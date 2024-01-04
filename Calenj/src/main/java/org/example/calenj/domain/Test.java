@@ -15,4 +15,7 @@ public class Test {
 
     @Column
     private String username;
+
+
+    //커밋용 주석티비
 }
