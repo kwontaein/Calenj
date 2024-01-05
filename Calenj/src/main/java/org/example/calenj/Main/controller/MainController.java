@@ -1,7 +1,7 @@
 package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.model.MainService;
-import org.example.calenj.domain.Test;
+import org.example.calenj.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,14 +31,17 @@ public class MainController {
     @GetMapping("/api/dbmsTest")
     @ResponseBody
     public String dbTest() {
-        Test test = new Test();
-        test.setUsername("권모씨");
-        mainService.test(test);
-
-/*        User user = new User();
-        user.setUser_id(1);
-        user.setUser_email("kosq3964");
-        mainService.saveUser(user);*/
-        return "실행";
+        User User = new User();
+        User.setAccount_id("kosq3964");
+        User.setKakao_login(false);
+        User.setNaver_login(false);
+        User.setWithdrawed(false);
+        User.setUser_password("1234");
+        User.setUser_roll("user");
+        User.setUser_email("kosq3964@naver.com");
+        User.setUser_phone("01025023964");
+        User.setUser_join_date("2000-11-11");
+        mainService.saveUser(User);
+        return User.toString();
     }
 }

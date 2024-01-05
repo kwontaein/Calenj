@@ -10,7 +10,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://calenj.cz0aqwwgc2x7.us-east-1.rds.amazonaws.com:3306/calenj"/>
             <!-- DB url -->
             <property name="javax.persistence.jdbc.user" value="admin"/>
-            <property name="javax.persistence.jdbc.password" value="your_password"/>
+            <property name="javax.persistence.jdbc.password" value="moon1026??1"/>
             <!-- DB Driver -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <!-- application 실행 시 ddl 전략 -->

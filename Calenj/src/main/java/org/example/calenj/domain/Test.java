@@ -16,6 +16,13 @@ public class Test {
     @Column
     private String username;
 
+    @Override
+    public String toString() {
+        return "Test{" +
+                "userid=" + userid +
+                ", username='" + username + '\'' +
+                '}';
+    }
 
     //커밋용 주석 2
 }
