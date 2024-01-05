@@ -31,6 +31,7 @@ public class MainController {
     @GetMapping("/api/dbmsTest")
     @ResponseBody
     public String dbTest() {
+        //성공
         User User = new User();
         User.setAccount_id("kosq3964");
         User.setKakao_login(false);
