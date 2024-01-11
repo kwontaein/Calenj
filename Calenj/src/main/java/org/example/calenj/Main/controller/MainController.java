@@ -38,6 +38,6 @@ public class MainController {
 
         mainService.test(test);
 
-        return "연습했어영 뿌뿌";
+        return "연습했어영 뿌뿌ㅋㅋ";
     }
 }
