@@ -2,8 +2,8 @@ package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.Repository.TestRepository;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.domain.Test;
-import org.example.calenj.domain.User;
+import org.example.calenj.Main.domain.Test;
+import org.example.calenj.Main.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

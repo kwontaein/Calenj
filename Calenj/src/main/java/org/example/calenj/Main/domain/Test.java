@@ -1,4 +1,4 @@
-package org.example.calenj.domain;
+package org.example.calenj.Main.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
