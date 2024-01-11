@@ -17,6 +17,7 @@ public class Test {
     @Column
     private String username;
 
+    //확인용 주석
     @Override
     public String toString() {
         return "Test{" +
