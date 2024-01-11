@@ -17,7 +17,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8080")
 public class MainController {
 
-    //테스트 주석 달기 2
+    //테스트 주석 달기 3
     @Autowired
     Test2Repository test2Repository;
     @Autowired
