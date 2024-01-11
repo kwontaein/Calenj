@@ -33,7 +33,6 @@ public class MainController {
     public String dbTest() {
         //성공
         User user = new User();
-
         user.setAccount_id("kosq3964");
         user.setKakao_login(false);
         user.setNaver_login(false);
@@ -45,5 +44,23 @@ public class MainController {
         user.setUser_join_date("2000-11-11");
         mainService.saveUser(user);
         return user.toString();
+    }
+
+    @GetMapping("/api/updateTest")
+    public String dbUpdateTest(){
+        //업데이트 테스트
+        return "";
+    }
+
+    @GetMapping("/api/deleteTest")
+    public String dbDeleteTest(){
+        //삭제 테스트
+        return "";
+    }
+
+    @GetMapping("/api/readTest")
+    public String dbReadTest(){
+        //select 테스트
+        return "";
     }
 }
