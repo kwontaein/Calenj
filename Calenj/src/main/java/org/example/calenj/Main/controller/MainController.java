@@ -32,7 +32,7 @@ public class MainController {
     @GetMapping("/api/dbmsTest")
     @ResponseBody
     public String dbTest() {
-<<<<<<< HEAD
+
         Test2 test = new Test2();
         test.setAccount_id("dysj12");
         test.setUser_password("dysj1234");
@@ -40,21 +40,7 @@ public class MainController {
         mainService.test(test);
 
         return "연습했어영 뿌뿌ㅋㅋ";
-=======
-        //성공
-        User user = new User();
-        user.setAccount_id("kosq3964");
-        user.setKakao_login(false);
-        user.setNaver_login(false);
-        user.setWithdrawed(false);
-        user.setUser_password("1234");
-        user.setUser_roll("user");
-        user.setUser_email("kosq3964@naver.com");
-        user.setUser_phone("01025023964");
-        user.setUser_join_date("2000-11-11");
-        mainService.saveUser(user);
-        return user.toString();
->>>>>>> origin/master
+
     }
 
     @GetMapping("/api/updateTest")
