@@ -1,8 +1,8 @@
 package org.example.calenj.Main.controller;
 
+import org.example.calenj.Main.domain.Test2;
+import org.example.calenj.Main.domain.User;
 import org.example.calenj.Main.model.MainService;
-
-import org.example.calenj.domain.Test2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +35,8 @@ public class MainController {
         Test2 test = new Test2();
         test.setAccount_id("dysj12");
         test.setUser_password("dysj1234");
+        mainService.test(test);
 
-        return "연습했어영 뿌뿌ㅋㅋ";
         //성공
         User user = new User();
         user.setAccount_id("kosq3964");
