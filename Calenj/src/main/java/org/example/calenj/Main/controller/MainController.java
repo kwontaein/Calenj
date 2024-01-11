@@ -18,6 +18,7 @@ import java.util.Optional;
 public class MainController {
 
     //테스트 주석 달기 2
+    //태인이가 요청한 주석
     @Autowired
     Test2Repository test2Repository;
     @Autowired
