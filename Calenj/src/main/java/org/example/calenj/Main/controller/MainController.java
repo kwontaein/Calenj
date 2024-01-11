@@ -1,5 +1,7 @@
 package org.example.calenj.Main.controller;
 
+import org.example.calenj.Main.Repository.Test2Repository;
+import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Test2;
 import org.example.calenj.Main.domain.User;
 import org.example.calenj.Main.model.MainService;
@@ -9,11 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
 public class MainController {
 
+    @Autowired
+    Test2Repository test2Repository;
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     MainService mainService;
 
@@ -32,43 +40,60 @@ public class MainController {
     @GetMapping("/api/dbmsTest")
     @ResponseBody
     public String dbTest() {
-        //승재 코드
-        Test2 test = new Test2();
-        test.setAccount_id("dysj12");
-        test.setUser_password("dysj1234");
-        mainService.test(test);
 
-        //성공
-        User user = new User();
-        user.setAccount_id("kosq3964");
-        user.setKakao_login(false);
-        user.setNaver_login(false);
-        user.setWithdrawed(false);
-        user.setUser_password("1234");
-        user.setUser_roll("user");
-        user.setUser_email("kosq3964@naver.com");
-        user.setUser_phone("01025023964");
-        user.setUser_join_date("2000-11-11");
-        mainService.saveUser(user);
+        //승재 삽입 코드
+        Test2 test2 = Test2.builder()
+                .account_id("kosq3964")
+                .user_password("dysj1234")
+                .build();
+        test2Repository.save(test2);
+
+        //태인 삽입 코드
+        User user = User.builder()
+                .account_id("kosq3964")
+                .user_password("1234")
+                .user_email("kosq3964@naver.com")
+                .user_phone("01025023964")
+                .user_roll("user")
+                .kakao_login(false)
+                .naver_login(false)
+                .user_join_date("2000-11-11")
+                .withdrawed(false)
+                .build();
+
+        userRepository.save(user);
+
         return user.toString();
     }
 
     @GetMapping("/api/updateTest")
-    public String dbUpdateTest(){
+    public String dbUpdateTest() {
         //업데이트 테스트
-        return "";
+        Test2 test2 = Test2.builder()
+                .userid(2)
+                .account_id("moon11")
+                .user_password("dysj1234")
+                .build();
+
+        test2Repository.save(test2);
+        return test2.toString();
     }
 
     @GetMapping("/api/deleteTest")
-    public String dbDeleteTest(){
+    public String dbDeleteTest() {
         //삭제 테스트
+        test2Repository.delete(Test2.builder().userid(2).account_id("moon11").build());
         return "";
     }
 
     @GetMapping("/api/readTest")
-    public String dbReadTest(){
+    public String dbReadTest() {
         //select 테스트
+        Optional<Test2> test = test2Repository.findById(2); //Optional을 사용하여 nullPointerException을 방지해줌을 알 수 있습니다.
+        System.out.println(test.isPresent() ? test.get().getUserid() : "Nothing");
+
+        Optional<User> user = userRepository.findById(1); //Optional을 사용하여 nullPointerException을 방지해줌을 알 수 있습니다.
+        System.out.println(user.isPresent() ? user.get().getUser_id() : "Nothing");
         return "";
     }
-    //bb
 }
