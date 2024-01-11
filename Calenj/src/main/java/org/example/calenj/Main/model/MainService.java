@@ -2,7 +2,7 @@ package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.domain.Test2;
+import org.example.calenj.Main.domain.Test2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

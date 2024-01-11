@@ -1,6 +1,6 @@
 package org.example.calenj.Main.Repository;
 
-import org.example.calenj.domain.Test2;
+import org.example.calenj.Main.domain.Test2;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
