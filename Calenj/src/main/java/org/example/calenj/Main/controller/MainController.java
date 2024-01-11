@@ -32,6 +32,7 @@ public class MainController {
     @GetMapping("/api/dbmsTest")
     @ResponseBody
     public String dbTest() {
+        //승재 코드
         Test2 test = new Test2();
         test.setAccount_id("dysj12");
         test.setUser_password("dysj1234");
