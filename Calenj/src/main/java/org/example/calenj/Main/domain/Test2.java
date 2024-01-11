@@ -1,10 +1,8 @@
-package org.example.calenj.domain;
+package org.example.calenj.Main.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.annotation.processing.Generated;
 
 @Entity //테이블 어노테이션
 @Getter
