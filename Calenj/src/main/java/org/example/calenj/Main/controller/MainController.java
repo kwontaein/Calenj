@@ -94,6 +94,6 @@ public class MainController {
 
         Optional<User> user = userRepository.findById(1); //Optional을 사용하여 nullPointerException을 방지해줌을 알 수 있습니다.
         System.out.println(user.isPresent() ? user.get().getUser_id() : "Nothing");
-        return "";
+        return "실행됨";
     }
 }
