@@ -21,10 +21,15 @@ public class User {
     private String user_join_date;
     private String user_email;
     private String user_phone;
-    private String user_roll;
-    private boolean naver_login;
-    private boolean kakao_login;
-    private boolean withdrawed;
+
+    @Builder.Default // 기본값 지정
+    private String user_roll = "User";
+    @Builder.Default // 기본값 지정
+    private boolean naver_login = false;
+    @Builder.Default
+    private boolean kakao_login = false;
+    @Builder.Default
+    private boolean withdrawed = false;
 
     @Override
     public String toString() {
