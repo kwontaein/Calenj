@@ -23,7 +23,10 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/**"};    // sign-up, sign-in 추가
+    private final String[] allAllowedUrls = {"/api/testlogin", "/api/usersave"};    // 모두 허가
+    private final String[] UserAllowedUrls = {"/**"};    // 유저만 허가
+    private final String[] AdminAllowedUrls = {"/**"};    // 매니저만 허가
+    private final String[] ManagerAllowedUrls = {"/api/testSuccess"};    // 관리자만 허가
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
@@ -38,7 +41,8 @@ public class SecurityConfig {
                 .headers((headers) -> headers.addHeaderWriter(
                         new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers(allowedUrls).permitAll()    // 허용할 url 목록을 배열로 분리했다
+                        requests.requestMatchers(allAllowedUrls).permitAll()    // 허용할 url 목록을 배열로 분리했다
+                                .requestMatchers(ManagerAllowedUrls).hasRole("MANAGER")   // Manager 역할을 갖고 있는 경우
                                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 )

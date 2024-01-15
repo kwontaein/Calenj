@@ -5,25 +5,38 @@ function TestGet() {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     const [data, setData] = useState({
-        accountid: 'UserI2',
-        user_password: 'UserP2',
-        user_email: 'example@ex.com',
-        user_phone: '010-1111-1111',
-        user_roll: 'User',
-        user_join_date: formattedDate,
+        accountid: 'UserI23',
+        user_password: 'UserP23',
     });
 
-    const [result, setResult] = useState('')
+    const [result, setResult] = useState('');
+
+    const handleClick = () => {
+        // 클릭 시 result.accessToken 정보를 서버로 전송
+        axios.post('/api/testSuccess', result.accessToken, {
+            headers: {
+                'Authorization': `Bearer ${result.accessToken}`
+            }
+        })
+            .then(response => {
+                // 서버에서의 응답 처리
+                console.log(response.data);
+            })
+            .catch(error => console.log(error));
+    };
 
     useEffect(() => {
         axios.post('/api/testlogin', data)
             .then(response => setResult(response.data))
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
     }, []);
 
     return (
         <div>
-            백엔드에서 가져온 데이터입니다 : {result}
+            <div> grantType: {result.grantType}</div>
+            <div> accessToken: {result.accessToken}</div>
+            <div> refreshToken: {result.refreshToken}</div>
+            <button onClick={handleClick}>Send AccessToken to Server</button>
         </div>
     );
 }

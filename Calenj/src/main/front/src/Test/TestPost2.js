@@ -7,11 +7,11 @@ const TestPost = () => {
 // 원하는 형식으로 날짜를 설정합니다.
 
     const [data, setData] = useState({
-        accountid: 'UserI23',
-        user_password: 'UserP23',
+        accountid: 'UserI',
+        user_password: 'UserP',
         user_email: 'example@ex.com',
         user_phone: '010-1111-1111',
-        user_role: 'User,Manager',
+        user_role: 'MANAGER',
         user_join_date: formattedDate,
     });
 

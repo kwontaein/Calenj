@@ -137,6 +137,7 @@ public class MainService {
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
         //Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
         // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환됩니다.
         // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.

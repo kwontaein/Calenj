@@ -41,21 +41,24 @@ public class MainController {
         return "Insert 실행";
     }
 
-    @PostMapping("api/usersave")
+    @PostMapping("/api/usersave")
     public int saveUser(@RequestBody UserDTO userDTO) {
         System.out.println(userDTO);
         return mainService.saveUser2(userDTO);
     }
 
-    @PostMapping("api/testlogin")
+    @PostMapping("/api/testlogin")
     public JwtToken login(@RequestBody UserDTO userDTO) {
-        System.out.println("실행1");
         String accountid = userDTO.getAccountid();
         String password = userDTO.getUser_password();
-        System.out.println(accountid + " " + password);
-        System.out.println("실행2");
         JwtToken jwtToken = mainService.login(accountid, password);
         return jwtToken;
+    }
+
+    @PostMapping("/api/testSuccess")
+    public String successTest() {
+        System.out.println("hi");
+        return "successTest";
     }
 
     @PostMapping("/api/insertTest2")

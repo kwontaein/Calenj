@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String user_phone;
 
     @Builder.Default // 기본값 지정
-    private String user_role = "User";
+    private String user_role = "USER";
     @Builder.Default // 기본값 지정
     private boolean naver_login = false;
     @Builder.Default
@@ -66,7 +66,7 @@ public class User implements UserDetails {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         for (String role : user_role.split(",")) {
-            authorities.add(new SimpleGrantedAuthority(role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
         return authorities;
     }
