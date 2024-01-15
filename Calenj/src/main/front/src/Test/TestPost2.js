@@ -7,18 +7,19 @@ const TestPost = () => {
 // 원하는 형식으로 날짜를 설정합니다.
 
     const [data, setData] = useState({
-        account_id: 'UserI',
-        user_password: 'UserP',
+        accountid: 'UserI23',
+        user_password: 'UserP23',
         user_email: 'example@ex.com',
         user_phone: '010-1111-1111',
-        user_roll: 'User',
+        user_role: 'User,Manager',
         user_join_date: formattedDate,
     });
 
     const [result, setResult] = useState('')
 
     useEffect(() => {
-        axios.post('/api/insertTest2', data)
+        console.log(data);
+        axios.post('/api/usersave', data)
             .then(response => setResult(response.data))
             .catch(error => console.log('데이터 전송 중 에러 발생:', error))
     }, []);

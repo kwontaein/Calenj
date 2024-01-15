@@ -4,8 +4,10 @@ package org.example.calenj.Main.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -20,9 +22,12 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private int user_id;
 
-    private String account_id;
+    @Column(name = "account_id")
+    private String accountid;
     private String user_password;
+
     private String user_join_date;
+
     private String user_email;
     private String user_phone;
 
@@ -39,7 +44,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "user_id=" + user_id +
-                ", account_id='" + account_id + '\'' +
+                ", account_id='" + accountid + '\'' +
                 ", user_password='" + user_password + '\'' +
                 ", user_join_date='" + user_join_date + '\'' +
                 ", user_email='" + user_email + '\'' +
@@ -58,7 +63,12 @@ public class User implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null; // 추후 찾아볼 예정
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (String role : user_role.split(",")) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
     }
 
     /**
@@ -75,7 +85,7 @@ public class User implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return account_id;
+        return accountid;
     }
 
     /**
