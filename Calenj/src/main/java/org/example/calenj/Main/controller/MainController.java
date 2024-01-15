@@ -41,8 +41,21 @@ public class MainController {
     }
 
     @PostMapping("api/usersave")
-    public int saveUser(UserDTO userDTO) {
+    public int saveUser(@RequestBody UserDTO userDTO) {
+        System.out.println(userDTO);
         return mainService.saveUser2(userDTO);
+    }
+
+    @PostMapping("api/testlogin")
+    public String login(@RequestBody UserDTO userDTO) {
+        System.out.println("실행1");
+        String accountid = userDTO.getAccountid();
+        String password = userDTO.getUser_password();
+        System.out.println(accountid + " " + password);
+        System.out.println("실행2");
+        /*JwtToken jwtToken = */
+        mainService.login(accountid, password);
+        return "jwtToken";
     }
 
     @PostMapping("/api/insertTest2")
@@ -63,7 +76,7 @@ public class MainController {
         return "delete 실행";
     }
 
-    @GetMapping("/api/readTest")
+    @PostMapping("/api/readTest")
     public String dbReadTest(@RequestBody Test2 test2Info) {
         mainService.selectTest2(test2Info);
         return "Test2";
