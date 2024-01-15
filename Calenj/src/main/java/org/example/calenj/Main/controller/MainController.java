@@ -1,6 +1,7 @@
 package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Test2;
@@ -47,15 +48,14 @@ public class MainController {
     }
 
     @PostMapping("api/testlogin")
-    public String login(@RequestBody UserDTO userDTO) {
+    public JwtToken login(@RequestBody UserDTO userDTO) {
         System.out.println("실행1");
         String accountid = userDTO.getAccountid();
         String password = userDTO.getUser_password();
         System.out.println(accountid + " " + password);
         System.out.println("실행2");
-        /*JwtToken jwtToken = */
-        mainService.login(accountid, password);
-        return "jwtToken";
+        JwtToken jwtToken = mainService.login(accountid, password);
+        return jwtToken;
     }
 
     @PostMapping("/api/insertTest2")
