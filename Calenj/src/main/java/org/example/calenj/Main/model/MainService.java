@@ -1,30 +1,34 @@
 package org.example.calenj.Main.model;
 
+import lombok.RequiredArgsConstructor;
+import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Test2;
 import org.example.calenj.Main.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
+@RequiredArgsConstructor
 @Service
 public class MainService {
     @Autowired
     Test2Repository test2Repository;
     @Autowired
     UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public void saveUser(User userInfo) {
         //유저 삽입 코드
         User user = User.builder()
                 .account_id(userInfo.getAccount_id()) //getter로 받은 데이터 사용
-                .user_password(userInfo.getUser_password())
+                .user_password(passwordEncoder.encode(userInfo.getUser_password())) //비밀번호 암호화
                 .user_email(userInfo.getUser_email())
                 .user_phone(userInfo.getUser_phone())
-                .user_roll(userInfo.getUser_roll())
+                .user_role(userInfo.getUser_role())
                 .kakao_login(userInfo.isKakao_login())
                 .naver_login(userInfo.isNaver_login())
                 .user_join_date(userInfo.getUser_join_date())
@@ -45,6 +49,13 @@ public class MainService {
                 .user_join_date(userInfo.getUser_join_date())
                 .withdrawed(userInfo.isWithdrawed())
                 .build());*/
+    }
+
+    public int saveUser2(UserDTO userDTO) {
+        //패스워드 암호화
+        userDTO.setUser_password(passwordEncoder.encode(userDTO.getUser_password()));
+        userRepository.save(userDTO.toEntity());
+        return userDTO.getUser_id();
     }
 
     public void saveTest2(Test2 test2Info) {
@@ -105,4 +116,5 @@ public class MainService {
         System.out.println(testResult);
 
     }
+
 }

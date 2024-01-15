@@ -1,5 +1,6 @@
 package org.example.calenj.Main.controller;
 
+import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Test2;
@@ -39,8 +40,13 @@ public class MainController {
         return "Insert 실행";
     }
 
+    @PostMapping("api/usersave")
+    public int saveUser(UserDTO userDTO) {
+        return mainService.saveUser2(userDTO);
+    }
+
     @PostMapping("/api/insertTest2")
-    public String dbInsertTest2(@RequestBody User userInfo) { //객체로 받기
+    public String dbInsertTest2(@RequestBody User userInfo) { //엔티티 형식으로 받기
         mainService.saveUser(userInfo); //서비스의 저장 코드로 연결
         return "Insert2 실행";
     }
@@ -68,4 +74,5 @@ public class MainController {
         mainService.selectUser(userInfo);
         return "User";
     }
+
 }
