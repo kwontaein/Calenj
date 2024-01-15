@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import Test from './Test2/Test'
+import {Routes,
+        Route,
+        Link} from "react-router-dom";
 
 function App() {
    const [hello, setHello] = useState('')
@@ -13,7 +17,12 @@ function App() {
     return (
         <div>
             백엔드에서 가져온 데이터입니다 : {hello}
+            <Routes>
+            <Route path="/api/login" element={<Test/>}></Route>
+            </Routes>
+            <Link to="/api/login">로그인 레츠고</Link>
         </div>
+
     );
 }
 

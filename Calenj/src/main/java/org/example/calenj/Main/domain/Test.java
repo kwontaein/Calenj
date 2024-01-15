@@ -15,14 +15,16 @@ public class Test {
     private int userid;                         //-> 얜 그냥 구분하기 위한 값
 
     @Column
-    private String username;
+    private String userName;
+    @Column
+    private  String userPw;
 
     //확인용 주석
     @Override
     public String toString() {
         return "Test{" +
                 "userid=" + userid +
-                ", username='" + username + '\'' +
+                ", username='" + userName + '\'' +
                 '}';
     }
 
