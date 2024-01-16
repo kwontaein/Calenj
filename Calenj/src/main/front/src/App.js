@@ -9,7 +9,7 @@ function App() {
    const [hello, setHello] = useState('')
 
     useEffect(() => {
-        axios.get('/api/dbmsTest')
+        axios.get('/api/demo-web')
         .then(response => setHello(response.data))
         .catch(error => console.log(error))
     }, []);
@@ -20,6 +20,7 @@ function App() {
             <Routes>
             <Route path="/api/login" element={<Test/>}></Route>
             </Routes>
+            <br></br>
             <Link to="/api/login">로그인 레츠고</Link>
         </div>
 

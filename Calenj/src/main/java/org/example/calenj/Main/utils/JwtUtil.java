@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+
 import java.util.Date;
 
 public class JwtUtil {
@@ -11,11 +12,12 @@ public class JwtUtil {
         Claims claims = Jwts.claims();
         claims.put("userName", userName);
 
+        System.out.println("secretKey :"+ secretKey);
         return  Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(SignatureAlgorithm.HS256,secretKey)
+                .signWith(SignatureAlgorithm.ES256, secretKey)
                 .compact();
     }
 }
