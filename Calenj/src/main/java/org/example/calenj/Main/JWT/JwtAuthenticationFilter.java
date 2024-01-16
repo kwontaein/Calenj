@@ -20,20 +20,22 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+        System.out.println("doFilter 실행 ");
         // 1. Request Header 에서 JWT 토큰 추출
         String token = resolveToken((HttpServletRequest) request);
 
-        System.out.println("token : " + token);
+        System.out.println("token값 : " + token);
 
         // 2. validateToken 으로 토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
             // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("authentication : " + authentication);
+            System.out.println("if문 실행 authentication : " + authentication);
         }
+
         try {
+            System.out.println("chain.doFilter 실행");
             chain.doFilter(request, response);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,7 +46,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        System.out.println("bearerToken : " + bearerToken);
+        System.out.println("resolveToken실행 bearerToken : " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }

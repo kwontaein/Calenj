@@ -51,6 +51,7 @@ public class MainController {
     public JwtToken login(@RequestBody UserDTO userDTO) {
         String accountid = userDTO.getAccountid();
         String password = userDTO.getUser_password();
+        System.out.println("controller 실행");
         JwtToken jwtToken = mainService.login(accountid, password);
         return jwtToken;
     }

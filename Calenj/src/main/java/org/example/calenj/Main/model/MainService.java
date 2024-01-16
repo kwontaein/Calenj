@@ -130,17 +130,22 @@ public class MainService {
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
 
+        System.out.println("실행 login");
+
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
 
+        System.out.println("UsernamePasswordAuthenticationToken 실행 ");
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        //Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
+        System.out.println("실행 authentication");
+        // Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
         // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환됩니다.
         // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
+
         System.out.println("authentication.getCredentials() : " + authentication.getCredentials()); //null
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
