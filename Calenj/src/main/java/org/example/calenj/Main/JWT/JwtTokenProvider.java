@@ -57,11 +57,9 @@ public class JwtTokenProvider {
 
         String refreshToken = generateRefreshToken();
 
-        // Refresh Token 생성 -> DB에 저장
         System.out.println("생성된 accessToken : " + accessToken);
 
         System.out.println("생성된 refreshToken : " + refreshToken);
-
 
         return JwtToken.builder()
                 .grantType("Bearer")

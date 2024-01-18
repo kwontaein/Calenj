@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
-import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.domain.Test2;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,8 +25,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MainService {
-    @Autowired
-    Test2Repository test2Repository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -74,46 +70,6 @@ public class MainService {
         return userDTO.toEntity().getUser_id();
     }
 
-    public void saveTest2(Test2 test2Info) {
-        //승재 삽입 코드
-        Test2 test2 = Test2.builder()
-                .account_id(test2Info.getAccount_id()) //getter로 받은 데이터 사용
-                .user_password(test2Info.getUser_password())
-                .build();
-        test2Repository.save(test2);
-        //------------위 코드와 아래의 코드는 같은 기능-------------------
-        /*test2Repository.save(Test2.builder()
-                .account_id(test2Info.getAccount_id())
-                .user_password(test2Info.getUser_password())
-                .build());*/
-
-    }
-
-    public void updateTest(Test2 test2Info) {
-        //업데이트 테스트
-        Test2 test2 = Test2.builder()
-                .userid(test2Info.getUserid())
-                .account_id(test2Info.getAccount_id())
-                .user_password(test2Info.getUser_password())
-                .build();
-        test2Repository.save(test2);
-        //------------위 코드와 아래의 코드는 같은 기능-------------------
-        /*test2Repository.save(Test2.builder()
-                .userid(test2Info.getUserid())
-                .account_id(test2Info.getAccount_id())
-                .user_password(test2Info.getUser_password())
-                .build());*/
-    }
-
-    public void deleteTest(Test2 test2Info) {
-        Test2 test2 = Test2.builder().userid(test2Info.getUserid()).build();
-        //delete는 null체크와 새로 생성한 entity인지 확인 후 삭제 -> 바로 삭제
-        test2Repository.delete(test2);
-        //deletebyid 는 아이디 값으로 삭제 -> select 후 delete 실행 -> deleteById를 사용하면 entity를 조회할 필요 없음
-        test2Repository.deleteById(test2Info.getUserid());
-        //------------위 코드와 아래의 코드는 같은 기능-------------------
-        //test2Repository.delete(Test2.builder().userid(1).account_id("moon11").build());
-    }
 
     public void selectUser(UserEntity userInfo) {
         //select 테스트
@@ -122,12 +78,6 @@ public class MainService {
 
         System.out.println(userResult);
 
-    }
-
-    public void selectTest2(Test2 test2Info) {
-        //select 테스트
-        Optional<Test2> test = test2Repository.findById(test2Info.getUserid()); //Optional을 사용하여 nullPointerException을 방지해줌을 알 수 있습니다.
-        String testResult = (test.isPresent() ? test.toString() : "정보가 없습니다");
     }
 
     @Transactional
@@ -192,7 +142,7 @@ public class MainService {
         Claims claims = Jwts.parser().parseClaimsJws(tokenValue).getBody();
         // 만료 시간 정보 얻기
         long expirationTime = claims.getExpiration().getTime();
-        
+
         System.out.println("expirationTime : " + expirationTime);
         Cookie cookie;
         try {
