@@ -62,6 +62,7 @@ public class JwtTokenProvider {
 
         System.out.println("생성된 refreshToken : " + refreshToken);
 
+
         return JwtToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
@@ -82,7 +83,7 @@ public class JwtTokenProvider {
     //AccessToken 생성 메소드
     private String generateAccessTokenBy(String subject, Collection<? extends GrantedAuthority> authorities) {
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 24 * 60 * 60 * 1000L);
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -98,8 +99,7 @@ public class JwtTokenProvider {
     private String generateRefreshToken() {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
-        long oneWeekInMillis = 7 * 24 * 60 * 60 * 1000L;
-        Date accessTokenExpiresIn = new Date(now + oneWeekInMillis);
+        Date accessTokenExpiresIn = new Date(now + 7 * 24 * 60 * 60 * 1000L);
 
         return Jwts.builder()
                 .setExpiration(accessTokenExpiresIn)
@@ -109,11 +109,8 @@ public class JwtTokenProvider {
 
     // 리프레시 토큰을 사용하여 새로운 액세스 토큰 생성
     public String refreshAccessToken(String refreshToken) {
-
-        long oneDayInMillis = 24 * 60 * 60 * 1000L;
-
         String newRefreshToken;
-
+        long oneDay = 24 * 60 * 60 * 1000L;
         // 리프레시 토큰에서 클레임 추출
         Claims claims = parseClaims(refreshToken);
         // 리프레시 토큰 만료 기간 추출
@@ -131,7 +128,7 @@ public class JwtTokenProvider {
         UserDetails userDetails = new User(userEntity.getUsername(), "", userEntity.getAuthorities());
 
         // 1일 이하인 경우에 대한 조건 추가 -- 리프레시 토큰 재발급 부분인데, 수정 필요
-        if (remainingTime <= oneDayInMillis) {
+        if (remainingTime <= oneDay) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
             System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
             newRefreshToken = generateRefreshToken();

@@ -1,5 +1,7 @@
 package org.example.calenj.Main.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.Test2Repository;
@@ -8,6 +10,8 @@ import org.example.calenj.Main.domain.Test2;
 import org.example.calenj.Main.domain.UserEntity;
 import org.example.calenj.Main.model.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,18 +51,34 @@ public class MainController {
     }
 
     @PostMapping("/api/testlogin")
-    public JwtToken login(@RequestBody UserDTO userDTO) {
-        String accountid = userDTO.getAccountid();
-        String password = userDTO.getUser_password();
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
         System.out.println("controller 실행");
-        JwtToken jwtToken = mainService.login(accountid, password);
-        return jwtToken;
+
+        JwtToken jwtToken = mainService.login(userDTO.getAccountid(), userDTO.getUser_password());
+
+        Cookie cookie = mainService.createCookie("accessToken", jwtToken.getAccessToken());
+        Cookie cookie2 = mainService.createCookie("refreshToken", jwtToken.getRefreshToken());
+
+        // 응답 헤더에 쿠키 추가
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
+
+        System.out.println("cookie : " + cookie);
+        System.out.println("cookie2 : " + cookie2);
+
+        return ResponseEntity.ok("Cookie Success");
     }
 
     @PostMapping("/api/testSuccess")
     public String successTest() {
         System.out.println("hi");
         return "successTest";
+    }
+
+    @PostMapping("/api/postCookie")
+    public String postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
+        System.out.println("Cookie : " + Cookie);
+        return Cookie;
     }
 
     @PostMapping("/api/insertTest2")

@@ -7,8 +7,8 @@ const TestPost = () => {
 // 원하는 형식으로 날짜를 설정합니다.
 
     const [data, setData] = useState({
-        accountid: 'UserI',
-        user_password: 'UserP',
+        accountid: 'UserI1',
+        user_password: 'UserP1',
         user_email: 'example@ex.com',
         user_phone: '010-1111-1111',
         user_role: 'MANAGER',
