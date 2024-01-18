@@ -111,7 +111,9 @@ public class JwtTokenProvider {
     public String refreshAccessToken(String refreshToken) {
 
         long oneDayInMillis = 24 * 60 * 60 * 1000L;
+
         String newRefreshToken;
+
         // 리프레시 토큰에서 클레임 추출
         Claims claims = parseClaims(refreshToken);
         // 리프레시 토큰 만료 기간 추출
@@ -122,13 +124,13 @@ public class JwtTokenProvider {
 
         System.out.println("remainingTime : " + remainingTime);
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
-        
+
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         UserDetails userDetails = new User(userEntity.getUsername(), "", userEntity.getAuthorities());
 
-        // 1일 이하인 경우에 대한 조건 추가
+        // 1일 이하인 경우에 대한 조건 추가 -- 리프레시 토큰 재발급 부분인데, 수정 필요
         if (remainingTime <= oneDayInMillis) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
             System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
