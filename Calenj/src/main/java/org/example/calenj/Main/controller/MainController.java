@@ -5,7 +5,7 @@ import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.Test2Repository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Test2;
-import org.example.calenj.Main.domain.User;
+import org.example.calenj.Main.domain.UserEntity;
 import org.example.calenj.Main.model.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
-
     //테스트 주석 달기 2
     //태인이가 요청한 주석
     @Autowired
@@ -63,8 +62,8 @@ public class MainController {
     }
 
     @PostMapping("/api/insertTest2")
-    public String dbInsertTest2(@RequestBody User userInfo) { //엔티티 형식으로 받기
-        mainService.saveUser(userInfo); //서비스의 저장 코드로 연결
+    public String dbInsertTest2(@RequestBody UserEntity userEntityInfo) { //엔티티 형식으로 받기
+        mainService.saveUser(userEntityInfo); //서비스의 저장 코드로 연결
         return "Insert2 실행";
     }
 
@@ -87,7 +86,7 @@ public class MainController {
     }
 
     @GetMapping("/api/readTest2")
-    public String dbReadTest2(@RequestBody User userInfo) {
+    public String dbReadTest2(@RequestBody UserEntity userInfo) {
         mainService.selectUser(userInfo);
         return "User";
     }

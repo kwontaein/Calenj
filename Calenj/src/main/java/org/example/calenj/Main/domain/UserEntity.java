@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
+@Entity(name = "User")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder // 빌더
 @Getter
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id //primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,8 @@ public class User implements UserDetails {
     private boolean kakao_login = false;
     @Builder.Default
     private boolean withdrawed = true;
+
+    private String refreshToken;
 
     @Override
     public String toString() {
@@ -64,7 +66,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-
         for (String role : user_role.split(",")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }

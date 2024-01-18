@@ -15,7 +15,9 @@ function TestGet() {
         // 클릭 시 result.accessToken 정보를 서버로 전송
         axios.post('/api/testSuccess', result.accessToken, {
             headers: {
-                'Authorization': `Bearer ${result.accessToken}`
+                'Authorization': `Bearer ${result.accessToken}`, //Token 값
+                'RefreshToken': `Bearer ${result.refreshToken}` //Refresh-Token 값
+
             }
         })
             .then(response => {

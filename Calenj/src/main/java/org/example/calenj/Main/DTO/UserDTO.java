@@ -1,7 +1,7 @@
 package org.example.calenj.Main.DTO;
 
 import lombok.Data;
-import org.example.calenj.Main.domain.User;
+import org.example.calenj.Main.domain.UserEntity;
 
 @Data
 public class UserDTO {
@@ -12,8 +12,8 @@ public class UserDTO {
     private String user_join_date;
     private String user_role;
 
-    public User toEntity() {
-        return User.builder()
+    public UserEntity toEntity() {
+        return UserEntity.builder()
                 .accountid(accountid)
                 .user_password(user_password)
                 .user_email(user_email)
