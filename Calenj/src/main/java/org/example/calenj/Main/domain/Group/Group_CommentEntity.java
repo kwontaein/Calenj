@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @DiscriminatorValue("Group_Comment") // 서브 테이블을 판별하기 위한 값
 public class Group_CommentEntity extends GroupEntity {
-    private long comment_id;
+    private int comment_id;
     private String commented_by;
     private String comment_user;
     private String comment_content;

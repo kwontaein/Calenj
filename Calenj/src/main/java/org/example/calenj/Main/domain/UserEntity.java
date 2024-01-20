@@ -46,7 +46,7 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Group_UserEntity> memberships;
-    
+
     @Override
     public String toString() {
         return "User{" +
