@@ -65,9 +65,8 @@ public class MainController {
     }
 
     @PostMapping("/api/postCookie")
-    public String postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
-        System.out.println("Cookie : " + Cookie);
-        return Cookie;
+    public boolean postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
+        return Cookie != null;
     }
 
 }
