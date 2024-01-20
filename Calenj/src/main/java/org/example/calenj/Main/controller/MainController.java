@@ -44,6 +44,7 @@ public class MainController {
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
         System.out.println("controller 실행");
 
+
         JwtToken jwtToken = mainService.login(userDTO.getAccountid(), userDTO.getUser_password());
 
         Cookie cookie = mainService.createCookie("accessToken", jwtToken.getAccessToken());
@@ -71,10 +72,14 @@ public class MainController {
         return "logout";
     }
 
-    @PostMapping("/api/postCookie")
-    public String postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
+    @PostMapping("/api/postCookie") // 마이페이지 or 메인에 로그인 로그아웃 시 자동 실행
+    public boolean postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = false) String Cookie) {
         System.out.println("Cookie : " + Cookie);
-        return Cookie;
+        if (Cookie != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
