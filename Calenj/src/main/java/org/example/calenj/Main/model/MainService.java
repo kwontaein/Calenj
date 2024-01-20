@@ -143,6 +143,7 @@ public class MainService {
         long expirationTime = claims.getExpiration().getTime();
 
         System.out.println("expirationTime : " + expirationTime);
+
         Cookie cookie;
         try {
             cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, "UTF-8"));
