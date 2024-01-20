@@ -3,12 +3,14 @@ package org.example.calenj.Main.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calenj.Main.domain.Group.Group_UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "User")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
@@ -42,6 +44,9 @@ public class UserEntity implements UserDetails {
 
     private String refreshToken;
 
+    @OneToMany(mappedBy = "user")
+    private List<Group_UserEntity> memberships;
+    
     @Override
     public String toString() {
         return "User{" +

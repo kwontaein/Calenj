@@ -10,5 +10,8 @@ import lombok.*;
 public class Group_NoticeEntity extends GroupEntity {
     private String notice_title;
     private String notice_created;
-    
+    private String notice_content;
+    private String notice_creater;
+    private String notice_watcher;
+
 }
