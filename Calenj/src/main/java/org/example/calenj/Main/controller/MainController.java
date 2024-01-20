@@ -65,6 +65,12 @@ public class MainController {
         return "successTest";
     }
 
+    @PostMapping("/api/logout")
+    public String logout(HttpServletResponse response) {
+        mainService.removeCookie(response);
+        return "logout";
+    }
+
     @PostMapping("/api/postCookie")
     public String postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
         System.out.println("Cookie : " + Cookie);

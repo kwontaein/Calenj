@@ -10,6 +10,7 @@ function TestGet() {
     });
 
     const [result, setResult] = useState('');
+    const [logstate, setLogstate] = useState('logout');
 
 
     const handleClick = () => {
@@ -36,15 +37,24 @@ function TestGet() {
             .catch(error => console.log(error));
     };
 
-    useEffect(() => {
+    const login = () => {
         axios.post('/api/testlogin', data)
-            .then(response => setResult(response.headers))
+            .then(response => setResult(response.data), setLogstate("login"))
             .catch(error => console.log(error));
-    }, []);
+    };
+
+    const logout = () => {
+        axios.post('/api/logout', data)
+            .then(response => setResult(response.data), setLogstate("logout"))
+            .catch(error => console.log(error));
+    };
 
     return (
         <div>
             <div> Date : {result}</div>
+            {logstate === "logout" ?
+                <button onClick={login}>로그인</button> :
+                <button onClick={logout}>로그아웃</button>}
             <button onClick={handleClick}>Send AccessToken to Server</button>
             <button onClick={handleClick2}>Send Header Cookie to Server</button>
         </div>

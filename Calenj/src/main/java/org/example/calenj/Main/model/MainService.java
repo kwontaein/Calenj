@@ -1,8 +1,7 @@
 package org.example.calenj.Main.model;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.JWT.JwtToken;
@@ -129,21 +128,36 @@ public class MainService {
 
     }
 
+    public void logout() {
+    }
+
+
     //토큰 정보 DB 저장 메소드
     public void saveRefreshToken(String accountid, String refreshToken) {
         System.out.println(accountid + " " + refreshToken);
         userRepository.updateUserRefreshToken(refreshToken, accountid);
     }
 
+    public void removeCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie2 = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie2.setMaxAge(0);
+        cookie2.setPath("/");
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
+    }
+
     //쿠키 생성 메소드
     public Cookie createCookie(String tokenName, String tokenValue) {
 
         // 토큰 디코드
-        Claims claims = Jwts.parser().parseClaimsJws(tokenValue).getBody();
+        // claims = Jwts.parser().parseClaimsJws(tokenValue).getBody();
         // 만료 시간 정보 얻기
-        long expirationTime = claims.getExpiration().getTime();
+        //long expirationTime = claims.getExpiration().getTime();
 
-        System.out.println("expirationTime : " + expirationTime);
+        //System.out.println("expirationTime : " + expirationTime);
         Cookie cookie;
         try {
             cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, "UTF-8"));
@@ -154,7 +168,7 @@ public class MainService {
         cookie.setHttpOnly(true);  //httponly 옵션 설정
         cookie.setSecure(true); //https 옵션 설정
         cookie.setPath("/"); // 모든 곳에서 쿠키열람이 가능하도록 설정
-        cookie.setMaxAge(Math.toIntExact(expirationTime)); //쿠키 만료시간 설정
+        cookie.setMaxAge(Math.toIntExact(24 * 60 * 60 * 1000L)); //쿠키 만료시간 설정
         return cookie;
     }
 }
