@@ -11,5 +11,8 @@ import lombok.*;
 @Getter
 @PrimaryKeyJoinColumn(name = "group_id")
 public class Group_UserEntity extends GroupEntity {
-
+    private long group_id;
+    private long user_id;
+    private String role;
+    private String group_user_location;
 }

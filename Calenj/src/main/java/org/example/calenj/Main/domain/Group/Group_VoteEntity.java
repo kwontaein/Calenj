@@ -11,4 +11,10 @@ import lombok.*;
 @Getter
 @PrimaryKeyJoinColumn(name = "group_id")
 public class Group_VoteEntity extends GroupEntity {
+
+    private long group_id;
+    private String vote_title;
+    private String vote_item;
+    private String vote_start_date;
+    private String vote_end_date;
 }

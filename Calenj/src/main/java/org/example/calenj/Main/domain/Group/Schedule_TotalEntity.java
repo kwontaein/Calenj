@@ -11,4 +11,9 @@ import lombok.*;
 @Getter
 @PrimaryKeyJoinColumn(name = "group_id")
 public class Schedule_TotalEntity extends GroupEntity {
+
+    private long group_id;
+    private boolean period;
+    private String total_result;
+    private String agreed_user;
 }
