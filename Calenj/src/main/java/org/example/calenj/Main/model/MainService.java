@@ -77,7 +77,6 @@ public class MainService {
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
 
         System.out.println(userResult);
-
     }
 
     @Transactional
