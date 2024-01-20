@@ -16,12 +16,9 @@ public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private long group_id;
-
     private String group_created;
-
     private String group_title;
-
-    private String group_creater;
+    private String group_creater; //토큰에서 값 빼오기
 
 }
 
