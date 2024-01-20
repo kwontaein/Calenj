@@ -1,30 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import Test from './Test2/Test'
-import {Routes,
-        Route,
-        Link} from "react-router-dom";
+import React from 'react';
+import TestGet from './Test/TestGet';
+import TestPost from './Test/TestPost';
+import TestPost2 from './Test/TestPost2';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-function App() {
-   const [hello, setHello] = useState('')
-
-    useEffect(() => {
-        axios.get('/api/demo-web')
-        .then(response => setHello(response.data))
-        .catch(error => console.log(error))
-    }, []);
+export default function App() {
 
     return (
-        <div>
-            백엔드에서 가져온 데이터입니다 : {hello}
-            <Routes>
-            <Route path="/api/login" element={<Test/>}></Route>
-            </Routes>
-            <br></br>
-            <Link to="/api/login">로그인 레츠고</Link>
+        <div className="App">
+            <BrowserRouter>
+                <Routes>
+                    <Route path={"/Test/TestGet"} element={<TestGet />}></Route>
+                    <Route path={"/Test/TestPost"} element={<TestPost />}></Route>
+                    <Route path={"/Test/TestPost2"} element={<TestPost2 />}></Route>
+                </Routes>
+            </BrowserRouter>
         </div>
-
     );
 }
-
-export default App;
