@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const TestPost = () => {
+
     const today = new Date();
     const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-// 원하는 형식으로 날짜를 설정합니다.
+    // 원하는 형식으로 날짜를 설정합니다.
 
     const [data, setData] = useState({
         accountid: 'UserI1',

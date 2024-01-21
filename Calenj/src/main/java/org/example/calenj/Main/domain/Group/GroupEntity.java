@@ -20,7 +20,7 @@ public class GroupEntity {
     private int group_id;
     private String group_created;
     private String group_title;
-    private String group_creater; //토큰에서 값 빼오기
+    private String group_creater; //SecurityContext 에서 값 빼오기
 
     @OneToMany(mappedBy = "group")
     private List<Group_UserEntity> members;

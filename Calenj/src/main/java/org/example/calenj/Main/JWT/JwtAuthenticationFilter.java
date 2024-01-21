@@ -37,8 +37,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 2. validateToken 으로 토큰 유효성 검사 -- refresh token의 경우는? 추가해야함
         if (token != null && jwtTokenProvider.validateToken(token).equals("true")) {
 
-            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            // SecurityContext 에 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
             System.out.println("if문 실행 authentication : " + authentication);
 
@@ -50,10 +51,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 System.out.println("새 토큰을 발행합니다!");
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
-                // 새로운 Access Token으로 SecurityContext 업데이트
+                // 새로운 Access Token으로
                 Authentication newAuthentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
+                //SecurityContext 업데이트
                 SecurityContextHolder.getContext().setAuthentication(newAuthentication);
-                System.out.println("Access Token을 재발급했습니다. newAuthentication : " + newAuthentication);
+
+                System.out.println("Access Token을 재발급했습니다. newAccessToken : " + newToken);
 
             } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
 

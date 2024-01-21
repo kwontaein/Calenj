@@ -61,7 +61,7 @@ public class JwtTokenProvider {
 
         String accessToken = generateAccessTokenInFirstTime(authentication);
         String refreshToken = generateRefreshToken();
-        
+
         //쿠키 생성 부분
         createCookie(response, "accessToken", accessToken);
         createCookie(response, "refreshToken", refreshToken);
@@ -202,7 +202,7 @@ public class JwtTokenProvider {
     //쿠키 생성 메소드
     public void createCookie(HttpServletResponse response, String tokenName, String tokenValue) {
         // 토큰 디코드
-        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenValue).getBody();
+        Claims claims = parseClaims(tokenValue);
         // 만료 시간 정보 얻기
         long expirationTime = claims.getExpiration().getTime() / 1000; // 밀리초를 초로 변환
 

@@ -109,11 +109,9 @@ public class MainService {
             // 4. refreshToken 정보 저장을 위한 account_id 값 가져오기
             UserEntity user = (UserEntity) authentication.getPrincipal();
             // refreshToken 정보 저장
-            saveRefreshToken(user.getAccountid(), tokenInfo.getRefreshToken());
-
+            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), user.getAccountid());
             System.out.println("tokenInfo : " + tokenInfo);
             return tokenInfo;
-
         } else {
             //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
             //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
@@ -125,13 +123,6 @@ public class MainService {
         }
 
     }
-
-    //토큰 정보 DB 저장 메소드
-    public void saveRefreshToken(String accountid, String refreshToken) {
-        System.out.println(accountid + " " + refreshToken);
-        userRepository.updateUserRefreshToken(refreshToken, accountid);
-    }
-
 
     //쿠키에서 토큰 정보 빼기
     public String extractTokenFromCookieHeader(String cookieHeader, String targetCookieName) {
@@ -170,4 +161,6 @@ public class MainService {
         response.addCookie(cookie);
         response.addCookie(cookie2);
     }
+
+
 }

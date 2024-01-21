@@ -39,7 +39,7 @@ public class MainController {
     }
 
     @PostMapping("/api/testlogin")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         JwtToken jwtToken = mainService.login(userDTO.getAccountid(), userDTO.getUser_password());
 
@@ -65,6 +65,5 @@ public class MainController {
         System.out.println(cookieValue);
         return cookieHeader != null;
     }
-
 
 }
