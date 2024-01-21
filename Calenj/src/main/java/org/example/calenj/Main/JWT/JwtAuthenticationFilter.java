@@ -49,10 +49,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true")) {//오류가 없다면
                 System.out.println("새 토큰을 발행합니다!");
                 //토큰 발행
-                String newAccessToken = jwtTokenProvider.refreshAccessToken(refreshToken);
-
+                JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
                 // 새로운 Access Token으로 SecurityContext 업데이트
-                Authentication newAuthentication = jwtTokenProvider.getAuthentication(newAccessToken);
+                Authentication newAuthentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
                 SecurityContextHolder.getContext().setAuthentication(newAuthentication);
                 System.out.println("Access Token을 재발급했습니다. newAuthentication : " + newAuthentication);
 
@@ -64,13 +63,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
             }
-        } else {
+        } else { // 쿠키에 값이 없거나 여러 상황
 
-            System.out.println("예외 발생!" + jwtTokenProvider.validateToken(token));
         }
-
         try {
-
             System.out.println("chain.doFilter 실행");
             chain.doFilter(request, response);
         } catch (IOException e) {

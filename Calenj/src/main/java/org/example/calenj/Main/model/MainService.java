@@ -1,8 +1,7 @@
 package org.example.calenj.Main.model;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.JWT.JwtToken;
@@ -18,8 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Optional;
 
 @Service
@@ -112,17 +109,18 @@ public class MainService {
             // 4. refreshToken 정보 저장을 위한 account_id 값 가져오기
             UserEntity user = (UserEntity) authentication.getPrincipal();
             // refreshToken 정보 저장
-            // saveRefreshToken(user.getAccountid(), tokenInfo.getRefreshToken());
+            saveRefreshToken(user.getAccountid(), tokenInfo.getRefreshToken());
 
             System.out.println("tokenInfo : " + tokenInfo);
             return tokenInfo;
 
         } else {
-            //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. 고로 아무것도 할 필요 없다
-            //사실 else문도 필요 없지만 출력문 써놓음
-            /*JwtToken tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
-            System.out.println("tokenInfo : " + tokenInfo);*/
-            System.out.println("저장된 값 있음. 토큰 생성 안함");
+            //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
+            //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
+            //유효하지 않다면 두개 다 새로 생성해줘야 한다.
+
+            JwtToken tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
+            System.out.println("tokenInfo : " + tokenInfo);
             return null;
         }
 
@@ -134,27 +132,42 @@ public class MainService {
         userRepository.updateUserRefreshToken(refreshToken, accountid);
     }
 
-    //쿠키 생성 메소드
-    public Cookie createCookie(String tokenName, String tokenValue) {
 
-        // 토큰 디코드
-        Claims claims = Jwts.parser().parseClaimsJws(tokenValue).getBody();
-        // 만료 시간 정보 얻기
-        long expirationTime = claims.getExpiration().getTime();
+    //쿠키에서 토큰 정보 빼기
+    public String extractTokenFromCookieHeader(String cookieHeader, String targetCookieName) {
+        if (cookieHeader != null) {
+            // 쿠키 헤더를 각각의 쿠키로 분할합니다.
+            String[] cookies = cookieHeader.split("; ");
 
-        System.out.println("expirationTime : " + expirationTime);
+            // 각 쿠키를 반복하면서 처리합니다.
+            for (String cookie : cookies) {
+                // 각 쿠키를 이름-값 쌍으로 분할합니다.
+                String[] parts = cookie.split("=");
 
-        Cookie cookie;
-        try {
-            cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+                // 현재 쿠키가 이름과 값 모두를 갖고 있는지 확인합니다.
+                if (parts.length == 2) {
+                    String name = parts[0];
+                    String value = parts[1];
+
+                    // 현재 쿠키가 대상 쿠키의 이름과 일치하는지 확인합니다.
+                    if (name.equals(targetCookieName)) {
+                        return value; // 대상 쿠키의 값 반환
+                    }
+                }
+            }
         }
-        // 쿠키 속성 설정
-        cookie.setHttpOnly(true);  //httponly 옵션 설정
-        cookie.setSecure(true); //https 옵션 설정
-        cookie.setPath("/"); // 모든 곳에서 쿠키열람이 가능하도록 설정
-        cookie.setMaxAge(Math.toIntExact(expirationTime)); //쿠키 만료시간 설정
-        return cookie;
+        return null; // 헤더에서 대상 쿠키를 찾지 못한 경우 null 반환
+    }
+
+
+    public void removeCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie2 = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie2.setMaxAge(0);
+        cookie2.setPath("/");
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
     }
 }

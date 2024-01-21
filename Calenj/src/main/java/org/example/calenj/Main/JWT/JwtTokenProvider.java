@@ -3,6 +3,8 @@ package org.example.calenj.Main.JWT;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +33,8 @@ public class JwtTokenProvider {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    HttpServletResponse response;
     private final Key key;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
@@ -54,11 +60,13 @@ public class JwtTokenProvider {
         System.out.println("토큰 생성 실행");
 
         String accessToken = generateAccessTokenInFirstTime(authentication);
-
         String refreshToken = generateRefreshToken();
+        
+        //쿠키 생성 부분
+        createCookie(response, "accessToken", accessToken);
+        createCookie(response, "refreshToken", refreshToken);
 
         System.out.println("생성된 accessToken : " + accessToken);
-
         System.out.println("생성된 refreshToken : " + refreshToken);
 
         return JwtToken.builder()
@@ -66,11 +74,6 @@ public class JwtTokenProvider {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-    }
-
-    //AccessToken 재발급 메소드
-    private String generateAccessTokenByRefreshToken(UserDetails userDetails) {
-        return generateAccessTokenBy(userDetails.getUsername(), userDetails.getAuthorities());
     }
 
     //AccessToken 최초 생성 메소드
@@ -93,7 +96,49 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // 새로운 리프레시 토큰 생성을 위한 도우미 메서드
+    // RefreshToken을 사용하여 AccessToken 재발급 메소드
+    public JwtToken refreshAccessToken(String refreshToken) {
+        String newRefreshToken;
+        long oneDay = 24 * 60 * 60 * 1000L;
+        // 리프레시 토큰에서 클레임 추출
+        Claims claims = parseClaims(refreshToken);
+
+        // 리프레시 토큰 만료 기간 추출
+        Date expirationDate = claims.getExpiration();
+
+        Date now = new Date();
+
+        // 만료 시간과 현재 시간을 비교하여 남은 만료 기간 계산
+        long remainingTime = expirationDate.getTime() - now.getTime();
+
+        System.out.println("remainingTime : " + remainingTime);
+        // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
+
+        if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
+            // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
+            System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
+            newRefreshToken = generateRefreshToken();
+        } else {
+            newRefreshToken = refreshToken;
+        }
+
+        UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
+        String newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
+
+        //쿠키 값 재지정
+        createCookie(response, "accessToken", newAccessToken);
+        createCookie(response, "refreshToken", newRefreshToken);
+
+        return JwtToken.builder()
+                .grantType("Bearer")
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
+    }
+
+    // 새로운 RefreshToken 생성 메서드
     private String generateRefreshToken() {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
@@ -103,39 +148,6 @@ public class JwtTokenProvider {
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    // 리프레시 토큰을 사용하여 새로운 액세스 토큰 생성
-    public String refreshAccessToken(String refreshToken) {
-        String newRefreshToken;
-        long oneDay = 24 * 60 * 60 * 1000L;
-        // 리프레시 토큰에서 클레임 추출
-        Claims claims = parseClaims(refreshToken);
-        // 리프레시 토큰 만료 기간 추출
-        Date expirationDate = claims.getExpiration();
-        Date now = new Date();
-        // 만료 시간과 현재 시간을 비교하여 남은 만료 기간 계산
-        long remainingTime = expirationDate.getTime() - now.getTime();
-
-        System.out.println("remainingTime : " + remainingTime);
-        // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
-
-        UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
-        UserDetails userDetails = new User(userEntity.getUsername(), "", userEntity.getAuthorities());
-
-        // 1일 이하인 경우에 대한 조건 추가 -- 리프레시 토큰 재발급 부분인데, 수정 필요
-        if (remainingTime <= oneDay) {
-            // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
-            System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
-            newRefreshToken = generateRefreshToken();
-        } else {
-            newRefreshToken = refreshToken;
-        }
-
-        return generateAccessTokenByRefreshToken(userDetails);
-
     }
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
@@ -156,20 +168,24 @@ public class JwtTokenProvider {
     // 토큰 정보를 검증하는 메서드
     public String validateToken(String token) {
 
-        System.out.println("validateToken 실행: ");
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            System.out.println("validateToken true");
             return "true";
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            System.out.println("Invalid JWT Token");
             // log.info("Invalid JWT Token", e);//잘못된 토큰
             return "Invalid JWT Token";
         } catch (ExpiredJwtException e) {
+            System.out.println("Expired JWT Token");
             // log.info("Expired JWT Token", e);//만료된 토큰
             return "Expired JWT Token";
         } catch (UnsupportedJwtException e) {
+            System.out.println("Unsupported JWT Token");
             // log.info("Unsupported JWT Token", e);//지원하지 않는 토큰
             return "Unsupported JWT Token";
         } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty");
             // log.info("JWT claims string is empty.", e);//토큰이 비었음
             return "JWT claims string is empty";
         }
@@ -181,5 +197,23 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    //쿠키 생성 메소드
+    public void createCookie(HttpServletResponse response, String tokenName, String tokenValue) {
+        // 토큰 디코드
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenValue).getBody();
+        // 만료 시간 정보 얻기
+        long expirationTime = claims.getExpiration().getTime() / 1000; // 밀리초를 초로 변환
+
+        Cookie cookie;
+        cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, StandardCharsets.UTF_8));
+
+        // 쿠키 속성 설정
+        cookie.setHttpOnly(true);  //httponly 옵션 설정
+        cookie.setSecure(true); //https 옵션 설정
+        cookie.setPath("/"); // 모든 곳에서 쿠키열람이 가능하도록 설정
+        cookie.setMaxAge(Math.toIntExact(expirationTime)); //쿠키 만료시간 설정
+        response.addCookie(cookie);
     }
 }
