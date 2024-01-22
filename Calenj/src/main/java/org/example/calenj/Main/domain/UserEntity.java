@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder // 빌더
 @Getter
+@ToString
 public class UserEntity implements UserDetails {
 
     @Id //primary key
@@ -46,23 +47,6 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Group_UserEntity> memberships;
-    
-    @Override
-    public String toString() {
-        return "User{" +
-                "user_id=" + user_id +
-                ", account_id='" + accountid + '\'' +
-                ", user_password='" + user_password + '\'' +
-                ", user_join_date='" + user_join_date + '\'' +
-                ", user_email='" + user_email + '\'' +
-                ", user_phone='" + user_phone + '\'' +
-                ", user_roll='" + user_role + '\'' +
-                ", naver_login=" + naver_login +
-                ", kakao_login=" + kakao_login +
-                ", withdrawed=" + withdrawed +
-                '}';
-    }
-
     //--여기서부터 UserDetails 요소들 오버라이드
 
     /**

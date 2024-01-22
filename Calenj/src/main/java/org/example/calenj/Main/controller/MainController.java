@@ -1,6 +1,5 @@
 package org.example.calenj.Main.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.JWT.JwtToken;
@@ -40,22 +39,18 @@ public class MainController {
     }
 
     @PostMapping("/api/testlogin")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
-
         JwtToken jwtToken = mainService.login(userDTO.getAccountid(), userDTO.getUser_password());
 
-        Cookie cookie = mainService.createCookie("accessToken", jwtToken.getAccessToken());
-        Cookie cookie2 = mainService.createCookie("refreshToken", jwtToken.getRefreshToken());
-
-        // 응답 헤더에 쿠키 추가
-        response.addCookie(cookie);
-        response.addCookie(cookie2);
-
-        System.out.println("cookie : " + cookie);
-        System.out.println("cookie2 : " + cookie2);
-
+        System.out.println(jwtToken);
         return ResponseEntity.ok("Cookie Success");
+    }
+
+    @PostMapping("/api/logout")
+    public String logout(HttpServletResponse response) {
+        mainService.removeCookie(response);
+        return "logout";
     }
 
     @PostMapping("/api/testSuccess")
@@ -65,8 +60,10 @@ public class MainController {
     }
 
     @PostMapping("/api/postCookie")
-    public boolean postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = true) String Cookie) {
-        return Cookie != null;
+    public boolean postCookie(@RequestHeader(value = HttpHeaders.COOKIE, required = false) String cookieHeader) {
+        String cookieValue = mainService.extractTokenFromCookieHeader(cookieHeader, "accessToken");
+        System.out.println(cookieValue);
+        return cookieHeader != null;
     }
 
 }

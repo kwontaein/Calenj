@@ -1,13 +1,20 @@
 package org.example.calenj.Main.domain.Group;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity(name = "Group_Schedule")
 @Getter
 @DiscriminatorValue("Group_Schedule") // 서브 테이블을 판별하기 위한 값
-public class Group_ScheduleEntity extends Group_UserEntity {
+public class Group_ScheduleEntity {
+    @Id
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "group_id", referencedColumnName = "group_id"),
+            @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    })
+    
+    private Group_UserEntity groupUser;
 
     private String group_schedule_location;
     private String group_schedule_title;
