@@ -21,7 +21,6 @@ const SignUp = () => {
         accountid: '',
         user_password: '',
         user_email: '',
-        user_email: '',
         user_role: 'MANAGER',
         user_join_date: formattedDate,
     });
