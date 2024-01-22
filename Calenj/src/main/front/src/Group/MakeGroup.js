@@ -2,11 +2,8 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 function MakeGroup() {
-
-    /*const [data, setData] = useState({
-        accountid: 'UserI1',
-        user_password: 'UserP1',
-    });*/
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
     const [result, setResult] = useState('');
     const [data, setData] = useState({
@@ -18,15 +15,6 @@ function MakeGroup() {
             .then(response => setResult(response.data))
             .catch(error => console.log(error));
     };
-    /* useEffect(() => {
-         axios.post('/api/postCookie')
-             .then(response => {
-                 // 서버에서의 응답 처리
-                 console.log(response.data);
-             })
-             .catch(error => console.log(error));
-     }, [])*/
-
     return (
         <div>
             <div>

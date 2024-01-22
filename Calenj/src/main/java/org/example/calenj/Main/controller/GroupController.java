@@ -17,7 +17,7 @@ public class GroupController {
 
     @PostMapping("/api/makeGroup")
     public String makeGroup(@RequestBody GroupDTO groupDTO) {
-        String username = groupService.makeGroup(groupDTO.getGroup_title(), groupDTO.getGroup_created());
-        return username;
+        String a = groupService.makeGroup(groupDTO.getGroup_title(), groupDTO.getGroup_created());
+        return a;
     }
 }

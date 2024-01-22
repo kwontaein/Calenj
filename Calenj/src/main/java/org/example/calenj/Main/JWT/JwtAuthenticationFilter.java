@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
             // SecurityContext 에 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
             System.out.println("if문 실행 authentication : " + authentication);
