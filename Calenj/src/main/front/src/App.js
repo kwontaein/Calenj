@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React from 'react';
+import Home from './Home';
+import SignUp from './Auth/Sign_up';
+import Sign from './Auth/Sign';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import MakeGroup from "./Group/MakeGroup";
 
-function App() {
-   const [hello, setHello] = useState('')
-
-    useEffect(() => {
-        axios.get('/api/dbmsTest')
-        .then(response => setHello(response.data))
-        .catch(error => console.log(error))
-    }, []);
+export default function App() {
 
     return (
-        <div>
-            백엔드에서 가져온 데이터입니다 : {hello}
+        <div className="App">
+            <BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<Home/>}></Route>
+                    <Route path={"/SignUp"} element={<SignUp/>}></Route>
+                    <Route path={"/Sign"} element={<Sign/>}></Route>
+                    <Route path={"/Group/MakeGroup"} element={<MakeGroup/>}></Route>
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }
-
-export default App;
