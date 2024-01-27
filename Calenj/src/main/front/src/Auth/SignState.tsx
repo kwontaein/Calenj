@@ -30,7 +30,8 @@ import { useQuery , useMutation, useQueryClient} from '@tanstack/react-query';;
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다. 
     const checkCookie = async ():Promise<boolean>=>{
         const response = await axios.post('/api/postCookie');
-        console.log(`cookie정보 ${response.data}`);
+        console.log(response);
+        console.log(`cookie값 ${response.data}`);
         return response.data;
     } 
 
@@ -49,7 +50,7 @@ import { useQuery , useMutation, useQueryClient} from '@tanstack/react-query';;
 
     return (
         <div>
-            {logState.isLoading && '로딩중'}
+            {logState.isLoading && '데이터 로딩중'}
             {logState.data ===true ?
             <button onClick={()=>mutation.mutate()}>로그아웃</button>
             :<div>
