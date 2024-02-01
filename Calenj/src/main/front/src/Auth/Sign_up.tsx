@@ -3,7 +3,25 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
    
-const schema = yup.object().shape({
+
+type role = "MANAGER"|"ADMIN";
+
+interface UserData{
+    nick_name: string;
+    accountid: string;
+    user_password: string;
+    password_check:string;
+    user_email: string;
+    
+}
+//인터페이스 확장
+interface User extends UserData{
+    user_role?: role;
+    user_join_date?: string;
+}
+
+
+const schema: yup.ObjectSchema<UserData> = yup.object().shape({
     nick_name: yup.string()
       .min(2, "닉네임은 최소 2글자 이상입니다!")
       .max(10, "닉네임은 최대 10글자입니다!")
@@ -40,22 +58,7 @@ const schema = yup.object().shape({
 
 const SignUp :React.FC= () => {
 
-    type role = "MANAGER"|"ADMIN";
-
-    interface UserData{
-        nick_name: string;
-        accountid: string;
-        user_password: string;
-        password_check:string;
-        user_email: string;
-        
-    }
-    //인터페이스 확장
-    interface User extends UserData{
-        user_role?: role;
-        user_join_date?: string;
-    }
-
+   
     //regiset : 첫번재 매개변수 객체의 key값을 받음, 2번째 매개변수로는 객체에 대한 유효성 검증코드
     //watch : 옵저버 기능 ->  register 한 항목의 변경사항을 추적
     //handleSubmit : Submit 시 사용, 데이터 유효성 검사가능(2번째 매개변수에 함수등록)
