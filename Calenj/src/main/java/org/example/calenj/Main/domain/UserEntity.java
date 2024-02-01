@@ -20,13 +20,19 @@ import java.util.List;
 @ToString
 public class UserEntity implements UserDetails {
 
-    @Id //primary key
+    //primary key
+    @Id
+    //GeneratedValue 애노테이션을 활용해서 Auto Increment Key 방식의 PK 매핑 전략
+    //UUid를 사용하는 방식도 고려해봐야함
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private int user_id;
 
     @Column(name = "account_id")
     private String accountid;
+    
+    private String nickname;
+
     private String user_password;
 
     private String user_join_date;

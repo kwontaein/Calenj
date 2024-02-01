@@ -12,6 +12,7 @@ import org.example.calenj.Main.domain.UserEntity;
 @Data
 public class UserDTO {
     private String accountid;
+    private String nickname;
     private String user_password;
     private String user_email;
     private String user_phone;
@@ -21,6 +22,7 @@ public class UserDTO {
     public UserEntity toEntity() {
         return UserEntity.builder()
                 .accountid(accountid)
+                .nickname(nickname)
                 .user_password(user_password)
                 .user_email(user_email)
                 .user_phone(user_phone)
