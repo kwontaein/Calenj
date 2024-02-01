@@ -28,7 +28,7 @@ import axios,{AxiosResponse} from 'axios';
     };
 
 
-    // git 연동 테스트2
+    // git 연동 테스트
     return (
         <div>
             <div>id: <input onChange={(event)=>{SignHandeler("accountid",event.target.value)}}></input></div>
