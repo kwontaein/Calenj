@@ -46,12 +46,12 @@ import { useQuery , useMutation, useQueryClient} from '@tanstack/react-query';;
 
 
 
+    // useQuery를 사용하여 쿠키를 체크하기보단 setInterval을 사용하여 하는 것이 좋음
+    // useQuery는 실시간 데이터 갱신(위치, 그래프 등)에 더욱 적합하다함
 
-  
-
+      
     return (
         <div>
-            {logState.isLoading && '데이터 로딩중'}
             {logState.data ===  true ?
             <button onClick={()=>mutation.mutate()}>로그아웃</button>
             :<div>

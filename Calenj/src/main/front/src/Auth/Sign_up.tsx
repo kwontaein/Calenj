@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
@@ -26,14 +26,14 @@ const schema: yup.ObjectSchema<UserData> = yup.object().shape({
       .min(2, "닉네임은 최소 2글자 이상입니다!")
       .max(10, "닉네임은 최대 10글자입니다!")
       .matches(
-        /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/,
+        /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?\\d\s]*$/,
         "닉네임에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!")
       .required('닉네임을 입력해주세요'),
     // checkNickname: yup.boolean().required('중복체크해주세요'),
     accountid: yup.string()
       .min(3, '3자 이상 입력해주세요!')
       .matches(
-        /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/,
+        /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?\\d\s]*$/,
         "닉네임에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!")
       .required('아이디를 입력해주세요'),
       user_password: yup.string()
@@ -65,12 +65,12 @@ const SignUp :React.FC= () => {
     const {register, handleSubmit, formState:{errors}, reset}=useForm<UserData>({
         resolver : yupResolver(schema), //유효성 검사
         mode: 'onChange' //실시간 유효성 검사를 위한 설정
-        }); 
+        });
 
     
    
     
-    const MakeJoinDate=():string=>{
+    const makeJoinDate=():string=>{
       const today:Date = new Date();
        
       return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
@@ -78,23 +78,33 @@ const SignUp :React.FC= () => {
     }
 
 
- 
     
-   const onSubmitHandler : SubmitHandler<User> =(data)=>{
-    console.log(data);
-    
-    data.user_role = "MANAGER";
-    data.user_join_date = MakeJoinDate();
-
+   const onSubmitHandler : SubmitHandler<User> =async(data:User)=>{
+     data.user_role = "MANAGER";
+     data.user_join_date = makeJoinDate();
+     
+     try {
+      const result = await postSignup(data);
+      console.log('성공:', result);
+      document.location.replace('/sign')
+    } catch (error) {
+      console.error('실패:', error);
+    }
    }
 
+   const postSignup = (data: User): Promise<Object> => {
+    return axios.post('api/signup', data)
+      .then((response: AxiosResponse<Object>) => response.data)
+      .catch((error) => Promise.reject(error));
+  };
 
 
 
-    const onClickLogin = () => {
-        document.location.replace('/sign')
-        reset();
-      }
+
+    // const onClickLogin = () => {
+    //     document.location.replace('/sign')
+    //     reset();
+    //   }
  
     return (
         <div style={{marginLeft: "10vw", display:'flex', flexDirection:'column', width:"100px"} }>
