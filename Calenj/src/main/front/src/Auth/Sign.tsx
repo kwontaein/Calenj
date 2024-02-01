@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import axios,{AxiosResponse} from 'axios';
 
  const Sign : React.FC=()=>{
 
@@ -23,7 +23,7 @@ import axios from 'axios';
 
     const login = ():void => {
         axios.post('/api/testlogin', data)
-            .then(response => window.location.replace("/"))
+            .then((response:AxiosResponse<Object>) => window.location.replace("/"))
             .catch(error => console.log(error))
     };
 
