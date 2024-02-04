@@ -12,8 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByAccountid(String username);
 
-    Optional<UserEntity> findByRefreshToken(String refreshToken);
-
+    Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullpointerException 방지
 
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)

@@ -3,27 +3,36 @@ package org.example.calenj.Main.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calenj.Main.domain.Group.Group_UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "User")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder // 빌더
 @Getter
+@ToString
 public class UserEntity implements UserDetails {
 
-    @Id //primary key
+    //primary key
+    @Id
+    //GeneratedValue 애노테이션을 활용해서 Auto Increment Key 방식의 PK 매핑 전략
+    //UUid를 사용하는 방식도 고려해봐야함
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private int user_id;
 
     @Column(name = "account_id")
     private String accountid;
+    
+    private String nickname;
+
     private String user_password;
 
     private String user_join_date;
@@ -42,22 +51,8 @@ public class UserEntity implements UserDetails {
 
     private String refreshToken;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "user_id=" + user_id +
-                ", account_id='" + accountid + '\'' +
-                ", user_password='" + user_password + '\'' +
-                ", user_join_date='" + user_join_date + '\'' +
-                ", user_email='" + user_email + '\'' +
-                ", user_phone='" + user_phone + '\'' +
-                ", user_roll='" + user_role + '\'' +
-                ", naver_login=" + naver_login +
-                ", kakao_login=" + kakao_login +
-                ", withdrawed=" + withdrawed +
-                '}';
-    }
-
+    @OneToMany(mappedBy = "user")
+    private List<Group_UserEntity> memberships;
     //--여기서부터 UserDetails 요소들 오버라이드
 
     /**

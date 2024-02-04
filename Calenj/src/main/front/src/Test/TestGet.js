@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 function TestGet() {
-    const today = new Date();
-    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+
     const [data, setData] = useState({
         accountid: 'UserI1',
         user_password: 'UserP1',
@@ -19,7 +18,7 @@ function TestGet() {
     };
 
     const logout = () => {
-        axios.post('/api/logout', data)
+        axios.post('/api/logout')
             .then(response => setResult(response.data), setLogstate("logout"))
             .catch(error => console.log(error));
     };
