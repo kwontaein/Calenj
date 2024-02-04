@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import axios from 'axios';
 
-function MakeGroup() {
-    const today = new Date();
+const MakeGroup: React.FC =()=>{
+    const today : Date = new Date();
     const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
     const [result, setResult] = useState('');
