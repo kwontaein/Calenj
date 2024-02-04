@@ -56,8 +56,9 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public void sendEmail(@Param("email") String email) {
-        emailVerificationService.joinEmail(email);
+    public String sendEmail(@RequestBody String email) {
+        System.out.println(email);
+        return emailVerificationService.joinEmail(email);
     }
 
     @PostMapping("/api/usersave")
