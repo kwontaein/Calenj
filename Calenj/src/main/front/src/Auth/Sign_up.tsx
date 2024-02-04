@@ -14,7 +14,7 @@ interface UserData{
     user_password: string;
     password_check?:string;
     user_email: string;
-    email_certification?:string;
+    email_certification:string;
 
 
 }
@@ -28,7 +28,7 @@ interface User extends UserData{
 
 const SignUp :React.FC= () => {
 
-const [emailValidation,setEmailValidation] = useState<String>('');
+const [emailValidation,setEmailValidation] = useState<string>('');
 
 
 const schema: yup.ObjectSchema<UserData> = yup.object().shape({
@@ -63,10 +63,9 @@ const schema: yup.ObjectSchema<UserData> = yup.object().shape({
     .required('이메일을 입력하세요'),        
   email_certification: yup.string()
   .required('이메일을 인증하세요')
-  .test('match-email-validation', '이메일 인증번호가 일치하지 않습니다.', (value)=> {
-    const result = (value ==emailValidation && emailValidation != null);
+  .test('match-email-validation', '이메일 인증번호가 일치하지 않습니다.', (value:string)=> {
+    const result = (value ===emailValidation+"" && emailValidation != null);
     if(result) console.log("인증이 완료되었습니다.")
-
 
     return result;
   }),
