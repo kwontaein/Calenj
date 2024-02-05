@@ -3,6 +3,7 @@ package org.example.calenj.Main.model;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -26,6 +27,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ValidateDTO validateDTO;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -91,5 +94,15 @@ public class UserService {
             return null;
         }
 
+    }
+
+    public int CodeValidate(String code, int count) {
+        if (validateDTO.getCode().equals(code)) {
+            System.out.println("코드 일치");
+        } else {
+            System.out.println("코드 불일치. 횟수 차감");
+            count--;
+        }
+        return count;
     }
 }

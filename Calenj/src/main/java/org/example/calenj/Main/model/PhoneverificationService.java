@@ -1,8 +1,6 @@
 package org.example.calenj.Main.model;
 
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +11,7 @@ import java.util.Random;
 @Service
 public class PhoneverificationService { //전화번호 인증 서비스
 
-    final DefaultMessageService messageService;
+    //final DefaultMessageService messageService;
 
     @Value("${coolsms.apiKey}")
     String api_key;
@@ -24,7 +22,7 @@ public class PhoneverificationService { //전화번호 인증 서비스
     // 생성자에서 메시지 서비스 초기화
     public PhoneverificationService() {
         // 메시지 서비스를 초기화합니다.
-        this.messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret, "https://api.coolsms.co.kr");
+        // this.messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret, "https://api.coolsms.co.kr");
     }
 
     public Map<String, Object> sendMessage(String phone) {

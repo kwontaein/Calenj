@@ -2,6 +2,7 @@ package org.example.calenj.Main.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
@@ -10,12 +11,8 @@ import org.example.calenj.Main.model.MainService;
 import org.example.calenj.Main.model.PhoneverificationService;
 import org.example.calenj.Main.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -33,6 +30,9 @@ public class UserController {
     MainService mainService;
 
     @Autowired
+    ValidateDTO validateDTO;
+
+    @Autowired
     PhoneverificationService phoneverificationService;
 
     @Autowired
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/api/sendMessage")
-    public Map<String, Object> sendMessage(@Param("phone") String phone) {
+    public Map<String, Object> sendMessage(@RequestBody String phone) {
 
         Map<String, Object> responseMap = phoneverificationService.sendMessage(phone);
 
@@ -56,8 +56,13 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public void sendEmail(@Param("email") String email) {
-        emailVerificationService.joinEmail(email);
+    public String sendEmail(@RequestParam String email) {
+        return emailVerificationService.joinEmail(email);
+    }
+
+    @PostMapping("/api/codeValidation")
+    public int codeValidation(@RequestParam(value = "code") String code, @RequestParam(value = "count", required = false) int count) { //인증번호 비교
+        return userService.CodeValidate(code, count);
     }
 
     @PostMapping("/api/usersave")
@@ -76,7 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/api/IdDuplicated")
-    public boolean isIdDuplicated(@Param("userName") String userName) {
+    public boolean isIdDuplicated(@RequestBody String userName) {
         //아이디 중복여부에 따른 논리 값 반환
         UserEntity user = userRepository.findByAccountid(userName).orElse(null);
         if (user == null) {
