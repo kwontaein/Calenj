@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/api/codeValidation")
-    public boolean codeValidation(@RequestParam(value = "code") String code, @RequestParam(value = "count", required = false) int count) { //인증번호 비교
+    public boolean codeValidation(@RequestParam String code) { //인증번호 비교
         return userService.CodeValidate(code);
     }
 
