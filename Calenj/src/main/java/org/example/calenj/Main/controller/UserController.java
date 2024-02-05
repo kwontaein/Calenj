@@ -2,6 +2,7 @@ package org.example.calenj.Main.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
@@ -11,10 +12,7 @@ import org.example.calenj.Main.model.PhoneverificationService;
 import org.example.calenj.Main.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -30,6 +28,9 @@ public class UserController {
 
     @Autowired
     MainService mainService;
+
+    @Autowired
+    ValidateDTO validateDTO;
 
     @Autowired
     PhoneverificationService phoneverificationService;
@@ -55,13 +56,13 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestBody String email) {
+    public String sendEmail(@RequestParam String email) {
         return emailVerificationService.joinEmail(email);
     }
 
     @PostMapping("/api/codeValidation")
-    public void codeValidation(@RequestBody String code) { //인증번호 비교
-
+    public boolean codeValidation(@RequestParam(value = "code") String code, @RequestParam(value = "count", required = false) int count) { //인증번호 비교
+        return userService.CodeValidate(code);
     }
 
     @PostMapping("/api/usersave")
