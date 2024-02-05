@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/api/IdDuplicated")
-    public boolean isIdDuplicated(@RequestBody String userName) {
+    public boolean isIdDuplicated(@RequestParam String userName) {
         //아이디 중복여부에 따른 논리 값 반환
         UserEntity user = userRepository.findByAccountid(userName).orElse(null);
         if (user == null) {
