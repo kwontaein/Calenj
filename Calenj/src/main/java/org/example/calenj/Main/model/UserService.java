@@ -96,13 +96,13 @@ public class UserService {
 
     }
 
-    public int CodeValidate(String code, int count) {
+    public boolean CodeValidate(String code) {
         if (validateDTO.getCode().equals(code)) {
             System.out.println("코드 일치");
+            return true;
         } else {
             System.out.println("코드 불일치. 횟수 차감");
-            count--;
+            return false;
         }
-        return count;
     }
 }

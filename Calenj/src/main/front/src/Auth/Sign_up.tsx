@@ -102,6 +102,8 @@ const SignUp: React.FC = () => {
         }
     }
 
+    //이메일 인증요청
+
 
     const makeJoinDate = (): string => {
         const today: Date = new Date();
