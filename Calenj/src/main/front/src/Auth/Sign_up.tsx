@@ -1,34 +1,33 @@
 import axios, {Axios, AxiosResponse} from 'axios';
-import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
-import {yupResolver} from "@hookform/resolvers/yup";
+import { useForm, SubmitHandler, SubmitErrorHandler, FieldErrors } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 
-type role = "MANAGER" | "ADMIN";
 
-interface UserData {
+type role = "MANAGER"|"ADMIN";
+
+interface UserData{
     nick_name: string;
     accountid: string;
     user_password: string;
-    password_check?: string;
+    password_check?:string;
     user_email: string;
-    email_certification: string;
 
 
 }
-
 //인터페이스 확장
-interface User extends UserData {
+interface User extends UserData{
     user_role?: role;
     user_join_date?: string;
-
+    email_certification?:string;
 }
 
 
-const SignUp: React.FC = () => {
+const SignUp :React.FC= () => {
 
-    const [emailValidation, setEmailValidation] = useState<string>('');
+    const [emailValidation,setEmailValidation] = useState<string>();
 
 
     const schema: yup.ObjectSchema<UserData> = yup.object().shape({
@@ -61,38 +60,44 @@ const SignUp: React.FC = () => {
         user_email: yup.string()
             .email('이메일형식이 적합하지 않습니다.')
             .required('이메일을 입력하세요'),
-        email_certification: yup.string()
-            .required('이메일을 인증하세요')
-            .test('match-email-validation', '이메일 인증번호가 일치하지 않습니다.', (value: string) => {
-                const result = (value === emailValidation + "" && emailValidation != null);
-                if (result) console.log("인증이 완료되었습니다.")
+        // email_certification: yup.string()
+        // .required('이메일을 인증하세요')
+        // .test('match-email-validation', '이메일 인증번호가 일치하지 않습니다.', (value:string)=> {
+        //   const result = (value ===emailValidation+"" && emailValidation != null);
+        //   if(result) console.log("인증이 완료되었습니다.")
 
-                return result;
-            }),
+        //   return result;
+        // }),
     })
+
+
 
 
     //regiset : 첫번재 매개변수 객체의 key값을 받음, 2번째 매개변수로는 객체에 대한 유효성 검증코드
     //watch : 옵저버 기능 ->  register 한 항목의 변경사항을 추적
     //handleSubmit : Submit 시 사용, 데이터 유효성 검사가능(2번째 매개변수에 함수등록)
-    const {register, handleSubmit, formState: {errors}, reset, watch} = useForm<User>({
-        resolver: yupResolver(schema), //유효성 검사
+    const {register, handleSubmit, formState:{errors}, reset,watch}=useForm<User>({
+        resolver : yupResolver(schema), //유효성 검사
         mode: 'onChange' //실시간 유효성 검사를 위한 설정
     });
 
 
+
+
     //이메일 인증요청
-    const EmailRequest = async (): Promise<void> => {
+    const emailRequest = async(): Promise<void> => {
         console.log(`${watch("user_email")}로 인증요청`);
-        const account_email = watch("user_email");
+        const accountEmail = watch("user_email");
 
 
         try {
-            const response = await axios.post('api/sendEmail', account_email, {
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            });
+            const response = await axios.post('api/sendEmail',
+                {params:{
+                        email : accountEmail},
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }}
+            );
 
             setEmailValidation(response.data);
             console.log(response.data); // 업데이트된 값을 출력
@@ -101,17 +106,60 @@ const SignUp: React.FC = () => {
         }
     }
 
-  
-    const makeJoinDate = (): string => {
-        const today: Date = new Date();
+
+
+    const codeRequest = async(): Promise<void> => {
+        console.log(`${watch("email_certification")}로 코드전송`);
+        const codeCertification = watch("email_certification");
+
+
+        try {
+            const response = await axios.post('api/codeValidation' ,{
+                params:{
+                    code: codeCertification
+                },
+            });
+            setEmailValidation(response.data);
+
+            if(response.data){
+                alert("이메일 인증이 완료되었습니다.")
+            }else{//결과가 false일 시 횟수차감
+                console.log(codeCount());
+            }
+
+            console.log(response.data); // 업데이트된 값을 출력
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    //클로저로 접근하여 count를 깎는 함수
+    const codeCount = function(){
+
+        let count:number = 5;
+
+        return function(){
+            return count--;
+        }
+    }
+
+
+
+
+
+
+    const makeJoinDate=():string=>{
+        const today:Date = new Date();
 
         return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
         // 원하는 형식으로 날짜를 설정합니다.
     }
 
 
+
     //성공 시
-    const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
+    const onValid:SubmitHandler<User> = (data: User): Promise<Object> => {
         data.user_role = "MANAGER";
         data.user_join_date = makeJoinDate();
         console.log("성공");
@@ -121,9 +169,14 @@ const SignUp: React.FC = () => {
     };
 
     //실패 시
-    const onInvalid: SubmitErrorHandler<User> = (errors: FieldErrors): void => {
+    const onInvalid:SubmitErrorHandler<User> =(errors:FieldErrors):void=>{
         console.log(errors)
     }
+
+
+
+
+
 
 
     // const onClickLogin = () => {
@@ -132,29 +185,27 @@ const SignUp: React.FC = () => {
     //   }
 
     return (
-        <div style={{marginLeft: "10vw", display: 'flex', flexDirection: 'column', width: "170px"}}>
+        <div style={{marginLeft: "10vw", display:'flex', flexDirection:'column', width:"170px"} }>
 
             <h2>회원가입</h2>
 
-            <form onSubmit={handleSubmit(onValid, onInvalid)}>
+            <form onSubmit={handleSubmit(onValid,onInvalid)}>
 
-                닉네임: <input {...register("nick_name", {required: true})} placeholder="닉네임"></input>
-                아이디: <input {...register("accountid", {required: true})} placeholder="아이디"></input>
-                이메일: <input type="email" {...register("user_email", {required: true})} placeholder="이메일"></input>
-                <div onClick={EmailRequest}>인증번호 보내기</div>
+                닉네임: <input {...register("nick_name",{required: true})} placeholder="닉네임"></input>
+                아이디: <input {...register("accountid",{required: true})} placeholder="아이디"></input>
+                이메일: <input type="email" {...register("user_email",{required: true})} placeholder="이메일"></input>
+                <div onClick={emailRequest}>{emailValidation ===null ?"인증번호 보내기" : "인증번호 재발급"}</div>
                 <br></br>
                 이메일 인증번호 입력<input {...register("email_certification")}></input>
                 {/* <p>{errors.email_certification?.message}</p> */}
                 인증번호 : {emailValidation}
+                <div onClick={codeRequest}>인증번호 확인</div>
                 <br></br>
                 <br></br>
-                패스워드: <input type="password" {...register("user_password", {required: true})}
-                             placeholder="비밀번호"></input>
-                패스워드 확인: <input type="password" {...register("password_check", {required: true})}
-                                placeholder="비밀번호 확인"></input>
+                패스워드: <input type="password" {...register("user_password",{required: true})} placeholder="비밀번호"></input>
+                패스워드 확인: <input type="password" {...register("password_check",{required: true})} placeholder="비밀번호 확인"></input>
 
-                <button type="submit" style={{marginTop: '2vw'}}>Submit</button>
-                <br></br>
+                <button type="submit" style={{marginTop:'2vw'}}>Submit</button><br></br>
 
             </form>
 
