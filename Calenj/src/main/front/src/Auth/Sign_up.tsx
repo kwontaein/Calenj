@@ -112,7 +112,7 @@ const SignUp: React.FC = () => {
         let count: number = 5;
 
         return function () {
-            return count -= 1;
+            return count--;
         }
     }
 
@@ -136,7 +136,8 @@ const SignUp: React.FC = () => {
                 alert("이메일 인증이 완료되었습니다.")
             } else {//결과가 false일 시 횟수차감
                 const countResult = count();
-                if (!countResult) {
+                console.log(countResult);
+                if (countResult) {
                     alert("ㅅㅂ 그만해");
                 }
             }
