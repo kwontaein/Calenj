@@ -27,7 +27,7 @@ interface User extends UserData{
 
 const SignUp :React.FC= () => {
 
-    const [emailValidation,setEmailValidation] = useState<string>();
+    const [emailValidation,setEmailValidation] = useState<string>('');
 
 
     const schema: yup.ObjectSchema<UserData> = yup.object().shape({
@@ -91,7 +91,7 @@ const SignUp :React.FC= () => {
 
 
         try {
-            const response = await axios.post('api/sendEmail',
+            const response = await axios.post('api/sendEmail',null,
                 {params:{
                         email : accountEmail},
                     headers: {
@@ -108,13 +108,26 @@ const SignUp :React.FC= () => {
 
 
 
+    //클로저로 접근하여 count를 깎는 함수
+    function codeCount(){
+
+        let count:number = 5;
+
+        return function(){
+            return count--;
+        }
+    }
+
+    const count = codeCount();
+    
+
     const codeRequest = async(): Promise<void> => {
         console.log(`${watch("email_certification")}로 코드전송`);
         const codeCertification = watch("email_certification");
 
 
         try {
-            const response = await axios.post('api/codeValidation' ,{
+            const response = await axios.post('api/codeValidation',null ,{
                 params:{
                     code: codeCertification
                 },
@@ -124,7 +137,11 @@ const SignUp :React.FC= () => {
             if(response.data){
                 alert("이메일 인증이 완료되었습니다.")
             }else{//결과가 false일 시 횟수차감
-                console.log(codeCount());
+                const countResult = count();
+                console.log(countResult);
+                if(!countResult){
+                    alert("ㅅㅂ 그만해");
+                }
             }
 
             console.log(response.data); // 업데이트된 값을 출력
@@ -134,16 +151,11 @@ const SignUp :React.FC= () => {
     }
 
 
-    //클로저로 접근하여 count를 깎는 함수
-    const codeCount = function(){
+    
 
-        let count:number = 5;
+   
 
-        return function(){
-            return count--;
-        }
-    }
-
+    
 
 
 
@@ -194,7 +206,7 @@ const SignUp :React.FC= () => {
                 닉네임: <input {...register("nick_name",{required: true})} placeholder="닉네임"></input>
                 아이디: <input {...register("accountid",{required: true})} placeholder="아이디"></input>
                 이메일: <input type="email" {...register("user_email",{required: true})} placeholder="이메일"></input>
-                <div onClick={emailRequest}>{emailValidation ===null ?"인증번호 보내기" : "인증번호 재발급"}</div>
+                <div onClick={emailRequest}>{emailValidation ==='' ?"인증번호 보내기" : "인증번호 재발급"}</div>
                 <br></br>
                 이메일 인증번호 입력<input {...register("email_certification")}></input>
                 {/* <p>{errors.email_certification?.message}</p> */}
