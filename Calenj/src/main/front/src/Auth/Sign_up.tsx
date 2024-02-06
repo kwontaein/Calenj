@@ -114,11 +114,13 @@ const SignUp :React.FC= () => {
         let count:number = 5;
 
         return function(){
-            return count--;
+            
+            return --count;
         }
     }
 
-    const count = codeCount();
+    const countFn = codeCount();
+    
     
 
     const codeRequest = async(): Promise<void> => {
@@ -132,12 +134,11 @@ const SignUp :React.FC= () => {
                     code: codeCertification
                 },
             });
-            setEmailValidation(response.data);
 
             if(response.data){
                 alert("이메일 인증이 완료되었습니다.")
             }else{//결과가 false일 시 횟수차감
-                const countResult = count();
+                const countResult = countFn();
                 console.log(countResult);
                 if(!countResult){
                     alert("ㅅㅂ 그만해");
