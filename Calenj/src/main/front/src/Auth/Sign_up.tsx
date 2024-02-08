@@ -3,6 +3,8 @@ import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hoo
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from 'yup';
 import {useEffect, useState} from 'react';
+import {SignUpFormContainer,Input, Button, ErrorMessage,FormLable} from '../Style/FormStyle';
+
 
 
 type role = "MANAGER" | "ADMIN";
@@ -178,33 +180,69 @@ const SignUp: React.FC = () => {
     //   }
 
     return (
-        <div style={{marginLeft: "10vw", display: 'flex', flexDirection: 'column', width: "170px"}}>
+        <div>
 
+            
+            <SignUpFormContainer>
             <h2>회원가입</h2>
-
             <form onSubmit={handleSubmit(onValid, onInvalid)}>
+                <div>
+                    <FormLable>닉네임</FormLable>
+                </div>
+                <div>
+                    <Input {...register("nick_name", {required: true})} placeholder="닉네임"/>
+                    <ErrorMessage>{errors.nick_name?.message}</ErrorMessage>
+                </div>
+                <div>
+                    <FormLable>아이디</FormLable>
+                </div>
+                <div>
+                    <Input {...register("accountid", {required: true})} placeholder="아이디"></Input>
+                    <ErrorMessage>{errors.accountid?.message}</ErrorMessage>
+                </div>
+                <div>
+                    <FormLable>이메일</FormLable>
+                </div>
+                <div>    
+                    <Input type="email" {...register("user_email", {required: true})} placeholder="이메일"></Input>
+                    <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
+                <div>
 
-                닉네임: <input {...register("nick_name", {required: true})} placeholder="닉네임"></input>
-                아이디: <input {...register("accountid", {required: true})} placeholder="아이디"></input>
-                이메일: <input type="email" {...register("user_email", {required: true})} placeholder="이메일"></input>
-                <div onClick={emailRequest}>{emailValidation === '' ? "인증번호 보내기" : "인증번호 재발급"}</div>
+                <div id='ValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}onClick={emailRequest}>{emailValidation === '' ? "인증번호 보내기" : "인증번호 재발급"}</div>
                 <br></br>
-                이메일 인증번호 입력<input {...register("email_certification")}></input>
-                {/* <p>{errors.email_certification?.message}</p> */}
-                인증번호 : {emailValidation}
-                <div onClick={codeRequest}>인증번호 확인</div>
+                </div>
+                <FormLable>이메일 인증번호 입력</FormLable>
+                </div>
+                <Input {...register("email_certification")}></Input>
+                <ErrorMessage>{errors.email_certification?.message}</ErrorMessage>
+               
+                 
+                <div onClick={codeRequest} style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}>인증번호 확인</div>
+                <div>
+                    {emailValidation &&<FormLable>인증번호 {emailValidation}</FormLable>}
+                    
+                </div>
                 <br></br>
                 <br></br>
-                패스워드: <input type="password" {...register("user_password", {required: true})}
-                             placeholder="비밀번호"></input>
-                패스워드 확인: <input type="password" {...register("password_check", {required: true})}
-                                placeholder="비밀번호 확인"></input>
-
-                <button type="submit" style={{marginTop: '2vw'}}>Submit</button>
+                <div>
+                    <FormLable>패스워드</FormLable> 
+                </div>
+                <div>
+                    <Input type="password" {...register("user_password", {required: true})} placeholder="비밀번호"></Input>
+                    <ErrorMessage>{errors.user_password?.message}</ErrorMessage>
+                </div>             
+                <div>
+                    <FormLable>패스워드 확인</FormLable>
+                </div>
+                    <Input type="password" {...register("password_check", {required: true})} placeholder="비밀번호 확인"></Input>
+                    <ErrorMessage>{errors.password_check?.message}</ErrorMessage>
+                <div>
+                <Button type="submit" style={{marginTop: '2vw'}}>회원가입</Button>
+                </div>
                 <br></br>
 
             </form>
-
+            </SignUpFormContainer>
 
         </div>
     );
