@@ -60,7 +60,7 @@ public class UserController {
         return emailVerificationService.joinEmail(email);
     }
 
-    @PostMapping("/api/codeValidation")
+    @PostMapping("/api/codeValidation") //이메일 인증코드 확인
     public boolean codeValidation(@RequestParam String code) { //인증번호 비교
         return userService.CodeValidate(code);
     }
