@@ -64,7 +64,7 @@ public class UserEntity implements UserDetails {
 
     @Getter
     @RequiredArgsConstructor
-    public enum RoleType{ //enum을 활용한 도메인설정
+    public enum RoleType{ //enum을 활용한 권한종류 설정
         USER("사용자"),
         ADMIN("관리자"),
         MANAGER("매니저");
@@ -74,10 +74,7 @@ public class UserEntity implements UserDetails {
         //user_role 유효성 검사
         @JsonCreator
         public static RoleType userRoleParsing(String inputValue){
-//            for(RoleType roleType : RoleType.values()){
-//                if(roleType.getRole().equals(inputValue)){
-//                    return roleType;
-//                }
+
                return Stream.of(RoleType.values())
                         .filter(roleType -> roleType.toString().equals(inputValue))
                         .findFirst()
