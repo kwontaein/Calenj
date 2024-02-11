@@ -8,4 +8,5 @@ import org.springframework.stereotype.Component;
 public class ValidateDTO {
     private String email;
     private String code;
+    private String emailToken;
 }

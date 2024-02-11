@@ -1,6 +1,7 @@
 package org.example.calenj.Main.DTO;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.domain.UserEntity;
 
 //DTO를 Entity와 별개로 따로 생성하는 이유
@@ -10,7 +11,9 @@ import org.example.calenj.Main.domain.UserEntity;
 //4 Entity 클래스는 애플리케이션 내에서 중요한 정보를 담고 있을 수 있다
 //5 Entity 클래스와 DTO 클래스를 분리하면 각각의 클래스가 자신의 책임을 가지게 되어 코드의 의도를 명확하게 유지 가능
 @Data
+@RequiredArgsConstructor
 public class UserDTO {
+
     private String accountid;
     private String nickname;
     private String user_password;
@@ -20,6 +23,8 @@ public class UserDTO {
     private String user_role;
 
     public UserEntity toEntity() {
+
+
         return UserEntity.builder()
                 .accountid(accountid)
                 .nickname(nickname)
@@ -27,7 +32,7 @@ public class UserDTO {
                 .user_email(user_email)
                 .user_phone(user_phone)
                 .user_join_date(user_join_date)
-                .user_role(user_role)
+                .user_role(UserEntity.RoleType.userRoleParsing(user_role))
                 .build();
     }
 }
