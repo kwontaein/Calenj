@@ -32,7 +32,7 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "account_id")
     private String accountid;
-
+    
     private String nickname;
 
     private String user_password;
@@ -64,25 +64,24 @@ public class UserEntity implements UserDetails {
 
     @Getter
     @RequiredArgsConstructor
-    public enum RoleType { //enum을 활용한 권한종류 설정
+    public enum RoleType{ //enum을 활용한 권한종류 설정
         USER("사용자"),
         ADMIN("관리자"),
         MANAGER("매니저");
 
         private final String role;
-
+    
         //user_role 유효성 검사
         @JsonCreator
-        public static RoleType userRoleParsing(String inputValue) {
+        public static RoleType userRoleParsing(String inputValue){
 
-            return Stream.of(RoleType.values())
-                    .filter(roleType -> roleType.toString().equals(inputValue))
-                    .findFirst()
-                    .orElse(USER);
+               return Stream.of(RoleType.values())
+                        .filter(roleType -> roleType.toString().equals(inputValue))
+                        .findFirst()
+                        .orElse(null);
         }
 
     }
-
     /**
      * 해당 유저의 권한 목록
      */

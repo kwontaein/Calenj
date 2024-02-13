@@ -61,14 +61,14 @@ public class UserController {
     }
 
     @PostMapping("/api/codeValidation")
-    public boolean codeValidation(@RequestParam(value = "code") String code, @RequestParam(value = "count", required = false) int count) { //인증번호 비교
+    public boolean codeValidation(@RequestParam String code) { //인증번호 비교
         return userService.CodeValidate(code);
     }
 
     @PostMapping("/api/usersave")
     public int saveUser(@RequestBody UserDTO userDTO) {
         System.out.println(userDTO);
-        return userService.saveUser2(userDTO);
+        return userService.saveUser(userDTO);
     }
 
     @PostMapping("/api/testlogin")
@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/api/IdDuplicated")
-    public boolean isIdDuplicated(@RequestBody String userName) {
+    public boolean isIdDuplicated(@RequestParam String userName) {
         //아이디 중복여부에 따른 논리 값 반환
         UserEntity user = userRepository.findByAccountid(userName).orElse(null);
         if (user == null) {
