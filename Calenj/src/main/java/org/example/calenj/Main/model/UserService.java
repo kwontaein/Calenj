@@ -36,7 +36,8 @@ public class UserService {
     public int saveUser(UserDTO userDTO) {
         //패스워드 암호화
         userDTO.setUser_password(passwordEncoder.encode(userDTO.getUser_password()));
-        System.out.println("UserRole 출력 : "+ userDTO.getUser_role());
+        System.out.println("UserRole 출력 : " + userDTO.getUser_role());
+        userRepository.save(userDTO.toEntity());
         return userDTO.toEntity().getUser_id();
     }
 
@@ -59,8 +60,8 @@ public class UserService {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
-
         System.out.println("UsernamePasswordAuthenticationToken 실행 ");
+
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -73,7 +74,7 @@ public class UserService {
         UserEntity userEntity = userRepository.findByAccountid(accountid)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         String refreshToken = userEntity.getRefreshToken();
-
+        
         if (refreshToken == null) { // DB에 저장된 값이 없는 경우
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             JwtToken tokenInfo = jwtTokenProvider.generateToken(authentication);
