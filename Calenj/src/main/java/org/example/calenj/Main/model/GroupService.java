@@ -43,10 +43,11 @@ public class GroupService {
 
         // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
         Group_UserEntity groupUserEntity = Group_UserEntity.builder()
-                .role("Group_Amdin")
+                .role(Group_UserEntity.GroupRoleType.Host)
                 .group(groupEntity)
                 .user(userEntity)
                 .build();
+        
         group_userRepository.save(groupUserEntity);
         System.out.println("유저 생성");
         return groupEntity.toString();
