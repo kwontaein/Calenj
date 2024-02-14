@@ -1,5 +1,6 @@
 package org.example.calenj.Main.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -38,6 +39,7 @@ public class UserController {
     @Autowired
     EmailVerificationService emailVerificationService;
 
+
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
@@ -56,19 +58,20 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email) {
-        return emailVerificationService.joinEmail(email);
-    }
+    public String sendEmail(@RequestParam String email, HttpServletResponse response) {
+        //토큰 발급
+        String emailToken = emailVerificationService.generateEmailValidateToken();
+        //쿠키 저장 및 프론트 전달 <- 근데 이거 프론트에서 쿠키값 유효시간 측정해야 할거같은데 일단 보류
+        Cookie cookie = new Cookie("enableSendEmail", emailToken);
+        response.addCookie(cookie);
 
-    @PostMapping("/api/codeValidation")
-    public boolean codeValidation(@RequestParam String code) { //인증번호 비교
-        return userService.CodeValidate(code);
+        return emailVerificationService.joinEmail(email);
     }
 
     @PostMapping("/api/usersave")
     public int saveUser(@RequestBody UserDTO userDTO) {
         System.out.println(userDTO);
-        
+
         return userService.saveUser(userDTO);
     }
 
@@ -80,6 +83,7 @@ public class UserController {
         System.out.println(jwtToken);
         return ResponseEntity.ok("Cookie Success");
     }
+
 
     @PostMapping("/api/IdDuplicated")
     public boolean isIdDuplicated(@RequestParam String userName) {

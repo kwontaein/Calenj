@@ -74,7 +74,7 @@ public class UserService {
         UserEntity userEntity = userRepository.findByAccountid(accountid)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         String refreshToken = userEntity.getRefreshToken();
-        
+
         if (refreshToken == null) { // DB에 저장된 값이 없는 경우
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             JwtToken tokenInfo = jwtTokenProvider.generateToken(authentication);
@@ -95,15 +95,5 @@ public class UserService {
             return null;
         }
 
-    }
-
-    public boolean CodeValidate(String code) {
-        if (validateDTO.getCode().equals(code)) {
-            System.out.println("코드 일치");
-            return true;
-        } else {
-            System.out.println("코드 불일치. 횟수 차감");
-            return false;
-        }
     }
 }
