@@ -17,12 +17,15 @@ public class GroupEntity {
     //a
     @Id //primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
-    private int group_id;
+    @Column(nullable = false, unique = true, name = "group_id")
+    private int groupid;
 
-    private String group_created;
-    private String group_title;
-    private String group_creater; //SecurityContext 에서 값 빼오기
+    @Column(name = "group_created")
+    private String groupcreated;
+    @Column(name = "group_title")
+    private String grouptitle;
+    @Column(name = "group_creater")
+    private String groupcreater; //SecurityContext 에서 값 빼오기
 
 
     @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many

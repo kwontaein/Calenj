@@ -12,6 +12,7 @@ import org.example.calenj.Main.model.MainService;
 import org.example.calenj.Main.model.PhoneverificationService;
 import org.example.calenj.Main.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,5 +97,13 @@ public class UserController {
             System.out.println(user);
             return true;
         }
+    }
+
+    @PostMapping("/api/updateUser")
+    public String updateUser(@Param("inviteCode") int inviteCode) { //유저 업데이트
+        //유저 정보 불러와서 보여주고
+        //정보를 바꾸려면 비밀번호 검증 후
+        //프론트에서 바뀐 값 전달하기
+        return "";
     }
 }

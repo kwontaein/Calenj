@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 
 public class GroupService {
@@ -31,9 +34,9 @@ public class GroupService {
 
         // 유저 이름으로 그룹 생성
         GroupEntity groupEntity = GroupEntity.builder()
-                .group_title(groupTitle)
-                .group_created(groupCreated)
-                .group_creater(userDetails.getUsername())
+                .grouptitle(groupTitle)
+                .groupcreated(groupCreated)
+                .groupcreater(userDetails.getUsername())
                 .build();
         groupRepository.save(groupEntity);
         System.out.println("그룹 생성");
@@ -47,7 +50,7 @@ public class GroupService {
                 .group(groupEntity)
                 .user(userEntity)
                 .build();
-        
+
         group_userRepository.save(groupUserEntity);
         System.out.println("유저 생성");
         return groupEntity.toString();
@@ -61,5 +64,13 @@ public class GroupService {
         // Authentication 객체에서 유저 정보 추출
         return (UserDetails) authentication.getPrincipal(); //->principal ->id , password , 권한
         // 유저 정보 사용
+    }
+
+    public Optional<List<GroupEntity>> groupList() {
+        UserDetails userDetails = extractFromSecurityContext();
+        String Username = userDetails.getUsername();
+        System.out.println("그룹 목록 불러오기");
+        System.out.println(groupRepository.findAllByGroupcreater(Username));
+        return groupRepository.findAllByGroupcreater(Username);
     }
 }
