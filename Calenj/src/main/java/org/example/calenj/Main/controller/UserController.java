@@ -63,6 +63,7 @@ public class UserController {
         //토큰 발급
         String emailToken = emailVerificationService.generateEmailValidateToken();
         //쿠키 저장 및 프론트 전달 <- 근데 이거 프론트에서 쿠키값 유효시간 측정해야 할거같은데 일단 보류
+        //아니면 인증번호 재전송 메소드를 하나 더 만들고, 프론트에서 첫 전송 이후에 토큰 값이 있다면 -> 재전송 메소드로 보내게끔 수정해야함
         Cookie cookie = new Cookie("enableSendEmail", emailToken);
         response.addCookie(cookie);
 
