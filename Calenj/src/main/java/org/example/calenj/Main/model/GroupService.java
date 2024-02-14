@@ -7,9 +7,6 @@ import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.Group_UserEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -27,10 +24,12 @@ public class GroupService {
     UserRepository userRepository;
     @Autowired
     Group_UserRepository group_userRepository;
+    @Autowired
+    GrobalService grobalService;
 
     public String makeGroup(String groupTitle, String groupCreated) {
 
-        UserDetails userDetails = extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        UserDetails userDetails = grobalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         // 유저 이름으로 그룹 생성
         GroupEntity groupEntity = GroupEntity.builder()
@@ -56,18 +55,9 @@ public class GroupService {
         return groupEntity.toString();
     }
 
-    //SecurityContext에서 유저 정보 추출하는 메소드
-    public UserDetails extractFromSecurityContext() { //id , password , 권한
-        // SecurityContext에서 Authentication 객체 추출
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        // Authentication 객체에서 유저 정보 추출
-        return (UserDetails) authentication.getPrincipal(); //->principal ->id , password , 권한
-        // 유저 정보 사용
-    }
 
     public Optional<List<GroupEntity>> groupList() {
-        UserDetails userDetails = extractFromSecurityContext();
+        UserDetails userDetails = grobalService.extractFromSecurityContext();
         String Username = userDetails.getUsername();
         System.out.println("그룹 목록 불러오기");
         System.out.println(groupRepository.findAllByGroupcreater(Username));

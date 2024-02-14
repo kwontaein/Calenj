@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     @Autowired
     ValidateDTO validateDTO;
+    @Autowired
+    GrobalService grobalService;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -41,9 +44,11 @@ public class UserService {
         return userDTO.toEntity().getUser_id();
     }
 
-    public void selectUser(UserEntity userInfo) {
+    public void selectUserInfo() {
+        UserDetails userDetails = grobalService.extractFromSecurityContext();
+
         //select 테스트
-        Optional<UserEntity> user = userRepository.findById(userInfo.getUser_id());
+        Optional<UserEntity> user = userRepository.findByAccountid(userDetails.getUsername());
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
 
         System.out.println(userResult);
