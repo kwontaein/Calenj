@@ -77,6 +77,12 @@ public class UserController {
         return userService.saveUser(userDTO);
     }
 
+    @PostMapping("/api/postCookie")
+    public boolean checkCookie(HttpServletRequest request){
+        Cookie[] cookie = request.getCookies();
+        return cookie !=null;
+    }
+
     @PostMapping("/api/testlogin")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");

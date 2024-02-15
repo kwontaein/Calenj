@@ -1,11 +1,13 @@
 package org.example.calenj.Main.model;
 
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.Repository.GroupRepository;
 import org.example.calenj.Main.Repository.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.Group_UserEntity;
 import org.example.calenj.Main.domain.UserEntity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,17 +17,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-
+@RequiredArgsConstructor
 public class GroupService {
 
-    @Autowired
-    GroupRepository groupRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    Group_UserRepository group_userRepository;
+
     @Autowired
     GrobalService grobalService;
+
+
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
+    private final Group_UserRepository group_userRepository;
+
 
     public String makeGroup(String groupTitle, String groupCreated) {
 

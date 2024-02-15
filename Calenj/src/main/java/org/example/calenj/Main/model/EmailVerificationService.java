@@ -14,22 +14,25 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+
 public class EmailVerificationService {
 
     private final JavaMailSender mailSender;
     private final String setFrom;
+
 
     private final Map<String, Long> tokenExpirationMap = new ConcurrentHashMap<>();
 
     @Autowired
     ValidateDTO validateDTO;
 
-    @Autowired
-    public EmailVerificationService(JavaMailSender mailSender,
-                                    @Value("${spring.mail.username}") String setFrom) {
+
+
+    private EmailVerificationService(JavaMailSender mailSender, @Value("${spring.mail.username}") String setFrom) {
         this.mailSender = mailSender;
         this.setFrom = setFrom;
     }
+
 
     public String joinEmail(String email) {
         String authNumber = makeRandomNumber();

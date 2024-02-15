@@ -8,7 +8,6 @@ import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,22 +23,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    ValidateDTO validateDTO;
-    @Autowired
+
     GrobalService grobalService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ValidateDTO validateDTO;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
+
+
     public int saveUser(UserDTO userDTO) {
         //패스워드 암호화
         userDTO.setUser_password(passwordEncoder.encode(userDTO.getUser_password()));
-        System.out.println("UserRole 출력 : " + userDTO.getUser_role());
+        System.out.println("UserRole 출력 : "+ userDTO.getUser_role());
         userRepository.save(userDTO.toEntity());
         return userDTO.toEntity().getUser_id();
     }
