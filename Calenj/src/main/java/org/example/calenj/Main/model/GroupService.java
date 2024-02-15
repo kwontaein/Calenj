@@ -1,5 +1,6 @@
 package org.example.calenj.Main.model;
 
+import org.example.calenj.Main.DTO.GroupDTO;
 import org.example.calenj.Main.Repository.GroupRepository;
 import org.example.calenj.Main.Repository.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -11,8 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
 
 @Service
 
@@ -56,11 +56,12 @@ public class GroupService {
     }
 
 
-    public Optional<List<GroupEntity>> groupList() {
+    public Collection<GroupDTO> groupList() {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
-        String Username = userDetails.getUsername();
-        System.out.println("그룹 목록 불러오기");
-        System.out.println(groupRepository.findAllByGroupcreater(Username));
-        return groupRepository.findAllByGroupcreater(Username);
+        String groupcreater = userDetails.getUsername();
+        System.out.println("Username : " + groupcreater);
+        Collection<GroupDTO> groupEntities = groupRepository.findbyGroupcreater("a").orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
+        System.out.println("그룹 목록 불러오기 Service");
+        return groupEntities;
     }
 }

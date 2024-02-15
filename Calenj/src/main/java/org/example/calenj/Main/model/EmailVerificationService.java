@@ -79,7 +79,7 @@ public class EmailVerificationService {
             System.out.println("5분간 재전송 불가능");
             return true;
         } else {
-            System.out.println("토큰 시간 지남");
+            System.out.println("재전송");
             tokenExpirationMap.remove(token);
             return false;
         }

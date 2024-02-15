@@ -69,10 +69,21 @@ public class UserController {
         return emailVerificationService.joinEmail(email);
     }
 
+    @PostMapping("/api/sendEmailAgain")
+    public String sendEmailAgain(@RequestParam String email, HttpServletResponse response) {
+        
+        //토큰 발급
+        String emailToken = emailVerificationService.generateEmailValidateToken();
+        Cookie cookie = new Cookie("enableSendEmail", emailToken);
+        response.addCookie(cookie);
+
+        return emailVerificationService.joinEmail(email);
+    }
+
     @PostMapping("/api/usersave")
     public int saveUser(@RequestBody UserDTO userDTO) {
-        System.out.println(userDTO);
 
+        System.out.println(userDTO);
         return userService.saveUser(userDTO);
     }
 
