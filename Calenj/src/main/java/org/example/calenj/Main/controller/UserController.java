@@ -1,5 +1,7 @@
 package org.example.calenj.Main.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -69,6 +71,12 @@ public class UserController {
     public int saveUser(@RequestBody UserDTO userDTO) {
         System.out.println(userDTO);
         return userService.saveUser(userDTO);
+    }
+
+    @PostMapping("/api/postCookie")
+    public boolean checkCookie(HttpServletRequest request){
+        Cookie[] cookie = request.getCookies();
+        return cookie !=null;
     }
 
     @PostMapping("/api/testlogin")
