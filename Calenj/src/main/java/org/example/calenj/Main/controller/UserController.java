@@ -1,6 +1,7 @@
 package org.example.calenj.Main.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -85,6 +86,11 @@ public class UserController {
         return ResponseEntity.ok("Cookie Success");
     }
 
+    @PostMapping("/api/postCookie")
+    public boolean checkCookie(HttpServletRequest request){
+        Cookie[] cookie = request.getCookies();
+        return cookie !=null;
+    }
 
     @PostMapping("/api/IdDuplicated")
     public boolean isIdDuplicated(@RequestParam String userName) {
