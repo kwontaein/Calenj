@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="02.06 npm 모듈 셋팅" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="02.15 checkout 전 commit">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/Calenj.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/Calenj.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/Auth/Sign_up.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/Auth/Sign_up.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,6 +81,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "TestBranch",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/IntelliJProjectFork/Calenj",
     "node.js.detected.package.eslint": "true",
@@ -162,6 +169,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="02.06 git fork &amp; request pull" />
     <MESSAGE value="02.06 npm 모듈 셋팅" />
-    <option name="LAST_COMMIT_MESSAGE" value="02.06 npm 모듈 셋팅" />
+    <MESSAGE value="02.15 checkout 전 commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="02.15 checkout 전 commit" />
   </component>
 </project>

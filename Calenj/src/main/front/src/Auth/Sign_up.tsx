@@ -4,7 +4,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from 'yup';
 import {useEffect, useState} from 'react';
 import {SignUpFormContainer,Input, Button, ErrorMessage,FormLable} from '../Style/FormStyle';
-
+import EmailValidation from './EmailValidation'
 
 
 type role = "MANAGER" | "ADMIN";
