@@ -92,11 +92,7 @@ public class UserController {
         return ResponseEntity.ok("Cookie Success");
     }
 
-    @PostMapping("/api/postCookie")
-    public boolean checkCookie(HttpServletRequest request){
-        Cookie[] cookie = request.getCookies();
-        return cookie !=null;
-    }
+
 
     @PostMapping("/api/IdDuplicated")
     public boolean isIdDuplicated(@RequestParam String userName) {
