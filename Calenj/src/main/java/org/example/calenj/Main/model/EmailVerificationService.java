@@ -20,7 +20,7 @@ public class EmailVerificationService {
     @Autowired
      ValidateDTO validateDTO;
 
-
+    //임시주석
     private EmailVerificationService(JavaMailSender mailSender, @Value("${spring.mail.username}") String setFrom) {
         this.mailSender = mailSender;
         this.setFrom = setFrom;
