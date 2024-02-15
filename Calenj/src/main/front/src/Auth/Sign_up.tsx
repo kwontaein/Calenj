@@ -7,7 +7,7 @@ import {SignUpFormContainer,Input, Button, ErrorMessage,FormLable} from '../Styl
 
 
 
-type role = "MANAGER" | "ADMIN";
+type role = "MANAGER" | "ADMIN" | "USER";
 
 interface UserData {
     nick_name: string;
@@ -160,7 +160,7 @@ const SignUp: React.FC = () => {
 
     //성공 시
     const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
-        data.user_role = "MANAGER";
+        data.user_role = "USER";
         data.user_join_date = makeJoinDate();
         console.log("성공");
         return axios.post('api/usersave', data)
