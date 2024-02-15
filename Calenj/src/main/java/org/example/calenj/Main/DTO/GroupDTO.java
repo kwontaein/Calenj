@@ -10,8 +10,8 @@ public class GroupDTO {
 
     public GroupEntity groupEntity() {
         return GroupEntity.builder()
-                .group_title(group_title)
-                .group_created(group_created)
+                .grouptitle(group_title)
+                .groupcreated(group_created)
                 .build();
     }
 }
