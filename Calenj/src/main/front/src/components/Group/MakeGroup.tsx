@@ -7,8 +7,8 @@ const MakeGroup: React.FC = () => {
 
     const [result, setResult] = useState('');
     const [data, setData] = useState({
-        group_title: 'TestGroup2',
-        group_created: formattedDate,
+        grouptitle: 'Group_kko123',
+        groupcreated: formattedDate,
     });
     const MakeGroup = () => {
         axios.post('/api/makeGroup', data)

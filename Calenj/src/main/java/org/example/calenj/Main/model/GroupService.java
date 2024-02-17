@@ -30,6 +30,7 @@ public class GroupService {
     public String makeGroup(String groupTitle, String groupCreated) {
 
         UserDetails userDetails = grobalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        System.out.println("userDetails : " + userDetails);
 
         // 유저 이름으로 그룹 생성
         GroupEntity groupEntity = GroupEntity.builder()
@@ -38,7 +39,9 @@ public class GroupService {
                 .groupcreater(userDetails.getUsername())
                 .build();
         groupRepository.save(groupEntity);
-        System.out.println("그룹 생성");
+        System.out.println("groupTitle : " + groupTitle);
+        System.out.println("groupCreated : " + groupCreated);
+        System.out.println("그룹 생성" + groupEntity);
 
         UserEntity userEntity = userRepository.findByAccountid(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
