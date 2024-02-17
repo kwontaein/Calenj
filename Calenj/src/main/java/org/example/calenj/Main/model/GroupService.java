@@ -58,9 +58,9 @@ public class GroupService {
 
     public Collection<GroupDTO> groupList() {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
-        String groupcreater = userDetails.getUsername();
-        System.out.println("Username : " + groupcreater);
-        Collection<GroupDTO> groupEntities = groupRepository.findbyGroupcreater("a").orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
+        String groupCreater = userDetails.getUsername();
+        System.out.println("Username : " + groupCreater);
+        Collection<GroupDTO> groupEntities = groupRepository.findbyGroupcreater(groupCreater).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
         System.out.println("그룹 목록 불러오기 Service");
         return groupEntities;
     }
