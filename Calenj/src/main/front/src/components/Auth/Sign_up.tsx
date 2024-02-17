@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {SignUpFormContainer,Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/Emailschema';
-
+import '../../style/sign.scss'
 
 type role = "MANAGER" | "ADMIN" | "USER";
 
@@ -116,6 +116,7 @@ const SignUp: React.FC = () => {
                 <div>
                     <Input {...register("accountid", {required: true})} placeholder="아이디"></Input>
                     <ErrorMessage>{errors.accountid?.message}</ErrorMessage>
+                    <div id='idValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}onClick={emailRequest}>중복확인</div>
                 </div>
                 <div>
                     <FormLable>이메일</FormLable>
@@ -125,7 +126,7 @@ const SignUp: React.FC = () => {
                     <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
                 </div>
 
-                <div id='ValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}onClick={emailRequest}>{validation === '' ? "인증번호 발급" : "인증번호 재발급"}</div>
+                <div id='eamil_ValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}} onClick={emailRequest}>{validation === '' ? "인증번호 발급" : "인증번호 재발급"}</div>
                 <br></br>
             
                 <div>

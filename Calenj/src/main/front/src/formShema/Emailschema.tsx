@@ -7,10 +7,8 @@ interface UserData {
     password_check?: string;
     user_email: string;
   }
-  
-  
-  
-  const schema: yup.ObjectSchema<UserData> = yup.object().shape({
+
+   const schema: yup.ObjectSchema<UserData> = yup.object().shape({
     nick_name: yup.string()
         .min(2, "닉네임은 최소 2글자 이상입니다!")
         .max(10, "닉네임은 최대 10글자입니다!")
@@ -50,4 +48,6 @@ interface UserData {
     // }),
   })
   
+
+
   export default schema;
