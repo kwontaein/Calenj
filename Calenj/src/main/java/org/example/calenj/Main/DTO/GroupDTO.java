@@ -7,12 +7,7 @@ import org.example.calenj.Main.domain.Group.GroupEntity;
 public class GroupDTO {
     private String grouptitle;
     private String groupcreated;
-
-    public GroupDTO(String grouptitle, String groupcreated) {
-        this.grouptitle = grouptitle;
-        this.groupcreated = groupcreated;
-    }
-
+    
     public GroupEntity groupEntity() {
         return GroupEntity.builder()
                 .grouptitle(grouptitle)

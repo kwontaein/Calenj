@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     //롬복의 @data 에 의한 생성자를 찾지 못함. + entity의 name을 지정한 경우 해당 name 값으로 select 해야함
-    @Query("select new org.example.calenj.Main.DTO.GroupDTO( g.grouptitle, g.groupcreated) from Group_table g where g.groupcreater = :groupCreater")
-    Optional<Collection<GroupDTO>> findbyGroupcreater(@Param("groupCreater") String groupCreater); // No argument for named parameter ':groupcreater'
+    @Query("select new org.example.calenj.Main.DTO.GroupDTO(g.grouptitle, g.groupcreated) from Group_table g JOIN Group_User gu where gu.user = :userId")
+    Optional<Collection<GroupDTO>> findbyGroupcreater(@Param("userId") String userId); // No argument for named parameter ':groupcreater'
 }
