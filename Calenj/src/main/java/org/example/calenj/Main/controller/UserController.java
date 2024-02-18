@@ -92,22 +92,18 @@ public class UserController {
         return ResponseEntity.ok("Cookie Success");
     }
 
-    @PostMapping("/api/postCookie")
-    public boolean checkCookie(HttpServletRequest request){
-        Cookie[] cookie = request.getCookies();
-        return cookie !=null;
-    }
 
-    @PostMapping("/api/IdDuplicated")
+
+    @PostMapping("/api/1IdDuplicated")
     public boolean isIdDuplicated(@RequestParam String userName) {
         //아이디 중복여부에 따른 논리 값 반환
         UserEntity user = userRepository.findByAccountid(userName).orElse(null);
         if (user == null) {
             System.out.println(user);
-            return false;
+            return true;
         } else {
             System.out.println(user);
-            return true;
+            return false;
         }
     }
 
