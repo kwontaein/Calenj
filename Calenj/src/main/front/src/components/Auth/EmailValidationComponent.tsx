@@ -1,7 +1,8 @@
 import {Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState} from 'react';
 import axios, {Axios, AxiosResponse} from 'axios';
-
+import { connect } from "react-redux";
+import { updateTime, checkToken} from '../../store/EmailValidationSlice';
 
 
 const EmailValidationComponent : React.FC = ()=>{
@@ -16,6 +17,27 @@ const EmailValidationComponent : React.FC = ()=>{
                 },
             });
 
+
+            console.log(response.data); // 업데이트된 값을 출력
+        } catch (error) {
+            console.error(error);
+        }
+    }
+        //이메일 인증요청
+    const emailRequest = async (): Promise<void> => {
+
+    
+        try {
+            const response = await axios.post('api/sendEmail', null,
+                {
+                    params: {
+                        email: ''
+                    },
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+            );
 
             console.log(response.data); // 업데이트된 값을 출력
         } catch (error) {
@@ -44,5 +66,14 @@ const EmailValidationComponent : React.FC = ()=>{
         </div>
     );
 }
+// function mapStateToProps(state){
+//     return{validateInfo:state}
+// }
+// function mapDispatchTProps(dispatch){
+//     return{
+//         updateToken:(text)=> dispatch(updateTime(text))
+        
+//     }
+// }
 
-export default EmailValidationComponent
+// export default connect(mapStateToProps,mapDispatchTProps) (EmailValidationComponent)

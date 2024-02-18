@@ -3,9 +3,11 @@ import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hoo
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from 'react';
 import {SignUpFormContainer,Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
-import EmailValidationComponent from './EmailValidationComponent';
-import schema from '../../formShema/Emailschema';
+// import EmailValidationComponent from './EmailValidationComponent';
+import schema from '../../formShema/signSchema';
 import '../../style/sign.scss'
+
+
 
 type role = "MANAGER" | "ADMIN" | "USER";
 
@@ -25,54 +27,30 @@ interface User extends UserData {
 }
 
 
+
 const SignUp: React.FC = () => {
 
-    const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [validation, setValidation] = useState<string>('');
+    
 
 
-        
-
-    //regiset : 첫번재 매개변수 객체의 key값을 받음, 2번째 매개변수로는 객체에 대한 유효성 검증코드
+  //regiset : 첫번재 매개변수 객체의 key값을 받음, 2번째 매개변수로는 객체에 대한 유효성 검증코드
     //watch : 옵저버 기능 ->  register 한 항목의 변경사항을 추적
     //handleSubmit : Submit 시 사용, 데이터 유효성 검사가능(2번째 매개변수에 함수등록)
-     const {register, handleSubmit, formState: {errors}, reset, watch} = useForm<User>({
+    const {register, handleSubmit, formState: {errors}, reset, watch, trigger} = useForm<User>({
         resolver: yupResolver(schema), //유효성 검사
         mode: 'onChange' //실시간 유효성 검사를 위한 설정
     });
 
-
-    //이메일 인증요청
-    const emailRequest = async (): Promise<void> => {
-        console.log(`${watch("user_email")}로 인증요청`);
-        const accountEmail = watch("user_email");
-
-        try {
-            const response = await axios.post('api/sendEmail', null,
-                {
-                    params: {
-                        email: accountEmail
-                    },
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                }
-            );
-
-            setValidation(response.data);
-            console.log(response.data); // 업데이트된 값을 출력
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [validation, setValidation] = useState<string>('');
+    const accountId = watch("accountid");
 
 
 
+    // 원하는 형식으로 날짜를 설정합니다.
     const makeJoinDate = (): string => {
         const today: Date = new Date();
-
         return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-        // 원하는 형식으로 날짜를 설정합니다.
     }
 
 
@@ -80,7 +58,7 @@ const SignUp: React.FC = () => {
     const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
         data.user_role = "USER";
         data.user_join_date = makeJoinDate();
-        console.log("성공");
+        console.log("회원가입 성공");
         return axios.post('api/usersave', data)
             .then((response: AxiosResponse<Object>) => response.data)
             .catch((error) => Promise.reject(error));
@@ -92,14 +70,37 @@ const SignUp: React.FC = () => {
     }
 
 
-    // const onClickLogin = () => {
-    //     document.location.replace('/sign')
-    //     reset();
-    //   }
+
+    //아이디 중복체크
+    const accountIdDuplication = async (): Promise<void> => {
+        const isValid = await trigger("accountid");
+        console.log(isValid);
+        if(isValid) {
+            console.log(`${accountId}로 중복확인`)
+            const response = await axios.post('/api/IdDuplicated' , null,{
+                params: {
+                    userName: accountId
+                }
+            });
+            if(response.data){ 
+                window.alert("사용 가능한 아이디입니다.")
+            }else{
+                window.alert("중복된 아이디입니다.")
+            }
+            //스키마로 id 중복체크 검증
+            // schema.validate({id_duplication: response.data}).catch((err)=> console.log(err.message))
+        }
+    };
+
+    const emailValidationController = ()=>{
+
+    }
+
+
+
 
     return (
         <div>
-
             <SignUpFormContainer>
             <h2>회원가입</h2>
             <form onSubmit={handleSubmit(onValid, onInvalid)}>
@@ -114,9 +115,9 @@ const SignUp: React.FC = () => {
                     <FormLable>아이디</FormLable>
                 </div>
                 <div>
-                    <Input {...register("accountid", {required: true})} placeholder="아이디"></Input>
+                    <Input {...register("accountid", {required: true, validate:{zero:(value)=>value.length==0? "아이디를 입력해주세요":""}})} placeholder="아이디"></Input>
+                    <div id='btn_idValidation' onClick={accountIdDuplication}>중복확인</div>
                     <ErrorMessage>{errors.accountid?.message}</ErrorMessage>
-                    <div id='idValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}onClick={emailRequest}>중복확인</div>
                 </div>
                 <div>
                     <FormLable>이메일</FormLable>
@@ -126,7 +127,7 @@ const SignUp: React.FC = () => {
                     <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
                 </div>
 
-                <div id='eamil_ValidationButton' style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}} onClick={emailRequest}>{validation === '' ? "인증번호 발급" : "인증번호 재발급"}</div>
+                <div id='btn_eamilValidation' >{validation === '' ? "인증번호 발급" : "인증번호 재발급"}</div>
                 <br></br>
             
                 <div>
@@ -154,4 +155,6 @@ const SignUp: React.FC = () => {
         </div>
     );
 };
+
+
 export default SignUp;

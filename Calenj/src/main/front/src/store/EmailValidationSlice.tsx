@@ -23,4 +23,4 @@ const emailValidation = createSlice({
 export const {checkToken, updateTime} = emailValidation.actions;
 
 
-export default emailValidation.reducer;
+export default emailValidation;

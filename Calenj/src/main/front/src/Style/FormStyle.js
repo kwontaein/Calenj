@@ -33,6 +33,8 @@ export const ErrorMessage = styled.div`
   color: red;
   font-size: 14px;
   margin-top: 5px;
+  margin-left: 10px;
+  margin-bottom:10px;
 `;
 
 
