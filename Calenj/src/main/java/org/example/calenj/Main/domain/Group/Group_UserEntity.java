@@ -24,7 +24,8 @@ public class Group_UserEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id") // 외래 키에 대한 참조 필드 지정
+    @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
+    // 외래 키에 대한 참조 필드 지정
     private UserEntity user;
 
     private GroupRoleType role;

@@ -36,19 +36,19 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public int saveUser(UserDTO userDTO) {
+    public String saveUser(UserDTO userDTO) {
         //패스워드 암호화
         userDTO.setUser_password(passwordEncoder.encode(userDTO.getUser_password()));
         System.out.println("UserRole 출력 : " + userDTO.getUser_role());
         userRepository.save(userDTO.toEntity());
-        return userDTO.toEntity().getUser_id();
+        return userDTO.toEntity().getUserEmail();
     }
 
     public void selectUserInfo() {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
 
         //select 테스트
-        Optional<UserEntity> user = userRepository.findByAccountid(userDetails.getUsername());
+        Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
 
         System.out.println(userResult);
@@ -76,7 +76,7 @@ public class UserService {
         // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
 
         //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
-        UserEntity userEntity = userRepository.findByAccountid(accountid)
+        UserEntity userEntity = userRepository.findByUserEmail(accountid)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         String refreshToken = userEntity.getRefreshToken();
 
@@ -87,7 +87,7 @@ public class UserService {
             // 4. refreshToken 정보 저장을 위한 account_id 값 가져오기
             UserEntity user = (UserEntity) authentication.getPrincipal();
             // refreshToken 정보 저장
-            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), user.getAccountid());
+            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), user.getUserEmail());
             System.out.println("tokenInfo : " + tokenInfo);
             return tokenInfo;
         } else {

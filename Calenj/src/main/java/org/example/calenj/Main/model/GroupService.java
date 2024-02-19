@@ -43,7 +43,7 @@ public class GroupService {
         System.out.println("groupCreated : " + groupCreated);
         System.out.println("그룹 생성" + groupEntity);
 
-        UserEntity userEntity = userRepository.findByAccountid(userDetails.getUsername())
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장

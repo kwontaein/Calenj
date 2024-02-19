@@ -14,7 +14,6 @@ import org.example.calenj.Main.domain.UserEntity;
 @RequiredArgsConstructor
 public class UserDTO {
 
-    private String accountid;
     private String nickname;
     private String user_password;
     private String user_email;
@@ -26,12 +25,11 @@ public class UserDTO {
 
 
         return UserEntity.builder()
-                .accountid(accountid)
+                .userEmail(user_email)
                 .nickname(nickname)
-                .user_password(user_password)
-                .user_email(user_email)
-                .user_phone(user_phone)
-                .user_join_date(user_join_date)
+                .userPassword(user_password)
+                .userPhone(user_phone)
+                .userJoinDate(user_join_date)
                 .user_role(UserEntity.RoleType.userRoleParsing(user_role))
                 .build();
     }

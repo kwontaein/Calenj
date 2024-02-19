@@ -71,7 +71,7 @@ public class UserController {
 
     @PostMapping("/api/sendEmailAgain")
     public String sendEmailAgain(@RequestParam String email, HttpServletResponse response) {
-        
+
         //토큰 발급
         String emailToken = emailVerificationService.generateEmailValidateToken();
         Cookie cookie = new Cookie("enableSendEmail", emailToken);
@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/api/usersave")
-    public int saveUser(@RequestBody UserDTO userDTO) {
+    public String saveUser(@RequestBody UserDTO userDTO) {
 
         System.out.println(userDTO);
         return userService.saveUser(userDTO);
@@ -90,7 +90,7 @@ public class UserController {
     @PostMapping("/api/testlogin")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
-        JwtToken jwtToken = userService.login(userDTO.getAccountid(), userDTO.getUser_password());
+        JwtToken jwtToken = userService.login(userDTO.getUser_email(), userDTO.getUser_password());
 
         System.out.println(jwtToken);
         return ResponseEntity.ok("Cookie Success");
@@ -100,7 +100,7 @@ public class UserController {
     @PostMapping("/api/IdDuplicated")
     public boolean isIdDuplicated(@RequestParam String userName) {
         //아이디 중복여부에 따른 논리 값 반환
-        UserEntity user = userRepository.findByAccountid(userName).orElse(null);
+        UserEntity user = userRepository.findByUserEmail(userName).orElse(null);
         if (user == null) {
             System.out.println(user);
             return false;
