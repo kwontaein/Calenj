@@ -3,17 +3,21 @@ import {ChangeEvent, useEffect, useState} from 'react';
 import axios, {Axios, AxiosResponse} from 'axios';
 import { connect } from "react-redux";
 import { updateTime, checkToken} from '../../store/EmailValidationSlice';
+import '../../style/sign.scss'
+interface EmailValidationComponentProps {
+    email: string;
+}
 
-
-const EmailValidationComponent : React.FC = ()=>{
+const EmailValidationComponent : React.FC<EmailValidationComponentProps> = (props)=>{
     const [code, setCode] = useState<string>('');
 
 
     const codeRequest = async (): Promise<void> => {
         try {
-            const response = await axios.post('api/codeValidation', null, {
+            const response = await axios.post('api/emailCodeValidation', null, {
                 params: {
-                    code: ''
+                    validationCode: code,
+                    email : props.email
                 },
             });
 
@@ -23,27 +27,7 @@ const EmailValidationComponent : React.FC = ()=>{
             console.error(error);
         }
     }
-        //이메일 인증요청
-    const emailRequest = async (): Promise<void> => {
-
     
-        try {
-            const response = await axios.post('api/sendEmail', null,
-                {
-                    params: {
-                        email: ''
-                    },
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                }
-            );
-
-            console.log(response.data); // 업데이트된 값을 출력
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
 
 
@@ -52,20 +36,23 @@ const EmailValidationComponent : React.FC = ()=>{
 
     return(
         <div>
-            <FormLable>이메일 인증번호 입력</FormLable>
+            
+            <FormLable>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
+            <br/>
+            <div>{props.email} 로 인증요청</div>
             <Input type ="text "onChange={(e:ChangeEvent<HTMLInputElement>)=>setCode(e.target.value)}></Input>
             <ErrorMessage></ErrorMessage>
                
                  
-                <div onClick={codeRequest} style={{marginLeft :'10px', fontSize:'15px', border: '1.8px solid', textAlign:'center', width:'180px'}}>인증번호 확인</div>
+                <div id="btn_emailCodeValidation" onClick={codeRequest} > 확인</div>
                 <div>
                 </div>
-            
-            
+
                 
         </div>
     );
 }
+export default EmailValidationComponent;
 // function mapStateToProps(state){
 //     return{validateInfo:state}
 // }

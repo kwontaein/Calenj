@@ -33,25 +33,27 @@ public class UserEntity implements UserDetails {
     @Column(name = "account_id")
     private String accountid;
     
-    private String nickname;
+    private String nickName;
 
-    private String user_password;
+    @Column(name = "user_password")
+    private String userPassword;
 
-    private String user_join_date;
+    private String userJoinDate;
 
-    private String user_email;
-    private String user_phone;
+    @Column(unique = true, name = "user_email")
+    private String userEmail;
+    private String userPhone;
 
 
     @Enumerated(EnumType.STRING)
 
-    private RoleType user_role;
+    private RoleType userRole;
 
 
     @Builder.Default // 기본값 지정
-    private boolean naver_login = false;
+    private boolean naverLogin = false;
     @Builder.Default
-    private boolean kakao_login = false;
+    private boolean kakaoLogin = false;
     @Builder.Default
     private boolean withdrawed = true;
 
@@ -89,7 +91,7 @@ public class UserEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user_role.getRole()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getRole()));
 
         return authorities;
     }
@@ -99,7 +101,7 @@ public class UserEntity implements UserDetails {
      */
     @Override
     public String getPassword() {
-        return user_password;
+        return userPassword;
     }
 
 
