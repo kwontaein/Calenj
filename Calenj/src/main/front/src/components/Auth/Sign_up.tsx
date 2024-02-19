@@ -42,7 +42,7 @@ const SignUp: React.FC = () => {
     });
 
     const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [validation, setValidation] = useState<string>('');
+    const [validation, setValidation] = useState<boolean>(false);
     const accountId = watch("accountid");
 
 
@@ -98,7 +98,7 @@ const SignUp: React.FC = () => {
         const isValid = await trigger("user_email");
         const email=watch("user_email");
         if(isValid){
-            setShowAlert(true);
+            
         try {
             const response = await axios.post('api/sendEmail', null,
                 {
@@ -111,7 +111,11 @@ const SignUp: React.FC = () => {
                 }
             );
 
-            console.log(response.data); // 업데이트된 값을 출력
+            if(response.data!="중복이메일" || response.data !="토큰정보확인"){
+                setShowAlert(true);
+            }else{
+                window.alert(response.data);
+            } 
         } catch (error) {
             console.error(error);
         }
@@ -150,7 +154,7 @@ const SignUp: React.FC = () => {
                     <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
                 </div>
 
-                <div id='btn_eamilValidation' onClick={emailRequest}>{validation === '' ? "인증번호 발급" : "인증번호 재발급"}</div>
+                <div id='btn_eamilValidation' onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}</div>
                 <br></br>
             
                 {showAlert && <EmailValidationComponent email={watch('user_email')}/>}
