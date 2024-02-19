@@ -1,9 +1,9 @@
-import {Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
+import {Input, Button, ErrorMessage,FormLable} from '../../Style/FormStyle';
 import {ChangeEvent, useEffect, useState} from 'react';
 import axios, {Axios, AxiosResponse} from 'axios';
 import { connect } from "react-redux";
 import { updateTime, checkToken} from '../../store/EmailValidationSlice';
-import '../../style/sign.scss'
+import '../../Style/Sign.scss'
 interface EmailValidationComponentProps {
     email: string;
 }
