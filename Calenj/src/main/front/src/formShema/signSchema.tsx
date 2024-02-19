@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import axios, { AxiosResponse} from 'axios';
+import { Value } from 'sass';
 
 
 interface UserData {
@@ -45,7 +46,7 @@ interface UserData {
         .email('이메일형식이 적합하지 않습니다.'),
     email_validation : yup.boolean()
     .test('이메일 인증 스키마','이메일 인증을 해주세요',(value)=>{
-        return value;
+        return true;
     }),
     id_duplication : yup.boolean()
     .test('아이디 중복체크 스키마','중복된 아이디입니다.',async(value,{parent})=>{
@@ -54,6 +55,7 @@ interface UserData {
                     userName: parent.accountid
                 }
             });
+          
         return response.data;
     })
 

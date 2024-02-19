@@ -1,6 +1,7 @@
 package org.example.calenj.Main.model;
 
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -36,8 +37,8 @@ public class UserService {
 
     public int saveUser(UserDTO userDTO) {
         //패스워드 암호화
-        userDTO.setUser_password(passwordEncoder.encode(userDTO.getUser_password()));
-        System.out.println("UserRole 출력 : "+ userDTO.getUser_role());
+        userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
+        System.out.println("UserRole 출력 : "+ userDTO.getUserRole());
         userRepository.save(userDTO.toEntity());
         return userDTO.toEntity().getUser_id();
     }
@@ -98,5 +99,25 @@ public class UserService {
             return null;
         }
 
+    }
+
+
+    //request로 받은 쿠키를 체크하는 메소드
+    public boolean checkUserToken(Cookie[] requestCookie) {
+        boolean checkCookie = false;
+
+        if (requestCookie != null) {
+            for (Cookie cookie : requestCookie) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    UserEntity userEntity = userRepository.findByRefreshToken(cookie.getValue())
+                            .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+                    if (userEntity != null) {
+                        checkCookie = true;
+                    }
+                }
+            }
+
+        }
+        return checkCookie;
     }
 }
