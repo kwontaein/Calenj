@@ -7,14 +7,12 @@ import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.domain.UserEntity;
 import org.example.calenj.Main.model.EmailVerificationService;
 import org.example.calenj.Main.model.MainService;
 import org.example.calenj.Main.model.PhoneverificationService;
 import org.example.calenj.Main.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -66,33 +64,33 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email,HttpServletRequest request, HttpServletResponse response) {
+    public String sendEmail(@RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
         //이메일 중복체크 후 중복이 아닐 시 전송
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
-        System.out.println("checkDublidated : "+checkDublidated);
+        System.out.println("checkDublidated : " + checkDublidated);
         //존재하지 않은 이메일 -true (Test 시 주석처리)
-        if(checkDublidated){
+        if (checkDublidated) {
             //토큰 발급 (만약 이메일토큰이 존재하고 유효할 경우 false 반환)
-            boolean enableEmail= emailVerificationService.generateEmailValidateToken(request, response);
+            boolean enableEmail = emailVerificationService.generateEmailValidateToken(request, response);
 
-            if(enableEmail) {//토큰 체크 후 이메일 발급
+            if (enableEmail) {//토큰 체크 후 이메일 발급
                 emailVerificationService.joinEmail(email);
-                System.out.println(email+"로 이메일 인증코드 발급완료");
+                System.out.println(email + "로 이메일 인증코드 발급완료");
                 return "발급완료";
-            }else{
+            } else {
                 return "토큰정보확인";
             }
 
         }
-        System.out.println(email+"은 이미 가입된 아이디입니다.");
+        System.out.println(email + "은 이미 가입된 아이디입니다.");
         return "중복이메일.";
     }
 
-  
+
     @PostMapping("/api/emailCodeValidation")
-    public boolean emailCodeValidation(@RequestParam String validationCode, @RequestParam String email){
-        System.out.println(email+"로 인증요청");
+    public boolean emailCodeValidation(@RequestParam String validationCode, @RequestParam String email) {
+        System.out.println(email + "로 인증요청");
         return emailVerificationService.checkValidationCode(validationCode);
 
     }
