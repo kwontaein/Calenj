@@ -5,13 +5,13 @@ import org.example.calenj.Main.domain.Group.GroupEntity;
 
 @Data
 public class GroupDTO {
-    private String group_created;
-    private String group_title;
-
+    private String grouptitle;
+    private String groupcreated;
+    
     public GroupEntity groupEntity() {
         return GroupEntity.builder()
-                .group_title(group_title)
-                .group_created(group_created)
+                .grouptitle(grouptitle)
+                .groupcreated(groupcreated)
                 .build();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class GroupController {
@@ -18,31 +20,24 @@ public class GroupController {
 
     @PostMapping("/api/makeGroup")
     public String makeGroup(@RequestBody GroupDTO groupDTO) {
-        String a = groupService.makeGroup(groupDTO.getGroup_title(), groupDTO.getGroup_created());
+        
+        String a = groupService.makeGroup(groupDTO.getGrouptitle(), groupDTO.getGroupcreated()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
         return a;
     }
 
-    //개인정보 업데이트 및 그룹 생성 후 진행하는 여러 기능(투표 등)
-
-    // 1. 개인정보 업데이트 창 -> 개인정보 수정 + 친구 관리 + 본인인증(회원가입시)
-
-    // 2. 추후 카카오 네이버
-
-    // 3. 그룹 생성 후 기능 (투표 등)
-
-    @PostMapping("/api/updateUser")
-    public String updateUser(@Param("inviteCode") int inviteCode) { //유저 업데이트
-        //유저 정보 불러와서 보여주고
-        //정보를 바꾸려면 비밀번호 검증 후
-        //프론트에서 바뀐 값 전달하기
-        return "";
+    @PostMapping("/api/groupList")
+    public Collection<GroupDTO> groupList() {
+        //그룹 목록 프론트 전달
+        //그룹 이름 및 아이디만 전달해서 세부 정보를 다시 불러올 것인지, 아예 처음부터 모든 정보를 가져와서 보여줄 것인지 토의 필요
+        Collection<GroupDTO> a = groupService.groupList();
+        System.out.println("a : " + a);
+        return a;
     }
 
-
-    @PostMapping("/api/userVerification")
-    public String userVerification(@Param("inviteCode") int inviteCode) { //본인인증
-        // 휴대번호 혹은 이메일 인증
-        // 두개 따로?
+    @PostMapping("/api/groupDetail")
+    public String groupDetail() {
+        //그룹 세부 정보 프론트에 전달
+        //토의 후 해당 부분 결정
         return "";
     }
 

@@ -10,13 +10,13 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    Optional<UserEntity> findByAccountid(String username);
+    Optional<UserEntity> findByUserEmail(String username);
 
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullpointerException 방지
 
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE User SET refreshToken = :refreshToken WHERE account_id = :accountid", nativeQuery = true)
-    void updateUserRefreshToken(String refreshToken, String accountid);
+    @Query(value = "UPDATE User SET refreshToken = :refreshToken WHERE user_email = :email", nativeQuery = true)
+    void updateUserRefreshToken(String refreshToken, String email);
 
 }

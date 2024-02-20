@@ -23,9 +23,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        System.out.println("doFilter 실행 ");
+        System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
-        String[] tokens = resolveCookie((HttpServletRequest) request);
+        //request로 받은 token을 구분해주는 메소드
+        String[] tokens = resolveCookieFilter((HttpServletRequest) request);
 
         String token = tokens[0];
         String refreshToken = tokens[1];
@@ -33,6 +34,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 1. Request Header 에서 JWT 토큰 추출
         System.out.println("token값 : " + token);
         System.out.println("refreshToken값 : " + refreshToken);
+
+
 
         // 2. validateToken 으로 토큰 유효성 검사 -- refresh token의 경우는? 추가해야함
         if (token != null && jwtTokenProvider.validateToken(token).equals("true")) {
@@ -79,7 +82,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     }
 
     //헤더 쿠키에서 토큰 값 가져오는 메소드
-    private String[] resolveCookie(HttpServletRequest request) {
+    private String[] resolveCookieFilter(HttpServletRequest request) {
         Cookie[] requestCookie = request.getCookies(); // 리퀘스트 헤더에서 쿠키 목록 가져오기
         String[] tokenList = new String[2];
 
@@ -87,10 +90,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             for (Cookie cookie : requestCookie) {
                 if ("accessToken".equals(cookie.getName())) {
                     tokenList[0] = cookie.getValue();
-                    System.out.println("accessToken : " + tokenList[0]);
+                    System.out.println("cookie에서 가져온 accessToken : " + tokenList[0]);
                 } else if ("refreshToken".equals(cookie.getName())) {
                     tokenList[1] = cookie.getValue();
-                    System.out.println("refreshToken : " + tokenList[1]);
+                    System.out.println("cookie에서 가져온 refreshToken : " + tokenList[1]);
                 }
             }
         }
