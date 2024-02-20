@@ -14,7 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.net.http.HttpRequest;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
