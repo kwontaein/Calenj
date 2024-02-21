@@ -14,8 +14,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.net.http.HttpRequest;
-import java.util.*;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -163,13 +166,9 @@ public class EmailVerificationService {
         }
         return true;
 
-
     }
 
-
-
-    //이메일 중복체크 메소드
-    public boolean eamilDublicated(String email) {
+    public boolean emailDuplicated(String email) {
 
         UserEntity user = userRepository.findByUserEmail(email).orElse(null);
         System.out.println(email);
@@ -182,5 +181,4 @@ public class EmailVerificationService {
             return false;
         }
     }
-
 }

@@ -24,6 +24,7 @@
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
     "sass": "^1.71.0",
+    "scss": "^0.2.4",
     "styled-components": "^6.1.8",
     "typescript": "^5.3.3",
     "web-vitals": "^2.1.4",
@@ -35,7 +36,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "sass": "sass --watch src/styles/scss:src/styles/css"
-
   },
   "eslintConfig": {
     "extends": [

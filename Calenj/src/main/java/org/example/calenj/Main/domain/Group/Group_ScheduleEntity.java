@@ -11,9 +11,9 @@ public class Group_ScheduleEntity {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "group_id", referencedColumnName = "group_id"),
-            @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+            @JoinColumn(name = "user_email", referencedColumnName = "user_email")
     })
-    
+
     private Group_UserEntity groupUser;
 
     private String group_schedule_location;
