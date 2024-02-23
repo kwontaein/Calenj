@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -79,20 +80,22 @@ public class UserController {
                 System.out.println(email + "로 이메일 인증코드 발급완료");
                 return "발급완료";
             } else {
-                return "토큰정보확인";
+                return "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.";
             }
 
         }
         System.out.println(email + "은 이미 가입된 아이디입니다.");
-        return "중복이메일.";
+        return "이미 가입된 이메일입니다.";
     }
 
 
     @PostMapping("/api/emailCodeValidation")
-    public boolean emailCodeValidation(@RequestParam String validationCode, @RequestParam String email) {
-        System.out.println(email + "로 인증요청");
-        return emailVerificationService.checkValidationCode(validationCode);
+    public Integer emailCodeValidation(@RequestParam String validationCode, @RequestParam String email, HttpServletRequest request) {
 
+        System.out.println(email + "로 인증요청");
+
+        emailVerificationService.checkValidationCode(validationCode,request);
+        return validateDTO.getEmailValidState().getCode();
     }
 
     @PostMapping("/api/saveUser")
