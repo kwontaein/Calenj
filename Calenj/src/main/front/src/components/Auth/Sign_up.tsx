@@ -2,10 +2,10 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../style/FormStyle';
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../Style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
-import '../../style/Sign.scss'
+import '../../Style/Sign.scss'
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
