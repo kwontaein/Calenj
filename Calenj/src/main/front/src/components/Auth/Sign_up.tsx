@@ -2,20 +2,19 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../Style/FormStyle';
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
-import '../../Style/Sign.scss'
+import '../../style/Sign.scss'
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
 
 interface UserData {
     nick_name: string;
-    accountid: string;
+    user_email: string;
     user_password: string;
     password_check?: string;
-    user_email: string;
 }
 
 //인터페이스 확장
@@ -39,7 +38,6 @@ const SignUp: React.FC = () => {
 
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [validation, setValidation] = useState<boolean>(false);
-    const accountId = watch("accountid");
 
 
     // 원하는 형식으로 날짜를 설정합니다.
@@ -65,26 +63,7 @@ const SignUp: React.FC = () => {
     }
 
 
-    //아이디 중복체크
-    const accountIdDuplication = async (): Promise<void> => {
-        const isValid = await trigger("accountid");
-        console.log(isValid);
-        if (isValid) {
-            console.log(`${accountId}로 중복확인`)
-            const response = await axios.post('/api/IdDuplicated', null, {
-                params: {
-                    userName: accountId
-                }
-            });
-            if (response.data) {
-                window.alert("사용 가능한 아이디입니다.")
-            } else {
-                window.alert("중복된 아이디입니다.")
-            }
-            //스키마로 id 중복체크 검증
-            // schema.validate({id_duplication: response.data}).catch((err)=> console.log(err.message))
-        }
-    };
+  
 
     //이메일 인증요청 -api 반환값 : 인증번호 (쿠키 값에 이메일 인증토큰도 있음)
     const emailRequest = async (): Promise<void> => {
@@ -105,9 +84,11 @@ const SignUp: React.FC = () => {
                     }
                 );
 
-                if (response.data != "중복이메일" || response.data != "토큰정보확인") {
+                console.log(response.data)
+                if (response.data != "이미 가입된 이메일입니다." && response.data != "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
                     setShowAlert(true);
-                } else {
+                    window.alert("이메일 인증코드가 발급되었습니다.")
+                } else { //중복된 이메일이 아니고 토큰이 유효하지 않으면 
                     window.alert(response.data);
                 }
             } catch (error) {
@@ -130,17 +111,7 @@ const SignUp: React.FC = () => {
                         <Input {...register("nick_name", {required: true})} placeholder="닉네임"/>
                         <ErrorMessage>{errors.nick_name?.message}</ErrorMessage>
                     </div>
-                    <div>
-                        <FormLable>아이디</FormLable>
-                    </div>
-                    <div>
-                        <Input {...register("accountid", {
-                            required: true,
-                            validate: {zero: (value) => value.length == 0 ? "아이디를 입력해주세요" : ""}
-                        })} placeholder="아이디"></Input>
-                        <div id='btn_idValidation' onClick={accountIdDuplication}>중복확인</div>
-                        <ErrorMessage>{errors.accountid?.message}</ErrorMessage>
-                    </div>
+                    
                     <div>
                         <FormLable>이메일</FormLable>
                     </div>
