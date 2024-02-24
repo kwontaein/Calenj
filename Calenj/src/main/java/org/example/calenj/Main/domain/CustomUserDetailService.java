@@ -31,7 +31,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 // 사용자 로딩 프로세스 중에는 올바르지 않습니다. 
                 // 패스워드는 데이터베이스에 인코딩된 형태로 저장되어야 합니다. 
                 // 회원가입 중에는 패스워드를 평문으로 저장하고, Spring Security가 인증 중에 인코딩을 처리합니다
-                .user_role(userEntity.getUser_role())
+                .userRole(userEntity.getUserRole())
                 .build();
     }
 }

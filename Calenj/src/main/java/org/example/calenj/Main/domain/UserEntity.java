@@ -40,7 +40,7 @@ public class UserEntity implements UserDetails {
 
 
     @Enumerated(EnumType.STRING)
-    private RoleType user_role;
+    private RoleType userRole;
 
 
     @Builder.Default // 기본값 지정
@@ -85,7 +85,7 @@ public class UserEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user_role.getRole()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getRole()));
 
         return authorities;
     }

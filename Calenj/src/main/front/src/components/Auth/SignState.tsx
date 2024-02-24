@@ -33,6 +33,7 @@ const SignState: React.FC = () => {
         const response = await axios.post('/api/postCookie');
         console.log(response);
         console.log(`cookie값 ${response.data}`);
+
         return response.data;
     }
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import Home from './Home';
-import SignUp from './Auth/Sign_up';
-import Sign from './Auth/Sign';
+import SignUp from './components/Auth/Sign_up';
+import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import MakeGroup from "./Group/MakeGroup";
+import MakeGroup from "./components/Group/MakeGroup";
 
  const App:React.FC =()=> {
 
