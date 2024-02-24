@@ -103,6 +103,7 @@ public class UserController {
     public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(userDTO);
+
         emailVerificationService.emailToeknDelete(request,response);
         return userService.saveUser(userDTO);
     }

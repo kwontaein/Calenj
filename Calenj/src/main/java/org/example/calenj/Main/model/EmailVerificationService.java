@@ -146,6 +146,8 @@ public class EmailVerificationService {
     }
 
     public void emailToeknDelete(HttpServletRequest request, HttpServletResponse response){
+
+        validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL); //대기상태로 바꿈
         if (request.getCookies()!=null) {
             Cookie[] requestCookie = request.getCookies();
 

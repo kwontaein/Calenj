@@ -91,7 +91,7 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
             <br></br>
             <FormLable>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
             <br/>
-            <div>{email} 로 인증요청</div>
+
             <Input type ="text "onChange={(e:ChangeEvent<HTMLInputElement>)=>setCode(e.target.value)}></Input>
             <ErrorMessage></ErrorMessage>
                
