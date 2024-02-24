@@ -19,7 +19,8 @@ public class Group_UserEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "group_id") // 외래 키에 대한 참조 필드 지정
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
+    // 외래 키에 대한 참조 필드 지정
     private GroupEntity group;
 
     @Id

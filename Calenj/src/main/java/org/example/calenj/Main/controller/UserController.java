@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
+    public String sendEmail(@RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
         //이메일 중복체크 후 중복이 아닐 시 전송
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
@@ -90,11 +89,11 @@ public class UserController {
 
 
     @PostMapping("/api/emailCodeValidation")
-    public Integer emailCodeValidation(@RequestParam String validationCode, @RequestParam String email, HttpServletRequest request) {
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request) {
 
         System.out.println(email + "로 인증요청");
 
-        emailVerificationService.checkValidationCode(validationCode,request);
+        emailVerificationService.checkValidationCode(validationCode, request);
         return validateDTO.getEmailValidState().getCode();
     }
 
