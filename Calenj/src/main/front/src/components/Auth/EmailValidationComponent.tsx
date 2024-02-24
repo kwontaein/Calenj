@@ -1,11 +1,12 @@
 import {Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState} from 'react';
-import axios, {Axios, AxiosResponse} from 'axios';
+import axios from 'axios';
 import { connect } from "react-redux";
-import {EmailToken, updateTime, updateCodeValid} from '../../store/EmailValidationSlice';
-import {RootState, AppDispatch} from'../../store/store'
+import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
 import '../../style/Sign.scss'
+import{RootState} from '../../store/store'
 import { Dispatch } from 'redux';
+import schema from '../../formShema/signSchema'
 
 
 
@@ -21,29 +22,25 @@ interface EmailToeknProps {
 
 //dispatch 함수타입을 interface로 정의
 interface DispatchProps {
-    updateTime: (payload: { tokenID: string; validateTime: Date }) => void;
+    updateToken: (payload: { tokenId: string; validateTime: number }) => void;
     updateCodeValid: (payload: boolean) => void;
 }
 
-
-
-
-
 //(Component Props로 전달하기 위한 interface)
 
-const mapStateToProps = (state: EmailToeknProps): EmailToeknProps => ({
-    emailToken: state.emailToken, // store에서 가져올 상태를 매핑
+const mapStateToProps = (state: RootState): EmailToeknProps => ({
+    emailToken: state.emailValidation, // store에서 가져올 상태를 매핑
 });
 
 //emailToken 정보를 수정하는 함수 정의 후 connect
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    updateTime: (payload: { tokenID: string; validateTime: Date }) => dispatch(updateTime(payload)),
+    updateToken: (payload: { tokenId: string; validateTime: number }) => dispatch(updateToken(payload)),
     updateCodeValid: (payload: boolean) => dispatch(updateCodeValid(payload)),
 });
 
 type Props = ComponentProps & DispatchProps & EmailToeknProps;
 
-const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateTime,updateCodeValid})=>{
+const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToken,updateCodeValid})=>{
     const [code, setCode] = useState<string>('');
     const [isValid,setIsValid] = useState<boolean>(false);
 
@@ -59,13 +56,13 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateTime
                 },
             });
             
-
+            
             console.log(response.data)
             if(response.data===100){
                 window.alert("인증코드를 입력해주세요.")
-            }
-            else if(response.data===200){
-                window.alert("인증에 성공하였습니다.")
+            }else if(response.data===200){
+                window.alert("인증이 완료되었습니다.")
+                updateCodeValid(true);
             }else if(response.data===500){
                 window.alert("인증코드가 일치하지 않습니다.")
             }else if(response.data ===300){

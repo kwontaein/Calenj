@@ -12,7 +12,7 @@ public class ValidateDTO {
     private String email;
     private String code;
     private String emailToken;
-    private EmailValidState emailValidState;
+    private EmailValidState emailValidState = EmailValidState.INITIAL;
 
     @Getter
     @RequiredArgsConstructor
@@ -25,7 +25,6 @@ public class ValidateDTO {
 
         private final Integer code;
         private final String state;
-
 
     }
 }
