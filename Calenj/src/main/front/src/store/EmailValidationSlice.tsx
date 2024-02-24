@@ -35,6 +35,7 @@ const emailValidation = createSlice({
     updateCodeValid :(state, action :PayloadAction<boolean>)=>{
       state.codeValid = action.payload;
     },
+
   },
 })
 

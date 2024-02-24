@@ -82,9 +82,16 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken,updateTok
     const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
         data.userRole = "USER";
         data.userJoinDate = makeJoinDate();
+        setShowAlert(false);
+        
+
         window.alert("회원가입에 성공했습니다.");
-        updateCodeValid(false); 
+   
+        window.location.replace("/");
         updateToken({tokenId:'', validateTime:0});//토큰 reset
+        
+        setTimeout(()=>{updateCodeValid(false)},1000); 
+
         return axios.post('api/saveUser', data)
             .then((response: AxiosResponse<Object>) => response.data)
             .catch((error) => Promise.reject(error));
@@ -116,13 +123,18 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken,updateTok
                         }
                     }
                 );
-                setValidation(true);
+                
                 console.log(response.data)
                 if (response.data != "이미 가입된 이메일입니다." && response.data != "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
                     setShowAlert(true);
+                    setValidation(true);
                     window.alert("이메일 인증코드가 발급되었습니다.")
-                } else { //중복된 이메일이 아니고 토큰이 유효하지 않으면 
+                }else if(response.data === "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
+                    setValidation(true);
                     window.alert(response.data);
+                }else { //중복된 이메일이 아니고 토큰이 유효하지 않으면 
+                    window.alert(response.data);
+                    setValidation(false);
                 }
             } catch (error) {
                 console.error(error);
@@ -157,7 +169,7 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken,updateTok
             
 
                     <div>
-                        <Input type="email" {...register("userEmail", {required: true})} placeholder="이메일"></Input>
+                        <Input type="email" {...register("userEmail", {required: true})} placeholder="이메일" readOnly={emailToken.codeValid}></Input>
                         <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
                     </div>
 
