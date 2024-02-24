@@ -1,10 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-
 export interface EmailToken {
-  tokenID: string;
-  validateTime: Date;
+  tokenId: string;
+  validateTime: number;
   codeValid: boolean;
 }
 //사전에 interface를 지정하여 emailToken을 정의한다.
@@ -12,16 +11,15 @@ export interface EmailToken {
 //State의 구조가 변경될 시 인터페이스도 같이 수정해야한다.
 
   
-export enum ActionType {
-  UPDATE_TOKEN = 'UPDATE_TOKEN',
-  UPDATE_TIME = 'UPDATE_TIME',
-  CODE_VALID = 'CODE_VALID',
-}
+ 
 
 
+
+
+//EmailTokenState 초기상태
 const initialState: EmailToken ={
-  tokenID :'',
-  validateTime: new Date(),
+  tokenId :'',
+  validateTime:0,
   codeValid:false,
 }
 
@@ -30,19 +28,24 @@ const emailValidation = createSlice({
   name:'emailToken',
   initialState,
   reducers:{
-    updateTime: (state, action :PayloadAction<{tokenID:string; validateTime: Date}>)=>{
-      state.tokenID = action.payload.tokenID;
+    updateToken: (state, action :PayloadAction<{tokenId:string; validateTime: number}>)=>{
+      state.tokenId = action.payload.tokenId;
       state.validateTime = action.payload.validateTime;
     },
     updateCodeValid :(state, action :PayloadAction<boolean>)=>{
       state.codeValid = action.payload;
-    }
-  }
+    },
+  },
 })
 
 
 
-export const {updateCodeValid, updateTime} = emailValidation.actions;
+
+
+
+
+
+export const {updateCodeValid, updateToken} = emailValidation.actions;
 
 
 export default emailValidation.reducer;
