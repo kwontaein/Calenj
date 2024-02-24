@@ -4,8 +4,8 @@ import axios,{AxiosResponse} from 'axios';
  const Sign : React.FC=()=>{
 
     interface MyData{
-        accountid: string;
-        user_password: string;
+        userEmail: string;
+        userPassword: string;
     }
 
     const SignHandeler =(key:string, event:string):void =>{
@@ -15,14 +15,15 @@ import axios,{AxiosResponse} from 'axios';
     };
 
     const [data, setData] = useState<MyData>({
-        accountid: '',
-        user_password: '',
+        userEmail: '',
+        userPassword: '',
     });
 
 
 
     const login = ():void => {
-        axios.post('/api/testlogin', data)
+        console.log(data);
+        axios.post('/api/login', data)
             .then((response:AxiosResponse<Object>) => window.location.replace("/"))
             .catch(error => console.log(error))
     };
@@ -31,8 +32,8 @@ import axios,{AxiosResponse} from 'axios';
     // git 연동 테스트3
     return (
         <div>
-            <div>id: <input onChange={(event)=>{SignHandeler("accountid",event.target.value)}}></input></div>
-            <div>pw: <input type="password" onChange={(event)=>{SignHandeler("user_password",event.target.value)}}></input></div>
+            <div>id: <input onChange={(event)=>{SignHandeler("userEmail",event.target.value)}}></input></div>
+            <div>pw: <input type="password" onChange={(event)=>{SignHandeler("userPassword",event.target.value)}}></input></div>
      
             <button onClick={login}>로그인</button> 
         

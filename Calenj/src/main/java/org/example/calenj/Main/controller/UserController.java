@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -89,22 +90,34 @@ public class UserController {
 
 
     @PostMapping("/api/emailCodeValidation")
-    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request) {
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(email + "로 인증요청");
 
-        emailVerificationService.checkValidationCode(validationCode, request);
+        emailVerificationService.checkValidationCode(validationCode,request,response);
+
         return validateDTO.getEmailValidState().getCode();
     }
 
     @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO userDTO) {
+    public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(userDTO);
+
+        emailVerificationService.emailTokenDelete(request,response);
         return userService.saveUser(userDTO);
     }
 
-    @PostMapping("/api/testlogin")
+    @GetMapping("/api/emailValidationState")
+    public boolean checkEmailValidate(){
+
+        if(validateDTO.getEmailValidState().getCode()==200){
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         JwtToken jwtToken = userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
