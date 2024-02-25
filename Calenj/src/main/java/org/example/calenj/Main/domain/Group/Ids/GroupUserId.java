@@ -4,6 +4,7 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,6 +13,6 @@ import java.io.Serializable;
 @Setter
 @Embeddable
 public class GroupUserId implements Serializable {
-    private int group;
-    private int user;
+    private UUID group;
+    private String user;
 }

@@ -4,6 +4,7 @@ import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,6 +18,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE User SET refreshToken = :refreshToken WHERE user_email = :email", nativeQuery = true)
-    void updateUserRefreshToken(String refreshToken, String email);
+    void updateUserRefreshToken(@Param("refreshToken") String refreshToken, @Param("email") String email);
 
 }

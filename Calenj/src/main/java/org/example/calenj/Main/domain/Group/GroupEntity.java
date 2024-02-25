@@ -32,7 +32,7 @@ public class GroupEntity {
 
 
     @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
-    private List<Group_UserEntity> members;//Group_UserEntity에서 목록으로 가져오기
+    private List<GroupUserEntity> members;//Group_UserEntity에서 목록으로 가져오기
 }
 
 
