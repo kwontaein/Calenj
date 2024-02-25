@@ -128,6 +128,12 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken,updateTok
                 if (response.data != "이미 가입된 이메일입니다." && response.data != "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
                     setShowAlert(true);
                     setValidation(true);
+                    try{
+                        const response = await axios.post('api/sendEmail')
+                        updateToken({tokenId:"tokenUUID",validateTime:response.data});
+                    }catch (error) {
+                        console.error(error);
+                    }
                     window.alert("이메일 인증코드가 발급되었습니다.")
                 }else if(response.data === "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
                     setValidation(true);

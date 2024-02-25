@@ -41,7 +41,6 @@ interface UserData {
     emailValidation : yup.boolean()
         .test('이메일 인증 스키마','이메일 인증을 해주세요',async (value)=>{
             const response = await axios.get('/api/emailValidationState');
-            console.log(response.data)
             return true;
         }),
 

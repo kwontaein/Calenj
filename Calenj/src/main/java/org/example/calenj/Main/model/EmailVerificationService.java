@@ -8,6 +8,7 @@ import kotlin.reflect.jvm.internal.ReflectProperties;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,7 +33,7 @@ public class EmailVerificationService {
     private final String setFrom;
 
     //email 인증 토큰을 저장하는 컬렉션
-    private final Map<String, Long> tokenExpirationMap = new ConcurrentHashMap<>();
+
 
     @Autowired
     ValidateDTO validateDTO;
@@ -78,7 +79,7 @@ public class EmailVerificationService {
         }
     }
     
-    //인증코드 체크
+    //front에서 보낸 인증코드 체크
     public void checkValidationCode(String validationCode, HttpServletRequest request,HttpServletResponse response){
         String code = validateDTO.getCode();
         System.out.println("ValidationCode :"+ validationCode);
@@ -86,10 +87,9 @@ public class EmailVerificationService {
         if(!validationCode.equals("")) { //인증코드가 입력되지 않으면
             System.out.println("checkValidationCode 실행");
 
-            boolean enableEmailToken =emailTokenValidateTimeCheck(request,response);
+            boolean enableEmailToken =emailTokenValidation(request,response,false);
             //이메일 토큰검증
             if(!enableEmailToken) { //이메일토큰 재발급 가능 시 true 유효하면 false
-
 
                 if (validationCode.equals(code)) {
                     validateDTO.setEmailValidState(ValidateDTO.EmailValidState.SUCCESS);
@@ -100,9 +100,7 @@ public class EmailVerificationService {
                     validateDTO.setEmailValidState(ValidateDTO.EmailValidState.FAIL);
                     System.out.println("이메일 인증코드가 일치하지 않습니다.");
                     return;
-
                 }
-
             }
             //쿠키가 만료되면
             validateDTO.setEmailValidState(ValidateDTO.EmailValidState.RETRY);
@@ -118,7 +116,7 @@ public class EmailVerificationService {
     //토큰 발급 (발급 전 토큰 유효기간 체크)
     public boolean generateEmailValidateToken(HttpServletRequest request, HttpServletResponse response) { // UUID를 통한 시간제한 토큰 생성
     
-        boolean enableSendEmail= emailTokenValidateTimeCheck(request,response);
+        boolean enableSendEmail= emailTokenValidation(request,response,false);
         System.out.println("enableSendEmail : "+enableSendEmail);
         
         if(enableSendEmail){ //발급 가능하면 토큰발급
@@ -129,12 +127,13 @@ public class EmailVerificationService {
         long expirationTime = System.currentTimeMillis() + validityInMilliseconds;
         System.out.print("이메일 인증토큰 발급합니다. ");
 
-        validateDTO.setEmailToken(token); //이메일 토큰 발급 이후 DTO셋팅
+        validateDTO.setEmailToken(token);
+        validateDTO.setExpirationTime(expirationTime);
         validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL); //코드 발급 이후엔 인증대기 상태
 
         System.out.println("이메일 인증토큰 유효시간 : "+ expirationTime);
 
-        tokenExpirationMap.put(token, expirationTime);
+
         Cookie cookie = new Cookie("enableSendEmail", token);  //UUID값을 넣음
         response.addCookie(cookie);
 
@@ -145,38 +144,13 @@ public class EmailVerificationService {
 
     }
 
-    public void emailToeknDelete(HttpServletRequest request, HttpServletResponse response){
-
-        validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL); //대기상태로 바꿈
-        if (request.getCookies()!=null) {
-            Cookie[] requestCookie = request.getCookies();
-
-            Cookie enableSendEmail = Stream.of(requestCookie)
-                    .filter(cookieName -> cookieName.getName().equals("enableSendEmail"))
-                    .findFirst()
-                    .orElse(null);
 
 
-            //이메일 토큰이 발급된 상태라면
-            if (enableSendEmail != null) {
+    //이메일 토큰시간 검증 및 삭제 -ignoreDelete 옵션을 통해 (검증/삭제) 옵션 선택
+    public boolean emailTokenValidation(HttpServletRequest request, HttpServletResponse response, boolean ignoreOption) {
 
-                String emailToken = enableSendEmail.getValue();
+        String emailTokenUUID = validateDTO.getEmailToken();
 
-                System.out.println("이메일 토큰을 삭제합니다."); //emailToken강제 삭제
-                tokenExpirationMap.remove(emailToken); //컬렉션 삭제
-                //쿠키도 삭제해줌
-                Cookie cookie = new Cookie("enableSendEmail", null);
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
-                validateDTO.setEmailToken("");
-                response.addCookie(cookie);
-
-            }
-        }
-    }
-
-    //이메일 토큰시간 체크
-    public boolean emailTokenValidateTimeCheck(HttpServletRequest request, HttpServletResponse response) {
         //쿠키 값이 존재하는지 확인
         if (request.getCookies()!=null) {
             Cookie[] requestCookie = request.getCookies();
@@ -186,19 +160,15 @@ public class EmailVerificationService {
                     .findFirst()
                     .orElse(null);
 
-
             System.out.println("enableSendEmail :" + enableSendEmail);
 
-            //이메일 토큰이 발급된 상태라면
-            if (enableSendEmail != null) {
+            //UUID를 비교함 같으면 유효한 코인
+            if (enableSendEmail.getValue().equals(emailTokenUUID) || ignoreOption) {
 
-                String emailToken = enableSendEmail.getValue(); //key = UUID
-                System.out.println("enableSendEmailTime: " + emailToken);
-
-                Long expirationTime = tokenExpirationMap.get(emailToken);//UUID로 token의 유효기간을 가져옴
+                Long expirationTime = validateDTO.getExpirationTime();//UUID로 token의 유효기간을 가져옴
 
                 //토큰 유효기간 체크 , 시간이 유효할 경우
-                if (expirationTime != null && expirationTime > System.currentTimeMillis()) {
+                if (expirationTime != null && expirationTime > System.currentTimeMillis() && !ignoreOption) {
 
                     System.out.println("이메일 토큰 시간이 유효합니다." + System.currentTimeMillis());
                     return false; // 토큰기간 유효 -> 재발급 불가능
@@ -206,7 +176,8 @@ public class EmailVerificationService {
                 } else {
 
                     System.out.println("이메일 토큰 시간이 만료되었습니다 인증번호를 재발급해주세요.");
-                    tokenExpirationMap.remove(emailToken); //컬렉션 삭제
+                    validateDTO.setEmailToken(null);
+                    validateDTO.setExpirationTime(null);
                     //쿠키도 삭제해줌
                     Cookie cookie = new Cookie("enableSendEmail", null);
                     cookie.setMaxAge(0);
@@ -218,18 +189,26 @@ public class EmailVerificationService {
                 }
             }
         }
+//
+//        쿠키에서 받은 값 자체가 없는 경우, but 컬렉션엔 저장된 토큰이 있으면(쿠키를 의도적으로 삭제한 경우 컬렉션에서 찾아서 다시 쿠키로 넣어줌)
+//        Iterator<String> keys = tokenExpirationMap.keySet().iterator();
+//
+//        while(keys.hasNext()){
+//            String key = keys.next();
+//       //   Long value = tokenExpirationMap.get(key);
+//            Cookie cookie = new Cookie("enableSendEmail", key);
+//            response.addCookie(cookie);
+//            System.out.println("이메일 쿠키를 복구합니다.");
+//            return false;
+//        }//조회한 컬렉션에 값이 없으면 재발급가능
 
-        //쿠키에서 받은 값 자체가 없는 경우, but 컬렉션엔 저장된 토큰이 있으면(쿠키를 의도적으로 삭제한 경우 컬렉션에서 찾아서 다시 쿠키로 넣어줌)
-        Iterator<String> keys = tokenExpirationMap.keySet().iterator();
-
-        while(keys.hasNext()){
-            String key = keys.next();
-       //   Long value = tokenExpirationMap.get(key);
-            Cookie cookie = new Cookie("enableSendEmail", key);
-            response.addCookie(cookie);
-            System.out.println("이메일 쿠키를 복구합니다.");
-            return false;
-        }//조회한 컬렉션에 값이 없으면 재발급가능
+        /**쿠키엔 토큰이 없으나 DTO에는 있으면 쿠키 복구**/
+        if(emailTokenUUID!=null){
+              Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
+              response.addCookie(cookie);
+              System.out.println("이메일 쿠키를 복구합니다.");
+              return false;
+        }
         return true;
 
     }

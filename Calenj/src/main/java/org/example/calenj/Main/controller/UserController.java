@@ -104,7 +104,7 @@ public class UserController {
 
         System.out.println(userDTO);
 
-        emailVerificationService.emailToeknDelete(request,response);
+        emailVerificationService.emailTokenValidation(request,response,true);
         return userService.saveUser(userDTO);
     }
 
@@ -115,6 +115,14 @@ public class UserController {
             return true;
         }
         return false;
+    }
+    @GetMapping("/api/emailTokenExpiration")
+    public Long emailTokenExpiration(){
+        Long expriationTime =validateDTO.getExpirationTime();
+        if(expriationTime!=null){
+            return expriationTime;
+        }
+        return 0L;
     }
 
     @PostMapping("/api/login")

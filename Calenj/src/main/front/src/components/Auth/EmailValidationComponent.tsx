@@ -43,6 +43,8 @@ type Props = ComponentProps & DispatchProps & EmailToeknProps;
 const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToken,updateCodeValid})=>{
     const [code, setCode] = useState<string>('');
     const [isValid,setIsValid] = useState<boolean>(false);
+    const [seconds, setSeconds] = useState<number>(0);
+    const [minutes, setMinutes] = useState<number>(0);
 
     
 
@@ -55,8 +57,7 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
                     email : email
                 },
             });
-            
-            
+                        
             console.log(response.data)
             if(response.data===100){
                 window.alert("인증코드를 입력해주세요.")
@@ -73,19 +74,49 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
         }
     }
 
-
+   
     //재랜더링 시 이메일 인증을 초기화
     useEffect(()=>{
+
         setIsValid(false);
     },[])
     
 
 
 
+    // useEffect(()=>{
+    //     const timerId = setInterval(updateTimer, 1000);
+
+
+
+    //     function updateTimer(){
+    //         const currentTime = Date.now();
+    
+    //         // 남은 시간 계산 (밀리초 단위)
+    //         const remainingTime = emailToken.validateTime - currentTime;
+    //         console.log((remainingTime / 1000) % 60);
+            
+    //         // 만료 시간이 지났으면 타이머 중지
+    //         if (remainingTime <= 0) {
+    //             (timerId);
+    //             console.log('Expired');
+    //             return;
+    //         }
+    //         // 남은 시간을 시분초로 변환
+    //         setSeconds(Math.floor((remainingTime / 1000) % 60));
+    //         setMinutes(Math.floor((remainingTime / 1000 / 60) % 60));
+    
+    
+    //     }
+    // },[seconds])
+    
+
+
     //Redux는 클라이언트 측의 상태 관리 라이브러리이므로 백에서 토큰관리로 철저히 관리해야됨.
     //보안적인 토큰 사용: Redux 애플리케이션에서 중요한 상태를 변경할 때 사용자 인증을 확인
 
     return(
+        
         <div>
             <FormLable>{!isValid && "이메일 인증을 해주세요"}</FormLable>
             <br></br>
@@ -93,10 +124,11 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
             <br/>
 
             <Input type ="text "onChange={(e:ChangeEvent<HTMLInputElement>)=>setCode(e.target.value)}></Input>
-            <ErrorMessage></ErrorMessage>
+            <ErrorMessage>{seconds}:</ErrorMessage>
                
                  
                 <div id="btn_emailCodeValidation" onClick={codeRequest} > 확인</div>
+
                 <div>
                 </div>
 

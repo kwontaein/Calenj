@@ -12,6 +12,7 @@ public class ValidateDTO {
     private String email;
     private String code;
     private String emailToken;
+    private Long expirationTime;
     private EmailValidState emailValidState = EmailValidState.INITIAL;
 
     @Getter
