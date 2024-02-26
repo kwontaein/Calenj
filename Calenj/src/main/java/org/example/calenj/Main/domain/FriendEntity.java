@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity(name = "Friends")
 @Getter
-@DiscriminatorValue("Friends")
 public class FriendEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
