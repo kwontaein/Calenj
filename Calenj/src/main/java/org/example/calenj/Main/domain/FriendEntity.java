@@ -14,10 +14,15 @@ public class FriendEntity {
     @Column(nullable = false, unique = true, name = "friend_id", columnDefinition = "BINARY(16)")
     private String friendId;
 
+    @Column(name = "from_user_id")
     private String fromUserId;
+    @Column(name = "to_user_id")
     private String toUserId;
+    @Column(name = "friend_each_other")
     private boolean friendEachOther;
+    @Column(name = "nick_name")
     private String nickName;
+    @Column(name = "create_date")
     private String createDate;
 
 }
