@@ -129,7 +129,8 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken,updateTok
                     setShowAlert(true);
                     setValidation(true);
                     try{
-                        const response = await axios.post('api/sendEmail')
+                        const response = await axios.get('api/emailTokenExpiration');
+                        console.log("validateTime :" +response.data);
                         updateToken({tokenId:"tokenUUID",validateTime:response.data});
                     }catch (error) {
                         console.error(error);

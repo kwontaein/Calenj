@@ -1,12 +1,13 @@
 import {Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
-import {ChangeEvent, useEffect, useState} from 'react';
+import {ChangeEvent, useEffect, useState,useRef } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
 import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
 import '../../style/Sign.scss'
 import{RootState} from '../../store/store'
 import { Dispatch } from 'redux';
-import schema from '../../formShema/signSchema'
+
+
 
 
 
@@ -42,11 +43,13 @@ type Props = ComponentProps & DispatchProps & EmailToeknProps;
 
 const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToken,updateCodeValid})=>{
     const [code, setCode] = useState<string>('');
-    const [isValid,setIsValid] = useState<boolean>(false);
     const [seconds, setSeconds] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
+    const [remainingTime,setRemainingTime] = useState<number>(0);
 
-    
+    const interval = useRef<boolean>();
+   
+
 
 
     const codeRequest = async (): Promise<void> => {
@@ -74,43 +77,56 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
         }
     }
 
-   
-    //재랜더링 시 이메일 인증을 초기화
-    useEffect(()=>{
 
-        setIsValid(false);
-    },[])
+    const updateTimer = ():boolean=>{
+        const currentTime = Date.now();
+
+        //남은 시간 계산 (밀리초 단위)
+        setRemainingTime(emailToken.validateTime-currentTime);
+        
+        // 남은 시간을 시분초로 변환
+        setSeconds(Math.floor((remainingTime / 1000) % 60));
+        setMinutes(Math.floor((remainingTime / 1000 / 60) % 60));
+        
+        if(remainingTime<0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    // remember function result
+   useEffect(()=>{  
+    interval.current = updateTimer();
+   },[updateTimer]);
+
+
+   //랜더링 시 카운트 다운, 만약 함수가 반환하는 값이 true면 멈춤
+   useEffect(()=>{
+    const id =setInterval(updateTimer,1000);
+
+    //이메일 토큰 유효시간이 지나면
+    if(interval.current){
+        clearInterval(id);
+        setSeconds(0);
+        setMinutes(0);
+    }
+    return ()=> clearInterval(id);
+   });
+
+
+
+
+  
+    const secondsUnit =(seconds :number):(string|number)=>{
+        if(seconds<10){
+            return "0"+seconds;
+        }else{
+            return seconds;
+        }
+    }
     
-
-
-
-    // useEffect(()=>{
-    //     const timerId = setInterval(updateTimer, 1000);
-
-
-
-    //     function updateTimer(){
-    //         const currentTime = Date.now();
-    
-    //         // 남은 시간 계산 (밀리초 단위)
-    //         const remainingTime = emailToken.validateTime - currentTime;
-    //         console.log((remainingTime / 1000) % 60);
-            
-    //         // 만료 시간이 지났으면 타이머 중지
-    //         if (remainingTime <= 0) {
-    //             (timerId);
-    //             console.log('Expired');
-    //             return;
-    //         }
-    //         // 남은 시간을 시분초로 변환
-    //         setSeconds(Math.floor((remainingTime / 1000) % 60));
-    //         setMinutes(Math.floor((remainingTime / 1000 / 60) % 60));
-    
-    
-    //     }
-    // },[seconds])
-    
-
 
     //Redux는 클라이언트 측의 상태 관리 라이브러리이므로 백에서 토큰관리로 철저히 관리해야됨.
     //보안적인 토큰 사용: Redux 애플리케이션에서 중요한 상태를 변경할 때 사용자 인증을 확인
@@ -118,15 +134,12 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
     return(
         
         <div>
-            <FormLable>{!isValid && "이메일 인증을 해주세요"}</FormLable>
             <br></br>
             <FormLable>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
-            <br/>
+            <ErrorMessage>남은 시간 : {minutes}분{secondsUnit(seconds)}초</ErrorMessage>    
+
 
             <Input type ="text "onChange={(e:ChangeEvent<HTMLInputElement>)=>setCode(e.target.value)}></Input>
-            <ErrorMessage>{seconds}:</ErrorMessage>
-               
-                 
                 <div id="btn_emailCodeValidation" onClick={codeRequest} > 확인</div>
 
                 <div>

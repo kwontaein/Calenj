@@ -119,6 +119,8 @@ public class UserController {
     @GetMapping("/api/emailTokenExpiration")
     public Long emailTokenExpiration(){
         Long expriationTime =validateDTO.getExpirationTime();
+        System.out.println("expriationTime : "+ expriationTime);
+
         if(expriationTime!=null){
             return expriationTime;
         }
