@@ -1,12 +1,15 @@
 package org.example.calenj.Main.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity(name = "Friends")
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
+@AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
+@Builder // 빌더
 @Getter
-@DiscriminatorValue("Friends")
+@ToString
 public class FriendEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
