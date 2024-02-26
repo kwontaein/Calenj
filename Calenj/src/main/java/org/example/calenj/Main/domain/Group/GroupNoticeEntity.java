@@ -7,7 +7,7 @@ import lombok.*;
 @Entity(name = "Group_Notice")
 @Getter
 @DiscriminatorValue("Group_Notice") // 서브 테이블을 판별하기 위한 값
-public class Group_NoticeEntity extends GroupEntity {
+public class GroupNoticeEntity extends GroupEntity {
     private String notice_title;
     private String notice_created;
     private String notice_content;

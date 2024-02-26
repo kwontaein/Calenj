@@ -23,7 +23,6 @@ public class UserDTO {
 
     public UserEntity toEntity() {
 
-
         return UserEntity.builder()
                 .userEmail(userEmail)
                 .nickname(nickname)

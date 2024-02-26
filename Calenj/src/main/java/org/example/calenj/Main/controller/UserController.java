@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -64,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
+    public String sendEmail(@RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
         //이메일 중복체크 후 중복이 아닐 시 전송
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
@@ -79,30 +80,44 @@ public class UserController {
                 System.out.println(email + "로 이메일 인증코드 발급완료");
                 return "발급완료";
             } else {
-                return "토큰정보확인";
+                return "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.";
             }
 
         }
         System.out.println(email + "은 이미 가입된 아이디입니다.");
-        return "중복이메일.";
+        return "이미 가입된 이메일입니다.";
     }
 
 
     @PostMapping("/api/emailCodeValidation")
-    public boolean emailCodeValidation(@RequestParam String validationCode, @RequestParam String email) {
-        System.out.println(email + "로 인증요청");
-        return emailVerificationService.checkValidationCode(validationCode);
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
 
+        System.out.println(email + "로 인증요청");
+
+        emailVerificationService.checkValidationCode(validationCode,request,response);
+
+        return validateDTO.getEmailValidState().getCode();
     }
 
     @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO userDTO) {
+    public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(userDTO);
+
+        emailVerificationService.emailTokenDelete(request,response);
         return userService.saveUser(userDTO);
     }
 
-    @PostMapping("/api/testlogin")
+    @GetMapping("/api/emailValidationState")
+    public boolean checkEmailValidate(){
+
+        if(validateDTO.getEmailValidState().getCode()==200){
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         JwtToken jwtToken = userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());

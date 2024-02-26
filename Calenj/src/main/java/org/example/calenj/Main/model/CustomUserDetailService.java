@@ -1,7 +1,8 @@
-package org.example.calenj.Main.domain;
+package org.example.calenj.Main.model;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.Repository.UserRepository;
+import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

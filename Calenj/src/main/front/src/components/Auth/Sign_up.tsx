@@ -5,28 +5,56 @@ import {useEffect, useState} from 'react';
 import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../Style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
+import {connect} from "react-redux";
+import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
+import {Dispatch} from 'redux';
+import {RootState} from '../../store/store'
 import '../../Style/Sign.scss'
+import {isDisabled} from '@testing-library/user-event/dist/utils';
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
 
 interface UserData {
-    nick_name: string;
-    accountid: string;
-    user_password: string;
-    password_check?: string;
-    user_email: string;
+    nickname: string;
+    userPassword: string;
+    passwordCheck?: string;
+    userEmail: string;
 }
 
 //인터페이스 확장
 interface User extends UserData {
-    user_role?: role;
-    user_join_date?: string;
-    email_certification?: string;
+    userRole?: role;
+    userJoinDate?: string;
 }
 
 
-const SignUp: React.FC = () => {
+// store에서 가져올 state의 타입(EmailToken)
+interface EmailToeknProps {
+    emailToken: EmailToken;
+}
+
+
+//dispatch 함수타입을 interface로 정의
+interface DispatchProps {
+    updateToken: (payload: { tokenId: string; validateTime: number }) => void;
+    updateCodeValid: (payload: boolean) => void;
+}
+
+//emailToken 정보를 수정하는 함수 정의 후 connect
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+    updateToken: (payload: { tokenId: string; validateTime: number }) => dispatch(updateToken(payload)),
+    updateCodeValid: (payload: boolean) => dispatch(updateCodeValid(payload)),
+});
+
+//(Component Props로 전달하기 위한 interface)
+
+const mapStateToProps = (state: RootState): EmailToeknProps => ({
+    emailToken: state.emailValidation, // store에서 가져올 상태를 매핑
+});
+
+
+const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateToken, updateCodeValid}) => {
 
 
     //regiset : 첫번재 매개변수 객체의 key값을 받음, 2번째 매개변수로는 객체에 대한 유효성 검증코드
@@ -39,7 +67,6 @@ const SignUp: React.FC = () => {
 
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [validation, setValidation] = useState<boolean>(false);
-    const accountId = watch("accountid");
 
 
     // 원하는 형식으로 날짜를 설정합니다.
@@ -51,10 +78,21 @@ const SignUp: React.FC = () => {
 
     //성공 시
     const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
-        data.user_role = "USER";
-        data.user_join_date = makeJoinDate();
-        console.log("회원가입 성공");
-        return axios.post('api/usersave', data)
+        data.userRole = "USER";
+        data.userJoinDate = makeJoinDate();
+        setShowAlert(false);
+
+
+        window.alert("회원가입에 성공했습니다.");
+
+        window.location.replace("/");
+        updateToken({tokenId: '', validateTime: 0});//토큰 reset
+
+        setTimeout(() => {
+            updateCodeValid(false)
+        }, 1000);
+
+        return axios.post('api/saveUser', data)
             .then((response: AxiosResponse<Object>) => response.data)
             .catch((error) => Promise.reject(error));
     };
@@ -65,32 +103,11 @@ const SignUp: React.FC = () => {
     }
 
 
-    //아이디 중복체크
-    const accountIdDuplication = async (): Promise<void> => {
-        const isValid = await trigger("accountid");
-        console.log(isValid);
-        if (isValid) {
-            console.log(`${accountId}로 중복확인`)
-            const response = await axios.post('/api/IdDuplicated', null, {
-                params: {
-                    userName: accountId
-                }
-            });
-            if (response.data) {
-                window.alert("사용 가능한 아이디입니다.")
-            } else {
-                window.alert("중복된 아이디입니다.")
-            }
-            //스키마로 id 중복체크 검증
-            // schema.validate({id_duplication: response.data}).catch((err)=> console.log(err.message))
-        }
-    };
-
     //이메일 인증요청 -api 반환값 : 인증번호 (쿠키 값에 이메일 인증토큰도 있음)
     const emailRequest = async (): Promise<void> => {
 
-        const isValid = await trigger("user_email");
-        const email = watch("user_email");
+        const isValid = await trigger("userEmail");
+        const email = watch("userEmail");
         if (isValid) {
 
             try {
@@ -105,21 +122,33 @@ const SignUp: React.FC = () => {
                     }
                 );
 
-                if (response.data != "중복이메일" || response.data != "토큰정보확인") {
+                console.log(response.data)
+                if (response.data != "이미 가입된 이메일입니다." && response.data != "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
                     setShowAlert(true);
-                } else {
+                    setValidation(true);
+                    window.alert("이메일 인증코드가 발급되었습니다.")
+                } else if (response.data === "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.") {
+                    setValidation(true);
                     window.alert(response.data);
+                } else { //중복된 이메일이 아니고 토큰이 유효하지 않으면
+                    window.alert(response.data);
+                    setValidation(false);
                 }
             } catch (error) {
                 console.error(error);
             }
         }
-
     }
+
+    useEffect(() => {
+        updateCodeValid(false);
+    }, [])
 
 
     return (
+
         <div>
+
             <SignUpFormContainer>
                 <h2>회원가입</h2>
                 <form onSubmit={handleSubmit(onValid, onInvalid)}>
@@ -127,48 +156,44 @@ const SignUp: React.FC = () => {
                         <FormLable>닉네임</FormLable>
                     </div>
                     <div>
-                        <Input {...register("nick_name", {required: true})} placeholder="닉네임"/>
-                        <ErrorMessage>{errors.nick_name?.message}</ErrorMessage>
-                    </div>
-                    <div>
-                        <FormLable>아이디</FormLable>
-                    </div>
-                    <div>
-                        <Input {...register("accountid", {
-                            required: true,
-                            validate: {zero: (value) => value.length == 0 ? "아이디를 입력해주세요" : ""}
-                        })} placeholder="아이디"></Input>
-                        <div id='btn_idValidation' onClick={accountIdDuplication}>중복확인</div>
-                        <ErrorMessage>{errors.accountid?.message}</ErrorMessage>
-                    </div>
-                    <div>
-                        <FormLable>이메일</FormLable>
-                    </div>
-                    <div>
-                        <Input type="email" {...register("user_email", {required: true})} placeholder="이메일"></Input>
-                        <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
+                        <Input {...register("nickname", {required: true})} placeholder="닉네임"/>
+                        <ErrorMessage>{errors.nickname?.message}</ErrorMessage>
                     </div>
 
-                    <div id='btn_eamilValidation'
-                         onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}</div>
+                    <div>
+                        <FormLable>아이디(이메일)</FormLable>
+                    </div>
+
+
+                    <div>
+                        <Input type="email" {...register("userEmail", {required: true})} placeholder="이메일"
+                               readOnly={emailToken.codeValid}></Input>
+                        <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
+                    </div>
+
+                    {!emailToken.codeValid &&
+                        <div id='btn_eamilValidation'
+                             onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}
+                        </div>}
                     <br></br>
 
-                    {showAlert && <EmailValidationComponent email={watch('user_email')}/>}
+                    {showAlert === true ? !emailToken.codeValid &&
+                        <EmailValidationComponent email={watch('userEmail')}/> : null}
                     <div>
                         <div>
                             <FormLable>패스워드</FormLable>
                         </div>
-                        <Input type="password" {...register("user_password", {required: true})}
+                        <Input type="password" {...register("userPassword", {required: true})}
                                placeholder="비밀번호"></Input>
-                        <ErrorMessage>{errors.user_password?.message}</ErrorMessage>
+                        <ErrorMessage>{errors.userPassword?.message}</ErrorMessage>
                     </div>
                     <div>
                         <FormLable>패스워드 확인</FormLable>
                     </div>
                     <div>
-                        <Input type="password" {...register("password_check", {required: true})}
+                        <Input type="password" {...register("passwordCheck", {required: true})}
                                placeholder="비밀번호 확인"></Input>
-                        <ErrorMessage>{errors.password_check?.message}</ErrorMessage>
+                        <ErrorMessage>{errors.passwordCheck?.message}</ErrorMessage>
                     </div>
                     <div>
                         <Button type="submit" style={{marginTop: '2vw'}}>회원가입</Button>
@@ -182,5 +207,4 @@ const SignUp: React.FC = () => {
     );
 };
 
-
-export default SignUp;
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
