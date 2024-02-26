@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
+    public String sendEmail(@RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
         //이메일 중복체크 후 중복이 아닐 시 전송
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
@@ -104,7 +104,7 @@ public class UserController {
 
         System.out.println(userDTO);
 
-        emailVerificationService.emailTokenDelete(request,response);
+        emailVerificationService.emailTokenValidation(request,response,true);
         return userService.saveUser(userDTO);
     }
 
@@ -116,10 +116,21 @@ public class UserController {
         }
         return false;
     }
+    @GetMapping("/api/emailTokenExpiration")
+    public Long emailTokenExpiration(){
+        Long expriationTime =validateDTO.getExpirationTime();
+        System.out.println("expriationTime : "+ expriationTime);
+
+        if(expriationTime!=null){
+            return expriationTime;
+        }
+        return 0L;
+    }
 
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
+        System.out.println("userDTO.getUserEmail() : "+userDTO.getUserEmail());
         JwtToken jwtToken = userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
 
         System.out.println(jwtToken);
