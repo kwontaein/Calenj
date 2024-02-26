@@ -1,12 +1,13 @@
 package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.domain.Group.GroupEntity;
+import org.example.calenj.Main.DTO.GroupDetailDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -31,10 +32,10 @@ public class GroupController {
     }
 
     @PostMapping("/api/groupDetail")
-    public GroupEntity groupDetail(@RequestParam(name = "groupid") UUID groupid) {
+    public Optional<GroupDetailDTO> groupDetail(@RequestParam(name = "groupid") UUID groupid) {
         System.out.println("groupid : " + groupid);
 
-        GroupEntity groupDetails = groupService.groupDetail(groupid);
+        Optional<GroupDetailDTO> groupDetails = groupService.groupDetail(groupid);
         System.out.println("groupDetails  : " + groupDetails);
         return groupDetails;
     }

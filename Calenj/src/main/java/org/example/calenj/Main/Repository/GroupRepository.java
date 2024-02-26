@@ -1,6 +1,7 @@
 package org.example.calenj.Main.Repository;
 
 import org.example.calenj.Main.DTO.GroupDTO;
+import org.example.calenj.Main.DTO.GroupUserDTO;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,10 +20,13 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     Optional<List<GroupDTO>> findByUserEntity_UserEmail(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
 
 
-    @Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")
-    Optional<List<GroupEntity>> findByUserEntity_UserEmail2(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
+    //서브 테이블 조회의 경우 쿼리 두개 사용 및 조인 전략을 사용해야 함 여기서는 두개의 쿼리 사용
+    // 첫 번째 쿼리: GroupEntity 조회
+    @Query("SELECT new org.example.calenj.Main.DTO.GroupDTO(g.groupid, g.grouptitle, g.groupcreated ,g.groupcreater) FROM Group_table g WHERE g.groupid = :groupId")
+    Optional<GroupDTO> findGroupById(@Param("groupId") UUID groupId);
 
-
-    Optional<GroupEntity> findByGroupid(UUID groupid);
+    // 두 번째 쿼리: GroupUserEntity 조회
+    @Query("SELECT new org.example.calenj.Main.DTO.GroupUserDTO(gu.user.nickname, gu.role, gu.group_user_location) FROM Group_User gu WHERE gu.group.groupid = :groupId")
+    List<GroupUserDTO> findGroupUsers(@Param("groupId") UUID groupId);
 
 }

@@ -1,6 +1,8 @@
 package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.DTO.GroupDTO;
+import org.example.calenj.Main.DTO.GroupDetailDTO;
+import org.example.calenj.Main.DTO.GroupUserDTO;
 import org.example.calenj.Main.Repository.GroupRepository;
 import org.example.calenj.Main.Repository.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -74,7 +77,29 @@ public class GroupService {
         return groupEntities;
     }
 
-    public GroupEntity groupDetail(UUID groupid) {
-        return groupRepository.findByGroupid(groupid).orElseThrow(() -> new RuntimeException("해당 그룹 정보를 찾을 수 없습니다"));
+    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
+        System.out.println(" groupDetail 실행 1");
+        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
+        System.out.println(" groupDetail 실행 2 : " + groupOptional);
+        if (groupOptional.isPresent()) {
+            GroupDTO groupDTO = groupOptional.get();
+            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupid());
+
+            System.out.println(" groupDetail 실행 3 : " + groupUsers);
+            // GroupDetailDTO 생성
+            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
+                    groupDTO.getGroupid(),
+                    groupDTO.getGrouptitle(),
+                    groupDTO.getGroupcreated(),
+                    groupDTO.getGroupcreater(),
+                    groupUsers
+            );
+
+            System.out.println(" groupDetail 실행 4 : " + groupDetailDTO);
+            return Optional.of(groupDetailDTO);
+        } else {
+            return Optional.empty();
+        }
     }
+
 }
