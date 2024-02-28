@@ -145,7 +145,6 @@ public class EmailVerificationService {
     }
 
 
-
     //이메일 토큰시간 검증 및 삭제 -ignoreDelete 옵션을 통해 (검증/삭제) 옵션 선택
     public boolean emailTokenValidation(HttpServletRequest request, HttpServletResponse response, boolean ignoreOption) {
 
@@ -204,10 +203,10 @@ public class EmailVerificationService {
 
         /**쿠키엔 토큰이 없으나 DTO에는 있으면 쿠키 복구**/
         if(emailTokenUUID!=null){
-              Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
-              response.addCookie(cookie);
-              System.out.println("이메일 쿠키를 복구합니다.");
-              return false;
+            Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
+            response.addCookie(cookie);
+            System.out.println("이메일 쿠키를 복구합니다.");
+            return false;
         }
         return true;
 
