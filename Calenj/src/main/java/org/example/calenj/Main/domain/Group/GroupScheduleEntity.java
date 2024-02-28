@@ -14,8 +14,11 @@ public class GroupScheduleEntity {
             @JoinColumn(name = "user_email", referencedColumnName = "user_email")
     })
     private GroupUserEntity groupUser;
-    
-    private String group_schedule_location;
-    private String group_schedule_title;
-    private String group_schedule_content;
+
+    @Column(name = "group_schedule_location")
+    private String groupScheduleLocation;
+    @Column(name = "group_schedule_title")
+    private String groupScheduleTitle;
+    @Column(name = "group_schedule_content")
+    private String groupScheduleContent;
 }
