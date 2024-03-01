@@ -19,7 +19,7 @@ public class GroupController {
 
     @PostMapping("/api/makeGroup")
     public void makeGroup(@RequestBody GroupDTO groupDTO) {
-        groupService.makeGroup(groupDTO.getGrouptitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
+        groupService.makeGroup(groupDTO.getGroupTitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
     }
 
     @PostMapping("/api/groupList")

@@ -22,14 +22,14 @@ public class GroupEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "group_id", columnDefinition = "BINARY(16)")
-    private UUID groupid;
+    private UUID groupId;
 
     @Column(name = "group_created")
-    private String groupcreated;
+    private String groupCreated;
     @Column(name = "group_title")
-    private String grouptitle;
+    private String groupTitle;
     @Column(name = "group_creater")
-    private String groupcreater; //SecurityContext 에서 값 빼오기
+    private String groupCreater; //SecurityContext 에서 값 빼오기
 
 
     @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
