@@ -56,5 +56,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     //웹소켓
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }

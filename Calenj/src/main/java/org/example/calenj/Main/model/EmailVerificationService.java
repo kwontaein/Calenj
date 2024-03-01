@@ -126,7 +126,7 @@ public class EmailVerificationService {
 
         String token = UUID.randomUUID().toString();
         // 5분 유효한 토큰
-        long validityInMilliseconds = (1000*60*1)+4000; //5분 + 서버 통신시간 4초
+        long validityInMilliseconds = (1000*60*5)+4000; //5분 + 서버 통신시간 4초
         long expirationTime = System.currentTimeMillis() + validityInMilliseconds;
         System.out.print("이메일 인증토큰 발급합니다. ");
 
