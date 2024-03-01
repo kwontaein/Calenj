@@ -54,5 +54,7 @@ dependencies {
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //웹소켓
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 }

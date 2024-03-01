@@ -1,6 +1,9 @@
-import axios from 'axios';
+import { rejects } from 'assert';
+import axios,{AxiosResponse} from 'axios';
+import { resolve } from 'path';
 import * as yup from 'yup';
 
+let timerId:NodeJS.Timeout | undefined;
 
 interface UserData {
     nickname: string;
@@ -9,6 +12,33 @@ interface UserData {
     userEmail: string;
     emailValidation?:boolean;
   }
+
+  async function fetchEmailValid ():Promise<boolean>{
+    try {
+        const response = await axios.get<boolean>('/api/emailValidationState');
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+  }
+
+
+    function debouncing(callback:()=>Promise<boolean>, timeout =2000 ):Promise<boolean>{
+    //timerId 제거    
+    clearTimeout(timerId);
+
+    return new Promise<boolean>((resolve, reject)=>{
+        timerId = setTimeout(async ()=>{
+            callback().then((result)=>{resolve(result)})
+            .catch((err)=>{reject(err)})
+        },timeout);
+    })
+
+
+    
+    
+  }
+
 
 
 
@@ -39,17 +69,17 @@ interface UserData {
         .email('이메일형식이 적합하지 않습니다.'),
 
     emailValidation : yup.boolean()
-        .test('이메일 인증 스키마','이메일 인증을 해주세요',async (value)=>{
-            try{
-                
-                const response = await axios.get('/api/emailValidationState');
-                console.log(response.data)
-                return response.data;
+        .test('이메일 인증 스키마','이메일 인증을 해주세요',  (value)=>{
+        
+            return debouncing(fetchEmailValid)
+            .then((resolve)=>{
+                return resolve
+            })
+            .catch((err)=>{
+                console.error(err)
+                return err.message;
+            });
 
-            }catch (error) {
-            console.error(error);
-            }
-           return false;
         }),
 
   });
