@@ -4,7 +4,7 @@ package org.example.calenj.Main.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.Group.Group_UserEntity;
+import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,7 +53,7 @@ public class UserEntity implements UserDetails {
     private String refreshToken;
 
     @OneToMany(mappedBy = "user")
-    private List<Group_UserEntity> memberships;
+    private List<GroupUserEntity> memberships;
     //--여기서부터 UserDetails 요소들 오버라이드
 
 

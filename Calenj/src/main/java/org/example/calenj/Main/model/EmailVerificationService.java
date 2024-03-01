@@ -57,6 +57,9 @@ public class EmailVerificationService {
                 "인증 번호는 " + authNumber + "입니다.<br>" +
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
         mailSend(toMail, title, content);
+
+        //인증번호 발급 이후 EnableSendEmail =SUCCESS
+        validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.SUCCESS);
         return authNumber;
     }
 
@@ -123,7 +126,7 @@ public class EmailVerificationService {
 
         String token = UUID.randomUUID().toString();
         // 5분 유효한 토큰
-        long validityInMilliseconds = (1000*60*5)+4000; //5분 + 서버 통신시간 4초
+        long validityInMilliseconds = (1000*60*1)+4000; //5분 + 서버 통신시간 4초
         long expirationTime = System.currentTimeMillis() + validityInMilliseconds;
         System.out.print("이메일 인증토큰 발급합니다. ");
 
@@ -139,11 +142,11 @@ public class EmailVerificationService {
 
         return true; //이메일 토큰 반환 후 ture 반환
         }
-
+        //만약 이메일 인증 토큰이 유효할 시 EnableSendEmail= FAIL
+        validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.FAIL);
         return false;
 
     }
-
 
 
     //이메일 토큰시간 검증 및 삭제 -ignoreDelete 옵션을 통해 (검증/삭제) 옵션 선택
@@ -204,10 +207,10 @@ public class EmailVerificationService {
 
         /**쿠키엔 토큰이 없으나 DTO에는 있으면 쿠키 복구**/
         if(emailTokenUUID!=null){
-              Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
-              response.addCookie(cookie);
-              System.out.println("이메일 쿠키를 복구합니다.");
-              return false;
+            Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
+            response.addCookie(cookie);
+            System.out.println("이메일 쿠키를 복구합니다.");
+            return false;
         }
         return true;
 
@@ -219,12 +222,13 @@ public class EmailVerificationService {
 
         UserEntity user = userRepository.findByUserEmail(email).orElse(null);
         System.out.println(email);
-
+        //DB에 해당 이메일이 존재하지 않을경우
         if (user == null) {
             System.out.println(user);
             return true;
-        } else {
+        } else { //이메일 중복 시
             System.out.println(user);
+            validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.DUPLICATE);
             return false;
         }
     }

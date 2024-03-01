@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,36 +64,34 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
-        //이메일 중복체크 후 중복이 아닐 시 전송
+    public Object sendEmail(@RequestParam(name = "email") String email, HttpServletRequest request, HttpServletResponse response) {
+        //이메일 중복체크 메소드 (이미 가입된 이메일 -false = 인증코드 발급 불가능)
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
         System.out.println("checkDublidated : " + checkDublidated);
-        //존재하지 않은 이메일 -true (Test 시 주석처리)
+
         if (checkDublidated) {
+            //이메일 중복 체크 후 이메일 발급 전 토큰 체크
             //토큰 발급 (만약 이메일토큰이 존재하고 유효할 경우 false 반환)
             boolean enableEmail = emailVerificationService.generateEmailValidateToken(request, response);
 
             if (enableEmail) {//토큰 체크 후 이메일 발급
                 emailVerificationService.joinEmail(email);
                 System.out.println(email + "로 이메일 인증코드 발급완료");
-                return "발급완료";
-            } else {
-                return "이메일 인증코드는 5분에 한 번 보낼 수 있습니다. 잠시후 다시 시도해 주세요.";
             }
-
         }
-        System.out.println(email + "은 이미 가입된 아이디입니다.");
-        return "이미 가입된 이메일입니다.";
+
+
+        return validateDTO.getEnableSendEmail().getEnableEmailEnum();
     }
 
 
     @PostMapping("/api/emailCodeValidation")
-    public Integer emailCodeValidation(@RequestParam String validationCode, @RequestParam String email, HttpServletRequest request, HttpServletResponse response) {
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(email + "로 인증요청");
 
-        emailVerificationService.checkValidationCode(validationCode,request,response);
+        emailVerificationService.checkValidationCode(validationCode, request, response);
 
         return validateDTO.getEmailValidState().getCode();
     }
@@ -104,24 +101,25 @@ public class UserController {
 
         System.out.println(userDTO);
 
-        emailVerificationService.emailTokenValidation(request,response,true);
+        emailVerificationService.emailTokenValidation(request, response, true);
         return userService.saveUser(userDTO);
     }
 
     @GetMapping("/api/emailValidationState")
-    public boolean checkEmailValidate(){
+    public boolean checkEmailValidate() {
 
-        if(validateDTO.getEmailValidState().getCode()==200){
+        if (validateDTO.getEmailValidState().getCode() == 200) {
             return true;
         }
         return false;
     }
-    @GetMapping("/api/emailTokenExpiration")
-    public Long emailTokenExpiration(){
-        Long expriationTime =validateDTO.getExpirationTime();
-        System.out.println("expriationTime : "+ expriationTime);
 
-        if(expriationTime!=null){
+    @GetMapping("/api/emailTokenExpiration")
+    public Long emailTokenExpiration() {
+        Long expriationTime = validateDTO.getExpirationTime();
+        System.out.println("expriationTime : " + expriationTime);
+
+        if (expriationTime != null) {
             return expriationTime;
         }
         return 0L;
@@ -130,7 +128,7 @@ public class UserController {
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
-        System.out.println("userDTO.getUserEmail() : "+userDTO.getUserEmail());
+        System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
         JwtToken jwtToken = userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
 
         System.out.println(jwtToken);

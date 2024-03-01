@@ -1,4 +1,4 @@
-import {Input, Button, ErrorMessage,FormLable} from '../../style/FormStyle';
+import {Input, ErrorMessage,FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState,useRef } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
@@ -88,6 +88,7 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
         setSeconds(Math.floor((remainingTime / 1000) % 60));
         setMinutes(Math.floor((remainingTime / 1000 / 60) % 60));
         
+
         if(remainingTime<0){
             return true;
         }else{
@@ -116,8 +117,6 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
    });
 
 
-
-
   
     const secondsUnit =(seconds :number):(string|number)=>{
         if(seconds<10){
@@ -136,7 +135,7 @@ const EmailValidationComponent : React.FC<Props> = ({email,emailToken,updateToke
         <div>
             <br></br>
             <FormLable>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
-            <ErrorMessage>남은 시간 : {minutes}분{secondsUnit(seconds)}초</ErrorMessage>    
+            <ErrorMessage>{(minutes===0 && seconds===0) ? "인증시간이 만료되었습니다." :`남은 시간 : ${minutes}분${secondsUnit(seconds)}초`}</ErrorMessage>    
 
 
             <Input type ="text "onChange={(e:ChangeEvent<HTMLInputElement>)=>setCode(e.target.value)}></Input>
