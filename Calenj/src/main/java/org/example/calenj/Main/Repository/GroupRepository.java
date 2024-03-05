@@ -1,7 +1,7 @@
 package org.example.calenj.Main.Repository;
 
-import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.DTO.GroupUserDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

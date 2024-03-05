@@ -16,6 +16,9 @@ public class ChatHandler extends TextWebSocketHandler {
 
     private static List<WebSocketSession> list = new ArrayList<>();
 
+
+    // WebSocket 에서 수신된 텍스트 메시지를 처리하는 메서드입니다.
+    // 세션에서 메시지를 가져와서 리스트에 있는 모든 세션에 메시지를 전송합니다.
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
@@ -26,7 +29,7 @@ public class ChatHandler extends TextWebSocketHandler {
         }
     }
 
-    /* Client가 접속 시 호출되는 메서드 */
+    /* Client 가 WebSocket 접속 시 호출되는 메서드 */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
@@ -35,7 +38,7 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info(session + " 클라이언트 접속");
     }
 
-    /* Client가 접속 해제 시 호출되는 메서드드 */
+    /* Client 가 WebSocket 접속 해제 시 호출되는 메서드드 */
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

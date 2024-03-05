@@ -1,14 +1,14 @@
 package org.example.calenj.Main.Repository;
 
 import jakarta.annotation.PostConstruct;
-import org.example.calenj.Main.DTO.ChatRoomDTO;
+import org.example.calenj.Main.DTO.Chat.ChatRoomDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
 public class ChatRoomRepository {
-
+    //여기도 엔티티 만들어서 DB에 저장하는 코드로 변경해야함
     private Map<String, ChatRoomDTO> chatRoomDTOMap;
 
     @PostConstruct
