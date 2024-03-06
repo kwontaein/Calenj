@@ -1,10 +1,10 @@
-import MakeGroup from "./MakeGroup"
+import GroupList from "./GroupList"
 
 
-const Group :React.FC = ()=>{
-    return(
+const Group: React.FC = () => {
+    return (
         <div>
-            <MakeGroup/>
+            <GroupList/>
         </div>
     )
 }
