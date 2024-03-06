@@ -1,9 +1,9 @@
-import {Input, ErrorMessage,FormLable} from '../../Style/FormStyle';
+import {Input, ErrorMessage,FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState,useRef } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
 import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
-import '../../Style/Sign.scss'
+import '../../style/Sign.scss'
 import{RootState} from '../../store/store'
 import { Dispatch } from 'redux';
 
