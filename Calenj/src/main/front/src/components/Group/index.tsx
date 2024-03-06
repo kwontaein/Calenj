@@ -1,9 +1,8 @@
-import GroupList from "./GroupList";
+import GroupList from "./GroupList"
 
 
-
-const Group :React.FC = ()=>{
-    return(
+const Group: React.FC = () => {
+    return (
         <div>
             <GroupList/>
         </div>

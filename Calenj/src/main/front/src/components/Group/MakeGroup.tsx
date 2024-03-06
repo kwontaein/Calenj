@@ -34,7 +34,7 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
 
         const confrimAction = () => { //취할 행동
           if(window.confirm(massage)){ //확신 시
-            MakeGroup
+            MakeGroup();
           }else{
             onCancel(); //취소 누르면 실행
           }

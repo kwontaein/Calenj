@@ -1,25 +1,25 @@
-
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
 import axios from 'axios';
-import { useState } from 'react';
+import {useState} from 'react';
 
 
-interface GroupList{
-    UUID:number;
-    groupTitle:string;
-    groupCreated:string;
-    groupCreater:string;
+interface GroupList {
+    UUID: number;
+    groupTitle: string;
+    groupCreated: string;
+    groupCreater: string;
 }
-const GroupList :React.FC =()=>{
-    const[showMakeGroup,setShowMakeGroup] = useState<boolean>(false);
+
+const GroupList: React.FC = () => {
+    const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
-    const QUERY_GROUP_LIST_KEY:string = 'groupList'
-    
+    const QUERY_GROUP_LIST_KEY: string = 'groupList'
+
 
     //그룹 목록 불러오기
-    const getGroupList = async ():Promise<GroupList[]> =>{
+    const getGroupList = async (): Promise<GroupList[]> => {
         const response = await axios.get('/api/groupList')
         console.log('그룹 목록을 불러옵니다.')
         return response.data;
@@ -31,21 +31,20 @@ const GroupList :React.FC =()=>{
     });
 
 
-
     const closeModal = () => {
         setShowMakeGroup(false);
-      };
+    };
 
-    return(
+    return (
         <div>
-            <button onClick={()=>setShowMakeGroup(true)}>그룹 생성</button>
-            {showMakeGroup && <MakeGroup onClose ={closeModal}/>}
-            {groupListState.data && groupListState.data.map((group)=>(
-                <div key={group.UUID}> 
+            <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
+            {showMakeGroup && <MakeGroup onClose={closeModal}></MakeGroup>}
+            {groupListState.data && groupListState.data.map((group) => (
+                <div key={group.UUID}>
                     <div>Group Title: {group.groupTitle}</div>
                 </div>
 
-            ))}s
+            ))}
         </div>
     )
 

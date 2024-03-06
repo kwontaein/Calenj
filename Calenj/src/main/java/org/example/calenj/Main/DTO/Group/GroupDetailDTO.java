@@ -14,11 +14,4 @@ public class GroupDetailDTO {
     private String groupCreater;
     private List<GroupUserDTO> members; //Group_UserEntity에서 목록으로 가져오기
 
-    public GroupDetailDTO(UUID groupId, String groupCreated, String groupTitle, String groupCreater, List<GroupUserDTO> groupUserEntity) {
-        this.groupId = groupId;
-        this.groupCreated = groupCreated;
-        this.groupTitle = groupTitle;
-        this.groupCreater = groupCreater;
-        this.members = groupUserEntity;
-    }
 }
