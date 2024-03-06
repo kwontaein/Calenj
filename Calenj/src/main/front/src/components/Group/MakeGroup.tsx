@@ -4,48 +4,57 @@ import axios from 'axios';
 interface Group {
     groupid: string;
     grouptitle: string;
-}
 
 
-const MakeGroup: React.FC = () => {
-    const today: Date = new Date();
-    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+}interface ModalProps {
+    onClose: () => void;
+  }
 
-    const [result, setResult] = useState('');
-    const [groups, setGroups] = useState<Group[] | null>(null); // null로 초기화
-    
-    const [data, setData] = useState({
-        grouptitle: 'Group_example4',
-        groupcreated: formattedDate,
-    });
+
+//단순 그룹 생성을 위한 컴포넌트
+const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
+    const [groupName,setGroupName] = useState<string>();
 
     const MakeGroup = () => {
-        axios.post('/api/makeGroup', data)
-            .then(response => setResult(response.data))
+
+        axios.post('/api/makeGroup',groupName)
+            .then(() => window.alert(`${groupName}이름으로 방이 생성되었습니다.`))
             .catch(error => console.log(error));
     };
 
-    const GroupList = () => {
-        axios.post('/api/groupList')
-            .then(response => setGroups(response.data))
-            .catch(error => console.log(error));
-    };
+
+
+    const useConfirm = (massage =" ",onConfirm:()=>void, onCancel:()=>void)=>{
+        if(typeof onConfirm !== "function" ){
+          return;
+        }
+        if(typeof onCancel !== "function" ){
+            return;
+        }
+
+        const confrimAction = () => { //취할 행동
+          if(window.confirm(massage)){ //확신 시
+            MakeGroup
+          }else{
+            onCancel(); //취소 누르면 실행
+          }
+        };
+        return confrimAction;
+      };
+
+      const hold =() =>  console.log("생성 취소");
+  
+      const createGroup = useConfirm(`${setGroupName} 이름으로 방을 생성하시겠습니까?`, MakeGroup, hold);
+
+
+
+   
+
 
     return (
         <div>
-            <div>
-                <button onClick={MakeGroup}>그룹 생성</button>
-                <button onClick={GroupList}>그룹 목록</button>
-                <div>result = {result}</div>
-                <div>
-                    {groups !== null && groups.map(group => (
-                        <div key={group.groupid}> 
-                            <div>Group ID: {group.groupid}</div>
-                            <div>Group Title: {group.grouptitle}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            <input type='text' placeholder='캘린룸 이름' onChange={(e)=>setGroupName(e.target.value)}></input>
+            <button onClick={createGroup}></button><button onClick={onClose}>닫기</button>
         </div>
     );
 }
