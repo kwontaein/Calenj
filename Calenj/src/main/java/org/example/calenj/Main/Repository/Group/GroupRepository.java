@@ -1,7 +1,6 @@
 package org.example.calenj.Main.Repository.Group;
 
-import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupUserDTO;
+import org.example.calenj.Main.DTO.Group.*;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,15 +31,15 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     // 세 번째 쿼리: GroupVoteEntity 조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteItem, gv.voteTitle, gv.voteStartDate , gv.voteEndDate) FROM Group_Vote gv WHERE gv.groupId = :groupId")
-    List<GroupUserDTO> findGroupVote(@Param("groupId") UUID groupId);
+    List<GroupVoteDTO> findGroupVote(@Param("groupId") UUID groupId);
 
     // 네 번째 쿼리: GroupNoticeEntity 조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupNoticeDTO(gn.noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated) FROM Group_Notice gn WHERE gn.groupId = :groupId")
-    List<GroupUserDTO> findGroupNotice(@Param("groupId") UUID groupId);
+    List<GroupNoticeDTO> findGroupNotice(@Param("groupId") UUID groupId);
 
     // 다섯 번째 쿼리: GroupScheduleEntity 조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleDTO(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
-    List<GroupUserDTO> findGroupSchedule(@Param("groupId") UUID groupId);
+    List<GroupScheduleDTO> findGroupSchedule(@Param("groupId") UUID groupId);
 
     //조인 사용한 쿼리
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupDTO(g.groupId, g.groupTitle, g.groupCreated, g.groupCreater,\n" +
@@ -55,5 +54,5 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
             ")\n" +
             "FROM Group_table g\n" +
             "WHERE g.groupId = :groupId")
-    List<GroupUserDTO> findGroup(@Param("groupId") UUID groupId);
+    List<GroupEntity> findGroup(@Param("groupId") UUID groupId);
 }
