@@ -31,7 +31,8 @@ public class GroupService {
     Group_UserRepository group_userRepository;
     @Autowired
     GrobalService grobalService;
-
+    
+    //그룹 만들기
     public String makeGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
@@ -66,7 +67,7 @@ public class GroupService {
         return groupEntity.toString();
     }
 
-
+    //그룹 목록 가져오기
     public List<GroupDTO> groupList() {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
         String userEmail = userDetails.getUsername();
@@ -77,6 +78,8 @@ public class GroupService {
         return groupEntities;
     }
 
+
+    //그룹 세부 정보 가져오기
     public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
         System.out.println(" groupDetail 실행 1");
         Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);

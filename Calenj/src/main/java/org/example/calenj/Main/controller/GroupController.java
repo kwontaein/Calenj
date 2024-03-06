@@ -17,11 +17,13 @@ public class GroupController {
     @Autowired
     GroupService groupService;
 
+    //그룹 만들기
     @PostMapping("/api/makeGroup")
     public void makeGroup(@RequestBody GroupDTO groupDTO) {
         groupService.makeGroup(groupDTO.getGroupTitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
     }
 
+    //그룹 목록 불러오기
     @PostMapping("/api/groupList")
     public List<GroupDTO> groupList() {
         //그룹 목록 프론트 전달
@@ -31,6 +33,7 @@ public class GroupController {
         return a;
     }
 
+    //그룹 세부 정보 가져오기
     @PostMapping("/api/groupDetail")
     public Optional<GroupDetailDTO> groupDetail(@RequestParam(name = "groupid") UUID groupid) {
         System.out.println("groupid : " + groupid);
@@ -40,6 +43,7 @@ public class GroupController {
         return groupDetails;
     }
 
+    //그룹 초대
     @PostMapping("/api/inviteGroup")
     public String inviteGroup(@RequestParam("inviteCode") int inviteCode) { //그룹 초대
         return "";

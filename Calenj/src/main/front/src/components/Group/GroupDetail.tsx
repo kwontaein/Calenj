@@ -15,7 +15,7 @@ interface Members {
 }
 
 const GroupDetail: React.FC = () => {
-    //a
+    
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
 
