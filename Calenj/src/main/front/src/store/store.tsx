@@ -2,14 +2,6 @@ import {configureStore,createSelector} from "@reduxjs/toolkit";
 import emailValidationSlice from './EmailValidationSlice';
 
 
-// RootState에서 emailValidation slice를 선택하는 selector 정의
-const selectEmailValidation = (state :RootState) =>state.emailValidation;
-
-// emailValidation slice의 상태를 선택하는 selector 정의
-export const selectEmailCodeValid = createSelector(
-  [selectEmailValidation],
-  (emailValidation) => emailValidation.codeValid,
-)
 
 
 
