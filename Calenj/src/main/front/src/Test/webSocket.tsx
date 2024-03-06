@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import * as StompJs from "@stomp/stompjs";
 
 
-const ROOM_SEQ = 1;
+const ROOM_SEQ = 0;
 
 const webSocket: React.FC = () => {
     const [chatMessages, setChatMessages] = useState<any[]>([]);
