@@ -1,10 +1,9 @@
 package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;
-import org.example.calenj.Main.Repository.GroupRepository;
-import org.example.calenj.Main.Repository.Group_UserRepository;
+import org.example.calenj.Main.Repository.Group.GroupRepository;
+import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
@@ -31,7 +30,7 @@ public class GroupService {
     Group_UserRepository group_userRepository;
     @Autowired
     GrobalService grobalService;
-    
+
     //그룹 만들기
     public String makeGroup(String groupTitle) {
 
@@ -80,29 +79,19 @@ public class GroupService {
 
 
     //그룹 세부 정보 가져오기
-    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
+    public void groupDetail(UUID groupId) {
+        //그룹정보 찾기
         System.out.println(" groupDetail 실행 1");
         Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
+
+        //그룹유저정보 찾기
         System.out.println(" groupDetail 실행 2 : " + groupOptional);
-        if (groupOptional.isPresent()) {
-            GroupDTO groupDTO = groupOptional.get();
-            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
+        GroupDTO groupDTO = groupOptional.get();
+        List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
 
-            System.out.println(" groupDetail 실행 3 : " + groupUsers);
-            // GroupDetailDTO 생성
-            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
-                    groupDTO.getGroupId(),
-                    groupDTO.getGroupTitle(),
-                    groupDTO.getGroupCreated(),
-                    groupDTO.getGroupCreater(),
-                    groupUsers
-            );
+        System.out.println(" groupDetail 실행 3 : " + groupUsers);
+        // GroupDetailDTO 생성
 
-            System.out.println(" groupDetail 실행 4 : " + groupDetailDTO);
-            return Optional.of(groupDetailDTO);
-        } else {
-            return Optional.empty();
-        }
     }
 
 }

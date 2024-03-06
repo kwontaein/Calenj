@@ -1,13 +1,11 @@
 package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,12 +33,10 @@ public class GroupController {
 
     //그룹 세부 정보 가져오기
     @PostMapping("/api/groupDetail")
-    public Optional<GroupDetailDTO> groupDetail(@RequestParam(name = "groupid") UUID groupid) {
+    public void groupDetail(@RequestParam(name = "groupid") UUID groupid) {
         System.out.println("groupid : " + groupid);
 
-        Optional<GroupDetailDTO> groupDetails = groupService.groupDetail(groupid);
-        System.out.println("groupDetails  : " + groupDetails);
-        return groupDetails;
+        groupService.groupDetail(groupid);
     }
 
     //그룹 초대
