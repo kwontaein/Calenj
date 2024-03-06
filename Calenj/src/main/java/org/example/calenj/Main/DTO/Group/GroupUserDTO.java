@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO;
+package org.example.calenj.Main.DTO.Group;
 
 import lombok.Data;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;

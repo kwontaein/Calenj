@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
-     "target": "ES6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "target": "ES6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,10 +17,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "noEmit": true
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts", "src/components/Auth/useInterval.js"],
-  "exclude": ["node_modules"],
-  
+  "include": [
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "src/components/Auth/useInterval.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-   
-

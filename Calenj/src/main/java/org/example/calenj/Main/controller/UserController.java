@@ -41,10 +41,10 @@ public class UserController {
 
 
     @PostMapping("/api/logout")
-    public String logout(HttpServletResponse response) {
+    public boolean logout(HttpServletResponse response) {
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
         mainService.removeCookie(response);
-        return "logout";
+        return false;
     }
 
     @PostMapping("/api/postCookie")
