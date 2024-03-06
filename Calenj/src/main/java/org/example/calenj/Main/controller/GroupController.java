@@ -1,7 +1,7 @@
 package org.example.calenj.Main.controller;
 
-import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.DTO.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

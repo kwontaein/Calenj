@@ -1,8 +1,8 @@
 package org.example.calenj.Main.model;
 
-import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.DTO.GroupDetailDTO;
-import org.example.calenj.Main.DTO.GroupUserDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.GroupRepository;
 import org.example.calenj.Main.Repository.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
