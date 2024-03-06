@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts"],
+  "include": ["src/**/*.tsx", "src/**/*.ts", "src/components/Auth/useInterval.js"],
   "exclude": ["node_modules"],
   
 }
