@@ -7,60 +7,63 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.util.stream.Stream;
 
-@Entity(name = "Friends")
+@Entity(name = "Events")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder // 빌더
 @Getter
 @ToString
-public class FriendEntity {
+public class EventEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "friend_id", columnDefinition = "BINARY(16)")
-    private String friendId;
+    @Column(nullable = false, unique = true, name = "event_id", columnDefinition = "BINARY(16)")
+    private String eventId;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "own_user_id", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
-    // 소유자 아이디
+    // 이벤트 발생자
     private UserEntity ownUserId;
 
-    // 친구 아이디
-    @Column(name = "friend_user_id")
-    private String friendUserId;
+    // 이벤트 요청받은 사람
+    @Column(name = "event_user_id")
+    private String eventUserId;
 
-    // 친구 닉네임
-    @Column(name = "nick_name")
-    private String nickName;
+    // 이벤트 목적
+    @Column(name = "event_purpose")
+    private String eventPurpose;
 
-    //친구된 날짜
+    // 이벤트 이름
+    @Column(name = "event_name")
+    private String eventName;
+
+    //이벤트 상태
+    @Column(name = "event_status")
+    private statusType eventStatus;
+
+    //이벤트 생성일
     @Column(name = "create_date")
     private String createDate;
-
-    //친구 상태
-    @Column(name = "status")
-    private statusType status;
 
     @Getter
     @RequiredArgsConstructor
     public enum statusType { //enum을 활용한 권한종류 설정
-        ACCEPT("친구"),
-        BAN("차단"),
+        ACCEPT("승인"),
+        REJECT("거절"),
         WAITING("대기");
 
         private final String status;
 
         @JsonCreator
-        public static FriendEntity.statusType userRoleParsing(String inputValue) {
+        public static EventEntity.statusType userRoleParsing(String inputValue) {
 
-            return Stream.of(FriendEntity.statusType.values())
+            return Stream.of(EventEntity.statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);
         }
 
     }
-
 }

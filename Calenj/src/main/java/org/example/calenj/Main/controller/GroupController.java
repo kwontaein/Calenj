@@ -1,7 +1,7 @@
 package org.example.calenj.Main.controller;
 
-import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.DTO.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class GroupController {
 
     @PostMapping("/api/makeGroup")
     public void makeGroup(@RequestBody GroupDTO groupDTO) {
-        groupService.makeGroup(groupDTO.getGrouptitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
+        groupService.makeGroup(groupDTO.getGroupTitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
     }
 
     @PostMapping("/api/groupList")

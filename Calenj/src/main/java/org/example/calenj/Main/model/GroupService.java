@@ -1,8 +1,8 @@
 package org.example.calenj.Main.model;
 
-import org.example.calenj.Main.DTO.GroupDTO;
-import org.example.calenj.Main.DTO.GroupDetailDTO;
-import org.example.calenj.Main.DTO.GroupUserDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.GroupRepository;
 import org.example.calenj.Main.Repository.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -41,9 +41,9 @@ public class GroupService {
 
         // 유저 이름으로 그룹 생성
         GroupEntity groupEntity = GroupEntity.builder()
-                .grouptitle(groupTitle)
-                .groupcreated(String.valueOf(today))
-                .groupcreater(userDetails.getUsername())
+                .groupTitle(groupTitle)
+                .groupCreated(String.valueOf(today))
+                .groupCreater(userDetails.getUsername())
                 .build();
 
         groupRepository.save(groupEntity);
@@ -83,15 +83,15 @@ public class GroupService {
         System.out.println(" groupDetail 실행 2 : " + groupOptional);
         if (groupOptional.isPresent()) {
             GroupDTO groupDTO = groupOptional.get();
-            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupid());
+            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
 
             System.out.println(" groupDetail 실행 3 : " + groupUsers);
             // GroupDetailDTO 생성
             GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
-                    groupDTO.getGroupid(),
-                    groupDTO.getGrouptitle(),
-                    groupDTO.getGroupcreated(),
-                    groupDTO.getGroupcreater(),
+                    groupDTO.getGroupId(),
+                    groupDTO.getGroupTitle(),
+                    groupDTO.getGroupCreated(),
+                    groupDTO.getGroupCreater(),
                     groupUsers
             );
 
