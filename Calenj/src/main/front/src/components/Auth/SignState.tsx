@@ -11,7 +11,7 @@ const SignState: React.FC = () => {
     const QUERY_COOKIE_KEY: string = 'cookie';
 
 
-    const logout = async (): Promise<string> => {
+    const logout = async (): Promise<boolean> => {
         const resopnse = await axios.post('/api/logout');
         console.log("로그아웃");
         return resopnse.data;

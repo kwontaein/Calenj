@@ -1,4 +1,4 @@
-package org.example.calenj.Main.Repository;
+package org.example.calenj.Main.Repository.Group;
 
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
