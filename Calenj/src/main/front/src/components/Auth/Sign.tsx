@@ -7,6 +7,11 @@ import axios,{AxiosResponse} from 'axios';
         userEmail: string;
         userPassword: string;
     }
+    const [data, setData] = useState<MyData>({
+        userEmail: '',
+        userPassword: '',
+    });
+
 
     const SignHandeler =(key:string, event:string):void =>{
         setData((prevState : MyData)=>{
@@ -14,11 +19,7 @@ import axios,{AxiosResponse} from 'axios';
         })
     };
 
-    const [data, setData] = useState<MyData>({
-        userEmail: '',
-        userPassword: '',
-    });
-
+   
 
 
     const login = ():void => {
