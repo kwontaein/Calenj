@@ -152,13 +152,12 @@ public class JwtTokenProvider {
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
     public Authentication getAuthentication(String accessToken) {
-        // 토큰 복호화
+        // 토큰 복호화 [emial(이메일), auth(권한) 정보를 가져옴], calims.getSubject = email
         Claims claims = parseClaims(accessToken);
-
+        System.out.println("getAuthentication 실행 가져온 accessToken으로 가져온 claims : "+ claims);
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);
 
-        System.out.println("authorities : " + authorities);
 
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);

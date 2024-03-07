@@ -1,10 +1,12 @@
 package org.example.calenj.Main.DTO.Group;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
 @Data
+@RequiredArgsConstructor
 public class GroupDTO {
     private UUID groupId;
     private String groupTitle;
