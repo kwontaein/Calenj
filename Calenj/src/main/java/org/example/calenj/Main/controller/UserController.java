@@ -5,10 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
+import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.*;
+import org.example.calenj.Main.model.EmailVerificationService;
+import org.example.calenj.Main.model.MainService;
+import org.example.calenj.Main.model.PhoneverificationService;
+import org.example.calenj.Main.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
