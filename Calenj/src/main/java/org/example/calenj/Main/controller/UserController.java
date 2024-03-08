@@ -7,12 +7,10 @@ import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.EmailVerificationService;
-import org.example.calenj.Main.model.MainService;
-import org.example.calenj.Main.model.PhoneverificationService;
-import org.example.calenj.Main.model.UserService;
+import org.example.calenj.Main.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -29,6 +27,9 @@ public class UserController {
 
     @Autowired
     MainService mainService;
+    
+    @Autowired
+    GrobalService grobalService;
 
     @Autowired
     ValidateDTO validateDTO;
@@ -42,6 +43,10 @@ public class UserController {
 
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
+
+        UserDetails userDetails = grobalService.extractFromSecurityContext();
+        //DB에서 리프레시 토큰 값 삭제
+        userRepository.deleteRefreshTokenByUserEmail(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
         mainService.removeCookie(response);
         return "logout";

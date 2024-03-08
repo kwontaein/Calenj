@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         System.out.println("refreshToken값 : " + refreshToken);
 
 
-
         // 2. validateToken 으로 토큰 유효성 검사 -- refresh token의 경우는? 추가해야함
         if (token != null && jwtTokenProvider.validateToken(token).equals("true")) {
 
@@ -51,7 +50,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             System.out.println("토큰이 만료되었습니다!");
 
-            if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true")) {//오류가 없다면
+            if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true")) {//리프레쉬 토큰이 만료되지 않았고 오류가 없다면
                 System.out.println("새 토큰을 발행합니다!");
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);

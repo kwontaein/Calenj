@@ -20,4 +20,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query(value = "UPDATE User SET refreshToken = :refreshToken WHERE user_email = :email", nativeQuery = true)
     void updateUserRefreshToken(@Param("refreshToken") String refreshToken, @Param("email") String email);
 
+    void deleteRefreshTokenByUserEmail(String userEmail);
 }

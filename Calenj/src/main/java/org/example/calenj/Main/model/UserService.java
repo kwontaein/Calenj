@@ -85,12 +85,10 @@ public class UserService {
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             JwtToken tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-            // 4. refreshToken 정보 저장을 위한 account_id 값 가져오기
-            UserEntity user = (UserEntity) authentication.getPrincipal();
-            System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + user.getUserEmail());
+            System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + userEntity.getUserEmail());
 
-            // refreshToken 정보 저장
-            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), user.getUserEmail());
+            // 4. refreshToken 정보 저장
+            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
             System.out.println("tokenInfo : " + tokenInfo);
             return tokenInfo;
         } else {
