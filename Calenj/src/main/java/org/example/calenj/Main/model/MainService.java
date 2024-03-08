@@ -1,7 +1,5 @@
 package org.example.calenj.Main.model;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,17 +31,4 @@ public class MainService {
         }
         return null; // 헤더에서 대상 쿠키를 찾지 못한 경우 null 반환
     }
-
-    public void removeCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("accessToken", null);
-        Cookie cookie2 = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        cookie2.setMaxAge(0);
-        cookie2.setPath("/");
-        response.addCookie(cookie);
-        response.addCookie(cookie2);
-    }
-
-
 }

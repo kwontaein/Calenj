@@ -2,6 +2,7 @@ package org.example.calenj.Main.model;
 
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -120,4 +121,24 @@ public class UserService {
         }
         return checkCookie;
     }
+
+    @Transactional
+    public void logout(UserDetails userDetails, HttpServletResponse response) {
+        //DB에서 리프레시 토큰 값 삭제
+        userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
+        //쿠키를 제거함으로서 로그인 토큰 정보 제거
+        removeCookie(response);
+    }
+
+    public void removeCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie2 = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie2.setMaxAge(0);
+        cookie2.setPath("/");
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
+    }
+
 }
