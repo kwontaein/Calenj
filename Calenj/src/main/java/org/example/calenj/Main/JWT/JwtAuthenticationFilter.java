@@ -6,6 +6,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,15 +63,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 System.out.println("Access Token을 재발급했습니다. newAccessToken : " + newToken);
 
             } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
-
                 // Refresh Token도 만료되었거나 없는 경우, 로그아웃 또는 다른 처리 수행
+                removeCookie((HttpServletResponse) response);
                 System.out.println("모든 토큰이 만료되었습니다. 다시 로그인해주세요!");
             } else {
 
                 System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
             }
         } else { // 쿠키에 값이 없거나 여러 상황
-
+            System.out.println("쿠키에 값이 없거나 문제가 발생했어요");
         }
         try {
             System.out.println("chain.doFilter 실행");
@@ -97,5 +98,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             }
         }
         return tokenList;
+    }
+
+    public void removeCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie2 = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie2.setMaxAge(0);
+        cookie2.setPath("/");
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
     }
 }
