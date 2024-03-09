@@ -1,5 +1,5 @@
 import React from 'react'
-import SignState from "./Auth/SignState"
+import SignState from "./components/Auth/SignState"
 
 
 const Home:React.FC=()=>{

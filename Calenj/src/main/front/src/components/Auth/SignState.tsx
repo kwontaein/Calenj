@@ -31,8 +31,8 @@ const SignState: React.FC = () => {
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다. 
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
-        console.log(response);
         console.log(`cookie값 ${response.data}`);
+
         return response.data;
     }
 

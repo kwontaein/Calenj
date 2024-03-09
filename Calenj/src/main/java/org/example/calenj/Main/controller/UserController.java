@@ -1,18 +1,14 @@
 package org.example.calenj.Main.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.domain.UserEntity;
-import org.example.calenj.Main.model.EmailVerificationService;
-import org.example.calenj.Main.model.MainService;
-import org.example.calenj.Main.model.PhoneverificationService;
-import org.example.calenj.Main.model.UserService;
+import org.example.calenj.Main.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -31,6 +27,9 @@ public class UserController {
     MainService mainService;
 
     @Autowired
+    GrobalService grobalService;
+
+    @Autowired
     ValidateDTO validateDTO;
 
     @Autowired
@@ -42,9 +41,15 @@ public class UserController {
 
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
-        //쿠키를 제거함으로서 로그인 토큰 정보 제거
-        mainService.removeCookie(response);
+        UserDetails userDetails = grobalService.extractFromSecurityContext();
+        userService.logout(userDetails, response);
         return "logout";
+    }
+
+    @PostMapping("/api/postCookie")
+    public boolean checkCookie(HttpServletRequest request) {
+        Cookie[] requestCookie = request.getCookies();
+        return userService.checkUserToken(requestCookie);
     }
 
     @PostMapping("/api/sendMessage")
@@ -58,45 +63,73 @@ public class UserController {
     }
 
     @PostMapping("/api/sendEmail")
-    public String sendEmail(@RequestParam String email, HttpServletResponse response) {
-        //토큰 발급
-        String emailToken = emailVerificationService.generateEmailValidateToken();
-        //쿠키 저장 및 프론트 전달 <- 근데 이거 프론트에서 쿠키값 유효시간 측정해야 할거같은데 일단 보류
-        //아니면 인증번호 재전송 메소드를 하나 더 만들고, 프론트에서 첫 전송 이후에 토큰 값이 있다면 -> 재전송 메소드로 보내게끔 수정해야함
-        Cookie cookie = new Cookie("enableSendEmail", emailToken);
-        response.addCookie(cookie);
+    public Object sendEmail(@RequestParam(name = "email") String email, HttpServletRequest request, HttpServletResponse response) {
+        //이메일 중복체크 메소드 (이미 가입된 이메일 -false = 인증코드 발급 불가능)
+        boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
-        return emailVerificationService.joinEmail(email);
+        System.out.println("checkDublidated : " + checkDublidated);
+
+        if (checkDublidated) {
+            //이메일 중복 체크 후 이메일 발급 전 토큰 체크
+            //토큰 발급 (만약 이메일토큰이 존재하고 유효할 경우 false 반환)
+            boolean enableEmail = emailVerificationService.generateEmailValidateToken(request, response);
+
+            if (enableEmail) {//토큰 체크 후 이메일 발급
+                emailVerificationService.joinEmail(email);
+                System.out.println(email + "로 이메일 인증코드 발급완료");
+            }
+        }
+
+
+        return validateDTO.getEnableSendEmail().getEnableEmailEnum();
     }
 
-    @PostMapping("/api/usersave")
-    public int saveUser(@RequestBody UserDTO userDTO) {
+
+    @PostMapping("/api/emailCodeValidation")
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println(email + "로 인증요청");
+
+        emailVerificationService.checkValidationCode(validationCode, request, response);
+
+        return validateDTO.getEmailValidState().getCode();
+    }
+
+    @PostMapping("/api/saveUser")
+    public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
+
         System.out.println(userDTO);
 
+        emailVerificationService.emailTokenValidation(request, response, true);
         return userService.saveUser(userDTO);
     }
 
-    @PostMapping("/api/testlogin")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        System.out.println("controller 실행");
-        JwtToken jwtToken = userService.login(userDTO.getAccountid(), userDTO.getUser_password());
+    @GetMapping("/api/emailValidationState")
+    public boolean checkEmailValidate() {
 
-        System.out.println(jwtToken);
-        return ResponseEntity.ok("Cookie Success");
-    }
-
-
-    @PostMapping("/api/IdDuplicated")
-    public boolean isIdDuplicated(@RequestParam String userName) {
-        //아이디 중복여부에 따른 논리 값 반환
-        UserEntity user = userRepository.findByAccountid(userName).orElse(null);
-        if (user == null) {
-            System.out.println(user);
-            return false;
-        } else {
-            System.out.println(user);
+        if (validateDTO.getEmailValidState().getCode() == 200) {
             return true;
         }
+        return false;
+    }
+
+    @GetMapping("/api/emailTokenExpiration")
+    public Long emailTokenExpiration() {
+        Long expriationTime = validateDTO.getExpirationTime();
+        System.out.println("expriationTime : " + expriationTime);
+
+        if (expriationTime != null) {
+            return expriationTime;
+        }
+        return 0L;
+    }
+
+    @PostMapping("/api/login")
+    public String login(@RequestBody UserDTO userDTO) {
+        System.out.println("controller 실행");
+        System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
+
+        return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }
 
     @PostMapping("/api/updateUser")
@@ -107,4 +140,6 @@ public class UserController {
         //프론트에서 바뀐 값 전달하기
         return "";
     }
+
+
 }

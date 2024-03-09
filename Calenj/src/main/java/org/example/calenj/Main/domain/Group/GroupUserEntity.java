@@ -15,16 +15,18 @@ import java.util.stream.Stream;
 @Getter
 @DiscriminatorValue("Group_User") // 서브 테이블을 판별하기 위한 값
 @IdClass(GroupUserId.class)
-public class Group_UserEntity {
+public class GroupUserEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "group_id") // 외래 키에 대한 참조 필드 지정
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
+    // 외래 키에 대한 참조 필드 지정
     private GroupEntity group;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id") // 외래 키에 대한 참조 필드 지정
+    @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
+    // 외래 키에 대한 참조 필드 지정
     private UserEntity user;
 
     private GroupRoleType role;
@@ -40,9 +42,9 @@ public class Group_UserEntity {
 
         //user_role 유효성 검사
         @JsonCreator
-        public static Group_UserEntity.GroupRoleType userRoleParsing(String inputValue) {
+        public static GroupUserEntity.GroupRoleType userRoleParsing(String inputValue) {
 
-            return Stream.of(Group_UserEntity.GroupRoleType.values())
+            return Stream.of(GroupUserEntity.GroupRoleType.values())
                     .filter(roleType -> roleType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(Member);

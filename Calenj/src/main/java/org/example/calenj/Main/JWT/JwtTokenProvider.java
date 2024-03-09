@@ -84,7 +84,8 @@ public class JwtTokenProvider {
     //AccessToken 생성 메소드
     private String generateAccessTokenBy(String subject, Collection<? extends GrantedAuthority> authorities) {
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 24 * 60 * 60 * 1000L);
+        //TODO 나중에 수정
+        Date accessTokenExpiresIn = new Date(now + 1 * 60 * 1000L);
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -112,20 +113,21 @@ public class JwtTokenProvider {
         long remainingTime = expirationDate.getTime() - now.getTime();
 
         System.out.println("remainingTime : " + remainingTime);
+
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
+        UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
+        String newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
         if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
             System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
             newRefreshToken = generateRefreshToken();
+            userRepository.updateUserRefreshToken(newRefreshToken, userEntity.getUserEmail());
         } else {
             newRefreshToken = refreshToken;
         }
-
-        UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
-        String newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
         //쿠키 값 재지정
         createCookie(response, "accessToken", newAccessToken);
@@ -142,7 +144,8 @@ public class JwtTokenProvider {
     private String generateRefreshToken() {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 7 * 24 * 60 * 60 * 1000L);
+        //TODO 나중에 수정
+        Date accessTokenExpiresIn = new Date(now + 1 * 60 * 1000L);
 
         return Jwts.builder()
                 .setExpiration(accessTokenExpiresIn)
