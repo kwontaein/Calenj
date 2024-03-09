@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String refreshToken = tokens[1];
 
         // 1. Request Header 에서 JWT 토큰 추출
+        // redis 에서 refreshToken 빼 오는 걸로 변경
         System.out.println("token값 : " + token);
         System.out.println("refreshToken값 : " + refreshToken);
 
