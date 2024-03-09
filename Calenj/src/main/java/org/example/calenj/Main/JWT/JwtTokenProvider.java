@@ -118,19 +118,21 @@ public class JwtTokenProvider {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
             System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
             newRefreshToken = generateRefreshToken();
+
         } else {
             newRefreshToken = refreshToken;
         }
 
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
+        //accessToken은 주기적으로 갱신, 이 메소드 자체가 refresh 토큰이 존재한다는 것이니
         String newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
         //쿠키 값 재지정
         createCookie(response, "accessToken", newAccessToken);
         createCookie(response, "refreshToken", newRefreshToken);
 
+        
         return JwtToken.builder()
                 .grantType("Bearer")
                 .accessToken(newAccessToken)
