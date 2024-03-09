@@ -2,6 +2,7 @@ package org.example.calenj.Main.model;
 
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
@@ -10,6 +11,9 @@ import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -56,58 +60,73 @@ public class UserService {
     }
 
     @Transactional
-    public JwtToken login(String accountid, String password) {
+    public String login(String accountid, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
-
-        System.out.println("login실행");
-
-        // 1. Login ID/PW 를 기반으로 Authentication 객체 생성 (id,pw를 저장하며 pw를 PROTECTED함(암호화)
-        // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
-        System.out.println("UsernamePasswordAuthenticationToken 실행");
-
-        // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
-        // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행, 입력한 id 가 없으면 예외 발생 후 종료
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        System.out.println("authentication : "+ authentication);
-        // Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않음
-        // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환함.
-        // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어진다.
-
-        //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
-        UserEntity userEntity = userRepository.findByUserEmail(accountid)
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-        String refreshToken = userEntity.getRefreshToken();
+        System.out.println("실행 login");
 
         JwtToken tokenInfo;
+        UserEntity userEntity;
 
-        if (refreshToken == null) { // DB에 저장된 값이 없는 경우
-            // 3. 인증 정보를 기반으로 JWT 토큰 생성
-            tokenInfo = jwtTokenProvider.generateToken(authentication);
+        try {
+            // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
+            // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
+            System.out.println("UsernamePasswordAuthenticationToken 실행 ");
 
-            // 4. refreshToken 정보 저장을 위한 account_id 값 가져오기
-            UserEntity user = (UserEntity) authentication.getPrincipal();
-            System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + user.getUserEmail());
+            // 여기서 존재하는 유저인지 체크 하면 두번 체크하는게 되는데 이게 맞나
+            // 흠
+            try {
+                // 사용자 정보 반환
+                userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+            } catch (UsernameNotFoundException e) {
+                // 존재하지 않는 사용자인 경우
+                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
+                return "존재하지 않는 사용자입니다.";
+            }
 
-            // refreshToken 정보 저장
-            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), user.getUserEmail());
-            System.out.println("tokenInfo : " + tokenInfo);
-            return tokenInfo;
-        } else {
-            //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
-            //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
-            //유효하지 않다면 두개 다 새로 생성해줘야 한다.
+            // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
+            // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
-            System.out.println("tokenInfo : " + tokenInfo);
-            return tokenInfo;
+            // Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
+            // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환됩니다.
+            // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
+
+            //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
+            //DB에 있어도 쿠키가 없다면 재발급?
+            String refreshToken = userEntity.getRefreshToken();
+
+            if (refreshToken == null) { // DB에 저장된 값이 없는 경우
+                // 3. 인증 정보를 기반으로 JWT 토큰 생성
+                tokenInfo = jwtTokenProvider.generateToken(authentication);
+                System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + userEntity.getUserEmail());
+
+                // 4. refreshToken 정보 저장
+                userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
+                System.out.println("tokenInfo : " + tokenInfo);
+
+            } else {
+                //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
+                //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
+                //유효하지 않다면 두개 다 새로 생성해줘야 한다.
+
+                //DB에만 저장된 값이 있지만 다시 로그인한 경우 // 쿠키엔 없음 -> 리프레쉬 재생성 후 저장
+                tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
+                System.out.println("tokenInfo : " + tokenInfo);
+            }
+            return ("로그인에 성공했습니다.");
+        } catch (BadCredentialsException e) {
+            // 존재하지 않는 사용자인 경우
+            System.out.println("로그인 실패: 비밀번호 틀림.");
+            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
+            return "로그인에 실패했습니다.";
         }
 
-    }   //request로 받은 쿠키를 체크하는 메소드
+    }
 
+    //request로 받은 쿠키를 체크하는 메소드
     public boolean checkUserToken(Cookie[] requestCookie) {
         boolean checkCookie = false;
 
@@ -125,4 +144,24 @@ public class UserService {
         }
         return checkCookie;
     }
+
+    @Transactional
+    public void logout(UserDetails userDetails, HttpServletResponse response) {
+        //DB에서 리프레시 토큰 값 삭제
+        userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
+        //쿠키를 제거함으로서 로그인 토큰 정보 제거
+        removeCookie(response);
+    }
+
+    public void removeCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        Cookie cookie2 = new Cookie("refreshToken", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie2.setMaxAge(0);
+        cookie2.setPath("/");
+        response.addCookie(cookie);
+        response.addCookie(cookie2);
+    }
+
 }

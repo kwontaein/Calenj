@@ -1,7 +1,6 @@
 package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -80,18 +78,7 @@ public class GroupService {
 
     //그룹 세부 정보 가져오기
     public void groupDetail(UUID groupId) {
-        //그룹정보 찾기
-        System.out.println(" groupDetail 실행 1");
-        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
-
-        //그룹유저정보 찾기
-        System.out.println(" groupDetail 실행 2 : " + groupOptional);
-        GroupDTO groupDTO = groupOptional.get();
-        List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
-
-        System.out.println(" groupDetail 실행 3 : " + groupUsers);
-        // GroupDetailDTO 생성
-
+        System.out.println(groupRepository.findGroup(groupId));
     }
 
 }

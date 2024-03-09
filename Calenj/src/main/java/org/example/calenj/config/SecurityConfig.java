@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+    
     //private String logout_url = "https://kauth.kakao.com/oauth/logout?client_id=${kakao.client.id}&logout_redirect_utl=${kakao.logout_redirect_url}";
 
     @Bean

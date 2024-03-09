@@ -5,14 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.EmailVerificationService;
-import org.example.calenj.Main.model.MainService;
-import org.example.calenj.Main.model.PhoneverificationService;
-import org.example.calenj.Main.model.UserService;
+import org.example.calenj.Main.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -31,6 +27,9 @@ public class UserController {
     MainService mainService;
 
     @Autowired
+    GrobalService grobalService;
+
+    @Autowired
     ValidateDTO validateDTO;
 
     @Autowired
@@ -41,15 +40,14 @@ public class UserController {
 
 
     @PostMapping("/api/logout")
-    public boolean logout(HttpServletResponse response) {
-        //쿠키를 제거함으로서 로그인 토큰 정보 제거
-        mainService.removeCookie(response);
-        return false;
+    public String logout(HttpServletResponse response) {
+        UserDetails userDetails = grobalService.extractFromSecurityContext();
+        userService.logout(userDetails, response);
+        return "logout";
     }
 
     @PostMapping("/api/postCookie")
     public boolean checkCookie(HttpServletRequest request) {
-        System.out.println("postcookie 실행");
         Cookie[] requestCookie = request.getCookies();
         return userService.checkUserToken(requestCookie);
     }
@@ -127,13 +125,11 @@ public class UserController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+    public String login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
-        JwtToken jwtToken = userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
 
-        System.out.println(jwtToken);
-        return ResponseEntity.ok("Cookie Success");
+        return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }
 
     @PostMapping("/api/updateUser")

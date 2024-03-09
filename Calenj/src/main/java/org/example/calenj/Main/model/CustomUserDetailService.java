@@ -19,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
         System.out.println("loadUserByUsername 실행");
         UserEntity userEntity = userRepository.findByUserEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
+        // 사용자 정보 반환
         return createUserDetails(userEntity);
     }
 
