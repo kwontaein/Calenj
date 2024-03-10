@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,11 +18,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)
+    @Transactional
     @Query(value = "UPDATE User SET refreshToken = :refreshToken WHERE user_email = :email", nativeQuery = true)
     void updateUserRefreshToken(@Param("refreshToken") String refreshToken, @Param("email") String email);
 
     //refreshToken 삭제 쿼리
     @Modifying(clearAutomatically = true)
+    @Transactional //update는 해당 어노테이션이 필요함
     @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_email = :email", nativeQuery = true)
     void updateUserRefreshTokenToNull(@Param("email") String email);
 }

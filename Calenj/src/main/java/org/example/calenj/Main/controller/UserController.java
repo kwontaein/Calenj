@@ -129,6 +129,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
+        System.out.println("ResponseEntity : " + userService.login(userDTO.getUserEmail(), userDTO.getUserPassword()));
 
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }

@@ -2,14 +2,14 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useCallback, useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../style/FormStyle';
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../Style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
 import {connect} from "react-redux";
 import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
 import {Dispatch} from 'redux';
 import {RootState} from '../../store/store'
-import '../../style/Sign.scss'
+import '../../Style/Sign.scss'
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
@@ -53,18 +53,14 @@ const mapStateToProps = (state: RootState): EmailToeknProps => ({
 });
 
 
-
-
 const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateToken, updateCodeValid}) => {
-    
+
     //이메일 인증 컴포넌트를 마운트하기 위한 State
-    const [showAlert, setShowAlert] = useState<boolean>(false); 
+    const [showAlert, setShowAlert] = useState<boolean>(false);
     //인증번호 발급여부
     const [validation, setValidation] = useState<boolean>(false);
     //이메일 발급 이후 input을 잠그기 위한 State
-    const [eamilInputState,setEamilInputState] = useState<boolean>(false);
-
-
+    const [eamilInputState, setEamilInputState] = useState<boolean>(false);
 
 
     const {register, handleSubmit, formState: {errors}, reset, watch, trigger} = useForm<User>({
@@ -72,13 +68,13 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
         mode: 'onTouched' //실시간 유효성 검사를 위한 설정
     });
 
-   // 회원가입 완료시 완료 날짜 저장을 위한 함수.
-   const makeJoinDate = (): string => {
-    const today: Date = new Date();
-    return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-}
+    // 회원가입 완료시 완료 날짜 저장을 위한 함수.
+    const makeJoinDate = (): string => {
+        const today: Date = new Date();
+        return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    }
 
-    
+
     //성공 시
     const onValid: SubmitHandler<User> = (data: User): Promise<Object> => {
         data.userRole = "USER";
@@ -106,11 +102,9 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
     }
 
 
-
-
     //이메일 인증요청 -api 반환값 : 인증번호 (쿠키 값에 이메일 인증토큰도 있음)
     const emailRequest = async (): Promise<void> => {
-        
+
         const isValid = await trigger("userEmail");
         const email = watch("userEmail");
         if (isValid) {
@@ -128,15 +122,15 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
                 );
 
                 console.log(response.data)
-                if (response.data.code==200) { //이메일 인증 발급 성공 시
+                if (response.data.code == 200) { //이메일 인증 발급 성공 시
                     //인증번호 발급가능
                     setShowAlert(true);
                     setValidation(true);
-                    try{
+                    try {
                         const response = await axios.get('api/emailTokenExpiration');
                         //이메일 인증번호 발급완료 =>이메일 검증 가능시간 update 
-                        updateToken({tokenId:"tokenUUID",validateTime:response.data});
-                    }catch (err) {
+                        updateToken({tokenId: "tokenUUID", validateTime: response.data});
+                    } catch (err) {
                         console.error(err);
                     }
                 }
@@ -148,26 +142,26 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
         }
     }
 
-    
+
     useEffect(() => {
         updateCodeValid(false);
     }, [])
 
 
     // 이메일 인증 시 인증번호 발급 이후 input을 임의로 바꾸는 걸 방지 (인증번호만 발급 후 이메일 수정 못함)
-    const emailInputHandler=()=>{
+    const emailInputHandler = () => {
         const currentTime = Date.now();
         //남은 시간 계산 (밀리초 단위)
-        const enableInputEmailTime = emailToken.validateTime-currentTime;
-        
+        const enableInputEmailTime = emailToken.validateTime - currentTime;
+
         //만약 토큰이 아직 유효하면 이메일 input 수정불가
-        if(enableInputEmailTime>0){
+        if (enableInputEmailTime > 0) {
             setEamilInputState(true);
-        }else{
+        } else {
             setEamilInputState(false);
         }
     }
-    
+
 
     return (
 
@@ -190,8 +184,9 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
 
 
                     <div>
-                        <Input type="email" onClick={emailInputHandler} {...register("userEmail", {required: true})} placeholder="이메일"
-                               readOnly={(emailToken.codeValid|| eamilInputState)}></Input>
+                        <Input type="email" onClick={emailInputHandler} {...register("userEmail", {required: true})}
+                               placeholder="이메일"
+                               readOnly={(emailToken.codeValid || eamilInputState)}></Input>
                         <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
                     </div>
 
