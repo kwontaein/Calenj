@@ -47,11 +47,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             System.out.println("if문 실행 authentication : " + authentication);
 
+            //accessToken 체크
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
 
             System.out.println("토큰이 만료되었습니다!");
 
+
             if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true")) {//리프레쉬 토큰이 만료되지 않았고 오류가 없다면
+
                 System.out.println("새 토큰을 발행합니다!");
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
