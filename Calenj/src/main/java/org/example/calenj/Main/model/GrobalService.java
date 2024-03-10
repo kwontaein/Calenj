@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class GrobalService {
 
     //SecurityContext에서 유저 정보 추출하는 메소드
-    public UserDetails extractFromSecurityContext() { //id , password , 권한
+    public UserDetails extractFromSecurityContext()  { //id , password , 권한
         // SecurityContext에서 Authentication 객체 추출
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
