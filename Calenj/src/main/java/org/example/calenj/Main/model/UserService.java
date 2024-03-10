@@ -60,7 +60,7 @@ public class UserService {
     }
 
     @Transactional
-    public String login(String accountid, String password) {
+    public ResponseEntity<String> login(String accountid, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
@@ -83,7 +83,7 @@ public class UserService {
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
                 System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-                return "존재하지 않는 사용자입니다.";
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
             }
 
             // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
@@ -116,12 +116,12 @@ public class UserService {
                 tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
                 System.out.println("tokenInfo : " + tokenInfo);
             }
-            return ("로그인에 성공했습니다.");
+            return ResponseEntity.ok("");
         } catch (BadCredentialsException e) {
             // 존재하지 않는 사용자인 경우
             System.out.println("로그인 실패: 비밀번호 틀림.");
             System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-            return "로그인에 실패했습니다.";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
     }

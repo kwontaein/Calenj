@@ -100,6 +100,7 @@ public class JwtTokenProvider {
     // RefreshToken을 사용하여 AccessToken 재발급 메소드
     public JwtToken refreshAccessToken(String refreshToken) {
         String newRefreshToken;
+
         long oneDay = 24 * 60 * 60 * 1000L;
         // 리프레시 토큰에서 클레임 추출
         Claims claims = parseClaims(refreshToken);

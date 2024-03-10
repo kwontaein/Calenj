@@ -22,13 +22,13 @@ public class GroupController {
     }
 
     //그룹 목록 불러오기
-    @PostMapping("/api/groupList")
+    @GetMapping("/api/groupList")
     public List<GroupDTO> groupList() {
         //그룹 목록 프론트 전달
         //그룹 이름 및 아이디만 전달해서 세부 정보를 다시 불러올 것인지, 아예 처음부터 모든 정보를 가져와서 보여줄 것인지 토의 필요
-        List<GroupDTO> a = groupService.groupList();
-        System.out.println("a : " + a);
-        return a;
+        List<GroupDTO> groupList = groupService.groupList();
+        System.out.println("그룹 리스트 호출 : " + groupList);
+        return groupList;
     }
 
     //그룹 세부 정보 가져오기

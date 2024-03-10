@@ -1,19 +1,22 @@
 // import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from "react-router-dom";
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+
+
+export const QUERY_COOKIE_KEY: string = 'cookie';
+
 
 
 const SignState: React.FC = () => {
 
     const queryClient = useQueryClient();
 
-    const QUERY_COOKIE_KEY: string = 'cookie';
-
-
     const logout = async (): Promise<boolean> => {
         const resopnse = await axios.post('/api/logout');
         console.log("로그아웃");
+        document.location.replace("/");
         return resopnse.data;
     };
 
@@ -25,14 +28,15 @@ const SignState: React.FC = () => {
                 queryKey: [QUERY_COOKIE_KEY],
             });
         },
-    });
+    }); 
+    
 
 
-    //api를 통하여 쿠키를 post하여 boolean값을 return 받는다. 
+    //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
+    //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요  
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
-
         return response.data;
     }
 
@@ -40,8 +44,9 @@ const SignState: React.FC = () => {
     //v5이후로 인자를 객체 형태로 전달해야함
     const logState = useQuery<boolean, Error>({
         queryKey: [QUERY_COOKIE_KEY],
-        queryFn: checkCookie //HTTP 요청함수 (Promise를 반환하는 함수)
+        queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
+
 
 
     // useQuery를 사용하여 쿠키를 체크하기보단 setInterval을 사용하여 하는 것이 좋음

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 interface ModalProps {
     onClose: () => void;
-  }
+}
 
 
 //단순 그룹 생성을 위한 컴포넌트
@@ -16,12 +16,14 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
 
         axios.post('/api/makeGroup',{groupTitle:groupTitle})
             .then(() => 
-            window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`),
-            onClose)
+            {
+              onClose()
+              window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`)
+            })
             .catch(error => console.log(error));
     };
 
-
+    
 
     const useConfirm = (massage =" ",onConfirm:()=>void, onCancel:()=>void)=>{
         if(typeof onConfirm !== "function" ){
@@ -55,8 +57,6 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
          
         }
       }
-
-   
 
 
     return (
