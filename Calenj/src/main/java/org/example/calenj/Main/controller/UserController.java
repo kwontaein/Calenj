@@ -8,6 +8,7 @@ import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -125,7 +126,7 @@ public class UserController {
     }
 
     @PostMapping("/api/login")
-    public String login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
 

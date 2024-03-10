@@ -64,7 +64,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
                 // Refresh Token도 만료되었거나 없는 경우, 로그아웃 또는 다른 처리 수행
+
+                // 쿠키 삭제
                 removeCookie((HttpServletResponse) response);
+                // response 에 값 반환
+                String responseBody = "Both tokens have expired. Please log in again!";
+                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                ((HttpServletResponse) response).getWriter().write(responseBody);
+
                 System.out.println("모든 토큰이 만료되었습니다. 다시 로그인해주세요!");
             } else {
 

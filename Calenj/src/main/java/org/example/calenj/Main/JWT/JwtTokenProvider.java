@@ -85,7 +85,7 @@ public class JwtTokenProvider {
     private String generateAccessTokenBy(String subject, Collection<? extends GrantedAuthority> authorities) {
         long now = (new Date()).getTime();
         //TODO 나중에 수정
-        Date accessTokenExpiresIn = new Date(now + 1 * 60 * 1000L);
+        Date accessTokenExpiresIn = new Date(now + 30 * 60 * 1000L);
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -145,7 +145,7 @@ public class JwtTokenProvider {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
         //TODO 나중에 수정
-        Date accessTokenExpiresIn = new Date(now + 1 * 60 * 1000L);
+        Date accessTokenExpiresIn = new Date(now + 7 * 60 * 60 * 1000L);
 
         return Jwts.builder()
                 .setExpiration(accessTokenExpiresIn)
@@ -157,7 +157,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화 [emial(이메일), auth(권한) 정보를 가져옴], calims.getSubject = email
         Claims claims = parseClaims(accessToken);
-        System.out.println("getAuthentication 실행 가져온 accessToken으로 가져온 claims : "+ claims);
+        System.out.println("getAuthentication 실행 가져온 accessToken으로 가져온 claims : " + claims);
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);
 
