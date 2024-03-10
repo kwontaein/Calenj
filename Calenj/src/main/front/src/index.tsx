@@ -1,35 +1,33 @@
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Provider } from "react-redux";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import {Provider} from "react-redux";
 import store from './store/store'
 
 
-export const queryClient = new QueryClient( {
-  defaultOptions: {
-  queries: {
-    staleTime: 1000 * 60 * 5, //만료시간 설정 : 5분 
-    retry: 1, //query 동작 실패 시, 자동으로 몇 번만큼 retry를 시도할 지 결정하는 옵션
-  },
-  mutations: {
-    retry: 1,
-  },
-},
+export const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5, //만료시간 설정 : 5분
+            //retry: 1, //query 동작 실패 시, 자동으로 몇 번만큼 retry를 시도할 지 결정하는 옵션
+        },
+        mutations: {
+            //retry: 1,
+        },
+    },
 });
 
 
-
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 root.render(
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}> 
-    <App />
-    </QueryClientProvider>
-  </Provider>
-
+    <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+            <App/>
+        </QueryClientProvider>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -116,7 +116,7 @@ public class UserService {
                 tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
                 System.out.println("tokenInfo : " + tokenInfo);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 성공");
+            return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 존재하지 않는 사용자인 경우
             System.out.println("로그인 실패: 비밀번호 틀림.");

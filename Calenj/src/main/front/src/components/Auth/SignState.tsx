@@ -14,6 +14,7 @@ const SignState: React.FC = () => {
     const logout = async (): Promise<boolean> => {
         const resopnse = await axios.post('/api/logout');
         console.log("로그아웃");
+        queryClient.removeQueries();
         return resopnse.data;
     };
 
@@ -30,9 +31,9 @@ const SignState: React.FC = () => {
 
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다. 
     const checkCookie = async (): Promise<boolean> => {
-        const response = await axios.post('/api/postCookie');
+        const response = await axios.post('/api/postCookie')
         console.log(`cookie값 ${response.data}`);
-
+        console.log('Response Headers:', response.status);
         return response.data;
     }
 

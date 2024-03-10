@@ -36,6 +36,7 @@ public class JwtTokenProvider {
     @Autowired
     HttpServletResponse response;
     private final Key key;
+    private long Hours = 1 * 10 * 1000L;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -85,7 +86,7 @@ public class JwtTokenProvider {
     private String generateAccessTokenBy(String subject, Collection<? extends GrantedAuthority> authorities) {
         long now = (new Date()).getTime();
         //TODO 나중에 수정
-        Date accessTokenExpiresIn = new Date(now + 30 * 60 * 1000L);
+        Date accessTokenExpiresIn = new Date(now + Hours);
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -100,7 +101,7 @@ public class JwtTokenProvider {
     // RefreshToken을 사용하여 AccessToken 재발급 메소드
     public JwtToken refreshAccessToken(String refreshToken) {
         String newRefreshToken;
-        long oneDay = 24 * 60 * 60 * 1000L;
+        long oneDay = 24 * Hours;
         // 리프레시 토큰에서 클레임 추출
         Claims claims = parseClaims(refreshToken);
 
@@ -145,7 +146,7 @@ public class JwtTokenProvider {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
         //TODO 나중에 수정
-        Date accessTokenExpiresIn = new Date(now + 7 * 60 * 60 * 1000L);
+        Date accessTokenExpiresIn = new Date(now + 1 * Hours);
 
         return Jwts.builder()
                 .setExpiration(accessTokenExpiresIn)
