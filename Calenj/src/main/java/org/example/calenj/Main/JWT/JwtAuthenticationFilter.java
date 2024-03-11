@@ -13,7 +13,6 @@ import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -106,10 +105,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 // 리스폰스에 정보 담아 반환
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
-                //로그인 페이지로 일시적으로 이동
+                /*httpResponse.setContentType("text/plain"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+                PrintWriter writer = httpResponse.getWriter();
+                writer.println("모든 토큰이 만료되었습니다. 재로그인해주세요.");
+                writer.close();*/
             } else {
 
                 System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
+
             }
         } else {
             // 쿠키에 값이 없거나 여러 상황
@@ -118,6 +121,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // 리스폰스에 정보 담아 반환
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
+             /* httpResponse.setContentType("text/plain"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+            PrintWriter writer = httpResponse.getWriter();
+            writer.println("쿠키에 값이 없습니다. 다시 로그인해주세요");
+            writer.close();*/
             //로그인 페이지로 일시적으로 이동
         }
         try {

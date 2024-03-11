@@ -75,17 +75,14 @@ public class UserService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
             System.out.println("UsernamePasswordAuthenticationToken 실행 ");
 
-            // 여기서 존재하는 유저인지 체크 하면 두번 체크하는게 되는데 이게 맞나
-            // 흠
             try {
                 // 사용자 정보 반환
                 userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
-                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}");
+                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
             }
-
             // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
             // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -118,10 +115,9 @@ public class UserService {
             }
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
-            // 존재하지 않는 사용자인 경우
-            System.out.println("로그인 실패: 비밀번호 틀림.");
-            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}");
+            // 비밀번호가 틀린 경우
+            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
     }
