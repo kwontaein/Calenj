@@ -2,14 +2,14 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useCallback, useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../Style/FormStyle';
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable} from '../../style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
 import {connect} from "react-redux";
 import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
 import {Dispatch} from 'redux';
 import {RootState} from '../../store/store'
-import '../../Style/Sign.scss'
+import '../../style/Sign.scss'
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
