@@ -36,12 +36,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         //request로 받은 token을 구분해주는 메소드
         String[] tokens = resolveCookieFilter((HttpServletRequest) request);
 
+        // 1. Request Header 에서 JWT 토큰 추출
         String token = tokens[0];
         String refreshToken = tokens[1];
-
-        // 1. Request Header 에서 JWT 토큰 추출
-        System.out.println("token값 : " + token);
-        System.out.println("refreshToken값 : " + refreshToken);
 
         // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서
         Authentication authentication;
@@ -59,13 +56,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
 
-            System.out.println("토큰이 만료되었습니다!");
-
             authentication = jwtTokenProvider.getAuthentication(token);
             UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
             String DbRefreshToken = userEntity.getRefreshToken();
-            System.out.println(DbRefreshToken);
 
             if (DbRefreshToken != null && !Objects.equals(DbRefreshToken, refreshToken)) {
                 //DB에 저장된 값과 일치하지 않는 경우 처리
@@ -73,7 +67,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 removeCookie((HttpServletResponse) response);
                 userRepository.updateUserRefreshTokenToNull(authentication.getName());
-                System.out.println("다른 곳에서 로그인되었습니다. 로그아웃됩니다");
 
                 // 리스폰스에 정보 담아 반환
 
@@ -82,7 +75,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             } else if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true") && Objects.equals(DbRefreshToken, refreshToken)) {
 
                 //리프레쉬 토큰이 만료되지 않았고 오류가 없고 DB에 저장된 값과 일치하다면(Redis 수정 예정)
-                System.out.println("새 토큰을 발행합니다!");
 
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
@@ -93,18 +85,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 //SecurityContext 업데이트
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                System.out.println("Access Token을 재발급했습니다. newAccessToken : " + newToken);
 
             } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
                 // Refresh Token도 만료된 경우, 로그아웃 처리 수행 후 로그인 페이지로 유도
                 // 쿠키 삭제
                 removeCookie((HttpServletResponse) response);
                 String email = authentication.getName();
-                System.out.println("authentication.getname : " + email);
 
                 userRepository.updateUserRefreshTokenToNull(email);
-
-                System.out.println("모든 토큰이 만료되었습니다. 다시 로그인해주세요!");
 
                 // 리스폰스에 정보 담아 반환
 
@@ -114,7 +102,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             } else {
 
-                System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
                 writer.print("UNKNOWN_EXCEPTION");
@@ -129,11 +116,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             }
         } else {
             // 쿠키에 값이 없거나 여러 상황
-            System.out.println("로그인해주세요");
 
         }
         try {
-            System.out.println("chain.doFilter 실행");
             chain.doFilter(request, response);
 
         } catch (IOException e) {
@@ -152,10 +137,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             for (Cookie cookie : requestCookie) {
                 if ("accessToken".equals(cookie.getName())) {
                     tokenList[0] = cookie.getValue();
-                    System.out.println("cookie에서 가져온 accessToken : " + tokenList[0]);
                 } else if ("refreshToken".equals(cookie.getName())) {
                     tokenList[1] = cookie.getValue();
-                    System.out.println("cookie에서 가져온 refreshToken : " + tokenList[1]);
                 }
             }
         }
