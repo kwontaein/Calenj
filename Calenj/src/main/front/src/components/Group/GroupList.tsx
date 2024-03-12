@@ -13,11 +13,12 @@ interface cookieState{
     cookie:boolean;
 }
 
+export const QUERY_GROUP_LIST_KEY: string = 'groupList'
+
 const GroupList: React.FC<cookieState> = ({cookie}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
-    const QUERY_GROUP_LIST_KEY: string = 'groupList'
    
 
     //그룹 목록 불러오기
@@ -44,11 +45,11 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
 
     return (
+            
             <div>
                 <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
                 {showMakeGroup && <MakeGroup onClose={closeModal}></MakeGroup>}
                 {groupListState.isLoading && <div>Loading...</div>}
-                {groupListState.error && <div>Error: {groupListState.error.message}</div>}
                 {groupListState.data && (
                     <div>
                         <h2>Group List</h2>
