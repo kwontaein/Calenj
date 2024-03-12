@@ -14,7 +14,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        System.out.println("실행?");
 
        /* // 인증 부족 예외인 경우
         if (authException instanceof DisabledException) {

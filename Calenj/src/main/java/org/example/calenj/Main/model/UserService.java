@@ -44,7 +44,6 @@ public class UserService {
     public String saveUser(UserDTO userDTO) {
         //패스워드 암호화
         userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
-        System.out.println("UserRole 출력 : " + userDTO.getUserRole());
         userRepository.save(userDTO.toEntity());
         return userDTO.toEntity().getUserEmail();
     }
@@ -56,7 +55,6 @@ public class UserService {
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
 
-        System.out.println(userResult);
     }
 
     @Transactional
@@ -64,7 +62,6 @@ public class UserService {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
-        System.out.println("실행 login");
 
         JwtToken tokenInfo;
         UserEntity userEntity;
@@ -73,14 +70,12 @@ public class UserService {
             // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
             // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
-            System.out.println("UsernamePasswordAuthenticationToken 실행 ");
 
             try {
                 // 사용자 정보 반환
                 userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
-                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
             }
             // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
@@ -98,11 +93,9 @@ public class UserService {
             if (refreshToken == null) { // DB에 저장된 값이 없는 경우
                 // 3. 인증 정보를 기반으로 JWT 토큰 생성
                 tokenInfo = jwtTokenProvider.generateToken(authentication);
-                System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + userEntity.getUserEmail());
 
                 // 4. refreshToken 정보 저장
                 userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-                System.out.println("tokenInfo : " + tokenInfo);
 
             } else {
                 //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
@@ -111,12 +104,10 @@ public class UserService {
 
                 //DB에만 저장된 값이 있지만 다시 로그인한 경우 // 쿠키엔 없음 -> 리프레쉬 재생성 후 저장
                 tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
-                System.out.println("tokenInfo : " + tokenInfo);
             }
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
-            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
