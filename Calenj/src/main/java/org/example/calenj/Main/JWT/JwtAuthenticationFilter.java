@@ -110,15 +110,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                writer.println("All_Token_Expired");
-
+                writer.print("ALL_TOKEN_EXPIRED");
 
             } else {
 
                 System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                writer.println("Unknown_Exception");
+                writer.print("UNKNOWN_EXCEPTION");
             }
             writer.flush();
             writer.close();
@@ -131,6 +130,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         } else {
             // 쿠키에 값이 없거나 여러 상황
             System.out.println("로그인해주세요");
+
         }
         try {
             System.out.println("chain.doFilter 실행");
