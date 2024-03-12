@@ -1,6 +1,7 @@
 // import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from "react-router-dom";
+import { QUERY_GROUP_LIST_KEY } from '../Group/GroupList';
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -18,6 +19,7 @@ const SignState: React.FC = () => {
         console.log("로그아웃");
         document.location.replace("/");
         return resopnse.data;
+
     };
 
     //query Mutation 을 통한 refetch 수행 => invalidatae 
@@ -37,6 +39,9 @@ const SignState: React.FC = () => {
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
+        if(!response.data){
+            queryClient.removeQueries({queryKey: [QUERY_COOKIE_KEY]})
+        }
         return response.data;
     }
 

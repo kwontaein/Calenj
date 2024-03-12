@@ -20,7 +20,10 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
               onClose()
               window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`)
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+              window.alert('세션이 만료되었습니다. 다시 로그인해주세요.')
+              document.location.replace('./sign')
+            });
     };
 
     
