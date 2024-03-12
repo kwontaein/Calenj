@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     //doFilter 메소드가 가장 먼저 실행되는 이유 : 클라이언트의 HTTP 요청이 서블릿 컨테이너에 도달하기 전에 필터가 요청을 가로채어 원하는 작업을 수행하기 때문
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
 
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
@@ -54,6 +56,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            PrintWriter writer = httpResponse.getWriter();
 
             System.out.println("토큰이 만료되었습니다!");
 
@@ -72,7 +76,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 System.out.println("다른 곳에서 로그인되었습니다. 로그아웃됩니다");
 
                 // 리스폰스에 정보 담아 반환
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
+
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
 
             } else if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true") && Objects.equals(DbRefreshToken, refreshToken)) {
@@ -103,36 +107,40 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 System.out.println("모든 토큰이 만료되었습니다. 다시 로그인해주세요!");
 
                 // 리스폰스에 정보 담아 반환
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
+
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
-                /*httpResponse.setContentType("text/plain"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                PrintWriter writer = httpResponse.getWriter();
-                writer.println("모든 토큰이 만료되었습니다. 재로그인해주세요.");
-                writer.close();*/
+                httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+                writer.println("All_Token_Expired");
+
+
             } else {
 
                 System.out.println("예외 발생!" + jwtTokenProvider.validateToken(refreshToken));
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
+                httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+                writer.println("Unknown_Exception");
+            }
+            writer.flush();
+            writer.close();
 
+            // 이미 응답이 작성되었는지 확인
+            if (httpResponse.isCommitted()) {
+                // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
+                return;
             }
         } else {
             // 쿠키에 값이 없거나 여러 상황
-            System.out.println("쿠키에 값이 없습니다. 다시 로그인해주세요");
-
-            // 리스폰스에 정보 담아 반환
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
-             /* httpResponse.setContentType("text/plain"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-            PrintWriter writer = httpResponse.getWriter();
-            writer.println("쿠키에 값이 없습니다. 다시 로그인해주세요");
-            writer.close();*/
-            //로그인 페이지로 일시적으로 이동
+            System.out.println("로그인해주세요");
         }
         try {
             System.out.println("chain.doFilter 실행");
             chain.doFilter(request, response);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 
     //헤더 쿠키에서 토큰 값 가져오는 메소드
@@ -163,5 +171,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         cookie2.setPath("/");
         response.addCookie(cookie);
         response.addCookie(cookie2);
+    }
+
+    public void ExceptionCreate(HttpServletResponse httpResponse, String msg) throws IOException {
+
     }
 }

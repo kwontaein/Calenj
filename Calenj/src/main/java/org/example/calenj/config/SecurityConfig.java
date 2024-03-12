@@ -80,13 +80,5 @@ public class SecurityConfig {
         사용자가 설정한 알고리즘을 사용하는 대신 BCrypt 알고리즘을 고정적으로 사용*/
         return new BCryptPasswordEncoder();
     }
-
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        *//*DelegatingPasswordEncoder는 여러 개의 해시 알고리즘을 지원하며, 알고리즘은 PasswordEncoderFactories를 통해 동적으로 선택됩니다.
-        여러 해시 알고리즘 중에서 현재 사용 중인 해시를 식별하는 프릭스(prefix)를 사용하여 암호화합니다.
-        개방성이 높아서 여러 알고리즘을 쉽게 변경할 수 있습니다.
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();*//*
-        return new BCryptPasswordEncoder();
-    }*/
+    
 }
