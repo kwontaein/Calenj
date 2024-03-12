@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
+            //RESPONSE를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
 

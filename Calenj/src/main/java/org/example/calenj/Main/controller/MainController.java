@@ -16,7 +16,6 @@ public class MainController {
 
     @PostMapping("/api/testpost") //웹페이지 호출
     public String Test() {
-
         return "Hello";
     }
 
