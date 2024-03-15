@@ -24,11 +24,11 @@ const Home:React.FC=()=>{
         
         <div style={{display:"flex", flexDirection:"column"}} >
             <SignState/>
-            {/* <h1>여기는 초기 페이지임</h1>
+            <h1>여기는 초기 페이지임</h1>
             {isLoding && 
             <div >
                 {cookie &&<GroupList cookie={cookie}/>}
-            </div>} */}
+            </div>}
         </div>
 
     )
