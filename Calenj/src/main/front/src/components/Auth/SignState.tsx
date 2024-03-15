@@ -15,11 +15,15 @@ const SignState: React.FC = () => {
     const queryClient = useQueryClient();
 
     const logout = async (): Promise<boolean> => {
-        const resopnse = await axios.post('/api/logout');
-        console.log("로그아웃");
-        document.location.replace("/");
-        return resopnse.data;
-
+        try{
+            const response = await axios.post('/api/logout');
+            console.log(response.data);
+            document.location.replace('/')
+            return response.data;
+        }catch(error){ //토큰이 만료되어도 로그아웃 처리
+            document.location.replace('/')
+            return false;
+        }
     };
 
     //query Mutation 을 통한 refetch 수행 => invalidatae 
@@ -40,7 +44,6 @@ const SignState: React.FC = () => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
         if(!response.data){
-            queryClient.removeQueries({queryKey: [QUERY_COOKIE_KEY]})
         }
         return response.data;
     }
@@ -52,9 +55,6 @@ const SignState: React.FC = () => {
         queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-
-
-    // useQuery를 사용하여 쿠키를 체크하기보단 setInterval을 사용하여 하는 것이 좋음
     // useQuery는 실시간 데이터 갱신(위치, 그래프 등)에 더욱 적합하다함
 
 

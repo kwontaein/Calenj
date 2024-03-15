@@ -41,10 +41,10 @@ public class UserController {
 
 
     @PostMapping("/api/logout")
-    public String logout(HttpServletResponse response) {
+    public boolean logout(HttpServletResponse response) {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
         userService.logout(userDetails, response);
-        return "logout";
+        return false;
     }
 
     @PostMapping("/api/postCookie")
