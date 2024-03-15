@@ -95,7 +95,7 @@ public class UserService {
             //DB에 있어도 쿠키가 없다면 재발급?
             String refreshToken = userEntity.getRefreshToken();
 
-            if (refreshToken == null) { // DB에 저장된 값이 없는 경우
+            if (refreshToken == null) { // DB에 저장된 값이 없는 경우, 즉 로그 기록이 없거나 로그아웃을 잘함
                 // 3. 인증 정보를 기반으로 JWT 토큰 생성
                 tokenInfo = jwtTokenProvider.generateToken(authentication);
                 System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + userEntity.getUserEmail());
