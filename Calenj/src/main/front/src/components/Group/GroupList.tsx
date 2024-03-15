@@ -1,8 +1,8 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
-import axios from 'axios';
-import { QUERY_COOKIE_KEY } from '../Auth/SignState';
+import axios ,{AxiosResponse}from 'axios';
 import {useEffect, useState} from 'react';
+import {stateFilter} from '../../stateFunc/filter'
 
 
 interface GroupList {
@@ -17,15 +17,20 @@ export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
 const GroupList: React.FC<cookieState> = ({cookie}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
-    const queryClient = useQueryClient();
+;
 
    
 
     //그룹 목록 불러오기
     const getGroupList = async (): Promise<GroupList[]> => {
-        const response = await axios.get('/api/groupList')
-        console.log('그룹 목록을 불러옵니다.')
-        return response.data;    
+        try {
+            const response = await axios.get('/api/groupList');
+            console.log('그룹 목록을 불러옵니다.');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 
     const groupListState = useQuery<GroupList[], Error>({

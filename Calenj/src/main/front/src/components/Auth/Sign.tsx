@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosResponse} from 'axios';
-
+import {stateFilter} from '../../stateFunc/filter'
 
 const Sign: React.FC = () => {
 
@@ -28,12 +28,7 @@ const Sign: React.FC = () => {
         axios.post('/api/login', data)
             .then((response: AxiosResponse<Object>) => document.location.replace("/"))
             .catch(error => {
-                console.log(error.response.data)
-                if (error.response.data === "NON_EXISTENT_ERROR") {
-                    window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
-                } else if (error.response.data === "PW_ERROR") {
-                    window.alert("비밀번호가 틀렸습니다. 다시 입력해주세요.")
-                }
+                stateFilter(error.response.data)
             })
     };
 
