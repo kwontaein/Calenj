@@ -20,10 +20,10 @@ const JustSend = () => {
                 console.log(error)
                 console.log(error.response.status)
                 console.log(error.response.data)
-                if (error.response.data === "NON_EXISTENT_ERROR") {
-                    window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
-                } else if (error.response.data === "PW_ERROR") {
-                    window.alert("비밀번호가 틀렸습니다. 다시 입력해주세요.")
+                if (error.response.data === "ALL_TOKEN_EXPIRED") {
+                    window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
+                } else if (error.response.data === "UNKNOWN_EXCEPTION") {
+                    window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
                 }
             })
     }, []);
