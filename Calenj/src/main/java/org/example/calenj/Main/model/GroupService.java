@@ -37,7 +37,7 @@ public class GroupService {
         UserDetails userDetails = grobalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         System.out.println("userDetails : " + userDetails);
 
-        // 유저 이름으로 그룹 생성
+        // 유저 이름으로 그룹 생성/
         GroupEntity groupEntity = GroupEntity.builder()
                 .groupTitle(groupTitle)
                 .groupCreated(String.valueOf(today))
