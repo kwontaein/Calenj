@@ -20,7 +20,7 @@ const SignState: React.FC = () => {
             console.log(response.data);
             document.location.replace('/')
             return response.data;
-        }catch(error){ //토큰이 만료되어도 로그아웃 처리
+        }catch(error){ 
             document.location.replace('/')
             return false;
         }

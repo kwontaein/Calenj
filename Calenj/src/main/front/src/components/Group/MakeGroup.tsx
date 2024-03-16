@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {stateFilter} from '../../stateFunc/filter'
+import {stateFilter} from '../../stateFunc/actionFun'
 
 
 interface ModalProps {

@@ -100,7 +100,6 @@ public class UserController {
     public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(userDTO);
-
         emailVerificationService.emailTokenValidation(request, response, true);
         return userService.saveUser(userDTO);
     }

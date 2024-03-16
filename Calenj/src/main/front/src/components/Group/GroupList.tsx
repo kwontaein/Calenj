@@ -2,7 +2,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
 import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useEffect, useState} from 'react';
-import {stateFilter} from '../../stateFunc/filter'
+import {stateFilter} from '../../stateFunc/actionFun'
 import { off } from 'process';
 import { object, string } from 'yup';
 
