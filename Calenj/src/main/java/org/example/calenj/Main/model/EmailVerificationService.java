@@ -156,7 +156,7 @@ public class EmailVerificationService {
         String emailTokenUUID = validateDTO.getEmailToken();
         System.out.println("emailTokenUUID: "+emailTokenUUID);
 
-        System.out.println("emailTokenUUID==null : "+emailTokenUUID.isEmpty());
+        System.out.println("emailTokenUUID==null :"+ (emailTokenUUID==null));
         //쿠키 값이 존재하는지 확인
         if (request.getCookies()!=null) {
             Cookie[] requestCookie = request.getCookies();

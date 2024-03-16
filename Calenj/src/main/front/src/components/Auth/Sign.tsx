@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
 import {stateFilter} from '../../stateFunc/actionFun'
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 
 const Sign: React.FC = () => {
-
+    const inputRef = useRef<HTMLInputElement>(null);
 
     interface MyData {
         userEmail: string;
@@ -16,36 +16,11 @@ const Sign: React.FC = () => {
         userPassword: '',
     });
 
-
     const SignHandeler = (key: string, event: string): void => {
         setData((prevState: MyData) => {
             return {...prevState, [key]: event}
         })
     };
-
-    const {register, handleSubmit, formState: {errors}} = useForm<MyData>({
-        mode: 'onTouched' //실시간 유효성 검사를 위한 설정
-    });
-
-     //성공 시
-     const onValid: SubmitHandler<MyData> = (data: MyData): Promise<Object|void> => {
-       
-        window.location.replace("/");
-
-        return  axios.post('/api/login', data)
-        .then((response: AxiosResponse<Object>) => {
-            response.data
-        })
-        .catch(error => {
-            stateFilter(error.response.data)
-        })
-           
-    };
-
-    //실패 시
-    const onInvalid: SubmitErrorHandler<MyData> = (errors: FieldErrors): void => {
-        console.log(errors)
-    }
 
 
 
@@ -59,11 +34,17 @@ const Sign: React.FC = () => {
     };
 
 
-    // git 연동 테스트3
+    //페이지 로딩 시 자동으로 id input에 focus
+    useEffect(() => {
+        if(inputRef.current!=null){
+            inputRef.current.focus();
+        }
+    }, []);
+
     return (
         <div>
             <form> 
-                <div>id: <input onChange={(event) => {
+                <div>id: <input ref={inputRef} onChange={(event) => {
                     SignHandeler("userEmail", event.target.value)
                 }}></input></div>
                 <div>pw: <input type="password" onChange={(event) => {
