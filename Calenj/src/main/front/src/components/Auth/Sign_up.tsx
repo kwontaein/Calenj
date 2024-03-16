@@ -196,7 +196,7 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
 
                         {!emailToken.codeValid &&
                             <div id='btn_eamilValidation'
-                                onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}
+                                onClick={emailRequest}>{!validation ? "인증번호 발급" : "인증번호 재발급"}
                             </div>}
                         <br></br>
                        
@@ -225,7 +225,7 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
                 </SignUpFormContainer>
                  {/*이메일 인증번호 발급 시 showAlert = true, 이후 인증까지 완료되면 컴포넌트 닫기  */}
                  
-                 {showAlert === true ? !emailToken.codeValid &&
+                 {showAlert ? !emailToken.codeValid &&
                             <EmailValidationComponent email={watch('userEmail')} onClose={closeModal}/> : null}
             </div>
     );

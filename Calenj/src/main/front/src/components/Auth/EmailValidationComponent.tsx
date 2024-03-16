@@ -179,12 +179,9 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
 
                 <ErrorMessage>{(minutes === 0 && seconds === 0) ? "인증시간이 만료되었습니다." : `남은 시간 : ${minutes}분${secondsUnit(seconds)}초`}</ErrorMessage>
 
-
                 <Input maxLength={10} type="text " onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}></Input>
                 <div id="btn_emailCodeValidation" onClick={codeRequest}> 확인</div>
-                
-                   
-       
+
             </div>
 
     );
