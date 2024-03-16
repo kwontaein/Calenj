@@ -90,21 +90,12 @@ public class UserService {
             //DB에 있어도 쿠키가 없다면 재발급?
             String refreshToken = userEntity.getRefreshToken();
 
-            if (refreshToken == null) { // DB에 저장된 값이 없는 경우
-                // 3. 인증 정보를 기반으로 JWT 토큰 생성
-                tokenInfo = jwtTokenProvider.generateToken(authentication);
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-                // 4. refreshToken 정보 저장
-                userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-
-            } else {
-                //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
-                //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
-                //유효하지 않다면 두개 다 새로 생성해줘야 한다.
-
-                //DB에만 저장된 값이 있지만 다시 로그인한 경우 // 쿠키엔 없음 -> 리프레쉬 재생성 후 저장
-                tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
-            }
+            // 4. refreshToken 정보 저장
+            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
+            
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우

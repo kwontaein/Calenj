@@ -41,18 +41,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleDTO(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
     List<GroupScheduleDTO> findGroupSchedule(@Param("groupId") UUID groupId);
 
-    //조인 사용한 쿼리
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupDTO(g.groupId, g.groupTitle, g.groupCreated, g.groupCreater,\n" +
-            "    (SELECT new org.example.calenj.Main.DTO.Group.GroupUserDTO(gu.user.nickname, gu.role, gu.group_user_location)\n" +
-            "     FROM Group_User gu WHERE gu.group.groupId = :groupId),\n" +
-            "    (SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteItem, gv.voteTitle, gv.voteStartDate, gv.voteEndDate)\n" +
-            "     FROM Group_Vote gv WHERE gv.groupId = :groupId),\n" +
-            "    (SELECT new org.example.calenj.Main.DTO.Group.GroupNoticeDTO(gn.noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated)\n" +
-            "     FROM Group_Notice gn WHERE gn.groupId = :groupId),\n" +
-            "    (SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleDTO(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId)\n" +
-            "     FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId)\n" +
-            ")\n" +
-            "FROM Group_table g\n" +
-            "WHERE g.groupId = :groupId")
-    List<GroupEntity> findGroup(@Param("groupId") UUID groupId);
+    /*@Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")
+    Optional<List<GroupEntity>> findByUserEntity_UserEmail2(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
+    */
 }

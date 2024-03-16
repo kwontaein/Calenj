@@ -26,11 +26,4 @@ public class GroupDTO {
         this.groupCreated = groupCreated;
         this.groupCreater = groupCreater;
     }
-
-    //안써서 일단 주석처리
-  /*  public GroupEntity groupEntity() {
-        return GroupEntity.builder()
-                .grouptitle(grouptitle)
-                .build();
-    }*/
 }

@@ -36,7 +36,7 @@ public class JwtTokenProvider {
     @Autowired
     HttpServletResponse response;
     private final Key key;
-    private long Hours = 1 * 10 * 1000L;
+    private long Hours = 60 * 60 * 1000L;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

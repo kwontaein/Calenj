@@ -1,6 +1,8 @@
 package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -14,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
-
 public class GroupService {
 
     @Autowired
@@ -69,8 +71,28 @@ public class GroupService {
 
 
     //그룹 세부 정보 가져오기
-    public void groupDetail(UUID groupId) {
-        System.out.println(groupRepository.findGroup(groupId));
-    }
+    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
+        System.out.println(" groupDetail 실행 1");
+        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
+        System.out.println(" groupDetail 실행 2 : " + groupOptional);
+        if (groupOptional.isPresent()) {
+            GroupDTO groupDTO = groupOptional.get();
+            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
 
+            System.out.println(" groupDetail 실행 3 : " + groupUsers);
+            // GroupDetailDTO 생성
+            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
+                    groupDTO.getGroupId(),
+                    groupDTO.getGroupTitle(),
+                    groupDTO.getGroupCreated(),
+                    groupDTO.getGroupCreater(),
+                    groupUsers
+            );
+
+            System.out.println(" groupDetail 실행 4 : " + groupDetailDTO);
+            return Optional.of(groupDetailDTO);
+        } else {
+            return Optional.empty();
+        }
+    }
 }

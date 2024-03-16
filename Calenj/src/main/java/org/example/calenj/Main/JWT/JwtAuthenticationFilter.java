@@ -29,8 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     //doFilter 메소드가 가장 먼저 실행되는 이유 : 클라이언트의 HTTP 요청이 서블릿 컨테이너에 도달하기 전에 필터가 요청을 가로채어 원하는 작업을 수행하기 때문
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-
+        
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
         //request로 받은 token을 구분해주는 메소드
@@ -53,6 +52,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
+            //GetWriter()가 이미 선언되었다는 오류가 생김 -> dofilter 동작방식에 이유가 있었음
             //RESPONSE를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
@@ -117,11 +117,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             }
         } else {
             // 쿠키에 값이 없거나 여러 상황
-
         }
         try {
             chain.doFilter(request, response);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -155,9 +153,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         cookie2.setPath("/");
         response.addCookie(cookie);
         response.addCookie(cookie2);
-    }
-
-    public void ExceptionCreate(HttpServletResponse httpResponse, String msg) throws IOException {
-
     }
 }
