@@ -41,10 +41,10 @@ public class UserController {
 
 
     @PostMapping("/api/logout")
-    public String logout(HttpServletResponse response) {
+    public boolean logout(HttpServletResponse response) {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
         userService.logout(userDetails, response);
-        return "logout";
+        return false;
     }
 
     @PostMapping("/api/postCookie")
@@ -100,7 +100,6 @@ public class UserController {
     public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println(userDTO);
-
         emailVerificationService.emailTokenValidation(request, response, true);
         return userService.saveUser(userDTO);
     }
@@ -129,6 +128,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("controller 실행");
         System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
+        System.out.println("ResponseEntity : " + userService.login(userDTO.getUserEmail(), userDTO.getUserPassword()));
 
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }

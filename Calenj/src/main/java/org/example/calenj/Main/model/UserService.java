@@ -60,7 +60,7 @@ public class UserService {
     }
 
     @Transactional
-    public String login(String accountid, String password) {
+    public ResponseEntity<String> login(String accountid, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
@@ -75,17 +75,14 @@ public class UserService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
             System.out.println("UsernamePasswordAuthenticationToken 실행 ");
 
-            // 여기서 존재하는 유저인지 체크 하면 두번 체크하는게 되는데 이게 맞나
-            // 흠
             try {
                 // 사용자 정보 반환
                 userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
-                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-                return "존재하지 않는 사용자입니다.";
+                System.out.println("로그인 실패: 존재하지 않는 사용자입니다." + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
             }
-
             // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
             // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -98,7 +95,7 @@ public class UserService {
             //DB에 있어도 쿠키가 없다면 재발급?
             String refreshToken = userEntity.getRefreshToken();
 
-            if (refreshToken == null) { // DB에 저장된 값이 없는 경우
+            if (refreshToken == null) { // DB에 저장된 값이 없는 경우, 즉 로그 기록이 없거나 로그아웃을 잘함
                 // 3. 인증 정보를 기반으로 JWT 토큰 생성
                 tokenInfo = jwtTokenProvider.generateToken(authentication);
                 System.out.println("tokenInfo.getRefreshToken(), user.getUserEmail() : " + tokenInfo.getRefreshToken() + "," + userEntity.getUserEmail());
@@ -116,12 +113,11 @@ public class UserService {
                 tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
                 System.out.println("tokenInfo : " + tokenInfo);
             }
-            return ("로그인에 성공했습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
-            // 존재하지 않는 사용자인 경우
-            System.out.println("로그인 실패: 비밀번호 틀림.");
-            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '로그인에 실패했습니다. " + e.getMessage() + "'}"));
-            return "로그인에 실패했습니다.";
+            // 비밀번호가 틀린 경우
+            System.out.println("로그인 실패: " + ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{'error': '" + e.getMessage() + "'}"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
     }

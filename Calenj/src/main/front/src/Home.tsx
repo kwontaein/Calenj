@@ -26,7 +26,7 @@ const Home:React.FC=()=>{
             <SignState/>
             <h1>여기는 초기 페이지임</h1>
             {isLoding && 
-            <div >
+            <div>
                 {cookie &&<GroupList cookie={cookie}/>}
             </div>}
         </div>

@@ -3,10 +3,7 @@ package org.example.calenj.Main.controller;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.model.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -17,7 +14,7 @@ public class MainController {
     @Autowired
     MainService mainService;
 
-    @GetMapping("/") //웹페이지 호출
+    @PostMapping("/api/testpost") //웹페이지 호출
     public String Test() {
 
         return "Hello";

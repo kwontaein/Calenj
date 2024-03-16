@@ -1,11 +1,23 @@
 import styled from 'styled-components'
 
 
-export const SignUpFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+interface UnfocusBackgroundProps {
+  focus: string;
+}
+
+export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
+
+  position: relative;
+  z-index : ${props => (props.focus ==="true" ? -1 : 1)}
 `;
+
+export const UnfocusBackgound = styled.div<UnfocusBackgroundProps>`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: ${props => props.focus ==="true"? 'black' : 'transparent'};
+  opacity: ${props => props.focus==="true" ? '60%' : '100%'};
+`
 
 
 export const Input = styled.input`
@@ -43,3 +55,6 @@ export const FormLable = styled.label`
     font-weight: 550;
     margin-left :5px;
 `;
+
+
+
