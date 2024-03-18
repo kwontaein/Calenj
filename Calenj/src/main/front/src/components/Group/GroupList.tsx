@@ -1,26 +1,26 @@
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {useQuery/*, useMutation, useQueryClient*/} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
-import axios ,{AxiosResponse, AxiosError}from 'axios';
-import {useEffect, useState} from 'react';
-import {redirect} from "react-router-dom";
+import axios, {/*AxiosResponse,*/ AxiosError} from 'axios';
+import React, {useState} from 'react';
+/*import {redirect} from "react-router-dom";
+import {off} from 'process';
+import {object, string} from 'yup';*/
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import { off } from 'process';
-import { object, string } from 'yup';
 
 
 interface GroupList {
-    groupId: number|string;
+    groupId: number | string;
     groupTitle: string;
 }
-interface cookieState{
-    cookie:boolean;
+
+interface cookieState {
+    cookie: boolean;
 }
 
-interface error{
-    message : string;
-}
-
+/*interface error {
+    message: string;
+}*/
 
 
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
@@ -28,20 +28,18 @@ export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 const GroupList: React.FC<cookieState> = ({cookie}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const navigate = useNavigate();
-    const [loading,setLoading] = useState<boolean>(false);
-
-
+    /* const [loading, setLoading] = useState<boolean>(false);*/
 
     //그룹 목록 불러오기
-    const getGroupList = async (): Promise<GroupList[]|null>=> {
-        try{
+    const getGroupList = async (): Promise<GroupList[] | null> => {
+        try {
             const response = await axios.get('/api/groupList');
             console.log('그룹 목록을 불러옵니다.');
             return response.data;
-        }catch(error){
+        } catch (error) {
             const axiosError = error as AxiosError;
             console.log(axiosError);
-            if(axiosError.response?.data){
+            if (axiosError.response?.data) {
                 stateFilter((axiosError.response.data) as string);
             }
             return null;
@@ -50,10 +48,10 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
     }
 
-    const groupListState = useQuery<GroupList[]|null, Error>({
+    const groupListState = useQuery<GroupList[] | null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
-        enabled:cookie,
+        enabled: cookie,
     });
     const redirectDetail = (groupId: number) => {
         navigate("/details", {state: {groupId: groupId}});
@@ -61,10 +59,8 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
     const closeModal = () => {
         setShowMakeGroup(false);
-        groupListState.refetch();
+        groupListState.refetch().then(r => "fetch");
     };
-
-    
 
 
     return (
@@ -79,13 +75,13 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                     <ul>
                         {groupListState.data.map((group) => (
                             <li key={group.groupId}
-                                onClick={() => redirectDetail(group.groupId)}>
+                                onClick={() => redirectDetail(group.groupId as number)}>
                                 {group.groupTitle}</li>
                         ))}
                     </ul>
                 </div>
             )}
-            </div> 
+        </div>
     )
 
 }
