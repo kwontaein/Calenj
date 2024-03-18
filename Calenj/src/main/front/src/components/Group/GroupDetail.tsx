@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import {useLocation} from 'react-router-dom';
 
 interface Details {
-    groupId: string;
+    groupId: number;
     groupCreated: string;
     groupTitle: string;
     groupCreater: string;
@@ -18,11 +19,13 @@ const GroupDetail: React.FC = () => {
     //a
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
+    const location = useLocation();
+    const groupInfo = {...location.state};
 
-    const groupDetail = (groupid: string) => {
+    useEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
-                groupid: groupid
+                groupid: groupInfo.groupId
             },
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -30,11 +33,12 @@ const GroupDetail: React.FC = () => {
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 setDetail(response.data);
+                console.log(response.data);
                 setMembers(response.data.members);
+                console.log(response.data.members);
             })
             .catch(error => console.log(error));
-    };
-
+    }, []);
 
     return (
         <div>

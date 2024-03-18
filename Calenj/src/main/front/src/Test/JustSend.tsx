@@ -10,7 +10,7 @@ const JustSend = () => {
 
     const [result, setResult] = useState('')
 
-    useEffect(() => {
+    const a = (): void => {
         console.log();
         axios.post('/api/testpost')
             .then(response => {
@@ -20,16 +20,17 @@ const JustSend = () => {
                 console.log(error)
                 console.log(error.response.status)
                 console.log(error.response.data)
-                if (error.response.data === "ALL_TOKEN_EXPIRED") {
-                    window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
-                } else if (error.response.data === "UNKNOWN_EXCEPTION") {
-                    window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
+                if (error.response.data === "NON_EXISTENT_ERROR") {
+                    window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
+                } else if (error.response.data === "PW_ERROR") {
+                    window.alert("비밀번호가 틀렸습니다. 다시 입력해주세요.")
                 }
             })
-    }, []);
+    };
 
     return (
         <div>
+            <button onClick={a}> 로그인여부</button>
             <h2>데이터 전송 예제 : {result}</h2>
         </div>
     );

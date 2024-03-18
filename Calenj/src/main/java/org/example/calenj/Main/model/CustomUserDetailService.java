@@ -16,7 +16,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("loadUserByUsername 실행");
         UserEntity userEntity = userRepository.findByUserEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         // 사용자 정보 반환
@@ -25,7 +24,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
     // 해당하는 User 의 데이터가 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(UserEntity userEntity) {
-        System.out.println("createUserDetails 실행");
         return UserEntity.builder()
                 .userEmail(userEntity.getUsername())
                 .userPassword(userEntity.getPassword()) //여기서 암호화를 한번 더 하는 바람에 오류가 생김.

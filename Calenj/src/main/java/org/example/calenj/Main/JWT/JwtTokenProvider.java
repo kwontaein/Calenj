@@ -36,7 +36,7 @@ public class JwtTokenProvider {
     @Autowired
     HttpServletResponse response;
     private final Key key;
-    private long Hours = 1 * 10 * 1000L;
+    private long Hours = 60 * 60 * 1000L;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -66,9 +66,6 @@ public class JwtTokenProvider {
         //쿠키 생성 부분
         createCookie(response, "accessToken", accessToken);
         createCookie(response, "refreshToken", refreshToken);
-
-        System.out.println("생성된 accessToken : " + accessToken);
-        System.out.println("생성된 refreshToken : " + refreshToken);
 
         return JwtToken.builder()
                 .grantType("Bearer")
@@ -115,8 +112,6 @@ public class JwtTokenProvider {
         // 만료 시간과 현재 시간을 비교하여 남은 만료 기간 계산
         long remainingTime = expirationDate.getTime() - now.getTime();
 
-        System.out.println("remainingTime : " + remainingTime);
-
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
@@ -125,7 +120,6 @@ public class JwtTokenProvider {
 
         if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
-            System.out.println("만료 기간이 1일 이하입니다. 새로운 리프레시 토큰을 발급합니다");
             newRefreshToken = generateRefreshToken();
             userRepository.updateUserRefreshToken(newRefreshToken, userEntity.getUserEmail());
         } else {
@@ -160,7 +154,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화 [emial(이메일), auth(권한) 정보를 가져옴], calims.getSubject = email
         Claims claims = parseClaims(accessToken);
-        System.out.println("getAuthentication 실행 가져온 accessToken으로 가져온 claims : " + claims);
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);
 
@@ -175,22 +168,17 @@ public class JwtTokenProvider {
 
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            System.out.println("validateToken true");
             return "true";
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            System.out.println("Invalid JWT Token");
             // log.info("Invalid JWT Token", e);//잘못된 토큰
             return "Invalid JWT Token";
         } catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT Token");
             // log.info("Expired JWT Token", e);//만료된 토큰
             return "Expired JWT Token";
         } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT Token");
             // log.info("Unsupported JWT Token", e);//지원하지 않는 토큰
             return "Unsupported JWT Token";
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty");
             // log.info("JWT claims string is empty.", e);//토큰이 비었음
             return "JWT claims string is empty";
         }

@@ -1,6 +1,8 @@
 package org.example.calenj.Main.model;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
@@ -14,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
-
 public class GroupService {
 
     @Autowired
@@ -35,7 +37,6 @@ public class GroupService {
         LocalDate today = LocalDate.now();
 
         UserDetails userDetails = grobalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        System.out.println("userDetails : " + userDetails);
 
         // 유저 이름으로 그룹 생성/
         GroupEntity groupEntity = GroupEntity.builder()
@@ -45,9 +46,6 @@ public class GroupService {
                 .build();
 
         groupRepository.save(groupEntity);
-        System.out.println("groupTitle : " + groupTitle);
-        System.out.println("groupCreated : " + today);
-        System.out.println("그룹 생성" + groupEntity);
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
@@ -60,7 +58,6 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
-        System.out.println("유저 생성");
         return groupEntity.toString();
     }
 
@@ -68,17 +65,29 @@ public class GroupService {
     public List<GroupDTO> groupList() {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
         String userEmail = userDetails.getUsername();
-
-        System.out.println("userEmail : " + userEmail);
         List<GroupDTO> groupEntities = groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
-        System.out.println("그룹 목록 불러오기 Service");
         return groupEntities;
     }
 
 
     //그룹 세부 정보 가져오기
-    public void groupDetail(UUID groupId) {
-        System.out.println(groupRepository.findGroup(groupId));
+    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
+        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
+        if (groupOptional.isPresent()) {
+            GroupDTO groupDTO = groupOptional.get();
+            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
+            // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
+            // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
+            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
+                    groupDTO.getGroupId(),
+                    groupDTO.getGroupTitle(),
+                    groupDTO.getGroupCreated(),
+                    groupDTO.getGroupCreater(),
+                    groupUsers
+            );
+            return Optional.of(groupDetailDTO);
+        } else {
+            return Optional.empty();
+        }
     }
-
 }

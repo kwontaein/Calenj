@@ -20,18 +20,13 @@ public class RoomController {
     //채팅방 목록 조회
     @GetMapping(value = "/rooms")
     public void rooms() {
-
         log.info("# All Chat Rooms");
-
-        System.out.println("rooms: " + repository.findAllRooms());
     }
 
     //채팅방 개설
     @PostMapping(value = "/room")
     public void create(@RequestParam String name) {
-
         log.info("# Create Chat Room , name: " + name);
-        System.out.println("roomName : " + repository.createChatRoomDTO(name));
     }
 
     //채팅방 조회
@@ -40,6 +35,5 @@ public class RoomController {
 
         log.info("# get Chat Room, roomID : " + roomId);
         //채팅방 찾기
-        System.out.println("room : " + repository.findRoomById(roomId));
     }
 }

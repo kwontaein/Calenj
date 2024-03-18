@@ -41,10 +41,10 @@ public class UserController {
 
 
     @PostMapping("/api/logout")
-    public boolean logout(HttpServletResponse response) {
+    public String logout(HttpServletResponse response) {
         UserDetails userDetails = grobalService.extractFromSecurityContext();
         userService.logout(userDetails, response);
-        return false;
+        return "logout";
     }
 
     @PostMapping("/api/postCookie")
@@ -58,8 +58,6 @@ public class UserController {
 
         Map<String, Object> responseMap = phoneverificationService.sendMessage(phone);
 
-        System.out.println("본인인증 문자 전송");
-
         return responseMap;
     }
 
@@ -68,8 +66,6 @@ public class UserController {
         //이메일 중복체크 메소드 (이미 가입된 이메일 -false = 인증코드 발급 불가능)
         boolean checkDublidated = emailVerificationService.emailDuplicated(email);
 
-        System.out.println("checkDublidated : " + checkDublidated);
-
         if (checkDublidated) {
             //이메일 중복 체크 후 이메일 발급 전 토큰 체크
             //토큰 발급 (만약 이메일토큰이 존재하고 유효할 경우 false 반환)
@@ -77,7 +73,6 @@ public class UserController {
 
             if (enableEmail) {//토큰 체크 후 이메일 발급
                 emailVerificationService.joinEmail(email);
-                System.out.println(email + "로 이메일 인증코드 발급완료");
             }
         }
 
@@ -89,8 +84,6 @@ public class UserController {
     @PostMapping("/api/emailCodeValidation")
     public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
 
-        System.out.println(email + "로 인증요청");
-
         emailVerificationService.checkValidationCode(validationCode, request, response);
 
         return validateDTO.getEmailValidState().getCode();
@@ -98,9 +91,8 @@ public class UserController {
 
     @PostMapping("/api/saveUser")
     public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
-
-        System.out.println(userDTO);
-        emailVerificationService.emailTokenValidation(request, response, true);
+        validateDTO.clear();
+        userService.removeCookie(response, "enableSendEmail");
         return userService.saveUser(userDTO);
     }
 
@@ -116,7 +108,6 @@ public class UserController {
     @GetMapping("/api/emailTokenExpiration")
     public Long emailTokenExpiration() {
         Long expriationTime = validateDTO.getExpirationTime();
-        System.out.println("expriationTime : " + expriationTime);
 
         if (expriationTime != null) {
             return expriationTime;
@@ -126,10 +117,6 @@ public class UserController {
 
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        System.out.println("controller 실행");
-        System.out.println("userDTO.getUserEmail() : " + userDTO.getUserEmail());
-        System.out.println("ResponseEntity : " + userService.login(userDTO.getUserEmail(), userDTO.getUserPassword()));
-
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }
 

@@ -31,7 +31,6 @@ public class PhoneverificationService { //전화번호 인증 서비스
         // 랜덤한 인증번호 생성
         Random r = new Random();
         int checkNum = r.nextInt(888888) + 111111;
-        System.out.println("인증번호 : " + checkNum);
 
         // 발신번호 및 수신번호 설정
         Message message = new Message();
