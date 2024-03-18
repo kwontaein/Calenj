@@ -95,7 +95,7 @@ public class UserService {
 
             // 4. refreshToken 정보 저장
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-            
+
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
@@ -128,18 +128,15 @@ public class UserService {
         //DB에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
-        removeCookie(response);
+        removeCookie(response, "accessToken");
+        removeCookie(response, "refreshToken");
     }
 
-    public void removeCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("accessToken", null);
-        Cookie cookie2 = new Cookie("refreshToken", null);
+    public void removeCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
-        cookie2.setMaxAge(0);
-        cookie2.setPath("/");
         response.addCookie(cookie);
-        response.addCookie(cookie2);
     }
 
 }

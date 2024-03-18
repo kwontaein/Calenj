@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     //doFilter 메소드가 가장 먼저 실행되는 이유 : 클라이언트의 HTTP 요청이 서블릿 컨테이너에 도달하기 전에 필터가 요청을 가로채어 원하는 작업을 수행하기 때문
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        
+
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
         //request로 받은 token을 구분해주는 메소드
@@ -66,6 +66,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 //DB에 저장된 값과 일치하지 않는 경우 처리
                 //내가로그인한 상태 -> 다른데서 로그인 -> 나는 DB랑 쿠키값이 달라 -> 저쪽은 두개 다 똑같애 -> 나는 로그아웃되고 -> 저쪽에서 로그인
 
+                removeCookie((HttpServletResponse) response);
                 removeCookie((HttpServletResponse) response);
                 userRepository.updateUserRefreshTokenToNull(authentication.getName());
 

@@ -72,15 +72,12 @@ public class GroupService {
 
     //그룹 세부 정보 가져오기
     public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
-        System.out.println(" groupDetail 실행 1");
         Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
-        System.out.println(" groupDetail 실행 2 : " + groupOptional);
         if (groupOptional.isPresent()) {
             GroupDTO groupDTO = groupOptional.get();
             List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
-
-            System.out.println(" groupDetail 실행 3 : " + groupUsers);
-            // GroupDetailDTO 생성
+            // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
+            // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
             GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
                     groupDTO.getGroupId(),
                     groupDTO.getGroupTitle(),
@@ -88,8 +85,6 @@ public class GroupService {
                     groupDTO.getGroupCreater(),
                     groupUsers
             );
-
-            System.out.println(" groupDetail 실행 4 : " + groupDetailDTO);
             return Optional.of(groupDetailDTO);
         } else {
             return Optional.empty();

@@ -91,8 +91,8 @@ public class UserController {
 
     @PostMapping("/api/saveUser")
     public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
-
-        emailVerificationService.emailTokenValidation(request, response, true);
+        validateDTO.clear();
+        userService.removeCookie(response, "enableSendEmail");
         return userService.saveUser(userDTO);
     }
 
