@@ -135,7 +135,7 @@ public class EmailVerificationService {
     }
 
 
-    //이메일 토큰시간 검증 및 삭제 -ignoreDelete 옵션을 통해 (검증/삭제) 옵션 선택
+    //이메일 토큰시간 검증 및 삭제
     public boolean emailTokenValidation(HttpServletRequest request, HttpServletResponse response) {
 
         String emailTokenUUID = validateDTO.getEmailToken();
