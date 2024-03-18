@@ -25,12 +25,12 @@ const GroupDetail: React.FC = () => {
     useEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
-                groupid: groupInfo.groupId
+                groupId: groupInfo.groupId
             },
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
             }
-        }) // 객체의 속성명을 'id'로 설정
+        }) // 객체의 속성명을 'id' 로 설정
             .then(response => {
                 setDetail(response.data);
                 console.log(response.data);

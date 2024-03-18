@@ -2,19 +2,23 @@ package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.model.MainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
 
-    @Autowired
+    final
     UserRepository userRepository;
-    @Autowired
+    final
     MainService mainService;
 
-    @PostMapping("/api/testpost") //웹페이지 호출
+    public MainController(UserRepository userRepository, MainService mainService) {
+        this.userRepository = userRepository;
+        this.mainService = mainService;
+    }
+
+    @PostMapping("/api/testPost") //웹페이지 호출
     public String Test() {
         return "Hello";
     }

@@ -14,9 +14,9 @@ import java.util.UUID;
 @Repository
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
-    //롬복의 @data 에 의한 생성자를 찾지 못함. + entity의 name을 지정한 경우 해당 name 값으로 select 해야함
+    //롬복의 @data 에 의한 생성자를 찾지 못함. + entity 의 name 을 지정한 경우 해당 name 값으로 select 해야함
     @Query("select new org.example.calenj.Main.DTO.Group.GroupDTO(g.groupId, g.groupTitle) from Group_table g JOIN Group_User gu ON g.groupId = gu.group.groupId where gu.user.userEmail = :userEmail")
-    Optional<List<GroupDTO>> findByUserEntity_UserEmail(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
+    Optional<List<GroupDTO>> findByUserEntity_UserEmail(@Param("userEmail") String userEmail); // No argument for named parameter ':groupCreater'
 
 
     //서브 테이블 조회의 경우 쿼리 두개 사용 및 조인 전략을 사용해야 함
@@ -40,8 +40,5 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     // 다섯 번째 쿼리: GroupScheduleEntity 조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleDTO(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
     List<GroupScheduleDTO> findGroupSchedule(@Param("groupId") UUID groupId);
-
-    /*@Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")
-    Optional<List<GroupEntity>> findByUserEntity_UserEmail2(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
-    */
+    
 }

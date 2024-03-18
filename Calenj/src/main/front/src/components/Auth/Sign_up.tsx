@@ -2,15 +2,15 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useCallback, useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable,UnfocusBackgound} from '../../style/FormStyle';
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBackgound} from '../../Style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
 import {connect} from "react-redux";
 import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
 import {Dispatch} from 'redux';
 import {RootState} from '../../store/store'
-import '../../style/Sign.scss'
-import { string } from 'yup';
+import '../../Style/Sign.scss'
+import {string} from 'yup';
 
 
 type role = "MANAGER" | "ADMIN" | "USER";
@@ -60,7 +60,6 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
     const [validation, setValidation] = useState<boolean>(false);
     //이메일 발급 이후 input을 잠그기 위한 State(이메일 인증번호 발급만하고 이메일 수정하는 거 막음)
     const [eamilInputState, setEamilInputState] = useState<boolean>(false);
- 
 
 
     const {register, handleSubmit, formState: {errors}, reset, watch, trigger} = useForm<User>({
@@ -96,7 +95,7 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
     //실패 시
     const onInvalid: SubmitErrorHandler<User> = (errors: FieldErrors): void => {
         console.log(errors)
-        if(errors.emailValidation?.message){
+        if (errors.emailValidation?.message) {
             window.alert('이메일 인증을 해주세요.')
         }
     }
@@ -166,68 +165,66 @@ const SignUp: React.FC<EmailToeknProps & DispatchProps> = ({emailToken, updateTo
     };
 
 
-
-
     return (
-        <div id ="SignUp_Parent_Box">
-            <UnfocusBackgound focus={String(showAlert)}/>      
-                <SignUpFormContainer focus={String(showAlert)}>
-                    <h2>회원가입</h2>
-                    <form onSubmit={handleSubmit(onValid, onInvalid)}>
-                        <div>
-                            <FormLable>닉네임</FormLable>
-                        </div>
-                        <div>
-                            <Input {...register("nickname", {required: true})} placeholder="닉네임"/>
-                            <ErrorMessage>{errors.nickname?.message}</ErrorMessage>
-                        </div>
+        <div id="SignUp_Parent_Box">
+            <UnfocusBackgound focus={String(showAlert)}/>
+            <SignUpFormContainer focus={String(showAlert)}>
+                <h2>회원가입</h2>
+                <form onSubmit={handleSubmit(onValid, onInvalid)}>
+                    <div>
+                        <FormLable>닉네임</FormLable>
+                    </div>
+                    <div>
+                        <Input {...register("nickname", {required: true})} placeholder="닉네임"/>
+                        <ErrorMessage>{errors.nickname?.message}</ErrorMessage>
+                    </div>
 
-                        <div>
-                            <FormLable>아이디(이메일)</FormLable>
-                        </div>
+                    <div>
+                        <FormLable>아이디(이메일)</FormLable>
+                    </div>
 
 
-                        <div>
-                            <Input type="email" onClick={emailInputHandler} {...register("userEmail", {required: true})}
-                                placeholder="이메일"
-                                readOnly={(emailToken.codeValid || eamilInputState)}></Input>
-                            <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
-                        </div>
+                    <div>
+                        <Input type="email" onClick={emailInputHandler} {...register("userEmail", {required: true})}
+                               placeholder="이메일"
+                               readOnly={(emailToken.codeValid || eamilInputState)}></Input>
+                        <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
+                    </div>
 
-                        {!emailToken.codeValid &&
-                            <div id='btn_eamilValidation'
-                                onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}
-                            </div>}
-                        <br></br>
-                       
-                        <div>
-                            <div>
-                                <FormLable>패스워드</FormLable>
-                            </div>
-                            <Input type="password" {...register("userPassword", {required: true})}
-                                placeholder="비밀번호"></Input>
-                            <ErrorMessage>{errors.userPassword?.message}</ErrorMessage>
-                        </div>
-                        <div>
-                            <FormLable>패스워드 확인</FormLable>
-                        </div>
-                        <div>
-                            <Input type="password" {...register("passwordCheck", {required: true})}
-                                placeholder="비밀번호 확인"></Input>
-                            <ErrorMessage>{errors.passwordCheck?.message}</ErrorMessage>
-                        </div>
-                        <div>
-                            <Button type="submit" style={{marginTop: '2vw'}}>회원가입</Button>
-                        </div>
-                        <br></br>
+                    {!emailToken.codeValid &&
+                        <div id='btn_eamilValidation'
+                             onClick={emailRequest}>{validation === false ? "인증번호 발급" : "인증번호 재발급"}
+                        </div>}
+                    <br></br>
 
-                    </form>
-                </SignUpFormContainer>
-                 {/*이메일 인증번호 발급 시 showAlert = true, 이후 인증까지 완료되면 컴포넌트 닫기  */}
-                 
-                 {showAlert === true ? !emailToken.codeValid &&
-                            <EmailValidationComponent email={watch('userEmail')} onClose={closeModal}/> : null}
-            </div>
+                    <div>
+                        <div>
+                            <FormLable>패스워드</FormLable>
+                        </div>
+                        <Input type="password" {...register("userPassword", {required: true})}
+                               placeholder="비밀번호"></Input>
+                        <ErrorMessage>{errors.userPassword?.message}</ErrorMessage>
+                    </div>
+                    <div>
+                        <FormLable>패스워드 확인</FormLable>
+                    </div>
+                    <div>
+                        <Input type="password" {...register("passwordCheck", {required: true})}
+                               placeholder="비밀번호 확인"></Input>
+                        <ErrorMessage>{errors.passwordCheck?.message}</ErrorMessage>
+                    </div>
+                    <div>
+                        <Button type="submit" style={{marginTop: '2vw'}}>회원가입</Button>
+                    </div>
+                    <br></br>
+
+                </form>
+            </SignUpFormContainer>
+            {/*이메일 인증번호 발급 시 showAlert = true, 이후 인증까지 완료되면 컴포넌트 닫기  */}
+
+            {showAlert === true ? !emailToken.codeValid &&
+                <EmailValidationComponent email={watch('userEmail')} onClose={closeModal}/> : null}
+        </div>
     );
 };
 

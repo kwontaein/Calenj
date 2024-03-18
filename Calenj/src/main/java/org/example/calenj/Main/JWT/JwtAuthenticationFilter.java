@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
-        //request로 받은 token을 구분해주는 메소드
+        //request 로 받은 token 을 구분해주는 메소드
         String[] tokens = resolveCookieFilter((HttpServletRequest) request);
 
         // 1. Request Header 에서 JWT 토큰 추출
@@ -52,8 +52,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
-            //GetWriter()가 이미 선언되었다는 오류가 생김 -> dofilter 동작방식에 이유가 있었음
-            //RESPONSE를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
+            //GetWriter()가 이미 선언되었다는 오류가 생김 -> doFilter 동작방식에 이유가 있었음
+            //RESPONSE 를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
 
@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
 
-                // 새로운 Access Token으로
+                // 새로운 Access Token 으로
                 authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
 
                 //SecurityContext 업데이트
@@ -89,7 +89,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 
             } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
-                // Refresh Token도 만료된 경우, 로그아웃 처리 수행 후 로그인 페이지로 유도
+                // Refresh Token 도 만료된 경우, 로그아웃 처리 수행 후 로그인 페이지로 유도
                 // 쿠키 삭제
                 removeCookie((HttpServletResponse) response);
                 String email = authentication.getName();
@@ -116,9 +116,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
                 return;
             }
-        } else {
+        }/* else {
             // 쿠키에 값이 없거나 여러 상황
-        }
+        }*/
         try {
             chain.doFilter(request, response);
         } catch (IOException e) {

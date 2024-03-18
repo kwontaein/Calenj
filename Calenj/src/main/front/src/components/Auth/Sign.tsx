@@ -1,4 +1,4 @@
-import React, {useState,useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
 import {stateFilter} from '../../stateFunc/actionFun'
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
@@ -22,28 +22,28 @@ const Sign: React.FC = () => {
         })
     };
 
-
-
-    const login = (): void => {
+    const login = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
         console.log(data);
         axios.post('/api/login', data)
-            .then((response: AxiosResponse<Object>) => document.location.replace("/"))
+            .then((response: AxiosResponse<Object>) => {
+                document.location.replace("/");
+            })
             .catch(error => {
                 stateFilter(error.response.data)
             })
     };
 
-
     //페이지 로딩 시 자동으로 id input에 focus
     useEffect(() => {
-        if(inputRef.current!=null){
+        if (inputRef.current != null) {
             inputRef.current.focus();
         }
     }, []);
 
     return (
         <div>
-            <form> 
+            <form onSubmit={login}>
                 <div>id: <input ref={inputRef} onChange={(event) => {
                     SignHandeler("userEmail", event.target.value)
                 }}></input></div>
@@ -51,7 +51,7 @@ const Sign: React.FC = () => {
                     SignHandeler("userPassword", event.target.value)
                 }}></input></div>
 
-                <button onClick={login}>로그인</button>
+                <button type="submit">로그인</button>
             </form>
         </div>
     );

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class PhoneverificationService { //전화번호 인증 서비스
+public class PhoneVerificationService { //전화번호 인증 서비스
 
     //final DefaultMessageService messageService;
 
@@ -20,7 +20,7 @@ public class PhoneverificationService { //전화번호 인증 서비스
     String api_secret;
 
     // 생성자에서 메시지 서비스 초기화
-    public PhoneverificationService() {
+    public PhoneVerificationService() {
         // 메시지 서비스를 초기화합니다.
         // this.messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret, "https://api.coolsms.co.kr");
     }

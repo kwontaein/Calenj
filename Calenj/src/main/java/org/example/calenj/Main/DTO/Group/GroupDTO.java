@@ -13,13 +13,13 @@ public class GroupDTO {
     private String groupCreated;
     private String groupCreater;
 
-    //jpa의 jpql은 DTO를 통해 조회할 경우 생성자를 생성해줘야 함
+    //jpa 의 jpql 은 DTO 를 통해 조회할 경우 생성자를 생성해줘야 함
     public GroupDTO(UUID groupId, String groupTitle) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
     }
 
-    //jpa의 jpql은 DTO를 통해 조회할 경우 생성자를 생성해줘야 함
+    //jpa 의 jpql 은 DTO 를 통해 조회할 경우 생성자를 생성해줘야 함
     public GroupDTO(UUID groupId, String groupTitle, String groupCreated, String groupCreater) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
