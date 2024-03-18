@@ -97,7 +97,9 @@ public class JwtTokenProvider {
 
     // RefreshToken을 사용하여 AccessToken 재발급 메소드
     public JwtToken refreshAccessToken(String refreshToken) {
+        String newAccessToken;
         String newRefreshToken;
+
         long oneDay = 24 * Hours;
         // 리프레시 토큰에서 클레임 추출
         Claims claims = parseClaims(refreshToken);
@@ -114,7 +116,7 @@ public class JwtTokenProvider {
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
-        String newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
+        newAccessToken= generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
         if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급

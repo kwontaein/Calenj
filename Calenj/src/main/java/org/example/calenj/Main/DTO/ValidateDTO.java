@@ -21,6 +21,7 @@ public class ValidateDTO {
 
     @Getter
     @RequiredArgsConstructor
+    //이메일 인증코드 전송 시 전송 성공여부
     public enum EmailValidState {
 
         INITIAL(100, "응답대기"),

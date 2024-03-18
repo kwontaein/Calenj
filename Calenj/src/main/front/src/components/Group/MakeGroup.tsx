@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-;
+import {stateFilter} from '../../stateFunc/actionFun'
 
 
 interface ModalProps {
@@ -21,8 +21,8 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
               window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`)
             })
             .catch(error => {
-              window.alert('세션이 만료되었습니다. 다시 로그인해주세요.')
-              document.location.replace('./sign')
+              console.log(error)
+              stateFilter(error.response.data);
             });
     };
 

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
-
+import {stateFilter} from '../../stateFunc/actionFun'
+import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 
 const Sign: React.FC = () => {
-
+    const inputRef = useRef<HTMLInputElement>(null);
 
     interface MyData {
         userEmail: string;
@@ -15,7 +16,6 @@ const Sign: React.FC = () => {
         userPassword: '',
     });
 
-
     const SignHandeler = (key: string, event: string): void => {
         setData((prevState: MyData) => {
             return {...prevState, [key]: event}
@@ -23,33 +23,36 @@ const Sign: React.FC = () => {
     };
 
 
+
     const login = (): void => {
         console.log(data);
         axios.post('/api/login', data)
             .then((response: AxiosResponse<Object>) => document.location.replace("/"))
             .catch(error => {
-                console.log(error.response.data)
-                if (error.response.data === "NON_EXISTENT_ERROR") {
-                    window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
-                } else if (error.response.data === "PW_ERROR") {
-                    window.alert("비밀번호가 틀렸습니다. 다시 입력해주세요.")
-                }
+                stateFilter(error.response.data)
             })
     };
 
 
-    // git 연동 테스트3
+    //페이지 로딩 시 자동으로 id input에 focus
+    useEffect(() => {
+        if(inputRef.current!=null){
+            inputRef.current.focus();
+        }
+    }, []);
+
     return (
         <div>
-            <div>id: <input onChange={(event) => {
-                SignHandeler("userEmail", event.target.value)
-            }}></input></div>
-            <div>pw: <input type="password" onChange={(event) => {
-                SignHandeler("userPassword", event.target.value)
-            }}></input></div>
+            <form> 
+                <div>id: <input ref={inputRef} onChange={(event) => {
+                    SignHandeler("userEmail", event.target.value)
+                }}></input></div>
+                <div>pw: <input type="password" onChange={(event) => {
+                    SignHandeler("userPassword", event.target.value)
+                }}></input></div>
 
-            <button onClick={login}>로그인</button>
-
+                <button onClick={login}>로그인</button>
+            </form>
         </div>
     );
 
