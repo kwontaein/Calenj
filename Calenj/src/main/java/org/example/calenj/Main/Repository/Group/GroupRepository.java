@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
+public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
 
     //롬복의 @data 에 의한 생성자를 찾지 못함. + entity 의 name 을 지정한 경우 해당 name 값으로 select 해야함
     @Query("select new org.example.calenj.Main.DTO.Group.GroupDTO(g.groupId, g.groupTitle) from Group_table g JOIN Group_User gu ON g.groupId = gu.group.groupId where gu.user.userEmail = :userEmail")
