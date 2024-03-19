@@ -1,5 +1,6 @@
 package org.example.calenj.Main.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
@@ -11,14 +12,10 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class GroupController {
 
-    final
-    GroupService groupService;
-
-    public GroupController(GroupService groupService) {
-        this.groupService = groupService;
-    }
+    private final GroupService groupService;
 
     //그룹 만들기
     @PostMapping("/api/makeGroup")
@@ -57,7 +54,7 @@ public class GroupController {
 
     //공지 생성
     @PostMapping("api/makeNotice")
-    public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO){
-        groupService.makeNotice(groupNoticeDTO.getNotice_title(),groupNoticeDTO.getNotice_content());
+    public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
+        groupService.makeNotice(groupNoticeDTO.getNotice_title(), groupNoticeDTO.getNotice_content());
     }
 }

@@ -3,10 +3,13 @@ package org.example.calenj.Main.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.*;
+import org.example.calenj.Main.model.EmailVerificationService;
+import org.example.calenj.Main.model.GlobalService;
+import org.example.calenj.Main.model.PhoneVerificationService;
+import org.example.calenj.Main.model.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -15,38 +18,18 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class UserController {
 
-    final
-    UserRepository userRepository;
+    private final UserService userService;
 
-    final
-    UserService userService;
+    private final GlobalService globalService;
 
-    final
-    MainService mainService;
+    private final ValidateDTO validateDTO;
 
-    final
-    GlobalService globalService;
+    private final PhoneVerificationService phoneVerificationService;
 
-    final
-    ValidateDTO validateDTO;
-
-    final
-    PhoneVerificationService phoneVerificationService;
-
-    final
-    EmailVerificationService emailVerificationService;
-
-    public UserController(UserRepository userRepository, UserService userService, MainService mainService, GlobalService globalService, ValidateDTO validateDTO, PhoneVerificationService phoneVerificationService, EmailVerificationService emailVerificationService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.mainService = mainService;
-        this.globalService = globalService;
-        this.validateDTO = validateDTO;
-        this.phoneVerificationService = phoneVerificationService;
-        this.emailVerificationService = emailVerificationService;
-    }
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
@@ -81,8 +64,6 @@ public class UserController {
                 emailVerificationService.joinEmail(email);
             }
         }
-
-
         return validateDTO.getEnableSendEmail().getEnableEmailEnum();
     }
 

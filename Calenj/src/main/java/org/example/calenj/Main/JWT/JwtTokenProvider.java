@@ -30,14 +30,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    final
-    UserRepository userRepository;
-    final
-    HttpServletResponse response;
-    private final
-    Key key;
-    private final
-    long Hours = 60 * 60 * 1000L;
+    final UserRepository userRepository;
+    final HttpServletResponse response;
+    private final Key key;
+    private final long Hours = 60 * 60 * 1000L;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserRepository userRepository, HttpServletResponse response) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

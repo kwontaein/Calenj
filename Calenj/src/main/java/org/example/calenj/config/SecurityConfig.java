@@ -1,5 +1,6 @@
 package org.example.calenj.config;
 
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.JWT.JwtAuthenticationEntryPoint;
 import org.example.calenj.Main.JWT.JwtAuthenticationFilter;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
@@ -22,21 +23,19 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final String[] allAllowedUrls = {"/**", "/api/login"};    // 모두 허가
     private final String[] UserAllowedUrls = {"/**"};    // 유저만 허가
     private final String[] AdminAllowedUrls = {"/**"};    // 매니저만 허가
     private final String[] ManagerAllowedUrls = {"/api/testSuccess"};    // 관리자만 허가
 
-    final
+    private final
     JwtTokenProvider jwtTokenProvider;
-    final
+    private final
     UserRepository userRepository;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userRepository = userRepository;
-    }
+
     //private String logout_url = "https://kauth.kakao.com/oauth/logout?client_id=${kakao.client.id}&logout_redirect_utl=${kakao.logout_redirect_url}";
 
     @Bean
