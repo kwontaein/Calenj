@@ -6,7 +6,6 @@ interface UnfocusBackgroundProps {
 }
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
-
   position: relative;
   z-index : ${props => (props.focus ==="true" ? -1 : 1)}
 `;
@@ -27,6 +26,23 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   width: 450px;
 `;
+
+export const Mini_Input = styled.input`
+  witdh :100px;
+  height : 20px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+export const Mini_Textarea =styled.textarea`
+  width :200px;
+  height : 200px;
+  padding-top :5px;
+  padding-left :5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`
 
 
 export const Button = styled.button`
@@ -57,4 +73,14 @@ export const FormLable = styled.label`
 `;
 
 
+export const RowFlexBox = styled.div`
+  display : flex;
+  flexdirection : row;
+`
 
+
+export const Right_flexBox = styled.div`
+  margin-top: 10px;
+  width: 205px;
+  text-align: right;
+`;

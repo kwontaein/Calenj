@@ -1,26 +1,26 @@
-import {useQuery/*, useMutation, useQueryClient*/} from '@tanstack/react-query';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
-import axios, {/*AxiosResponse,*/ AxiosError, AxiosResponse} from 'axios';
-import React, {useState} from 'react';
-/*import {redirect} from "react-router-dom";
-import {off} from 'process';
-import {object, string} from 'yup';*/
+import axios ,{AxiosResponse, AxiosError}from 'axios';
+import {useEffect, useState} from 'react';
+import {redirect} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 
 
+
 interface GroupList {
-    groupId: number | string;
+    groupId: number|string;
     groupTitle: string;
+    groupCreated :string;
+}
+interface cookieState{
+    cookie:boolean;
 }
 
-interface cookieState {
-    cookie: boolean;
+interface error{
+    message : string;
 }
 
-/*interface error {
-    message: string;
-}*/
 
 
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
@@ -28,30 +28,37 @@ export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 const GroupList: React.FC<cookieState> = ({cookie}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const navigate = useNavigate();
-    /* const [loading, setLoading] = useState<boolean>(false);*/
+    const [loading,setLoading] = useState<boolean>(false);
+
+
 
     //그룹 목록 불러오기
-    const getGroupList = async (): Promise<GroupList[] | null> => {
-        try {
+    const getGroupList = async (): Promise<GroupList[]|null>=> {
+        try{
             const response = await axios.get('/api/groupList');
             console.log('그룹 목록을 불러옵니다.');
-            return response.data;
-        } catch (error) {
+            const data = response.data as GroupList[];
+            const dataSort = data.sort((a,b)=>{
+                return (Number(b.groupCreated)-Number(a.groupCreated));
+            })
+            return dataSort;
+        }catch(error){
             const axiosError = error as AxiosError;
             console.log(axiosError);
-            if (axiosError.response?.data) {
+            if(axiosError.response?.data){
                 stateFilter((axiosError.response.data) as string);
             }
             return null;
         }
-
-
     }
 
-    const groupListState = useQuery<GroupList[] | null, Error>({
+
+
+
+    const groupListState = useQuery<GroupList[]|null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
-        enabled: cookie,
+        enabled:cookie,
     });
     const redirectDetail = (groupId: number) => {
         navigate("/details", {state: {groupId: groupId}});
@@ -59,19 +66,14 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
     const closeModal = () => {
         setShowMakeGroup(false);
-        groupListState.refetch().then(r => "fetch");
+        groupListState.refetch();
     };
 
-    // const joinUser = (groupId: number) => {
-    //     axios.post('/api/joinGroup', groupId)
-    //         .then((response: AxiosResponse<Object>) => {
-    //             console.log("응애");
-    //         })
-    //         .catch(error => {
-    //             stateFilter(error.response.data)
-    //         })
-    // };
+    
+
+
     return (
+
         <div>
             <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
             {showMakeGroup && <MakeGroup onClose={closeModal}></MakeGroup>}
@@ -81,15 +83,15 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                     <h2>Group List</h2>
                     <ul>
                         {groupListState.data.map((group) => (
-                            <li key={group.groupId} onClick={() => redirectDetail(group.groupId as number)}>
-                                <b>{group.groupTitle}</b>
-                            </li>
+                            <li key={group.groupId}
+                                onClick={() => redirectDetail(group.groupId as number)}>
+                                {group.groupTitle}
+                                </li>
                         ))}
                     </ul>
                 </div>
             )}
-            {/*<div onClick={() => joinUser(group.groupId as number)}>ㅋㅋ</div>*/}
-        </div>
+            </div> 
     )
 
 }

@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import axios, {AxiosResponse} from 'axios';
+import React, {useLayoutEffect, useState} from 'react';
+import axios from 'axios';
 import {useLocation} from 'react-router-dom';
-import {stateFilter} from "../../stateFunc/actionFun";
+import { useId } from 'react';
 
 interface Details {
     groupId: number;
@@ -14,6 +14,7 @@ interface Members {
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
+    userEmail:String;
 }
 
 const GroupDetail: React.FC = () => {
@@ -22,16 +23,18 @@ const GroupDetail: React.FC = () => {
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
     const groupInfo = {...location.state};
+    const id = useId();
 
-    useEffect(() => {
+
+    useLayoutEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
-                groupId: groupInfo.groupId
+                groupid: groupInfo.groupId
             },
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
             }
-        }) // 객체의 속성명을 'id' 로 설정
+        }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 setDetail(response.data);
                 console.log(response.data);
@@ -40,7 +43,6 @@ const GroupDetail: React.FC = () => {
             })
             .catch(error => console.log(error));
     }, []);
-
 
     return (
         <div>
@@ -53,10 +55,9 @@ const GroupDetail: React.FC = () => {
                 )}
             </div>
             <hr/>
-            <hr/>
             <div>
                 {members !== null && members.map(members => (
-                    <div>
+                    <div key={`${id}-${members.userEmail}`}>
                         <div>닉네임 : {members.nickName}</div>
                         <div>역할 : {members.groupRoleType}</div>
                         <div>위치 : {members.group_user_location}</div>

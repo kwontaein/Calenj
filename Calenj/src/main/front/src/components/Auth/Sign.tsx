@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
 import {stateFilter} from '../../stateFunc/actionFun'
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
@@ -22,6 +22,8 @@ const Sign: React.FC = () => {
         })
     };
 
+
+
     const login = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log(data);
@@ -34,16 +36,15 @@ const Sign: React.FC = () => {
             })
     };
 
+
     //페이지 로딩 시 자동으로 id input에 focus
-    useEffect(() => {
-        if (inputRef.current != null) {
-            inputRef.current.focus();
-        }
-    }, []);
+    useEffect(()=>{
+        inputRef.current?.focus();
+    },[])
 
     return (
         <div>
-            <form onSubmit={login}>
+            <form onSubmit={login}> 
                 <div>id: <input ref={inputRef} onChange={(event) => {
                     SignHandeler("userEmail", event.target.value)
                 }}></input></div>

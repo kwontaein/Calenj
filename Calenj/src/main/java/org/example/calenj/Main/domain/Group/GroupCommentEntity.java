@@ -3,6 +3,7 @@ package org.example.calenj.Main.domain.Group;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Entity(name = "Group_Comment")
