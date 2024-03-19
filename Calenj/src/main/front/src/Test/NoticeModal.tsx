@@ -12,13 +12,9 @@ const NoticeModal :React.FC<ModalProps> = ({onClose})=>{
     const [title,setTitle] = useState<string>('');
     const [content,setContent] = useState<string>('');
 
-
-
     useEffect(()=>{
         inputRef.current?.focus();
     },[])
-
-    
     const closeModal =()=>{
         if (content===''&& title==='') {
             onClose();
