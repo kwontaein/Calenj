@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {stateFilter} from '../../stateFunc/actionFun'
+import {stateFilter,useConfirm} from '../../stateFunc/actionFun'
 
 
 interface ModalProps {
@@ -28,27 +28,6 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
 
     
 
-    const useConfirm = (massage =" ",onConfirm:()=>void, onCancel:()=>void)=>{
-        if(typeof onConfirm !== "function" ){
-          return;
-        }
-        if(typeof onCancel !== "function" ){
-            return;
-        }
-
-          const confrimAction = () => { //취할 행동
-          if(window.confirm(massage)){ //확신 시
-
-            makeGroup();
-
-          }else{
-            onCancel(); //취소 누르면 실행
-          }
-        };
-        return confrimAction();
-      };
-
-    
    
       const createGroup = ()=>{
         const cancle =() =>  console.log("생성 취소");

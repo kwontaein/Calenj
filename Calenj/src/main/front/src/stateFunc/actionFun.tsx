@@ -9,7 +9,7 @@ export function stateFilter (error:string): void{
         
     } else if (error === "UNKNOWN_EXCEPTION") {
         window.alert("알수없는 접근입니다 재로그인하세요.")
-        document.location.replace('/sign')
+        console.log('ㅎㅇ')
 
     } else if (error === "NON_EXISTENT_ERROR") {
         window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
@@ -20,4 +20,21 @@ export function stateFilter (error:string): void{
 }
 
 
+export function useConfirm(massage =" ",onConfirm:()=>void, onCancel:()=>void){
+    if(typeof onConfirm !== "function" ){
+      return;
+    }
+    if(typeof onCancel !== "function" ){
+        return;
+    }
+
+      const confrimAction = () => { //취할 행동
+      if(window.confirm(massage)){ //확신 시
+        onConfirm();
+      }else{
+        onCancel(); //취소 누르면 실행
+      }
+    };
+    return confrimAction();
+  };
 

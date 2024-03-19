@@ -7,6 +7,7 @@ import '../../style/Sign.scss'
 import {RootState} from '../../store/store'
 import {Dispatch} from 'redux';
 import { kMaxLength } from 'buffer';
+import {useConfirm} from '../../stateFunc/actionFun'
 
 
 //상위 컴포넌트의 props
@@ -78,30 +79,9 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
     }
 
 
-    /*취소 버튼 누를 시 confirm으로 한 번 더 물어봄 */
-    const useConfirm = (massage =" ",onConfirm:()=>void, onCancel:()=>void)=>{
-        if(typeof onConfirm !== "function" ){
-          return;
-        }
-        if(typeof onCancel !== "function" ){
-            return;
-        }
-
-          const confrimAction = () => { //취할 행동
-          if(window.confirm(massage)){ //확신 시
-            onConfirm(); //닫음
-          }else{
-            onCancel(); //취소
-          }
-        };
-        return confrimAction();
-      };
 
       const validateCancle = ()=>{
- 
         const cancle =() =>  console.log("취소");
-
-
             if(minutes ===0 &&seconds===0){
                 return onClose();
             }else{

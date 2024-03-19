@@ -2,6 +2,7 @@ package org.example.calenj.Main.controller;
 
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,12 @@ public class GroupController {
     @PostMapping("/api/inviteGroup")
     public String inviteGroup(@RequestParam("inviteCode") int inviteCode) { //그룹 초대
         return "";
+    }
+
+
+    //공지 생성
+    @PostMapping("api/makeNotice")
+    public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO){
+        groupService.makeNotice(groupNoticeDTO.getNotice_title(),groupNoticeDTO.getNotice_content());
     }
 }

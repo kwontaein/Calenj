@@ -5,13 +5,13 @@ import {useEffect, useState} from 'react';
 import {redirect} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import { off } from 'process';
-import { object, string } from 'yup';
+
 
 
 interface GroupList {
     groupId: number|string;
     groupTitle: string;
+    groupCreated :string;
 }
 interface cookieState{
     cookie:boolean;
@@ -37,7 +37,11 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
         try{
             const response = await axios.get('/api/groupList');
             console.log('그룹 목록을 불러옵니다.');
-            return response.data;
+            const data = response.data as GroupList[];
+            const dataSort = data.sort((a,b)=>{
+                return (Number(b.groupCreated)-Number(a.groupCreated));
+            })
+            return dataSort;
         }catch(error){
             const axiosError = error as AxiosError;
             console.log(axiosError);
@@ -46,9 +50,10 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
             }
             return null;
         }
-
-
     }
+
+
+    
 
     const groupListState = useQuery<GroupList[]|null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],
@@ -79,8 +84,9 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                     <ul>
                         {groupListState.data.map((group) => (
                             <li key={group.groupId}
-                                onClick={() => redirectDetail(group.groupId)}>
-                                {group.groupTitle}</li>
+                                onClick={() => redirectDetail(group.groupId as number)}>
+                                {group.groupTitle}
+                                </li>
                         ))}
                     </ul>
                 </div>

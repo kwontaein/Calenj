@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from 'react-router-dom';
+import { useId } from 'react';
 
 interface Details {
     groupId: number;
@@ -13,6 +14,7 @@ interface Members {
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
+    userEmail:String;
 }
 
 const GroupDetail: React.FC = () => {
@@ -21,8 +23,10 @@ const GroupDetail: React.FC = () => {
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
     const groupInfo = {...location.state};
+    const id = useId();
 
-    useEffect(() => {
+
+    useLayoutEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
                 groupid: groupInfo.groupId
@@ -53,7 +57,7 @@ const GroupDetail: React.FC = () => {
             <hr/>
             <div>
                 {members !== null && members.map(members => (
-                    <div>
+                    <div key={`${id}-${members.userEmail}`}>
                         <div>닉네임 : {members.nickName}</div>
                         <div>역할 : {members.groupRoleType}</div>
                         <div>위치 : {members.group_user_location}</div>

@@ -1,12 +1,15 @@
 package org.example.calenj.Main.model;
 
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
+import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Group.GroupEntity;
+import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +23,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class GroupService {
 
-    @Autowired
-    GroupRepository groupRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    Group_UserRepository group_userRepository;
-    @Autowired
-    GrobalService grobalService;
+
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
+    private final Group_UserRepository group_userRepository;
+    private final GrobalService grobalService;
+    private final Group_NoticeRepository groupNoticeRepository;
 
     //그룹 만들기
-    public String makeGroup(String groupTitle) {
+    public void makeGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
 
@@ -58,7 +60,6 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
-        return groupEntity.toString();
     }
 
     //그룹 목록 가져오기
@@ -89,5 +90,22 @@ public class GroupService {
         } else {
             return Optional.empty();
         }
+    }
+
+    //그룹 공지 생성
+    public void makeNotice(String NoticeTitle,String NoticeContent) {
+
+        LocalDate today = LocalDate.now();
+
+        UserDetails userDetails = grobalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+
+        GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
+                        .noticeTitle(NoticeTitle)
+                        .noticeContent(NoticeContent)
+                        .noticeCreated(String.valueOf(today))
+                        .noticeCreater(userDetails.getUsername())
+                        .build();
+
+        groupNoticeRepository.save(groupNoticeEntity);
     }
 }
