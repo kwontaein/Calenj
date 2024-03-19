@@ -7,6 +7,9 @@ import lombok.*;
 
 @Entity(name = "Group_Notice")
 @Getter
+@Builder(builderMethodName = "GroupNoticeBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
+@NoArgsConstructor
+@AllArgsConstructor
 @DiscriminatorValue("Group_Notice") // 서브 테이블을 판별하기 위한 값
 public class GroupNoticeEntity extends GroupEntity {
 
@@ -21,7 +24,7 @@ public class GroupNoticeEntity extends GroupEntity {
 
     @Column(name = "notice_creater")
     private String noticeCreater;
-    
+
     @Column(name = "notice_watcher")
     private String noticeWatcher;
 

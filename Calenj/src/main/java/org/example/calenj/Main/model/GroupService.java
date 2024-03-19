@@ -51,7 +51,7 @@ public class GroupService {
                 .groupCreated(String.valueOf(today))
                 .groupCreater(userDetails.getUsername())
                 .build();
-
+        
         groupRepository.save(groupEntity);
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
