@@ -2,7 +2,8 @@ import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useEffect, useState, useRef} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
-import JustSend from "./Test/JustSend";
+import Notice from "./Test/Notice";
+
 
 
 const Home: React.FC = () => {
