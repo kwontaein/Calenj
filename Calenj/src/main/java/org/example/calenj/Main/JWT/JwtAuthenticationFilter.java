@@ -52,8 +52,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
-            //GetWriter()가 이미 선언되었다는 오류가 생김 -> dofilter 동작방식에 이유가 있었음
-            //RESPONSE를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
+            //GetWriter()가 이미 선언되었다는 오류가 생김 -> doFilter 동작방식에 이유가 있었음
+            //RESPONSE 를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
 
@@ -100,7 +100,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                writer.print("ALL_TOKEN_EXPIRED");
 
             } else {
 
@@ -116,11 +115,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
                 return;
             }
-        } else {
+        }/* else {
             // 쿠키에 값이 없거나 여러 상황
-        }
+        }*/
         try {
             chain.doFilter(request, response);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

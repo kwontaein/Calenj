@@ -5,12 +5,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,16 +27,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    ValidateDTO validateDTO;
-    @Autowired
-    GrobalService grobalService;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    /*private final ValidateDTO validateDTO;*/
+
+    private final GlobalService grobalService;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public String saveUser(UserDTO userDTO) {
@@ -54,7 +52,7 @@ public class UserService {
         //select 테스트
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
-
+        System.out.println(userResult);
     }
 
     @Transactional
@@ -87,18 +85,17 @@ public class UserService {
             // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
 
             //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
-            //DB에 있어도 쿠키가 없다면 재발급?
-            String refreshToken = userEntity.getRefreshToken();
 
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             tokenInfo = jwtTokenProvider.generateToken(authentication);
 
             // 4. refreshToken 정보 저장
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-
+            System.out.println("1");
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
+            System.out.println("2");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 

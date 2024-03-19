@@ -53,7 +53,7 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
     }
 
 
-    
+
 
     const groupListState = useQuery<GroupList[]|null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],

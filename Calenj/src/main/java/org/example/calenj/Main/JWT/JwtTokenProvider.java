@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,16 +30,16 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    HttpServletResponse response;
+    final UserRepository userRepository;
+    final HttpServletResponse response;
     private final Key key;
-    private long Hours = 60 * 60 * 1000L;
+    private final long Hours = 60 * 60 * 1000L;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserRepository userRepository, HttpServletResponse response) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.userRepository = userRepository;
+        this.response = response;
     }
 
     // 클레임에서 권한 추출을 위한 도우미 메서드
@@ -54,7 +53,7 @@ public class JwtTokenProvider {
     }
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
-    // -> DB 에서 refreshToken 값이 있다면 AccessToken생성 메소드만 실행. 
+    // -> DB 에서 refreshToken 값이 있다면 AccessToken 생성 메소드만 실행.
     // 없다면 두개 다 생성 메소드 실행
     public JwtToken generateToken(Authentication authentication) {
 
@@ -95,7 +94,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // RefreshToken을 사용하여 AccessToken 재발급 메소드
+    // RefreshToken 을 사용하여 AccessToken 재발급 메소드
     public JwtToken refreshAccessToken(String refreshToken) {
         String newAccessToken;
         String newRefreshToken;
@@ -116,7 +115,7 @@ public class JwtTokenProvider {
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
-        newAccessToken= generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
+        newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
         if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
@@ -142,7 +141,7 @@ public class JwtTokenProvider {
         //리프레시 토큰의 기간 1주일
         long now = (new Date()).getTime();
         //TODO 나중에 수정
-        Date accessTokenExpiresIn = new Date(now + 1 * Hours);
+        Date accessTokenExpiresIn = new Date(now + 7 * Hours);
 
         return Jwts.builder()
                 .setExpiration(accessTokenExpiresIn)
@@ -152,7 +151,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
     public Authentication getAuthentication(String accessToken) {
-        // 토큰 복호화 [emial(이메일), auth(권한) 정보를 가져옴], calims.getSubject = email
+        // 토큰 복호화 [email(이메일), auth(권한) 정보를 가져옴], claims.getSubject = email
         Claims claims = parseClaims(accessToken);
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);

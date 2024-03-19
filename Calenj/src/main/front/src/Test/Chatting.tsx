@@ -1,86 +1,133 @@
 import React, {useState, useEffect} from 'react';
+import {Client, Frame, IMessage} from '@stomp/stompjs';
 
-interface Message {
-    sessionId: string;
-    message: string;
-    self: boolean;
-}
+function Chatting(): JSX.Element {
+    // 상태 변수들 정의
+    const [name, setName] = useState<string>(''); // 사용자 이름
+    const [messages, setMessages] = useState<string[]>([]); // 수신된 메시지 배열
+    const [connected, setConnected] = useState<boolean>(false); // WebSocket 연결 상태
+    const [stompClient, setStompClient] = useState<Client | null>(null); // Stomp 클라이언트 인스턴스
 
-const ChatApp: React.FC = () => {
-    const [username, setUsername] = useState<string>(''); // 사용자명 상태
-    const [msg, setMsg] = useState<string>(''); // 메시지 상태
-    const [messages, setMessages] = useState<Message[]>([]); // 채팅 메시지 목록 상태
-    const [websocket, setWebsocket] = useState<WebSocket | null>(null); // 웹소켓 상태
-
+    // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
-        // 웹소켓 연결
-        const ws = new WebSocket("ws://localhost:8080/ws/chat");
-        setWebsocket(ws);
+        const stompClient = new Client({
+            brokerURL: 'ws://localhost:8080/gs-guide-websocket' // WebSocket 연결 주소
+        });
 
-        // 웹소켓 메시지 수신 이벤트 핸들러
-        ws.onmessage = (msg: MessageEvent) => {
-            const data: string = msg.data;
-            const arr: string[] = data.split(":");
-            const sessionId: string = arr[0];
-            const message: string = arr[1];
-            const cur_session: string = username;
-
-            // 수신된 메시지를 상태에 추가
-            if (sessionId === cur_session) {
-                setMessages([...messages, {sessionId, message, self: true}]);
-            } else {
-                setMessages([...messages, {sessionId, message, self: false}]);
-            }
+        // 연결 성공시 처리
+        stompClient.onConnect = (frame: Frame) => {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            // '/topic/greetings' 구독하고 메시지 수신시 showGreeting 함수 호출
+            stompClient.subscribe('/topic/greetings', (greeting: IMessage) => {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
         };
 
-        // 웹소켓 연결 해제 이벤트 핸들러
-        ws.onclose = () => {
-            // 웹소켓 연결 해제 처리
+        // WebSocket 에러 처리
+        stompClient.onWebSocketError = (error: Error) => {
+            console.error('Error with websocket', error);
         };
 
+        // Stomp 에러 처리
+        stompClient.onStompError = (frame: Frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+        };
+
+        // Stomp 클라이언트 설정 저장
+        setStompClient(stompClient);
+
+        // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
         return () => {
-            // 컴포넌트 언마운트 시 웹소켓 연결 해제
-            ws.close();
+            stompClient.deactivate();
         };
-    }, [username]);
+    }, []);
 
-    // 메시지 전송 핸들러
-    const handleSend = () => {
-        if (websocket && msg.trim() !== '') {
-            websocket.send(username + ":" + msg);
-            setMsg('');
+    // WebSocket 연결 함수
+    function connect(): void {
+        if (stompClient) {
+            stompClient.activate();
         }
-    };
+    }
 
+    // WebSocket 연결 해제 함수
+    function disconnect(): void {
+        if (stompClient) {
+            stompClient.deactivate();
+            setConnected(false);
+            console.log("Disconnected");
+        }
+    }
+
+    // 메시지 전송 함수
+    function sendName(): void {
+        if (stompClient) {
+            stompClient.publish({
+                destination: "/app/hello", // 메시지 전송 대상
+                body: JSON.stringify({'name': name}) // JSON 형태의 데이터 전송
+            });
+        }
+    }
+
+    // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
+    function showGreeting(message: string): void {
+        setMessages(prevMessages => [...prevMessages, message]);
+    }
+
+    // JSX 반환
     return (
-        <div className="container">
-            <div className="col-6">
-                <label><b>채팅방</b></label>
-            </div>
-            <div>
-                <div id="msgArea" className="col">
-                    {/* 채팅 메시지 출력 */}
-                    {messages.map((msg: Message, index: number) => (
-                        <div key={index} className={msg.self ? 'alert alert-secondary' : 'alert alert-warning'}>
-                            <b>{msg.sessionId} : {msg.message}</b>
-                        </div>
-                    ))}
-                </div>
-                <div className="col-6">
-                    <div className="input-group mb-3">
-                        {/* 메시지 입력 필드 */}
-                        <input type="text" id="msg" className="form-control" aria-label="Recipient's username"
-                               aria-describedby="button-addon2" value={msg} onChange={(e) => setMsg(e.target.value)}/>
-                        <div className="input-group-append">
-                            {/* 메시지 전송 버튼 */}
-                            <button className="btn btn-outline-secondary" type="button" id="button-send"
-                                    onClick={handleSend}>전송
+        <div>
+            <noscript>
+                <h2 style={{color: '#ff0000'}}>Seems your browser doesn't support Javascript! WebSocket relies on
+                    Javascript being enabled. Please enable Javascript and reload this page!</h2>
+            </noscript>
+            <div id="main-content" className="container">
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="form-group">
+                            <label>WebSocket connection:</label>
+                            {/* Connect 버튼 */}
+                            <button className="btn btn-default" onClick={connect} disabled={connected}>Connect</button>
+                            {/* Disconnect 버튼 */}
+                            <button className="btn btn-default" onClick={disconnect} disabled={!connected}>Disconnect
                             </button>
                         </div>
+                    </div>
+                    <div className="col-md-6">
+                        <div className="form-group">
+                            <label>What is your name?</label>
+                            {/* 사용자 이름 입력 필드 */}
+                            <input type="text" className="form-control" placeholder="Your name here..." value={name}
+                                   onChange={(e) => setName(e.target.value)}/>
+                        </div>
+                        {/* Send 버튼 */}
+                        <button className="btn btn-default" onClick={sendName}>Send</button>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        {/* 메시지 표시 테이블 */}
+                        <table className="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Greetings</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {/* 메시지 표시 */}
+                            {messages.map((message: string, index: number) => (
+                                <tr key={index}>
+                                    <td>{message}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-export default ChatApp;
+}
+
+export default Chatting;

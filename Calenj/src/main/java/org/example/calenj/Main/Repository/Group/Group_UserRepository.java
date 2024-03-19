@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface Group_UserRepository extends JpaRepository<GroupUserEntity, UUID> {
+
+    // 그룹에 인원 참가
 }

@@ -8,7 +8,6 @@ import java.util.*;
 
 @Repository
 public class ChatRoomRepository {
-    //여기도 엔티티 만들어서 DB에 저장하는 코드로 변경해야함
     private Map<String, ChatRoomDTO> chatRoomDTOMap;
 
     @PostConstruct
