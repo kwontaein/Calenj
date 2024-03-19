@@ -37,8 +37,14 @@ public class GroupController {
     @PostMapping("/api/groupDetail")
     public GroupDetailDTO groupDetail(@RequestParam(name = "groupId") UUID groupId) {
         GroupDetailDTO a = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
-        System.out.println(a);
         return a;
+    }
+
+    @PostMapping("/api/joinGroup")
+    public String joinGroup(@RequestParam(name = "groupId") UUID groupId) {
+        groupService.joinGroup(groupId);
+        System.out.println("그룹 참가");
+        return "a";
     }
 
     //그룹 초대

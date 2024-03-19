@@ -1,6 +1,6 @@
 import {useQuery/*, useMutation, useQueryClient*/} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
-import axios, {/*AxiosResponse,*/ AxiosError} from 'axios';
+import axios, {/*AxiosResponse,*/ AxiosError, AxiosResponse} from 'axios';
 import React, {useState} from 'react';
 /*import {redirect} from "react-router-dom";
 import {off} from 'process';
@@ -62,9 +62,16 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
         groupListState.refetch().then(r => "fetch");
     };
 
-
+    // const joinUser = (groupId: number) => {
+    //     axios.post('/api/joinGroup', groupId)
+    //         .then((response: AxiosResponse<Object>) => {
+    //             console.log("응애");
+    //         })
+    //         .catch(error => {
+    //             stateFilter(error.response.data)
+    //         })
+    // };
     return (
-
         <div>
             <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
             {showMakeGroup && <MakeGroup onClose={closeModal}></MakeGroup>}
@@ -74,13 +81,14 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                     <h2>Group List</h2>
                     <ul>
                         {groupListState.data.map((group) => (
-                            <li key={group.groupId}
-                                onClick={() => redirectDetail(group.groupId as number)}>
-                                {group.groupTitle}</li>
+                            <li key={group.groupId} onClick={() => redirectDetail(group.groupId as number)}>
+                                <b>{group.groupTitle}</b>
+                            </li>
                         ))}
                     </ul>
                 </div>
             )}
+            {/*<div onClick={() => joinUser(group.groupId as number)}>ㅋㅋ</div>*/}
         </div>
     )
 

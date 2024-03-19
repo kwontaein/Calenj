@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {useLocation} from 'react-router-dom';
+import {stateFilter} from "../../stateFunc/actionFun";
 
 interface Details {
     groupId: number;
@@ -40,6 +41,7 @@ const GroupDetail: React.FC = () => {
             .catch(error => console.log(error));
     }, []);
 
+
     return (
         <div>
             <div>
@@ -50,6 +52,7 @@ const GroupDetail: React.FC = () => {
                     </div>
                 )}
             </div>
+            <hr/>
             <hr/>
             <div>
                 {members !== null && members.map(members => (
