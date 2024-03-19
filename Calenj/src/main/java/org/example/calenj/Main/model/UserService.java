@@ -5,12 +5,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,16 +27,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    ValidateDTO validateDTO;
-    @Autowired
-    GrobalService grobalService;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    /*private final ValidateDTO validateDTO;*/
+
+    private final GlobalService grobalService;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public String saveUser(UserDTO userDTO) {
@@ -54,7 +52,7 @@ public class UserService {
         //select 테스트
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
         String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
-
+        System.out.println(userResult);
     }
 
     @Transactional
@@ -87,27 +85,17 @@ public class UserService {
             // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
 
             //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
-            //DB에 있어도 쿠키가 없다면 재발급?
-            String refreshToken = userEntity.getRefreshToken();
 
-            if (refreshToken == null) { // DB에 저장된 값이 없는 경우
-                // 3. 인증 정보를 기반으로 JWT 토큰 생성
-                tokenInfo = jwtTokenProvider.generateToken(authentication);
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-                // 4. refreshToken 정보 저장
-                userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-
-            } else {
-                //저장된 값이 있는 경우는 필터에서 이미 토큰을 새로 생성하거나 이미 쿠키에 저장된 상태. -> 임의로 쿠키를 지운 상태라면 ?
-                //저장된 refreshToken 값의 만료 기간을 검사하고, 유효하면 accessToken 값을 새로 생성해줘야 함
-                //유효하지 않다면 두개 다 새로 생성해줘야 한다.
-
-                //DB에만 저장된 값이 있지만 다시 로그인한 경우 // 쿠키엔 없음 -> 리프레쉬 재생성 후 저장
-                tokenInfo = jwtTokenProvider.refreshAccessToken(refreshToken);
-            }
+            // 4. refreshToken 정보 저장
+            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
+            System.out.println("1");
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
+            System.out.println("2");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
@@ -137,18 +125,15 @@ public class UserService {
         //DB에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
-        removeCookie(response);
+        removeCookie(response, "accessToken");
+        removeCookie(response, "refreshToken");
     }
 
-    public void removeCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("accessToken", null);
-        Cookie cookie2 = new Cookie("refreshToken", null);
+    public void removeCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
-        cookie2.setMaxAge(0);
-        cookie2.setPath("/");
         response.addCookie(cookie);
-        response.addCookie(cookie2);
     }
 
 }

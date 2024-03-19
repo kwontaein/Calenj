@@ -25,10 +25,10 @@ const Home: React.FC = () => {
             <SignState/>
             <h1>여기는 초기 페이지임</h1>
             {isLoding &&
-                <div>
-                    {cookie && <GroupList cookie={cookie}/>}
-                </div>}
-            <JustSend/>
+            <div >
+                {cookie &&<GroupList cookie={cookie}/>}
+            </div>}
+            <Notice/>
         </div>
 
     )

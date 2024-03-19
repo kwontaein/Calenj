@@ -3,11 +3,13 @@ package org.example.calenj.Main.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.calenj.Main.model.EmailVerificationService;
+import org.example.calenj.Main.model.GlobalService;
+import org.example.calenj.Main.model.PhoneVerificationService;
+import org.example.calenj.Main.model.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -16,33 +18,22 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserService userService;
 
-    @Autowired
-    UserService userService;
+    private final GlobalService globalService;
 
-    @Autowired
-    MainService mainService;
+    private final ValidateDTO validateDTO;
 
-    @Autowired
-    GrobalService grobalService;
+    private final PhoneVerificationService phoneVerificationService;
 
-    @Autowired
-    ValidateDTO validateDTO;
-
-    @Autowired
-    PhoneverificationService phoneverificationService;
-
-    @Autowired
-    EmailVerificationService emailVerificationService;
-
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
-        UserDetails userDetails = grobalService.extractFromSecurityContext();
+        UserDetails userDetails = globalService.extractFromSecurityContext();
         userService.logout(userDetails, response);
         return "logout";
     }
@@ -56,17 +47,15 @@ public class UserController {
     @PostMapping("/api/sendMessage")
     public Map<String, Object> sendMessage(@RequestBody String phone) {
 
-        Map<String, Object> responseMap = phoneverificationService.sendMessage(phone);
-
-        return responseMap;
+        return phoneVerificationService.sendMessage(phone);
     }
 
     @PostMapping("/api/sendEmail")
     public Object sendEmail(@RequestParam(name = "email") String email, HttpServletRequest request, HttpServletResponse response) {
         //이메일 중복체크 메소드 (이미 가입된 이메일 -false = 인증코드 발급 불가능)
-        boolean checkDublidated = emailVerificationService.emailDuplicated(email);
+        boolean checkDuplicated = emailVerificationService.emailDuplicated(email);
 
-        if (checkDublidated) {
+        if (checkDuplicated) {
             //이메일 중복 체크 후 이메일 발급 전 토큰 체크
             //토큰 발급 (만약 이메일토큰이 존재하고 유효할 경우 false 반환)
             boolean enableEmail = emailVerificationService.generateEmailValidateToken(request, response);
@@ -75,14 +64,12 @@ public class UserController {
                 emailVerificationService.joinEmail(email);
             }
         }
-
-
         return validateDTO.getEnableSendEmail().getEnableEmailEnum();
     }
 
 
     @PostMapping("/api/emailCodeValidation")
-    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, @RequestParam(value = "email") String email, HttpServletRequest request, HttpServletResponse response) {
+    public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, HttpServletRequest request, HttpServletResponse response) {
 
         emailVerificationService.checkValidationCode(validationCode, request, response);
 
@@ -90,33 +77,30 @@ public class UserController {
     }
 
     @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
-
-        emailVerificationService.emailTokenValidation(request, response, true);
+    public String saveUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+        validateDTO.clear();
+        userService.removeCookie(response, "enableSendEmail");
         return userService.saveUser(userDTO);
     }
 
     @GetMapping("/api/emailValidationState")
     public boolean checkEmailValidate() {
-
-        if (validateDTO.getEmailValidState().getCode() == 200) {
-            return true;
-        }
-        return false;
+        return validateDTO.getEmailValidState().getCode() == 200;
     }
 
     @GetMapping("/api/emailTokenExpiration")
     public Long emailTokenExpiration() {
-        Long expriationTime = validateDTO.getExpirationTime();
+        Long expirationTime = validateDTO.getExpirationTime();
 
-        if (expriationTime != null) {
-            return expriationTime;
+        if (expirationTime != null) {
+            return expirationTime;
         }
         return 0L;
     }
 
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+        System.out.println("로그인?");
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }
 

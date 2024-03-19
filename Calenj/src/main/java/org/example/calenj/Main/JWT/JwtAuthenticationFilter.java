@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
         //request로 받은 token을 구분해주는 메소드
@@ -53,6 +52,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
+            //GetWriter()가 이미 선언되었다는 오류가 생김 -> doFilter 동작방식에 이유가 있었음
+            //RESPONSE 를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             PrintWriter writer = httpResponse.getWriter();
 
@@ -65,6 +66,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 //DB에 저장된 값과 일치하지 않는 경우 처리
                 //내가로그인한 상태 -> 다른데서 로그인 -> 나는 DB랑 쿠키값이 달라 -> 저쪽은 두개 다 똑같애 -> 나는 로그아웃되고 -> 저쪽에서 로그인
 
+                removeCookie((HttpServletResponse) response);
                 removeCookie((HttpServletResponse) response);
                 userRepository.updateUserRefreshTokenToNull(authentication.getName());
 
@@ -98,7 +100,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                writer.print("ALL_TOKEN_EXPIRED");
 
             } else {
 
@@ -114,10 +115,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
                 return;
             }
-        } else {
+        }/* else {
             // 쿠키에 값이 없거나 여러 상황
-
-        }
+        }*/
         try {
             chain.doFilter(request, response);
 
@@ -154,9 +154,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         cookie2.setPath("/");
         response.addCookie(cookie);
         response.addCookie(cookie2);
-    }
-
-    public void ExceptionCreate(HttpServletResponse httpResponse, String msg) throws IOException {
-
     }
 }

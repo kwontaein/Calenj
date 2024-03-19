@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByUserEmail(String username);
 
-    Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullpointerException 방지
+    Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
 
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)
@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     //refreshToken 삭제 쿼리
     @Modifying(clearAutomatically = true)
-    @Transactional //update는 해당 어노테이션이 필요함
+    @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_email = :email", nativeQuery = true)
     void updateUserRefreshTokenToNull(@Param("email") String email);
 }
