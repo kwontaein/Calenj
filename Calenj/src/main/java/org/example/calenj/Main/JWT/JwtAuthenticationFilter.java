@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-
         System.out.println("-------------------------------------------------------------doFilter 실행------------------------------------------------------------- ");
 
         //request로 받은 token을 구분해주는 메소드
@@ -44,85 +43,84 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         Authentication authentication;
 
         // 2. validateToken 으로 토큰 유효성 검사
-        if(token != null) {
-            //refresh 토큰 만료 시 
-            if (jwtTokenProvider.validateToken(token).equals("true")) {
+        if (token != null && jwtTokenProvider.validateToken(token).equals("true")) {
 
-                authentication = jwtTokenProvider.getAuthentication(token);
+            authentication = jwtTokenProvider.getAuthentication(token);
 
-                // SecurityContext 에 저장
+            // SecurityContext 에 저장
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("authentication : " + authentication);
+
+        } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
+            //GetWriter()가 이미 선언되었다는 오류가 생김 -> dofilter 동작방식에 이유가 있었음
+            //RESPONSE를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            PrintWriter writer = httpResponse.getWriter();
+
+            authentication = jwtTokenProvider.getAuthentication(token);
+            UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
+            String DbRefreshToken = userEntity.getRefreshToken();
+
+            if (DbRefreshToken != null && !Objects.equals(DbRefreshToken, refreshToken)) {
+                //DB에 저장된 값과 일치하지 않는 경우 처리
+                //내가로그인한 상태 -> 다른데서 로그인 -> 나는 DB랑 쿠키값이 달라 -> 저쪽은 두개 다 똑같애 -> 나는 로그아웃되고 -> 저쪽에서 로그인
+
+                removeCookie((HttpServletResponse) response);
+                removeCookie((HttpServletResponse) response);
+                userRepository.updateUserRefreshTokenToNull(authentication.getName());
+
+                // 리스폰스에 정보 담아 반환
+
+                httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
+
+            } else if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true") && Objects.equals(DbRefreshToken, refreshToken)) {
+
+                //리프레쉬 토큰이 만료되지 않았고 오류가 없고 DB에 저장된 값과 일치하다면(Redis 수정 예정)
+
+                //토큰 발행
+                JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
+
+                // 새로운 Access Token으로
+                authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
+
+                //SecurityContext 업데이트
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("authentication : " + authentication);
 
 
-            } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) {  //accessToken 만료시
-                HttpServletResponse httpResponse = (HttpServletResponse) response; //response 생성
-                PrintWriter writer = httpResponse.getWriter();
+            } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
+                // Refresh Token도 만료된 경우, 로그아웃 처리 수행 후 로그인 페이지로 유도
+                // 쿠키 삭제
+                removeCookie((HttpServletResponse) response);
+                String email = authentication.getName();
 
-                authentication = jwtTokenProvider.getAuthentication(token);
-                UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+                userRepository.updateUserRefreshTokenToNull(email);
 
-                String DbRefreshToken = userEntity.getRefreshToken();
+                // 리스폰스에 정보 담아 반환
 
-                if (DbRefreshToken != null && !Objects.equals(DbRefreshToken, refreshToken)) {
-                    //DB에 저장된 값과 일치하지 않는 경우 처리
-                    //내가로그인한 상태 -> 다른데서 로그인 -> 나는 DB랑 쿠키값이 달라 -> 저쪽은 두개 다 똑같애 -> 나는 로그아웃되고 -> 저쪽에서 로그인
+                httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
+                httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+                writer.print("ALL_TOKEN_EXPIRED");
 
-                    removeCookie((HttpServletResponse) response);
-                    //DB refreshToken 지우기
-                    userRepository.updateUserRefreshTokenToNull(authentication.getName());
+            } else {
 
-                    // 리스폰스에 정보 담아 반환
-
-                    httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
-
-                } else if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true") && Objects.equals(DbRefreshToken, refreshToken)) {
-
-                    //리프레쉬 토큰이 오류없이 유효하며 DB에 저장된 값과 일치하다면(Redis 수정 예정)
-
-                    //토큰 발행
-                    JwtToken newToken = jwtTokenProvider.refreshAccessToken(refreshToken);
-
-                    // 새로운 Access Token으로
-                    authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
-
-                    //SecurityContext 업데이트
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
-                } else if (jwtTokenProvider.validateToken(refreshToken).equals("Expired JWT Token")) {
-                    // RefreshToken도 만료된 경우, 로그아웃 처리 수행 후 로그인 페이지로 유도
-                    // 쿠키 삭제
-                    removeCookie((HttpServletResponse) response);
-                    String email = authentication.getName();
-
-                    userRepository.updateUserRefreshTokenToNull(email);
-
-                    // 리스폰스에 정보 담아 반환
-
-                    httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
-                    httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                    writer.print("ALL_TOKEN_EXPIRED"); //모든토큰 만료
-
-                } else {
-
-                    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
-                    httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-                    writer.print("UNKNOWN_EXCEPTION");
-                }
-                writer.flush();
-                writer.close();
-
-                // 이미 응답이 작성되었는지 확인
-                if (httpResponse.isCommitted()) {
-                    // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
-                    return;
-                }
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
+                httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
+                writer.print("UNKNOWN_EXCEPTION");
             }
+            writer.flush();
+            writer.close();
+
+            // 이미 응답이 작성되었는지 확인
+            if (httpResponse.isCommitted()) {
+                // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
+                return;
+            }
+        } else {
+            // 쿠키에 값이 없거나 여러 상황
         }
         try {
             chain.doFilter(request, response);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -139,10 +137,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             for (Cookie cookie : requestCookie) {
                 if ("accessToken".equals(cookie.getName())) {
                     tokenList[0] = cookie.getValue();
-                    System.out.println("cookie에서 가져온 accessToken : " + tokenList[0]);
                 } else if ("refreshToken".equals(cookie.getName())) {
                     tokenList[1] = cookie.getValue();
-                    System.out.println("cookie에서 가져온 refreshToken : " + tokenList[1]);
                 }
             }
         }

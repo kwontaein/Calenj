@@ -1,10 +1,11 @@
 import GroupList from "./GroupList"
+import GroupDetail from "./GroupDetail";
 
 
 const Group: React.FC = () => {
     return (
         <div>
-            <GroupList cookie={false} />
+            <GroupList cookie={false}/>
         </div>
     )
 }

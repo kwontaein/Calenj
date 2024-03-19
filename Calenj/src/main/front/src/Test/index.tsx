@@ -1,10 +1,10 @@
-import JustSend from "./JustSend"
+import Notice from "./Notice"
 
 
 const Send: React.FC = () => {
     return (
         <div>
-            <JustSend/>
+            <Notice/>
         </div>
     )
 }
