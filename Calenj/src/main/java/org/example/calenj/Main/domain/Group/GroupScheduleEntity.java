@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Entity(name = "Group_Schedule")
 @Getter
-@DiscriminatorValue("Group_Schedule") // 서브 테이블을 판별하기 위한 값
 public class GroupScheduleEntity {
 
     @Id

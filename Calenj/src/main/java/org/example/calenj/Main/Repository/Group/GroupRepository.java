@@ -26,7 +26,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     Optional<GroupDTO> findGroupById(@Param("groupId") UUID groupId);
 
     // 두 번째 쿼리: GroupUserEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupUserDTO(gu.user.nickname, gu.role, gu.group_user_location) FROM Group_User gu WHERE gu.group.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupUserDTO(gu.user.nickname, gu.role, gu.group_user_location ) FROM Group_User gu WHERE gu.group.groupId = :groupId")
     List<GroupUserDTO> findGroupUsers(@Param("groupId") UUID groupId);
 
     // 세 번째 쿼리: GroupVoteEntity 조회

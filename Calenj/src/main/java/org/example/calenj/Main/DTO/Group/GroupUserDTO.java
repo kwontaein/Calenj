@@ -14,4 +14,9 @@ public class GroupUserDTO {
     private GroupUserEntity.GroupRoleType groupRoleType;
     private String group_user_location;
 
+    public GroupUserDTO(String nickName, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
+        this.nickName = nickName;
+        this.groupRoleType = groupRoleType;
+        this.group_user_location = group_user_location;
+    }
 }

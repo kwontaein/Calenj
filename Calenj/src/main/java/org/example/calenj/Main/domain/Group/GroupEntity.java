@@ -13,8 +13,8 @@ import java.util.UUID;
 @Builder // 빌더
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "DTYPE")
 //자식테이블을 구분할 구분자 컬럼이름을 지어준다.
+@DiscriminatorColumn(name = "DTYPE")
 @ToString
 public class GroupEntity {
 
