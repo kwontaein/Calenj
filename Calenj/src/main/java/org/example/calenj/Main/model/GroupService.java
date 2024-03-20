@@ -73,7 +73,7 @@ public class GroupService {
         Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
         if (groupOptional.isPresent()) {
             GroupDTO groupDTO = groupOptional.get();
-            List<GroupUserDTO> groupUsers = groupRepository.findGroupUsers(groupDTO.getGroupId());
+            List<GroupUserDTO> groupUsers = group_userRepository.findGroupUsers(groupDTO.getGroupId());
             // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
             // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
             GroupDetailDTO groupDetailDTO = new GroupDetailDTO(

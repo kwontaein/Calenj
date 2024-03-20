@@ -2,7 +2,7 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.Group.Ids.GroupNoticeEntityId;
+import org.example.calenj.Main.domain.Group.Ids.GroupNoticeId;
 import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder(builderMethodName = "GroupNoticeBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
-@IdClass(GroupNoticeEntityId.class)
+@IdClass(GroupNoticeId.class)
 public class GroupNoticeEntity {
 
 
