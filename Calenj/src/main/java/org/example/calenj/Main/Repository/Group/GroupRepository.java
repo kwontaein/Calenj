@@ -30,7 +30,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     List<GroupUserDTO> findGroupUsers(@Param("groupId") UUID groupId);
 
     // 세 번째 쿼리: GroupVoteEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteItem, gv.voteTitle, gv.voteStartDate , gv.voteEndDate) FROM Group_Vote gv WHERE gv.groupId = :groupId")
+/*    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteItem, gv.voteTitle, gv.voteStartDate , gv.voteEndDate) FROM Group_Vote gv WHERE gv.groupId = :groupId")
     List<GroupVoteDTO> findGroupVote(@Param("groupId") UUID groupId);
 
     // 네 번째 쿼리: GroupNoticeEntity 조회
@@ -39,7 +39,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
 
     // 다섯 번째 쿼리: GroupScheduleEntity 조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleDTO(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
-    List<GroupScheduleDTO> findGroupSchedule(@Param("groupId") UUID groupId);
+    List<GroupScheduleDTO> findGroupSchedule(@Param("groupId") UUID groupId);*/
 
     /*@Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")
     Optional<List<GroupEntity>> findByUserEntity_UserEmail2(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
