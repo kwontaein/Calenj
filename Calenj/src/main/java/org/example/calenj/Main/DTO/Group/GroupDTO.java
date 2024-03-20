@@ -17,7 +17,6 @@ public class GroupDTO {
     public GroupDTO(UUID groupId, String groupTitle) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
-        this.groupCreated= groupCreated;
     }
 
     //jpa의 jpql은 DTO를 통해 조회할 경우 생성자를 생성해줘야 함

@@ -5,9 +5,11 @@ import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
+import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Group.GroupEntity;
+import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +29,8 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final Group_UserRepository group_userRepository;
-    private final GlobalService globalService;/*
-    private final Group_NoticeRepository groupNoticeRepository;*/
+    private final GlobalService globalService;
+    private final Group_NoticeRepository groupNoticeRepository;
 
     //그룹 만들기
     public void makeGroup(String groupTitle) {
@@ -90,7 +92,7 @@ public class GroupService {
     }
 
     //그룹 공지 생성
-   /* public void makeNotice(String NoticeTitle, String NoticeContent) {
+    public void makeNotice(String NoticeTitle, String NoticeContent) {
 
         LocalDate today = LocalDate.now();
 
@@ -101,10 +103,11 @@ public class GroupService {
                 .noticeContent(NoticeContent)
                 .noticeCreated(String.valueOf(today))
                 .noticeCreater(userDetails.getUsername())
+                /*.group() 여기에 그룹아이로 그룹엔티티 집어넣으면 됨*/
                 .build();
 
         groupNoticeRepository.save(groupNoticeEntity);
-    }*/
+    }
 
     public void joinGroup(UUID groupId) {
         //유저를 그룹에 추가하는 코드
