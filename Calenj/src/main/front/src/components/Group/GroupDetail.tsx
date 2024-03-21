@@ -2,7 +2,6 @@ import React, {useLayoutEffect, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
-import Room from "../../Test/room";
 import Chatting from "../../Test/Chatting";
 
 interface Details {
@@ -20,13 +19,11 @@ interface Members {
 }
 
 const GroupDetail: React.FC = () => {
-    //a
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-
 
     useLayoutEffect(() => {
         axios.post('/api/groupDetail', null, {
@@ -68,11 +65,9 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <div>
-                {detail && <Room groupName={detail.groupTitle} groupId={detail.groupId}/>}
-                {/*  <Chatting></Chatting> */}
+                {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
             </div>
         </div>
     );
 }
-
 export default GroupDetail;
