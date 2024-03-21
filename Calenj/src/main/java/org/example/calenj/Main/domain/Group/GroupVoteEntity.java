@@ -21,7 +21,7 @@ public class GroupVoteEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "group_id", columnDefinition = "BINARY(16)")
+    @Column(nullable = false, unique = true, name = "vote_id", columnDefinition = "BINARY(16)")
     //주키
     private UUID voteId;
 

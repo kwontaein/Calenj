@@ -10,7 +10,7 @@ import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidat
 import {Dispatch} from 'redux';
 import {RootState} from '../../store/store'
 import '../../style/Sign.scss'
-import { string } from 'yup';
+
 
 
 type role = "MANAGER" | "ADMIN" | "USER";

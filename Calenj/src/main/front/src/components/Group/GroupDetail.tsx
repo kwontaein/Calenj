@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
+import Notice from '../../Test/Notice'
 
 interface Details {
     groupId: number;
@@ -19,11 +20,13 @@ interface Members {
 }
 
 const GroupDetail: React.FC = () => {
+    //a
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
+
 
     useLayoutEffect(() => {
         axios.post('/api/groupDetail', null, {
@@ -67,7 +70,11 @@ const GroupDetail: React.FC = () => {
             <div>
                 {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
             </div>
+            <hr/>
+            <h1>공지 생성하기</h1>
+            <Notice/>
         </div>
     );
 }
+
 export default GroupDetail;

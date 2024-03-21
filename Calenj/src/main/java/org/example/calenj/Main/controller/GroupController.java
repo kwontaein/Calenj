@@ -34,8 +34,8 @@ public class GroupController {
     //그룹 세부 정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailDTO groupDetail(@RequestParam(name = "groupId") UUID groupId) {
-        GroupDetailDTO a = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
-        return a;
+        GroupDetailDTO groupDetail = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
+        return groupDetail;
     }
 
     @PostMapping("/api/joinGroup")
@@ -52,9 +52,15 @@ public class GroupController {
     }
 
 
+
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNotice_title(), groupNoticeDTO.getNotice_content());
+        groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(),groupNoticeDTO.getGroupId());
+    }
+
+    @PostMapping("api/noticeList")
+    public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO groupNoticeDTO){
+        return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
     }
 }
