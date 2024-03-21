@@ -29,7 +29,7 @@ const GroupDetail: React.FC = () => {
     useLayoutEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
-                groupid: groupInfo.groupId
+                groupId: groupInfo.groupId
             },
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'

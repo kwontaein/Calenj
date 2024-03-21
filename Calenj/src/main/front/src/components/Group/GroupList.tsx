@@ -2,7 +2,6 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
 import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useEffect, useState} from 'react';
-import {redirect} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 

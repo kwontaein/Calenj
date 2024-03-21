@@ -34,8 +34,8 @@ public class GroupController {
     //그룹 세부 정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailDTO groupDetail(@RequestParam(name = "groupId") UUID groupId) {
-        GroupDetailDTO a = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
-        return a;
+        GroupDetailDTO groupDetail = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
+        return groupDetail;
     }
 
     @PostMapping("/api/joinGroup")
