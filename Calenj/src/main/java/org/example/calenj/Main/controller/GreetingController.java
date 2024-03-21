@@ -36,6 +36,7 @@ public class GreetingController {
     //"/pub/chat/enter"
     @MessageMapping(value = "/chat/message")
     public void message(ChatMessageDTO message) throws Exception {
+        message.setMessage(message.getNickName() + " : " + message.getMessage());
         System.out.println(message.getMessage());
         template.convertAndSend("/topic/chat/room/" + message.getGroupId(), message);
     }

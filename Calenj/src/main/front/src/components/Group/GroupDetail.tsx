@@ -7,8 +7,8 @@ import Notice from '../../Test/Notice'
 
 interface Details {
     groupId: number;
-    groupCreated: string;
     groupTitle: string;
+    groupCreated: string;
     groupCreater: string;
 }
 

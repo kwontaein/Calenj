@@ -14,7 +14,7 @@ interface Room {
 
 const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들 정의
     const [msg, setMsg] = useState<string>(''); // 사용자 이름
-    const [messages, setMessages] = useState<string[]>([]); // 수신된 메시지 배열
+    const [messages, setMessages] = useState<Message[]>([]); // 수신된 메시지 배열
     const [connected, setConnected] = useState<boolean>(false); // WebSocket 연결 상태
     const [stompClient, setStompClient] = useState<Client | null>(null); // Stomp 클라이언트 인스턴스
 
@@ -32,7 +32,7 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
             console.log('Connected: ' + frame);
             // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
             stompClient.subscribe(`/topic/chat/room/${groupId}`, (greeting: IMessage) => {
-                showGreeting(JSON.parse(greeting.body).message);
+                showGreeting(JSON.parse(greeting.body));
             });
             stompClient.send('/app/chat/enter', {}, JSON.stringify({groupId}));
         };
@@ -90,17 +90,13 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
     }
 
     // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
-    function showGreeting(message: string): void {
+    function showGreeting(message: Message): void {
         setMessages(prevMessages => [...prevMessages, message]);
     }
 
     // JSX 반환
     return (
         <div>
-            <noscript>
-                <h2 style={{color: '#ff0000'}}>Seems your browser doesn't support Javascript! WebSocket relies on
-                    Javascript being enabled. Please enable Javascript and reload this page!</h2>
-            </noscript>
             <div id="main-content" className="container">
                 <div className="row">
                     <div className="col-md-6">
@@ -124,9 +120,9 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
                                 </div>
                                 <div>
                                     {/* 메시지 표시 */}
-                                    {messages.map((message: string, index: number) => (
+                                    {messages.map((message: Message, index: number) => (
                                         <div key={index}>
-                                            <div>{message}</div>
+                                            <div><h3> {message.message}</h3></div>
                                         </div>
                                     ))}
                                 </div>
