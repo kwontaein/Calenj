@@ -8,9 +8,9 @@ import Notice from '../../Test/Notice'
 
 interface Details {
     groupId: string;
+    groupTitle: string;  
     groupCreated: string;
-    groupTitle: string;
-    groupCreater: string;
+    groupCreater: string;   
 }
 
 interface Members {
@@ -73,7 +73,6 @@ const GroupDetail: React.FC = () => {
                 {/*  <Chatting></Chatting> */}
             </div>
             <hr/>
-            <h1>공지 생성하기</h1>
             <Notice/>
         </div>
     );

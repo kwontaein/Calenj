@@ -123,11 +123,18 @@ public class GroupService {
         groupNoticeRepository.save(groupNoticeEntity);
     }
 
+    //그룹 공지 가져오기
     public List<GroupNoticeDTO> groupNoticeList(UUID groupId) {
-
-        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findGroupNotice(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupNoticeDTOS;
     }
+
+    //그룹 공지 디테일
+    public Optional<GroupNoticeDTO> noticeDetail(UUID noticeId) {
+        Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+        return groupNoticeDTO;
+    }
+
 
     public void joinGroup(UUID groupId) {
         //유저를 그룹에 추가하는 코드
