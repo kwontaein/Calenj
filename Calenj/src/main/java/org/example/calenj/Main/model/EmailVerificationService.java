@@ -19,21 +19,16 @@ import java.util.stream.Stream;
 @Service
 
 public class EmailVerificationService {
-    final
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    final
-    UserService userService;
+    private final UserService userService;
 
-    private final
-    JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    private final
-    String setFrom;
+    private final String setFrom;
 
     //email 인증 토큰을 저장하는 컬렉션
-    final
-    ValidateDTO validateDTO;
+    private final ValidateDTO validateDTO;
 
 
     private EmailVerificationService(JavaMailSender mailSender, @Value("${spring.mail.username}") String setFrom, UserRepository userRepository, UserService userService, ValidateDTO validateDTO) {

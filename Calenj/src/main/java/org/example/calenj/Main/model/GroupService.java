@@ -3,6 +3,7 @@ package org.example.calenj.Main.model;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
+import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
@@ -31,6 +32,7 @@ public class GroupService {
     private final Group_UserRepository group_userRepository;
     private final GlobalService globalService;
     private final Group_NoticeRepository groupNoticeRepository;
+
 
     //그룹 만들기
     public void makeGroup(String groupTitle) {
@@ -92,21 +94,39 @@ public class GroupService {
     }
 
     //그룹 공지 생성
-    public void makeNotice(String NoticeTitle, String NoticeContent) {
+    public void makeNotice(String NoticeTitle, String NoticeContent, UUID groupId) {
 
         LocalDate today = LocalDate.now();
 
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+
+        GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
                 .noticeTitle(NoticeTitle)
                 .noticeContent(NoticeContent)
                 .noticeCreated(String.valueOf(today))
                 .noticeCreater(userDetails.getUsername())
-                /*.group() 여기에 그룹아이로 그룹엔티티 집어넣으면 됨*/
+                .group(groupEntity)
+                .build();
+
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
+        // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
+        GroupUserEntity groupUserEntity = GroupUserEntity.builder()
+                .role(GroupUserEntity.GroupRoleType.Host)
+                .group(groupEntity)
+                .user(userEntity)
                 .build();
 
         groupNoticeRepository.save(groupNoticeEntity);
+    }
+
+    public List<GroupNoticeDTO> groupNoticeList(UUID groupId) {
+
+        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findGroupNotice(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        return groupNoticeDTOS;
     }
 
     public void joinGroup(UUID groupId) {
