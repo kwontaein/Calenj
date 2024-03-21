@@ -1,7 +1,6 @@
 import React, {useState,useEffect,useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
 import {stateFilter} from '../../stateFunc/actionFun'
-import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 
 const Sign: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);

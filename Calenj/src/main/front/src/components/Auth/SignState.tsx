@@ -1,9 +1,7 @@
 // import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from "react-router-dom";
-import { QUERY_GROUP_LIST_KEY } from '../Group/GroupList';
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
