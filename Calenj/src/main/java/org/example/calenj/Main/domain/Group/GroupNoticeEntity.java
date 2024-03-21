@@ -1,9 +1,6 @@
 package org.example.calenj.Main.domain.Group;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.Main.helper.StringListConverter;
 
@@ -15,7 +12,13 @@ import java.util.List;
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @DiscriminatorValue("Group_Notice") // 서브 테이블을 판별하기 위한 값
 @Builder(builderMethodName = "GroupNoticeBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
-public class GroupNoticeEntity extends GroupEntity {
+public class GroupNoticeEntity {
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
+    // 외래 키에 대한 참조 필드 지정
+    private GroupEntity group;
 
     @Column(name = "notice_title")
     private String noticeTitle;

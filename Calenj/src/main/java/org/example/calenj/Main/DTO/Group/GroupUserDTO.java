@@ -6,10 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupUserDTO {
+    private UUID groupId;
     private String nickName;
     private String userEmail;
     private GroupUserEntity.GroupRoleType groupRoleType;

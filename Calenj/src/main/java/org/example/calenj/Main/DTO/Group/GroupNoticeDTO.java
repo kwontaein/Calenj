@@ -9,9 +9,10 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupNoticeDTO {
-    private String notice_title;
-    private String notice_created;
-    private String notice_content;
-    private String notice_creater;
-    private String notice_watcher;
+
+    private String noticeTitle;
+    private String noticeCreated;
+    private String noticeContent;
+    private String noticeCreater;
+    private String noticeWatcher;
 }

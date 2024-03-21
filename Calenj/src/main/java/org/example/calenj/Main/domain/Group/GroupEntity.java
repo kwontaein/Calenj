@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder 를 사용
 @Builder // 빌더
 @Getter
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "DTYPE")
+@Inheritance(strategy = InheritanceType.JOINED) //상속 매핑지정, 조인전략사용
+@DiscriminatorColumn(name = "DTYPE") // 단일 테이블 전략, 자식엔티티를 구분할 컬럼의 이름지정
 //자식테이블을 구분할 구분자 컬럼이름을 지어준다.
 @ToString
 public class GroupEntity {

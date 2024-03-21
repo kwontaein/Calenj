@@ -5,12 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupVoteDTO {
-    private String vote_title;
-    private String[] vote_Item;
-    private String vote_start_date;
-    private String vote_end_date;
+    private UUID groupId;
+    private String voteTitle;
+    private String[] voteItem;
+    private String voteStartDate;
+    private String voteEndDate;
 }
