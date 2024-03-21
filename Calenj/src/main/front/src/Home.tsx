@@ -4,8 +4,6 @@ import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
 import Notice from "./Test/Notice";
 
-
-
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
     const queryClient = useQueryClient();
@@ -26,9 +24,9 @@ const Home: React.FC = () => {
             <SignState/>
             <h1>여기는 초기 페이지임</h1>
             {isLoding &&
-            <div >
-                {cookie &&<GroupList cookie={cookie}/>}
-            </div>}
+                <div>
+                    {cookie && <GroupList cookie={cookie}/>}
+                </div>}
             <Notice/>
         </div>
 
