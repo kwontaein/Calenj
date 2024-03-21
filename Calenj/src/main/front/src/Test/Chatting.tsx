@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Client, Frame, IMessage} from '@stomp/stompjs';
+import {Client, Frame, IMessage, Stomp} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 interface Message {
@@ -22,8 +22,10 @@ const Chatting: React.FC = () => {
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
-        const stompClient = new Client({
-            brokerURL: 'ws://localhost:8080/ws-stomp' // WebSocket 연결 주소
+
+        const stompClient = Stomp.over(() => {
+            const sock = new SockJS("http://localhost:8080/ws-stomp")
+            return sock;
         });
 
         // 연결 성공시 처리

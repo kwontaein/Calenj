@@ -69,7 +69,7 @@ const GroupDetail: React.FC = () => {
             <hr/>
             <div>
                 {detail && <Room groupName={detail.groupTitle} groupId={detail.groupId}/>}
-                {/* <Chatting></Chatting>*/}
+                {/*  <Chatting></Chatting> */}
             </div>
         </div>
     );

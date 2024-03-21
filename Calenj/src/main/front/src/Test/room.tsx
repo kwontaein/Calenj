@@ -16,14 +16,13 @@ const Room: React.FC<Room> = ({groupName, groupId}) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputMessage, setInputMessage] = useState('');
 
-    const sockJs = new SockJS("/ws-stomp");
-    const stomp = Stomp.over(sockJs);
-    /*const stomp = Stomp.over(function () {
-        return new WebSocket('ws://localhost:8080/ws-stomp')
-    });*/
+    const stomp = Stomp.over(() => {
+        const sock = new SockJS("http://localhost:8080/ws-stomp")
+        return sock;
+    });
 
     useEffect(() => {
-        /*const roomName = groupName;
+        const roomName = groupName;
         const group_Id = groupId;
 
         stomp.connect({}, () => {
@@ -35,7 +34,7 @@ const Room: React.FC<Room> = ({groupName, groupId}) => {
         });
         return () => {
             stomp.disconnect();
-        };*/
+        };
     }, [groupId]);
 
     const sendMessage = () => {
@@ -49,7 +48,7 @@ const Room: React.FC<Room> = ({groupName, groupId}) => {
     }
 
     return (
-        <div className="container">{/*
+        <div className="container">
             <div className="col-6">
                 <h1>{groupName}</h1>
             </div>
@@ -75,7 +74,7 @@ const Room: React.FC<Room> = ({groupName, groupId}) => {
                 </div>
             </div>
             <div className="col-6"></div>
-        */}</div>
+        </div>
     );
 }
 
