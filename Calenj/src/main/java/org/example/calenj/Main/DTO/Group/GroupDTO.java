@@ -20,7 +20,6 @@ public class GroupDTO {
     public GroupDTO(UUID groupId, String groupTitle) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
-        this.groupCreated= groupCreated;
     }
 
 

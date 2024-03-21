@@ -1,10 +1,13 @@
 import React, {useLayoutEffect, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from 'react-router-dom';
-import { useId } from 'react';
+import {useId} from 'react';
+import Room from "../../Test/room";
+import Chatting from "../../Test/Chatting";
+import Notice from '../../Test/Notice'
 
 interface Details {
-    groupId: number;
+    groupId: string;
     groupCreated: string;
     groupTitle: string;
     groupCreater: string;
@@ -14,7 +17,7 @@ interface Members {
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
-    userEmail:String;
+    userEmail: String;
 }
 
 const GroupDetail: React.FC = () => {
@@ -50,7 +53,7 @@ const GroupDetail: React.FC = () => {
                 {detail !== null && (
                     <div key={detail.groupId}>
                         <div>Group Detail ID: {detail.groupId}</div>
-                        <div>Group Detail Title: {detail.groupTitle}</div>
+                         <div>Group Detail Title: {detail.groupTitle}</div>
                     </div>
                 )}
             </div>
@@ -64,6 +67,14 @@ const GroupDetail: React.FC = () => {
                     </div>
                 ))}
             </div>
+            <hr/>
+            <div>
+                {/* {detail && <Room groupName={detail.groupTitle} groupId={detail.groupId}/>} */}
+                {/*  <Chatting></Chatting> */}
+            </div>
+            <hr/>
+            <h1>공지 생성하기</h1>
+            <Notice/>
         </div>
     );
 }

@@ -1,17 +1,31 @@
 import React, {useState, useEffect} from 'react';
-import {Client, Frame, IMessage} from '@stomp/stompjs';
+import {Client, Frame, IMessage, Stomp} from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
-function Chatting(): JSX.Element {
+interface Message {
+    writer: string;
+    message: string;
+}
+
+interface Room {
+    groupName: string;
+    groupId: number;
+}
+
+const Chatting: React.FC = () => {
     // 상태 변수들 정의
     const [name, setName] = useState<string>(''); // 사용자 이름
     const [messages, setMessages] = useState<string[]>([]); // 수신된 메시지 배열
     const [connected, setConnected] = useState<boolean>(false); // WebSocket 연결 상태
     const [stompClient, setStompClient] = useState<Client | null>(null); // Stomp 클라이언트 인스턴스
 
+
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
-        const stompClient = new Client({
-            brokerURL: 'ws://localhost:8080/gs-guide-websocket' // WebSocket 연결 주소
+
+        const stompClient = Stomp.over(() => {
+            const sock = new SockJS("http://localhost:8080/ws-stomp")
+            return sock;
         });
 
         // 연결 성공시 처리
@@ -70,6 +84,16 @@ function Chatting(): JSX.Element {
         }
     }
 
+    /*    const sendMessage = () => {
+            if (inputMessage.trim() !== '') {
+                stomp.send('/pub/chat/message', {}, JSON.stringify({
+                    groupId: groupId,
+                    message: inputMessage,
+                }));
+                setInputMessage('');
+            }
+        };*/
+
     // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
     function showGreeting(message: string): void {
         setMessages(prevMessages => [...prevMessages, message]);
@@ -94,6 +118,26 @@ function Chatting(): JSX.Element {
                             </button>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            {/* 메시지 표시 테이블 */}
+                            <table className="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Greetings</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {/* 메시지 표시 */}
+                                {messages.map((message: string, index: number) => (
+                                    <tr key={index}>
+                                        <td>{message}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div className="col-md-6">
                         <div className="form-group">
                             <label>What is your name?</label>
@@ -103,26 +147,6 @@ function Chatting(): JSX.Element {
                         </div>
                         {/* Send 버튼 */}
                         <button className="btn btn-default" onClick={sendName}>Send</button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        {/* 메시지 표시 테이블 */}
-                        <table className="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Greetings</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {/* 메시지 표시 */}
-                            {messages.map((message: string, index: number) => (
-                                <tr key={index}>
-                                    <td>{message}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>

@@ -13,8 +13,8 @@ import java.util.UUID;
 @Builder // 빌더
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "DTYPE")
 //자식테이블을 구분할 구분자 컬럼이름을 지어준다.
+@DiscriminatorColumn(name = "DTYPE")
 @ToString
 public class GroupEntity {
 
@@ -34,6 +34,16 @@ public class GroupEntity {
 
     @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
     private List<GroupUserEntity> members;//Group_UserEntity 에서 목록으로 가져오기
+
+/*    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
+    private List<GroupNoticeEntity> Notice;//Group_UserEntity 에서 목록으로 가져오기
+
+    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
+    private List<GroupCommentEntity> Comments;//Group_UserEntity 에서 목록으로 가져오기
+
+    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
+    private List<GroupVoteEntity> Votes;//Group_UserEntity 에서 목록으로 가져오기*/
+
 }
 
 
