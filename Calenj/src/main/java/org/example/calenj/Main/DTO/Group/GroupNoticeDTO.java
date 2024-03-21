@@ -23,7 +23,17 @@ public class GroupNoticeDTO {
 
     //noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated
 
-    public GroupNoticeDTO(String noticeTitle, String noticeContent,  List<String> noticeWatcher, String noticeCreater, String noticeCreated, UUID noticeId) {
+
+    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated) {
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
+        this.noticeCreater = noticeCreater;
+        this.noticeCreated = noticeCreated;
+        this.noticeId = noticeId;
+    }
+
+
+    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated,  List<String> noticeWatcher) {
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
@@ -31,5 +41,7 @@ public class GroupNoticeDTO {
         this.noticeWatcher = noticeWatcher;
         this.noticeId = noticeId;
     }
+
+
 
 }

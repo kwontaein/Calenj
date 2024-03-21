@@ -24,10 +24,10 @@ public class GroupEntity {
     @Column(nullable = false, unique = true, name = "group_id", columnDefinition = "BINARY(16)")
     private UUID groupId;
 
-    @Column(name = "group_created")
-    private String groupCreated;
     @Column(name = "group_title")
     private String groupTitle;
+    @Column(name = "group_created")
+    private String groupCreated;
     @Column(name = "group_creater")
     private String groupCreater; //SecurityContext 에서 값 빼오기
 
