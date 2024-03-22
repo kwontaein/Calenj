@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
@@ -29,7 +29,7 @@ const GroupDetail: React.FC = () => {
     const id = useId();
 
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         axios.post('/api/groupDetail', null, {
             params: {
                 groupId: groupInfo.groupId
@@ -43,7 +43,7 @@ const GroupDetail: React.FC = () => {
                 setMembers(response.data.members);
             })
             .catch(error => console.log(error));
-    });
+    },[]);
 
     return (
         <div>

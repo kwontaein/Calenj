@@ -146,15 +146,14 @@ public class GroupService {
         Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
 
         if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
-            List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
+            //중복제거를 위한 Set
+            Set<String> ViewerDuplicates = new LinkedHashSet<>(groupNoticeDTO.get().getNoticeWatcher());
 
-            Viewerlist.add(userDetails.getUsername());
-
-            Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
+            ViewerDuplicates.add(userDetails.getUsername());
 
             List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
 
-            // JSON 문자열로 변환
+            // JSON 문자열로 변환, [id,id2] => ["id","id2]로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String json = objectMapper.writeValueAsString(ViewerDuplicateList);
