@@ -4,7 +4,7 @@ import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Room from "../../Test/room";
 import Chatting from "../../Test/Chatting";
-import Notice from '../../Test/Notice'
+import Notice from './Notice/Notice'
 
 interface Details {
     groupId: string;

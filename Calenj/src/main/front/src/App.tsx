@@ -5,7 +5,7 @@ import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import GroupDetail from "./components/Group/GroupDetail";
 import Chatting from "./Test/Chatting";
-import NoticeDetail from './Test/NoticeDetail';
+import NoticeDetail from './components/Group/Notice/NoticeDetail';
 // import GroupList from "./components/Group/GroupList";
 
 const App: React.FC = () => {
