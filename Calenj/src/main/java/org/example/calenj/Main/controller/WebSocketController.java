@@ -44,12 +44,6 @@ public class WebSocketController {
         template.convertAndSend("/topic/userOnline/" + isOnline.getGroupId(), isOnline.getOnlineStatusMap());
     }
 
-    @MessageMapping(value = "/chat/message")
-    public void message(Authentication authentication, ChatMessageDTO message) throws Exception {
-        String username = webSokcetService.returnNickname(authentication);
-        message.setMessage(username + " : " + message.getMessage());
-        template.convertAndSend("/topic/chat/room/" + message.getGroupId(), message);
-    }
 
     @MessageMapping("/chat/enter")
     public void enter(Authentication authentication, ChatMessageDTO message) throws Exception {

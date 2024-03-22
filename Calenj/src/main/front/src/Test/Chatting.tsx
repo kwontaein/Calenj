@@ -32,7 +32,6 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
             stompClient.subscribe(`/topic/chat/room/${groupId}`, (greeting: IMessage) => {
                 showGreeting(JSON.parse(greeting.body));
             });
-            stompClient.send('/app/chat/enter', {}, JSON.stringify({groupId}));
         };
 
         // WebSocket 에러 처리
