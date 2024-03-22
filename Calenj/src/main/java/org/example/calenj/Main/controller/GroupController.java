@@ -71,4 +71,10 @@ public class GroupController {
         GroupNoticeDTO noticeDetail = groupService.noticeDetail(noticeId).orElseThrow(() -> new RuntimeException("조회 실패"));
         return noticeDetail;
     }
+
+    @PostMapping("api/noticeViewBy")
+    public int noticeVeiwBy(@RequestParam(name = "noticeId") UUID noticeId){
+        int viewCount =groupService.noticeViewCount(noticeId);
+        return viewCount;
+    }
 }

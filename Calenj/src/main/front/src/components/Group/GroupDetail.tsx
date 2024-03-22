@@ -40,9 +40,7 @@ const GroupDetail: React.FC = () => {
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 setDetail(response.data);
-                console.log(response.data);
                 setMembers(response.data.members);
-                console.log(response.data.members);
             })
             .catch(error => console.log(error));
     }, []);
@@ -73,7 +71,8 @@ const GroupDetail: React.FC = () => {
                 {/*  <Chatting></Chatting> */}
             </div>
             <hr/>
-            <Notice/>
+           <Notice/>
+            
         </div>
     );
 }
