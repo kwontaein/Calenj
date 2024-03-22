@@ -130,7 +130,7 @@ public class GroupService {
 
 
 
-
+    @Transactional
     //그룹 공지 디테일
     public Optional<GroupNoticeDTO> noticeDetail(UUID noticeId) {
         Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
@@ -150,10 +150,10 @@ public class GroupService {
 
             Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
 
-            List<String> noticeWatcher = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
-            System.out.println("ViewerDuplicateList :"+noticeWatcher);
+            List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
+            System.out.println("ViewerDuplicateList :"+ViewerDuplicateList);
 
-            groupNoticeRepository.updateNoticeWatcher(noticeWatcher,noticeId);
+            groupNoticeRepository.updateNoticeWatcher(ViewerDuplicateList.toString(),noticeId);
             return ViewerDuplicates.size();
         }
 
