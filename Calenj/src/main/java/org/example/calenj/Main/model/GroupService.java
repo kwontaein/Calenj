@@ -1,5 +1,10 @@
 package org.example.calenj.Main.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
@@ -13,14 +18,13 @@ import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.UserEntity;
+import org.example.calenj.Main.helper.StringListConverter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -102,32 +106,69 @@ public class GroupService {
 
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
+        List<String> Viewerlist = new ArrayList<>();
+
+        Viewerlist.add("dysj11@naver.com");
+
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
                 .noticeTitle(NoticeTitle)
                 .noticeContent(NoticeContent)
                 .noticeCreated(String.valueOf(today))
                 .noticeCreater(userDetails.getUsername())
+                .noticeWatcher(Viewerlist)
                 .group(groupEntity)
                 .build();
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
-        // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
-        GroupUserEntity groupUserEntity = GroupUserEntity.builder()
-                .role(GroupUserEntity.GroupRoleType.Host)
-                .group(groupEntity)
-                .user(userEntity)
-                .build();
-
         groupNoticeRepository.save(groupNoticeEntity);
     }
 
+    //그룹 공지 가져오기
     public List<GroupNoticeDTO> groupNoticeList(UUID groupId) {
-
-        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findGroupNotice(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupNoticeDTOS;
     }
+
+
+
+
+    //그룹 공지 디테일
+    public GroupNoticeDTO noticeDetail(UUID noticeId) {
+        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(()->new RuntimeException("공지가 존재하지 않습니다."));
+        return groupNoticeDTO;
+    }
+
+
+    public void noticeViewCount(UUID noticeId) {
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+
+        if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
+            List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
+
+            Viewerlist.add(userDetails.getUsername());
+
+            Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
+
+            List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
+
+            // JSON 문자열로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String json = objectMapper.writeValueAsString(ViewerDuplicateList);
+
+                System.out.println("ViewerDuplicateList as JSON :" + json);
+
+                groupNoticeRepository.updateNoticeWatcher(json, noticeId);
+            } catch (JsonProcessingException e) {
+                e.getMessage();
+            }
+        }
+
+    }
+
 
     public void joinGroup(UUID groupId) {
         //유저를 그룹에 추가하는 코드

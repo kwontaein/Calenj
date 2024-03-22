@@ -3,10 +3,10 @@ import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
-import Notice from '../../Test/Notice'
+import Notice from './Notice/Notice'
 
 interface Details {
-    groupId: number;
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
@@ -39,20 +39,18 @@ const GroupDetail: React.FC = () => {
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 setDetail(response.data);
-                console.log(response.data);
                 setMembers(response.data.members);
-                console.log(response.data.members);
             })
             .catch(error => console.log(error));
-    }, []);
-    
+    });
+
     return (
         <div>
             <div>
                 {detail !== null && (
                     <div key={detail.groupId}>
                         <div>Group Detail ID: {detail.groupId}</div>
-                        <div>Group Detail Title: {detail.groupTitle}</div>
+                         <div>Group Detail Title: {detail.groupTitle}</div>
                     </div>
                 )}
             </div>
@@ -71,8 +69,7 @@ const GroupDetail: React.FC = () => {
                 {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
             </div>
             <hr/>
-            <h1>공지 생성하기</h1>
-            <Notice/>
+           <Notice/>
         </div>
     );
 }

@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
-import {RowFlexBox, Mini_Input,Mini_Textarea, Button, FormLable,} from '../style/FormStyle';
-import '../style/ModalStyle.scss';
+import {RowFlexBox, Mini_Input,Mini_Textarea, Button, FormLable,} from '../../../style/FormStyle';
+import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
-import {useConfirm} from '../stateFunc/actionFun'
+import {useConfirm} from '../../../stateFunc/actionFun'
 import axios from 'axios';
 
 

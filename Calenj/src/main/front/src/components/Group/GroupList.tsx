@@ -59,6 +59,7 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
         enabled:cookie,
     });
+    
     const redirectDetail = (groupId: number) => {
         navigate("/details", {state: {groupId: groupId}});
     }

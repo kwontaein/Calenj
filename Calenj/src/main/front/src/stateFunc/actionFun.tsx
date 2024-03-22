@@ -27,7 +27,6 @@ export function useConfirm(massage =" ",onConfirm:()=>void, onCancel:()=>void){
     if(typeof onCancel !== "function" ){
         return;
     }
-
       const confrimAction = () => { //취할 행동
       if(window.confirm(massage)){ //확신 시
         onConfirm();

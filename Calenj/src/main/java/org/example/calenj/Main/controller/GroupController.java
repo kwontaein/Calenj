@@ -59,8 +59,19 @@ public class GroupController {
         groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(),groupNoticeDTO.getGroupId());
     }
 
+    //공지 리스트
     @PostMapping("api/noticeList")
     public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO groupNoticeDTO){
         return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
     }
+
+    //그룹 세부 정보 가져오기
+    @PostMapping("/api/noticeDetail")
+    public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
+        groupService.noticeViewCount(noticeId);
+        GroupNoticeDTO noticeDetail = groupService.noticeDetail(noticeId);
+        return noticeDetail;
+    }
+
+
 }

@@ -17,5 +17,4 @@ public class GroupDetailDTO {
     private String groupCreated;
     private String groupCreater;
     private List<GroupUserDTO> members; //Group_UserEntity에서 목록으로 가져오기
-
 }
