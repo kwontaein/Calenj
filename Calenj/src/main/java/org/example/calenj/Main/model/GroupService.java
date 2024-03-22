@@ -1,5 +1,8 @@
 package org.example.calenj.Main.model;
 
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
@@ -13,14 +16,13 @@ import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.UserEntity;
+import org.example.calenj.Main.helper.StringListConverter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -102,23 +104,20 @@ public class GroupService {
 
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
+        List<String> Viewerlist = new ArrayList<>();
+        Viewerlist.add("dysj11@naver.com");
+
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
                 .noticeTitle(NoticeTitle)
                 .noticeContent(NoticeContent)
                 .noticeCreated(String.valueOf(today))
                 .noticeCreater(userDetails.getUsername())
+                .noticeWatcher(Viewerlist)
                 .group(groupEntity)
                 .build();
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
-        // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
-        GroupUserEntity groupUserEntity = GroupUserEntity.builder()
-                .role(GroupUserEntity.GroupRoleType.Host)
-                .group(groupEntity)
-                .user(userEntity)
-                .build();
 
         groupNoticeRepository.save(groupNoticeEntity);
     }
@@ -129,10 +128,37 @@ public class GroupService {
         return groupNoticeDTOS;
     }
 
+
+
+
     //그룹 공지 디테일
     public Optional<GroupNoticeDTO> noticeDetail(UUID noticeId) {
         Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
         return groupNoticeDTO;
+    }
+
+    @Transactional //트랜잭션을 관리함(시작, 종료, 롤백)
+    public int noticeViewCount(UUID noticeId){
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+
+
+        if(groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher()!=null){
+            System.out.println("groupNoticeDTO.get().getNoticeWatcher() :"+groupNoticeDTO.get().getNoticeWatcher());
+            List<String> Viewerlist= groupNoticeDTO.get().getNoticeWatcher();
+            Viewerlist.add(userDetails.getUsername());
+
+            Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
+
+            List<String> noticeWatcher = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
+            System.out.println("ViewerDuplicateList :"+noticeWatcher);
+
+            groupNoticeRepository.updateNoticeWatcher(noticeWatcher,noticeId);
+            return ViewerDuplicates.size();
+        }
+
+        return 0;
+
     }
 
 

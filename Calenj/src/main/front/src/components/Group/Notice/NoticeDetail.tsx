@@ -11,20 +11,34 @@ interface NoticeDetails {
     noticeCreater: string;   
 }
 
-interface ViewBy {
-    viewer:string[];
-}
+
 
 
 const NoticeDetail:React.FC=()=>{
     
     const [detail, setDetail] = useState<NoticeDetails | null>(null);
-    const [viewBy, setViewBy] = useState<ViewBy | null>(null);
+    const [viewBy, setViewBy] = useState<number>(0);
     const location = useLocation();
     const noticeInfo = {...location.state};
 
-    useLayoutEffect(() => {
-        axios.post('/api/noticeDetail', null, {
+    function getNoticeVieweBy(){
+        axios.post('/api/noticeViewBy', null, {
+            params: {
+                noticeId: noticeInfo.noticeId
+            },
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        }) // 객체의 속성명을 'id'로 설정
+            .then(response => {
+                setViewBy(response.data);
+                console.log(response.data);
+            })
+            .catch(error => console.log(error));
+    }
+
+    function getNoticeDetail (){
+         axios.post('/api/noticeDetail', null, {
             params: {
                 noticeId: noticeInfo.noticeId
             },
@@ -37,6 +51,11 @@ const NoticeDetail:React.FC=()=>{
                 console.log(response.data);
             })
             .catch(error => console.log(error));
+    }
+    
+    useLayoutEffect(() => {
+        getNoticeVieweBy();
+        getNoticeDetail();
     }, []);
 
 
@@ -44,6 +63,9 @@ const NoticeDetail:React.FC=()=>{
         <div>
             {detail?.noticeTitle}
             <br/>
+            조회인원 : {viewBy}
+        
+            <hr/>
             {detail?.noticeContent}
         </div>
     )

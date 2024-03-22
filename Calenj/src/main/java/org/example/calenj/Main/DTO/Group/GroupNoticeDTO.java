@@ -18,6 +18,7 @@ public class GroupNoticeDTO {
     private String noticeCreated;
     private String noticeContent;
     private String noticeCreater;
+
     private List<String> noticeWatcher;
 
 
@@ -33,7 +34,7 @@ public class GroupNoticeDTO {
     }
 
 
-    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated,  List<String> noticeWatcher) {
+    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
