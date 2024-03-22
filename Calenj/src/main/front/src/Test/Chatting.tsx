@@ -26,6 +26,8 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
             return sock;
         });
 
+        stompClient.activate();
+
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
             setConnected(true);

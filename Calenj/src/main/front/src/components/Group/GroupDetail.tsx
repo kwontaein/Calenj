@@ -45,7 +45,7 @@ const GroupDetail: React.FC = () => {
             })
             .catch(error => console.log(error));
     }, []);
-
+    
     return (
         <div>
             <div>
