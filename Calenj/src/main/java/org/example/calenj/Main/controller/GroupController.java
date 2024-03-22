@@ -68,13 +68,10 @@ public class GroupController {
     //그룹 세부 정보 가져오기
     @PostMapping("/api/noticeDetail")
     public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
-        GroupNoticeDTO noticeDetail = groupService.noticeDetail(noticeId).orElseThrow(() -> new RuntimeException("조회 실패"));
+        groupService.noticeViewCount(noticeId);
+        GroupNoticeDTO noticeDetail = groupService.noticeDetail(noticeId);
         return noticeDetail;
     }
 
-    @PostMapping("api/noticeViewBy")
-    public int noticeVeiwBy(@RequestParam(name = "noticeId") UUID noticeId){
-        int viewCount =groupService.noticeViewCount(noticeId);
-        return viewCount;
-    }
+
 }
