@@ -1,8 +1,11 @@
 package org.example.calenj.Main.Repository.Group;
 
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
 import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
+import org.example.calenj.Main.helper.StringListConverter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,7 +31,8 @@ public interface Group_NoticeRepository extends JpaRepository<GroupNoticeEntity,
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
+
     @Query(value = "UPDATE Group_Notice SET notice_watcher = :noticeWatcher WHERE notice_id = :noticeId", nativeQuery = true)
-    void updateNoticeWatcher(@Param("noticeWatcher") List<String> noticeWatcher, @Param("noticeId") UUID noticeId);
+    void updateNoticeWatcher(@Param("noticeWatcher") String noticeWatcher, @Param("noticeId") UUID noticeId);
 
 }

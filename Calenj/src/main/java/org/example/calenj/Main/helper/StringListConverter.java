@@ -33,7 +33,7 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     //String을 List타입으로 변환
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
-        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {};
+        TypeReference<List<String>> typeReference = new TypeReference<>() {};
         try {
             return mapper.readValue(dbData, typeReference);
         } catch (IOException e) {

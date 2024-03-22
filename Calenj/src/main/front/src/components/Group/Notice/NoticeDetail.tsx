@@ -9,6 +9,7 @@ interface NoticeDetails {
     noticeContent : string;  
     noticeCreated: string;
     noticeCreater: string;   
+    noticeWatcher:string[];
 }
 
 
@@ -21,21 +22,6 @@ const NoticeDetail:React.FC=()=>{
     const location = useLocation();
     const noticeInfo = {...location.state};
 
-    function getNoticeVieweBy(){
-        axios.post('/api/noticeViewBy', null, {
-            params: {
-                noticeId: noticeInfo.noticeId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        }) // 객체의 속성명을 'id'로 설정
-            .then(response => {
-                setViewBy(response.data);
-                console.log(response.data);
-            })
-            .catch(error => console.log(error));
-    }
 
     function getNoticeDetail (){
          axios.post('/api/noticeDetail', null, {
@@ -54,7 +40,6 @@ const NoticeDetail:React.FC=()=>{
     }
     
     useLayoutEffect(() => {
-        getNoticeVieweBy();
         getNoticeDetail();
     }, []);
 
@@ -63,7 +48,7 @@ const NoticeDetail:React.FC=()=>{
         <div>
             {detail?.noticeTitle}
             <br/>
-            조회인원 : {viewBy}
+            조회인원 : {detail?.noticeWatcher.length}
         
             <hr/>
             {detail?.noticeContent}

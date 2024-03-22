@@ -20,11 +20,11 @@ interface NoticeList{
 export const QUERY_NOTICE_LIST_KEY: string = 'noticeList'
 const Notice :React.FC =()=>{
     const[makeNotice,setMakeNotice] = useState(false);
-    const[noticeListView,setNoticeListView] = useState(false);
+
     const location = useLocation();
     const navigate = useNavigate();
     const groupInfo = {...location.state};
-    const noticeInfo = {...location.state};
+
 
     const queryClient = useQueryClient();
     

@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Entity(name = "Group_Notice")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
 @Builder(builderMethodName = "GroupNoticeBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경

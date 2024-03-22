@@ -1,5 +1,7 @@
 package org.example.calenj.Main.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Converter;
 import jakarta.transaction.Transactional;
@@ -105,6 +107,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         List<String> Viewerlist = new ArrayList<>();
+
         Viewerlist.add("dysj11@naver.com");
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
@@ -132,32 +135,37 @@ public class GroupService {
 
 
     //그룹 공지 디테일
-    public Optional<GroupNoticeDTO> noticeDetail(UUID noticeId) {
-        Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+    public GroupNoticeDTO noticeDetail(UUID noticeId) {
+        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(()->new RuntimeException("공지가 존재하지 않습니다."));
         return groupNoticeDTO;
     }
 
-    @Transactional //트랜잭션을 관리함(시작, 종료, 롤백)
-    public int noticeViewCount(UUID noticeId){
+
+    public void noticeViewCount(UUID noticeId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
 
+        if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
+            List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
 
-        if(groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher()!=null){
-            System.out.println("groupNoticeDTO.get().getNoticeWatcher() :"+groupNoticeDTO.get().getNoticeWatcher());
-            List<String> Viewerlist= groupNoticeDTO.get().getNoticeWatcher();
             Viewerlist.add(userDetails.getUsername());
 
             Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
 
-            List<String> noticeWatcher = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
-            System.out.println("ViewerDuplicateList :"+noticeWatcher);
+            List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
 
-            groupNoticeRepository.updateNoticeWatcher(noticeWatcher,noticeId);
-            return ViewerDuplicates.size();
+            // JSON 문자열로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String json = objectMapper.writeValueAsString(ViewerDuplicateList);
+
+                System.out.println("ViewerDuplicateList as JSON :" + json);
+
+                groupNoticeRepository.updateNoticeWatcher(json, noticeId);
+            } catch (JsonProcessingException e) {
+                e.getMessage();
+            }
         }
-
-        return 0;
 
     }
 

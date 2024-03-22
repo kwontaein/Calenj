@@ -43,7 +43,7 @@ const GroupDetail: React.FC = () => {
                 setMembers(response.data.members);
             })
             .catch(error => console.log(error));
-    }, []);
+    });
 
     return (
         <div>
