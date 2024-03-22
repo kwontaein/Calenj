@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Client, Frame, IMessage, Stomp} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -15,22 +15,18 @@ interface Room {
 const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들 정의
     const [msg, setMsg] = useState<string>(''); // 사용자 이름
     const [messages, setMessages] = useState<Message[]>([]); // 수신된 메시지 배열
-    const [connected, setConnected] = useState<boolean>(false); // WebSocket 연결 상태
     const [stompClient, setStompClient] = useState<Client | null>(null); // Stomp 클라이언트 인스턴스
-
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
         const stompClient = Stomp.over(() => {
-            const sock = new SockJS("http://localhost:8080/ws-stomp")
-            return sock;
+            return new SockJS("http://localhost:8080/ws-stomp");
         });
 
         stompClient.activate();
 
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
-            setConnected(true);
             console.log('Connected: ' + frame);
             // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
             stompClient.subscribe(`/topic/chat/room/${groupId}`, (greeting: IMessage) => {
@@ -59,22 +55,6 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
         };
     }, []);
 
-    // WebSocket 연결 함수
-    function connect(): void {
-        if (stompClient) {
-            stompClient.activate();
-        }
-    }
-
-    // WebSocket 연결 해제 함수
-    function disconnect(): void {
-        if (stompClient) {
-            stompClient.deactivate();
-            setConnected(false);
-            console.log("Disconnected");
-        }
-    }
-
     // 메시지 전송 함수
     function sendName(): void {
         if (stompClient) {
@@ -101,16 +81,6 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
         <div>
             <div id="main-content" className="container">
                 <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label>WebSocket connection:</label>
-                            {/* Connect 버튼 */}
-                            <button className="btn btn-default" onClick={connect} disabled={connected}>Connect</button>
-                            {/* Disconnect 버튼 */}
-                            <button className="btn btn-default" onClick={disconnect} disabled={!connected}>Disconnect
-                            </button>
-                        </div>
-                    </div>
                     <div className="row">
                         <div className="col-md-12">
                             {/* 메시지 표시 테이블 */}
@@ -133,9 +103,9 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
                     </div>
                     <div className="col-md-6">
                         <div className="form-group">
-                            <label>What is your name?</label>
+                            <label>Message Field</label>
                             {/* 사용자 이름 입력 필드 */}
-                            <input type="text" className="form-control" placeholder="Your name here..." value={msg}
+                            <input type="text" className="form-control" value={msg}
                                    onChange={(e) => setMsg(e.target.value)}/>
                         </div>
                         {/* Send 버튼 */}
