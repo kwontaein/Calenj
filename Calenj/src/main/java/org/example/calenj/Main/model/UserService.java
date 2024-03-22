@@ -136,4 +136,7 @@ public class UserService {
         response.addCookie(cookie);
     }
 
+    public void requestFriend(String userId) {
+        
+    }
 }
