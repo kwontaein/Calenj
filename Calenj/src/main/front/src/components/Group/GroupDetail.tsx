@@ -9,7 +9,7 @@ import SockJS from "sockjs-client";
 import group from "./index";
 
 interface OnlineState {
-    userEmail: string;
+    nickName: string;
     isOnline: boolean;
 }
 
@@ -35,9 +35,7 @@ const GroupDetail: React.FC = () => {
     const id = useId();
     const [online, setOnline] = useState<OnlineState[]>([]); // 수신된 메시지 배열
 
-    const stompClient = Stomp.over(() => {
-        return new SockJS("http://localhost:8080/ws-stomp");
-    });
+
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
 
@@ -52,18 +50,16 @@ const GroupDetail: React.FC = () => {
             .then(response => {
                 setDetail(response.data);
                 setMembers(response.data.members);
-                GroupOnline(response.data.groupId);
             })
             .catch(error => console.log(error));
 
-        return () => {
-            stompClient.send('/app/offline', {}, JSON.stringify({groupId: groupInfo.groupId}));
-            stompClient.deactivate();
-        };
-
     }, []);
 
-    function GroupOnline(groupId: number | undefined) {
+    useEffect(() => {
+
+        const stompClient = Stomp.over(() => {
+            return new SockJS("http://localhost:8080/ws-stomp");
+        });
 
         stompClient.activate();
 
@@ -71,10 +67,12 @@ const GroupDetail: React.FC = () => {
         stompClient.onConnect = (frame: Frame) => {
             console.log('Connected: ' + frame);
             // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
-            stompClient.subscribe(`/topic/userOnline/${groupId}`, (online: IMessage) => {
-                showOnline(JSON.parse(online.body));
+            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (online: IMessage) => {
+                setOnline(JSON.parse(online.body));
+                console.log(online);
+                //onlineConsole(JSON.parse(online.body));
             })
-            stompClient.send('/app/online', {}, JSON.stringify({groupId}));
+            stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
         };
 
         // WebSocket 에러 처리
@@ -91,10 +89,10 @@ const GroupDetail: React.FC = () => {
         // Stomp 클라이언트 설정 저장
         // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
         return () => {
-            stompClient.send('/app/offline', {}, JSON.stringify({groupId}));
+            stompClient.send('/app/offline', {}, JSON.stringify({groupId: groupInfo.groupId}));
             stompClient.deactivate();
         };
-    }
+    }, [])
 
     function invite() {
         axios.post('/api/inviteGroup', null, {
@@ -112,10 +110,12 @@ const GroupDetail: React.FC = () => {
 
     }
 
-    function showOnline(online: OnlineState): void {
-        setOnline(prevMessages => [...prevMessages, online]);
-        console.log(online);
-    }
+    // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
+    /*
+        function onlineConsole(online: OnlineState): void {
+            setOnline(prevOnlines => [...prevOnlines, online]);
+        }
+    */
 
     return (
         <div>
@@ -129,13 +129,21 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <div>
-                {members !== null && members.map((members, index) => (
-                    <div key={index}>
-                        <div>닉네임 : {members.nickName}</div>
-                        <div>역할 : {members.groupRoleType}</div>
-                        <div>위치 : {members.group_user_location}</div>
-                    </div>
-                ))}
+                {Object.entries(online).map(([nickName, isOnline]) => {
+                    const groupedMembers = members !== null ? members.filter(member => member.nickName === nickName) : [];
+                    return (
+                        <div key={nickName}>
+                            <li>{nickName}: {isOnline ? '온라인' : '오프라인'}</li>
+                            {groupedMembers.map((member, index) => (
+                                <div key={index}>
+                                    <div>닉네임: {member.nickName}</div>
+                                    <div>역할: {member.groupRoleType}</div>
+                                    <div>위치: {member.group_user_location}</div>
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
             </div>
             <hr/>
             <div>
