@@ -2,7 +2,7 @@ import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
-import Notice from "./Test/Notice";
+import Notice from "./components/Group/Notice/Notice";
 
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);

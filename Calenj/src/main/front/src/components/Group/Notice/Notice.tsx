@@ -5,7 +5,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
-import {stateFilter} from '../stateFunc/actionFun';
+import {stateFilter} from '../../../stateFunc/actionFun';
 
 
 
