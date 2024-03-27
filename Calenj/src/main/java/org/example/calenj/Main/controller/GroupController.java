@@ -47,21 +47,21 @@ public class GroupController {
 
     //그룹 초대
     @PostMapping("/api/inviteGroup")
-    public String inviteGroup(/*@RequestParam("inviteCode") int inviteCode*/) { //그룹 초대
-        return "";
+    public String inviteGroup(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
+        groupService.joinGroup(groupId);
+        return "그룹 초대";
     }
-
 
 
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(),groupNoticeDTO.getGroupId());
+        groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getGroupId());
     }
 
     //공지 리스트
     @PostMapping("api/noticeList")
-    public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO groupNoticeDTO){
+    public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO groupNoticeDTO) {
         return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
     }
 

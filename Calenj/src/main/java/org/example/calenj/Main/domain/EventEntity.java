@@ -54,6 +54,7 @@ public class EventEntity {
         REJECT("거절"),
         WAITING("대기");
 
+
         private final String status;
 
         @JsonCreator

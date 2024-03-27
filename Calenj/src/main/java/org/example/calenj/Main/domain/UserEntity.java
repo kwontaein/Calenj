@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @Getter
 @ToString
 public class UserEntity implements UserDetails {
-    
+
     //primary key
     @Id
     @Column(nullable = false, unique = true, name = "user_email")

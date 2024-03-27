@@ -165,7 +165,7 @@ public class GroupService {
 
 
     public void joinGroup(UUID groupId) {
-        //유저를 그룹에 추가하는 코드
+        // 유저를 그룹에 추가하는 코드
         // SecurityContext 에서 유저 정보 추출하는 메소드
         // UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));

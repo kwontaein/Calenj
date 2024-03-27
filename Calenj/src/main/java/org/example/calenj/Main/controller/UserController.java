@@ -113,5 +113,9 @@ public class UserController {
         return "";
     }
 
+    @PostMapping("/api/requestFriend")
+    public void requestFriend(@RequestParam(name = "userId") String userId) {
+        userService.requestFriend(userId);
+    }
 
 }
