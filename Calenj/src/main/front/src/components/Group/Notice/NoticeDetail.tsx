@@ -1,7 +1,8 @@
 import React, {useLayoutEffect, useState} from 'react';
-import axios from 'axios';
+import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
+import {stateFilter} from '../../../stateFunc/actionFun'
 
 interface NoticeDetails {
     groupId: string;
@@ -36,7 +37,13 @@ const NoticeDetail:React.FC=()=>{
                 setDetail(response.data);
                 console.log(response.data);
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if(axiosError.response?.data){
+                    stateFilter((axiosError.response.data) as string);
+                }
+            });
     }
     
     useLayoutEffect(() => {

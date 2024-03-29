@@ -2,8 +2,8 @@ import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
 import {RowFlexBox, Mini_Input,Mini_Textarea, Button, FormLable,} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
-import {useConfirm} from '../../../stateFunc/actionFun'
-import axios from 'axios';
+import {useConfirm,stateFilter} from '../../../stateFunc/actionFun'
+import axios ,{AxiosError}from 'axios';
 
 
 interface ModalProps {
@@ -35,7 +35,13 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId})=>{
             window.alert('공지를 생성했습니다.')
             onClose();
         })
-        .catch((err)=>console.error(err))
+        .catch((error)=>{
+            const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if(axiosError.response?.data){
+                    stateFilter((axiosError.response.data) as string);
+                }
+        })
     }
 
     const createNotice =()=>{
@@ -49,13 +55,13 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId})=>{
 
 
     return(
-        <div id='notice_container' >
+        <div id='makeNotice_container' >
             <RowFlexBox>
-            <FormLable style={{marginTop : '7px'}}>제목</FormLable>
-            <Mini_Input onChange={(e:ChangeEvent<HTMLInputElement>)=>setTitle(e.target.value)} ref={inputRef} style={{marginTop:'1px'}}/>
+                <FormLable style={{marginTop : '7px'}}>제목</FormLable>
+                <Mini_Input onChange={(e:ChangeEvent<HTMLInputElement>)=>setTitle(e.target.value)} ref={inputRef} style={{marginTop:'1px'}}/>
             </RowFlexBox>
             <RowFlexBox>
-            <Mini_Textarea onChange={(e:ChangeEvent<HTMLTextAreaElement>)=>setContent(e.target.value)} placeholder='내용을 입력해주세요'/> 
+                <Mini_Textarea onChange={(e:ChangeEvent<HTMLTextAreaElement>)=>setContent(e.target.value)} placeholder='내용을 입력해주세요'/> 
             </RowFlexBox> 
             <div style={{width:'210px', marginTop:'10px', textAlign:'right'}}>
                 <button onClick={createNotice}>생성</button> <button onClick={closeModal}>취소</button> 

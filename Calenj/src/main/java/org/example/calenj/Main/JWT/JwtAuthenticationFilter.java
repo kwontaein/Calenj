@@ -49,7 +49,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             // SecurityContext 에 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("authentication : " + authentication);
 
         } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
             //GetWriter()가 이미 선언되었다는 오류가 생김 -> doFilter 동작방식에 이유가 있었음
