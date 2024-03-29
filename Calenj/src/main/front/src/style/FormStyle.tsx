@@ -18,6 +18,11 @@ export const UnfocusBackgound = styled.div<UnfocusBackgroundProps>`
   opacity: ${props => props.focus==="true" ? '60%' : '100%'};
 `
 
+export const Li = styled.li`
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 5px;
+`
 
 export const Input = styled.input`
   padding: 10px;
@@ -84,3 +89,10 @@ export const Right_flexBox = styled.div`
   width: 205px;
   text-align: right;
 `;
+
+export const OveflowBlock = styled.div`
+  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left : 5px
+` 

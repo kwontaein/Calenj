@@ -2,7 +2,8 @@ import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
-import Notice from "./components/Group/Notice/Notice";
+import Vote from './Test/Vote'
+
 
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
@@ -27,8 +28,10 @@ const Home: React.FC = () => {
                 <div>
                     {cookie && <GroupList cookie={cookie}/>}
                 </div>}
+        <Vote/>
         </div>
 
+                
     )
 }
 export default Home;
