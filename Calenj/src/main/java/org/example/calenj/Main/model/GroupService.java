@@ -10,10 +10,12 @@ import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
+import org.example.calenj.Main.Repository.Group.Group_VoteRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
+import org.example.calenj.Main.domain.Group.GroupVoteEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +34,7 @@ public class GroupService {
     private final Group_UserRepository group_userRepository;
     private final GlobalService globalService;
     private final Group_NoticeRepository groupNoticeRepository;
+    private final Group_VoteRepository groupVoteRepository;
 
 
     //그룹 만들기
@@ -103,7 +106,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         List<String> Viewerlist = new ArrayList<>();
-
+        //TODO :제거해야함
         Viewerlist.add("dysj11@naver.com");
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
@@ -115,8 +118,7 @@ public class GroupService {
                 .group(groupEntity)
                 .build();
 
-        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
 
         groupNoticeRepository.save(groupNoticeEntity);
     }
@@ -134,7 +136,7 @@ public class GroupService {
         return groupNoticeDTO;
     }
 
-
+    //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
@@ -162,7 +164,32 @@ public class GroupService {
         }
 
     }
+    
+    //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
+    public void makeVote( UUID groupId, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
+
+        LocalDate today = LocalDate.now();
+
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+
+        GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+
+
+        GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
+                .voteCreater(userDetails.getUsername())
+                .voteTitle(voteTitle)
+                .voteItem(voteItems)
+                .voteCreated(String.valueOf(today))
+                .voteEndDate(endDate)
+                .isMultiple(isMultiple)
+                .anonymous(anonymous)
+                .group(groupEntity)
+                .build();
+
+        System.out.println(groupVoteEntity);
+        groupVoteRepository.save(groupVoteEntity);
+    }
 
     public void joinGroup(UUID groupId) {
         // 유저를 그룹에 추가하는 코드

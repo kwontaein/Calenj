@@ -2,7 +2,6 @@ import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
-import Vote from './Test/Vote'
 
 
 const Home: React.FC = () => {
@@ -28,7 +27,7 @@ const Home: React.FC = () => {
                 <div>
                     {cookie && <GroupList cookie={cookie}/>}
                 </div>}
-        <Vote/>
+
         </div>
 
                 

@@ -132,13 +132,7 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
     });
 
 
-    const secondsUnit = (seconds: number): (string | number) => {
-        if (seconds < 10) {
-            return "0" + seconds;
-        } else {
-            return seconds;
-        }
-    }
+
 
 
     //Redux는 클라이언트 측의 상태 관리 라이브러리이므로 백에서 토큰관리로 철저히 관리해야됨.
@@ -154,7 +148,7 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
                 <br></br>
                 <div style={{fontSize:"15px", marginTop:"3px", marginLeft:"10px"}}>{email}로 인증요청함</div>
 
-                <ErrorMessage>{(minutes === 0 && seconds === 0) ? "인증시간이 만료되었습니다." : `남은 시간 : ${minutes}분${secondsUnit(seconds)}초`}</ErrorMessage>
+                <ErrorMessage>{(minutes === 0 && seconds === 0) ? "인증시간이 만료되었습니다." : `남은 시간 : ${minutes}분${seconds.toString().padStart(2,'0')}초`}</ErrorMessage>
 
                 <Input maxLength={10} type="text " onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}></Input>
                 <div id="btn_emailCodeValidation" onClick={codeRequest}> 확인</div>

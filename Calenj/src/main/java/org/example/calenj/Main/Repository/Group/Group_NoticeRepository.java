@@ -34,5 +34,4 @@ public interface Group_NoticeRepository extends JpaRepository<GroupNoticeEntity,
 
     @Query(value = "UPDATE Group_Notice SET notice_watcher = :noticeWatcher WHERE notice_id = :noticeId", nativeQuery = true)
     void updateNoticeWatcher(@Param("noticeWatcher") String noticeWatcher, @Param("noticeId") UUID noticeId);
-
 }
