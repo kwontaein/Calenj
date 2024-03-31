@@ -13,6 +13,7 @@ import java.util.UUID;
 @Repository
 public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, UUID> {
     // 쿼리: GroupVoteEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteItem, gv.voteTitle, gv.voteStartDate , gv.voteEndDate) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
     List<GroupVoteDTO> findGroupVote(@Param("groupId") UUID groupId);
+
 }

@@ -7,6 +7,7 @@ import Notice from './Notice/Notice'
 import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
+import Vote from './Vote/Vote';
 
 interface OnlineState {
     nickName: string;
@@ -156,6 +157,8 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <Notice/>
+            <hr/>
+            <Vote/>
         </div>
     );
 }

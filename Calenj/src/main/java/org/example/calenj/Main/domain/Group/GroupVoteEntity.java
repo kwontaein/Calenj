@@ -1,14 +1,21 @@
 package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+import org.example.calenj.Main.domain.Group.Ids.GroupNoticeId;
 import org.example.calenj.Main.domain.Group.Ids.GroupVoteId;
+import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "Group_Vote")
 @Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
+@AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder를 사용
+@Builder(builderMethodName = "GroupVoteBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
 @IdClass(GroupVoteId.class)
 public class GroupVoteEntity {
 
@@ -25,16 +32,29 @@ public class GroupVoteEntity {
     //주키
     private UUID voteId;
 
+    @Column(name ="vote_creater")
+    private String voteCreater;
 
     @Column(name = "vote_title")
     private String voteTitle;
 
     @Column(name = "vote_Item")
-    private String voteItem;
+    @Convert(converter = StringListConverter.class)
+    private List<String> voteItem;
 
-    @Column(name = "vote_start_date")
-    private String voteStartDate;
+    @Column(name = "vote_created")
+    private String voteCreated;
 
     @Column(name = "vote_end_date")
     private String voteEndDate;
+
+    @Column(name = "is_multiple")
+    private Boolean isMultiple;
+
+    @Column(name = "anonymous")
+    private Boolean anonymous;
+
+    @Column(name ="voter")
+    @Convert(converter = StringListConverter.class)
+    private List<String> voter;
 }

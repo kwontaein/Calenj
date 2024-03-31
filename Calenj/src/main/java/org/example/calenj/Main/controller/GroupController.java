@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
+import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class GroupController {
         return groupService.groupList();
     }
 
-    //그룹 세부 정보 가져오기
+    //그룹 세부정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailDTO groupDetail(@RequestParam(name = "groupId") UUID groupId) {
         GroupDetailDTO groupDetail = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
@@ -65,7 +66,7 @@ public class GroupController {
         return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
     }
 
-    //그룹 세부 정보 가져오기
+    //그룹공지 세부정보 가져오기
     @PostMapping("/api/noticeDetail")
     public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
         groupService.noticeViewCount(noticeId);
@@ -73,5 +74,11 @@ public class GroupController {
         return noticeDetail;
     }
 
+
+    @PostMapping("/api/makeVote")
+    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO){
+        System.out.println("getGroupId: "+ groupVoteDTO.getGroupId() +"\ngetVoteTitle: " +groupVoteDTO.getVoteTitle() + "\ngetVoteItem: "+ groupVoteDTO.getVoteItem() +"\ngetVoteEndDate: " +groupVoteDTO.getVoteEndDate()+ "\ngetIsMultiple :"+groupVoteDTO.getIsMultiple()+ "\ngetAnonymous: "+ groupVoteDTO.getAnonymous());
+        groupService.makeVote(groupVoteDTO.getVoteId() ,groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(),groupVoteDTO.getVoteEndDate(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
+    }
 
 }
