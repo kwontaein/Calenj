@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model;
+package org.example.calenj.Main.model.WebSoket;
 
 import org.example.calenj.Main.DTO.Chat.OnlineDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;

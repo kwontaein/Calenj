@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.model.EmailVerificationService;
+import org.example.calenj.Main.model.Verify.EmailVerificationService;
 import org.example.calenj.Main.model.GlobalService;
-import org.example.calenj.Main.model.PhoneVerificationService;
+import org.example.calenj.Main.model.Verify.PhoneVerificationService;
 import org.example.calenj.Main.model.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -112,10 +112,5 @@ public class UserController {
         //프론트에서 바뀐 값 전달하기
         return "";
     }
-
-    @PostMapping("/api/requestFriend")
-    public void requestFriend(@RequestParam(name = "userId") String userId) {
-        userService.requestFriend(userId);
-    }
-
+    
 }
