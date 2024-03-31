@@ -57,7 +57,7 @@ public class GroupController {
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getGroupId());
+        groupService.makeNotice(groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getNoticeCreated(),groupNoticeDTO.getGroupId());
     }
 
     //공지 리스트
@@ -77,8 +77,12 @@ public class GroupController {
 
     @PostMapping("/api/makeVote")
     public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO){
-        System.out.println("getGroupId: "+ groupVoteDTO.getGroupId() +"\ngetVoteTitle: " +groupVoteDTO.getVoteTitle() + "\ngetVoteItem: "+ groupVoteDTO.getVoteItem() +"\ngetVoteEndDate: " +groupVoteDTO.getVoteEndDate()+ "\ngetIsMultiple :"+groupVoteDTO.getIsMultiple()+ "\ngetAnonymous: "+ groupVoteDTO.getAnonymous());
-        groupService.makeVote(groupVoteDTO.getVoteId() ,groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(),groupVoteDTO.getVoteEndDate(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
+        groupService.makeVote(groupVoteDTO.getGroupId() ,groupVoteDTO.getVoteCreated(),groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(),groupVoteDTO.getVoteEndDate(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
+    }
+
+    @PostMapping("api/voteList")
+    public List<GroupVoteDTO> noticeList(@RequestBody GroupVoteDTO groupVoteDTO) {
+        return groupService.groupVoteList(groupVoteDTO.getGroupId());
     }
 
 }

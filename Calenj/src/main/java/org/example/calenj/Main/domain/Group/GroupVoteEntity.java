@@ -56,5 +56,5 @@ public class GroupVoteEntity {
 
     @Column(name ="voter")
     @Convert(converter = StringListConverter.class)
-    private List<String> voter;
+    private List<String[]> voter;
 }

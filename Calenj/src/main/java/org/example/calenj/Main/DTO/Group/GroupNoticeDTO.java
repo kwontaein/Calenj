@@ -14,7 +14,6 @@ import java.util.UUID;
 public class GroupNoticeDTO {
     private UUID groupId;
     private UUID noticeId;
-    private String noticeTitle;
     private String noticeCreated;
     private String noticeContent;
     private String noticeCreater;
@@ -25,8 +24,7 @@ public class GroupNoticeDTO {
     //noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated
 
 
-    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated) {
-        this.noticeTitle = noticeTitle;
+    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;
@@ -34,15 +32,12 @@ public class GroupNoticeDTO {
     }
 
 
-    public GroupNoticeDTO(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
-        this.noticeTitle = noticeTitle;
+    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;
         this.noticeWatcher = noticeWatcher;
         this.noticeId = noticeId;
     }
-
-
 
 }
