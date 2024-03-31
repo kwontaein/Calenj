@@ -4,6 +4,7 @@ import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
+import {ListView, MiniText} from '../../style/FormStyle'
 
 
 
@@ -83,10 +84,10 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                     <h2>Group List</h2>
                     <ul>
                         {groupListState.data.map((group) => (
-                            <li key={group.groupId}
+                            <ListView key={group.groupId}
                                 onClick={() => redirectDetail(group.groupId as number)}>
                                 {group.groupTitle}
-                                </li>
+                                </ListView>
                         ))}
                     </ul>
                 </div>

@@ -77,13 +77,13 @@ export const FormLable = styled.label`
     margin-left :5px;
 `;
 
-
+//div 가로로 나열
 export const RowFlexBox = styled.div`
   display : flex;
   flexdirection : row;
 `
 
-
+//item오른쪽으로 정렬
 export const Right_flexBox = styled.div`
   margin-top: 10px;
   width: 205px;
@@ -96,3 +96,23 @@ export const OveflowBlock = styled.div`
   text-overflow: ellipsis;
   padding-left : 5px
 ` 
+
+
+export const ListView = styled.li`
+  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 0.5px solid #ccc;
+  width:100vw;
+  padding-left : 40px;
+  margin-left:-40px;
+  margin-top :-1px;
+  padding-top:10px;
+  padding-bottom:10px;
+`
+
+export const MiniText = styled.div`
+  color:gray;
+  margin-top:5px;
+  font-size:12px;
+`

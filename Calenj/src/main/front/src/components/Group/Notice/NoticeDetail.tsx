@@ -6,7 +6,6 @@ import {stateFilter} from '../../../stateFunc/actionFun'
 
 interface NoticeDetails {
     groupId: string;
-    noticeTitle: string;
     noticeContent : string;  
     noticeCreated: string;
     noticeCreater: string;   
@@ -53,9 +52,7 @@ const NoticeDetail:React.FC=()=>{
 
     return(
         <div>
-            {detail?.noticeTitle}
-            <br/>
-            조회인원 : {detail?.noticeWatcher.length}
+            {detail?.noticeWatcher.length}명 읽음
         
             <hr/>
             {detail?.noticeContent}

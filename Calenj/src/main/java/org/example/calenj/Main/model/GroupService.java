@@ -3,10 +3,7 @@ package org.example.calenj.Main.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
-import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
-import org.example.calenj.Main.DTO.Group.GroupUserDTO;
+import org.example.calenj.Main.DTO.Group.*;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
@@ -97,9 +94,8 @@ public class GroupService {
     }
 
     //그룹 공지 생성
-    public void makeNotice(String NoticeTitle, String NoticeContent, UUID groupId) {
+    public void makeNotice(String NoticeContent, String NoticeCreated, UUID groupId) {
 
-        LocalDate today = LocalDate.now();
 
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
@@ -110,9 +106,8 @@ public class GroupService {
         Viewerlist.add("dysj11@naver.com");
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
-                .noticeTitle(NoticeTitle)
                 .noticeContent(NoticeContent)
-                .noticeCreated(String.valueOf(today))
+                .noticeCreated(NoticeCreated)
                 .noticeCreater(userDetails.getUsername())
                 .noticeWatcher(Viewerlist)
                 .group(groupEntity)
@@ -128,6 +123,12 @@ public class GroupService {
         List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupNoticeDTOS;
     }
+
+    public List<GroupVoteDTO> groupVoteList(UUID groupId) {
+        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        return groupVoteDTOS;
+    }
+
 
 
     //그룹 공지 디테일
@@ -167,9 +168,8 @@ public class GroupService {
     
     //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
-    public void makeVote( UUID groupId, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
+    public void makeVote( UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
 
-        LocalDate today = LocalDate.now();
 
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
@@ -180,14 +180,13 @@ public class GroupService {
                 .voteCreater(userDetails.getUsername())
                 .voteTitle(voteTitle)
                 .voteItem(voteItems)
-                .voteCreated(String.valueOf(today))
+                .voteCreated(voteCreated)
                 .voteEndDate(endDate)
                 .isMultiple(isMultiple)
                 .anonymous(anonymous)
                 .group(groupEntity)
                 .build();
 
-        System.out.println(groupVoteEntity);
         groupVoteRepository.save(groupVoteEntity);
     }
 
