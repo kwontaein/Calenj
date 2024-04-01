@@ -27,10 +27,11 @@ public class GroupVoteDTO {
     private String voteEndDate;
     private Boolean isMultiple;
     private Boolean anonymous;
+    private List<String> voter;
 
 
     //gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous
-    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, List<String> voteItem, String voteCreated,String voteEndDate,Boolean isMultiple, Boolean anonymous){
+    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, List<String> voteItem, String voteCreated,String voteEndDate,Boolean isMultiple, Boolean anonymous, List<String> voter){
         this.voteId = voteId;
         this.voteCreater = voteCreater;
         this.voteTitle = voteTitle;
@@ -39,7 +40,16 @@ public class GroupVoteDTO {
         this.voteEndDate = voteEndDate;
         this.isMultiple = isMultiple;
         this.anonymous = anonymous;
+        this.voter = voter;
 
-
+    }
+    //list만 불러오기위한 생성자
+    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, String voteCreated,String voteEndDate, List<String> voter){
+        this.voteId = voteId;
+        this.voteCreater = voteCreater;
+        this.voteTitle = voteTitle;
+        this.voteCreated = voteCreated;
+        this.voteEndDate = voteEndDate;
+        this.voter = voter;
     }
 }

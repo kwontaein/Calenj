@@ -85,4 +85,9 @@ public class GroupController {
         return groupService.groupVoteList(groupVoteDTO.getGroupId());
     }
 
+    @PostMapping("/api/voteDetail")
+    public GroupVoteDTO voteDetail(@RequestParam(name = "voteId") UUID voteId) {
+        GroupVoteDTO voteDetail = groupService.voteDetail(voteId);
+        return voteDetail;
+    }
 }

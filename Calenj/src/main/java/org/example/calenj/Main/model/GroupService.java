@@ -133,9 +133,10 @@ public class GroupService {
 
     //그룹 공지 디테일
     public GroupNoticeDTO noticeDetail(UUID noticeId) {
-        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
+        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
         return groupNoticeDTO;
     }
+
 
     //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
@@ -188,6 +189,10 @@ public class GroupService {
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
+    }
+    public GroupVoteDTO voteDetail(UUID voteId) {
+        GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
+        return groupVoteDTO;
     }
 
     public void joinGroup(UUID groupId) {
