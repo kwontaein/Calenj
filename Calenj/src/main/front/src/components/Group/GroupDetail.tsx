@@ -8,11 +8,6 @@ import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
 
-interface OnlineState {
-    nickName: string;
-    isOnline: string;
-}
-
 interface Details {
     groupId: number;
     groupTitle: string;
@@ -33,8 +28,6 @@ const GroupDetail: React.FC = () => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [online, setOnline] = useState<OnlineState[]>([]); // 수신된 메시지 배열
-
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
@@ -63,10 +56,7 @@ const GroupDetail: React.FC = () => {
 
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
-            console.log('Connected: ' + frame);
             stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
-                console.log("JSON.parse(isOnline.body)", Object.entries(JSON.parse(isOnline.body)));
-                setOnline((JSON.parse(isOnline.body))); // 여기에서 setOnline() 호출
             })
             stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
         };
@@ -111,26 +101,9 @@ const GroupDetail: React.FC = () => {
                 )}
             </div>
             <hr/>
-            <div>
-                <div>
-                    {Object.entries(online).map(([nickName, OnlineState]) => {
-                        const groupedMembers = members !== null ? members.filter(member => member.nickName === nickName) : [];
-                        console.log(OnlineState);
-                        return (
-                            <div key={nickName}>
-                                <li>{nickName}: {OnlineState.isOnline}</li>
-                                {groupedMembers.map((member, index) => (
-                                    <div key={index}>
-                                        <div>닉네임: {member.nickName}</div>
-                                        <div>역할: {member.groupRoleType}</div>
-                                        <div>위치: {member.group_user_location}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+
+            {/*내용 추가*/}
+
             <hr/>
             <div>
                 {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
