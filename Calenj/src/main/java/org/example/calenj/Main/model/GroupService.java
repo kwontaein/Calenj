@@ -48,7 +48,8 @@ public class GroupService {
                 .groupCreater(userDetails.getUsername())
                 .build();
 
-        groupRepository.save(groupEntity);
+        groupRepository
+                .save(groupEntity);
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));

@@ -3,7 +3,7 @@ package org.example.calenj.Main.domain.Group;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.Group.Ids.GroupUserId;
+import org.example.calenj.Main.domain.Ids.GroupUserId;
 import org.example.calenj.Main.domain.UserEntity;
 
 import java.util.stream.Stream;

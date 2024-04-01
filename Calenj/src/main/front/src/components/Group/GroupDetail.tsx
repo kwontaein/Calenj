@@ -10,7 +10,7 @@ import group from "./index";
 
 interface OnlineState {
     nickName: string;
-    isOnline: boolean;
+    isOnline: string;
 }
 
 interface Details {
@@ -52,25 +52,21 @@ const GroupDetail: React.FC = () => {
                 setMembers(response.data.members);
             })
             .catch(error => console.log(error));
-
     }, []);
 
     useEffect(() => {
-
         const stompClient = Stomp.over(() => {
             return new SockJS("http://localhost:8080/ws-stomp");
         });
 
-        stompClient.activate();
+        stompClient.activate();//로그인 시 자동 활성화
 
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
             console.log('Connected: ' + frame);
-            // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
-            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (online: IMessage) => {
-                setOnline(JSON.parse(online.body));
-                console.log(online);
-                //onlineConsole(JSON.parse(online.body));
+            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
+                console.log("JSON.parse(isOnline.body)", Object.entries(JSON.parse(isOnline.body)));
+                setOnline((JSON.parse(isOnline.body))); // 여기에서 setOnline() 호출
             })
             stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
         };
@@ -86,12 +82,6 @@ const GroupDetail: React.FC = () => {
             console.error('Additional details: ' + frame.body);
         };
 
-        // Stomp 클라이언트 설정 저장
-        // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
-        return () => {
-            stompClient.send('/app/offline', {}, JSON.stringify({groupId: groupInfo.groupId}));
-            stompClient.deactivate();
-        };
     }, [])
 
     function invite() {
@@ -110,13 +100,6 @@ const GroupDetail: React.FC = () => {
 
     }
 
-    // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
-    /*
-        function onlineConsole(online: OnlineState): void {
-            setOnline(prevOnlines => [...prevOnlines, online]);
-        }
-    */
-
     return (
         <div>
             <div>
@@ -129,21 +112,24 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <div>
-                {Object.entries(online).map(([nickName, isOnline]) => {
-                    const groupedMembers = members !== null ? members.filter(member => member.nickName === nickName) : [];
-                    return (
-                        <div key={nickName}>
-                            <li>{nickName}: {isOnline ? '온라인' : '오프라인'}</li>
-                            {groupedMembers.map((member, index) => (
-                                <div key={index}>
-                                    <div>닉네임: {member.nickName}</div>
-                                    <div>역할: {member.groupRoleType}</div>
-                                    <div>위치: {member.group_user_location}</div>
-                                </div>
-                            ))}
-                        </div>
-                    );
-                })}
+                <div>
+                    {Object.entries(online).map(([nickName, OnlineState]) => {
+                        const groupedMembers = members !== null ? members.filter(member => member.nickName === nickName) : [];
+                        console.log(OnlineState);
+                        return (
+                            <div key={nickName}>
+                                <li>{nickName}: {OnlineState.isOnline}</li>
+                                {groupedMembers.map((member, index) => (
+                                    <div key={index}>
+                                        <div>닉네임: {member.nickName}</div>
+                                        <div>역할: {member.groupRoleType}</div>
+                                        <div>위치: {member.group_user_location}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
             <hr/>
             <div>

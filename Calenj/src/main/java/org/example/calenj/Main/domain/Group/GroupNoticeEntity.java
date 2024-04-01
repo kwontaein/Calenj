@@ -2,7 +2,7 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.Group.Ids.GroupNoticeId;
+import org.example.calenj.Main.domain.Ids.GroupNoticeId;
 import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 

@@ -1,13 +1,8 @@
 import {useEffect, useState} from "react"
 import {Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import * as jwt from 'jsonwebtoken';
 import group from "../components/Group";
-
-
-interface Online {
-    userEmail: string;
-    isOnline: boolean;
-}
 
 export function stateFilter(error: string): void {
     if (error === "ALL_TOKEN_EXPIRED") {
@@ -44,3 +39,7 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     return confrimAction();
 }
 
+export function personalTopic(userEmail: string) {
+
+
+}

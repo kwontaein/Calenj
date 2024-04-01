@@ -2,7 +2,7 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.example.calenj.Main.domain.Group.Ids.GroupVoteId;
+import org.example.calenj.Main.domain.Ids.GroupVoteId;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;

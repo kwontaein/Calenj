@@ -3,6 +3,7 @@ package org.example.calenj.Main.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calenj.Main.domain.Ids.FriendId;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.stream.Stream;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 @Builder // 빌더
 @Getter
 @ToString
+@IdClass(FriendId.class)
 public class FriendEntity {
 
     @Id

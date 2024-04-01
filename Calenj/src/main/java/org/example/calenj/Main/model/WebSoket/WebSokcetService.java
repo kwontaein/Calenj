@@ -8,6 +8,7 @@ import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,15 +28,32 @@ public class WebSokcetService {
         return userEntity.getNickname();
     }
 
-    public Map<String, Boolean> offlineList(OnlineDTO onlineDTO, UUID groupId) {
-        Map<String, Boolean> onlineList = onlineDTO.getOnlineStatusMap();
+    public String returnUserId(String userName) {
+        UserEntity userEntity = userRepository.findByUserEmail(userName).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
+        return userEntity.getUserEmail();
+    }
+
+
+    public Map<String, String> offlineList(OnlineDTO onlineDTO, UUID groupId) {
+        Map<String, String> onlineList = new HashMap<>();
+        //여기서 온라인 오프라인 여부 불러옴
         List<GroupUserDTO> groupUserDTO = group_userRepository.findGroupUsers(groupId);
 
         // 온/오프라인 목록 생성
         for (GroupUserDTO userDTO : groupUserDTO) {
             String nickName = userDTO.getNickName();
-            if (!onlineList.containsKey(nickName)) {
-                onlineList.put(nickName, false);
+
+            String onlineStatus = userDTO.getOnlineStatus().toString().replace("CUSTOM", "");
+            userDTO.setOnlineStatus(UserEntity.OnlineStatus.valueOf(onlineStatus));
+
+            if (userDTO.getOnlineStatus() == UserEntity.OnlineStatus.OFFLINE) {
+                onlineList.put(nickName, "OFFLINE");
+            } else if (userDTO.getOnlineStatus() == UserEntity.OnlineStatus.SLEEP) {
+                onlineList.put(nickName, "SLEEP");
+            } else if (userDTO.getOnlineStatus() == UserEntity.OnlineStatus.TOUCH) {
+                onlineList.put(nickName, "TOUCH");
+            } else {
+                onlineList.put(nickName, "ONLINE");
             }
         }
 
@@ -43,4 +61,18 @@ public class WebSokcetService {
         return onlineList;
     }
 
+    public boolean OnOff(String userId) {
+        UserEntity userEntity = userRepository.findByUserEmail(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
+
+        if (userEntity.getIsOnline() == UserEntity.OnlineStatus.OFFLINE) {//온/오프라인 전환
+            System.out.println("온라인 : " + UserEntity.OnlineStatus.ONLINE);
+            userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.ONLINE.toString());
+            return true;
+        } else {
+            System.out.println("오프라인 : " + UserEntity.OnlineStatus.OFFLINE);
+            userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
+            return false;
+        }
+
+    }
 }
