@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
@@ -8,6 +8,8 @@ import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
 import Vote from './Vote/Vote';
+import {stateFilter} from '../../stateFunc/actionFun';
+
 
 interface OnlineState {
     nickName: string;
@@ -53,7 +55,13 @@ const GroupDetail: React.FC = () => {
                 setDetail(response.data);
                 setMembers(response.data.members);
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if(axiosError.response?.data){
+                    stateFilter((axiosError.response.data) as string);
+                }
+            });
 
     }, []);
 
@@ -157,7 +165,7 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <Notice/>
-            <hr/>
+            
             <Vote/>
         </div>
     );

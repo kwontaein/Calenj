@@ -213,7 +213,7 @@ const MakeVote :React.FC<ModalProps>=({onClose, groupId})=>{
             <DatePicker
                 dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
                 shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                minDate={new Date(new Date().setDate(new Date().getDate()+1))} // minDate 이전 날짜 선택 불가
+                minDate={new Date(new Date().setDate(new Date().getDate()))} // minDate 이전 날짜 선택 불가
                 maxDate={new Date(new Date().setDate(new Date().getDate()+6))}//최대 날짜를 현재기준 일주일까지
                 showTimeSelect //시간선택
                 timeFormat="HH:mm" //시간 포맷 

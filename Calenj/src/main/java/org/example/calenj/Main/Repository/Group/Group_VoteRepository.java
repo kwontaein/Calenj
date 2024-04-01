@@ -1,5 +1,6 @@
 package org.example.calenj.Main.Repository.Group;
 
+import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
 import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
 import org.example.calenj.Main.domain.Group.GroupVoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +14,12 @@ import java.util.UUID;
 
 @Repository
 public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, UUID> {
-    // 쿼리: GroupVoteEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
+    // 쿼리: GroupVote를 List로 조회
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.voter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
     Optional<List<GroupVoteDTO>> findVoteByGroupId(@Param("groupId") UUID groupId);
+
+    //voteId로 상세조회
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
+    Optional<GroupVoteDTO> findByVoteId(@Param("voteId") UUID voteId);
 
 }

@@ -14,7 +14,7 @@ const Home: React.FC = () => {
         setTimeout(() => {
             setCookie(queryClient.getQueryData([QUERY_COOKIE_KEY]) as boolean);
             setLoding(true);
-        }, 200)
+        }, 400)
     }, [])
 
 
@@ -23,10 +23,11 @@ const Home: React.FC = () => {
         <div style={{display: "flex", flexDirection: "column"}}>
             <SignState/>
             <h1>여기는 초기 페이지임</h1>
-            {isLoding &&
+            {isLoding ?
                 <div>
                     {cookie && <GroupList cookie={cookie}/>}
-                </div>}
+                </div>:
+                <div style={{marginLeft:'10px'}}>isLoding..</div>}
 
         </div>
 

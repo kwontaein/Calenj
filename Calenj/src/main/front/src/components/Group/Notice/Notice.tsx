@@ -34,7 +34,7 @@ const Notice :React.FC =()=>{
       const getNoticeList = async (): Promise<NoticeList[]|null>=> {
         try{
             const response = await axios.post('/api/noticeList',{groupId:groupInfo.groupId});
-            console.log(response.data);
+            // console.log(response.data);
             return response.data
         }catch(error){
             const axiosError = error as AxiosError;
