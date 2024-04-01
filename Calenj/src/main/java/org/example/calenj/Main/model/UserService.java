@@ -135,8 +135,5 @@ public class UserService {
         cookie.setPath("/");
         response.addCookie(cookie);
     }
-
-    public void requestFriend(String userId) {
-        
-    }
+    
 }

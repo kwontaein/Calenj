@@ -3,6 +3,7 @@ package org.example.calenj.Main.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calenj.Main.domain.Ids.EventId;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.stream.Stream;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 @Builder // 빌더
 @Getter
 @ToString
+@IdClass(EventId.class)
 public class EventEntity {
 
     @Id
@@ -37,7 +39,7 @@ public class EventEntity {
 
     // 이벤트 이름
     @Column(name = "event_name")
-    private String eventName;
+    private eventType eventName;
 
     //이벤트 상태
     @Column(name = "event_status")
@@ -54,17 +56,32 @@ public class EventEntity {
         REJECT("거절"),
         WAITING("대기");
 
-
         private final String status;
 
         @JsonCreator
         public static EventEntity.statusType userRoleParsing(String inputValue) {
-
             return Stream.of(EventEntity.statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);
         }
+    }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum eventType { //enum을 활용한 권한종류 설정
+        RequestFriend("친구 요청"),
+        InviteGroup("그룹 초대"),
+        Else("그 외 이벤트");
+
+        private final String eventName;
+
+        @JsonCreator
+        public static EventEntity.eventType userRoleParsing(String inputValue) {
+            return Stream.of(EventEntity.eventType.values())
+                    .filter(eventType -> eventType.toString().equals(inputValue))
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 }

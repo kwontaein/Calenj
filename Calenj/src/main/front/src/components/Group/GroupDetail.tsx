@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios ,{AxiosError}from 'axios';
+import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
@@ -7,14 +7,7 @@ import Notice from './Notice/Notice'
 import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
-import Vote from './Vote/Vote';
-import {stateFilter} from '../../stateFunc/actionFun';
-
-
-interface OnlineState {
-    nickName: string;
-    isOnline: boolean;
-}
+import {ListView} from '../../style/FormStyle'
 
 interface Details {
     groupId: number;
@@ -27,17 +20,16 @@ interface Members {
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
-    userEmail: String;
+    onlineStatus: string;
 }
 
+
 const GroupDetail: React.FC = () => {
-    //a
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [online, setOnline] = useState<OnlineState[]>([]); // 수신된 메시지 배열
 
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
@@ -52,35 +44,24 @@ const GroupDetail: React.FC = () => {
             }
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
+                console.log(response.data.members);
                 setDetail(response.data);
                 setMembers(response.data.members);
             })
-            .catch(error => {
-                const axiosError = error as AxiosError;
-                console.log(axiosError);
-                if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
-                }
-            });
-
+            .catch(error => console.log(error));
     }, []);
 
     useEffect(() => {
-
         const stompClient = Stomp.over(() => {
             return new SockJS("http://localhost:8080/ws-stomp");
         });
 
-        stompClient.activate();
+        stompClient.activate();//로그인 시 자동 활성화
 
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
-            console.log('Connected: ' + frame);
-            // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
-            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (online: IMessage) => {
-                setOnline(JSON.parse(online.body));
-                console.log(online);
-                //onlineConsole(JSON.parse(online.body));
+            // console.log('Connected: ' + frame);
+            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
             })
             stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
         };
@@ -96,12 +77,6 @@ const GroupDetail: React.FC = () => {
             console.error('Additional details: ' + frame.body);
         };
 
-        // Stomp 클라이언트 설정 저장
-        // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
-        return () => {
-            stompClient.send('/app/offline', {}, JSON.stringify({groupId: groupInfo.groupId}));
-            stompClient.deactivate();
-        };
     }, [])
 
     function invite() {
@@ -120,12 +95,23 @@ const GroupDetail: React.FC = () => {
 
     }
 
-    // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
-    /*
-        function onlineConsole(online: OnlineState): void {
-            setOnline(prevOnlines => [...prevOnlines, online]);
+    const onlineCheck =(isOnline:string):string=>{
+        let status;
+        switch (isOnline) {
+            case "ONLINE":
+            status = '온라인';
+            break;
+            case "SLEEP":
+            status = '자리비움';
+            break;
+            case "TOUCH":
+            status = '방해금지';
+            break;
+            default:
+            status = '오프라인';
         }
-    */
+        return status
+    }
 
     return (
         <div>
@@ -137,25 +123,20 @@ const GroupDetail: React.FC = () => {
                     </div>
                 )}
             </div>
-            <hr/>
-            <div>
-                {Object.entries(online).map(([nickName, isOnline]) => {
-                    const groupedMembers = members !== null ? members.filter(member => member.nickName === nickName) : [];
-                    return (
-                        <div key={nickName}>
-                            <li>{nickName}: {isOnline ? '온라인' : '오프라인'}</li>
-                            {groupedMembers.map((member, index) => (
-                                <div key={index}>
-                                    <div>닉네임: {member.nickName}</div>
-                                    <div>역할: {member.groupRoleType}</div>
-                                    <div>위치: {member.group_user_location}</div>
-                                </div>
-                            ))}
-                        </div>
-                    );
-                })}
-            </div>
-            <hr/>
+
+            
+            {members && 
+                <div>
+                    <ul>
+                    {members.map((member) => (
+                        <ListView>
+                            {member.nickName} : {onlineCheck(member.onlineStatus)}
+                        </ListView>
+                    ))}
+                </ul>
+                </div>
+                }
+
             <div>
                 {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
             </div>
@@ -165,8 +146,6 @@ const GroupDetail: React.FC = () => {
             </div>
             <hr/>
             <Notice/>
-            
-            <Vote/>
         </div>
     );
 }
