@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
-import {personalTopic, stateFilter} from '../../stateFunc/actionFun'
+import {stateFilter} from '../../stateFunc/actionFun'
 import {Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
