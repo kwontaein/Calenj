@@ -1,4 +1,4 @@
-package org.example.calenj.Main.domain.Group.Ids;
+package org.example.calenj.Main.domain.Ids;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
 import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
+import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
 import org.example.calenj.Main.model.GroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class GroupController {
         return groupService.groupList();
     }
 
-    //그룹 세부 정보 가져오기
+    //그룹 세부정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailDTO groupDetail(@RequestParam(name = "groupId") UUID groupId) {
         GroupDetailDTO groupDetail = groupService.groupDetail(groupId).orElseThrow(() -> new RuntimeException("조회 실패"));
@@ -56,7 +57,7 @@ public class GroupController {
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNoticeTitle(), groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getGroupId());
+        groupService.makeNotice(groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getNoticeCreated(),groupNoticeDTO.getGroupId());
     }
 
     //공지 리스트
@@ -65,7 +66,7 @@ public class GroupController {
         return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
     }
 
-    //그룹 세부 정보 가져오기
+    //그룹공지 세부정보 가져오기
     @PostMapping("/api/noticeDetail")
     public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
         groupService.noticeViewCount(noticeId);
@@ -74,4 +75,19 @@ public class GroupController {
     }
 
 
+    @PostMapping("/api/makeVote")
+    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO){
+        groupService.makeVote(groupVoteDTO.getGroupId() ,groupVoteDTO.getVoteCreated(),groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(),groupVoteDTO.getVoteEndDate(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
+    }
+
+    @PostMapping("api/voteList")
+    public List<GroupVoteDTO> noticeList(@RequestBody GroupVoteDTO groupVoteDTO) {
+        return groupService.groupVoteList(groupVoteDTO.getGroupId());
+    }
+
+    @PostMapping("/api/voteDetail")
+    public GroupVoteDTO voteDetail(@RequestParam(name = "voteId") UUID voteId) {
+        GroupVoteDTO voteDetail = groupService.voteDetail(voteId);
+        return voteDetail;
+    }
 }

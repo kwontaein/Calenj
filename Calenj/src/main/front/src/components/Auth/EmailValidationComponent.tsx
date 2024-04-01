@@ -6,7 +6,7 @@ import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidat
 import '../../style/Sign.scss'
 import {RootState} from '../../store/store'
 import {Dispatch} from 'redux';
-import {kMaxLength} from 'buffer';
+
 import {useConfirm} from '../../stateFunc/actionFun'
 
 
@@ -15,6 +15,7 @@ interface ComponentProps {
     email: string;
     onClose: () => void;
 }
+
 
 
 // store에서 가져올 state의 타입(EmailToken)
@@ -42,7 +43,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
 
 type Props = ComponentProps & DispatchProps & EmailToeknProps;
 
-const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateToken, updateCodeValid, onClose}) => {
+const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateToken, updateCodeValid,onClose}) => {
     const [code, setCode] = useState<string>('');
     const [seconds, setSeconds] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
@@ -50,7 +51,7 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
 
     const interval = useRef<boolean>();
 
-    /*이메일 인증을 확인하는 코드*/
+    /*이메일 인증을 확인하는 코드*/ 
     const codeRequest = async (): Promise<void> => {
         try {
             const response = await axios.post('api/emailCodeValidation', null, {
@@ -78,15 +79,16 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
     }
 
 
-    const validateCancle = () => {
-        const cancle = () => console.log("취소");
-        if (minutes === 0 && seconds === 0) {
-            return onClose();
-        } else {
-            useConfirm(`지금 나가시면 남은시간까지 인증번호를 보낼 수 없습니다.\n정말로 나가시겠습니까?`, onClose, cancle);
-        }
-
+      const validateCancle = ()=>{
+        const cancle =() =>  console.log("취소");
+            if(minutes ===0 &&seconds===0){
+                return onClose();
+            }else{
+                useConfirm(`지금 나가시면 남은시간까지 인증번호를 보낼 수 없습니다.\n정말로 나가시겠습니까?`, onClose, cancle);
+            }        
+         
     }
+
 
 
     /*토큰의 남은 시간을 계산하여 반환하는 함수 */
@@ -124,41 +126,34 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
             clearInterval(id);
             setSeconds(0);
             setMinutes(0);
-
+            
         }
         return () => clearInterval(id);
     });
 
 
-    const secondsUnit = (seconds: number): (string | number) => {
-        if (seconds < 10) {
-            return "0" + seconds;
-        } else {
-            return seconds;
-        }
-    }
+
 
 
     //Redux는 클라이언트 측의 상태 관리 라이브러리이므로 백에서 토큰관리로 철저히 관리해야됨.
     //보안적인 토큰 사용: Redux 애플리케이션에서 중요한 상태를 변경할 때 사용자 인증을 확인
 
     return (
+  
+            <div id='emailValidation_Box'>
+                <div> 
+                    <FormLable style={{marginLeft:'8px'}}>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
+                    <button id="btn_cancleValid"onClick={validateCancle}>x</button>
+                </div>
+                <br></br>
+                <div style={{fontSize:"15px", marginTop:"3px", marginLeft:"10px"}}>{email}로 인증요청함</div>
 
-        <div id='emailValidation_Box'>
-            <div>
-                <FormLable style={{marginLeft: '8px'}}>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
-                <button id="btn_cancleValid" onClick={validateCancle}>x</button>
+                <ErrorMessage>{(minutes === 0 && seconds === 0) ? "인증시간이 만료되었습니다." : `남은 시간 : ${minutes}분${seconds.toString().padStart(2,'0')}초`}</ErrorMessage>
+
+                <Input maxLength={10} type="text " onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}></Input>
+                <div id="btn_emailCodeValidation" onClick={codeRequest}> 확인</div>
+
             </div>
-            <br></br>
-            <div style={{fontSize: "15px", marginTop: "3px", marginLeft: "10px"}}>{email}로 인증요청함</div>
-
-            <ErrorMessage>{(minutes === 0 && seconds === 0) ? "인증시간이 만료되었습니다." : `남은 시간 : ${minutes}분${secondsUnit(seconds)}초`}</ErrorMessage>
-
-            <Input maxLength={10} type="text "
-                   onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}></Input>
-            <div id="btn_emailCodeValidation" onClick={codeRequest}> 확인</div>
-
-        </div>
 
     );
 }

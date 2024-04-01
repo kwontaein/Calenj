@@ -8,5 +8,5 @@ import java.util.UUID;
 @Data
 public class OnlineDTO {
     private UUID groupId;
-    private Map<String, Boolean> onlineStatusMap;
+    private Map<String, String> onlineStatusMap;
 }

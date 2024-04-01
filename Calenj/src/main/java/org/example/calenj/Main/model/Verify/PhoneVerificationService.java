@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model;
+package org.example.calenj.Main.model.Verify;
 
 import net.nurigo.sdk.message.model.Message;
 import org.springframework.beans.factory.annotation.Value;

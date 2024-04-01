@@ -3,6 +3,7 @@ package org.example.calenj.Main.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calenj.Main.domain.Ids.FriendId;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.stream.Stream;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 @Builder // 빌더
 @Getter
 @ToString
+@IdClass(FriendId.class)
 public class FriendEntity {
 
     @Id
@@ -46,9 +48,9 @@ public class FriendEntity {
     @Getter
     @RequiredArgsConstructor
     public enum statusType { //enum을 활용한 권한종류 설정
-        ACCEPT("친구"),
-        BAN("차단"),
-        WAITING("대기");
+        ACCEPT("친구"), //친구 요청 받음
+        BAN("차단"), //내가 차단
+        WAITING("대기"); //난 보냈고, 상대는 대기중
 
         private final String status;
 

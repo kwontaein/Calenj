@@ -2,12 +2,14 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.example.calenj.Main.domain.Ids.GroupScheduleId;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
 @Entity(name = "Group_Schedule")
 @Getter
+@IdClass(GroupScheduleId.class)
 public class GroupScheduleEntity {
 
     @Id
