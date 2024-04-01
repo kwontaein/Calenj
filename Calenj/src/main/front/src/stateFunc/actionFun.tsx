@@ -1,8 +1,5 @@
-import {useEffect, useState} from "react"
-import {Frame, IMessage, Stomp} from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import * as jwt from 'jsonwebtoken';
-import group from "../components/Group";
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 locale 추가
 
 export function stateFilter(error: string): void {
     if (error === "ALL_TOKEN_EXPIRED") {
@@ -39,7 +36,7 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     return confrimAction();
 }
 
-export function personalTopic(userEmail: string) {
 
-
+export function CreateDate(date:Date):string{
+    return dayjs(date).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')
 }

@@ -7,6 +7,7 @@ const InviteCode:React.FC=()=>{
     const[isInInvited,setIsInvited] = useState<boolean>(false);
     const[inviteCode, setInvitedCode] = useState<string>('');
 
+
     return(
         <div>
             

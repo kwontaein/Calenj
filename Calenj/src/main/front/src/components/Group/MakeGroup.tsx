@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import axios ,{AxiosError }from 'axios';
 import {stateFilter,useConfirm} from '../../stateFunc/actionFun'
 
 
@@ -21,8 +21,11 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
               window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`)
             })
             .catch(error => {
-              console.log(error)
-              stateFilter(error.response.data);
+              const axiosError = error as AxiosError;
+              console.log(axiosError);
+              if(axiosError.response?.data){
+              stateFilter((axiosError.response.data) as string);
+              }
             });
     };
 

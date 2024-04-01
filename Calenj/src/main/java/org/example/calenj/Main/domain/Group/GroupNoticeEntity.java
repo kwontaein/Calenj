@@ -32,9 +32,6 @@ public class GroupNoticeEntity {
     // 외래 키에 대한 참조 필드 지정
     private GroupEntity group;
 
-    @Column(name = "notice_title")
-    private String noticeTitle;
-
     @Column(name = "notice_created")
     private String noticeCreated;
 
