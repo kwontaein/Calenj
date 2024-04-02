@@ -4,6 +4,6 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class GroupVoteId implements Serializable {
-    private UUID group;
     private UUID voteId;
+    private UUID group;
 }
