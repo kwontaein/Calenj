@@ -42,7 +42,7 @@ public class GroupController {
     // 임시로 만든 그룹 참여 코드 -> 공개 서버라면 참여 가능하게 만들 것
     @PostMapping("/api/joinGroup")
     public String joinGroup(@RequestParam(name = "groupId") UUID groupId, @RequestParam(name = "userId") String userId) {
-        groupService.joinGroup(groupId, userId);
+        groupService.joinGroup(groupId);
         System.out.println("그룹 참가");
         return "a";
     }

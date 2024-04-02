@@ -22,12 +22,10 @@ public class ChoiceEntity {
     @JoinColumn(name = "vote_id", referencedColumnName = "vote_id", columnDefinition = "BINARY(16)")
     // 외래 키에 대한 참조 필드 지정
     private GroupVoteEntity vote;
-
     @ManyToMany
     @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
     // 외래 키에 대한 참조 필드 지정
     private List<UserEntity> user;
-
     private String content;
     private int count;
 }
