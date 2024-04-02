@@ -178,7 +178,6 @@ public class GroupService {
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
                 .voteTitle(voteTitle)
-                .voteItem(voteItems)
                 .voteCreated(voteCreated)
                 .voteEndDate(endDate)
                 .isMultiple(isMultiple)

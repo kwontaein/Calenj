@@ -31,15 +31,11 @@ public class GroupVoteEntity {
     //주키
     private UUID voteId;
 
-    @Column(name ="vote_creater")
+    @Column(name = "vote_creater")
     private String voteCreater;
 
     @Column(name = "vote_title")
     private String voteTitle;
-
-    @Column(name = "vote_Item")
-    @Convert(converter = StringListConverter.class)
-    private List<String> voteItem;
 
     @Column(name = "vote_created")
     private String voteCreated;
@@ -53,7 +49,7 @@ public class GroupVoteEntity {
     @Column(name = "anonymous")
     private Boolean anonymous;
 
-    @Column(name ="voter")
+    @Column(name = "voter")
     @Convert(converter = StringListConverter.class)
     private List<String> voter;
 

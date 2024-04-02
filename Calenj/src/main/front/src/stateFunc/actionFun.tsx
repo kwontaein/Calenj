@@ -1,21 +1,28 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 
-
-export function stateFilter(error: string): void {
-    if (error === "ALL_TOKEN_EXPIRED") {
-        window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
-        document.location.replace('/sign')
-
-    } else if (error === "UNKNOWN_EXCEPTION") {
-        window.alert("알수없는 접근입니다 재로그인하세요.")
-        console.log('ㅎㅇ')
-
-    } else if (error === "NON_EXISTENT_ERROR") {
+export function loginFilter(error: string): void {
+    if (error === "NON_EXISTENT_ERROR") {
         window.alert("존재하지 않는 아이디 입니다. 다시 확인해주세요.")
 
     } else if (error === "PW_ERROR") {
         window.alert("비밀번호가 틀렸습니다. 다시 입력해주세요.")
+    } else {
+        window.alert("알 수 없는 오류가 발생했습니다. 관리자에게 문의하세요.")
+    }
+}
+
+export function stateFilter(error: string): void {
+    if (error === "302") {
+        window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
+        document.location.replace('/sign')
+
+    } else if (error === "401") {
+        window.alert("알수없는 접근입니다 재로그인하세요.")
+
+    } else if (error === "409") {
+        window.alert("다른 곳에서 로그인되었습니다. 로그아웃합니다")
+        document.location.replace('/sign')
     }
 }
 
@@ -43,7 +50,7 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
 
 
 
-/*************************************날짜 관련 함수*************************************/ 
+/*************************************날짜 관련 함수*************************************/
 const now = new Date();
 const minute = 1000*60 //1분
 const hour = minute*60;
@@ -66,7 +73,7 @@ export const createTimePassed =(date:string)=>{
         result =(lastTime<hour? `${(lastTime/minute).toFixed(0)}분 전`:`${(lastTime/hour).toFixed(0)}시간 전`)
     }else{
         result = AHMFormat(created).slice(6);//년도 자르고 보이기
-    }        
+    }
     return result
 }
 
