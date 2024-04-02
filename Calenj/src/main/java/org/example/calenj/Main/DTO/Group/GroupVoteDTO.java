@@ -20,10 +20,11 @@ public class GroupVoteDTO {
     private Boolean isMultiple;
     private Boolean anonymous;
     private List<String> voteWatcher;
+    private List<String> postedVoteChoiceDTO;
     private List<VoteChoiceDTO> voteChoiceDTO;
 
     //list만 불러오기위한 생성자
-    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, String voteCreated,String voteEndDate){
+    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, String voteCreated, String voteEndDate) {
         this.voteId = voteId;
         this.voteCreater = voteCreater;
         this.voteTitle = voteTitle;

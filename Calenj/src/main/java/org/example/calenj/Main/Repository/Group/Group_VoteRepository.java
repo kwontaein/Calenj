@@ -23,7 +23,7 @@ public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, Gro
     @Query("SELECT gv FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
     Optional<GroupVoteEntity> findVoteEntityByGroupId(@Param("groupId") UUID groupId);
 
-    //Optional<GroupVoteDTO> findGroupVoteEntitieById(@Param("groupId") UUID groupId);
+    Optional<GroupVoteEntity> findGroupVoteEntityByVoteId(UUID voteId);
 
     //voteId로 상세조회
     @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.group.groupId,gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher) FROM Group_Vote gv WHERE gv.voteId = :voteId")

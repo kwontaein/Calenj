@@ -2,7 +2,7 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.UserEntity;
+import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
@@ -29,14 +29,14 @@ public class VoteChoiceEntity {
                     @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")})
     private GroupVoteEntity vote;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user", // 연결 테이블 이름 설정
-            joinColumns = @JoinColumn(name = "choice_id"), // 현재 엔티티의 외래 키 컬럼 설정
-            inverseJoinColumns = @JoinColumn(name = "user_id") // 참조하는 엔티티의 외래 키 컬럼 설정
-    )
-    private List<UserEntity> user;
+    // 투표한 유저 이름 목록
+    // (외래키가 복잡해서 나중에 찾아보고 고치든 함)
+    @Convert(converter = StringListConverter.class)
+    private List<String> user;
 
-    private String content;
-    private int count;
+    @Builder.Default
+    private String voteItem = "무제";
+
+    @Builder.Default
+    private int count = 0;
 }
