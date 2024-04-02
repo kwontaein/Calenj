@@ -2,7 +2,9 @@ import React, {useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
-import {stateFilter} from '../../../stateFunc/actionFun'
+import {stateFilter, createTimePassed} from '../../../stateFunc/actionFun'
+import DetailTop from '../DetailTop'
+
 
 interface NoticeDetails {
     groupId: string;
@@ -52,10 +54,16 @@ const NoticeDetail:React.FC=()=>{
 
     return(
         <div>
-            {detail?.noticeWatcher.length}명 읽음
-        
-            <hr/>
-            {detail?.noticeContent}
+            {detail &&
+            <div>
+                 <DetailTop Created={detail.noticeCreated}Creater={detail.noticeCreater} Watcher={detail.noticeWatcher}/>
+            
+                <div style={{width:'88vw', marginLeft:'1vw',padding:'4vw'}}>
+                    {detail?.noticeContent}
+                </div>
+            </div>
+            }
+            
         </div>
     )
 }

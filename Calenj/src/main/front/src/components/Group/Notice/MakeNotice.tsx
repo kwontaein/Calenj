@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
-import {RowFlexBox, Mini_Input,Mini_Textarea, Button, FormLable,} from '../../../style/FormStyle';
+import {RowFlexBox,Mini_Textarea} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
-import {useConfirm,stateFilter,CreateDate} from '../../../stateFunc/actionFun'
+import {useConfirm,stateFilter,saveDBFormat} from '../../../stateFunc/actionFun'
 import axios ,{AxiosError}from 'axios';
 
 
@@ -29,7 +29,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId})=>{
     }
 
     const postNotice =()=>{
-        const createDate= CreateDate(new Date());
+        const createDate= saveDBFormat(new Date());
         axios.post('api/makeNotice', {noticeContent:content, noticeCreated:createDate, groupId: groupId})
         .then((res)=>{
             window.alert('공지를 생성했습니다.')

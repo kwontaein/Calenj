@@ -83,6 +83,8 @@ export const RowFlexBox = styled.div`
   flexdirection : row;
 `
 
+
+
 //item오른쪽으로 정렬
 export const Right_flexBox = styled.div`
   margin-top: 10px;

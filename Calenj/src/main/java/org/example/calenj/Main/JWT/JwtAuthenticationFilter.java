@@ -99,7 +99,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
-
+                writer.print("ALL_TOKEN_EXPIRED");
             } else {
 
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
