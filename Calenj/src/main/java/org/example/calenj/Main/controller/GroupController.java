@@ -39,25 +39,35 @@ public class GroupController {
         return groupDetail;
     }
 
+    // 임시로 만든 그룹 참여 코드 -> 공개 서버라면 참여 가능하게 만들 것
     @PostMapping("/api/joinGroup")
-    public String joinGroup(@RequestParam(name = "groupId") UUID groupId) {
-        groupService.joinGroup(groupId);
+    public String joinGroup(@RequestParam(name = "groupId") UUID groupId, @RequestParam(name = "userId") String userId) {
+        groupService.joinGroup(groupId, userId);
         System.out.println("그룹 참가");
         return "a";
     }
 
-    //그룹 초대
-    @PostMapping("/api/inviteGroup")
-    public String inviteGroup(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
-        groupService.joinGroup(groupId);
-        return "그룹 초대";
+    // 초대 링크 발급
+    @PostMapping("/api/inviteCode")
+    public String inviteCode(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
+        //알림 웹소켓 전송 or
+        String inviteCode = groupService.inviteCode(groupId);
+        System.out.println(inviteCode);
+        return inviteCode;
     }
 
+    // 그룹 초대 -> 초대 코드 발급 + 이벤트로 구분
+    @PostMapping("/api/inviteGroup/")
+    public String inviteGroup(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
+        //알림 웹소켓 전송 or
+        groupService.inviteGroup(groupId);
+        return "그룹 초대";
+    }
 
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getNoticeCreated(),groupNoticeDTO.getGroupId());
+        groupService.makeNotice(groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getNoticeCreated(), groupNoticeDTO.getGroupId());
     }
 
     //공지 리스트
@@ -76,8 +86,8 @@ public class GroupController {
 
 
     @PostMapping("/api/makeVote")
-    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO){
-        groupService.makeVote(groupVoteDTO.getGroupId() ,groupVoteDTO.getVoteCreated(),groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(),groupVoteDTO.getVoteEndDate(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
+    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO) {
+        groupService.makeVote(groupVoteDTO.getGroupId(), groupVoteDTO.getVoteCreated(), groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteItem(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous());
     }
 
     @PostMapping("api/voteList")

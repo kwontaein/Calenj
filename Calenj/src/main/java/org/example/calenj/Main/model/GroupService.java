@@ -68,8 +68,7 @@ public class GroupService {
     public List<GroupDTO> groupList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String userEmail = userDetails.getUsername();
-        List<GroupDTO> groupEntities = groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
-        return groupEntities;
+        return groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
     }
 
 
@@ -115,27 +114,22 @@ public class GroupService {
                 .build();
 
 
-
         groupNoticeRepository.save(groupNoticeEntity);
     }
 
     //그룹 공지 가져오기
     public List<GroupNoticeDTO> groupNoticeList(UUID groupId) {
-        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
-        return groupNoticeDTOS;
+        return groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
     }
 
     public List<GroupVoteDTO> groupVoteList(UUID groupId) {
-        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
-        return groupVoteDTOS;
+        return groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
     }
-
 
 
     //그룹 공지 디테일
     public GroupNoticeDTO noticeDetail(UUID noticeId) {
-        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
-        return groupNoticeDTO;
+        return groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
     }
 
 
@@ -167,10 +161,10 @@ public class GroupService {
         }
 
     }
-    
+
     //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
-    public void makeVote( UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
+    public void makeVote(UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
 
 
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
@@ -181,7 +175,6 @@ public class GroupService {
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
                 .voteTitle(voteTitle)
-                .voteItem(voteItems)
                 .voteCreated(voteCreated)
                 .voteEndDate(endDate)
                 .isMultiple(isMultiple)
@@ -191,17 +184,17 @@ public class GroupService {
 
         groupVoteRepository.save(groupVoteEntity);
     }
+
     public GroupVoteDTO voteDetail(UUID voteId) {
-        GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
-        return groupVoteDTO;
+        return groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
     }
 
-    public void joinGroup(UUID groupId) {
+    public void joinGroup(UUID groupId, String userId) {
         // 유저를 그룹에 추가하는 코드
         // SecurityContext 에서 유저 정보 추출하는 메소드
         // UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-        UserEntity userEntity = userRepository.findByUserEmail("zodls1128@gmail.com").orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        UserEntity userEntity = userRepository.findByUserEmail(userId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()
@@ -211,5 +204,22 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
+    }
+
+    public void inviteGroup(UUID groupId) {
+
+    }
+
+    public String inviteCode(UUID groupId) {
+        //초대 링크 테이블에 저장 및 생성된 링크 반환
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random RANDOM = new Random();
+        StringBuilder code = new StringBuilder();
+        // 8글자의 코드 생성
+        for (int i = 0; i < 8; i++) {
+            int index = RANDOM.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(index));
+        }
+        return code.toString();
     }
 }

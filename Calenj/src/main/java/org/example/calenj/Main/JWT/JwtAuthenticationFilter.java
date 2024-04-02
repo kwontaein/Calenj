@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 // 리스폰스에 정보 담아 반환
 
-                httpResponse.setStatus(HttpServletResponse.SC_FOUND); // 302 Found
+                httpResponse.setStatus(HttpServletResponse.SC_CONFLICT); // 409
 
             } else if (StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken).equals("true") && Objects.equals(DbRefreshToken, refreshToken)) {
 
@@ -102,7 +102,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             } else {
 
-                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 302 Found
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
                 httpResponse.setContentType("application/json"); // 본문의 형식을 지정합니다. 여기서는 일반 텍스트로 설정하였습니다.
                 writer.print("UNKNOWN_EXCEPTION");
             }
