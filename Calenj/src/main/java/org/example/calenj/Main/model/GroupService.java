@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -125,11 +126,6 @@ public class GroupService {
         return groupNoticeDTOS;
     }
 
-    public List<GroupVoteDTO> groupVoteList(UUID groupId) {
-        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
-        return groupVoteDTOS;
-    }
-
 
 
     //그룹 공지 디테일
@@ -165,7 +161,6 @@ public class GroupService {
                 e.getMessage();
             }
         }
-
     }
     
     //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
@@ -176,25 +171,67 @@ public class GroupService {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-
-
+        List<String> Viewerlist = new ArrayList<>();
+        //TODO :제거해야함
+        Viewerlist.add("dysj11@naver.com");
+        List<String> Voter = new ArrayList<>();
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
                 .voteTitle(voteTitle)
-                .voteItem(voteItems)
                 .voteCreated(voteCreated)
                 .voteEndDate(endDate)
                 .isMultiple(isMultiple)
                 .anonymous(anonymous)
+                .voteWatcher(Viewerlist)
+                .voter(Voter)
                 .group(groupEntity)
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
     }
+
+
+    public List<GroupVoteDTO> groupVoteList(UUID groupId) {
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        return groupVoteDTOS;
+    }
+
     public GroupVoteDTO voteDetail(UUID voteId) {
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
+        groupVoteDTO.setMyId(userDetails.getUsername());
         return groupVoteDTO;
     }
+
+    //그룹 투표 조회한 사람
+    public void voteViewCount(UUID voteId) {
+        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        Optional<GroupVoteDTO> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
+
+        //조회한 사람 갱신
+        if (groupVoteDTO.isPresent() && groupVoteDTO.get().getVoteWatcher() != null) {
+            List<String> Viewerlist = new ArrayList<>(groupVoteDTO.get().getVoteWatcher());
+
+            Viewerlist.add(userDetails.getUsername());
+            Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
+
+            List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
+
+            // JSON 문자열로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String json = objectMapper.writeValueAsString(ViewerDuplicateList);
+
+                System.out.println("ViewerDuplicateList as JSON :" + json);
+
+                groupVoteRepository.updateVoteWatcher(json, voteId);
+            } catch (JsonProcessingException e) {
+                e.getMessage();
+            }
+        }
+    }
+
 
     public void joinGroup(UUID groupId) {
         // 유저를 그룹에 추가하는 코드

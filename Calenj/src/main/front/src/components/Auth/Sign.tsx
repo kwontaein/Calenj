@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios, {AxiosResponse} from 'axios';
-import {stateFilter} from '../../stateFunc/actionFun'
+import {loginFilter, stateFilter} from '../../stateFunc/actionFun'
 import {Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
@@ -71,7 +71,7 @@ const Sign: React.FC = () => {
                 document.location.replace("/");
             })
             .catch(error => {
-                stateFilter(error.response?.data || "An unexpected error occurred");
+                loginFilter(error.response?.data || "An unexpected error occurred");
             })
     };
 

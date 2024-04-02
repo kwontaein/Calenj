@@ -4,9 +4,11 @@ import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
 import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
 import org.example.calenj.Main.domain.Group.GroupVoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,13 @@ public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, UUI
     Optional<List<GroupVoteDTO>> findVoteByGroupId(@Param("groupId") UUID groupId);
 
     //voteId로 상세조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voter, gv.voteWatcher) FROM Group_Vote gv WHERE gv.voteId = :voteId")
     Optional<GroupVoteDTO> findByVoteId(@Param("voteId") UUID voteId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional //update 는 해당 어노테이션이 필요함
+    @Query(value = "UPDATE Group_Vote SET vote_watcher = :voteWatcher WHERE vote_id = :voteId", nativeQuery = true)
+    void updateVoteWatcher(@Param("voteWatcher") String voteWatcher, @Param("voteId") UUID voteId);
+
 
 }

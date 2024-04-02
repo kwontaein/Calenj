@@ -3,7 +3,7 @@ import {RowFlexBox, Mini_Input, Button, FormLable,Li,OveflowBlock} from '../../.
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
 import axios ,{AxiosError}from 'axios';
-import {stateFilter, useConfirm, CreateDate} from '../../../stateFunc/actionFun'
+import {stateFilter, useConfirm,saveDBFormat} from '../../../stateFunc/actionFun'
 import '../../../style/Datepicker.scss'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
@@ -36,6 +36,7 @@ const MakeVote :React.FC<ModalProps>=({onClose, groupId})=>{
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   
+    
     
     //List추가
     const addList=()=>{
@@ -126,8 +127,8 @@ const MakeVote :React.FC<ModalProps>=({onClose, groupId})=>{
         if(selectedDate!=null){
 
             const voteContent = voteList.map(item => item.content);
-            const VoteEndDate =dayjs(selectedDate).format('YYYY.MM.DD HH:mm');
-            const createDate= CreateDate(new Date());
+            const VoteEndDate =saveDBFormat(selectedDate);
+            const createDate=  saveDBFormat(new Date());
             console.log(VoteEndDate);
             axios.post('api/makeVote', {groupId: groupId, voteCreated: createDate, voteTitle:title,voteItem:voteContent,voteEndDate:VoteEndDate, isMultiple:multipleOption, anonymous: anonymousOption})
             .then((res)=>{
@@ -213,7 +214,7 @@ const MakeVote :React.FC<ModalProps>=({onClose, groupId})=>{
             <DatePicker
                 dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
                 shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                minDate={new Date(new Date().setDate(new Date().getDate()))} // minDate 이전 날짜 선택 불가
+                minDate={new Date(new Date().setDate(new Date().getDate()+1))} // minDate 이전 날짜 선택 불가
                 maxDate={new Date(new Date().setDate(new Date().getDate()+6))}//최대 날짜를 현재기준 일주일까지
                 showTimeSelect //시간선택
                 timeFormat="HH:mm" //시간 포맷 

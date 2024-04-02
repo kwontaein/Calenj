@@ -19,7 +19,8 @@ public class GroupUserDTO {
     private UserEntity.OnlineStatus onlineStatus;
     private String group_user_location;
 
-    public GroupUserDTO(String nickName, UserEntity.OnlineStatus onlineStatus, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
+    public GroupUserDTO(String userEmail, String nickName, UserEntity.OnlineStatus onlineStatus, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
+        this.userEmail = userEmail;
         this.nickName = nickName;
         this.onlineStatus = onlineStatus;
         this.groupRoleType = groupRoleType;
