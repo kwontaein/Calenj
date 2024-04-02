@@ -126,11 +126,15 @@ const MakeVote :React.FC<ModalProps>=({onClose, groupId})=>{
 
         if(selectedDate!=null){
 
-            const voteContent = voteList.map(item => item.content);
+            const voteItem = voteList.map(item => item.content);
             const VoteEndDate =saveDBFormat(selectedDate);
             const createDate=  saveDBFormat(new Date());
             console.log(VoteEndDate);
-            axios.post('api/makeVote', {groupId: groupId, voteCreated: createDate, voteTitle:title,voteItem:voteContent,voteEndDate:VoteEndDate, isMultiple:multipleOption, anonymous: anonymousOption})
+            const data = {
+                dto1:  {groupId: groupId, voteCreated: createDate, voteTitle:title,voteEndDate:VoteEndDate, isMultiple:multipleOption, anonymous: anonymousOption},
+                dto2: {voteItem:voteItem}
+              };
+            axios.post('api/makeVote',data)
             .then((res)=>{
                 window.alert('투표를 생성했습니다.')
                 onClose();
