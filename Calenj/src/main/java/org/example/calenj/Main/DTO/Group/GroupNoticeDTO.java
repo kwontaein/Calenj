@@ -17,8 +17,8 @@ public class GroupNoticeDTO {
     private String noticeCreated;
     private String noticeContent;
     private String noticeCreater;
-
     private List<String> noticeWatcher;
+
 
 
     //noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated

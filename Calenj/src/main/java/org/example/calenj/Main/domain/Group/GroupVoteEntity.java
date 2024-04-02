@@ -56,4 +56,10 @@ public class GroupVoteEntity {
     @Column(name ="voter")
     @Convert(converter = StringListConverter.class)
     private List<String> voter;
+
+
+    @Column(name = "vote_watcher")
+    @Convert(converter = StringListConverter.class)
+    //List<String> 유형의 형식 필드를 데이터베이스 열로 매핑
+    private List<String> voteWatcher;
 }

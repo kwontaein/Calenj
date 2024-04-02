@@ -3,7 +3,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
-import {stateFilter} from '../../../stateFunc/actionFun';
+import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
 import {ListView, MiniText} from '../../../style/FormStyle'
 
@@ -73,7 +73,7 @@ const Notice :React.FC =()=>{
                         onClick={() => redirectDetail(notice.noticeId as string)}>
                             {notice.noticeContent}
                             <br></br>
-                            <MiniText>{notice.noticeCreated}</MiniText>
+                            <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
                         </ListView>
                     ))}
                 </ul>

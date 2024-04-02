@@ -28,10 +28,11 @@ public class GroupVoteDTO {
     private Boolean isMultiple;
     private Boolean anonymous;
     private List<String> voter;
-
+    private List<String> voteWatcher;
+    private String myId;
 
     //gv.voteId, gv.voteCreater, gv.voteTitle,gv.voteItem, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous
-    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, List<String> voteItem, String voteCreated,String voteEndDate,Boolean isMultiple, Boolean anonymous, List<String> voter){
+    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, List<String> voteItem, String voteCreated,String voteEndDate,Boolean isMultiple, Boolean anonymous, List<String> voter, List<String> voteWatcher){
         this.voteId = voteId;
         this.voteCreater = voteCreater;
         this.voteTitle = voteTitle;
@@ -41,6 +42,7 @@ public class GroupVoteDTO {
         this.isMultiple = isMultiple;
         this.anonymous = anonymous;
         this.voter = voter;
+        this.voteWatcher=voteWatcher;
 
     }
     //list만 불러오기위한 생성자

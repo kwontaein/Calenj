@@ -3,7 +3,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
-import {stateFilter} from '../../../stateFunc/actionFun';
+import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
 import MakeVote from "./MakeVote";
 import {ListView, MiniText,RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
@@ -74,14 +74,6 @@ const Vote :React.FC=()=>{
 
 
 
-    const changeDateForm= (date:string)=>{
-        let list = date.split(' ');
-        let YYMMDD :number[]= list[0].split('.').map((yymmdd)=> Number(yymmdd));
-
-        let hhmm:number[]= list[1].split(':').map((hm)=> Number(hm));
-        const newDate = new Date(YYMMDD[0], YYMMDD[1]-1,YYMMDD[2], hhmm[0], hhmm[1]);
-        return newDate;
-    }
 
     function deadlineFilter(list: VoteList[], end:boolean):VoteList[]{
         const newList =list.filter((li)=>{
@@ -132,15 +124,15 @@ const Vote :React.FC=()=>{
                 <ul>
                     {endVoteList.map((vote) => (
                         <ListView key={vote.voteId}
-                        onClick={() => redirectDetail(vote.voteId as string)}
-                        >
-                        <RowFlexBox>
-                        <div style={{marginLeft:'-20px', marginRight:'20px', paddingTop:'2px',fontWeight:550, letterSpacing:'-2px'}}>Q .</div>
-                        <div>
-                            {vote.voteTitle}
-                            <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
-                        </div>
-                        </RowFlexBox>
+                            onClick={() => redirectDetail(vote.voteId as string)}
+                            >
+                            <RowFlexBox>
+                            <div style={{marginLeft:'-20px', marginRight:'20px', paddingTop:'2px',fontWeight:550, letterSpacing:'-2px'}}>Q .</div>
+                            <div>
+                                {vote.voteTitle}
+                                <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
+                            </div>
+                            </RowFlexBox>
                         
                         </ListView>
                     ))}

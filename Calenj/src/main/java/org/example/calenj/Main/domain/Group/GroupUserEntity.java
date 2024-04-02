@@ -30,6 +30,7 @@ public class GroupUserEntity {
     private UserEntity user;
 
     private GroupRoleType role;
+    private String group_user_location;
 
     @Getter
     @RequiredArgsConstructor
@@ -52,5 +53,5 @@ public class GroupUserEntity {
 
     }
 
-    private String group_user_location;
+
 }

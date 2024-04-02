@@ -87,6 +87,7 @@ public class GroupController {
 
     @PostMapping("/api/voteDetail")
     public GroupVoteDTO voteDetail(@RequestParam(name = "voteId") UUID voteId) {
+        groupService.voteViewCount(voteId);
         GroupVoteDTO voteDetail = groupService.voteDetail(voteId);
         return voteDetail;
     }
