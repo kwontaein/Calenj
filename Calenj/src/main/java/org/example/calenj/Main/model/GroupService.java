@@ -4,21 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.*;
-import org.example.calenj.Main.Repository.Group.GroupRepository;
-import org.example.calenj.Main.Repository.Group.Group_NoticeRepository;
-import org.example.calenj.Main.Repository.Group.Group_UserRepository;
-import org.example.calenj.Main.Repository.Group.Group_VoteRepository;
+import org.example.calenj.Main.Repository.Group.*;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.domain.Group.GroupEntity;
-import org.example.calenj.Main.domain.Group.GroupNoticeEntity;
-import org.example.calenj.Main.domain.Group.GroupUserEntity;
-import org.example.calenj.Main.domain.Group.GroupVoteEntity;
+import org.example.calenj.Main.domain.Group.*;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -27,12 +20,15 @@ import java.util.*;
 public class GroupService {
 
 
-    private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final Group_UserRepository group_userRepository;
     private final GlobalService globalService;
+
+    private final GroupRepository groupRepository;
+    private final Group_UserRepository group_userRepository;
     private final Group_NoticeRepository groupNoticeRepository;
+
     private final Group_VoteRepository groupVoteRepository;
+    private final VoteChoiceRepository voteChoiceRepository;
 
 
     //그룹 만들기
@@ -49,8 +45,7 @@ public class GroupService {
                 .groupCreater(userDetails.getUsername())
                 .build();
 
-        groupRepository
-                .save(groupEntity);
+        groupRepository.save(groupEntity);
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
@@ -116,7 +111,6 @@ public class GroupService {
                 .build();
 
 
-
         groupNoticeRepository.save(groupNoticeEntity);
     }
 
@@ -125,7 +119,6 @@ public class GroupService {
         List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupNoticeDTOS;
     }
-
 
 
     //그룹 공지 디테일
@@ -162,32 +155,39 @@ public class GroupService {
             }
         }
     }
-    
+
     //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
-    public void makeVote( UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
-
-
+    public void makeVote(GroupVoteDTO groupVoteDTO) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
-        GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        GroupEntity groupEntity = groupRepository.findByGroupId(groupVoteDTO.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         List<String> Viewerlist = new ArrayList<>();
         //TODO :제거해야함
         Viewerlist.add("dysj11@naver.com");
-        List<String> Voter = new ArrayList<>();
+
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
-                .voteTitle(voteTitle)
-                .voteCreated(voteCreated)
-                .voteEndDate(endDate)
-                .isMultiple(isMultiple)
-                .anonymous(anonymous)
+                .voteTitle(groupVoteDTO.getVoteTitle())
+                .voteCreated(groupVoteDTO.getVoteCreated())
+                .voteEndDate(groupVoteDTO.getVoteEndDate())
+                .isMultiple(groupVoteDTO.getIsMultiple())
+                .anonymous(groupVoteDTO.getAnonymous())
                 .voteWatcher(Viewerlist)
-                .voter(Voter)
                 .group(groupEntity)
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
+        UUID voteId = groupVoteEntity.getVoteId();
+
+        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findGroupVoteEntityByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        for (String items : groupVoteDTO.getPostedVoteChoiceDTO()) {
+            voteChoiceRepository.save(VoteChoiceEntity
+                    .builder()
+                    .vote(groupVoteEntity2)
+                    .voteItem(items)
+                    .build());
+        }
     }
 
 
@@ -200,7 +200,6 @@ public class GroupService {
     public GroupVoteDTO voteDetail(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
-        groupVoteDTO.setMyId(userDetails.getUsername());
         return groupVoteDTO;
     }
 
