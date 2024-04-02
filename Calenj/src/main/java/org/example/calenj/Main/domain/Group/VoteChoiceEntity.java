@@ -2,10 +2,11 @@ package org.example.calenj.Main.domain.Group;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.Main.domain.Ids.ChoiceId;
 import org.example.calenj.Main.domain.UserEntity;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "Choice")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder // 빌더
 @Getter
 @ToString
-public class ChoiceEntity {
+public class VoteChoiceEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
