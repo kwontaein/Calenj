@@ -163,13 +163,14 @@ public class GroupService {
 
     public void makeVote(UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
 
-
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         List<String> Viewerlist = new ArrayList<>();
+
         //TODO :제거해야함
         Viewerlist.add("dysj11@naver.com");
+
         List<String> Voter = new ArrayList<>();
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
@@ -184,12 +185,15 @@ public class GroupService {
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
+        // 엔티티의 UUID ID 값을 가져옴
+        UUID voteId = groupVoteEntity.getVoteId();
+        System.out.println("생성된 UUID ID: " + voteId);
     }
 
 
     public List<GroupVoteDTO> groupVoteList(UUID groupId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVotesByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupVoteDTOS;
     }
 

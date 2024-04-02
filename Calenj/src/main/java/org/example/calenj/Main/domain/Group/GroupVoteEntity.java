@@ -17,19 +17,19 @@ import java.util.UUID;
 @Builder(builderMethodName = "GroupVoteBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
 @IdClass(GroupVoteId.class)
 public class GroupVoteEntity {
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
-    // 외래 키에 대한 참조 필드 지정
-    private GroupEntity group;
-
+    
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "vote_id", columnDefinition = "BINARY(16)")
     //주키
     private UUID voteId;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
+    // 외래 키에 대한 참조 필드 지정
+    private GroupEntity group;
 
     @Column(name = "vote_creater")
     private String voteCreater;

@@ -48,7 +48,7 @@ public class GroupController {
     }
 
     // 초대 링크 발급
-    @PostMapping("/api/inviteCode")
+    /*@PostMapping("/api/inviteCode")
     public String inviteCode(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
         //알림 웹소켓 전송 or
         String inviteCode = groupService.inviteCode(groupId);
@@ -62,7 +62,7 @@ public class GroupController {
         //알림 웹소켓 전송 or
         groupService.inviteGroup(groupId);
         return "그룹 초대";
-    }
+    }*/
 
     //공지 생성
     @PostMapping("api/makeNotice")
