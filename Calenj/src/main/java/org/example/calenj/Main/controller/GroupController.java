@@ -83,8 +83,9 @@ public class GroupController {
 
 
     @PostMapping("/api/makeVote")
-    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO,@RequestBody VoteChoiceDTO voteChoiceDTO) {
-        groupService.makeVote(groupVoteDTO,voteChoiceDTO);
+    public void makeVote(@RequestBody GroupVoteDTO groupVoteDTO) {
+        System.out.println(groupVoteDTO);
+        groupService.makeVote(groupVoteDTO);
     }
 
     @PostMapping("api/voteList")

@@ -14,26 +14,26 @@ import org.example.calenj.Main.domain.UserEntity;
 @ToString
 public class InviteCodeEntity {
 
-    //    그룹아이디
+    // 그룹아이디
     @Id
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
     private GroupEntity group;
 
-    //    초대 코드
-    private String inviteCode;
-
-    //    초대자
+    // 초대자
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", columnDefinition = "varchar(255)")
+    @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
     private UserEntity user;
 
-    //    사용 기간
+    // 초대 코드
+    private String inviteCode;
+
+    // 사용 기간
     private String endDateTime;
 
-    //    사용 횟수
+    // 사용 횟수
     private String useAbleCount;
 
-    //    사용 가능 횟수
+    // 사용 가능 횟수
     private String maxUseAble;
 }
