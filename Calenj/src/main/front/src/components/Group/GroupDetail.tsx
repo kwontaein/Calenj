@@ -86,7 +86,7 @@ const GroupDetail: React.FC = () => {
             console.error('Broker reported error: ' + frame.headers['message']);
             console.error('Additional details: ' + frame.body);
         };
-
+//
         // Stomp 클라이언트 설정 저장
         // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
         return () => {
