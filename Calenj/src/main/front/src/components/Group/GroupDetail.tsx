@@ -4,12 +4,11 @@ import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import Vote from './Vote/Vote'
 import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
 import {ListView} from '../../style/FormStyle'
-import '../../style/Detail.scss'
+import Vote from "./Vote/Vote";
 
 interface Details {
     groupId: number;
@@ -19,7 +18,6 @@ interface Details {
 }
 
 interface Members {
-    userEmail:string;
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
@@ -98,20 +96,20 @@ const GroupDetail: React.FC = () => {
 
     }
 
-    const onlineCheck =(isOnline:string):string=>{
+    const onlineCheck = (isOnline: string): string => {
         let status;
         switch (isOnline) {
             case "ONLINE":
-            status = '온라인';
-            break;
+                status = '온라인';
+                break;
             case "SLEEP":
-            status = '자리비움';
-            break;
+                status = '자리비움';
+                break;
             case "TOUCH":
-            status = '방해금지';
-            break;
+                status = '방해금지';
+                break;
             default:
-            status = '오프라인';
+                status = '오프라인';
         }
         return status
     }
@@ -127,18 +125,18 @@ const GroupDetail: React.FC = () => {
                 )}
             </div>
 
-            
-            {members && 
+
+            {members &&
                 <div>
                     <ul>
-                    {members.map((member) => (
-                        <ListView key={member.userEmail}>
-                            {member.nickName} : {onlineCheck(member.onlineStatus)}
-                        </ListView>
-                    ))}
-                </ul>
+                        {members.map((member) => (
+                            <ListView>
+                                {member.nickName} : {onlineCheck(member.onlineStatus)}
+                            </ListView>
+                        ))}
+                    </ul>
                 </div>
-                }
+            }
 
             <div>
                 {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}

@@ -49,8 +49,7 @@ public class GroupService {
                 .groupCreater(userDetails.getUsername())
                 .build();
 
-        groupRepository
-                .save(groupEntity);
+        groupRepository.save(groupEntity);
 
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
@@ -165,30 +164,31 @@ public class GroupService {
     
     //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
-    public void makeVote( UUID groupId, String voteCreated, String voteTitle, List<String> voteItems, String endDate, boolean isMultiple, boolean anonymous) {
+    public void makeVote(GroupVoteDTO groupVoteDTO, VoteChoiceDTO voteChoiceDTO) {
 
 
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
-        GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        GroupEntity groupEntity = groupRepository.findByGroupId(groupVoteDTO.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         List<String> Viewerlist = new ArrayList<>();
         //TODO :제거해야함
         Viewerlist.add("dysj11@naver.com");
         List<String> Voter = new ArrayList<>();
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
-                .voteTitle(voteTitle)
-                .voteItem(voteItems)
-                .voteCreated(voteCreated)
-                .voteEndDate(endDate)
-                .isMultiple(isMultiple)
-                .anonymous(anonymous)
+                .voteTitle(groupVoteDTO.getVoteTitle())
+                .voteCreated(groupVoteDTO.getVoteCreated())
+                .voteEndDate(groupVoteDTO.getVoteEndDate())
+                .isMultiple(groupVoteDTO.getIsMultiple())
+                .anonymous(groupVoteDTO.getAnonymous())
                 .voteWatcher(Viewerlist)
-                .voter(Voter)
                 .group(groupEntity)
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
+
+        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findVoteEntityByGroupId(groupVoteDTO.getGroupId()).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+
     }
 
 
@@ -201,7 +201,6 @@ public class GroupService {
     public GroupVoteDTO voteDetail(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
-        groupVoteDTO.setMyId(userDetails.getUsername());
         return groupVoteDTO;
     }
 
