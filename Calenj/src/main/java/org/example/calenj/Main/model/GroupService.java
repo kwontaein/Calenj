@@ -173,8 +173,10 @@ public class GroupService {
         List<String> Viewerlist = new ArrayList<>();
         //TODO :제거해야함
         Viewerlist.add("dysj11@naver.com");
+        UUID uuid = UUID.randomUUID();
         List<String> Voter = new ArrayList<>();
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
+                .voteId(uuid)
                 .voteCreater(userDetails.getUsername())
                 .voteTitle(groupVoteDTO.getVoteTitle())
                 .voteCreated(groupVoteDTO.getVoteCreated())
@@ -186,8 +188,8 @@ public class GroupService {
                 .build();
 
         groupVoteRepository.save(groupVoteEntity);
+        groupVoteEntity.getVoteId();
 
-        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findVoteEntityByGroupId(groupVoteDTO.getGroupId()).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
 
     }
 
