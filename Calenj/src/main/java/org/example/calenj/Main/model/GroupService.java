@@ -180,7 +180,7 @@ public class GroupService {
         groupVoteRepository.save(groupVoteEntity);
         UUID voteId = groupVoteEntity.getVoteId();
 
-        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findGroupVoteEntityByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findGroupVoteEntityByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
         for (String items : groupVoteDTO.getPostedVoteChoiceDTO()) {
             voteChoiceRepository.save(VoteChoiceEntity
                     .builder()
@@ -193,13 +193,15 @@ public class GroupService {
 
     public List<GroupVoteDTO> groupVoteList(UUID groupId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+        List<GroupVoteDTO> groupVoteDTOS = groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
         return groupVoteDTOS;
     }
 
+
     public GroupVoteDTO voteDetail(UUID voteId) {
-        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("공지가 존재하지 않습니다."));
+        GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
+        List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
+        groupVoteDTO.setVoteChoiceDTO(voteChoiceDTO);
         return groupVoteDTO;
     }
 

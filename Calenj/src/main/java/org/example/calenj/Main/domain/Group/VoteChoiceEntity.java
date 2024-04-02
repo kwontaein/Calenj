@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.List;
 import java.util.UUID;
 
-@Entity(name = "Choice")
+@Entity(name = "VoteChoice")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder 를 사용
 @Builder // 빌더
@@ -29,14 +29,11 @@ public class VoteChoiceEntity {
                     @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")})
     private GroupVoteEntity vote;
 
-    // 투표한 유저 이름 목록
-    // (외래키가 복잡해서 나중에 찾아보고 고치든 함)
+    private String voteItem;
+
     @Convert(converter = StringListConverter.class)
-    private List<String> user;
+    private List<String> voter;
 
     @Builder.Default
-    private String voteItem = "무제";
-
-    @Builder.Default
-    private int count = 0;
+    private int countVoter = 0;
 }
