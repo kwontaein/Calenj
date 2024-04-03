@@ -6,15 +6,15 @@ import org.example.calenj.Main.domain.Ids.FriendId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> {
-    @Query("SELECT new org.example.calenj.Main.DTO.FriendDTO(f.friendId,f.ownUserId.userEmail,f.friendUserId,f.nickName,f.createDate" +
-            ",f.status) FROM Friends f WHERE f.ownUserId.userEmail =:userId")
-    Optional<List<FriendDTO>> findFriendListById(String userId);
+    @Query("SELECT new org.example.calenj.Main.DTO.FriendDTO(f.friendUserId,f.nickName) FROM Friends f WHERE f.ownUserId.userEmail =:userId")
+    Optional<List<FriendDTO>> findFriendListById(@Param("userId") String userId);
 
     @Query("delete from Friends f where f.ownUserId =:userId")
     void deleteByOwnUserId(String userId);

@@ -4,23 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.EventDTO;
 import org.example.calenj.Main.DTO.FriendDTO;
 import org.example.calenj.Main.model.FriendService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class FriendController {
 
     private final FriendService friendService;
 
-    @PostMapping("/api/friendList")
-    public void friendList(@RequestParam(name = "userId") String userId) {
-        //친구목록 불러오기
-        List<FriendDTO> friends = friendService.friendList(userId);
-        System.out.println(friends.toString());
+    @PostMapping("/api/getFriendList")
+    public List<FriendDTO> friendList() {
+        List<FriendDTO> a = friendService.friendList();
+        System.out.println(a);
+        return friendService.friendList();
     }
 
     @PostMapping("/api/requestFriend")

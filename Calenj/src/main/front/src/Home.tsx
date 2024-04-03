@@ -2,6 +2,7 @@ import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
+import FriendList from "./components/Friends/FriendList";
 
 
 const Home: React.FC = () => {
@@ -25,13 +26,14 @@ const Home: React.FC = () => {
             <h1>여기는 초기 페이지임</h1>
             {isLoding ?
                 <div>
-                    {cookie && <GroupList cookie={cookie}/>}
-                </div>:
-                <div style={{marginLeft:'10px'}}>isLoding..</div>}
+                    <div> {cookie && <GroupList cookie={cookie}/>}</div>
+                </div> :
+                <div style={{marginLeft: '10px'}}>isLoding..</div>}
+
 
         </div>
 
-                
+
     )
 }
 export default Home;

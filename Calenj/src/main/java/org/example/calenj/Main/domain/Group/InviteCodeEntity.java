@@ -1,6 +1,9 @@
 package org.example.calenj.Main.domain.Group;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.example.calenj.Main.domain.UserEntity;
 
@@ -9,13 +12,13 @@ import org.example.calenj.Main.domain.UserEntity;
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder 를 사용
 @Builder // 빌더
 @Getter
-//자식테이블을 구분할 구분자 컬럼이름을 지어준다.
-@DiscriminatorColumn(name = "DTYPE")
 @ToString
 public class InviteCodeEntity {
 
     // 그룹아이디
     @Id
+    private String inviteCode;
+
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")
     private GroupEntity group;
@@ -25,15 +28,15 @@ public class InviteCodeEntity {
     @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
     private UserEntity user;
 
-    // 초대 코드
-    private String inviteCode;
 
     // 사용 기간
     private String endDateTime;
 
     // 사용 횟수
-    private String useAbleCount;
+    @Builder.Default
+    private int useAbleCount = 0;
 
     // 사용 가능 횟수
-    private String maxUseAble;
+    @Builder.Default
+    private int maxUseAble = 999999;
 }

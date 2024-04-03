@@ -29,6 +29,7 @@ public class GroupService {
 
     private final Group_VoteRepository groupVoteRepository;
     private final VoteChoiceRepository voteChoiceRepository;
+    private final InviteCodeRepository inviteCodeRepository;
 
 
     //그룹 만들기
@@ -247,5 +248,65 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
+
     }
+
+    public String inviteCode(InviteCodeDTO inviteCodeDTO) {
+
+        Random rnd = new Random();
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < 8; i++) {
+            // rnd.nextBoolean() 는 랜덤으로 true, false 를 리턴. true일 시 랜덤 한 소문자를,
+            // false 일 시 랜덤 한 숫자를 StringBuffer 에 append 한다.
+            if (rnd.nextBoolean()) {
+                buf.append((char) ((int) (rnd.nextInt(26)) + 97));
+            } else {
+                buf.append((rnd.nextInt(10)));
+            }
+        }
+
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeDTO.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+
+        inviteCodeRepository.save(InviteCodeEntity
+                .builder()
+                .inviteCode(buf.toString())
+                .group(groupEntity)
+                .user(userEntity)
+                .endDateTime(globalService.nowTime())
+                .build());
+
+        return buf.toString();
+
+    }
+
+    //초대 코드로 그룹 정보 반환 -> 기간 만료 or 잘못된 코드시 정보 반환해야함
+    public InviteCodeDTO inviteGroup(String inviteCode) {
+
+        InviteCodeDTO inviteCodeDTO = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
+
+        int onlineCnt = inviteCodeRepository.onlineUserCount(inviteCode).orElse(0);
+        int memberCnt = inviteCodeRepository.memberCount(inviteCode).orElse(0);
+
+        inviteCodeDTO.setOnlineCount(onlineCnt);
+        inviteCodeDTO.setOnlineCount(memberCnt);
+
+        String enableUse = globalService.compareDate(inviteCodeDTO.getEndDateTime());
+        System.out.println(enableUse);
+
+
+        if (inviteCodeDTO.getGroupTitle() != null && enableUse.equals("useAble")) {
+            inviteCodeDTO.setAbleCode("유효한 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+        } else if (enableUse.equals("cannotUse")) {
+            inviteCodeDTO.setAbleCode("만료된 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+        } else {
+            inviteCodeDTO.setAbleCode("잘못된 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+        }
+        return inviteCodeDTO;
+    }
+
 }
