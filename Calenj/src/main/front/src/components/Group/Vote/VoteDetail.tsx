@@ -50,8 +50,10 @@ const VoteDetail:React.FC=()=>{
                 console.log(voteDetail.voteChoiceDTO)
                 setVoted(voteDetail.voteChoiceDTO)
                 console.log(voteDetail)
-                // //TODO : 배열을 voteDetail.voter로 바꾸기
-                // BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
+                //TODO : 배열을 voteDetail.voter로 바꾸기
+
+
+                //BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
             })
             .catch(error => {
                 const axiosError = error as AxiosError;
