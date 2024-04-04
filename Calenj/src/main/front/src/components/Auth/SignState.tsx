@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 
 
+
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
 
@@ -34,14 +35,13 @@ const SignState: React.FC = () => {
         },
     }); 
     
-
-
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요  
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
         if(!response.data){
+            sessionStorage.removeItem('userId')
         }
         return response.data;
     }
@@ -68,8 +68,10 @@ const SignState: React.FC = () => {
                         <button>회원가입</button>
                     </Link>
                 </div>}
+                {sessionStorage.getItem(`userId`)}
         </div>
     );
 
 }
+
 export default SignState;

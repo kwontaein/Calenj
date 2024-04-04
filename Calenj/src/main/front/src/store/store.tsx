@@ -1,6 +1,12 @@
 import {configureStore,createSelector} from "@reduxjs/toolkit";
-import emailValidationSlice from './EmailValidationSlice';
+import {applyMiddleware} from 'redux'
+import thunkMiddleware from 'redux-thunk'//비동기 논리를 모두 사용하는 데 가장 일반적으로 사용되는 미들웨어
 
+
+
+import emailValidationSlice from './EmailValidationSlice';
+import StompSlice from "./StompSlice";
+import UserInfoSlice from "./UserInfoSlice";
 
 
 
@@ -8,7 +14,11 @@ import emailValidationSlice from './EmailValidationSlice';
 const store = configureStore({
   reducer: {
     emailValidation: emailValidationSlice,
-  }
+    stomp : StompSlice,
+    // userInfo :UserInfoSlice,
+    applyMiddleware
+  },
+
 });
 
 export default store;

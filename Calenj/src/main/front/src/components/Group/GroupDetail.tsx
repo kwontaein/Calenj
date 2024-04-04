@@ -4,11 +4,18 @@ import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
+import {Client, CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import group from "./index";
 import {ListView} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
+import Invite from "./Invite/Invite"
+import {RootState} from '../../store/store'
+import {Dispatch} from 'redux';
+import {connect} from "react-redux";
+import {saveStomp,StompCompat} from '../../store/StompSlice'
+
+
 
 interface Details {
     groupId: number;
@@ -22,32 +29,42 @@ interface Members {
     group_user_location: String;
     nickName: String;
     onlineStatus: string;
-}
-
-interface Friends {
-    // 친구 아이디
-    friendUserId: string;
-    // 친구 닉네임
-    nickName: string;
+    userEmail:string;
 }
 
 
-const GroupDetail: React.FC = () => {
 
 
-    /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
-     console.log = function no_console() {}; // console log 막기
-     console.warn = function no_console() {}; // console warning 막기
-     console.error = function () {}; // console error 막기*/
+
+
+
+
+//dispatch 함수타입을 interface로 정의
+interface DispatchProps {
+    saveStomp: (payload: { stompClient: CompatClient }) => void;
+}
+
+//(Component Props로 전달하기 위한 interface)
+const mapStateToProps = (state: RootState): StompCompat => ({
+    stompClient: state.stomp.stompClient, // store에서 가져올 상태를 매핑
+});
+
+//emailToken 정보를 수정하는 함수 정의 후 connect
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+    saveStomp: (payload: { stompClient: CompatClient }) => dispatch(saveStomp(payload))
+});
+
+
+/* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
+ console.log = function no_console() {}; // console log 막기
+ console.warn = function no_console() {}; // console warning 막기
+ console.error = function () {}; // console error 막기*/
+
+const GroupDetail: React.FC<DispatchProps & StompCompat> = ({saveStomp}) => {
+
 
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
-    const [friends, setFriends] = useState<Friends[] | null>(null);
-    const [inviteLink, setInviteLink] = useState<string>("");
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-    const modalBackground = useRef<HTMLDivElement>(null);
-
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -67,12 +84,13 @@ const GroupDetail: React.FC = () => {
             console.error('Broker reported error: ' + frame.headers['message']);
             console.error('Additional details: ' + frame.body);
         };
+        saveStomp({stompClient:stomp});
         return stomp;
     })();
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     useEffect(() => {
-
+        
         axios.post('/api/groupDetail', null, {
             params: {
                 groupId: groupInfo.groupId
@@ -81,49 +99,25 @@ const GroupDetail: React.FC = () => {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         }) // 객체의 속성명을 'id'로 설정
-            .then(response => {
-                console.log(response.data.members);
-                setDetail(response.data);
-                setMembers(response.data.members);
-            })
-            .catch(error => console.log(error));
-    }, []);
+        .then(response => {
+            console.log(response.data.members);
+            setDetail(response.data);
+            setMembers(response.data.members);
+        })
+        .catch(error => console.log(error));
 
-    useEffect(() => {
         stompClient.activate(); // 로그인 시 자동 활성화
-
+        // console.log(stompClient);
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
-            // console.log('Connected: ' + frame);
-            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
-            })
+                // console.log('Connected: ' + frame);
+            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {})
             stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
         };
-    }, [])
+    }, []);
 
-//usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
-    function invite() {
-        axios.post('/api/inviteCode', {
-            groupId: groupInfo.groupId
-        }).then(response => {
-            setInviteLink(response.data)
-            axios.post('/api/getFriendList', {})
-                .then(response => {
-                    setFriends(response.data)
-                    console.log("friends", friends)
-                    console.log(response.data)
-                    setModalOpen(true)
-                }).catch(error => console.log(error));
-        }).catch(error => console.log(error));
 
-    }
 
-    function sendToFriend(friendId: string, inviteLink: string) {
-        //친구에게 알림 보내기
-        stompClient.subscribe(`/topic/userOnline/${friendId}`, (isOnline: IMessage) => {
-        })
-        stompClient.send('/app/online', {}, JSON.stringify({inviteLink}));
-    }
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -153,13 +147,14 @@ const GroupDetail: React.FC = () => {
                     </div>
                 )}
             </div>
+            <Invite groupId={groupInfo.groupId}/>
 
 
             {members &&
                 <div>
                     <ul>
                         {members.map((member) => (
-                            <ListView>
+                            <ListView key={member.userEmail}>
                                 {member.nickName} : {onlineCheck(member.onlineStatus)}
                             </ListView>
                         ))}
@@ -173,43 +168,7 @@ const GroupDetail: React.FC = () => {
             <hr/>
             <div>
             </div>
-            <div className={'btn-wrapper'}>
-                <button className={'modal-open-btn'} onClick={invite}>
-                    초대하기
-                </button>
-            </div>
-            {modalOpen &&
-                <div ref={modalBackground} className={'modal-container'} onClick={e => {
-                    if (e.target === modalBackground.current) {
-                        setModalOpen(false);
-                    }
-                }}>
-                    <div className={'modal-content'}>
-                        <div className={'FriendList'}>
-                            {friends && friends.length > 0 ?
-                                <ul>
-                                    {friends.map((friend) => (
-                                        <ListView>
-                                            <div>{friend.nickName}({friend.friendUserId})</div>
-                                            <button onClick={() => sendToFriend(friend.friendUserId, inviteLink)}>
-                                                친구에게 보내기
-                                            </button>
-                                        </ListView>
-                                    ))}
-                                </ul> : <div className={'noFriends'}>
-                                    <p>친구가 없으신가요?</p>
-                                    <p>친구를 만들어 보세요!</p>
-                                </div>
-                            }</div>
-                        {inviteLink && <div className={'issueLink'}><b>{inviteLink}</b>
-                            <button>복사하기</button>
-                        </div>}
-                        <button className={'modal-close-btn'} onClick={() => setModalOpen(false)}>
-                            모달 닫기
-                        </button>
-                    </div>
-                </div>
-            }
+           
             <hr/>
             <Notice/>
             <Vote/>
@@ -217,4 +176,4 @@ const GroupDetail: React.FC = () => {
     );
 }
 
-export default GroupDetail;
+export default connect(mapStateToProps, mapDispatchToProps) (GroupDetail);

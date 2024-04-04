@@ -104,7 +104,6 @@ export const ListView = styled.li`
     overflow: hidden;
     text-overflow: ellipsis;
     border: 0.5px solid #ccc;
-    width: 100vw;
     padding-left: 40px;
     margin-left: -40px;
     margin-top: -1px;
