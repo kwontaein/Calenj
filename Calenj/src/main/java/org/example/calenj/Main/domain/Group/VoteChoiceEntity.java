@@ -29,13 +29,11 @@ public class VoteChoiceEntity {
                     @JoinColumn(name = "group_id", referencedColumnName = "group_id", columnDefinition = "BINARY(16)")})
     private GroupVoteEntity vote;
 
-    // 투표한 유저 이름 목록
-    // (외래키가 복잡해서 나중에 찾아보고 고치든 함)
-    @Convert(converter = StringListConverter.class)
-    private List<String> user;
-
     private String voteItem;
 
+    @Convert(converter = StringListConverter.class)
+    private List<String> voter;
+
     @Builder.Default
-    private int count = 0;
+    private int countVoter = 0;
 }
