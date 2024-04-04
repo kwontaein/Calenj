@@ -24,11 +24,12 @@ public class FriendService {
     private final UserRepository userRepository;
     private final GlobalService globalService;
 
-    public List<FriendDTO> friendList(String userId) {
-        return friendRepository.findFriendListById(userId).orElseThrow(() -> new RuntimeException("친구 목록을 불러오는데 실패했습니다."));
+    public List<FriendDTO> friendList() {
+        return friendRepository.findFriendListById(globalService.extractFromSecurityContext().getUsername()).orElseThrow(() -> new RuntimeException("친구 목록이 비었습니다"));
     }
 
     public void requestFriend(String userId) {
+        //상대가 보낸 요청에 따라 바뀌게
         UserDetails userDetails = globalService.extractFromSecurityContext();
         //친구테이블 추가
 
@@ -38,28 +39,37 @@ public class FriendService {
         //친구추가할 유저 정보
         UserEntity friendUser = userRepository.findByUserEmail(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        try {
+            //서로 요청한 상태라면 둘다 수락으로 바꿔주면 끝
+            friendRepository.updateStatus(userId, FriendEntity.statusType.ACCEPT);
+            friendRepository.updateStatus(ownUser.getUserEmail(), FriendEntity.statusType.ACCEPT);
 
-        FriendEntity friendEntity = FriendEntity
-                .builder()
-                .ownUserId(ownUser)
-                .friendUserId(userId)
-                .nickName(friendUser.getNickname())
-                .createDate(String.valueOf(LocalDate.now()))
-                .status(FriendEntity.statusType.WAITING).build();
+            eventRepository.updateEventFriendRequest(userId, "ACCEPT");
+        } catch (Exception e) {
+            //동일한 요청 정보가 있다면? -> 저장x
+            // 아니라면 내 친구 테이블에 추가
+            FriendEntity friendEntity = FriendEntity
+                    .builder()
+                    .ownUserId(ownUser)
+                    .friendUserId(userId)
+                    .nickName(friendUser.getNickname())
+                    .createDate(String.valueOf(LocalDate.now()))
+                    .status(FriendEntity.statusType.WAITING).build();
 
-        //이벤트테이블추가
-        EventEntity eventEntity = EventEntity
-                .builder()
-                .ownUserId(ownUser)
-                .eventUserId(userId)
-                .eventPurpose("Friend Request")
-                .eventName(EventEntity.eventType.RequestFriend)
-                .eventStatus(EventEntity.statusType.WAITING)
-                .createDate(String.valueOf(LocalDate.now()))
-                .build();
+            //이벤트테이블추가
+            EventEntity eventEntity = EventEntity
+                    .builder()
+                    .ownUserId(ownUser)
+                    .eventUserId(userId)
+                    .eventPurpose("Friend Request")
+                    .eventName(EventEntity.eventType.RequestFriend)
+                    .eventStatus(EventEntity.statusType.WAITING)
+                    .createDate(String.valueOf(LocalDate.now()))
+                    .build();
 
-        friendRepository.save(friendEntity);
-        eventRepository.save(eventEntity);
+            friendRepository.save(friendEntity);
+            eventRepository.save(eventEntity);
+        }
         //요청한 친구에게 알림 보내기(보류)
     }
 
@@ -75,7 +85,7 @@ public class FriendService {
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         //이벤트 변경 후 친구테이블에 추가
-        eventRepository.updateEventFriendRequest(requestUserId, isAccept);
+        eventRepository.updateEventFriendRequest(requestUserId, "ACCEPT");
 
         //거절이라면
         if (isAccept.equals("REJECT")) {
@@ -83,9 +93,10 @@ public class FriendService {
             friendRepository.deleteByOwnUserId(requestUserId);
         } else {
             //수락했다면
-            //요청한 유저 상태 수락으로 변경 후
+            //요청한 유저 상태 수락으로 변경
             friendRepository.updateStatus(requestUserId, FriendEntity.statusType.ACCEPT);
-            // 내 친구 테이블에도 추가
+
+            // 아니라면 내 친구 테이블에도 추가
             FriendEntity friendEntity = FriendEntity
                     .builder()
                     .ownUserId(ownUser)
@@ -95,10 +106,22 @@ public class FriendService {
                     .status(FriendEntity.statusType.ACCEPT).build();
 
             friendRepository.save(friendEntity);
+
         }
     }
 
     public List<EventDTO> myEvents(String userId) {
         return eventRepository.EventListById(userId).orElseThrow(() -> new RuntimeException(""));
     }
+
+    public List<EventDTO> ResponseFriendList() {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+    }
+
+    public List<EventDTO> RequestFriendList() {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        return eventRepository.ResponseEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+    }
+
 }
