@@ -1,12 +1,11 @@
 import {Input, ErrorMessage, FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState, useRef} from 'react';
 import axios from 'axios';
-import {connect} from "react-redux";
-import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
+import {EmailToken, updateToken, updateCodeValid} from '../../store/slice/EmailValidationSlice';
 import '../../style/Sign.scss'
 import {RootState} from '../../store/store'
 import {Dispatch} from 'redux';
-
+import {connect} from "react-redux";
 import {useConfirm} from '../../stateFunc/actionFun'
 
 
@@ -30,7 +29,6 @@ interface DispatchProps {
 }
 
 //(Component Props로 전달하기 위한 interface)
-
 const mapStateToProps = (state: RootState): EmailToeknProps => ({
     emailToken: state.emailValidation, // store에서 가져올 상태를 매핑
 });

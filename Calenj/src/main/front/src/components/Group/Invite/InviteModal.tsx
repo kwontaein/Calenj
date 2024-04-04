@@ -4,9 +4,8 @@ import {ListView} from '../../../style/FormStyle'
 import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
-import {StompCompat} from '../../../store/StompSlice'
-
-
+import{updateTopic,updateApp,sendStompMsg,receivedStompMsg}  from '../../../store/module/StompReducer'
+import {initializeStompChannel} from '../../../store/module/StompMiddleware'
 
 interface Friends {
     // 친구 아이디
@@ -17,16 +16,13 @@ interface Friends {
 
 interface ModalProps {
     onClose: () => void;
-    groupId: string;
+    groupId: number;
 }
 
-//(Component Props로 전달하기 위한 interface)
-const mapStateToProps = (state: RootState): StompCompat => ({
-    stompClient: state.stomp.stompClient, // store에서 가져올 상태를 매핑
-});
 
 
-const InviteModal :React.FC<ModalProps&StompCompat> =({onClose,stompClient})=>{
+
+const InviteModal :React.FC<ModalProps> =({onClose})=>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const modalBackground = useRef<HTMLDivElement>(null);
@@ -36,8 +32,8 @@ const InviteModal :React.FC<ModalProps&StompCompat> =({onClose,stompClient})=>{
 
     function sendToFriend(friendId: string, inviteLink: string) {
         //친구에게 알림 보내기
-        stompClient?.subscribe(`/topic/userOnline/${friendId}`, (isOnline: IMessage) => {})
-        stompClient?.send('/app/online', {}, JSON.stringify({inviteLink}));
+        // stompClient?.subscribe(`/topic/userOnline/${friendId}`, (isOnline: IMessage) => {})
+        // stompClient?.send('/app/online', {}, JSON.stringify({inviteLink}));
     }
 
     return(
@@ -77,4 +73,4 @@ const InviteModal :React.FC<ModalProps&StompCompat> =({onClose,stompClient})=>{
         </div>
     )
 }
-export default connect(mapStateToProps) (InviteModal);
+export default connect() (InviteModal);

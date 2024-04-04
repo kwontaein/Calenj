@@ -15,6 +15,8 @@ export const QUERY_VOTE_LIST_KEY: string = 'voteList'
 
 interface VoteList{
     voteId : string;
+    myId:string;
+    voter:string[];
     voteCreater : string;
     voteTitle : string;
     voteCreated:string;
