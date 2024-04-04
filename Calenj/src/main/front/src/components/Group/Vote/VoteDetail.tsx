@@ -5,7 +5,7 @@ import {stateFilter,createTimePassed} from '../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
 import { array } from 'yup';
 
-interface VoteItem{
+interface voteChoiceDTO{
     voteItem:string;
     voter:string[];
     countVoter:number;
@@ -20,7 +20,7 @@ interface VoteDetails{
     anonymous:boolean;
     voteWatcher:string[]
     voter:string[];
-    voteChoiceDTO:VoteItem[];
+    voteChoiceDTO:voteChoiceDTO[];
 
 }
 
@@ -29,7 +29,7 @@ const VoteDetail:React.FC=()=>{
     
     const [detail, setDetail] = useState<VoteDetails | null>(null);
     const [myVoter,setMyVoter] = useState<boolean[]>();
-    const [voted, setVoted] = useState<string[][]>();
+    const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
     const [countVoted,setCountVoted] = useState<number>(0);
     const location = useLocation();
     const [isLoading,setIsLoading] =useState<boolean>(false);
@@ -47,6 +47,8 @@ const VoteDetail:React.FC=()=>{
             .then(response => {
                 let voteDetail = response.data
                 setDetail(voteDetail);
+                console.log(voteDetail.voteChoiceDTO)
+                setVoted(voteDetail.voteChoiceDTO)
                 console.log(voteDetail)
                 // //TODO : 배열을 voteDetail.voter로 바꾸기
                 // BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
@@ -69,6 +71,11 @@ const VoteDetail:React.FC=()=>{
         getVoteDetail();
     }, []);
 
+    const BeforCheckVoter=(voteChoice:voteChoiceDTO[])=>{
+        voteChoice.map((value)=>{
+            // value.voter.includes()
+        })
+    }
 
     // //내가 투표한 항목 및 투표 항목별 투표자 셋팅
     // const BeforCheckVoter=(voter:string[],voteItem:string[],myId:string)=>{
