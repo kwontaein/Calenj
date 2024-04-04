@@ -17,6 +17,13 @@ import java.util.UUID;
 @Builder(builderMethodName = "GroupVoteBuilder") // 자식 클래스에서 builder() 메서드 이름을 변경
 @IdClass(GroupVoteId.class)
 public class GroupVoteEntity {
+    
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(nullable = false, unique = true, name = "vote_id", columnDefinition = "BINARY(16)")
+    //주키
+    private UUID voteId;
 
     @Id
     @ManyToOne
@@ -24,12 +31,6 @@ public class GroupVoteEntity {
     // 외래 키에 대한 참조 필드 지정
     private GroupEntity group;
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "vote_id", columnDefinition = "BINARY(16)")
-    //주키
-    private UUID voteId;
 
     @Column(name = "vote_creater")
     private String voteCreater;
@@ -48,6 +49,10 @@ public class GroupVoteEntity {
 
     @Column(name = "anonymous")
     private Boolean anonymous;
+
+    @Column(name = "voter")
+    @Convert(converter = StringListConverter.class)
+    private List<String> voter;
 
     @Column(name = "vote_watcher")
     @Convert(converter = StringListConverter.class)
