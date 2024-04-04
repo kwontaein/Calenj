@@ -38,12 +38,24 @@ public class FriendController {
     }
 
     @PostMapping("/api/myEvents")
-    public void myEvents(@RequestParam(name = "userId") String userId) {
+    public List<EventDTO> myEvents(@RequestParam(name = "userId") String userId) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
         List<EventDTO> events = friendService.myEvents(userId);
         System.out.println(events.toString());
+        return events;
     }
 
+    //내가 보낸 요청 목록
+    @PostMapping("/api/RequestFriendList")
+    public List<EventDTO> RequestFriendList() {
+        return friendService.RequestFriendList();
+    }
+
+    //내가 받은 요청 목록
+    @PostMapping("/api/ResponseFriendList")
+    public List<EventDTO> ResponseFriendList() {
+        return friendService.ResponseFriendList();
+    }
 
 }

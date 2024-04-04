@@ -46,9 +46,7 @@ public class FriendService {
 
             eventRepository.updateEventFriendRequest(userId, "ACCEPT");
         } catch (Exception e) {
-
             //동일한 요청 정보가 있다면? -> 저장x
-
             // 아니라면 내 친구 테이블에 추가
             FriendEntity friendEntity = FriendEntity
                     .builder()
@@ -115,4 +113,15 @@ public class FriendService {
     public List<EventDTO> myEvents(String userId) {
         return eventRepository.EventListById(userId).orElseThrow(() -> new RuntimeException(""));
     }
+
+    public List<EventDTO> ResponseFriendList() {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+    }
+
+    public List<EventDTO> RequestFriendList() {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        return eventRepository.ResponseEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+    }
+
 }

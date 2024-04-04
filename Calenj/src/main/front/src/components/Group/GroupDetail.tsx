@@ -119,6 +119,7 @@ const GroupDetail: React.FC = () => {
     }
 
     function sendToFriend(friendId: string, inviteLink: string) {
+        //친구에게 알림 보내기
         stompClient.subscribe(`/topic/userOnline/${friendId}`, (isOnline: IMessage) => {
         })
         stompClient.send('/app/online', {}, JSON.stringify({inviteLink}));

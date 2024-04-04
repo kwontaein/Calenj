@@ -37,6 +37,7 @@ public class GroupController {
     }
 
     // 임시로 만든 그룹 참여 코드 -> 공개 서버라면 참여 가능하게 만들 것
+    // TODO 내가 이미 참여한 그룹일 경우 추가
     @PostMapping("/api/joinGroup")
     public String joinGroup(@RequestParam(name = "groupId") UUID groupId) {
         groupService.joinGroup(groupId);

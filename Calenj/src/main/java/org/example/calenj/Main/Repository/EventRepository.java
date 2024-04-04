@@ -17,7 +17,12 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     @Query(value = "UPDATE Events SET eventStatus =:isAccept WHERE ownUserId = :requestUserId", nativeQuery = true)
     void updateEventFriendRequest(String requestUserId, String isAccept);
 
-
     @Query("SELECT new org.example.calenj.Main.DTO.EventDTO(e.eventId,e.ownUserId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId")
     Optional<List<EventDTO>> EventListById(String userId);
+
+    @Query("SELECT new org.example.calenj.Main.DTO.EventDTO(e.eventId,e.ownUserId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId and e.eventName=:RequestFriend")
+    Optional<List<EventDTO>> RequestEventListById(String userId);
+
+    @Query("SELECT new org.example.calenj.Main.DTO.EventDTO(e.eventId,e.ownUserId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.eventUserId =:userId and e.eventName=:RequestFriend")
+    Optional<List<EventDTO>> ResponseEventListById(String userId);
 }
