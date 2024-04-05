@@ -1,3 +1,4 @@
+import { UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 
@@ -27,7 +28,7 @@ export function stateFilter(error: string): void {
 }
 
 
-export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () => void) {
+export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () => void, refetchQuery?:UseQueryResult) {
     if (typeof onConfirm !== "function") {
         return;
     }
@@ -37,6 +38,9 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     const confrimAction = () => { //취할 행동
         if (window.confirm(massage)) { //확신 시
             onConfirm();
+            if(refetchQuery){
+                refetchQuery.refetch();
+            }
         } else {
             onCancel(); //취소 누르면 실행
         }

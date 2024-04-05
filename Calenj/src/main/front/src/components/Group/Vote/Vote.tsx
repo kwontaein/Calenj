@@ -76,8 +76,6 @@ const Vote :React.FC=()=>{
     }
 
 
-
-
     function deadlineFilter(list: VoteList[], end:boolean):VoteList[]{
         const newList =list.filter((li)=>{
             let endDate = changeDateForm(li.voteEndDate)//Date형식으로
@@ -97,8 +95,8 @@ const Vote :React.FC=()=>{
             <hr></hr>
             <h1>투표</h1>
             <button onClick={()=>setMakeVote(true)} style={{marginBottom:'10px'}}>투표생성하기</button>
-            {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId}/>}
-
+            {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId} queryState={voteListState}/>}
+            {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data && 
                 <div>
                 {voteList.length>0 && 

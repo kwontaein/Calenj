@@ -10,10 +10,12 @@ import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
+import { UseQueryResult } from '@tanstack/react-query';
 
 interface ModalProps {
     onClose: () => void;
     groupId: string;
+    queryState: UseQueryResult;
 }
 
 interface VoteList {
@@ -21,7 +23,7 @@ interface VoteList {
     content: string,
 }
 
-const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
+const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [title, setTitle] = useState<string>('');
     const [voteList, setVoteList] = useState<VoteList[]>([]);//항목 리스트
     const [content, setContent] = useState<string>(''); //항목 (텍스트)
@@ -105,11 +107,10 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
         if (voteList.length === 0) {
             mutation();
         } else {
-            useConfirm('응답 유형을 변경할 경우 입력된 내용이 초기화 됩니다.\n변경 하시겠습니까?', mutation, () => {
-                e.preventDefault()
-            })
+            useConfirm('응답 유형을 변경할 경우 입력된 내용이 초기화 됩니다.\n변경 하시겠습니까?'
+            ,mutation
+            ,() => {e.preventDefault()})
         }
-
     }
     //모달창 닫기
     const cancle = () => {
@@ -117,8 +118,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
             onClose();
             return
         }
-        useConfirm('내용은 저장되지 않습니다. 정말로 취소하시겠습니까?', onClose, () => {
-        })
+        useConfirm('내용은 저장되지 않습니다. 정말로 취소하시겠습니까?', onClose, () => {})
     }
 
 
@@ -160,8 +160,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
 
     const createVote = () => {
         if (title !== '' && voteList.length > 1) {
-            useConfirm(`투표를 생성하시겠습니까?`, postVote, () => {
-            })
+            useConfirm(`투표를 생성하시겠습니까?`, postVote, () => {},queryState)
         } else if (title === '' && voteList.length < 2) {
             window.alert('제목 입력해주세요.')
         } else if (voteList.length < 2) {

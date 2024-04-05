@@ -4,14 +4,16 @@ import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
 import {useConfirm,stateFilter,saveDBFormat} from '../../../stateFunc/actionFun'
 import axios ,{AxiosError}from 'axios';
+import { UseQueryResult } from '@tanstack/react-query';
 
 
 interface ModalProps {
     onClose: () => void;
     groupId: string;
+    queryState: UseQueryResult;
 }
 
-const NoticeModal :React.FC<ModalProps> = ({onClose, groupId})=>{
+const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
     const inputRef = useRef<HTMLInputElement>(null);
     const [content,setContent] = useState<string>('');
     const location = useLocation();
@@ -46,7 +48,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId})=>{
 
     const createNotice =()=>{
         if(content!==''){
-            useConfirm(`공지를 생성하시겠습니까?`,postNotice,()=>{})
+            useConfirm(`공지를 생성하시겠습니까?`,postNotice,()=>{}, queryState)
         }else{
             window.alert('내용을 입력해주세요.')
         }  
