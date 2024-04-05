@@ -126,3 +126,30 @@ function createEventChannel(stompClient:CompatClient, topicLogic:string, params:
     ;
 }
 
+
+// 미들웨어 탐색의 잔해..
+
+// let unSubscribe;//구취기능
+        // //정보를 가지고 있음 (payload)
+        // const topicPayloadValue=State.next(updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})).value;
+        // const startStomp =State.next(topicPayloadValue).value //값을 저장하고 넘어감
+        // const stompStartFn =startStomp.next(startStomp);//제네레이션 함수실행을 위한 next()
+        // //Stomp연결,(첫번째 call)
+        // const createStompConnectionPromise =stompStartFn.value.payload.fn();
+        // createStompConnectionPromise.then((res:CompatClient)=>{
+        //     console.log("Stomp connection created successfully.")
+        //     console.log(startStomp)
+        //         //call은 비동기식처리, Promise가능, res를 받아 넘기기(res: StompClient)
+        //         const nextSecound=startStomp.next(res); //2번째 call로 넘어가기
+        //         const [stompCleint,topicLogic, topicParams, topicTarget ] =[...nextSecound.value.payload.args,];
+        //         //버퍼반환, 버퍼 종료 시 채널구독 취소
+        //         const secoundCall =nextSecound.value.payload.fn(stompCleint,topicLogic,topicParams,topicTarget)
+        //         unSubscribe=()=>{secoundCall.close()} //버퍼 종료 => 구독취소, (thunk)=>즉시종료 X, 함수 호출 시 종료
+        //         const forkSend = startStomp.next(unSubscribe)
+        //         //메세지 수신을 위한 sendMsg 제네레이터 함수
+        //         const sendMsgFn = forkSend.value.payload.fn(stompCleint)
+        //         sendMsgFn.next() //함수 들어간 후 next()=>첫 yield
+        //         const appPayloadValue =sendMsgFn.next(updateApp({appLogic:'userOnline', target:'groupId',params:groupInfo.groupId})).value
+        //         console.log(sendMsgFn.next(appPayloadValue))
+        //         console.log(startStomp.next())
+        //     })

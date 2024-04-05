@@ -1,5 +1,6 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
-import axios from 'axios';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
@@ -9,8 +10,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
-
-
+import {stateFilter} from '../../stateFunc/actionFun'
 
 
 interface Details {
@@ -18,6 +18,7 @@ interface Details {
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
+    members:Members[];
 }
 
 interface Members {
@@ -34,7 +35,7 @@ interface Message{
     message:string;
 }
 
-
+const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
 /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
  console.log = function no_console() {}; // console log 막기
@@ -53,61 +54,46 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
     useLayoutEffect(() => {
-
-        axios.post('/api/groupDetail', null, {
-            params: {
-                groupId: groupInfo.groupId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        }) // 객체의 속성명을 'id'로 설정
-        .then(response => {
-            console.log(response.data.members);
-            setDetail(response.data);
-            setMembers(response.data.members);
-        })
-        .catch(error => console.log(error));
-
-
-        let unSubscribe;//구취기능
-
         // let State = initializeStompChannel();
         // State.next();
         // const dispatch = useDispatch();
         // dispatch(restartSaga());
         updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
 
-
-        // //정보를 가지고 있음 (payload)
-        // const topicPayloadValue=State.next(updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})).value;
-        // const startStomp =State.next(topicPayloadValue).value //값을 저장하고 넘어감
-        // const stompStartFn =startStomp.next(startStomp);//제네레이션 함수실행을 위한 next()
-        // //Stomp연결,(첫번째 call)
-        // const createStompConnectionPromise =stompStartFn.value.payload.fn();
-        // createStompConnectionPromise.then((res:CompatClient)=>{
-        //     console.log("Stomp connection created successfully.")
-        //     console.log(startStomp)
-        //         //call은 비동기식처리, Promise가능, res를 받아 넘기기(res: StompClient)
-        //         const nextSecound=startStomp.next(res); //2번째 call로 넘어가기
-        //         const [stompCleint,topicLogic, topicParams, topicTarget ] =[...nextSecound.value.payload.args,];
-        //         //버퍼반환, 버퍼 종료 시 채널구독 취소
-        //         const secoundCall =nextSecound.value.payload.fn(stompCleint,topicLogic,topicParams,topicTarget)
-        //         unSubscribe=()=>{secoundCall.close()} //버퍼 종료 => 구독취소, (thunk)=>즉시종료 X, 함수 호출 시 종료
-        //         const forkSend = startStomp.next(unSubscribe)
-        //         //메세지 수신을 위한 sendMsg 제네레이터 함수
-        //         const sendMsgFn = forkSend.value.payload.fn(stompCleint)
-        //         sendMsgFn.next() //함수 들어간 후 next()=>첫 yield
-        //         const appPayloadValue =sendMsgFn.next(updateApp({appLogic:'userOnline', target:'groupId',params:groupInfo.groupId})).value
-        //         console.log(sendMsgFn.next(appPayloadValue))
-        //         console.log(startStomp.next())
-        //     })
         return;
 
     }, []);
 
+    //그룹 목록 불러오기
+    const getGroupList = async (): Promise<Details | null> => {
+        try {
+            const response = await axios.post('/api/groupDetail', null, {
+                params: {
+                    groupId: groupInfo.groupId
+                },
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }) // 객체의 속성명을 'id'로 설정;
+            const data = response.data as Details;
+            console.log(data)
+            return data;
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.log(axiosError);
+            if (axiosError.response?.status) {
+                console.log(axiosError.response.status);
+                stateFilter((axiosError.response.status).toString());
+            }
+            return null;
+        }
+    }
 
 
+    const groupDetailState = useQuery<Details | null, Error>({
+        queryKey: [QUERY_GROUP_DETAIL_KEY,groupInfo.groupId],
+        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
+    });
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -130,40 +116,46 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
 
     return (
         <div>
+        {/* <div>
+            {detail !== null && (
+                <div key={detail.groupId}>
+                    <div>Group Detail ID: {detail.groupId}</div>
+                    <div>Group Detail Title: {detail.groupTitle}</div>
+                </div>
+            )}
+        </div> */}
+        {groupDetailState.isLoading && <div>Loading...</div>}
+        {groupDetailState.data && (
             <div>
-                {detail !== null && (
-                    <div key={detail.groupId}>
-                        <div>Group Detail ID: {detail.groupId}</div>
-                        <div>Group Detail Title: {detail.groupTitle}</div>
-                    </div>
-                )}
-            </div>
-
-
-            {members &&
+                <div key={groupDetailState.data.groupId}>
+                    <div>Group Detail ID: {groupDetailState.data.groupId}</div>
+                    <div>Group Detail Title: {groupDetailState.data.groupTitle}</div>
+                </div>
                 <div>
                     <ul>
-                        {members.map((member) => (
-                            <ListView key ={member.userEmail}>
+                        {groupDetailState.data.members.map((member) => (
+                            <ListView key={member.userEmail}>
                                 {member.nickName} : {onlineCheck(member.onlineStatus)}
                             </ListView>
                         ))}
                     </ul>
                 </div>
-            }
 
-            <div>
-                {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
+                <div>
+                    <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/>
+                </div>
+                <hr/>
+                <div>
+                    <Invite groupId={groupInfo.groupId}/>
+                </div>
+                <hr/>
+                <div>
+                    <Notice/>
+                    <Vote/>
+                </div>
             </div>
-            <hr/>
-            <div>
-            </div>
-            <Invite groupId={groupInfo.groupId}/>
-            
-            <hr/>
-            <Notice/>
-            <Vote/>
-        </div>
+        )}
+    </div>
     );
 }
 
