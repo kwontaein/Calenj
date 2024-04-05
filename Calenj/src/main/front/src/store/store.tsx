@@ -39,13 +39,18 @@ const store = configureStore({
 //Client 실행 시 자동으로 바로 시작
 export const sagaTask =sagaMiddleware.run(rootSaga);
 
-export function RestartSaga(){
-  // console.log(sagaTask.isRunning())
-  // if(sagaTask.isRunning()){
-  //   sagaTask.cancel();
-  //   sagaMiddleware.run(rootSaga)
-  //   console.log("Saga재시작")
-  // }
+export function sagaMutation(login:boolean){
+  if(login){
+    if(!sagaTask.isRunning()){
+      sagaMiddleware.run(rootSaga)
+      console.log("Saga재시작")
+    }
+  }else{
+    if(sagaTask.isRunning()){
+      sagaTask.cancel();
+    }
+  }
+  
  
 }
 export default store;

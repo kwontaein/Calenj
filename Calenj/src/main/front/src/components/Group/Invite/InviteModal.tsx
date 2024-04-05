@@ -4,7 +4,7 @@ import {ListView} from '../../../style/FormStyle'
 import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
-import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
+// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
     // 친구 아이디
@@ -21,7 +21,7 @@ interface ModalProps {
 
 
 
-const InviteModal :React.FC<ModalProps&DispatchProps> =({onClose,updateTopic,updateApp})=>{
+const InviteModal :React.FC<ModalProps> =({onClose})=>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const modalBackground = useRef<HTMLDivElement>(null);
@@ -40,12 +40,12 @@ const InviteModal :React.FC<ModalProps&DispatchProps> =({onClose,updateTopic,upd
     return(
         <div>
       
-            <div ref={modalBackground} className={'modal-container'} onClick={e => {
+            <div ref={modalBackground} className={'modal_container'} onClick={e => {
                 if (e.target === modalBackground.current) {
                     onClose();
                 }
             }}>
-                <div className={'modal-content'}>
+                <div className={'modalContent'}>
                     <div className={'FriendList'}>
                         {friends && friends.length > 0 ?
                         <ul>
@@ -67,11 +67,11 @@ const InviteModal :React.FC<ModalProps&DispatchProps> =({onClose,updateTopic,upd
                     {inviteLink && <div className={'issueLink'}><b>{inviteLink}</b>
                         <button>복사하기</button>
                 </div>}
-                <button className={'modal-close-btn'} onClick={onClose}>닫기</button>
+                <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>
                 </div>
             </div>
 
         </div>
     )
 }
-export default connect(null,mapDispatchToProps) (InviteModal);
+export default InviteModal;

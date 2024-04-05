@@ -2,14 +2,16 @@
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
-
-
+import { group } from 'console';
+import{ DispatchProps,mapDispatchToProps}  from '../../store/module/StompReducer';
+import {connect} from "react-redux";
+import {sagaMutation} from '../../store/store'
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
 
 
-const SignState: React.FC = () => {
+const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
 
     const queryClient = useQueryClient();
 
@@ -35,17 +37,42 @@ const SignState: React.FC = () => {
         },
     }); 
     
+   
+
+    interface SubScribe{
+        groupId:number;
+        friendId:number;
+    }
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요  
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
+        sagaMutation(response.data)//saga middleware 관리
         if(!response.data){
             sessionStorage.removeItem('userId')
+
+        }else{
+            axios.get(`/api/subscribeCheck`)
+            .then((res)=>{
+                let arr = res.data
+                let friendArr = Array.from(arr.friendList,(value:SubScribe)=>{return value.friendId})
+                let groupArr = Array.from(arr.groupList,(value:SubScribe)=>{return value.groupId;})
+                let subScribe = subScribeFilter(friendArr,groupArr,arr.userId)
+                updateDestination({destination:subScribe});
+            })
         }
         return response.data;
     }
 
+    function subScribeFilter(friendList:number[],groupList:number[],userId:string){
+        let parmasList =[];
+        parmasList.push([userId])
+        parmasList.push([userId])
+        parmasList.push(groupList)
+        parmasList.push(friendList)
+        return parmasList;
+    }
 
     //v5이후로 인자를 객체 형태로 전달해야함
     const logState = useQuery<boolean, Error>({
@@ -74,4 +101,4 @@ const SignState: React.FC = () => {
 
 }
 
-export default SignState;
+export default connect(null,mapDispatchToProps)(SignState);

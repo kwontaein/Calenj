@@ -5,7 +5,7 @@ import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
 import InviteModal from './InviteModal'
-import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
+// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
     // 친구 아이디
@@ -19,7 +19,7 @@ interface ParentProps{
 }
 
 
-const Invite :React.FC<ParentProps&DispatchProps> =({groupId,updateTopic})=>{
+const Invite :React.FC<ParentProps> =({groupId})=>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [friends, setFriends] = useState<Friends[] | null>(null);
@@ -63,8 +63,8 @@ const Invite :React.FC<ParentProps&DispatchProps> =({groupId,updateTopic})=>{
 
     return(
         <div>
-            <div className={'btn-wrapper'}>
-                <button className={'modal-open-btn'} onClick={invite}>
+            <div className={'btn_wrapper'}>
+                <button className={'btn_modalOpen'} onClick={invite}>
                     초대하기
                 </button>
                 {modalOpen && <InviteModal onClose={closeModal} groupId={groupId}/>}
@@ -73,4 +73,4 @@ const Invite :React.FC<ParentProps&DispatchProps> =({groupId,updateTopic})=>{
         </div>
     )
 }
-export default connect(null,mapDispatchToProps) (Invite);
+export default Invite;

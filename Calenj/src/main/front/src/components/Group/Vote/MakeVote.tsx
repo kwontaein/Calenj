@@ -129,7 +129,6 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
             const voteItem = voteList.map(item => item.content);
             const VoteEndDate = saveDBFormat(selectedDate);
             const createDate = saveDBFormat(new Date());
-            console.log(VoteEndDate);
             const data = {
                 dto1: {
                     groupId: groupId,

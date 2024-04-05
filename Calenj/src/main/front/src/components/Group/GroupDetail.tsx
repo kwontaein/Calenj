@@ -5,12 +5,12 @@ import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import {ListView} from '../../style/FormStyle'
+import {ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
-import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
 import {stateFilter} from '../../stateFunc/actionFun'
+// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
 
 
 interface Details {
@@ -41,7 +41,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
+const GroupDetail :React.FC=({})=>{
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
@@ -54,17 +54,12 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
     useLayoutEffect(() => {
-        // let State = initializeStompChannel();
-        // State.next();
-        // const dispatch = useDispatch();
-        // dispatch(restartSaga());
-        updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
-
+        // updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
         return;
 
     }, []);
 
-    //그룹 목록 불러오기
+    //그룹 디테일 불러오기
     const getGroupList = async (): Promise<Details | null> => {
         try {
             const response = await axios.post('/api/groupDetail', null, {
@@ -76,7 +71,6 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
                 }
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
-            console.log(data)
             return data;
         } catch (error) {
             const axiosError = error as AxiosError;
@@ -128,8 +122,13 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
         {groupDetailState.data && (
             <div>
                 <div key={groupDetailState.data.groupId}>
-                    <div>Group Detail ID: {groupDetailState.data.groupId}</div>
-                    <div>Group Detail Title: {groupDetailState.data.groupTitle}</div>
+                <div>방아이디: {groupDetailState.data.groupId.toString().slice(0,9).padEnd(20,'*')}</div>
+                    <RowFlexBox style={{justifyContent: 'space-between'}}>
+                    <div>방이름: {groupDetailState.data.groupTitle}</div>
+                    <div><Invite groupId={groupInfo.groupId}/></div>
+                    </RowFlexBox>
+                    
+                  
                 </div>
                 <div>
                     <ul>
@@ -142,11 +141,11 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
                 </div>
 
                 <div>
-                    <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/>
+                    {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
                 </div>
                 <hr/>
                 <div>
-                    <Invite groupId={groupInfo.groupId}/>
+                   
                 </div>
                 <hr/>
                 <div>
@@ -159,4 +158,4 @@ const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
     );
 }
 
-export default connect(null,mapDispatchToProps) (GroupDetail);
+export default GroupDetail;

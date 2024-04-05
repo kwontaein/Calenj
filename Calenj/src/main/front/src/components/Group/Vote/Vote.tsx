@@ -8,6 +8,7 @@ import MakeVote from "./MakeVote";
 import {ListView, MiniText,RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
+import styled from "styled-components";
 
 
 export const QUERY_VOTE_LIST_KEY: string = 'voteList'
@@ -95,7 +96,7 @@ const Vote :React.FC=()=>{
         <div>
             <hr></hr>
             <h1>투표</h1>
-            <button onClick={()=>setMakeVote(true)}>투표생성하기</button>
+            <button onClick={()=>setMakeVote(true)} style={{marginBottom:'10px'}}>투표생성하기</button>
             {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId}/>}
 
             {voteListState.data && 
