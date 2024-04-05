@@ -4,8 +4,7 @@ import {ListView} from '../../../style/FormStyle'
 import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
-import{updateTopic,updateApp,sendStompMsg,receivedStompMsg}  from '../../../store/module/StompReducer'
-import {initializeStompChannel} from '../../../store/module/StompMiddleware'
+import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
     // 친구 아이디
@@ -22,13 +21,15 @@ interface ModalProps {
 
 
 
-const InviteModal :React.FC<ModalProps> =({onClose})=>{
+const InviteModal :React.FC<ModalProps&DispatchProps> =({onClose,updateTopic,updateApp})=>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const modalBackground = useRef<HTMLDivElement>(null);
 
 
-    
+    useEffect(()=>{
+        // updateTopic({topicLogic:'',})
+    })
 
     function sendToFriend(friendId: string, inviteLink: string) {
         //친구에게 알림 보내기
@@ -73,4 +74,4 @@ const InviteModal :React.FC<ModalProps> =({onClose})=>{
         </div>
     )
 }
-export default connect() (InviteModal);
+export default connect(null,mapDispatchToProps) (InviteModal);

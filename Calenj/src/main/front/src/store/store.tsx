@@ -37,7 +37,17 @@ const store = configureStore({
 });
 
 //Client 실행 시 자동으로 바로 시작
-sagaMiddleware.run(rootSaga);
+export const sagaTask =sagaMiddleware.run(rootSaga);
+
+export function RestartSaga(){
+  // console.log(sagaTask.isRunning())
+  // if(sagaTask.isRunning()){
+  //   sagaTask.cancel();
+  //   sagaMiddleware.run(rootSaga)
+  //   console.log("Saga재시작")
+  // }
+ 
+}
 export default store;
 
 //Redux를 사용하기 위한 type들, 유틸리티 타입을 정의할 때 사용

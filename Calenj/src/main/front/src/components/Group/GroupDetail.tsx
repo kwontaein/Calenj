@@ -8,12 +8,12 @@ import SockJS from "sockjs-client";
 import {ListView} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
-import {RootState} from '../../store/store'
+
 import {connect} from "react-redux";
 import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
 import { Dispatch } from 'redux';
 import { useDispatch } from 'react-redux';
-import {restartSaga} from '../../store/store'
+import {RestartSaga} from '../../store/store'
 
 
 
@@ -75,7 +75,7 @@ interface Message{
 
 
         let unSubscribe;//구취기능
-
+        RestartSaga();
         // let State = initializeStompChannel();
         // State.next();
         // const dispatch = useDispatch();

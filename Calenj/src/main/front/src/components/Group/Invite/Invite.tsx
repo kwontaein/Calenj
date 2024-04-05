@@ -4,8 +4,8 @@ import {ListView} from '../../../style/FormStyle'
 import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
-import{ DispatchProps, mapDispatchToProps}  from '../../../store/module/StompReducer';
 import InviteModal from './InviteModal'
+import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
     // 친구 아이디
@@ -19,7 +19,7 @@ interface ParentProps{
 }
 
 
-const Invite :React.FC<ParentProps&DispatchProps> =({groupId})=>{
+const Invite :React.FC<ParentProps&DispatchProps> =({groupId,updateTopic})=>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [friends, setFriends] = useState<Friends[] | null>(null);
@@ -47,6 +47,9 @@ const Invite :React.FC<ParentProps&DispatchProps> =({groupId})=>{
         setModalOpen(false);
     };
 
+    useEffect(()=>{
+
+    })
 
     function sendToFriend(friendId: string, inviteLink: string) {
         //친구에게 알림 보내기
@@ -70,4 +73,4 @@ const Invite :React.FC<ParentProps&DispatchProps> =({groupId})=>{
         </div>
     )
 }
-export default connect(mapDispatchToProps) (Invite);
+export default connect(null,mapDispatchToProps) (Invite);
