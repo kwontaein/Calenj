@@ -4,16 +4,12 @@ import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import SockJS from "sockjs-client";
 import {ListView} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
-
 import {connect} from "react-redux";
 import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
-import { Dispatch } from 'redux';
-import { useDispatch } from 'react-redux';
-import {RestartSaga} from '../../store/store'
+
 
 
 
@@ -44,7 +40,7 @@ interface Message{
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-
+const GroupDetail :React.FC<DispatchProps>=({updateTopic})=>{
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
@@ -75,7 +71,7 @@ interface Message{
 
 
         let unSubscribe;//구취기능
-        RestartSaga();
+
         // let State = initializeStompChannel();
         // State.next();
         // const dispatch = useDispatch();
@@ -148,7 +144,7 @@ interface Message{
                 <div>
                     <ul>
                         {members.map((member) => (
-                            <ListView key={member.userEmail}>
+                            <ListView key ={member.userEmail}>
                                 {member.nickName} : {onlineCheck(member.onlineStatus)}
                             </ListView>
                         ))}
@@ -157,12 +153,13 @@ interface Message{
             }
 
             <div>
-                {/* {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>} */}
+                {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
             </div>
             <hr/>
             <div>
             </div>
-
+            <Invite groupId={groupInfo.groupId}/>
+            
             <hr/>
             <Notice/>
             <Vote/>

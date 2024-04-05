@@ -1,83 +1,28 @@
 //공지모달
-#makeNotice_container {
-  width: 214px;
-  margin: 20px;
-  padding: 5px;
-  border-radius: 5px;
-  align-content: center;
-  background-color: rgb(236, 236, 236);
+#makeNotice_container{
+    width: 214px;
+    margin: 20px;
+    padding:5px;
+    border-radius: 5px;
+    align-content: center;
+    background-color: rgb(236, 236, 236);
 }
 
 //투표모달
-.makeVote_container {
-  width: 214px;
-  margin: 20px;
-  padding: 5px;
-  border-radius: 5px;
-  align-content: center;
-  background-color: rgb(236, 236, 236);
+.makeVote_container{
+    width: 214px;
+    margin: 20px;
+    padding:5px;
+    border-radius: 5px;
+    align-content: center;
+    background-color: rgb(236, 236, 236);
 }
-
-/* 목록의 기본 스타일(점)을 없앰. */
+ /* 목록의 기본 스타일(점)을 없앰. */
 ul {
-  list-style: none;
+    list-style: none;
 }
 
-.voteItem {
-  width: 205px;
-}
-
-/*초대 모달*/
-.btn-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 5rem;
-}
-
-.modal-close-btn {
-  text-align: center;
-  cursor: pointer;
-  margin-left: auto;
-}
-
-.modal-container {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-  background-color: #ffffff;
-  width: 500px;
-  min-height: 200px;
-  max-height: 500px;
-  padding: 15px;
-}
-
-.issueLink {
-  display: flex;
-  background-color: #cccccc;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 5px;
-  justify-content: space-between;
-}
-
-.FriendList {
-  background-color: #cccccc;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 5px;
-  max-height: 500px;
-  min-height: 100px;
-}
-
-.noFriends {
-  text-align: center;
+.voteItem{
+    width: 205px;
+    
 }

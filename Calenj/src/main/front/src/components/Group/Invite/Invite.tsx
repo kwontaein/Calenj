@@ -67,7 +67,7 @@ const Invite :React.FC<ParentProps&DispatchProps> =({groupId,updateTopic})=>{
                 <button className={'modal-open-btn'} onClick={invite}>
                     초대하기
                 </button>
-                {modalOpen && <InviteModal onClose={closeModal} groupId={groupId} />}
+                {modalOpen && <InviteModal onClose={closeModal} groupId={groupId}/>}
             </div>
 
         </div>
