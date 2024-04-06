@@ -28,4 +28,9 @@ public class FriendDTO {
     //친구 상태
     private FriendEntity.statusType status;
 
+    public FriendDTO(String friendUserId, String nickName) {
+        this.friendUserId = friendUserId;
+        this.nickName = nickName;
+    }
+
 }

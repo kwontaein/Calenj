@@ -37,29 +37,31 @@ public class GroupController {
     }
 
     // 임시로 만든 그룹 참여 코드 -> 공개 서버라면 참여 가능하게 만들 것
+    // TODO 내가 이미 참여한 그룹일 경우 추가
     @PostMapping("/api/joinGroup")
-    public String joinGroup(@RequestParam(name = "groupId") UUID groupId, @RequestParam(name = "userId") String userId) {
+    public String joinGroup(@RequestParam(name = "groupId") UUID groupId) {
         groupService.joinGroup(groupId);
         System.out.println("그룹 참가");
         return "a";
     }
 
     // 초대 링크 발급
-//    @PostMapping("/api/inviteCode")
-//    public String inviteCode(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
-//        //알림 웹소켓 전송 or
-////        String inviteCode = groupService.inviteCode(groupId);
-////        System.out.println(inviteCode);
-////        return inviteCode;
-//    }
-
-    // 그룹 초대 -> 초대 코드 발급 + 이벤트로 구분
-    @PostMapping("/api/inviteGroup/")
-    public String inviteGroup(@RequestParam(name = "groupId") UUID groupId) { //그룹 초대
-        //알림 웹소켓 전송 or
-//        groupService.inviteGroup(groupId);
-        return "그룹 초대";
+    @PostMapping("/api/inviteCode")
+    public String inviteCode(@RequestBody InviteCodeDTO inviteCodeDTO) { //그룹 초대
+        //링크 테이블에 저장
+        String inviteCode = "http://localhost:3000/inviteGroup/" + groupService.inviteCode(inviteCodeDTO);
+        System.out.println(inviteCode);
+        return inviteCode;
     }
+
+    //초대 코드로 정보 받아오기. 없을 시 잘못된 코드임을 반환
+    @PostMapping("/api/inviteGroup")
+    public InviteCodeDTO inviteGroup(@RequestParam(name = "inviteCode") String inviteCode) {
+        System.out.println(inviteCode);
+        return groupService.inviteGroup(inviteCode);
+        // 메소드 내부 로직
+    }
+
 
     //공지 생성
     @PostMapping("api/makeNotice")
