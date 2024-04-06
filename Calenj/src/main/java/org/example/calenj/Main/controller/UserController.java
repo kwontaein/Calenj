@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.DTO.UserSbscribeDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.model.Verify.EmailVerificationService;
 import org.example.calenj.Main.model.GlobalService;
@@ -102,6 +103,11 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("로그인?");
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
+    }
+
+    @GetMapping("/api/subscribeCheck")
+    public UserSbscribeDTO subscribeCheck(){
+        return userService.subscribeCheck();
     }
 
     @PostMapping("/api/updateUser")

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Client, Frame, IMessage, Stomp} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+
 interface Message {
     nickName: string;
     message: string;
@@ -11,6 +12,7 @@ interface Room {
     groupName: string;
     groupId: number;
 }
+
 
 const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들 정의
     const [msg, setMsg] = useState<string>(''); // 사용자 이름
@@ -27,7 +29,6 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
 
         // 연결 성공시 처리
         stompClient.onConnect = (frame: Frame) => {
-            console.log('Connected: ' + frame);
             // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
             stompClient.subscribe(`/topic/chat/room/${groupId}`, (greeting: IMessage) => {
                 showGreeting(JSON.parse(greeting.body));

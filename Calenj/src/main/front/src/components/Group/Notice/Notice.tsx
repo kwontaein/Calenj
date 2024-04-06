@@ -28,7 +28,6 @@ const Notice :React.FC =()=>{
     
     const closeModal = () => {
         setMakeNotice(false);
-        noticeListState.refetch();
     };
       //공지목록 불러오기
       const getNoticeList = async (): Promise<NoticeList[]|null>=> {
@@ -47,7 +46,7 @@ const Notice :React.FC =()=>{
     }
 
     const noticeListState = useQuery<NoticeList[]|null, Error>({
-        queryKey: [QUERY_NOTICE_LIST_KEY],
+        queryKey: [QUERY_NOTICE_LIST_KEY, groupInfo.groupId],
         queryFn: getNoticeList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
@@ -56,17 +55,17 @@ const Notice :React.FC =()=>{
     }
 
     useEffect(()=>{
-        return queryClient.removeQueries({queryKey: [QUERY_NOTICE_LIST_KEY]});
+    
     },[])
 
    
     return(
-        <div>
+        <div>                
+            <h1>공지</h1>
             <button onClick={()=>setMakeNotice(true)}>공지생성하기</button>
-            <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupInfo.groupId}/>}</div>
+            <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupInfo.groupId} queryState={noticeListState}/>}</div>
             {noticeListState.data && 
                 <div>
-                <h2>Notice List</h2>
                 <ul>
                     {noticeListState.data.map((notice) => (
                         <ListView key={notice.noticeId}

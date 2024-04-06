@@ -8,6 +8,7 @@ import MakeVote from "./MakeVote";
 import {ListView, MiniText,RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
+import styled from "styled-components";
 
 
 export const QUERY_VOTE_LIST_KEY: string = 'voteList'
@@ -15,6 +16,8 @@ export const QUERY_VOTE_LIST_KEY: string = 'voteList'
 
 interface VoteList{
     voteId : string;
+    myId:string;
+    voter:string[];
     voteCreater : string;
     voteTitle : string;
     voteCreated:string;
@@ -34,7 +37,6 @@ const Vote :React.FC=()=>{
     
     const closeModal = () => {
         setMakeVote(false);
-        voteListState.refetch();
     };
 
     //투표리스트 불러오기
@@ -42,8 +44,7 @@ const Vote :React.FC=()=>{
         try{
             const response = await axios.post('/api/voteList',{groupId:groupInfo.groupId});
             
-            setVoteList(deadlineFilter(response.data,false))//filter()=>진행중인 투표
-            setEndVoteList(deadlineFilter(response.data,true))//filter()=>마감된 투표
+            
             return response.data
         }catch(error){
             const axiosError = error as AxiosError;
@@ -56,23 +57,24 @@ const Vote :React.FC=()=>{
     }
     //현재 상태 저장
     const voteListState = useQuery<VoteList[]|null, Error>({
-        queryKey: [QUERY_VOTE_LIST_KEY],
+        queryKey: [QUERY_VOTE_LIST_KEY,groupInfo.groupId],
         queryFn: getVoteList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
     
-    //종료 시 삭제
+
+    //데이터가 바뀌면 다시 세팅
     useEffect(()=>{
-        return queryClient.removeQueries({queryKey: [QUERY_VOTE_LIST_KEY]});
-    },[])
+        if(voteListState.data){
+            setVoteList(deadlineFilter(voteListState.data,false))//filter()=>진행중인 투표
+            setEndVoteList(deadlineFilter(voteListState.data,true))//filter()=>마감된 투표
+        }
+    },[voteListState.data])
 
-
-
+    
     const redirectDetail = (voteId: string) => {
         navigate("/vote/detail", {state: {voteId: voteId}});
     }
-
-
 
 
     function deadlineFilter(list: VoteList[], end:boolean):VoteList[]{
@@ -93,9 +95,9 @@ const Vote :React.FC=()=>{
         <div>
             <hr></hr>
             <h1>투표</h1>
-            <button onClick={()=>setMakeVote(true)}>투표생성하기</button>
-            {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId}/>}
-
+            <button onClick={()=>setMakeVote(true)} style={{marginBottom:'10px'}}>투표생성하기</button>
+            {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId} queryState={voteListState}/>}
+            {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data && 
                 <div>
                 {voteList.length>0 && 

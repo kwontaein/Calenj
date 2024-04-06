@@ -33,7 +33,5 @@ public class VoteChoiceEntity {
 
     @Convert(converter = StringListConverter.class)
     private List<String> voter;
-
-    @Builder.Default
-    private int countVoter = 0;
+    
 }

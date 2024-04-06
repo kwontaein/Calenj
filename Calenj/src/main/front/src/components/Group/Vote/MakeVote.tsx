@@ -10,10 +10,12 @@ import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
+import { UseQueryResult } from '@tanstack/react-query';
 
 interface ModalProps {
     onClose: () => void;
     groupId: string;
+    queryState: UseQueryResult;
 }
 
 interface VoteList {
@@ -21,7 +23,7 @@ interface VoteList {
     content: string,
 }
 
-const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
+const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [title, setTitle] = useState<string>('');
     const [voteList, setVoteList] = useState<VoteList[]>([]);//항목 리스트
     const [content, setContent] = useState<string>(''); //항목 (텍스트)
@@ -42,7 +44,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
 
         if (inputForm === 'TEXT') {
             if (content != '') {
-                inputContent = content;
+                inputContent = content; 
             }
         } else if (inputForm === 'DATE') {
             if (content_Date != null) {
@@ -57,7 +59,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
             const id = new Date().getTime();
 
             voteList.map((value) => {
-                if (value.content === inputContent) {
+                if (value.content === inputContent) { //내용 중복 시 초기화
                     inputContent = '';
                 }
             })
@@ -105,11 +107,10 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
         if (voteList.length === 0) {
             mutation();
         } else {
-            useConfirm('응답 유형을 변경할 경우 입력된 내용이 초기화 됩니다.\n변경 하시겠습니까?', mutation, () => {
-                e.preventDefault()
-            })
+            useConfirm('응답 유형을 변경할 경우 입력된 내용이 초기화 됩니다.\n변경 하시겠습니까?'
+            ,mutation
+            ,() => {e.preventDefault()})
         }
-
     }
     //모달창 닫기
     const cancle = () => {
@@ -117,19 +118,17 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
             onClose();
             return
         }
-        useConfirm('내용은 저장되지 않습니다. 정말로 취소하시겠습니까?', onClose, () => {
-        })
+        useConfirm('내용은 저장되지 않습니다. 정말로 취소하시겠습니까?', onClose, () => {})
     }
 
 
     const postVote = () => {
 
-        if (selectedDate != null) {
+   
 
             const voteItem = voteList.map(item => item.content);
-            const VoteEndDate = saveDBFormat(selectedDate);
+            const VoteEndDate = saveDBFormat(selectedDate as Date);
             const createDate = saveDBFormat(new Date());
-            console.log(VoteEndDate);
             const data = {
                 dto1: {
                     groupId: groupId,
@@ -153,21 +152,20 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId}) => {
                         stateFilter((axiosError.response.data) as string);
                     }
                 })
-        } else {
-            window.alert('투표 마감날짜를 정해주세요.')
-        }
+        
 
     }
 
     const createVote = () => {
-        if (title !== '' && voteList.length > 1) {
-            useConfirm(`투표를 생성하시겠습니까?`, postVote, () => {
-            })
+        if (title !== '' && voteList.length > 1 && selectedDate != null) {
+            useConfirm(`투표를 생성하시겠습니까?`, postVote, () => {},queryState)
         } else if (title === '' && voteList.length < 2) {
             window.alert('제목 입력해주세요.')
         } else if (voteList.length < 2) {
             window.alert('항목을 2개이상 추가해주세요.')
-        } else {
+        }else if(selectedDate ===null){
+            window.alert('날짜를 입력해주세요.')
+        }else {
             window.alert('제목 및 항목을 입력해주세요.')
         }
     }

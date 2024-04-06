@@ -13,5 +13,4 @@ import java.util.List;
 public class VoteChoiceDTO {
     private String voteItem;
     private List<String> voter;
-    private int countVoter;
 }

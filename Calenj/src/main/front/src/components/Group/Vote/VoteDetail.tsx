@@ -8,7 +8,7 @@ import { array } from 'yup';
 interface voteChoiceDTO{
     voteItem:string;
     voter:string[];
-    countVoter:number;
+
 }
 
 interface VoteDetails{
@@ -20,6 +20,7 @@ interface VoteDetails{
     anonymous:boolean;
     voteWatcher:string[]
     voter:string[];
+    countVoter:number;
     voteChoiceDTO:voteChoiceDTO[];
 
 }
@@ -28,7 +29,7 @@ interface VoteDetails{
 const VoteDetail:React.FC=()=>{
     
     const [detail, setDetail] = useState<VoteDetails | null>(null);
-    const [myVoter,setMyVoter] = useState<boolean[]>();
+    const [myVoter,setMyVoter] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
     const [countVoted,setCountVoted] = useState<number>(0);
     const location = useLocation();
@@ -50,8 +51,10 @@ const VoteDetail:React.FC=()=>{
                 console.log(voteDetail.voteChoiceDTO)
                 setVoted(voteDetail.voteChoiceDTO)
                 console.log(voteDetail)
-                // //TODO : 배열을 voteDetail.voter로 바꾸기
-                // BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
+                //TODO : 배열을 voteDetail.voter로 바꾸기
+                BeforCheckVoter(voteDetail.voteChoiceDTO)
+                setIsLoading(true);
+                //BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
             })
             .catch(error => {
                 const axiosError = error as AxiosError;
@@ -63,17 +66,18 @@ const VoteDetail:React.FC=()=>{
     }
     
     useLayoutEffect(() => {
-        let list=[['ㅎㅇ','ㅎㅇ2'],['ㅎ2']];
-        let newlist =list.map((value)=>{
-            return value.toString()
-        })
-        console.log(newlist);
         getVoteDetail();
     }, []);
 
-    const BeforCheckVoter=(voteChoice:voteChoiceDTO[])=>{
-        voteChoice.map((value)=>{
-            // value.voter.includes()
+    const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
+        let userVoter = new Array(voteList.length).fill(false);
+        let userEmail = sessionStorage.getItem('userId')
+        voteList.map((item)=>{
+            item.voter.map((voter)=>{
+                if(voter ===userEmail){
+
+                }
+            })
         })
     }
 

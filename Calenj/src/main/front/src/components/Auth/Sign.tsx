@@ -1,21 +1,23 @@
-import React, {useState, useEffect, useRef} from 'react';
-import axios, {AxiosResponse} from 'axios';
-import {loginFilter, stateFilter} from '../../stateFunc/actionFun'
+import React, {useState,useEffect,useRef} from 'react';
+import axios, {AxiosResponse,AxiosError} from 'axios';
+import {stateFilter,loginFilter} from '../../stateFunc/actionFun'
 import {Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-
-interface MyData {
-    userEmail: string;
-    userPassword: string;
-}
 
 interface OnlineState {
     nickName: string;
     isOnline: boolean;
 }
 
-const Sign: React.FC = () => {
+interface MyData {
+    userEmail: string;
+    userPassword: string;
+}
 
+
+
+
+const Sign: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [online, setOnline] = useState<OnlineState[]>([]); // 수신된 메시지 배열
 
@@ -31,13 +33,12 @@ const Sign: React.FC = () => {
         })
     };
 
-
     const login = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log(data);
         axios.post('/api/login', data)
-            .then((response: AxiosResponse<Object>) => {
-
+            .then(() => {
+                sessionStorage.setItem('userId', data.userEmail);
                 const stompClient = Stomp.over(() => {
                     return new SockJS("http://localhost:8080/ws-stomp");
                 });
@@ -67,9 +68,11 @@ const Sign: React.FC = () => {
                     console.error('Broker reported error: ' + frame.headers['message']);
                     console.error('Additional details: ' + frame.body);
                 };
-
+                
                 document.location.replace("/");
+
             })
+                
             .catch(error => {
                 loginFilter(error.response?.data || "An unexpected error occurred");
             })
@@ -83,7 +86,7 @@ const Sign: React.FC = () => {
 
     return (
         <div>
-            <form onSubmit={login}>
+            <form onSubmit={login}> 
                 <div>id: <input ref={inputRef} onChange={(event) => {
                     SignHandeler("userEmail", event.target.value)
                 }}></input></div>
@@ -97,4 +100,4 @@ const Sign: React.FC = () => {
     );
 
 }
-export default Sign;
+export default Sign

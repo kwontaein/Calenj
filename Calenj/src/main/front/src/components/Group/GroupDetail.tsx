@@ -1,20 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React, {useLayoutEffect, useRef, useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import group from "./index";
-import {ListView} from '../../style/FormStyle'
+import {ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
+import Invite from "./Invite/Invite"
+import {connect} from "react-redux";
+import {stateFilter} from '../../stateFunc/actionFun'
+// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
+
 
 interface Details {
     groupId: number;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
+    members:Members[];
 }
 
 interface Members {
@@ -22,10 +26,22 @@ interface Members {
     group_user_location: String;
     nickName: String;
     onlineStatus: string;
+    userEmail:string;
 }
 
 
-const GroupDetail: React.FC = () => {
+interface Message{
+    from:string;
+    message:string;
+}
+
+const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
+
+/* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
+ console.log = function no_console() {}; // console log 막기
+ console.warn = function no_console() {}; // console warning 막기
+ console.error = function () {}; // console error 막기*/
+const GroupDetail :React.FC=({})=>{
     const [detail, setDetail] = useState<Details | null>(null);
     const [members, setMembers] = useState<Members[] | null>(null);
     const location = useLocation();
@@ -33,68 +49,46 @@ const GroupDetail: React.FC = () => {
     const id = useId();
 
 
-    // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
-    useEffect(() => {
 
-        axios.post('/api/groupDetail', null, {
-            params: {
-                groupId: groupInfo.groupId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        }) // 객체의 속성명을 'id'로 설정
-            .then(response => {
-                console.log(response.data.members);
-                setDetail(response.data);
-                setMembers(response.data.members);
-            })
-            .catch(error => console.log(error));
+
+    // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
+    //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
+    useLayoutEffect(() => {
+        // updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
+        return;
+
     }, []);
 
-    useEffect(() => {
-        const stompClient = Stomp.over(() => {
-            return new SockJS("http://localhost:8080/ws-stomp");
-        });
-
-        stompClient.activate();//로그인 시 자동 활성화
-
-        // 연결 성공시 처리
-        stompClient.onConnect = (frame: Frame) => {
-            // console.log('Connected: ' + frame);
-            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
-            })
-            stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
-        };
-
-        // WebSocket 에러 처리
-        stompClient.onWebSocketError = (error: Error) => {
-            console.error('Error with websocket', error);
-        };
-
-        // Stomp 에러 처리
-        stompClient.onStompError = (frame: Frame) => {
-            console.error('Broker reported error: ' + frame.headers['message']);
-            console.error('Additional details: ' + frame.body);
-        };
-
-    }, [])
-
-    function invite() {
-        axios.post('/api/inviteGroup', null, {
-            params: {
-                groupId: groupInfo.groupId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
+    //그룹 디테일 불러오기
+    const getGroupList = async (): Promise<Details | null> => {
+        try {
+            const response = await axios.post('/api/groupDetail', null, {
+                params: {
+                    groupId: groupInfo.groupId
+                },
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }) // 객체의 속성명을 'id'로 설정;
+            const data = response.data as Details;
+            return data;
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.log(axiosError);
+            if (axiosError.response?.status) {
+                console.log(axiosError.response.status);
+                stateFilter((axiosError.response.status).toString());
             }
-        }) // 객체의 속성명을 'id'로 설정
-            .then(response => {
-                console.log(response.data)
-            })
-            .catch(error => console.log(error));
-
+            return null;
+        }
     }
+
+
+    const groupDetailState = useQuery<Details | null, Error>({
+        queryKey: [QUERY_GROUP_DETAIL_KEY,groupInfo.groupId],
+        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
+    });
+
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -116,39 +110,51 @@ const GroupDetail: React.FC = () => {
 
     return (
         <div>
+        {/* <div>
+            {detail !== null && (
+                <div key={detail.groupId}>
+                    <div>Group Detail ID: {detail.groupId}</div>
+                    <div>Group Detail Title: {detail.groupTitle}</div>
+                </div>
+            )}
+        </div> */}
+        {groupDetailState.isLoading && <div>Loading...</div>}
+        {groupDetailState.data && (
             <div>
-                {detail !== null && (
-                    <div key={detail.groupId}>
-                        <div>Group Detail ID: {detail.groupId}</div>
-                        <div>Group Detail Title: {detail.groupTitle}</div>
-                    </div>
-                )}
-            </div>
-
-
-            {members &&
+                <div key={groupDetailState.data.groupId}>
+                <div>방아이디: {groupDetailState.data.groupId.toString().slice(0,9).padEnd(20,'*')}</div>
+                    <RowFlexBox style={{justifyContent: 'space-between'}}>
+                    <div>방이름: {groupDetailState.data.groupTitle}</div>
+                    <div><Invite groupId={groupInfo.groupId}/></div>
+                    </RowFlexBox>
+                    
+                  
+                </div>
                 <div>
                     <ul>
-                        {members.map((member) => (
-                            <ListView>
+                        {groupDetailState.data.members.map((member) => (
+                            <ListView key={member.userEmail}>
                                 {member.nickName} : {onlineCheck(member.onlineStatus)}
                             </ListView>
                         ))}
                     </ul>
                 </div>
-            }
 
-            <div>
-                {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
+                <div>
+                    {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
+                </div>
+                <hr/>
+                <div>
+                   
+                </div>
+                <hr/>
+                <div>
+                    <Notice/>
+                    <Vote/>
+                </div>
             </div>
-            <hr/>
-            <div>
-                <div onClick={invite}>초대하기</div>
-            </div>
-            <hr/>
-            <Notice/>
-            <Vote/>
-        </div>
+        )}
+    </div>
     );
 }
 
