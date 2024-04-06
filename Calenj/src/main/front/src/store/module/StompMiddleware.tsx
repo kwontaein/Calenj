@@ -12,7 +12,7 @@ interface StompData {
     message: string
 }
 
-const subscribeDirection = ['addfriend','invite','groupmsg','friendmsg']
+const subscribeDirection = ['friend','invite','groupMsg','friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
     const { payload } = yield take(UPDATE_APP) //보낼 경로 먼저 설정

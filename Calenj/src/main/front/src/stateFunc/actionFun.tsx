@@ -38,9 +38,13 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     const confrimAction = () => { //취할 행동
         if (window.confirm(massage)) { //확신 시
             onConfirm();
-            if(refetchQuery){
-                refetchQuery.refetch();
-            }
+            setTimeout(()=>{
+                if(refetchQuery){
+                    console.log('refetch')
+                    refetchQuery.refetch();
+                }
+            },500)
+            
         } else {
             onCancel(); //취소 누르면 실행
         }

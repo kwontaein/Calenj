@@ -58,4 +58,7 @@ public class GroupVoteEntity {
     @Convert(converter = StringListConverter.class)
     //List<String> 유형의 형식 필드를 데이터베이스 열로 매핑
     private List<String> voteWatcher;
+
+    @Builder.Default
+    private int countVoter = 0;
 }

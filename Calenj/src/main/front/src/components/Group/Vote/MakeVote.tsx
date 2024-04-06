@@ -44,7 +44,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
 
         if (inputForm === 'TEXT') {
             if (content != '') {
-                inputContent = content;
+                inputContent = content; 
             }
         } else if (inputForm === 'DATE') {
             if (content_Date != null) {
@@ -59,7 +59,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
             const id = new Date().getTime();
 
             voteList.map((value) => {
-                if (value.content === inputContent) {
+                if (value.content === inputContent) { //내용 중복 시 초기화
                     inputContent = '';
                 }
             })
@@ -124,10 +124,10 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
 
     const postVote = () => {
 
-        if (selectedDate != null) {
+   
 
             const voteItem = voteList.map(item => item.content);
-            const VoteEndDate = saveDBFormat(selectedDate);
+            const VoteEndDate = saveDBFormat(selectedDate as Date);
             const createDate = saveDBFormat(new Date());
             const data = {
                 dto1: {
@@ -152,20 +152,20 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                         stateFilter((axiosError.response.data) as string);
                     }
                 })
-        } else {
-            window.alert('투표 마감날짜를 정해주세요.')
-        }
+        
 
     }
 
     const createVote = () => {
-        if (title !== '' && voteList.length > 1) {
+        if (title !== '' && voteList.length > 1 && selectedDate != null) {
             useConfirm(`투표를 생성하시겠습니까?`, postVote, () => {},queryState)
         } else if (title === '' && voteList.length < 2) {
             window.alert('제목 입력해주세요.')
         } else if (voteList.length < 2) {
             window.alert('항목을 2개이상 추가해주세요.')
-        } else {
+        }else if(selectedDate ===null){
+            window.alert('날짜를 입력해주세요.')
+        }else {
             window.alert('제목 및 항목을 입력해주세요.')
         }
     }

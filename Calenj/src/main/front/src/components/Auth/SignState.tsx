@@ -20,6 +20,7 @@ const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
             const response = await axios.post('/api/logout');
             console.log(response.data);
             document.location.replace('/')
+            queryClient.clear();
             return response.data;
         }catch(error){ 
             document.location.replace('/')

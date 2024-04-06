@@ -17,7 +17,7 @@ import java.util.UUID;
 @Repository
 public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, GroupVoteId> {
     // 쿼리: GroupVote를 List로 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.countVoter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
     Optional<List<GroupVoteDTO>> findVoteByGroupId(@Param("groupId") UUID groupId);
 
 
@@ -25,7 +25,7 @@ public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, Gro
     Optional<GroupVoteEntity> findGroupVoteEntityByVoteId(UUID voteId);
 
     //voteId로 상세조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher) FROM Group_Vote gv WHERE gv.voteId = :voteId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher,gv.countVoter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
     Optional<GroupVoteDTO> findByVoteId(@Param("voteId") UUID voteId);
 
     @Modifying(clearAutomatically = true)

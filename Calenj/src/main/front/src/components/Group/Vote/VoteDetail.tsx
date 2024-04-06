@@ -8,7 +8,7 @@ import { array } from 'yup';
 interface voteChoiceDTO{
     voteItem:string;
     voter:string[];
-    countVoter:number;
+
 }
 
 interface VoteDetails{
@@ -20,6 +20,7 @@ interface VoteDetails{
     anonymous:boolean;
     voteWatcher:string[]
     voter:string[];
+    countVoter:number;
     voteChoiceDTO:voteChoiceDTO[];
 
 }
@@ -68,9 +69,15 @@ const VoteDetail:React.FC=()=>{
         getVoteDetail();
     }, []);
 
-    const BeforCheckVoter=(voteChoice:voteChoiceDTO[])=>{
-        voteChoice.map((value)=>{
+    const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
+        let userVoter = new Array(voteList.length).fill(false);
+        let userEmail = sessionStorage.getItem('userId')
+        voteList.map((item)=>{
+            item.voter.map((voter)=>{
+                if(voter ===userEmail){
 
+                }
+            })
         })
     }
 
