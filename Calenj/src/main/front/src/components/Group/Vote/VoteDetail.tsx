@@ -72,10 +72,10 @@ const VoteDetail:React.FC=()=>{
     const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
         let userVoter = new Array(voteList.length).fill(false);
         let userEmail = sessionStorage.getItem('userId')
-        voteList.map((item)=>{
+        voteList.map((item,index)=>{
             item.voter.map((voter)=>{
                 if(voter ===userEmail){
-
+                    userVoter[index] = true;
                 }
             })
         })
