@@ -59,7 +59,7 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
 
 
 /*************************************날짜 관련 함수*************************************/
-const now = new Date();
+
 const minute = 1000*60 //1분
 const hour = minute*60;
 const oneDay = hour*24 //하루
@@ -71,6 +71,7 @@ export function AHMFormat(date:Date):string{
 
 
 export const createTimePassed =(date:string)=>{
+    const now = new Date();
     const created = changeDateForm(date);
     const lastTime = (Number(now)-Number(created));
     let result;
@@ -78,7 +79,7 @@ export const createTimePassed =(date:string)=>{
     if(lastTime<minute){
         result='방금'
     }else if(lastTime<oneDay){//하루가 안 지났으면
-        result =(lastTime<hour? `${(lastTime/minute).toFixed(0)}분 전`:`${(lastTime/hour).toFixed(0)}시간 전`)
+        result =(lastTime<hour? `${Math.floor((lastTime/minute))}분 전`:`${(lastTime/hour).toFixed(0)}시간 전`)
     }else{
         result = AHMFormat(created).slice(6);//년도 자르고 보이기
     }

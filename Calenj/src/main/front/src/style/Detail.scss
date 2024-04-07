@@ -1,17 +1,26 @@
 .VoteDetailContainer {
   border-radius: 5px;
   border: 1px solid #ccc;
-  width: 88vw;
-  margin-left: 1vw;
+  width: 92vw;
+  margin: 2vw;
   margin-Top: 20px;
-  padding: 4vw;
+  padding: 2vw;
 }
 
 
 #ViewDetails_Text {
-  margin: 2vw;
-  width: 100vw;
+  padding: 2vw;
+  width: 96vw;
   text-align: center;
   font-size: 20px;
   font-weight: 550;
+}
+
+//투표 디테일
+#VoteDetail_title{
+  font-size: 18px;
+  font-weight: 550;
+}
+#voteContent{
+  margin-top: 4px;
 }

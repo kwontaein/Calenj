@@ -15,19 +15,25 @@ interface StompData {
 const subscribeDirection = ['friend','invite','groupMsg','friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
-    const { payload } = yield take(UPDATE_APP) //보낼 경로 먼저 설정
-    const { appLogic, params, target } = yield payload;
+    
     while (true) {
+        const { payload } = yield take(UPDATE_APP) //보낼 경로 먼저 설정
+        const { params, target } = yield payload;
+        console.log(`app/${target}/${params}`)
         const { message } = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
+        
+        console.log('ㅇㅅㅇ')
         const data: StompData = {  
             [target]: `${params}`,
             message: `${message}`
         }
-        const url = `app/${appLogic}`
+        const url = `app/${target}/${params}`
         stompClient.publish({
             destination: `${url}`,
             body: JSON.stringify(data),
         })
+
+        // app/groupMsg/
     }
 }
 
@@ -47,6 +53,7 @@ function* startStomp(destination:Destination): any{
     const stompClient = yield call(createStompConnection) //Stomp를 connect하는 함수, 성공 시 다음 명령 실행
     const channel = yield call(createEventChannel,stompClient,destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     const lastWriteTask = yield fork(sendStomp, stompClient) //함수 실행 후 백그라운드에도 유지
+   
     let isRunning = true;
 
   //put == dispatch랑 동일
@@ -66,13 +73,13 @@ function* startStomp(destination:Destination): any{
 
 
 
-//stomp연결을 위한 함수
+//stomp연결을 위한 함수 >>call로 호출 > 비동기식으로 처리해주는 거, Promise도 가능
 function createStompConnection(){
 
     const stompUrl :string = "http://localhost:8080/ws-stomp"
         
     return new Promise((res,rej)=>{
-     
+    
             const sock = new SockJS(stompUrl);
             const stompClient = Stomp.over(sock);
 
@@ -121,8 +128,8 @@ function createEventChannel(stompClient:CompatClient, destination:Destination){
                     }
                     stompClient.send('/app/online', {}, JSON.stringify(data));
                 }
-                sub.map((topic:(string|number))=>{
-                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${topic}`, (isOnline: IMessage) => {})
+                sub.map((parmas:(string|number))=>{
+                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${parmas}`, (isOnline: IMessage) => {})
                 })
             }) 
             
@@ -321,4 +328,4 @@ function createEventChannel(stompClient:CompatClient, destination:Destination){
 //         //         const appPayloadValue =sendMsgFn.next(updateApp({appLogic:'userOnline', target:'groupId',params:groupInfo.groupId})).value
 //         //         console.log(sendMsgFn.next(appPayloadValue))
 //         //         console.log(startStomp.next())
-//         //     })
+//         //})

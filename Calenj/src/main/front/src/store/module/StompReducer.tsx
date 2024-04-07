@@ -20,14 +20,14 @@ interface StompData{
 
 export interface DispatchProps {
     updateDestination: (payload: { destination:Destination})=>void;
-    updateTarget: (payload: { target: string, params: string|number})=>void;
+    updateApp: (payload: { target: string, params: string|number})=>void;
     sendStompMsg : (payload: {message: string}) =>void;
     receivedStompMsg : (payload: {message: Message}) =>void;
 }
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     updateDestination: (payload: { destination: Destination })=>dispatch(updateDestination(payload)),
-    updateTarget: (payload: { target: string, params: string|number})=>dispatch(updateTarget(payload)),
+    updateApp: (payload: { target: string, params: string|number})=>dispatch(updateApp(payload)),
     sendStompMsg : (payload: {message: string}) =>dispatch(sendStompMsg(payload)),
     receivedStompMsg : (payload: {message: Message}) =>dispatch(receivedStompMsg(payload)),
 });
@@ -47,7 +47,7 @@ export const updateDestination = (payload:{destination:Destination}) => ({
 });
 
 
-export const updateTarget = (payload:{target: string, params: string|number}) => ({
+export const updateApp = (payload:{target: string, params: string|number}) => ({
     type: UPDATE_APP,
     payload: payload,
 });
@@ -99,9 +99,7 @@ const StompReducer = handleActions(
     {
       [UPDATE_DESTINATION]: (state, action) => ({
         ...state,
-        destination: action.payload.destination,
-        params: action.payload.params,
-        target: action.payload.target,
+        destination: action.payload.destination, //[[userid],[userid],list<groupId>, list<friendId>]
       }),
       [UPDATE_APP]: (state, action) => ({
         ...state,

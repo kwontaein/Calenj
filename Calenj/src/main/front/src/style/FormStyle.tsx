@@ -4,6 +4,9 @@ import styled from 'styled-components'
 interface UnfocusBackgroundProps {
     focus: string;
 }
+interface VoteProps{
+    isCreater :boolean
+}
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
     position: relative;
@@ -116,3 +119,12 @@ export const MiniText = styled.div`
     margin-top: 5px;
     font-size: 12px;
 `
+
+export const TrasformButton = styled.button<VoteProps>`
+    width: ${props=>props.isCreater? '44vw': '80vw'};
+    padding: ${props=>props.isCreater? '1.2vw': '15px'};
+    margin-top:2vw;
+    font-size:15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+`;
