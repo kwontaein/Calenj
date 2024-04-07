@@ -6,7 +6,7 @@ import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable,UnfocusBackg
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';
 import {connect} from "react-redux";
-import {EmailToken, updateToken, updateCodeValid} from '../../store/EmailValidationSlice';
+import {EmailToken, updateToken, updateCodeValid} from '../../store/slice/EmailValidationSlice';
 import {Dispatch} from 'redux';
 import {RootState} from '../../store/store'
 import '../../style/Sign.scss'

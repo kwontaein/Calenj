@@ -1,3 +1,4 @@
+import { UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 
@@ -27,7 +28,7 @@ export function stateFilter(error: string): void {
 }
 
 
-export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () => void) {
+export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () => void, refetchQuery?:UseQueryResult) {
     if (typeof onConfirm !== "function") {
         return;
     }
@@ -37,6 +38,13 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     const confrimAction = () => { //취할 행동
         if (window.confirm(massage)) { //확신 시
             onConfirm();
+            setTimeout(()=>{
+                if(refetchQuery){
+                    console.log('refetch')
+                    refetchQuery.refetch();
+                }
+            },500)
+            
         } else {
             onCancel(); //취소 누르면 실행
         }
@@ -51,7 +59,7 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
 
 
 /*************************************날짜 관련 함수*************************************/
-const now = new Date();
+
 const minute = 1000*60 //1분
 const hour = minute*60;
 const oneDay = hour*24 //하루
@@ -63,6 +71,7 @@ export function AHMFormat(date:Date):string{
 
 
 export const createTimePassed =(date:string)=>{
+    const now = new Date();
     const created = changeDateForm(date);
     const lastTime = (Number(now)-Number(created));
     let result;
@@ -70,7 +79,7 @@ export const createTimePassed =(date:string)=>{
     if(lastTime<minute){
         result='방금'
     }else if(lastTime<oneDay){//하루가 안 지났으면
-        result =(lastTime<hour? `${(lastTime/minute).toFixed(0)}분 전`:`${(lastTime/hour).toFixed(0)}시간 전`)
+        result =(lastTime<hour? `${Math.floor((lastTime/minute))}분 전`:`${(lastTime/hour).toFixed(0)}시간 전`)
     }else{
         result = AHMFormat(created).slice(6);//년도 자르고 보이기
     }

@@ -1,20 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
-import axios from 'axios';
+import React, {useLayoutEffect, useRef, useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
-import {Client, Frame, IMessage, Stomp} from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import group from "./index";
-import {ListView} from '../../style/FormStyle'
+import {ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
+import Invite from "./Invite/Invite"
+import {connect} from "react-redux";
+import {stateFilter} from '../../stateFunc/actionFun'
+import{ DispatchProps,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
+
 
 interface Details {
     groupId: number;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
+    members:Members[];
 }
 
 interface Members {
@@ -22,108 +26,75 @@ interface Members {
     group_user_location: String;
     nickName: String;
     onlineStatus: string;
-}
-
-interface Friends {
-    // 친구 아이디
-    friendUserId: string;
-    // 친구 닉네임
-    nickName: string;
+    userEmail:string;
 }
 
 
-const GroupDetail: React.FC = () => {
+interface Message{
+    from:string;
+    message:string;
+}
 
+const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
-    /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
-     console.log = function no_console() {}; // console log 막기
-     console.warn = function no_console() {}; // console warning 막기
-     console.error = function () {}; // console error 막기*/
-
-    const [detail, setDetail] = useState<Details | null>(null);
-    const [members, setMembers] = useState<Members[] | null>(null);
-    const [friends, setFriends] = useState<Friends[] | null>(null);
-    const [inviteLink, setInviteLink] = useState<string>("");
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-    const modalBackground = useRef<HTMLDivElement>(null);
-
+/* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
+ console.log = function no_console() {}; // console log 막기
+ console.warn = function no_console() {}; // console warning 막기
+ console.error = function () {}; // console error 막기*/
+const GroupDetail :React.FC<DispatchProps>=({updateApp,sendStompMsg})=>{
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
 
 
-    const stompClient = (() => {
-        const sock = new SockJS("http://localhost:8080/ws-stomp");
-        const stomp = Stomp.over(sock);
 
-        // WebSocket 에러 처리
-        stomp.onWebSocketError = (error: Error) => {
-            console.error('Error with websocket', error);
-        };
-
-        // Stomp 에러 처리
-        stomp.onStompError = (frame: Frame) => {
-            console.error('Broker reported error: ' + frame.headers['message']);
-            console.error('Additional details: ' + frame.body);
-        };
-        return stomp;
-    })();
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
-    useEffect(() => {
+    //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
+    useLayoutEffect(() => {
+        // updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
+        return;
 
-        axios.post('/api/groupDetail', null, {
-            params: {
-                groupId: groupInfo.groupId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        }) // 객체의 속성명을 'id'로 설정
-            .then(response => {
-                console.log(response.data.members);
-                setDetail(response.data);
-                setMembers(response.data.members);
-            })
-            .catch(error => console.log(error));
     }, []);
 
-    useEffect(() => {
-        stompClient.activate(); // 로그인 시 자동 활성화
-
-        // 연결 성공시 처리
-        stompClient.onConnect = (frame: Frame) => {
-            // console.log('Connected: ' + frame);
-            stompClient.subscribe(`/topic/userOnline/${groupInfo.groupId}`, (isOnline: IMessage) => {
-            })
-            stompClient.send('/app/online', {}, JSON.stringify({groupId: groupInfo.groupId}));
-        };
-    }, [])
-
-//usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
-    function invite() {
-        axios.post('/api/inviteCode', {
-            groupId: groupInfo.groupId
-        }).then(response => {
-            setInviteLink(response.data)
-            axios.post('/api/getFriendList', {})
-                .then(response => {
-                    setFriends(response.data)
-                    console.log("friends", friends)
-                    console.log(response.data)
-                    setModalOpen(true)
-                }).catch(error => console.log(error));
-        }).catch(error => console.log(error));
-
+    //그룹 디테일 불러오기
+    const getGroupList = async (): Promise<Details | null> => {
+        try {
+            const response = await axios.post('/api/groupDetail', null, {
+                params: {
+                    groupId: groupInfo.groupId
+                },
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }) // 객체의 속성명을 'id'로 설정;
+            const data = response.data as Details;
+            return data;
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.log(axiosError);
+            if (axiosError.response?.status) {
+                console.log(axiosError.response.status);
+                stateFilter((axiosError.response.status).toString());
+            }
+            return null;
+        }
     }
 
-    function sendToFriend(friendId: string, inviteLink: string) {
-        //친구에게 알림 보내기
-        stompClient.subscribe(`/topic/userOnline/${friendId}`, (isOnline: IMessage) => {
-        })
-        stompClient.send('/app/online', {}, JSON.stringify({inviteLink}));
+
+    const groupDetailState = useQuery<Details | null, Error>({
+        queryKey: [QUERY_GROUP_DETAIL_KEY,groupInfo.groupId],
+        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
+    });
+
+    const sendMsg = ()=>{
+        if(groupDetailState.data){
+            updateApp({target:'groupMsg',params:groupDetailState.data.groupId})
+            sendStompMsg({message:'ㅎㅇ'})
+        }
+        console.log('ㅎㅇ')
     }
+
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -145,76 +116,56 @@ const GroupDetail: React.FC = () => {
 
     return (
         <div>
+        {/* <div>
+            {detail !== null && (
+                <div key={detail.groupId}>
+                    <div>Group Detail ID: {detail.groupId}</div>
+                    <div>Group Detail Title: {detail.groupTitle}</div>
+                </div>
+            )}
+        </div> */}
+        {groupDetailState.isLoading && <div>Loading...</div>}
+        {groupDetailState.data && (
             <div>
-                {detail !== null && (
-                    <div key={detail.groupId}>
-                        <div>Group Detail ID: {detail.groupId}</div>
-                        <div>Group Detail Title: {detail.groupTitle}</div>
-                    </div>
-                )}
-            </div>
-
-
-            {members &&
+                <div key={groupDetailState.data.groupId}>
+                <div>방아이디: {groupDetailState.data.groupId.toString().slice(0,9).padEnd(20,'*')}</div>
+                    <RowFlexBox style={{justifyContent: 'space-between'}}>
+                    <div>방이름: {groupDetailState.data.groupTitle}</div>
+                    <div><Invite groupId={groupInfo.groupId}/></div>
+                    </RowFlexBox>
+                    
+                  
+                </div>
                 <div>
                     <ul>
-                        {members.map((member) => (
-                            <ListView>
+                        {groupDetailState.data.members.map((member) => (
+                            <ListView key={member.userEmail}>
                                 {member.nickName} : {onlineCheck(member.onlineStatus)}
                             </ListView>
                         ))}
                     </ul>
                 </div>
-            }
-
-            <div>
-                {detail && <Chatting groupName={detail.groupTitle} groupId={detail.groupId}/>}
-            </div>
-            <hr/>
-            <div>
-            </div>
-            <div className={'btn-wrapper'}>
-                <button className={'modal-open-btn'} onClick={invite}>
-                    초대하기
-                </button>
-            </div>
-            {modalOpen &&
-                <div ref={modalBackground} className={'modal-container'} onClick={e => {
-                    if (e.target === modalBackground.current) {
-                        setModalOpen(false);
-                    }
+                <div onClick={()=>{
+                    sendMsg()
                 }}>
-                    <div className={'modal-content'}>
-                        <div className={'FriendList'}>
-                            {friends && friends.length > 0 ?
-                                <ul>
-                                    {friends.map((friend) => (
-                                        <ListView>
-                                            <div>{friend.nickName}({friend.friendUserId})</div>
-                                            <button onClick={() => sendToFriend(friend.friendUserId, inviteLink)}>
-                                                친구에게 보내기
-                                            </button>
-                                        </ListView>
-                                    ))}
-                                </ul> : <div className={'noFriends'}>
-                                    <p>친구가 없으신가요?</p>
-                                    <p>친구를 만들어 보세요!</p>
-                                </div>
-                            }</div>
-                        {inviteLink && <div className={'issueLink'}><b>{inviteLink}</b>
-                            <button>복사하기</button>
-                        </div>}
-                        <button className={'modal-close-btn'} onClick={() => setModalOpen(false)}>
-                            모달 닫기
-                        </button>
-                    </div>
+                    타겟설정
                 </div>
-            }
-            <hr/>
-            <Notice/>
-            <Vote/>
-        </div>
+                <div>
+                    {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
+                </div>
+                <hr/>
+                <div>
+                   
+                </div>
+                <hr/>
+                <div>
+                    <Notice/>
+                    <Vote/>
+                </div>
+            </div>
+        )}
+    </div>
     );
 }
 
-export default GroupDetail;
+export default connect(null,mapDispatchToProps) (GroupDetail);

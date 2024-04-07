@@ -1,32 +1,37 @@
 import React, {useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
-import {stateFilter,createTimePassed} from '../../../stateFunc/actionFun'
+import {stateFilter,changeDateForm,AHMFormat} from '../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
 import { array } from 'yup';
+import { MiniText, RowFlexBox ,TrasformButton} from '../../../style/FormStyle';
 
+interface voteChoiceDTO{
+    voteItem:string;
+    voter:string[];
+
+}
 
 interface VoteDetails{
-    voteId : string;
     voteCreater : string;
     voteTitle : string;
-    voteItem:string[];
     voteCreated:string;
     voteEndDate:string;
     isMultiple:boolean;
     anonymous:boolean;
     voteWatcher:string[]
     voter:string[];
-    myId:string;
+    countVoter:number;
+    voteChoiceDTO:voteChoiceDTO[];
+
 }
 
 
 const VoteDetail:React.FC=()=>{
     
     const [detail, setDetail] = useState<VoteDetails | null>(null);
-    const [myVoter,setMyVoter] = useState<boolean[]>();
-    const [voted, setVoted] = useState<string[][]>();
-    const [countVoted,setCountVoted] = useState<number>(0);
+    const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
+    const [myVoter,setMyVoter] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const location = useLocation();
     const [isLoading,setIsLoading] =useState<boolean>(false);
     const voteInfo = {...location.state};
@@ -43,9 +48,14 @@ const VoteDetail:React.FC=()=>{
             .then(response => {
                 let voteDetail = response.data
                 setDetail(voteDetail);
+                console.log(voteDetail.voteChoiceDTO)
+                setVoted(voteDetail.voteChoiceDTO)
                 console.log(voteDetail)
+                TimeOperation(voteDetail.voteEndDate)
                 //TODO : 배열을 voteDetail.voter로 바꾸기
-                BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
+                BeforCheckVoter(voteDetail.voteChoiceDTO)
+                setIsLoading(true);
+                //BeforCheckVoter(['dysj12@gmail.com, ㅎ2','ㅎ2','ㅇㅅㅇ, ㅇㅂㅇ,ㅇㅁㅇ'],voteDetail.voteItem,voteDetail.myId)
             })
             .catch(error => {
                 const axiosError = error as AxiosError;
@@ -57,40 +67,46 @@ const VoteDetail:React.FC=()=>{
     }
     
     useLayoutEffect(() => {
-        let list=[['ㅎㅇ','ㅎㅇ2'],['ㅎ2']];
-        let newlist =list.map((value)=>{
-            return value.toString()
-        })
-        console.log(newlist);
         getVoteDetail();
     }, []);
 
-
-    //내가 투표한 항목 및 투표 항목별 투표자 셋팅
-    const BeforCheckVoter=(voter:string[],voteItem:string[],myId:string)=>{
-        let countArr = new Array(voteItem.length).fill(false); //투표항목의 길이만큼 생성
-        let set = new Set();
-        //각 항목 별 투표한 사람을 2차원 배열로 저장
-        let arr = Array.from(voter,(v:string,index:number)=>{
-            let voterList = v.split(',')
-            let newVoterList =voterList.map((value)=>{
-                if(value.trim() ===myId){   //각 항목별 투표한 사람 중 내id가 있으면 (내가 투표한 항목 체크)
-                    countArr[index] = true; 
+    const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
+        let userVoter = new Array(voteList.length).fill(false);
+        let userEmail = sessionStorage.getItem('userId')
+        voteList.map((item,index)=>{
+            item.voter.map((voter)=>{
+                if(voter ===userEmail){
+                    userVoter[index] = true; //내가 투표한 게 있는지 체크
                 }
-                set.add(value.trim()) //투표한 인원을 중복없이
-                return value //newVoterList의 배열로 들어감
             })
-            return newVoterList
         })
-        console.log(countArr)
-        console.log(arr)
-        setCountVoted(set.size)
-        setMyVoter(countArr); //내가 투표한 항목 가져옴
-        setVoted(arr)   //항목별 투표한 사람을 가져옴
-        setIsLoading(true);
+        setMyVoter(userVoter);
+        console.log(userVoter)
     }
 
-
+    const TimeOperation =(endDate:string)=>{
+        const now = new Date();
+        const end = changeDateForm(endDate);
+        const remaining =Number(end)-Number(now);
+        const minute = 60*1000;
+        const hour = minute*60;
+        const oneDay = hour*24
+        let result:string;
+        if(now>end){
+            result = `${AHMFormat(end).slice(6)} 종료`
+        }else if(remaining< hour){//1시간도 안남았으면
+            result = `${Math.floor(remaining/minute)}분 남음`
+        }else if(remaining<(oneDay)){ //하루 전이면
+            result = `${Math.floor(remaining/hour)}시간 남음`
+        }else{
+            result = `${Math.round(remaining/oneDay)}일 남음`
+        }
+        return result;
+    }
+    const createrCheck=(creater:string)=>{
+        const userEmail=sessionStorage.getItem('userId')
+        return creater===userEmail
+    }
 
     return(
         <div>
@@ -99,9 +115,43 @@ const VoteDetail:React.FC=()=>{
             <div>
                 <DetailTop Created={detail.voteCreated}Creater={detail.voteCreater} Watcher={detail.voteWatcher}/>
                 <div className='VoteDetailContainer'>
-                    {myVoter?.toString().includes('true') ? 
-                        <>ㅎㅇ</>:<>ㅇㅅㅇ</>
-                    }
+                    {detail &&
+                    <div>
+                        <div id='VoteDetail_title'>
+                            {detail.voteTitle}
+                        </div>
+                        <MiniText>
+                            <div id='voteContent'>{detail.anonymous ? <>익명투표</>:<></>}</div>
+                            <div id='voteContent'>{detail.isMultiple ? <>복수선택</>:<></>}</div>
+                            <div id='voteContent'>{TimeOperation(detail.voteEndDate)}</div>
+                        </MiniText>
+
+                        {myVoter?.toString().includes('true') ? 
+                        <div>
+                            <button>다시 투표하기</button>
+                        </div>
+                            
+                            :
+                            <div>
+                            {voted?.map((Item) => (
+                                <RowFlexBox>
+                                    <label>
+                                    <input type={detail.isMultiple?'checkbox':'radio'}name='voterList'/> 
+                                    {Item.voteItem}
+                                    </label>
+                                   
+                                </RowFlexBox>
+                            ))}
+                            <div style={{width:'100vw'}}>
+                                <TrasformButton isCreater={createrCheck(detail.voteCreater)}>투표 하기</TrasformButton>
+                                {createrCheck(detail.voteCreater) ?<TrasformButton isCreater={createrCheck(detail.voteCreater)}>투표 종료</TrasformButton>:<></>}
+                            </div>
+                            
+                        </div>
+                        }  
+                    </div>
+        
+                }
                 </div>
             </div>
             )

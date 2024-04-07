@@ -4,9 +4,15 @@ package org.example.calenj.Main.model;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.Main.DTO.FriendDTO;
+import org.example.calenj.Main.DTO.Group.GroupDTO;
+import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.DTO.UserDTO;
+import org.example.calenj.Main.DTO.UserSbscribeDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
+import org.example.calenj.Main.Repository.FriendRepository;
+import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.http.HttpStatus;
@@ -21,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,7 +40,10 @@ public class UserService {
 
     /*private final ValidateDTO validateDTO;*/
 
-    private final GlobalService grobalService;
+    private final GlobalService globalService;
+    private final GroupRepository groupRepository;
+    private final FriendRepository friendRepository;
+
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -47,7 +57,7 @@ public class UserService {
     }
 
     public void selectUserInfo() {
-        UserDetails userDetails = grobalService.extractFromSecurityContext();
+        UserDetails userDetails = globalService.extractFromSecurityContext();
 
         //select 테스트
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
@@ -129,11 +139,23 @@ public class UserService {
         removeCookie(response, "refreshToken");
     }
 
+
+    public UserSbscribeDTO subscribeCheck(){
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+
+        String userEmail = userDetails.getUsername();
+        List<GroupDTO> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
+        List<FriendDTO> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
+        UserSbscribeDTO userSbscribeDTO = new UserSbscribeDTO(friendDTO, groupDTO, userEmail);
+        return userSbscribeDTO;
+    }
+
+
     public void removeCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
     }
-    
+
 }

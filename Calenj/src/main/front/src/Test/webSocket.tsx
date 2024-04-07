@@ -50,7 +50,7 @@ const webSocket: React.FC = () => {
         }
 
         client.current.publish({
-        destination: "/pub/chat",
+        destination: "/app/chat",
         body: JSON.stringify({
             roomSeq: ROOM_SEQ,
             message: message }),
