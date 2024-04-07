@@ -12,7 +12,7 @@ interface StompData {
     message: string
 }
 
-const subscribeDirection = ['friend','invite','groupMsg','friendMsg']
+const subscribeDirection = ['personalTopic','groupMsg','friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
     
