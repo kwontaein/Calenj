@@ -10,7 +10,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun'
-import{ DispatchProps,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
+import{ DispatchStompProps,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToStompProps}  from '../../store/module/StompReducer';
 
 
 interface Details {
@@ -41,7 +41,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail :React.FC<DispatchProps>=({updateApp,sendStompMsg})=>{
+const GroupDetail :React.FC<DispatchStompProps>=({updateApp,sendStompMsg})=>{
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -168,4 +168,4 @@ const GroupDetail :React.FC<DispatchProps>=({updateApp,sendStompMsg})=>{
     );
 }
 
-export default connect(null,mapDispatchToProps) (GroupDetail);
+export default connect(null,mapDispatchToStompProps) (GroupDetail);

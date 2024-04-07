@@ -38,37 +38,7 @@ const Sign: React.FC = () => {
         console.log(data);
         axios.post('/api/login', data)
             .then(() => {
-                sessionStorage.setItem('userId', data.userEmail);
-                const stompClient = Stomp.over(() => {
-                    return new SockJS("http://localhost:8080/ws-stomp");
-                });
-
-                stompClient.activate();//로그인 시 자동 활성화
-
-                // 연결 성공시 처리
-                stompClient.onConnect = (frame: Frame) => {
-                    console.log('Connected: ' + frame);
-                    stompClient.subscribe(`/topic/personalTopic/${data.userEmail}`, (online: IMessage) => {
-                        setOnline(JSON.parse(online.body));
-                        console.log(online);
-                    })
-                    stompClient.send('/app/personalTopic', {}, JSON.stringify({
-                        userName: data.userEmail,
-                        alarmContent: "로그인!!"
-                    }));
-                };
-
-                // WebSocket 에러 처리
-                stompClient.onWebSocketError = (error: Error) => {
-                    console.error('Error with websocket', error);
-                };
-
-                // Stomp 에러 처리
-                stompClient.onStompError = (frame: Frame) => {
-                    console.error('Broker reported error: ' + frame.headers['message']);
-                    console.error('Additional details: ' + frame.body);
-                };
-                
+                sessionStorage.setItem('userId', data.userEmail);                
                 document.location.replace("/");
 
             })
