@@ -55,6 +55,7 @@ public class FriendController {
     //내가 받은 요청 목록
     @PostMapping("/api/ResponseFriendList")
     public List<EventDTO> ResponseFriendList() {
+        System.out.println(friendService.ResponseFriendList());
         return friendService.ResponseFriendList();
     }
 

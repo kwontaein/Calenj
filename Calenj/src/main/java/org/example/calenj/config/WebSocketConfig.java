@@ -13,8 +13,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         System.out.println("실행 configureMessageBroker");
-        config.enableSimpleBroker("/topic");//sub
-        config.setApplicationDestinationPrefixes("/app");//pub
+        config.enableSimpleBroker("/topic");//sub 보낼때
+        config.setApplicationDestinationPrefixes("/app");//pub 받을때
     }
 
     @Override

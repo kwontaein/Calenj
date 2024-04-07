@@ -6,10 +6,11 @@ import lombok.NoArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSbscribeDTO {
+public class UserSubscribeDTO {
     List<FriendDTO> FriendList;
     List<GroupDTO> GroupList;
     String userId;

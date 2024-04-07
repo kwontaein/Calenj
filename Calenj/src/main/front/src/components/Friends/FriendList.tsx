@@ -9,16 +9,13 @@ import {ListView, MiniText} from '../../style/FormStyle'
 interface FriendList {
     friendId: string;
     nickName: string;
+    chattingRoomId: number;
     friendAddDate: string;
 }
 
 export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
 
 const FriendList: React.FC = () => {
-    const [showAddFriend, setShowAddFriend] = useState<boolean>(false);
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState<boolean>(false);
-
     //그룹 목록 불러오기
     const getFriendList = async (): Promise<FriendList[] | null> => {
         try {
@@ -40,27 +37,37 @@ const FriendList: React.FC = () => {
         }
     }
 
-
     const friendListState = useQuery<FriendList[] | null, Error>({
         queryKey: [QUERY_FRIEND_LIST_KEY],
         queryFn: getFriendList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    const redirectDetail = (friendId: String) => {
-        navigate("/details", {state: {friendId: friendId}});
+    const addFriend = async () => {
+        axios.post('/api/requestFriend', null, {
+            params: {
+                otherUserId: "zodls1128@gmail.com"
+            },
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        }) // 객체의 속성명을 'id'로 설정;
+            .then(() => window.alert('친구 요청이 성공적으로 전송되었습니다.'))
+            .catch((error) => {
+                window.alert('친구 요청이 모종의 이유로 취소되었습니다.');
+                console.log(error.response.status);
+            })
     }
 
     return (
         <div>
-            <button onClick={() => setShowAddFriend(true)}>친구 추가</button>
+            <button onClick={() => addFriend()}>친구 추가</button>
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <div>
                     <h2>Friend List</h2>
                     <ul>
                         {friendListState.data.map((friends) => (
-                            <ListView key={friends.friendId}
-                                      onClick={() => redirectDetail(friends.friendId)}>
+                            <ListView key={friends.friendId}>
                                 {friends.nickName}
                             </ListView>
                         ))}
@@ -69,6 +76,5 @@ const FriendList: React.FC = () => {
             )}
         </div>
     )
-
 }
 export default FriendList;

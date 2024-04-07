@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ChatMessageDTO {
     private String groupId;
+    private String friendId;
     private String nickName;
     private String message;
 }

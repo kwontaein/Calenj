@@ -31,11 +31,19 @@ public class FriendDTO {
     private FriendEntity.statusType status;
 
     //친구 채팅 id
-    private UUID ChatingUUID;
+    private UUID ChattingRoomId;
 
-    public FriendDTO(String friendUserId, String nickName) {
+    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId) {
         this.friendUserId = friendUserId;
         this.nickName = nickName;
+        this.ChattingRoomId = ChattingRoomId;
+    }
+
+    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId, String createDate) {
+        this.friendUserId = friendUserId;
+        this.nickName = nickName;
+        this.ChattingRoomId = ChattingRoomId;
+        this.createDate = createDate;
     }
 
 }

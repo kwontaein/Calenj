@@ -6,9 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.FriendDTO;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupUserDTO;
 import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.UserSbscribeDTO;
+import org.example.calenj.Main.DTO.UserSubscribeDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.FriendRepository;
@@ -140,14 +139,14 @@ public class UserService {
     }
 
 
-    public UserSbscribeDTO subscribeCheck(){
+    public UserSubscribeDTO subscribeCheck() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         String userEmail = userDetails.getUsername();
         List<GroupDTO> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
         List<FriendDTO> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
-        UserSbscribeDTO userSbscribeDTO = new UserSbscribeDTO(friendDTO, groupDTO, userEmail);
-        return userSbscribeDTO;
+        UserSubscribeDTO userSubscribeDTO = new UserSubscribeDTO(friendDTO, groupDTO, userEmail);
+        return userSubscribeDTO;
     }
 
 

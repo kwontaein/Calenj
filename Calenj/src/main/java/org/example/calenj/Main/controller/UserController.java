@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.UserSbscribeDTO;
+import org.example.calenj.Main.DTO.UserSubscribeDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.model.Verify.EmailVerificationService;
 import org.example.calenj.Main.model.GlobalService;
@@ -106,7 +106,7 @@ public class UserController {
     }
 
     @GetMapping("/api/subscribeCheck")
-    public UserSbscribeDTO subscribeCheck(){
+    public UserSubscribeDTO subscribeCheck() {
         return userService.subscribeCheck();
     }
 
@@ -118,5 +118,5 @@ public class UserController {
         //프론트에서 바뀐 값 전달하기
         return "";
     }
-    
+
 }

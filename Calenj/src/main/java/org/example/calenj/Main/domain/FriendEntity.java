@@ -22,7 +22,7 @@ public class FriendEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "friend_id", columnDefinition = "BINARY(16)")
-    private String friendId;
+    private UUID friendId;
 
     @Id
     @ManyToOne
@@ -44,10 +44,10 @@ public class FriendEntity {
 
     //친구 상태
     @Column(name = "status")
-    private statusType status;
+    @Builder.Default
+    private statusType status = statusType.WAITING;
 
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    // 채팅방 아이디
     @Column(nullable = false, name = "chatting_room_Id", columnDefinition = "BINARY(16)")
     private UUID ChattingRoomId;
 

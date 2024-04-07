@@ -10,6 +10,7 @@ import VoteDetail from './components/Group/Vote/VoteDetail';
 import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
+import RequestFriend from "./components/Friends/RequestFriend";
 // import GroupList from "./components/Group/GroupList";
 
 const App: React.FC = () => {
@@ -28,6 +29,7 @@ const App: React.FC = () => {
                         <Route path={":inviteCode"} element={<InviteGroup/>}/>
                     </Route>
                     <Route path={"/friend"} element={<FriendList/>}/>
+                    <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                 </Routes>
             </BrowserRouter>
         </div>

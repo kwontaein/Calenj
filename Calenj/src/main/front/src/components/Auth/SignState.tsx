@@ -2,13 +2,12 @@
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
-import { group } from 'console';
-import{ DispatchProps,mapDispatchToProps}  from '../../store/module/StompReducer';
+import {group} from 'console';
+import {DispatchProps, mapDispatchToProps} from '../../store/module/StompReducer';
 import {connect} from "react-redux";
 import {sagaMutation} from '../../store/store'
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
-
 
 
 const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
@@ -16,13 +15,13 @@ const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
     const queryClient = useQueryClient();
 
     const logout = async (): Promise<boolean> => {
-        try{
+        try {
             const response = await axios.post('/api/logout');
             console.log(response.data);
             document.location.replace('/')
             queryClient.clear();
             return response.data;
-        }catch(error){ 
+        } catch (error) {
             document.location.replace('/')
             return false;
         }
@@ -36,39 +35,41 @@ const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
                 queryKey: [QUERY_COOKIE_KEY],
             });
         },
-    }); 
-    
-   
+    });
 
-    interface SubScribe{
-        groupId:number;
-        friendId:number;
+    interface SubScribe {
+        groupId: number;
+        chattingRoomId: number;
     }
+
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요  
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
         sagaMutation(response.data)//saga middleware 관리
-        if(!response.data){
+        if (!response.data) {
             sessionStorage.removeItem('userId')
 
-        }else{
+        } else {
             axios.get(`/api/subscribeCheck`)
-            .then((res)=>{
-                let arr = res.data
-                let friendArr = Array.from(arr.friendList,(value:SubScribe)=>{return value.friendId})
-                let groupArr = Array.from(arr.groupList,(value:SubScribe)=>{return value.groupId;})
-                let subScribe = subScribeFilter(friendArr,groupArr,arr.userId)
-                updateDestination({destination:subScribe});
-            })
+                .then((res) => {
+                    let arr = res.data
+                    let friendArr = Array.from(arr.friendList, (value: SubScribe) => {
+                        return value.chattingRoomId
+                    })
+                    let groupArr = Array.from(arr.groupList, (value: SubScribe) => {
+                        return value.groupId;
+                    })
+                    let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
+                    updateDestination({destination: subScribe});
+                })
         }
         return response.data;
     }
 
-    function subScribeFilter(friendList:number[],groupList:number[],userId:string){
-        let parmasList =[];
-        parmasList.push([userId])
+    function subScribeFilter(friendList: number[], groupList: number[], userId: string) {
+        let parmasList = [];
         parmasList.push([userId])
         parmasList.push(groupList)
         parmasList.push(friendList)
@@ -96,10 +97,10 @@ const SignState: React.FC<DispatchProps> = ({updateDestination}) => {
                         <button>회원가입</button>
                     </Link>
                 </div>}
-                {sessionStorage.getItem(`userId`)}
+            {sessionStorage.getItem(`userId`)}
         </div>
     );
 
 }
 
-export default connect(null,mapDispatchToProps)(SignState);
+export default connect(null, mapDispatchToProps)(SignState);
