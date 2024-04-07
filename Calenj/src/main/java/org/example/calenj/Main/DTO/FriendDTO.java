@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.example.calenj.Main.domain.FriendEntity;
 import org.example.calenj.Main.domain.UserEntity;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +29,9 @@ public class FriendDTO {
 
     //친구 상태
     private FriendEntity.statusType status;
+
+    //친구 채팅 id
+    private UUID ChatingUUID;
 
     public FriendDTO(String friendUserId, String nickName) {
         this.friendUserId = friendUserId;
