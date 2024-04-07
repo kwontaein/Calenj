@@ -8,32 +8,34 @@ export const UPDATE_DESTINATION = 'UPDATE_DESTINATION';
 export const UPDATE_APP = 'UPDATE_APP';
 export const RECEIVED_STOMP_MSG ='RECEIVED_STOMP_MSG';
 export const SEND_STOMP_MSG ='SEND_STOMP_MSG';
-
+export const UPDATE_ONLINE ='UPDATE_ONLINE'
 interface Message{
     from:string;
     message:string;
 }
 
-interface StompData{
+export interface StompData{
     stomp:StompState
 }
 
-export interface DispatchProps {
+export interface DispatchStompProps {
     updateDestination: (payload: { destination:Destination})=>void;
     updateApp: (payload: { target: string, params: string|number})=>void;
     sendStompMsg : (payload: {message: string}) =>void;
     receivedStompMsg : (payload: {message: Message}) =>void;
+    updateOnline : (payload:{isOnline:boolean})=>void;
 }
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
-export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination })=>dispatch(updateDestination(payload)),
     updateApp: (payload: { target: string, params: string|number})=>dispatch(updateApp(payload)),
     sendStompMsg : (payload: {message: string}) =>dispatch(sendStompMsg(payload)),
     receivedStompMsg : (payload: {message: Message}) =>dispatch(receivedStompMsg(payload)),
+    updateOnline : (payload: {isOnline: boolean}) =>dispatch(updateOnline(payload)),
 });
 
-//(Component Props로 전달하기 위한 interface)
-export const mapStateToProps = (state: RootState): StompData => ({
+//(Component Props로 전달하기 위한 interface) 
+export const mapStateToStompProps = (state: RootState): StompData => ({
     stomp: state.stomp, // store에서 가져올 상태를 매핑
 });
 
@@ -66,6 +68,11 @@ export const receivedStompMsg = (payload:{message: Message}) => ({
     payload: payload,
 });
 
+export const updateOnline =(payload:{isOnline:boolean})=>({
+    type: UPDATE_ONLINE,
+    payload:payload,
+});
+
 export interface Destination{
     map: any;
     [index:number] :(string|number)[];
@@ -79,7 +86,7 @@ export interface StompState{
     target:string;
     params:string|number;
     message:string;
-    
+    isOnline:boolean;
 }
 
 
@@ -89,6 +96,7 @@ const initialState:StompState = {
   target: '',//초기 publish 대상
   params: '', // (sub/pub 시)식별하기 위한 값
   message: '', // 초기 message 상태
+  isOnline:false,
 };
 
 
@@ -114,6 +122,10 @@ const StompReducer = handleActions(
         ...state,
         message: action.payload.message
       }),
+      [UPDATE_ONLINE]:(state,action) =>({
+        ...state,
+        isOnline: action.payload.isOnline
+      })
     },
     initialState
   );

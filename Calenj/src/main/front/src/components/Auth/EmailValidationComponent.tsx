@@ -1,10 +1,9 @@
 import {Input, ErrorMessage, FormLable} from '../../style/FormStyle';
 import {ChangeEvent, useEffect, useState, useRef} from 'react';
 import axios from 'axios';
-import {EmailToken, updateToken, updateCodeValid} from '../../store/slice/EmailValidationSlice';
+import {EmailToken, DispatchEmailProps,mapStateToEmailProps,mapDispatchToEmailProps} from '../../store/slice/EmailValidationSlice';
 import '../../style/Sign.scss'
-import {RootState} from '../../store/store'
-import {Dispatch} from 'redux';
+
 import {connect} from "react-redux";
 import {useConfirm} from '../../stateFunc/actionFun'
 
@@ -22,24 +21,9 @@ interface EmailToeknProps {
     emailToken: EmailToken;
 }
 
-//dispatch 함수타입을 interface로 정의
-interface DispatchProps {
-    updateToken: (payload: { tokenId: string; validateTime: number }) => void;
-    updateCodeValid: (payload: boolean) => void;
-}
 
-//(Component Props로 전달하기 위한 interface)
-const mapStateToProps = (state: RootState): EmailToeknProps => ({
-    emailToken: state.emailValidation, // store에서 가져올 상태를 매핑
-});
 
-//emailToken 정보를 수정하는 함수 정의 후 connect
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    updateToken: (payload: { tokenId: string; validateTime: number }) => dispatch(updateToken(payload)),
-    updateCodeValid: (payload: boolean) => dispatch(updateCodeValid(payload)),
-});
-
-type Props = ComponentProps & DispatchProps & EmailToeknProps;
+type Props = ComponentProps & DispatchEmailProps & EmailToeknProps;
 
 const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateToken, updateCodeValid,onClose}) => {
     const [code, setCode] = useState<string>('');
@@ -157,4 +141,4 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailValidationComponent)
+export default connect(mapStateToEmailProps, mapDispatchToEmailProps)(EmailValidationComponent)
