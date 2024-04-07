@@ -4,7 +4,6 @@ import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
 import FriendList from "./components/Friends/FriendList";
 
-
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
     const queryClient = useQueryClient();

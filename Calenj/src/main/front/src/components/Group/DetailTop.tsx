@@ -20,7 +20,7 @@ const DetailTop:React.FC<Details>=({Created,Creater,Watcher})=>{
         <div>
             <div id ='ViewDetails_Text'>상세보기</div>
             <div>
-                <RowFlexBox style={{marginLeft:'2vw'}}>
+                <RowFlexBox style={{marginLeft:'3vw'}}>
                     <div>😒</div>{/*프로필 들어갈 예정*/}
                     <div style={{marginLeft:'10px'}}>
                         <div>

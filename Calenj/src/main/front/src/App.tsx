@@ -11,7 +11,7 @@ import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
-import{ DispatchStompProps,mapDispatchToStompProps, updateApp}  from './store/module/StompReducer';
+import{ DispatchStompProps,mapDispatchToStompProps}  from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'

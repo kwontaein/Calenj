@@ -4,11 +4,10 @@ import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
-import MakeVote from "./MakeVote";
 import {ListView, MiniText,RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
-import styled from "styled-components";
+import MakeVote from "./MakeVote";
 
 
 export const QUERY_VOTE_LIST_KEY: string = 'voteList'

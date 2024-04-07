@@ -5,7 +5,7 @@ interface UnfocusBackgroundProps {
     focus: string;
 }
 interface VoteProps{
-    isCreater :boolean
+    creater :string
 }
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
@@ -121,8 +121,9 @@ export const MiniText = styled.div`
 `
 
 export const TrasformButton = styled.button<VoteProps>`
-    width: ${props=>props.isCreater? '44vw': '80vw'};
-    padding: ${props=>props.isCreater? '1.2vw': '15px'};
+    
+    width: ${props=>props.creater ===sessionStorage.getItem('userId')? '43.5vw': '88vw'};
+    padding: ${props=>props.creater ===sessionStorage.getItem('userId')? '1.2vw': '15px'};
     margin-top:2vw;
     font-size:15px;
     border-radius: 5px;

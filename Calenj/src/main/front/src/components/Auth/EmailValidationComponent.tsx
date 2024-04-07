@@ -3,7 +3,6 @@ import {ChangeEvent, useEffect, useState, useRef} from 'react';
 import axios from 'axios';
 import {EmailToken, DispatchEmailProps,mapStateToEmailProps,mapDispatchToEmailProps} from '../../store/slice/EmailValidationSlice';
 import '../../style/Sign.scss'
-
 import {connect} from "react-redux";
 import {useConfirm} from '../../stateFunc/actionFun'
 

@@ -207,11 +207,13 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
 
                     <button onClick={() => addList()} style={{height: '25px'}}>추가</button>
                 </RowFlexBox>
-                <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='TEXT'
-                    onClick={(e) => inputFormHandler(e)}
-                    defaultChecked/>텍스트
+                <label style={{fontSize: '13px'}}>
+                    <input type='radio' name='inputForm' value='TEXT'
+                        onClick={(e) => inputFormHandler(e)}
+                        defaultChecked/>텍스트
                 </label>
-                <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='DATE'
+                <label style={{fontSize: '13px'}}>
+                    <input type='radio' name='inputForm' value='DATE'
                     onClick={(e) => inputFormHandler(e)}/>날짜
                 </label>
                 {voteList &&
@@ -244,14 +246,13 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     locale={ko}
                 />
                 <label style={{fontSize: '13px', marginLeft: '3px'}}><input type='checkBox' name='choice'
-                                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                                setMultipleOption(e.target.checked)
-                                                                            }}/>복수선택</label>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setMultipleOption(e.target.checked)
+                    }}/>복수선택</label>
                 <label style={{fontSize: '13px'}}><input type='checkBox' name='anonymous'
-                                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                             setanonymousOption(e.target.checked)
-                                                         }}/>익명투표</label>
-
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setanonymousOption(e.target.checked)
+                    }}/>익명투표</label>
                 <div style={{width: '210px', marginTop: '20px', textAlign: 'right'}}>
                     <button style={{marginRight: '5px'}} onClick={createVote}>생성</button>
                     <button onClick={cancle}>취소</button>
