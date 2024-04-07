@@ -10,7 +10,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun'
-// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
+import{ DispatchProps,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../store/module/StompReducer';
 
 
 interface Details {
@@ -41,9 +41,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail :React.FC=({})=>{
-    const [detail, setDetail] = useState<Details | null>(null);
-    const [members, setMembers] = useState<Members[] | null>(null);
+const GroupDetail :React.FC<DispatchProps>=({updateApp,sendStompMsg})=>{
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -88,6 +86,14 @@ const GroupDetail :React.FC=({})=>{
         queryKey: [QUERY_GROUP_DETAIL_KEY,groupInfo.groupId],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
+
+    const sendMsg = ()=>{
+        if(groupDetailState.data){
+            updateApp({target:'groupMsg',params:groupDetailState.data.groupId})
+            sendStompMsg({message:'ㅎㅇ'})
+        }
+        console.log('ㅎㅇ')
+    }
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -139,7 +145,11 @@ const GroupDetail :React.FC=({})=>{
                         ))}
                     </ul>
                 </div>
-
+                <div onClick={()=>{
+                    sendMsg()
+                }}>
+                    타겟설정
+                </div>
                 <div>
                     {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
                 </div>
@@ -158,4 +168,4 @@ const GroupDetail :React.FC=({})=>{
     );
 }
 
-export default GroupDetail;
+export default connect(null,mapDispatchToProps) (GroupDetail);

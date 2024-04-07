@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {stateFilter,createTimePassed} from '../../stateFunc/actionFun'
@@ -13,9 +13,7 @@ interface Details{
 }
 
 
-
 const DetailTop:React.FC<Details>=({Created,Creater,Watcher})=>{
-   
 
 
     return(

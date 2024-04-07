@@ -65,7 +65,7 @@ const Notice :React.FC =()=>{
             <button onClick={()=>setMakeNotice(true)}>공지생성하기</button>
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupInfo.groupId} queryState={noticeListState}/>}</div>
             {noticeListState.data && 
-                <div>
+            <div>
                 <ul>
                     {noticeListState.data.map((notice) => (
                         <ListView key={notice.noticeId}

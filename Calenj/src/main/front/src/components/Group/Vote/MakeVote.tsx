@@ -208,11 +208,12 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     <button onClick={() => addList()} style={{height: '25px'}}>추가</button>
                 </RowFlexBox>
                 <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='TEXT'
-                                                         onClick={(e) => inputFormHandler(e)}
-                                                         defaultChecked/>텍스트</label>
+                    onClick={(e) => inputFormHandler(e)}
+                    defaultChecked/>텍스트
+                </label>
                 <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='DATE'
-                                                         onClick={(e) => inputFormHandler(e)}/>날짜</label>
-
+                    onClick={(e) => inputFormHandler(e)}/>날짜
+                </label>
                 {voteList &&
                     <div style={{listStyle: 'none', marginTop: '20px'}}>
                         {voteList.map((list) => (
