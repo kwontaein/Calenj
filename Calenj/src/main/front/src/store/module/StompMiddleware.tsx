@@ -76,7 +76,7 @@ function createStompConnection(){
         
     return new Promise((res,rej)=>{
     
-            const sock = new SockJS(stompUrl);
+            const sock = () => new SockJS(stompUrl);
             const stompClient = Stomp.over(sock);
 
             // WebSocket 에러 처리

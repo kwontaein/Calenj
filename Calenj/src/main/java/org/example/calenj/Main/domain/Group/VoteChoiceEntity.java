@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,8 @@ public class VoteChoiceEntity {
 
     private String voteItem;
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
-    private List<String> voter;
+    private List<String> voter = new ArrayList<>();
     
 }

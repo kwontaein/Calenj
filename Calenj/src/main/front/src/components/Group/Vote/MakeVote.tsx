@@ -191,7 +191,8 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     {inputForm === 'TEXT' ?
                         <Mini_Input ref={contentRef}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setContent(e.target.value)}
-                                    style={{width: '150px', fontSize: '12px'}} placeholder='항목 입력'></Mini_Input>
+                                    style={{width: '150px', fontSize: '12px'}} placeholder='항목 입력' maxLength={20}>
+                        </Mini_Input>
                         :
                         <DatePicker
                             dateFormat=' yyyy년 MM월 dd일 (EEE)' // 날짜 형태

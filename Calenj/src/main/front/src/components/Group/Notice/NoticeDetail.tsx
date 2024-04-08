@@ -20,7 +20,6 @@ interface NoticeDetails {
 const NoticeDetail:React.FC=()=>{
     
     const [detail, setDetail] = useState<NoticeDetails | null>(null);
-    const [viewBy, setViewBy] = useState<number>(0);
     const location = useLocation();
     const noticeInfo = {...location.state};
 

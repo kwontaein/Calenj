@@ -10,7 +10,6 @@ export const RECEIVED_STOMP_MSG ='RECEIVED_STOMP_MSG';
 export const SEND_STOMP_MSG ='SEND_STOMP_MSG';
 export const UPDATE_ONLINE ='UPDATE_ONLINE'
 interface Message{
-    from:string;
     message:string;
 }
 

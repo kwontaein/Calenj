@@ -14,7 +14,7 @@ import{ DispatchStompProps,StompData,mapDispatchToStompProps,mapStateToStompProp
 
 
 interface Details {
-    groupId: number;
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;

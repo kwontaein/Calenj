@@ -54,6 +54,7 @@ const Vote :React.FC=()=>{
             return null;
         }
     }
+
     //현재 상태 저장
     const voteListState = useQuery<VoteList[]|null, Error>({
         queryKey: [QUERY_VOTE_LIST_KEY,groupInfo.groupId],
@@ -77,9 +78,10 @@ const Vote :React.FC=()=>{
 
 
     function deadlineFilter(list: VoteList[], end:boolean):VoteList[]{
+        let nowDate = new Date();
         const newList =list.filter((li)=>{
             let endDate = changeDateForm(li.voteEndDate)//Date형식으로
-            let nowDate = new Date();
+            console.log(`endDate : ${endDate}, nowDate : ${nowDate}`)
             if(end){ //end :ture => 마감된 거 찾기
                 return endDate<nowDate;
             }else{
