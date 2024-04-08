@@ -6,6 +6,7 @@ import org.example.calenj.Main.domain.Ids.GroupNoticeId;
 import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,9 +42,10 @@ public class GroupNoticeEntity {
     @Column(name = "notice_creater")
     private String noticeCreater;
 
+    @Builder.Default
     @Column(name = "notice_watcher")
     @Convert(converter = StringListConverter.class)
     //List<String> 유형의 형식 필드를 데이터베이스 열로 매핑
-    private List<String> noticeWatcher;
+    private List<String> noticeWatcher = new ArrayList<>();
 
 }

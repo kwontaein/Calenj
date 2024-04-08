@@ -31,7 +31,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
     return (
         <div>
             {stomp.isOnline ?
-                <button onClick={() => logout}>로그아웃</button>
+                <button onClick={() => logout()}>로그아웃</button>
                 : <div>
                     <Link to="/sign" style={{textDecoration: "none"}}>
                         <button>로그인</button>
@@ -40,7 +40,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
                         <button>회원가입</button>
                     </Link>
                 </div>}
-                {sessionStorage.getItem(`userId`)}
+                {localStorage.getItem(`userId`)}
         </div>
     );
 

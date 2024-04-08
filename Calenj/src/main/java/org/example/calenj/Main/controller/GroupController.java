@@ -101,4 +101,8 @@ public class GroupController {
         GroupVoteDTO voteDetail = groupService.voteDetail(voteId);
         return voteDetail;
     }
+    @PostMapping("/api/voteUpdate")
+    public void voteUpdate(@RequestBody GroupVoteDTO groupVoteDTO){
+        groupService.updateVote(groupVoteDTO.getVoteId(),groupVoteDTO.getMyVote());
+    }
 }

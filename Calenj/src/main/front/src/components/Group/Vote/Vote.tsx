@@ -4,11 +4,10 @@ import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
-import MakeVote from "./MakeVote";
 import {ListView, MiniText,RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
-import styled from "styled-components";
+import MakeVote from "./MakeVote";
 
 
 export const QUERY_VOTE_LIST_KEY: string = 'voteList'
@@ -17,14 +16,17 @@ export const QUERY_VOTE_LIST_KEY: string = 'voteList'
 interface VoteList{
     voteId : string;
     myId:string;
-    voter:string[];
+    countVoter:string[];
     voteCreater : string;
     voteTitle : string;
     voteCreated:string;
     voteEndDate:string;
 }
+interface GroupProps{
+    member:number;
+}
 
-const Vote :React.FC=()=>{
+const Vote :React.FC<GroupProps>=({member})=>{
     const[makeVote,setMakeVote] = useState(false);
     const [voteList,setVoteList]= useState<VoteList[]>([]);
     const [endVoteList,setEndVoteList]= useState<VoteList[]>([]);
@@ -33,7 +35,7 @@ const Vote :React.FC=()=>{
     const groupInfo = {...location.state};
 
 
-    const queryClient = useQueryClient();
+   
     
     const closeModal = () => {
         setMakeVote(false);
@@ -55,6 +57,7 @@ const Vote :React.FC=()=>{
             return null;
         }
     }
+
     //현재 상태 저장
     const voteListState = useQuery<VoteList[]|null, Error>({
         queryKey: [QUERY_VOTE_LIST_KEY,groupInfo.groupId],
@@ -66,21 +69,22 @@ const Vote :React.FC=()=>{
     //데이터가 바뀌면 다시 세팅
     useEffect(()=>{
         if(voteListState.data){
+            voteListState.refetch()
             setVoteList(deadlineFilter(voteListState.data,false))//filter()=>진행중인 투표
             setEndVoteList(deadlineFilter(voteListState.data,true))//filter()=>마감된 투표
         }
     },[voteListState.data])
 
     
-    const redirectDetail = (voteId: string) => {
-        navigate("/vote/detail", {state: {voteId: voteId}});
+    const redirectDetail = (voteId: string , end :boolean) => {
+        navigate("/vote/detail", {state: {voteId: voteId, member:member, end:end}});
     }
 
 
     function deadlineFilter(list: VoteList[], end:boolean):VoteList[]{
+        let nowDate = new Date();
         const newList =list.filter((li)=>{
             let endDate = changeDateForm(li.voteEndDate)//Date형식으로
-            let nowDate = new Date();
             if(end){ //end :ture => 마감된 거 찾기
                 return endDate<nowDate;
             }else{
@@ -89,7 +93,12 @@ const Vote :React.FC=()=>{
         })
         
         return newList;
-        
+    }
+
+    const checkMyVoter= (countVoter:string[]):boolean=>{
+        const userId = localStorage.getItem('userId')
+        const isVoter= countVoter.includes(userId as string);
+        return isVoter;
     }
     return(
         <div>
@@ -103,16 +112,19 @@ const Vote :React.FC=()=>{
                 {voteList.length>0 && 
                 <MiniText style={{border: '0.5px solid #ccc', padding:'5px', marginBottom:'-17px'}}>진행중인 투표</MiniText>
                 }
-                
                 <ul>
                     {voteList.map((vote) => (
                         <ListView key={vote.voteId}
-                        onClick={() => redirectDetail(vote.voteId as string)}
+                        onClick={() => redirectDetail(vote.voteId as string, false)}
                         >
                         <RowFlexBox>
                         <div style={{marginLeft:'-20px', marginRight:'20px', paddingTop:'2px',fontWeight:550, letterSpacing:'-2px'}}>Q .</div>
                         <div>
                             {vote.voteTitle}
+                            <RowFlexBox>
+                                    <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
+                                    <MiniText style={{marginLeft:'3px', color :checkMyVoter(vote.countVoter) ? '#007bff':''}}>{`· ${checkMyVoter(vote.countVoter)? '참여완료':'미참여'}`}</MiniText>
+                                </RowFlexBox>
                             <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
                         </div>
                         </RowFlexBox>
@@ -126,12 +138,17 @@ const Vote :React.FC=()=>{
                 <ul>
                     {endVoteList.map((vote) => (
                         <ListView key={vote.voteId}
-                            onClick={() => redirectDetail(vote.voteId as string)}
+                            onClick={() => redirectDetail(vote.voteId as string, true)}
                             >
+                            
                             <RowFlexBox>
                             <div style={{marginLeft:'-20px', marginRight:'20px', paddingTop:'2px',fontWeight:550, letterSpacing:'-2px'}}>Q .</div>
                             <div>
                                 {vote.voteTitle}
+                                <RowFlexBox>
+                                    <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
+                                    <MiniText style={{marginLeft:'3px'}}>{`· ${checkMyVoter(vote.countVoter)? '참여완료':'미참여'}`}</MiniText>
+                                </RowFlexBox>
                                 <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
                             </div>
                             </RowFlexBox>
