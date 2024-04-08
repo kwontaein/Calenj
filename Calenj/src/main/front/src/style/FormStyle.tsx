@@ -8,6 +8,9 @@ interface VoteProps{
     $isCreater :boolean;
     $ableClick : boolean;
 }
+interface VoteAble{
+    $end:boolean
+}
 
 
 
@@ -148,4 +151,13 @@ export const TrasformButton = styled.button<VoteProps>`
    
 `;
 
+export const TransVoteContainer = styled.div<VoteAble>`
+    margin-top: 20px;
+    
+    ${props => props.$end && `
+        & > * {
+            opacity: 0.5;
+        }
+    `}
+`;
 

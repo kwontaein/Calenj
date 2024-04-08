@@ -182,12 +182,15 @@ public class GroupService {
         UUID voteId = groupVoteEntity.getVoteId();
 
         GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findGroupVoteEntityByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
+        int i=0;
         for (String items : groupVoteDTO.getPostedVoteChoiceDTO()) {
             voteChoiceRepository.save(VoteChoiceEntity
                     .builder()
                     .vote(groupVoteEntity2)
                     .voteItem(items)
+                    .voteIndex(i)
                     .build());
+            i++;
         }
     }
 
@@ -247,11 +250,11 @@ public class GroupService {
 
     public void updateVote(UUID voteId, boolean[] myVote){
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
         List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
         Set<String> uniqueVoters = new LinkedHashSet<>();//몇명이 투표했는지 확인하기 위한 Set
 
-
+        voteChoiceDTO.sort((o1, o2) -> o1.getVoteIndex() - o2.getVoteIndex());;
+        System.out.println(voteChoiceDTO);
         int i = 0; //voter의 index값을 위한 선언
         for(VoteChoiceDTO voters :voteChoiceDTO){
             int includeUser = voters.getVoter().indexOf(userDetails.getUsername());
@@ -277,8 +280,6 @@ public class GroupService {
 
             i++;
         }
-
-
 
         //투표 갱신 이후 투표자 명단 갱신
         for(VoteChoiceDTO voters :voteChoiceDTO){

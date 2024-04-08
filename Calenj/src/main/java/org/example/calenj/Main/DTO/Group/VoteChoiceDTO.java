@@ -16,6 +16,7 @@ public class VoteChoiceDTO {
     private UUID choiceId;
     private String voteItem;
     private List<String> voter;
+    private int voteIndex;
 
     public List<String> getBlindedVoter(List<String> countVoter,String id) {
         List<String> blindedValues = new ArrayList<>();

@@ -35,7 +35,7 @@ interface Message{
     message:string;
 }
 
-const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
+export const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
 /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
  console.log = function no_console() {}; // console log 막기
@@ -160,7 +160,7 @@ const GroupDetail :React.FC<DispatchStompProps &StompData>=({sendStompMsg,stomp}
                 <hr/>
                 <div>
                     <Notice/>
-                    <Vote/>
+                    <Vote member={groupDetailState.data.members.length}/>
                 </div>
             </div>
         )}

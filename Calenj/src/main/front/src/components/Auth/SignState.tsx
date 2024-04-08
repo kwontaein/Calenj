@@ -40,7 +40,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
                         <button>회원가입</button>
                     </Link>
                 </div>}
-                {sessionStorage.getItem(`userId`)}
+                {localStorage.getItem(`userId`)}
         </div>
     );
 

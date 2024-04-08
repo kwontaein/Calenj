@@ -35,5 +35,6 @@ public class VoteChoiceEntity {
     @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> voter = new ArrayList<>();
-    
+
+    private int voteIndex;
 }

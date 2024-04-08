@@ -3,14 +3,15 @@ import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {stateFilter,TimeOperation} from '../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
-import { array } from 'yup';
-import { MiniText, RowFlexBox ,TrasformButton} from '../../../style/FormStyle';
+import { MiniText, RowFlexBox ,TrasformButton,TransVoteContainer} from '../../../style/FormStyle';
 import '../../../style/Detail.scss'
 import { useId } from 'react';
+
 
 interface voteChoiceDTO{
     voteItem:string;
     voter:string[];
+    voteIndex:number
 }
 
 interface VoteDetails{
@@ -27,22 +28,26 @@ interface VoteDetails{
     
 }
 interface VoteDetailProps{
-    voteId:string;
+    //전체 디테일정보
     detail:VoteDetails;
-    voted:voteChoiceDTO[]|null;
+    //투표 목록별 값
+    voteChoiceDTO:voteChoiceDTO[]|null;
+    //사용자가 투표 현황
     myVote :boolean[];
+    //처음 데이터를 불러올 때 사용자가 투표했는지 여부
     participation: boolean|undefined;
+    //update이후 다시 가져오기 위한 함수
     refetchVoteDetail:()=>void
-    pickVote: (e:React.ChangeEvent<HTMLInputElement>,isMultiple:boolean)=>void
-    
+    //현재 클릭한 목록 수정
+    pickVote: (e:React.ChangeEvent<HTMLInputElement>,isMultiple:boolean)=>void 
 }
 
 
 
 
 
+
 const VoteDetail:React.FC=()=>{
-    
     const [detail, setDetail] = useState<VoteDetails | null>(null);
     const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
     const [myVote,setMyVote] = useState<boolean[]>(); //내가 투표한 항목순번에 true
@@ -50,7 +55,6 @@ const VoteDetail:React.FC=()=>{
     const location = useLocation();
     const [isLoading,setIsLoading] =useState<boolean>(false);
     const voteInfo = {...location.state};
-    let isPick:boolean;
 
     function getVoteDetail (){
          axios.post('/api/voteDetail', null, {
@@ -64,12 +68,9 @@ const VoteDetail:React.FC=()=>{
             .then(response => {
                 const voteDetail = response.data
                 setDetail(voteDetail);
-                console.log(voteDetail.voteChoiceDTO)
-                setVoted(voteDetail.voteChoiceDTO)
-                TimeOperation(voteDetail.voteEndDate)
                 BeforCheckVoter(voteDetail.voteChoiceDTO)                
+                TimeOperation(voteDetail.voteEndDate)
                 setIsLoading(true);
-                console.log(voteDetail)
             })
             .catch(error => {
                 const axiosError = error as AxiosError;
@@ -89,25 +90,23 @@ const VoteDetail:React.FC=()=>{
     },[dbVoter])
 
     const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
+        let newList = voteList.sort((a,b)=>{return a.voteIndex-b.voteIndex})
         let userVoter = new Array(voteList.length).fill(false);
-        let userEmail = sessionStorage.getItem('userId')
-        console.log(`userEmail: ${userEmail}`)
-        voteList.map((item,index)=>{
+        let userEmail = localStorage.getItem('userId')
+        newList.map((item,index)=>{
             item.voter.map((voter)=>{
                 if(voter ===userEmail?.toString()){
                     userVoter[index] = true; //내가 투표한 게 있는지 체크
                 }
             })
         })
+        setVoted(newList)
         setMyVote(userVoter);
         setDbMyBoter(userVoter.includes(true))
       
     }
 
 
-
-
-    
     //보내기 전에 체크
     const pickVote = (e:React.ChangeEvent<HTMLInputElement>,isMultiple:Boolean)=>{
         let newVoter
@@ -132,6 +131,7 @@ const VoteDetail:React.FC=()=>{
             (detail&&
             <div style={{width:'100vw', alignItems:'center', justifyContent:'center'}}>
                 <DetailTop Created={detail.voteCreated}Creater={detail.voteCreater} Watcher={detail.voteWatcher}/>
+                <TransVoteContainer $end={voteInfo.end}>
                 <div className='VoteDetailContainer'>
                     {detail &&
                     <div>
@@ -144,11 +144,12 @@ const VoteDetail:React.FC=()=>{
                             <div id='voteContent'>{TimeOperation(detail.voteEndDate)}</div>
                         </MiniText>
                      
-                        <VoteContent detail={detail} voted={voted} participation={dbVoter} pickVote={pickVote} myVote={myVote as boolean[]} refetchVoteDetail={getVoteDetail} voteId={voteInfo.voteId}/>
+                        <VoteContent detail={detail} voteChoiceDTO={voted} participation={dbVoter} pickVote={pickVote} myVote={myVote as boolean[]} refetchVoteDetail={getVoteDetail}/>
                         
                     </div>
                 }
                 </div>
+                </TransVoteContainer>
             </div>
             )
             }
@@ -158,16 +159,19 @@ const VoteDetail:React.FC=()=>{
 
 
 export default VoteDetail
-const VoteContent:React.FC<VoteDetailProps> =({detail,voted,participation,pickVote, myVote, refetchVoteDetail,voteId})=>{
+const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, pickVote, myVote, refetchVoteDetail})=>{
     const id = useId();
     const [votecomplete,setVoteComplete] = useState<boolean>();
+    const location = useLocation();
+    const voteInfo = {...location.state};
 
     useLayoutEffect(()=>{
         setVoteComplete(participation);
+  
     },[])
 
     const checkCreater=()=>{
-        const userEmail=sessionStorage.getItem('userId')
+        const userEmail=localStorage.getItem('userId')
         return detail.voteCreater===userEmail
     }
     //이전에 투표한 상태라면 재투표가능 styled를 변경하기 위해 쓰는 함수
@@ -195,10 +199,9 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voted,participation,pickVo
         if(!checkVoteBefore()){
             return
         }
-        console.log(myVote)
         
         axios.post('/api/voteUpdate', {
-            voteId: voteId,
+            voteId: voteInfo.voteId,
              myVote: myVote,
      
         }).then(()=>{
@@ -222,30 +225,44 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voted,participation,pickVo
     return(
         <div style={{marginTop:'20px'}}>
         
-        {voted?.map((Item,index) => (
-            <RowFlexBox  key={id+index}>
-                <label style={{display:'flex', alignItems:'center', marginBlock:'0.5vw'}} >
+        {voteChoiceDTO?.map((Item,index) => (
+            <div  key={id+index}>
+            <RowFlexBox style={{width:'88vw'}}>
+                <label style={{display:'flex', alignItems:'center', marginBlock:'0.5vw', width:'88vw'}} >
  
-                {votecomplete&&participation ? 
+                {(votecomplete&&participation)||voteInfo.end ? 
                 <div className={myVote[index]? 'checked_div':'unChecked_div'}></div>:
                 <input type='checkbox' name='voterList' value={index} className='checkbox'
                 onChange={(e:React.ChangeEvent<HTMLInputElement>)=>pickVote(e, detail.isMultiple)} checked={myVote[index]}/> }
                 
                 <div style={{marginInline:'3px', color: myVote[index]? '#007bff':''}}>{Item.voteItem}</div>
+                {(votecomplete||voteInfo.end) &&<MiniText style={{marginLeft:'auto'}}>{(Item.voter.length>0||voteInfo.end)? `${Item.voter.length}명`:''}</MiniText>}
                 </label>
             </RowFlexBox>
+            {(votecomplete||voteInfo.end) &&<div style={{width:'86vw',height:'4px',backgroundColor:'rgb(228, 228, 228)',margin:'1vw'}}>
+                <div style={{width: `${(86/voteInfo.member)*Item.voter.length}vw`,height:'4px',backgroundColor:'#007bff'}}></div>
+            </div>}
+            </div>
+            
         ))}
+        
         <div style={{width:'88vw'}}>
+        {!voteInfo.end &&
+            <div>
             <TrasformButton $isCreater={checkCreater()&&(checkVoterCount()>0)} $ableClick={checkVoteBefore()} onClick={postVote}>
                 {participation&&votecomplete ? '다시 투표하기':'투표 하기'}
             </TrasformButton>
-            {checkCreater() &&(checkVoterCount()>0)?
-            <TrasformButton $isCreater={checkCreater()} $ableClick={(detail.countVoter.length>0)} style={{marginLeft:'1vw'}}>
-                투표 종료
-            </TrasformButton>:<></>}    
+            {checkCreater() &&checkVoterCount()>0 &&  
+            <TrasformButton $isCreater={checkCreater()}
+                            $ableClick={(detail.countVoter.length>0)}
+                            style={{marginLeft:'1vw'}}>
+                            투표 종료
+            </TrasformButton>}
+            </div>
+        }   
         </div>
-        <div>
-            {checkVoterCount()>0? <div>{detail.countVoter.length}명 참여</div>:<></>}
+        <div style={{width:'88vw',marginTop:'3vw', fontSize:'14px'}}>
+            {(detail.countVoter.length>0||voteInfo.end) && <div>{detail.countVoter.length}명 참여</div>}
         </div>
     </div>
     )
