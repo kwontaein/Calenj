@@ -11,51 +11,55 @@ import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
-import{ DispatchStompProps,mapDispatchToStompProps, updateApp}  from './store/module/StompReducer';
+import {DispatchStompProps, mapDispatchToStompProps} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
+import RequestFriend from "./components/Friends/RequestFriend";
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
-import RequestFriend from "./components/Friends/RequestFriend";
+
 // import GroupList from "./components/Group/GroupList";
 
-interface SubScribe{
-    groupId:number;
-    friendId:number;
+interface SubScribe {
+    groupId: number;
+    friendId: number;
 }
 
 
-
-const App: React.FC<DispatchStompProps> = ({updateDestination,updateOnline}) => {
+const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) => {
     const queryClient = useQueryClient();
 
-       //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
+    //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
         console.log(`cookie값 ${response.data}`);
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
-        if(!response.data){
+        if (!response.data) {
             sessionStorage.removeItem('userId')
-            updateOnline({isOnline:false});
+            updateOnline({isOnline: false});
             queryClient.clear(); //캐시 삭제
-        }else{
+        } else {
             axios.get(`/api/subscribeCheck`)
-            .then((res)=>{
-                let arr = res.data
-                let friendArr = Array.from(arr.friendList,(value:SubScribe)=>{return value.friendId})
-                let groupArr = Array.from(arr.groupList,(value:SubScribe)=>{return value.groupId;})
-                let subScribe = subScribeFilter(friendArr,groupArr,arr.userId)
-                updateDestination({destination:subScribe});
-                updateOnline({isOnline:true});
-            })
+                .then((res) => {
+                    let arr = res.data
+                    let friendArr = Array.from(arr.friendList, (value: SubScribe) => {
+                        return value.friendId
+                    })
+                    let groupArr = Array.from(arr.groupList, (value: SubScribe) => {
+                        return value.groupId;
+                    })
+                    let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
+                    updateDestination({destination: subScribe});
+                    updateOnline({isOnline: true});
+                })
         }
         return response.data;
     }
 
-    function subScribeFilter(friendList:number[],groupList:number[],userId:string){
-        let parmasList =[];
+    function subScribeFilter(friendList: number[], groupList: number[], userId: string) {
+        let parmasList = [];
         parmasList.push([userId]) //친구요청
         parmasList.push(groupList) //그룹채팅
         parmasList.push(friendList) //친구채팅
@@ -90,5 +94,4 @@ const App: React.FC<DispatchStompProps> = ({updateDestination,updateOnline}) => 
         </div>
     );
 }
-export default connect(null,mapDispatchToStompProps)(App);
-
+export default connect(null, mapDispatchToStompProps)(App);

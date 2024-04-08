@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class AlarmDTO {
-    private String userName;
+    private String userId;
     private String alarmContent;
-    private boolean StartEnd;
 }

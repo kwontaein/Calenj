@@ -4,20 +4,20 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Chatting from "../../Test/Chatting";
-import Notice from './Notice/Notice'
-import {ListView, RowFlexBox} from '../../style/FormStyle'
+import Notice from './Notice/Notice';
+import {ListView, RowFlexBox} from '../../style/FormStyle';
 import Vote from "./Vote/Vote";
-import Invite from "./Invite/Invite"
+import Invite from "./Invite/Invite";
 import {connect} from "react-redux";
-import {stateFilter} from '../../stateFunc/actionFun'
+import {stateFilter} from '../../stateFunc/actionFun';
+import MessageDisplay from "../../store/module/MessageDispay";
 import {
     DispatchStompProps,
-    updateApp,
-    sendStompMsg,
-    receivedStompMsg,
-    StompState,
-    mapDispatchToStompProps, mapStateToStompProps, StompData
+    StompData,
+    mapDispatchToStompProps,
+    mapStateToStompProps, updateDestination, updateOnline
 } from '../../store/module/StompReducer';
+import {RootState} from "../../store/store";
 
 
 interface Details {
@@ -48,11 +48,11 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendStompMsg, stomp}) => {
+const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, receivedStompMsg}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-
+    const [messages, setMessages] = useState<Message[]>([]); // 수신된 메시지 배열
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
@@ -86,7 +86,6 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
         }
     }
 
-
     const groupDetailState = useQuery<Details | null, Error>({
         queryKey: [QUERY_GROUP_DETAIL_KEY, groupInfo.groupId],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
@@ -94,12 +93,9 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
 
     const sendMsg = () => {
         if (groupDetailState.data) {
-            updateApp({target: 'groupMsg', params: groupDetailState.data.groupId})
-            sendStompMsg({message: 'hi'})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: '강승재 븅진 ㅋㅋ'})
         }
-        console.log("stomp.message: ", stomp.message);
     }
-
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -121,14 +117,6 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
 
     return (
         <div>
-            {/* <div>
-            {detail !== null && (
-                <div key={detail.groupId}>
-                    <div>Group Detail ID: {detail.groupId}</div>
-                    <div>Group Detail Title: {detail.groupTitle}</div>
-                </div>
-            )}
-        </div> */}
             {groupDetailState.isLoading && <div>Loading...</div>}
             {groupDetailState.data && (
                 <div>
@@ -138,8 +126,6 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
                             <div>방이름: {groupDetailState.data.groupTitle}</div>
                             <div><Invite groupId={groupInfo.groupId}/></div>
                         </RowFlexBox>
-
-
                     </div>
                     <div>
                         <ul>
@@ -155,12 +141,12 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
                     }}>
                         타겟설정
                     </div>
-                    <div>
-                        {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
-                    </div>
                     <hr/>
                     <div>
-
+                        <MessageDisplay
+                            receivedStompMsg={receivedStompMsg}
+                            groupId={groupDetailState.data.groupId}
+                        />
                     </div>
                     <hr/>
                     <div>
@@ -172,5 +158,4 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({updateApp, sendS
         </div>
     );
 }
-
 export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupDetail);

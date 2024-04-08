@@ -101,6 +101,10 @@ public class UserService {
             // 4. refreshToken 정보 저장
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
             System.out.println("1");
+
+            //온라인 전환
+            OnOff(userEntity.getUserEmail());
+            
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
@@ -131,6 +135,7 @@ public class UserService {
 
     @Transactional
     public void logout(UserDetails userDetails, HttpServletResponse response) {
+        OnOff(userDetails.getUsername());
         //DB에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
@@ -157,4 +162,17 @@ public class UserService {
         response.addCookie(cookie);
     }
 
+    public boolean OnOff(String userId) {
+        UserEntity userEntity = userRepository.findByUserEmail(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
+        System.out.println(userEntity.getIsOnline());
+        if (userEntity.getIsOnline() == UserEntity.OnlineStatus.OFFLINE) {//온/오프라인 전환
+            System.out.println("온라인 : " + UserEntity.OnlineStatus.ONLINE);
+            userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.ONLINE.toString());
+            return true;
+        } else {
+            System.out.println("오프라인 : " + UserEntity.OnlineStatus.OFFLINE);
+            userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
+            return false;
+        }
+    }
 }

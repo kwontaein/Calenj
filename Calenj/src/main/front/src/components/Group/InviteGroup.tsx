@@ -47,7 +47,8 @@ const inviteGroup: React.FC = () => {
     }, [])
 
     const JoinGroup = () => {
-        axios.post('api/joinGroup', null, {
+        console.log("실행?")
+        axios.post('/api/joinGroup', null, {
             params: {
                 groupId: info?.groupId
             },
