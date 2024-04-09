@@ -17,15 +17,6 @@ public class WebSocketController {
     private final WebSokcetService webSokcetService;
 
 
-    /*@MessageMapping("/online")//그룹원 온라인 리스트 (그룹)
-    public void online(OnlineDTO isOnline) throws Exception {
-        Map<String, String> isOnlineStatus = webSokcetService.offlineList(isOnline, isOnline.getGroupId());
-        isOnline.setOnlineStatusMap(isOnlineStatus);
-
-        System.out.println("온/오프라인 유저 리스트 : " + isOnline.getOnlineStatusMap());
-        template.convertAndSend("/topic/userOnline/" + isOnline.getGroupId(), isOnline.getOnlineStatusMap());
-    }*/
-
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageDTO message) throws Exception {

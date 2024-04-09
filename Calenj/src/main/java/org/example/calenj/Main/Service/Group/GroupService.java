@@ -63,7 +63,7 @@ public class GroupService {
     }
 
     //그룹 목록 가져오기
-    public List<GroupDTO.Response> groupList() {
+    public List<GroupDTO> groupList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String userEmail = userDetails.getUsername();
         return groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
@@ -71,14 +71,14 @@ public class GroupService {
 
 
     //그룹 세부 정보 가져오기
-    public Optional<GroupDetailDTO.Response> groupDetail(UUID groupId) {
-        Optional<GroupDTO.Response> groupOptional = groupRepository.findGroupById(groupId);
+    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
+        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
         if (groupOptional.isPresent()) {
-            GroupDTO.Response groupDTO = groupOptional.get();
-            List<GroupUserDTO.Response> groupUsers = group_userRepository.findGroupUsers(groupDTO.getGroupId());
+            GroupDTO groupDTO = groupOptional.get();
+            List<GroupUserDTO> groupUsers = group_userRepository.findGroupUsers(groupDTO.getGroupId());
             // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
             // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
-            GroupDetailDTO.Response groupDetailDTO = new GroupDetailDTO.Response(
+            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
                     groupDTO.getGroupId(),
                     groupDTO.getGroupTitle(),
                     groupDTO.getGroupCreated(),
@@ -110,7 +110,7 @@ public class GroupService {
 
     }
 
-    public String inviteCode(InviteCodeDTO.Request inviteCodeDTO) {
+    public String inviteCode(InviteCodeDTO inviteCodeDTO) {
 
         Random rnd = new Random();
         StringBuffer buf = new StringBuffer();
@@ -141,9 +141,9 @@ public class GroupService {
     }
 
     //초대 코드로 그룹 정보 반환 -> 기간 만료 or 잘못된 코드시 정보 반환해야함
-    public InviteCodeDTO.Response inviteGroup(String inviteCode) {
+    public InviteCodeDTO inviteGroup(String inviteCode) {
 
-        InviteCodeDTO.Response inviteCodeDTO = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
+        InviteCodeDTO inviteCodeDTO = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
 
         int onlineCnt = inviteCodeRepository.onlineUserCount(inviteCode).orElse(0);
         int memberCnt = inviteCodeRepository.memberCount(inviteCode).orElse(0);
@@ -153,7 +153,7 @@ public class GroupService {
 
         String enableUse = globalService.compareDate(inviteCodeDTO.getEndDateTime());
         System.out.println(enableUse);
-        
+
         if (inviteCodeDTO.getGroupTitle() != null && enableUse.equals("useAble")) {
             inviteCodeDTO.setAbleCode("유효한 코드입니다");
             System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);

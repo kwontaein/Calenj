@@ -37,10 +37,10 @@ public class WebSokcetService {
     public Map<String, String> offlineList(OnlineDTO onlineDTO, UUID groupId) {
         Map<String, String> onlineList = new HashMap<>();
         //여기서 온라인 오프라인 여부 불러옴
-        List<GroupUserDTO.Response> groupUserDTO = group_userRepository.findGroupUsers(groupId);
+        List<GroupUserDTO> groupUserDTO = group_userRepository.findGroupUsers(groupId);
 
         // 온/오프라인 목록 생성
-        for (GroupUserDTO.Response userDTO : groupUserDTO) {
+        for (GroupUserDTO userDTO : groupUserDTO) {
             String nickName = userDTO.getNickName();
 
             String onlineStatus = userDTO.getOnlineStatus().toString().replace("CUSTOM", "");
