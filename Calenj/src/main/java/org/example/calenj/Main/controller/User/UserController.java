@@ -1,4 +1,4 @@
-package org.example.calenj.Main.controller;
+package org.example.calenj.Main.controller.User;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

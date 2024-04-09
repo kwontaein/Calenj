@@ -1,4 +1,4 @@
-package org.example.calenj.Main.controller;
+package org.example.calenj.Main.controller.User;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.User.EventDTO;
