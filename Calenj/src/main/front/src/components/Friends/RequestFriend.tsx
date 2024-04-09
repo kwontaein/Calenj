@@ -31,7 +31,7 @@ const RequestFriend: React.FC = () => {
     //그룹 목록 불러오기
     const getEvents = async (): Promise<Event[] | null> => {
         try {
-            const response = await axios.post('/api/ResponseFriendList');
+            const response = await axios.get('/api/ResponseFriendList');
             console.log('친구 요청 받은 목록을 불러옵니다.');
             const data = response.data as Event[];
             const dataSort = data.sort((a, b) => {
@@ -55,15 +55,10 @@ const RequestFriend: React.FC = () => {
         queryFn: getEvents, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    const acceptFriend = async (requestUserId: string, isAccept: string) => {
-        axios.post('/api/responseFriend', null, {
-            params: {
-                requestUserId: requestUserId,
-                isAccept: isAccept,
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
+    const acceptFriend = async (friendUserId: string, isAccept: string) => {
+        axios.post('/api/responseFriend', {
+            friendUserId: friendUserId,
+            isAccept: isAccept,
         }) // 객체의 속성명을 'id'로 설정;
             .then(() => window.alert(`친구 요청을 ${isAccept === "ACCEPT" ? "수락" : "거절"}했습니다.`))
             .catch((error) => {

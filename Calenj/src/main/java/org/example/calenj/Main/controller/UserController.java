@@ -4,13 +4,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.UserSubscribeDTO;
+import org.example.calenj.Main.DTO.User.UserDTO;
+import org.example.calenj.Main.DTO.User.UserSubscribeDTO;
 import org.example.calenj.Main.DTO.ValidateDTO;
-import org.example.calenj.Main.model.Verify.EmailVerificationService;
-import org.example.calenj.Main.model.GlobalService;
-import org.example.calenj.Main.model.Verify.PhoneVerificationService;
-import org.example.calenj.Main.model.UserService;
+import org.example.calenj.Main.Service.GlobalService;
+import org.example.calenj.Main.Service.UserService;
+import org.example.calenj.Main.Service.Verify.EmailVerificationService;
+import org.example.calenj.Main.Service.Verify.PhoneVerificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,26 @@ public class UserController {
 
     private final EmailVerificationService emailVerificationService;
 
+    //개인 정보 부분------------------------------------------------------------------------------
+    @PostMapping("/api/postCookie")
+    public boolean checkCookie(HttpServletRequest request) {
+        Cookie[] requestCookie = request.getCookies();
+        return userService.checkUserToken(requestCookie);
+    }
+
+    @PostMapping("/api/saveUser")
+    public String saveUser(@RequestBody UserDTO.Request userDTO, HttpServletResponse response) {
+        validateDTO.clear();
+        userService.removeCookie(response, "enableSendEmail");
+        return userService.saveUser(userDTO);
+    }
+
+    @PostMapping("/api/login")
+    public ResponseEntity<String> login(@RequestBody UserDTO.Request userDTO) {
+        System.out.println("로그인?");
+        return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
+    }
+
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
@@ -39,11 +59,21 @@ public class UserController {
         return "logout";
     }
 
-    @PostMapping("/api/postCookie")
-    public boolean checkCookie(HttpServletRequest request) {
-        Cookie[] requestCookie = request.getCookies();
-        return userService.checkUserToken(requestCookie);
+    @GetMapping("/api/subscribeCheck")
+    public UserSubscribeDTO subscribeCheck() {
+        return userService.subscribeCheck();
     }
+
+    @PostMapping("/api/updateUser")
+    public String updateUser() { //유저 업데이트
+        userService.selectUserInfo();
+        //유저 정보 불러와서 보여주고
+        //정보를 바꾸려면 비밀번호 검증 후
+        //프론트에서 바뀐 값 전달하기
+        return "";
+    }
+
+    //메일 인증 부분------------------------------------------------------------------------------
 
     @PostMapping("/api/sendMessage")
     public Map<String, Object> sendMessage(@RequestBody String phone) {
@@ -77,13 +107,6 @@ public class UserController {
         return validateDTO.getEmailValidState().getCode();
     }
 
-    @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
-        validateDTO.clear();
-        userService.removeCookie(response, "enableSendEmail");
-        return userService.saveUser(userDTO);
-    }
-
     @GetMapping("/api/emailValidationState")
     public boolean checkEmailValidate() {
         return validateDTO.getEmailValidState().getCode() == 200;
@@ -97,26 +120,6 @@ public class UserController {
             return expirationTime;
         }
         return 0L;
-    }
-
-    @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        System.out.println("로그인?");
-        return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
-    }
-
-    @GetMapping("/api/subscribeCheck")
-    public UserSubscribeDTO subscribeCheck() {
-        return userService.subscribeCheck();
-    }
-
-    @PostMapping("/api/updateUser")
-    public String updateUser() { //유저 업데이트
-        userService.selectUserInfo();
-        //유저 정보 불러와서 보여주고
-        //정보를 바꾸려면 비밀번호 검증 후
-        //프론트에서 바뀐 값 전달하기
-        return "";
     }
 
 }

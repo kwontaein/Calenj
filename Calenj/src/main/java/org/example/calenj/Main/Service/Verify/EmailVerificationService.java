@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model.Verify;
+package org.example.calenj.Main.Service.Verify;
 
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.Cookie;
@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
-import org.example.calenj.Main.model.UserService;
+import org.example.calenj.Main.Service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

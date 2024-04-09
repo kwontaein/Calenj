@@ -17,16 +17,16 @@ import java.util.UUID;
 @Repository
 public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, GroupVoteId> {
     // 쿼리: GroupVote를 List로 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.countVoter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
-    Optional<List<GroupVoteDTO>> findVoteByGroupId(@Param("groupId") UUID groupId);
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO.Response(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.countVoter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
+    Optional<List<GroupVoteDTO.Response>> findVoteByGroupId(@Param("groupId") UUID groupId);
 
 
     //voteId찾기
     Optional<GroupVoteEntity> findGroupVoteEntityByVoteId(UUID voteId);
 
     //voteId로 상세조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher,gv.countVoter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
-    Optional<GroupVoteDTO> findByVoteId(@Param("voteId") UUID voteId);
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO.Response(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher,gv.countVoter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
+    Optional<GroupVoteDTO.Response> findByVoteId(@Param("voteId") UUID voteId);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
@@ -36,10 +36,10 @@ public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, Gro
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE Group_Vote SET count_voter = :countVoter WHERE vote_id = :voteId", nativeQuery = true)
-    void updateVoteCount(@Param("voteId") UUID voteId,@Param("countVoter") String countVoter);
+    void updateVoteCount(@Param("voteId") UUID voteId, @Param("countVoter") String countVoter);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE Group_Vote SET vote_end_date = :voteEndDate WHERE vote_id = :voteId", nativeQuery = true)
-    void updatevoteEndDate(@Param("voteId") UUID voteId,@Param("voteEndDate") String voteEndDate);
+    void updatevoteEndDate(@Param("voteId") UUID voteId, @Param("voteEndDate") String voteEndDate);
 }

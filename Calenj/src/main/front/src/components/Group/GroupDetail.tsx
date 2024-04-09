@@ -25,7 +25,7 @@ interface Details {
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
-    members:Members[];
+    members: Members[];
 }
 
 interface Members {
@@ -33,13 +33,13 @@ interface Members {
     group_user_location: String;
     nickName: String;
     onlineStatus: string;
-    userEmail:string;
+    userEmail: string;
 }
 
 
-interface Message{
-    from:string;
-    message:string;
+interface Message {
+    from: string;
+    message: string;
 }
 
 const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
@@ -54,8 +54,6 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const id = useId();
 
 
-
-
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
     useLayoutEffect(() => {
@@ -67,13 +65,8 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     //그룹 디테일 불러오기
     const getGroupList = async (): Promise<Details | null> => {
         try {
-            const response = await axios.post('/api/groupDetail', null, {
-                params: {
-                    groupId: groupInfo.groupId
-                },
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
+            const response = await axios.post('/api/groupDetail', {
+                groupId: groupInfo.groupId
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
             return data;
@@ -90,7 +83,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
 
 
     const groupDetailState = useQuery<Details | null, Error>({
-        queryKey: [QUERY_GROUP_DETAIL_KEY,groupInfo.groupId],
+        queryKey: [QUERY_GROUP_DETAIL_KEY, groupInfo.groupId],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
@@ -156,7 +149,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
                     <hr/>
                     <div>
                         <Notice/>
-                        <Vote/>
+                        <Vote member={groupDetailState.data.members.length}/>
                     </div>
                 </div>
             )}
@@ -164,4 +157,4 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     );
 }
 
-export default connect(null,mapDispatchToStompProps) (GroupDetail);
+export default connect(null, mapDispatchToStompProps)(GroupDetail);

@@ -3,7 +3,7 @@ package org.example.calenj.Main.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Chat.AlarmDTO;
 import org.example.calenj.Main.DTO.Chat.ChatMessageDTO;
-import org.example.calenj.Main.model.WebSoket.WebSokcetService;
+import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;

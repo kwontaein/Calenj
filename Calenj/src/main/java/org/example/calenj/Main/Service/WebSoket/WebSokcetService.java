@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model.WebSoket;
+package org.example.calenj.Main.Service.WebSoket;
 
 import org.example.calenj.Main.DTO.Chat.OnlineDTO;
 import org.example.calenj.Main.DTO.Group.GroupUserDTO;
@@ -37,10 +37,10 @@ public class WebSokcetService {
     public Map<String, String> offlineList(OnlineDTO onlineDTO, UUID groupId) {
         Map<String, String> onlineList = new HashMap<>();
         //여기서 온라인 오프라인 여부 불러옴
-        List<GroupUserDTO> groupUserDTO = group_userRepository.findGroupUsers(groupId);
+        List<GroupUserDTO.Response> groupUserDTO = group_userRepository.findGroupUsers(groupId);
 
         // 온/오프라인 목록 생성
-        for (GroupUserDTO userDTO : groupUserDTO) {
+        for (GroupUserDTO.Response userDTO : groupUserDTO) {
             String nickName = userDTO.getNickName();
 
             String onlineStatus = userDTO.getOnlineStatus().toString().replace("CUSTOM", "");

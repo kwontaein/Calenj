@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model;
+package org.example.calenj.Main.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -22,14 +22,8 @@ const inviteGroup: React.FC = () => {
 
 
     useEffect(() => {
-        axios.post('/api/inviteGroup', null, {
-            params: {
-                inviteCode: inviteCode
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        })
+        axios.post('/api/inviteGroup', {inviteCode: inviteCode}
+        )
             .then((res) => {
                 console.log(res.data);
                 if (res.data == null) {
@@ -48,13 +42,8 @@ const inviteGroup: React.FC = () => {
 
     const JoinGroup = () => {
         console.log("실행?")
-        axios.post('/api/joinGroup', null, {
-            params: {
-                groupId: info?.groupId
-            },
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
+        axios.post('/api/joinGroup', {
+            groupId: info?.groupId
         })
             .then((res) => {
                 window.alert('그룹에 참여되었습니다')

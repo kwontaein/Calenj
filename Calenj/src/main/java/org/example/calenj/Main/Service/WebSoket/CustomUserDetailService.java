@@ -1,4 +1,4 @@
-package org.example.calenj.Main.model.WebSoket;
+package org.example.calenj.Main.Service.WebSoket;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.Repository.UserRepository;

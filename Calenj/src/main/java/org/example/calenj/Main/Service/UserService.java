@@ -1,13 +1,13 @@
-package org.example.calenj.Main.model;
+package org.example.calenj.Main.Service;
 
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.FriendDTO;
+import org.example.calenj.Main.DTO.User.FriendDTO;
 import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.UserDTO;
-import org.example.calenj.Main.DTO.UserSubscribeDTO;
+import org.example.calenj.Main.DTO.User.UserDTO;
+import org.example.calenj.Main.DTO.User.UserSubscribeDTO;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.FriendRepository;
@@ -48,7 +48,7 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String saveUser(UserDTO userDTO) {
+    public String saveUser(UserDTO.Request userDTO) {
         //패스워드 암호화
         userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
         userRepository.save(userDTO.toEntity());
@@ -104,7 +104,7 @@ public class UserService {
 
             //온라인 전환
             OnOff(userEntity.getUserEmail());
-            
+
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
@@ -148,10 +148,9 @@ public class UserService {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         String userEmail = userDetails.getUsername();
-        List<GroupDTO> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
-        List<FriendDTO> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
-        UserSubscribeDTO userSubscribeDTO = new UserSubscribeDTO(friendDTO, groupDTO, userEmail);
-        return userSubscribeDTO;
+        List<GroupDTO.Response> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
+        List<FriendDTO.Response> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
+        return new UserSubscribeDTO(friendDTO, groupDTO, userEmail);
     }
 
 
