@@ -2,7 +2,7 @@ package org.example.calenj.Main.controller.Group;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
-import org.example.calenj.Main.Service.GroupVoteService;
+import org.example.calenj.Main.Service.Group.GroupVoteService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

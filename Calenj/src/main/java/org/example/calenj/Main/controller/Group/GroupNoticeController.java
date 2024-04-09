@@ -2,7 +2,7 @@ package org.example.calenj.Main.controller.Group;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
-import org.example.calenj.Main.Service.GroupNoticeService;
+import org.example.calenj.Main.Service.Group.GroupNoticeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
