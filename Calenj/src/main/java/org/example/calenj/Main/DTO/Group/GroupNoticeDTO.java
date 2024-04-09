@@ -7,43 +7,33 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupNoticeDTO {
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
-        private UUID groupId;
-        private String noticeCreated;
-        private String noticeContent;
+
+
+    private UUID groupId;
+    private UUID noticeId;
+    private String noticeCreated;
+    private String noticeContent;
+    private String noticeCreater;
+    private List<String> noticeWatcher;
+
+    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
+        this.noticeContent = noticeContent;
+        this.noticeCreater = noticeCreater;
+        this.noticeCreated = noticeCreated;
+        this.noticeId = noticeId;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private UUID groupId;
-        private UUID noticeId;
-        private String noticeCreated;
-        private String noticeContent;
-        private String noticeCreater;
-        private List<String> noticeWatcher;
 
-        public Response(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
-            this.noticeContent = noticeContent;
-            this.noticeCreater = noticeCreater;
-            this.noticeCreated = noticeCreated;
-            this.noticeId = noticeId;
-        }
-
-
-        public Response(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
-            this.noticeContent = noticeContent;
-            this.noticeCreater = noticeCreater;
-            this.noticeCreated = noticeCreated;
-            this.noticeWatcher = noticeWatcher;
-            this.noticeId = noticeId;
-        }
+    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
+        this.noticeContent = noticeContent;
+        this.noticeCreater = noticeCreater;
+        this.noticeCreated = noticeCreated;
+        this.noticeWatcher = noticeWatcher;
+        this.noticeId = noticeId;
     }
 
 

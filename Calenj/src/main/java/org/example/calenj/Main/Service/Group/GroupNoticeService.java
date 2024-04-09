@@ -47,15 +47,15 @@ public class GroupNoticeService {
     }
 
     //그룹 공지 가져오기
-    public List<GroupNoticeDTO.Response> groupNoticeList(UUID groupId) {
-        List<GroupNoticeDTO.Response> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
+    public List<GroupNoticeDTO> groupNoticeList(UUID groupId) {
+        List<GroupNoticeDTO> groupNoticeDTOS = groupNoticeRepository.findNoticeByGroupId(groupId).orElseThrow(() -> new RuntimeException("공지를 찾을 수 없습니다."));
         return groupNoticeDTOS;
     }
 
 
     //그룹 공지 디테일
-    public GroupNoticeDTO.Response noticeDetail(UUID noticeId) {
-        GroupNoticeDTO.Response groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
+    public GroupNoticeDTO noticeDetail(UUID noticeId) {
+        GroupNoticeDTO groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
         return groupNoticeDTO;
     }
 
@@ -63,7 +63,7 @@ public class GroupNoticeService {
     //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        Optional<GroupNoticeDTO.Response> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+        Optional<GroupNoticeDTO> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
 
         if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
             List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());

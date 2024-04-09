@@ -15,29 +15,29 @@ public class GroupVoteController {
     private final GroupVoteService groupVoteService;
 
     @PostMapping("/api/makeVote")
-    public void makeVote(@RequestBody GroupVoteDTO.Request request) {
+    public void makeVote(@RequestBody GroupVoteDTO request) {
         System.out.println(request);
         groupVoteService.makeVote(request);
     }
 
     @PostMapping("api/voteList")
-    public List<GroupVoteDTO.Response> noticeList(@RequestBody GroupVoteDTO.Request request) {
+    public List<GroupVoteDTO> noticeList(@RequestBody GroupVoteDTO request) {
         return groupVoteService.groupVoteList(request.getGroupId());
     }
 
     @PostMapping("/api/voteDetail")
-    public GroupVoteDTO.Response voteDetail(@RequestParam(name = "voteId") UUID voteId) {
+    public GroupVoteDTO voteDetail(@RequestParam(name = "voteId") UUID voteId) {
         groupVoteService.voteViewCount(voteId);
         return groupVoteService.voteDetail(voteId);
     }
 
     @PostMapping("/api/voteUpdate")
-    public void voteUpdate(@RequestBody GroupVoteDTO.Request request) {
+    public void voteUpdate(@RequestBody GroupVoteDTO request) {
         groupVoteService.updateVote(request.getVoteId(), request.getMyVote());
     }
 
     @PostMapping("/api/voteEndDateUpdate")
-    public void voteEndDateUpdate(@RequestBody GroupVoteDTO.Request request) {
+    public void voteEndDateUpdate(@RequestBody GroupVoteDTO request) {
         groupVoteService.voteEndDateUpdate(request.getVoteId(), request.getVoteEndDate());
     }
 

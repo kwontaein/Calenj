@@ -8,41 +8,33 @@ import org.example.calenj.Main.domain.UserEntity;
 
 import java.util.UUID;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FriendDTO {
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
-        public String userId;
-        private String friendUserId;
-        private String isAccept;
+
+
+    public String userId;
+    private String isAccept;
+    private String friendId;
+    private UserEntity ownUserId;
+    private String friendUserId;
+    private String nickName;
+    private String createDate;
+    private FriendEntity.statusType status;
+    private UUID ChattingRoomId;
+
+    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId) {
+        this.friendUserId = friendUserId;
+        this.nickName = nickName;
+        this.ChattingRoomId = ChattingRoomId;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private String friendId;
-        private UserEntity ownUserId;
-        private String friendUserId;
-        private String nickName;
-        private String createDate;
-        private FriendEntity.statusType status;
-        private UUID ChattingRoomId;
-
-        public Response(String friendUserId, String nickName, UUID ChattingRoomId) {
-            this.friendUserId = friendUserId;
-            this.nickName = nickName;
-            this.ChattingRoomId = ChattingRoomId;
-        }
-
-        public Response(String friendUserId, String nickName, UUID ChattingRoomId, String createDate) {
-            this.friendUserId = friendUserId;
-            this.nickName = nickName;
-            this.ChattingRoomId = ChattingRoomId;
-            this.createDate = createDate;
-        }
+    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId, String createDate) {
+        this.friendUserId = friendUserId;
+        this.nickName = nickName;
+        this.ChattingRoomId = ChattingRoomId;
+        this.createDate = createDate;
     }
 
 

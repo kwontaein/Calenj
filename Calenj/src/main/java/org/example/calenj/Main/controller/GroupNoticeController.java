@@ -17,21 +17,21 @@ public class GroupNoticeController {
 
     //공지 생성
     @PostMapping("api/makeNotice")
-    public void makeNotice(@RequestBody GroupNoticeDTO.Request request) {
+    public void makeNotice(@RequestBody GroupNoticeDTO request) {
         groupNoticeService.makeNotice(request.getNoticeContent(), request.getNoticeCreated(), request.getGroupId());
     }
 
     //공지 리스트
     @PostMapping("api/noticeList")
-    public List<GroupNoticeDTO.Response> noticeList(@RequestBody GroupNoticeDTO.Request request) {
+    public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO request) {
         return groupNoticeService.groupNoticeList(request.getGroupId());
     }
 
     //그룹공지 세부정보 가져오기
     @PostMapping("/api/noticeDetail")
-    public GroupNoticeDTO.Response noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
+    public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
         groupNoticeService.noticeViewCount(noticeId);
-        GroupNoticeDTO.Response noticeDetail = groupNoticeService.noticeDetail(noticeId);
+        GroupNoticeDTO noticeDetail = groupNoticeService.noticeDetail(noticeId);
         return noticeDetail;
     }
 

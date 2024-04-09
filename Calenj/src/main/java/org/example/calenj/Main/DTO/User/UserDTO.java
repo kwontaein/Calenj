@@ -1,7 +1,8 @@
 package org.example.calenj.Main.DTO.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.example.calenj.Main.domain.UserEntity;
 
 //DTO를 Entity와 별개로 따로 생성하는 이유
@@ -10,40 +11,26 @@ import org.example.calenj.Main.domain.UserEntity;
 //3 DTO는 주로 비즈니스 로직이나 클라이언트에 필요한 데이터를 중심으로 설계되어 있으며, 데이터베이스 변경에 덜 민감
 //4 Entity 클래스는 애플리케이션 내에서 중요한 정보를 담고 있을 수 있다
 //5 Entity 클래스와 DTO 클래스를 분리하면 각각의 클래스가 자신의 책임을 가지게 되어 코드의 의도를 명확하게 유지 가능
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
-    @Data
-    @RequiredArgsConstructor
-    public static class Request {
-        private String nickname;
-        private String userPassword;
-        private String userEmail;
-        private String userPhone;
-        private String userJoinDate;
-        private String userRole;
+    private String nickname;
+    private String userPassword;
+    private String userEmail;
+    private String userPhone;
+    private String userJoinDate;
+    private String userRole;
 
-        public UserEntity toEntity() {
-            return UserEntity.builder()
-                    .userEmail(userEmail)
-                    .nickname(nickname)
-                    .userPassword(userPassword)
-                    .userPhone(userPhone)
-                    .userJoinDate(userJoinDate)
-                    .userRole(UserEntity.RoleType.userRoleParsing(userRole))
-                    .build();
-        }
+    public UserEntity toEntity() {
+        return UserEntity.builder()
+                .userEmail(userEmail)
+                .nickname(nickname)
+                .userPassword(userPassword)
+                .userPhone(userPhone)
+                .userJoinDate(userJoinDate)
+                .userRole(UserEntity.RoleType.userRoleParsing(userRole))
+                .build();
     }
-
-    @Data
-    @RequiredArgsConstructor
-    public static class Response {
-        private String nickname;
-        private String userPassword;
-        private String userEmail;
-        private String userPhone;
-        private String userJoinDate;
-        private String userRole;
-    }
-
 
 }

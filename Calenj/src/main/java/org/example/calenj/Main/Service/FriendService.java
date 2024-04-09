@@ -25,7 +25,7 @@ public class FriendService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    public List<FriendDTO.Response> friendList() {
+    public List<FriendDTO> friendList() {
         return friendRepository.findFriendListById(globalService.extractFromSecurityContext().getUsername()).orElseThrow(() -> new RuntimeException("친구 목록이 비었습니다"));
     }
 
@@ -40,7 +40,7 @@ public class FriendService {
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         try {
-            FriendDTO.Response friendDTO = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
+            FriendDTO friendDTO = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
             //이미 상대가 요청했다면
             //상대 수락으로 변경 후 내 친구에 추가
             friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
@@ -57,7 +57,7 @@ public class FriendService {
 
             friendRepository.save(friendEntity);
             eventRepository.updateEventFriendRequest(friendUserId, "ACCEPT");
-            
+
         } catch (Exception e) {
             //동일한 요청 정보가 있다면? -> 저장x
             if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserEmail(), friendUserId)) {
@@ -103,7 +103,7 @@ public class FriendService {
         //이벤트 변경 후 친구테이블에 추가
         eventRepository.updateEventFriendRequest(friendUserId, "ACCEPT");
 
-        FriendDTO.Response friendDTO = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
+        FriendDTO friendDTO = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
         //거절이라면
         if (isAccept.equals("REJECT")) {
             //요청한 유저 친구목록에서 삭제
@@ -128,19 +128,19 @@ public class FriendService {
         }
     }
 
-    public List<EventDTO.Response> myEvents(String userId) {
+    public List<EventDTO> myEvents(String userId) {
         return eventRepository.EventListById(userId).orElseThrow(() -> new RuntimeException(""));
     }
 
     //내가 받은 요청 목록
-    public List<EventDTO.Response> ResponseFriendList() {
+    public List<EventDTO> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         System.out.println(userDetails.getUsername());
         return eventRepository.ResponseEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
     }
 
     //내가 보낸 요청 목록
-    public List<EventDTO.Response> RequestFriendList() {
+    public List<EventDTO> RequestFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         System.out.println(userDetails.getUsername());
         return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));

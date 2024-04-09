@@ -48,7 +48,7 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String saveUser(UserDTO.Request userDTO) {
+    public String saveUser(UserDTO userDTO) {
         //패스워드 암호화
         userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
         userRepository.save(userDTO.toEntity());
@@ -148,8 +148,8 @@ public class UserService {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         String userEmail = userDetails.getUsername();
-        List<GroupDTO.Response> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
-        List<FriendDTO.Response> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
+        List<GroupDTO> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
+        List<FriendDTO> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
         return new UserSubscribeDTO(friendDTO, groupDTO, userEmail);
     }
 

@@ -25,7 +25,7 @@ public class GroupVoteService {
     private final Group_VoteRepository groupVoteRepository;
     private final VoteChoiceRepository voteChoiceRepository;
 
-    public void makeVote(GroupVoteDTO.Request request) {
+    public void makeVote(GroupVoteDTO request) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
@@ -59,19 +59,19 @@ public class GroupVoteService {
         }
     }
 
-    public List<GroupVoteDTO.Response> groupVoteList(UUID groupId) {
+    public List<GroupVoteDTO> groupVoteList(UUID groupId) {
         return groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
     }
 
-    public GroupVoteDTO.Response voteDetail(UUID voteId) {
+    public GroupVoteDTO voteDetail(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        GroupVoteDTO.Response response = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
-        List<VoteChoiceDTO.Response> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
+        GroupVoteDTO response = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
+        List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
 
         if (response.getAnonymous()) {//익명투표일 경우 블라인드처리
             response.setCountVoter(response.getBlindedCounter(response.getCountVoter(), userDetails.getUsername()));
 
-            for (VoteChoiceDTO.Response choiceDTO : voteChoiceDTO) {
+            for (VoteChoiceDTO choiceDTO : voteChoiceDTO) {
                 choiceDTO.setVoter(choiceDTO.getBlindedVoter(choiceDTO.getVoter(), userDetails.getUsername()));
             }
         }
@@ -84,7 +84,7 @@ public class GroupVoteService {
     //그룹 투표 조회한 사람
     public void voteViewCount(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        Optional<GroupVoteDTO.Response> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
+        Optional<GroupVoteDTO> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
 
         //조회한 사람 갱신
         if (groupVoteDTO.isPresent() && groupVoteDTO.get().getVoteWatcher() != null) {
@@ -101,14 +101,14 @@ public class GroupVoteService {
 
     public void updateVote(UUID voteId, boolean[] myVote) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        List<VoteChoiceDTO.Response> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
+        List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
         Set<String> uniqueVoters = new LinkedHashSet<>();//몇명이 투표했는지 확인하기 위한 Set
 
-        voteChoiceDTO.sort(Comparator.comparingInt(VoteChoiceDTO.Response::getVoteIndex));
+        voteChoiceDTO.sort(Comparator.comparingInt(VoteChoiceDTO::getVoteIndex));
         System.out.println(voteChoiceDTO);
 
         int i = 0; //voter의 index값을 위한 선언
-        for (VoteChoiceDTO.Response voters : voteChoiceDTO) {
+        for (VoteChoiceDTO voters : voteChoiceDTO) {
             int includeUser = voters.getVoter().indexOf(userDetails.getUsername());
             if (myVote[i] && includeUser == -1) { //기존 항목의 투표자중 내가 없으면서 투표를 했으면 내 이름 추가
                 voters.getVoter().add(userDetails.getUsername());
@@ -124,7 +124,7 @@ public class GroupVoteService {
         }
 
         //투표 갱신 이후 투표자 명단 갱신
-        for (VoteChoiceDTO.Response voters : voteChoiceDTO) {
+        for (VoteChoiceDTO voters : voteChoiceDTO) {
             for (String voter : voters.getVoter()) {
                 uniqueVoters.add(voter.trim());
             }

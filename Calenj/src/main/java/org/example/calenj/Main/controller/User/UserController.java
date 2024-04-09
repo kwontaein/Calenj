@@ -40,14 +40,14 @@ public class UserController {
     }
 
     @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO.Request userDTO, HttpServletResponse response) {
+    public String saveUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
         validateDTO.clear();
         userService.removeCookie(response, "enableSendEmail");
         return userService.saveUser(userDTO);
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO.Request userDTO) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         System.out.println("로그인?");
         return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
     }
