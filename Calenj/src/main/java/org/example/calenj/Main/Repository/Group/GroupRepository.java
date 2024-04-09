@@ -22,7 +22,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     //서브 테이블 조회의 경우 쿼리 두개 사용 및 조인 전략을 사용해야 함
 
     // 첫 번째 쿼리: GroupEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group(g.groupId, g.groupTitle, g.groupCreated ,g.groupCreater) FROM Group_table g WHERE g.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupDTO(g.groupId, g.groupTitle, g.groupCreated ,g.groupCreater) FROM Group_table g WHERE g.groupId = :groupId")
     Optional<GroupDTO> findGroupById(@Param("groupId") UUID groupId);
 
     /*@Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")

@@ -14,7 +14,7 @@ public interface InviteCodeRepository extends JpaRepository<InviteCodeEntity, St
     @Query("SELECT new org.example.calenj.Main.DTO.Group.InviteCodeDTO(ic.group.groupId,ic.group.groupTitle,ic.user.nickname,ic.endDateTime,ic.useAbleCount,ic.maxUseAble) FROM InviteCode ic WHERE ic.inviteCode = :inviteCode GROUP BY ic.group.groupTitle, ic.user.nickname, ic.endDateTime")
     Optional<InviteCodeDTO> findByInviteCode(@Param("inviteCode") String inviteCode);
 
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.InviteCodeDTO.Response(ic.user.nickname,ic.inviteCode,ic.endDateTime,ic.useAbleCount) FROM InviteCode ic WHERE ic.group.groupId = :groupId ")
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.InviteCodeDTO(ic.user.nickname,ic.inviteCode,ic.endDateTime,ic.useAbleCount) FROM InviteCode ic WHERE ic.group.groupId = :groupId ")
     Optional<InviteCodeDTO> findByGroupId(@Param("groupId") UUID groupId);
 
     @Query("SELECT COUNT(m) FROM InviteCode ic JOIN ic.group.members m WHERE ic.inviteCode = :inviteCode")
