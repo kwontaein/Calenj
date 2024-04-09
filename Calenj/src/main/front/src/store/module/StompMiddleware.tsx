@@ -1,8 +1,11 @@
+
+
+
 import { CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { call ,put, race,delay,take,fork} from 'redux-saga/effects';
 import { eventChannel ,buffers } from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG,UPDATE_DESTINATION,UPDATE_APP,Destination} from "./StompReducer"
+import {receivedStompMsg, SEND_STOMP_MSG,UPDATE_DESTINATION, Destination} from "./StompReducer"
 
 interface StompData {
     [type:string]: string|number,
@@ -13,27 +16,20 @@ const subscribeDirection = ['personalTopic','groupMsg','friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
     
-    while (true) {
-        const {payload} = yield take(UPDATE_APP) //보낼 경로 먼저 설정
-        const {params, target} = yield payload;
-
-        const {payload2} = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
-        console.log(payload2)
-        const {message} = yield payload2;
-
-        console.log(message)
-
-        const data: StompData = {
+    while (true) {        
+        const { payload } = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
+        const { params, target ,message} = yield payload;
+        const data: StompData = {  
             [target]: `${params}`,
             message: `${message}`
         }
-
-        const url = `/app/${target}`
-        console.log(url)
+        const url = `app/${target}/${params}`
         stompClient.publish({
             destination: `${url}`,
             body: JSON.stringify(data),
         })
+
+        // app/groupMsg/
     }
 }
 
@@ -80,7 +76,7 @@ function createStompConnection(){
         
     return new Promise((res,rej)=>{
     
-            const sock = new SockJS(stompUrl);
+            const sock = () => new SockJS(stompUrl);
             const stompClient = Stomp.over(sock);
 
             // WebSocket 에러 처리
@@ -120,17 +116,20 @@ function createEventChannel(stompClient:CompatClient, destination:Destination){
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
 
         const subscribeMessage = () => {
+             
             destination.map((sub:(string|number)[],index:number)=>{
                 if(!index){
                     console.log(`${sub[0]}: Online`);
                     const data = {
                         userId: `${sub[0]}`,
-                        StartEnd: true,
                     }
                     stompClient.send('/app/online', {}, JSON.stringify(data));
                 }
                 sub.map((parmas:(string|number))=>{
-                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${parmas}`, (isOnline: IMessage) => {})
+                    
+                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${parmas}`, (isOnline: IMessage) => {
+
+                    })
                 })
             }) 
             

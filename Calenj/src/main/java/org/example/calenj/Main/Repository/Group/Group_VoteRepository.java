@@ -33,5 +33,13 @@ public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, Gro
     @Query(value = "UPDATE Group_Vote SET vote_watcher = :voteWatcher WHERE vote_id = :voteId", nativeQuery = true)
     void updateVoteWatcher(@Param("voteWatcher") String voteWatcher, @Param("voteId") UUID voteId);
 
+    @Modifying(clearAutomatically = true)
+    @Transactional //update 는 해당 어노테이션이 필요함
+    @Query(value = "UPDATE Group_Vote SET count_voter = :countVoter WHERE vote_id = :voteId", nativeQuery = true)
+    void updateVoteCount(@Param("voteId") UUID voteId,@Param("countVoter") String countVoter);
 
+    @Modifying(clearAutomatically = true)
+    @Transactional //update 는 해당 어노테이션이 필요함
+    @Query(value = "UPDATE Group_Vote SET vote_end_date = :voteEndDate WHERE vote_id = :voteId", nativeQuery = true)
+    void updatevoteEndDate(@Param("voteId") UUID voteId,@Param("voteEndDate") String voteEndDate);
 }

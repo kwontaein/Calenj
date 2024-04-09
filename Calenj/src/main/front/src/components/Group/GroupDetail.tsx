@@ -10,11 +10,11 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun'
-import{ DispatchStompProps,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToStompProps}  from '../../store/module/StompReducer';
+import{ DispatchStompProps,StompData,mapDispatchToStompProps,mapStateToStompProps}  from '../../store/module/StompReducer';
 
 
 interface Details {
-    groupId: number;
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
@@ -35,13 +35,13 @@ interface Message{
     message:string;
 }
 
-const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
+export const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
 /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail :React.FC<DispatchStompProps>=({updateApp,sendStompMsg})=>{
+const GroupDetail :React.FC<DispatchStompProps &StompData>=({sendStompMsg,stomp})=>{
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -89,10 +89,10 @@ const GroupDetail :React.FC<DispatchStompProps>=({updateApp,sendStompMsg})=>{
 
     const sendMsg = ()=>{
         if(groupDetailState.data){
-            updateApp({target:'groupMsg',params:groupDetailState.data.groupId})
-            sendStompMsg({message:'ㅎㅇ'})
+            sendStompMsg({target:'groupMsg',params:groupDetailState.data.groupId, message:'권태인 븅진 ㅋㅋ'})
         }
-        console.log('ㅎㅇ')
+        console.log(stomp.message)
+
     }
 
 
@@ -160,7 +160,7 @@ const GroupDetail :React.FC<DispatchStompProps>=({updateApp,sendStompMsg})=>{
                 <hr/>
                 <div>
                     <Notice/>
-                    <Vote/>
+                    <Vote member={groupDetailState.data.members.length}/>
                 </div>
             </div>
         )}
@@ -168,4 +168,4 @@ const GroupDetail :React.FC<DispatchStompProps>=({updateApp,sendStompMsg})=>{
     );
 }
 
-export default connect(null,mapDispatchToStompProps) (GroupDetail);
+export default connect(mapStateToStompProps,mapDispatchToStompProps) (GroupDetail);

@@ -11,7 +11,7 @@ import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
-import{ DispatchStompProps,mapDispatchToStompProps, updateApp}  from './store/module/StompReducer';
+import{ DispatchStompProps,mapDispatchToStompProps}  from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
@@ -37,7 +37,7 @@ const App: React.FC<DispatchStompProps> = ({updateDestination,updateOnline}) => 
         console.log(`cookie값 ${response.data}`);
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if(!response.data){
-            sessionStorage.removeItem('userId')
+            localStorage.removeItem('userId')
             updateOnline({isOnline:false});
             queryClient.clear(); //캐시 삭제
         }else{

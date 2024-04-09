@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /* StringListConverter.java */

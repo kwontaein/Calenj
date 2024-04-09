@@ -101,4 +101,13 @@ public class GroupController {
         GroupVoteDTO voteDetail = groupService.voteDetail(voteId);
         return voteDetail;
     }
+    @PostMapping("/api/voteUpdate")
+    public void voteUpdate(@RequestBody GroupVoteDTO groupVoteDTO){
+        groupService.updateVote(groupVoteDTO.getVoteId(),groupVoteDTO.getMyVote());
+    }
+
+    @PostMapping("/api/voteEndDateUpdate")
+    public void voteEndDateUpdate(@RequestBody GroupVoteDTO groupVoteDTO){
+        groupService.voteEndDateUpdate(groupVoteDTO.getVoteId(),groupVoteDTO.getVoteEndDate());
+    }
 }

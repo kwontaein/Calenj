@@ -1,16 +1,17 @@
-import React, {ChangeEvent, InputHTMLAttributes, useEffect, useRef, useState} from 'react';
-import {RowFlexBox, Mini_Input, Button, FormLable, Li, OveflowBlock} from '../../../style/FormStyle';
+import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
+import {RowFlexBox, Mini_Input, FormLable, Li, OveflowBlock} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm, saveDBFormat} from '../../../stateFunc/actionFun'
 import '../../../style/Datepicker.scss'
-import DatePicker from 'react-datepicker';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import { UseQueryResult } from '@tanstack/react-query';
+import ReactDatePicker from 'react-datepicker';
 
 interface ModalProps {
     onClose: () => void;
@@ -31,12 +32,11 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [inputForm, setInputForm] = useState<string>('TEXT'); //입력형식
     const [multipleOption, setMultipleOption] = useState<boolean>(false);//중복투표여부
     const [anonymousOption, setanonymousOption] = useState<boolean>(false); //익명여부
-    const location = useLocation();
-    const groupInfo = {...location.state};
+    const datepickerRef =useRef<ReactDatePickerProps>()
     const inputRef = useRef<HTMLInputElement>(null);
     const contentRef = useRef<HTMLInputElement>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(new Date().setDate(new Date().getDate() + 1)));
+    
 
     //List추가
     const addList = () => {
@@ -191,7 +191,8 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     {inputForm === 'TEXT' ?
                         <Mini_Input ref={contentRef}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setContent(e.target.value)}
-                                    style={{width: '150px', fontSize: '12px'}} placeholder='항목 입력'></Mini_Input>
+                                    style={{width: '150px', fontSize: '12px'}} placeholder='항목 입력' maxLength={20}>
+                        </Mini_Input>
                         :
                         <DatePicker
                             dateFormat=' yyyy년 MM월 dd일 (EEE)' // 날짜 형태
@@ -207,11 +208,13 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
 
                     <button onClick={() => addList()} style={{height: '25px'}}>추가</button>
                 </RowFlexBox>
-                <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='TEXT'
-                    onClick={(e) => inputFormHandler(e)}
-                    defaultChecked/>텍스트
+                <label style={{fontSize: '13px'}}>
+                    <input type='radio' name='inputForm' value='TEXT'
+                        onClick={(e) => inputFormHandler(e)}
+                        defaultChecked/>텍스트
                 </label>
-                <label style={{fontSize: '13px'}}><input type='radio' name='inputForm' value='DATE'
+                <label style={{fontSize: '13px'}}>
+                    <input type='radio' name='inputForm' value='DATE'
                     onClick={(e) => inputFormHandler(e)}/>날짜
                 </label>
                 {voteList &&
@@ -241,17 +244,17 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     onChange={(date) => setSelectedDate(date)}
                     className='DatePicker'
                     placeholderText='날짜 선택'
+ 
                     locale={ko}
                 />
                 <label style={{fontSize: '13px', marginLeft: '3px'}}><input type='checkBox' name='choice'
-                                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                                setMultipleOption(e.target.checked)
-                                                                            }}/>복수선택</label>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setMultipleOption(e.target.checked)
+                    }}/>복수선택</label>
                 <label style={{fontSize: '13px'}}><input type='checkBox' name='anonymous'
-                                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                             setanonymousOption(e.target.checked)
-                                                         }}/>익명투표</label>
-
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setanonymousOption(e.target.checked)
+                    }}/>익명투표</label>
                 <div style={{width: '210px', marginTop: '20px', textAlign: 'right'}}>
                     <button style={{marginRight: '5px'}} onClick={createVote}>생성</button>
                     <button onClick={cancle}>취소</button>

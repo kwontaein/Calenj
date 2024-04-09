@@ -1,14 +1,19 @@
 package org.example.calenj.Main.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GlobalService {
@@ -62,4 +67,19 @@ public class GlobalService {
             return ("cannotUse");
         }
     }
+
+//    public String saveArrayList(List<String> transData){
+//        // JSON 문자열로 변환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            String json = objectMapper.writeValueAsString(transData);
+//
+//            System.out.println("ViewerDuplicateList as JSON :" + json);
+//            return json;
+//        } catch (JsonProcessingException e) {
+//            e.getMessage();
+//        }
+//        //투표자 갱신
+//
+//    }
 }

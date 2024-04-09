@@ -6,6 +6,7 @@ import org.example.calenj.Main.domain.Ids.GroupVoteId;
 import org.example.calenj.Main.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,15 +51,15 @@ public class GroupVoteEntity {
     @Column(name = "anonymous")
     private Boolean anonymous;
 
-    @Column(name = "voter")
-    @Convert(converter = StringListConverter.class)
-    private List<String> voter;
 
+    @Builder.Default
     @Column(name = "vote_watcher")
     @Convert(converter = StringListConverter.class)
     //List<String> 유형의 형식 필드를 데이터베이스 열로 매핑
-    private List<String> voteWatcher;
+    private List<String> voteWatcher =new ArrayList<>();
 
     @Builder.Default
-    private int countVoter = 0;
+    @Column(name="count_voter")
+    @Convert(converter = StringListConverter.class)
+    private List<String> countVoter = new ArrayList<>();
 }

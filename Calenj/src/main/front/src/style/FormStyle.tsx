@@ -5,8 +5,14 @@ interface UnfocusBackgroundProps {
     focus: string;
 }
 interface VoteProps{
-    isCreater :boolean
+    $isCreater :boolean;
+    $ableClick : boolean;
 }
+interface VoteAble{
+    $end:boolean
+}
+
+
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
     position: relative;
@@ -120,11 +126,38 @@ export const MiniText = styled.div`
     font-size: 12px;
 `
 
+//isPick을 통해 항목을 선택했는지 체크
 export const TrasformButton = styled.button<VoteProps>`
-    width: ${props=>props.isCreater? '44vw': '80vw'};
-    padding: ${props=>props.isCreater? '1.2vw': '15px'};
+    
+    width: ${props=>props.$isCreater? '43.5vw': '88vw'};
+    padding: ${props=>props.$isCreater ? '1.2vw': '15px'};
     margin-top:2vw;
     font-size:15px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    ${props=>props.$ableClick?
+        `cursor: pointer;
+        hover:#ccc;
+        transition : background-color 0.3s ease;
+        &:hover{
+            background-color: rgb(228, 227, 227);
+        }`
+    :
+    `
+    background-color :  #fafafa;
+    color :#d6d6d6;
+    border: 1px solid rgb(219, 219, 219);
+    `}
+   
 `;
+
+export const TransVoteContainer = styled.div<VoteAble>`
+    margin-top: 20px;
+    
+    ${props => props.$end && `
+        & > * {
+            opacity: 0.7;
+        }
+    `}
+`;
+

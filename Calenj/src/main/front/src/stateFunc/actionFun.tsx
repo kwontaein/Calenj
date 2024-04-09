@@ -102,3 +102,23 @@ export function changeDateForm(date:string){
     const newDate = new Date(YYMMDD[0], YYMMDD[1]-1,YYMMDD[2], hhmm[0], hhmm[1]);
     return newDate;
 }
+
+
+//남은시간 계산
+export const TimeOperation =(endDate:string)=>{
+    const now = new Date();
+    const end = changeDateForm(endDate);
+    const remaining =Number(end)-Number(now);
+
+    let result:string;
+    if(now>end){
+        result = `${AHMFormat(end).slice(6)} 종료`
+    }else if(remaining< hour){//1시간도 안남았으면
+        result = `${Math.floor(remaining/minute)}분 남음`
+    }else if(remaining<(oneDay)){ //하루 전이면
+        result = `${Math.floor(remaining/hour)}시간 남음`
+    }else{
+        result = `${Math.round(remaining/oneDay)}일 남음`
+    }
+    return result;
+}
