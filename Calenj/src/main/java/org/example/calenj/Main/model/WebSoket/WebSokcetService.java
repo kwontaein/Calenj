@@ -60,7 +60,7 @@ public class WebSokcetService {
         return onlineList;
     }
 
-    public boolean OnOff(String userId) {
+    /*public boolean OnOff(String userId) {
         UserEntity userEntity = userRepository.findByUserEmail(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
         if (userEntity.getIsOnline() == UserEntity.OnlineStatus.OFFLINE) {//온/오프라인 전환
             System.out.println("온라인 : " + UserEntity.OnlineStatus.ONLINE);
@@ -71,5 +71,5 @@ public class WebSokcetService {
             userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
             return false;
         }
-    }
+    }*/
 }

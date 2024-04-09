@@ -11,13 +11,14 @@ import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
-import{ DispatchStompProps,mapDispatchToStompProps}  from './store/module/StompReducer';
+import {DispatchStompProps, mapDispatchToStompProps} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
+import RequestFriend from "./components/Friends/RequestFriend";
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
-import RequestFriend from "./components/Friends/RequestFriend";
+
 // import GroupList from "./components/Group/GroupList";
 
 interface SubScribe{
@@ -26,8 +27,7 @@ interface SubScribe{
 }
 
 
-
-const App: React.FC<DispatchStompProps> = ({updateDestination,updateOnline}) => {
+const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) => {
     const queryClient = useQueryClient();
 
        //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
@@ -37,7 +37,7 @@ const App: React.FC<DispatchStompProps> = ({updateDestination,updateOnline}) => 
         console.log(`cookie값 ${response.data}`);
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if(!response.data){
-            localStorage.removeItem('userId')
+            sessionStorage.removeItem('userId')
             updateOnline({isOnline:false});
             queryClient.clear(); //캐시 삭제
         }else{

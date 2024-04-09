@@ -30,21 +30,19 @@ public class WebSocketController {
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageDTO message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
-        message.setMessage(username + message.getMessage());
+        message.setMessage(username + " : " + message.getMessage());
         System.out.println(message.getMessage());
-        template.convertAndSend("/topic/groupMsg/" + message.getGroupId(), message);
+        System.out.println("/topic/groupMsg/" + message.getGroupMsg());
+        template.convertAndSend("/topic/groupMsg/" + message.getGroupMsg(), message);
     }
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
     @MessageMapping("/personalTopic")
     public void personalTopic(AlarmDTO alarmDTO) throws Exception {
-        String username = webSokcetService.returnUserId(alarmDTO.getUserName());
-        //db에 값 업데이트
-        if (alarmDTO.isStartEnd()) {
-            webSokcetService.OnOff(username); //온라인 오프라인 전환
-            alarmDTO.setStartEnd(false);
-        }
-        template.convertAndSend("/topic/personalTopic/" + username, alarmDTO.getAlarmContent());
+        System.out.println("alarmDTO : " + alarmDTO);
+        String userId = webSokcetService.returnUserId(alarmDTO.getUserId());
+        System.out.println("/topic/personalTopic/" + userId);
+        template.convertAndSend("/topic/personalTopic/" + userId, alarmDTO);
     }
 
     //친구에게 알림 보내기
@@ -53,7 +51,7 @@ public class WebSocketController {
         String username = webSokcetService.returnNickname(authentication);
         message.setMessage(username + message.getMessage());
         System.out.println(message.getMessage());
-        template.convertAndSend("/topic/friendMsg/" + message.getFriendId(), message);
+        template.convertAndSend("/topic/friendMsg/" + message.getFriendMsg(), message);
     }
 
 }

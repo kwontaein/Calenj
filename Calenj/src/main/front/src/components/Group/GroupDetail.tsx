@@ -9,12 +9,19 @@ import {ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
-import {stateFilter} from '../../stateFunc/actionFun'
-import{ DispatchStompProps,StompData,mapDispatchToStompProps,mapStateToStompProps}  from '../../store/module/StompReducer';
+import {stateFilter} from '../../stateFunc/actionFun';
+import MessageDisplay from "../../store/module/MessageDispay";
+import {
+    DispatchStompProps,
+    StompData,
+    mapDispatchToStompProps,
+    mapStateToStompProps, updateDestination, updateOnline
+} from '../../store/module/StompReducer';
+import {RootState} from "../../store/store";
 
 
 interface Details {
-    groupId: string;
+    groupId: number;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
@@ -35,13 +42,13 @@ interface Message{
     message:string;
 }
 
-export const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
+const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
 /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail :React.FC<DispatchStompProps &StompData>=({sendStompMsg,stomp})=>{
+const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, receivedStompMsg}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -87,12 +94,11 @@ const GroupDetail :React.FC<DispatchStompProps &StompData>=({sendStompMsg,stomp}
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    const sendMsg = ()=>{
-        if(groupDetailState.data){
-            sendStompMsg({target:'groupMsg',params:groupDetailState.data.groupId, message:'권태인 븅진 ㅋㅋ'})
+    const sendMsg = () => {
+        if (groupDetailState.data) {
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: '강승재 븅진 ㅋㅋ'})
         }
-        console.log(stomp.message)
-
+        console.log('ㅎㅇ')
     }
 
 
@@ -116,56 +122,46 @@ const GroupDetail :React.FC<DispatchStompProps &StompData>=({sendStompMsg,stomp}
 
     return (
         <div>
-        {/* <div>
-            {detail !== null && (
-                <div key={detail.groupId}>
-                    <div>Group Detail ID: {detail.groupId}</div>
-                    <div>Group Detail Title: {detail.groupTitle}</div>
+            {groupDetailState.isLoading && <div>Loading...</div>}
+            {groupDetailState.data && (
+                <div>
+                    <div key={groupDetailState.data.groupId}>
+                        <div>방아이디: {groupDetailState.data.groupId.toString().slice(0, 9).padEnd(20, '*')}</div>
+                        <RowFlexBox style={{justifyContent: 'space-between'}}>
+                            <div>방이름: {groupDetailState.data.groupTitle}</div>
+                            <div><Invite groupId={groupInfo.groupId}/></div>
+                        </RowFlexBox>
+                    </div>
+                    <div>
+                        <ul>
+                            {groupDetailState.data.members.map((member) => (
+                                <ListView key={member.userEmail}>
+                                    {member.nickName} : {onlineCheck(member.onlineStatus)}
+                                </ListView>
+                            ))}
+                        </ul>
+                    </div>
+                    <div onClick={() => {
+                        sendMsg()
+                    }}>
+                        타겟설정
+                    </div>
+                    <hr/>
+                    <div>
+                        <MessageDisplay
+                            receivedStompMsg={receivedStompMsg}
+                            groupId={groupDetailState.data.groupId}
+                        />
+                    </div>
+                    <hr/>
+                    <div>
+                        <Notice/>
+                        <Vote/>
+                    </div>
                 </div>
             )}
-        </div> */}
-        {groupDetailState.isLoading && <div>Loading...</div>}
-        {groupDetailState.data && (
-            <div>
-                <div key={groupDetailState.data.groupId}>
-                <div>방아이디: {groupDetailState.data.groupId.toString().slice(0,9).padEnd(20,'*')}</div>
-                    <RowFlexBox style={{justifyContent: 'space-between'}}>
-                    <div>방이름: {groupDetailState.data.groupTitle}</div>
-                    <div><Invite groupId={groupInfo.groupId}/></div>
-                    </RowFlexBox>
-                    
-                  
-                </div>
-                <div>
-                    <ul>
-                        {groupDetailState.data.members.map((member) => (
-                            <ListView key={member.userEmail}>
-                                {member.nickName} : {onlineCheck(member.onlineStatus)}
-                            </ListView>
-                        ))}
-                    </ul>
-                </div>
-                <div onClick={()=>{
-                    sendMsg()
-                }}>
-                    타겟설정
-                </div>
-                <div>
-                    {/* <Chatting groupName={groupDetailState.data.groupTitle} groupId={groupDetailState.data.groupId}/> */}
-                </div>
-                <hr/>
-                <div>
-                   
-                </div>
-                <hr/>
-                <div>
-                    <Notice/>
-                    <Vote member={groupDetailState.data.members.length}/>
-                </div>
-            </div>
-        )}
-    </div>
+        </div>
     );
 }
 
-export default connect(mapStateToStompProps,mapDispatchToStompProps) (GroupDetail);
+export default connect(null,mapDispatchToStompProps) (GroupDetail);
