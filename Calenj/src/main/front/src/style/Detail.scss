@@ -26,8 +26,21 @@
   margin-left: 0.25vw;
 }
 
-
-
+#viewVoter{
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid #030303;
+  border-right: 1.5px solid #030303;
+  transform:rotate(45deg);
+  margin-top: 5.1px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition : background-color 0.3s ease;
+}
+#viewVoter:hover{
+  border-top: 1.9px solid #797979;
+  border-right: 1.9px solid #797979;
+}
 
 .checkbox  {
   width: 1.2rem;

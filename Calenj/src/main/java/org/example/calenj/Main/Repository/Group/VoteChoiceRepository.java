@@ -23,4 +23,5 @@ public interface VoteChoiceRepository extends JpaRepository<VoteChoiceEntity, UU
     @Query(value = "UPDATE VoteChoice SET voter = :voter WHERE choice_id = :choiceId", nativeQuery = true)
     void updateVoterList(@Param("choiceId") UUID choiceId,@Param("voter") String voter);
 
+
 }

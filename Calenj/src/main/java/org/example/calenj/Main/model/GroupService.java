@@ -207,7 +207,6 @@ public class GroupService {
         GroupVoteDTO groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
         List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
 
-
         if(groupVoteDTO.getAnonymous()){//익명투표일 경우 블라인드처리
             groupVoteDTO.setCountVoter(groupVoteDTO.getBlindedCounter(groupVoteDTO.getCountVoter(),userDetails.getUsername()));
 
@@ -280,7 +279,6 @@ public class GroupService {
 
             i++;
         }
-
         //투표 갱신 이후 투표자 명단 갱신
         for(VoteChoiceDTO voters :voteChoiceDTO){
             for(String voter : voters.getVoter()){
@@ -302,6 +300,10 @@ public class GroupService {
         //투표자 갱신
 
 
+    }
+
+    public void voteEndDateUpdate(UUID voteId, String voteEndDate){
+        groupVoteRepository.updatevoteEndDate(voteId,voteEndDate);
     }
 
 

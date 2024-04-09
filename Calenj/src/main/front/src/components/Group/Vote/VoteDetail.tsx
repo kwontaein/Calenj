@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
-import {stateFilter,TimeOperation} from '../../../stateFunc/actionFun'
+import {saveDBFormat, stateFilter,TimeOperation, useConfirm,changeDateForm} from '../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
 import { MiniText, RowFlexBox ,TrasformButton,TransVoteContainer} from '../../../style/FormStyle';
 import '../../../style/Detail.scss'
@@ -40,6 +40,7 @@ interface VoteDetailProps{
     refetchVoteDetail:()=>void
     //현재 클릭한 목록 수정
     pickVote: (e:React.ChangeEvent<HTMLInputElement>,isMultiple:boolean)=>void 
+    voteEnd:boolean;
 }
 
 
@@ -52,6 +53,7 @@ const VoteDetail:React.FC=()=>{
     const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
     const [myVote,setMyVote] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const [dbVoter,setDbMyBoter] =useState<boolean>(false);
+    const [voteEnd,setVoteEnd] = useState<boolean>();
     const location = useLocation();
     const [isLoading,setIsLoading] =useState<boolean>(false);
     const voteInfo = {...location.state};
@@ -70,6 +72,7 @@ const VoteDetail:React.FC=()=>{
                 setDetail(voteDetail);
                 BeforCheckVoter(voteDetail.voteChoiceDTO)                
                 TimeOperation(voteDetail.voteEndDate)
+                setVoteEnd(checkVoteEnd(voteDetail.voteEndDate))
                 setIsLoading(true);
             })
             .catch(error => {
@@ -85,9 +88,13 @@ const VoteDetail:React.FC=()=>{
         getVoteDetail();
     }, []);
 
-    useEffect(()=>{
+    const checkVoteEnd = (date:string) =>{
+        let endDate = changeDateForm(date)//Date형식으로
+        let nowDate = new Date();
+        return endDate<nowDate;
+     
+    }
 
-    },[dbVoter])
 
     const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
         let newList = voteList.sort((a,b)=>{return a.voteIndex-b.voteIndex})
@@ -131,7 +138,7 @@ const VoteDetail:React.FC=()=>{
             (detail&&
             <div style={{width:'100vw', alignItems:'center', justifyContent:'center'}}>
                 <DetailTop Created={detail.voteCreated}Creater={detail.voteCreater} Watcher={detail.voteWatcher}/>
-                <TransVoteContainer $end={voteInfo.end}>
+                <TransVoteContainer $end={voteEnd as boolean}>
                 <div className='VoteDetailContainer'>
                     {detail &&
                     <div>
@@ -144,7 +151,7 @@ const VoteDetail:React.FC=()=>{
                             <div id='voteContent'>{TimeOperation(detail.voteEndDate)}</div>
                         </MiniText>
                      
-                        <VoteContent detail={detail} voteChoiceDTO={voted} participation={dbVoter} pickVote={pickVote} myVote={myVote as boolean[]} refetchVoteDetail={getVoteDetail}/>
+                        <VoteContent detail={detail} voteChoiceDTO={voted} participation={dbVoter} voteEnd={voteEnd as boolean} pickVote={pickVote} myVote={myVote as boolean[]} refetchVoteDetail={getVoteDetail}/>
                         
                     </div>
                 }
@@ -159,15 +166,16 @@ const VoteDetail:React.FC=()=>{
 
 
 export default VoteDetail
-const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, pickVote, myVote, refetchVoteDetail})=>{
+const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, myVote, voteEnd,refetchVoteDetail, pickVote})=>{
     const id = useId();
     const [votecomplete,setVoteComplete] = useState<boolean>();
     const location = useLocation();
+    const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [viewVoter, setViewVoter] = useState<boolean>(false);
     const voteInfo = {...location.state};
 
     useLayoutEffect(()=>{
         setVoteComplete(participation);
-  
     },[])
 
     const checkCreater=()=>{
@@ -178,15 +186,6 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
     const checkVoteBefore =()=>{
         return participation||myVote.includes(true)
     }    
-    const checkVoterCount =()=>{
-        let result;
-        if(participation&&!votecomplete){//내가 이전에 참여한 기록이 있으면
-            result= detail.countVoter.length-1;
-        }else{
-            result= detail.countVoter.length;
-        }
-        return result;
-    }
 
     const postVote=()=>{
         
@@ -219,8 +218,27 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
             }
         });
     }
-
     
+    const postVoteEnd=()=>{
+        axios.post('/api/voteEndDateUpdate',{
+            voteId: voteInfo.voteId,
+            voteEndDate:saveDBFormat(new Date())
+        }).then(()=>{
+            refetchVoteDetail()//refetch
+            window.alert('투표가 종료되었습니다.')
+        }).catch(error => {
+            const axiosError = error as AxiosError;
+            console.log(axiosError);
+            if(axiosError.response?.data){
+                stateFilter((axiosError.response.data) as string);
+            }
+        })
+    } 
+
+    const earlyVoteEnd =()=>{
+        useConfirm('투표를 종료하시겠습니까?',postVoteEnd,()=>{} )
+    }
+
 
     return(
         <div style={{marginTop:'20px'}}>
@@ -230,16 +248,16 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
             <RowFlexBox style={{width:'88vw'}}>
                 <label style={{display:'flex', alignItems:'center', marginBlock:'0.5vw', width:'88vw'}} >
  
-                {(votecomplete&&participation)||voteInfo.end ? 
+                {(votecomplete&&participation)||voteEnd ? 
                 <div className={myVote[index]? 'checked_div':'unChecked_div'}></div>:
                 <input type='checkbox' name='voterList' value={index} className='checkbox'
                 onChange={(e:React.ChangeEvent<HTMLInputElement>)=>pickVote(e, detail.isMultiple)} checked={myVote[index]}/> }
                 
                 <div style={{marginInline:'3px', color: myVote[index]? '#007bff':''}}>{Item.voteItem}</div>
-                {(votecomplete||voteInfo.end) &&<MiniText style={{marginLeft:'auto'}}>{(Item.voter.length>0||voteInfo.end)? `${Item.voter.length}명`:''}</MiniText>}
+                {(votecomplete||voteEnd) &&<MiniText style={{marginLeft:'auto'}}>{(Item.voter.length>0||voteEnd)? `${Item.voter.length}명`:''}</MiniText>}
                 </label>
             </RowFlexBox>
-            {(votecomplete||voteInfo.end) &&<div style={{width:'86vw',height:'4px',backgroundColor:'rgb(228, 228, 228)',margin:'1vw'}}>
+            {(votecomplete||voteEnd) &&<div style={{width:'86vw',height:'4px',backgroundColor:'rgb(228, 228, 228)',margin:'1vw'}}>
                 <div style={{width: `${(86/voteInfo.member)*Item.voter.length}vw`,height:'4px',backgroundColor:'#007bff'}}></div>
             </div>}
             </div>
@@ -247,23 +265,37 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
         ))}
         
         <div style={{width:'88vw'}}>
-        {!voteInfo.end &&
+        {!voteEnd &&
             <div>
-            <TrasformButton $isCreater={checkCreater()&&(checkVoterCount()>0)} $ableClick={checkVoteBefore()} onClick={postVote}>
+            <TrasformButton $isCreater={checkCreater()&&(detail.countVoter.length>0)} $ableClick={checkVoteBefore()} onClick={postVote}>
                 {participation&&votecomplete ? '다시 투표하기':'투표 하기'}
             </TrasformButton>
-            {checkCreater() &&checkVoterCount()>0 &&  
+            {checkCreater() &&detail.countVoter.length>0 &&  
             <TrasformButton $isCreater={checkCreater()}
                             $ableClick={(detail.countVoter.length>0)}
-                            style={{marginLeft:'1vw'}}>
+                            style={{marginLeft:'1vw'}}
+                            onClick={earlyVoteEnd}>
                             투표 종료
             </TrasformButton>}
             </div>
         }   
         </div>
-        <div style={{width:'88vw',marginTop:'3vw', fontSize:'14px'}}>
-            {(detail.countVoter.length>0||voteInfo.end) && <div>{detail.countVoter.length}명 참여</div>}
-        </div>
+      
+        {(detail.countVoter.length>0||voteEnd) && 
+        <RowFlexBox style={{width:'88vw',marginTop:'3vw', fontSize:'14px'}}>
+            <div>{detail.countVoter.length}명 참여</div>
+            <div id='viewVoter' 
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onClick={()=>setViewVoter(!viewVoter)}
+            ></div>
+            {isHovered &&
+            <div style={{height:'10px', marginLeft:'10px',marginTop:'1px',background: 'white', fontSize:'13px',color: '#007bff'}}>
+                투표현황 보기
+            </div>
+            }
+        </RowFlexBox>
+        }
     </div>
     )
 }
