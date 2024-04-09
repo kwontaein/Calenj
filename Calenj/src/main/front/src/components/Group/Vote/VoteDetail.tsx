@@ -37,10 +37,12 @@ interface VoteDetailProps{
     //처음 데이터를 불러올 때 사용자가 투표했는지 여부
     participation: boolean|undefined;
     //update이후 다시 가져오기 위한 함수
-    refetchVoteDetail:()=>void
+    refetchVoteDetail:()=>void;
     //현재 클릭한 목록 수정
     pickVote: (e:React.ChangeEvent<HTMLInputElement>,isMultiple:boolean)=>void 
+    viewVoterList : ()=>void;
     voteEnd:boolean;
+
 }
 
 
@@ -54,6 +56,7 @@ const VoteDetail:React.FC=()=>{
     const [myVote,setMyVote] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const [dbVoter,setDbMyBoter] =useState<boolean>(false);
     const [voteEnd,setVoteEnd] = useState<boolean>();
+    const [viewVoter, setViewVoter] = useState<boolean>(false);
     const location = useLocation();
     const [isLoading,setIsLoading] =useState<boolean>(false);
     const voteInfo = {...location.state};
@@ -94,6 +97,9 @@ const VoteDetail:React.FC=()=>{
         return endDate<nowDate;
      
     }
+    const viewVoterList =()=>{
+        setViewVoter(!viewVoter)
+    }
 
 
     const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
@@ -111,6 +117,10 @@ const VoteDetail:React.FC=()=>{
         setMyVote(userVoter);
         setDbMyBoter(userVoter.includes(true))
       
+    }
+    const checkCreater=()=>{
+        const userEmail=localStorage.getItem('userId')
+        return detail?.voteCreater===userEmail
     }
 
 
@@ -151,12 +161,52 @@ const VoteDetail:React.FC=()=>{
                             <div id='voteContent'>{TimeOperation(detail.voteEndDate)}</div>
                         </MiniText>
                      
-                        <VoteContent detail={detail} voteChoiceDTO={voted} participation={dbVoter} voteEnd={voteEnd as boolean} pickVote={pickVote} myVote={myVote as boolean[]} refetchVoteDetail={getVoteDetail}/>
+                        <VoteContent 
+                            detail={detail} 
+                            voteChoiceDTO={voted} 
+                            participation={dbVoter} 
+                            voteEnd={voteEnd as boolean} 
+                            pickVote={pickVote} 
+                            myVote={myVote as boolean[]} 
+                            refetchVoteDetail={getVoteDetail}
+                            viewVoterList={viewVoterList}
+                        />
                         
                     </div>
                 }
                 </div>
                 </TransVoteContainer>
+                {(viewVoter&&voted)&&
+                <div className='ViewVoterContainer'>
+                    {voted.map((result,index)=>(
+                        <div key={result.voteItem} style={{marginBottom:'20px'}}> 
+                        {index!=0&& <hr/> }
+                        <MiniText style={{marginBottom:'10px'}}>
+                            {result.voteItem} : {result.voter.length}명
+                        </MiniText>
+                        <div>
+                            {result.voter.length===0 &&
+                                <div style={{width:'88vw', textAlign:'center',fontSize:'12px'}}>
+                                    투표한 멤버가 없습니다.
+                                </div>
+                            }
+                            {result.voter.map((voterUser, index) => (
+                                <RowFlexBox key={index}> 
+                                    {checkCreater()&& 
+                                        <div style={{borderRadius:'50px',border:'border: 1px solid #ccc',backgroundColor:'#ccc', fontSize:'10px', height:'15px', width:'13px', marginTop:'4px',padding:'1px'}}>
+                                            나
+                                        </div>
+                                    }  
+                                    <div style={{marginInline:'3px', fontSize:'14px'}}>{voterUser}</div>
+                                </RowFlexBox>
+                            ))}
+                        </div>
+                        
+                    </div>
+                        
+                    ))}
+                </div>
+                }
             </div>
             )
             }
@@ -166,12 +216,12 @@ const VoteDetail:React.FC=()=>{
 
 
 export default VoteDetail
-const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, myVote, voteEnd,refetchVoteDetail, pickVote})=>{
+const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, myVote, voteEnd,refetchVoteDetail, pickVote,viewVoterList})=>{
     const id = useId();
     const [votecomplete,setVoteComplete] = useState<boolean>();
     const location = useLocation();
     const [isHovered, setIsHovered] = useState<boolean>(false);
-    const [viewVoter, setViewVoter] = useState<boolean>(false);
+    
     const voteInfo = {...location.state};
 
     useLayoutEffect(()=>{
@@ -284,11 +334,13 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
         {(detail.countVoter.length>0||voteEnd) && 
         <RowFlexBox style={{width:'88vw',marginTop:'3vw', fontSize:'14px'}}>
             <div>{detail.countVoter.length}명 참여</div>
+            {!detail.anonymous&&
             <div id='viewVoter' 
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                onClick={()=>setViewVoter(!viewVoter)}
+                onClick={()=>viewVoterList()}
             ></div>
+            }
             {isHovered &&
             <div style={{height:'10px', marginLeft:'10px',marginTop:'1px',background: 'white', fontSize:'13px',color: '#007bff'}}>
                 투표현황 보기
