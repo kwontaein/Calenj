@@ -1,16 +1,17 @@
-import React, {ChangeEvent, InputHTMLAttributes, useEffect, useRef, useState} from 'react';
-import {RowFlexBox, Mini_Input, Button, FormLable, Li, OveflowBlock} from '../../../style/FormStyle';
+import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
+import {RowFlexBox, Mini_Input, FormLable, Li, OveflowBlock} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm, saveDBFormat} from '../../../stateFunc/actionFun'
 import '../../../style/Datepicker.scss'
-import DatePicker from 'react-datepicker';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import { UseQueryResult } from '@tanstack/react-query';
+import ReactDatePicker from 'react-datepicker';
 
 interface ModalProps {
     onClose: () => void;
@@ -31,12 +32,11 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [inputForm, setInputForm] = useState<string>('TEXT'); //입력형식
     const [multipleOption, setMultipleOption] = useState<boolean>(false);//중복투표여부
     const [anonymousOption, setanonymousOption] = useState<boolean>(false); //익명여부
-    const location = useLocation();
-    const groupInfo = {...location.state};
+    const datepickerRef =useRef<ReactDatePickerProps>()
     const inputRef = useRef<HTMLInputElement>(null);
     const contentRef = useRef<HTMLInputElement>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(new Date().setDate(new Date().getDate() + 1)));
+    
 
     //List추가
     const addList = () => {
@@ -244,6 +244,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     onChange={(date) => setSelectedDate(date)}
                     className='DatePicker'
                     placeholderText='날짜 선택'
+ 
                     locale={ko}
                 />
                 <label style={{fontSize: '13px', marginLeft: '3px'}}><input type='checkBox' name='choice'

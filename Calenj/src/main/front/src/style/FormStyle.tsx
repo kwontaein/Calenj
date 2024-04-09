@@ -156,7 +156,7 @@ export const TransVoteContainer = styled.div<VoteAble>`
     
     ${props => props.$end && `
         & > * {
-            opacity: 0.5;
+            opacity: 0.7;
         }
     `}
 `;
