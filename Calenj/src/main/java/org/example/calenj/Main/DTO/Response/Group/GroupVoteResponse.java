@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupVoteDTO {
+public class GroupVoteResponse {
 
 
     private UUID groupId;
@@ -25,10 +25,10 @@ public class GroupVoteDTO {
     private List<String> voteWatcher;
     private List<String> countVoter;
     private List<String> postedVoteChoiceDTO; //처음 투표 생성 시 항목을 받아오기 위한 필드
-    private List<VoteChoiceDTO> voteChoiceDTO;
+    private List<VoteChoiceResponse> voteChoiceResponse;
     private boolean[] myVote;
 
-    public GroupVoteDTO(String voteCreater, String voteTitle, String voteCreated, String voteEndDate, Boolean isMultiple, Boolean anonymous, List<String> voteWatcher, List<String> countVoter) {
+    public GroupVoteResponse(String voteCreater, String voteTitle, String voteCreated, String voteEndDate, Boolean isMultiple, Boolean anonymous, List<String> voteWatcher, List<String> countVoter) {
         this.voteCreater = voteCreater;
         this.voteTitle = voteTitle;
         this.voteCreated = voteCreated;
@@ -40,7 +40,7 @@ public class GroupVoteDTO {
     }
 
     //list만 불러오기위한 생성자
-    public GroupVoteDTO(UUID voteId, String voteCreater, String voteTitle, String voteCreated, String voteEndDate, List<String> countVoter) {
+    public GroupVoteResponse(UUID voteId, String voteCreater, String voteTitle, String voteCreated, String voteEndDate, List<String> countVoter) {
         this.voteId = voteId;
         this.voteCreater = voteCreater;
         this.voteTitle = voteTitle;

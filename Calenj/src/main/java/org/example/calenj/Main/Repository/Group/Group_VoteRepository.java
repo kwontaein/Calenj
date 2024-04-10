@@ -1,6 +1,6 @@
 package org.example.calenj.Main.Repository.Group;
 
-import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
+import org.example.calenj.Main.DTO.Response.Group.GroupVoteResponse;
 import org.example.calenj.Main.domain.Group.GroupVoteEntity;
 import org.example.calenj.Main.domain.Ids.GroupVoteId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,16 +17,16 @@ import java.util.UUID;
 @Repository
 public interface Group_VoteRepository extends JpaRepository<GroupVoteEntity, GroupVoteId> {
     // 쿼리: GroupVote를 List로 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.countVoter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
-    Optional<List<GroupVoteDTO>> findVoteByGroupId(@Param("groupId") UUID groupId);
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteResponse(gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate, gv.countVoter) FROM Group_Vote gv WHERE gv.group.groupId = :groupId")
+    Optional<List<GroupVoteResponse>> findVoteByGroupId(@Param("groupId") UUID groupId);
 
 
     //voteId찾기
     Optional<GroupVoteEntity> findGroupVoteEntityByVoteId(UUID voteId);
 
     //voteId로 상세조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteDTO(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher,gv.countVoter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
-    Optional<GroupVoteDTO> findByVoteId(@Param("voteId") UUID voteId);
+    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupVoteResponse(gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher,gv.countVoter) FROM Group_Vote gv WHERE gv.voteId = :voteId")
+    Optional<GroupVoteResponse> findByVoteId(@Param("voteId") UUID voteId);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함

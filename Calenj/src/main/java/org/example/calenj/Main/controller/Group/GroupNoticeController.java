@@ -1,7 +1,8 @@
 package org.example.calenj.Main.controller.Group;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.Group.GroupNoticeDTO;
+import org.example.calenj.Main.DTO.Request.Group.GroupNoticeRequest;
+import org.example.calenj.Main.DTO.Response.Group.GroupNoticeResponse;
 import org.example.calenj.Main.Service.Group.GroupNoticeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +18,21 @@ public class GroupNoticeController {
 
     //공지 생성
     @PostMapping("api/makeNotice")
-    public void makeNotice(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        groupService.makeNotice(groupNoticeDTO.getNoticeContent(), groupNoticeDTO.getNoticeCreated(), groupNoticeDTO.getGroupId());
+    public void makeNotice(@RequestBody GroupNoticeRequest groupNoticeRequest) {
+        groupService.makeNotice(groupNoticeRequest.getNoticeContent(), groupNoticeRequest.getNoticeCreated(), groupNoticeRequest.getGroupId());
     }
 
     //공지 리스트
     @PostMapping("api/noticeList")
-    public List<GroupNoticeDTO> noticeList(@RequestBody GroupNoticeDTO groupNoticeDTO) {
-        return groupService.groupNoticeList(groupNoticeDTO.getGroupId());
+    public List<GroupNoticeResponse> noticeList(@RequestBody GroupNoticeRequest groupNoticeRequest) {
+        return groupService.groupNoticeList(groupNoticeRequest.getGroupId());
     }
 
     //그룹공지 세부정보 가져오기
     @PostMapping("/api/noticeDetail")
-    public GroupNoticeDTO noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
+    public GroupNoticeResponse noticeDetail(@RequestParam(name = "noticeId") UUID noticeId) {
         groupService.noticeViewCount(noticeId);
-        GroupNoticeDTO noticeDetail = groupService.noticeDetail(noticeId);
-        return noticeDetail;
+        return groupService.noticeDetail(noticeId);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupNoticeDTO {
+public class GroupNoticeResponse {
 
 
     private UUID groupId;
@@ -20,7 +20,7 @@ public class GroupNoticeDTO {
     private String noticeCreater;
     private List<String> noticeWatcher;
 
-    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
+    public GroupNoticeResponse(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;
@@ -28,7 +28,7 @@ public class GroupNoticeDTO {
     }
 
 
-    public GroupNoticeDTO(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
+    public GroupNoticeResponse(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;

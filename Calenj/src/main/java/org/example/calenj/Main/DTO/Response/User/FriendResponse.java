@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.User;
+package org.example.calenj.Main.DTO.Response.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendDTO {
+public class FriendResponse {
 
 
     public String userId;
@@ -24,13 +24,13 @@ public class FriendDTO {
     private FriendEntity.statusType status;
     private UUID ChattingRoomId;
 
-    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId) {
+    public FriendResponse(String friendUserId, String nickName, UUID ChattingRoomId) {
         this.friendUserId = friendUserId;
         this.nickName = nickName;
         this.ChattingRoomId = ChattingRoomId;
     }
 
-    public FriendDTO(String friendUserId, String nickName, UUID ChattingRoomId, String createDate) {
+    public FriendResponse(String friendUserId, String nickName, UUID ChattingRoomId, String createDate) {
         this.friendUserId = friendUserId;
         this.nickName = nickName;
         this.ChattingRoomId = ChattingRoomId;

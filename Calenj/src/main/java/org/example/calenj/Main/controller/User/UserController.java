@@ -4,8 +4,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.User.UserDTO;
-import org.example.calenj.Main.DTO.User.UserSubscribeDTO;
+import org.example.calenj.Main.DTO.Request.User.UserRequest;
+import org.example.calenj.Main.DTO.Response.User.UserSubscribeResponse;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.Service.UserService;
@@ -40,16 +40,16 @@ public class UserController {
     }
 
     @PostMapping("/api/saveUser")
-    public String saveUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+    public String saveUser(@RequestBody UserRequest userRequest, HttpServletResponse response) {
         validateDTO.clear();
         userService.removeCookie(response, "enableSendEmail");
-        return userService.saveUser(userDTO);
+        return userService.saveUser(userRequest);
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> login(@RequestBody UserRequest userRequest) {
         System.out.println("로그인?");
-        return userService.login(userDTO.getUserEmail(), userDTO.getUserPassword());
+        return userService.login(userRequest.getUserEmail(), userRequest.getUserPassword());
     }
 
     @PostMapping("/api/logout")
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/api/subscribeCheck")
-    public UserSubscribeDTO subscribeCheck() {
+    public UserSubscribeResponse subscribeCheck() {
         return userService.subscribeCheck();
     }
 

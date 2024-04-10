@@ -1,8 +1,8 @@
 package org.example.calenj.Main.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.Chat.AlarmResponse;
-import org.example.calenj.Main.DTO.Chat.ChatMessageResponse;
+import org.example.calenj.Main.DTO.Response.Chat.AlarmResponse;
+import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

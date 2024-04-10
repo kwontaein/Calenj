@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.example.calenj.Main.domain.Group.GroupUserEntity;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupScheduleDTO {
+public class GroupScheduleResponse {
 
 
     private String groupScheduleTitle;

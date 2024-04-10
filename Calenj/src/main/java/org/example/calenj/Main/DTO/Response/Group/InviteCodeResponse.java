@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InviteCodeDTO {
+public class InviteCodeResponse {
 
 
     private UUID groupId;
@@ -24,7 +24,7 @@ public class InviteCodeDTO {
     private int memberCount;
     private String ableCode;
 
-    public InviteCodeDTO(UUID groupId, String groupTitle, String nickname, String endDateTime, int useAbleCount, int maxUseAble) {
+    public InviteCodeResponse(UUID groupId, String groupTitle, String nickname, String endDateTime, int useAbleCount, int maxUseAble) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
         this.inviter = nickname;
@@ -33,7 +33,7 @@ public class InviteCodeDTO {
         this.maxUseAble = maxUseAble;
     }
 
-    public InviteCodeDTO(String nickname, String inviteCode, String endDateTime, int useCount) {
+    public InviteCodeResponse(String nickname, String inviteCode, String endDateTime, int useCount) {
         this.inviter = nickname;
         this.inviteCode = inviteCode;
         this.endDateTime = endDateTime;

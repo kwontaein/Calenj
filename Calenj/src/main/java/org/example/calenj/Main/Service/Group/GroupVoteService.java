@@ -1,8 +1,9 @@
 package org.example.calenj.Main.Service.Group;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.Group.GroupVoteDTO;
-import org.example.calenj.Main.DTO.Group.VoteChoiceDTO;
+import org.example.calenj.Main.DTO.Request.Group.GroupVoteRequest;
+import org.example.calenj.Main.DTO.Response.Group.GroupVoteResponse;
+import org.example.calenj.Main.DTO.Response.Group.VoteChoiceResponse;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_VoteRepository;
 import org.example.calenj.Main.Repository.Group.VoteChoiceRepository;
@@ -25,7 +26,7 @@ public class GroupVoteService {
     private final Group_VoteRepository groupVoteRepository;
     private final VoteChoiceRepository voteChoiceRepository;
 
-    public void makeVote(GroupVoteDTO request) {
+    public void makeVote(GroupVoteRequest request) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
@@ -59,24 +60,24 @@ public class GroupVoteService {
         }
     }
 
-    public List<GroupVoteDTO> groupVoteList(UUID groupId) {
+    public List<GroupVoteResponse> groupVoteList(UUID groupId) {
         return groupVoteRepository.findVoteByGroupId(groupId).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
     }
 
-    public GroupVoteDTO voteDetail(UUID voteId) {
+    public GroupVoteResponse voteDetail(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        GroupVoteDTO response = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
-        List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
+        GroupVoteResponse response = groupVoteRepository.findByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
+        List<VoteChoiceResponse> voteChoiceResponse = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
 
         if (response.getAnonymous()) {//익명투표일 경우 블라인드처리
             response.setCountVoter(response.getBlindedCounter(response.getCountVoter(), userDetails.getUsername()));
 
-            for (VoteChoiceDTO choiceDTO : voteChoiceDTO) {
+            for (VoteChoiceResponse choiceDTO : voteChoiceResponse) {
                 choiceDTO.setVoter(choiceDTO.getBlindedVoter(choiceDTO.getVoter(), userDetails.getUsername()));
             }
         }
 
-        response.setVoteChoiceDTO(voteChoiceDTO);
+        response.setVoteChoiceResponse(voteChoiceResponse);
         return response;
     }
 
@@ -84,7 +85,7 @@ public class GroupVoteService {
     //그룹 투표 조회한 사람
     public void voteViewCount(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        Optional<GroupVoteDTO> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
+        Optional<GroupVoteResponse> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
 
         //조회한 사람 갱신
         if (groupVoteDTO.isPresent() && groupVoteDTO.get().getVoteWatcher() != null) {
@@ -101,14 +102,14 @@ public class GroupVoteService {
 
     public void updateVote(UUID voteId, boolean[] myVote) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        List<VoteChoiceDTO> voteChoiceDTO = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
+        List<VoteChoiceResponse> voteChoiceResponse = voteChoiceRepository.findVoteItemByVoteId(voteId).orElseThrow(() -> new RuntimeException("투표항목을 찾을 수 없습니다."));
         Set<String> uniqueVoters = new LinkedHashSet<>();//몇명이 투표했는지 확인하기 위한 Set
 
-        voteChoiceDTO.sort(Comparator.comparingInt(VoteChoiceDTO::getVoteIndex));
-        System.out.println(voteChoiceDTO);
+        voteChoiceResponse.sort(Comparator.comparingInt(VoteChoiceResponse::getVoteIndex));
+        System.out.println(voteChoiceResponse);
 
         int i = 0; //voter의 index값을 위한 선언
-        for (VoteChoiceDTO voters : voteChoiceDTO) {
+        for (VoteChoiceResponse voters : voteChoiceResponse) {
             int includeUser = voters.getVoter().indexOf(userDetails.getUsername());
             if (myVote[i] && includeUser == -1) { //기존 항목의 투표자중 내가 없으면서 투표를 했으면 내 이름 추가
                 voters.getVoter().add(userDetails.getUsername());
@@ -124,7 +125,7 @@ public class GroupVoteService {
         }
 
         //투표 갱신 이후 투표자 명단 갱신
-        for (VoteChoiceDTO voters : voteChoiceDTO) {
+        for (VoteChoiceResponse voters : voteChoiceResponse) {
             for (String voter : voters.getVoter()) {
                 uniqueVoters.add(voter.trim());
             }

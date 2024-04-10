@@ -4,10 +4,10 @@ package org.example.calenj.Main.Service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.User.FriendDTO;
-import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.User.UserDTO;
-import org.example.calenj.Main.DTO.User.UserSubscribeDTO;
+import org.example.calenj.Main.DTO.Request.User.UserRequest;
+import org.example.calenj.Main.DTO.Response.Group.GroupResponse;
+import org.example.calenj.Main.DTO.Response.User.FriendResponse;
+import org.example.calenj.Main.DTO.Response.User.UserSubscribeResponse;
 import org.example.calenj.Main.JWT.JwtToken;
 import org.example.calenj.Main.JWT.JwtTokenProvider;
 import org.example.calenj.Main.Repository.FriendRepository;
@@ -48,11 +48,11 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String saveUser(UserDTO userDTO) {
+    public String saveUser(UserRequest userRequest) {
         //패스워드 암호화
-        userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
-        userRepository.save(userDTO.toEntity());
-        return userDTO.toEntity().getUserEmail();
+        userRequest.setUserPassword(passwordEncoder.encode(userRequest.getUserPassword()));
+        userRepository.save(userRequest.toEntity());
+        return userRequest.toEntity().getUserEmail();
     }
 
     public void selectUserInfo() {
@@ -144,13 +144,13 @@ public class UserService {
     }
 
 
-    public UserSubscribeDTO subscribeCheck() {
+    public UserSubscribeResponse subscribeCheck() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         String userEmail = userDetails.getUsername();
-        List<GroupDTO> groupDTO = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
-        List<FriendDTO> friendDTO = friendRepository.findFriendListById(userEmail).orElse(null);
-        return new UserSubscribeDTO(friendDTO, groupDTO, userEmail);
+        List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
+        List<FriendResponse> friendResponse = friendRepository.findFriendListById(userEmail).orElse(null);
+        return new UserSubscribeResponse(friendResponse, groupResponse, userEmail);
     }
 
 

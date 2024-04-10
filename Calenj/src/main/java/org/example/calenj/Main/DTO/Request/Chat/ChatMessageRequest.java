@@ -1,9 +1,9 @@
-package org.example.calenj.Main.DTO.Chat;
+package org.example.calenj.Main.DTO.Request.Chat;
 
 import lombok.Data;
 
 @Data
-public class ChatMessageResponse {
+public class ChatMessageRequest {
     private String groupMsg;
     private String friendMsg;
     private String nickName;

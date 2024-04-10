@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupCommentDTO {
+public class GroupCommentResponse {
 
 
     private UUID groupId;

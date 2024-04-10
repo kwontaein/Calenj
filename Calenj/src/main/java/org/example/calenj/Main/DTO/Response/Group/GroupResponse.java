@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupDTO {
+public class GroupResponse {
 
     private UUID groupId;
     private String groupTitle;
@@ -17,7 +17,7 @@ public class GroupDTO {
     private String groupCreater;
 
     //jpa의 jpql은 DTO를 통해 조회할 경우 생성자를 생성해줘야 함
-    public GroupDTO(UUID groupId, String groupTitle) {
+    public GroupResponse(UUID groupId, String groupTitle) {
         this.groupId = groupId;
         this.groupTitle = groupTitle;
     }

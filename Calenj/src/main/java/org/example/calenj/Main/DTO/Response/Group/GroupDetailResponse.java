@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 
 import lombok.AllArgsConstructor;
@@ -11,12 +11,12 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupDetailDTO {
+public class GroupDetailResponse {
 
     private UUID groupId;
     private String groupTitle;
     private String groupCreated;
     private String groupCreater;
-    private List<GroupUserDTO> members; //Group_UserEntity에서 목록으로 가져오기
+    private List<GroupUserResponse> members; //Group_UserEntity에서 목록으로 가져오기
 
 }

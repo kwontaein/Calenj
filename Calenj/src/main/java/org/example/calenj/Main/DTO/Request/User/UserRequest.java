@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.User;
+package org.example.calenj.Main.DTO.Request.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import org.example.calenj.Main.domain.UserEntity;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserRequest {
     private String nickname;
     private String userPassword;
     private String userEmail;

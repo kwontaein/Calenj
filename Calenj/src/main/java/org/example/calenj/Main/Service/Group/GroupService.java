@@ -1,11 +1,14 @@
 package org.example.calenj.Main.Service.Group;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.Main.DTO.Group.GroupDTO;
-import org.example.calenj.Main.DTO.Group.GroupDetailDTO;
-import org.example.calenj.Main.DTO.Group.GroupUserDTO;
-import org.example.calenj.Main.DTO.Group.InviteCodeDTO;
-import org.example.calenj.Main.Repository.Group.*;
+import org.example.calenj.Main.DTO.Request.Group.InviteCodeRequest;
+import org.example.calenj.Main.DTO.Response.Group.GroupDetailResponse;
+import org.example.calenj.Main.DTO.Response.Group.GroupResponse;
+import org.example.calenj.Main.DTO.Response.Group.GroupUserResponse;
+import org.example.calenj.Main.DTO.Response.Group.InviteCodeResponse;
+import org.example.calenj.Main.Repository.Group.GroupRepository;
+import org.example.calenj.Main.Repository.Group.Group_UserRepository;
+import org.example.calenj.Main.Repository.Group.InviteCodeRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.domain.Group.GroupEntity;
@@ -63,7 +66,7 @@ public class GroupService {
     }
 
     //그룹 목록 가져오기
-    public List<GroupDTO> groupList() {
+    public List<GroupResponse> groupList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String userEmail = userDetails.getUsername();
         return groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
@@ -71,21 +74,21 @@ public class GroupService {
 
 
     //그룹 세부 정보 가져오기
-    public Optional<GroupDetailDTO> groupDetail(UUID groupId) {
-        Optional<GroupDTO> groupOptional = groupRepository.findGroupById(groupId);
+    public Optional<GroupDetailResponse> groupDetail(UUID groupId) {
+        Optional<GroupResponse> groupOptional = groupRepository.findGroupById(groupId);
         if (groupOptional.isPresent()) {
-            GroupDTO groupDTO = groupOptional.get();
-            List<GroupUserDTO> groupUsers = group_userRepository.findGroupUsers(groupDTO.getGroupId());
+            GroupResponse groupResponse = groupOptional.get();
+            List<GroupUserResponse> groupUsers = group_userRepository.findGroupUsers(groupResponse.getGroupId());
             // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
             // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
-            GroupDetailDTO groupDetailDTO = new GroupDetailDTO(
-                    groupDTO.getGroupId(),
-                    groupDTO.getGroupTitle(),
-                    groupDTO.getGroupCreated(),
-                    groupDTO.getGroupCreater(),
+            GroupDetailResponse groupDetailResponse = new GroupDetailResponse(
+                    groupResponse.getGroupId(),
+                    groupResponse.getGroupTitle(),
+                    groupResponse.getGroupCreated(),
+                    groupResponse.getGroupCreater(),
                     groupUsers
             );
-            return Optional.of(groupDetailDTO);
+            return Optional.of(groupDetailResponse);
         } else {
             return Optional.empty();
         }
@@ -110,7 +113,7 @@ public class GroupService {
 
     }
 
-    public String inviteCode(InviteCodeDTO inviteCodeDTO) {
+    public String inviteCode(InviteCodeRequest inviteCodeRequest) {
 
         Random rnd = new Random();
         StringBuffer buf = new StringBuffer();
@@ -126,7 +129,7 @@ public class GroupService {
 
         UserDetails userDetails = globalService.extractFromSecurityContext();
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-        GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeDTO.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         inviteCodeRepository.save(InviteCodeEntity
                 .builder()
@@ -141,30 +144,30 @@ public class GroupService {
     }
 
     //초대 코드로 그룹 정보 반환 -> 기간 만료 or 잘못된 코드시 정보 반환해야함
-    public InviteCodeDTO inviteGroup(String inviteCode) {
+    public InviteCodeResponse inviteGroup(String inviteCode) {
 
-        InviteCodeDTO inviteCodeDTO = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
+        InviteCodeResponse inviteCodeResponse = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
 
         int onlineCnt = inviteCodeRepository.onlineUserCount(inviteCode).orElse(0);
         int memberCnt = inviteCodeRepository.memberCount(inviteCode).orElse(0);
 
-        inviteCodeDTO.setOnlineCount(onlineCnt);
-        inviteCodeDTO.setOnlineCount(memberCnt);
+        inviteCodeResponse.setOnlineCount(onlineCnt);
+        inviteCodeResponse.setOnlineCount(memberCnt);
 
-        String enableUse = globalService.compareDate(inviteCodeDTO.getEndDateTime());
+        String enableUse = globalService.compareDate(inviteCodeResponse.getEndDateTime());
         System.out.println(enableUse);
 
-        if (inviteCodeDTO.getGroupTitle() != null && enableUse.equals("useAble")) {
-            inviteCodeDTO.setAbleCode("유효한 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+        if (inviteCodeResponse.getGroupTitle() != null && enableUse.equals("useAble")) {
+            inviteCodeResponse.setAbleCode("유효한 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         } else if (enableUse.equals("cannotUse")) {
-            inviteCodeDTO.setAbleCode("만료된 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+            inviteCodeResponse.setAbleCode("만료된 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         } else {
-            inviteCodeDTO.setAbleCode("잘못된 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeDTO);
+            inviteCodeResponse.setAbleCode("잘못된 코드입니다");
+            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         }
-        return inviteCodeDTO;
+        return inviteCodeResponse;
     }
 
 }

@@ -1,6 +1,6 @@
 package org.example.calenj.Main.Repository;
 
-import org.example.calenj.Main.DTO.User.EventDTO;
+import org.example.calenj.Main.DTO.Response.User.EventResponse;
 import org.example.calenj.Main.domain.EventEntity;
 import org.example.calenj.Main.domain.Ids.EventId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,21 +20,21 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
 
     //모든 이벤트 리스트
     @Query("SELECT new org.example.calenj.Main.DTO.User.EventDTO(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId")
-    Optional<List<EventDTO>> EventListById(@Param("userId") String userId);
+    Optional<List<EventResponse>> EventListById(@Param("userId") String userId);
 
     //요청한 친구 추가 이벤트
     @Query("SELECT new org.example.calenj.Main.DTO.User.EventDTO(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId and e.eventName=RequestFriend")
-    Optional<List<EventDTO>> RequestEventListById(@Param("userId") String userId);
+    Optional<List<EventResponse>> RequestEventListById(@Param("userId") String userId);
 
     //요청받은 친구 추가 이벤트
     @Query("SELECT new org.example.calenj.Main.DTO.User.EventDTO(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend")
-    Optional<List<EventDTO>> ResponseEventListById(@Param("userId") String userId);
+    Optional<List<EventResponse>> ResponseEventListById(@Param("userId") String userId);
 
     @Query("SELECT new org.example.calenj.Main.DTO.User.EventDTO(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:ownUserId and e.eventUserId =:friendId and e.eventName=:RequestFriend")
-    Optional<List<EventDTO>> isDuplicatedEvent(@Param("ownUserId") String ownUserId, @Param("friendId") String friendId);
+    Optional<List<EventResponse>> isDuplicatedEvent(@Param("ownUserId") String ownUserId, @Param("friendId") String friendId);
 
     default boolean checkIfDuplicatedEvent(String ownUserId, String friendId) {
-        Optional<List<EventDTO>> duplicatedEvents = isDuplicatedEvent(ownUserId, friendId);
+        Optional<List<EventResponse>> duplicatedEvents = isDuplicatedEvent(ownUserId, friendId);
         return duplicatedEvents.isPresent() && !duplicatedEvents.get().isEmpty();
     }
 

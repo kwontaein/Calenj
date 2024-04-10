@@ -1,4 +1,4 @@
-package org.example.calenj.Main.DTO.Group;
+package org.example.calenj.Main.DTO.Response.Group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupUserDTO {
+public class GroupUserResponse {
 
     private UUID groupId;
     private String nickName;
@@ -20,7 +20,7 @@ public class GroupUserDTO {
     private UserEntity.OnlineStatus onlineStatus;
     private String group_user_location;
 
-    public GroupUserDTO(String userEmail, String nickName, UserEntity.OnlineStatus onlineStatus, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
+    public GroupUserResponse(String userEmail, String nickName, UserEntity.OnlineStatus onlineStatus, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
         this.userEmail = userEmail;
         this.nickName = nickName;
         this.onlineStatus = onlineStatus;
