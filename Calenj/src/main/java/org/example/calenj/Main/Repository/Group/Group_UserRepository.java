@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface Group_UserRepository extends JpaRepository<GroupUserEntity, GroupUserId> {
     //쿼리: GroupUserEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupUserResponse(gu.user.userEmail,gu.user.nickname,gu.user.isOnline, gu.role, gu.group_user_location) FROM Group_User gu WHERE gu.group.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Response.Group.GroupUserResponse(gu.user.userEmail,gu.user.nickname,gu.user.isOnline, gu.role, gu.group_user_location) FROM Group_User gu WHERE gu.group.groupId = :groupId")
     List<GroupUserResponse> findGroupUsers(@Param("groupId") UUID groupId);
 
     // 그룹에 인원 참가

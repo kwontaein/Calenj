@@ -121,6 +121,7 @@ public class UserService {
         if (requestCookie != null) {
             for (Cookie cookie : requestCookie) {
                 if ("refreshToken".equals(cookie.getName())) {
+                    System.out.println(cookie.getValue());
                     UserEntity userEntity = userRepository.findByRefreshToken(cookie.getValue())
                             .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
                     if (userEntity != null) {
@@ -130,6 +131,7 @@ public class UserService {
             }
 
         }
+        System.out.println("checkCookie : " + checkCookie);
         return checkCookie;
     }
 

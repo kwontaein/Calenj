@@ -36,6 +36,7 @@ public class FriendController {
     public void responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
+        System.out.println("request.getFriendUserId() : " + request.getFriendUserId() + "request.getIsAccept() : " + request.getIsAccept());
         friendService.responseFriend(request.getFriendUserId(), request.getIsAccept());
     }
 

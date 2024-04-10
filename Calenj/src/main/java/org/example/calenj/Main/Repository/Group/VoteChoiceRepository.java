@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface VoteChoiceRepository extends JpaRepository<VoteChoiceEntity, UUID> {
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.VoteChoiceDTO(vc.choiceId,vc.voteItem,vc.voter,vc.voteIndex) FROM VoteChoice vc WHERE vc.vote.voteId = :voteId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Response.Group.VoteChoiceResponse(vc.choiceId,vc.voteItem,vc.voter,vc.voteIndex) FROM VoteChoice vc WHERE vc.vote.voteId = :voteId")
     Optional<List<VoteChoiceResponse>> findVoteItemByVoteId(@Param("voteId") UUID voteId);
 
 

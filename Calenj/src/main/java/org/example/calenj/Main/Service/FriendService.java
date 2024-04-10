@@ -56,7 +56,7 @@ public class FriendService {
                     .build();
 
             friendRepository.save(friendEntity);
-            eventRepository.updateEventFriendRequest(friendUserId, "ACCEPT");
+            eventRepository.updateEventFriendRequest(friendUserId, 1);
 
         } catch (Exception e) {
             //동일한 요청 정보가 있다면? -> 저장x
@@ -89,7 +89,7 @@ public class FriendService {
         //요청한 친구에게 알림 보내기(보류)
     }
 
-    public void responseFriend(String friendUserId, String isAccept) {
+    public void responseFriend(String friendUserId, int isAccept) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         //로그인된 유저 정보
@@ -100,14 +100,15 @@ public class FriendService {
         UserEntity friendUser = userRepository.findByUserEmail(friendUserId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        //이벤트 변경 후 친구테이블에 추가
-        eventRepository.updateEventFriendRequest(friendUserId, "ACCEPT");
-
+        //요청 정보가 없다면 오류 반환
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
+
         //거절이라면
-        if (isAccept.equals("REJECT")) {
+        if (isAccept == 2) {
             //요청한 유저 친구목록에서 삭제
             friendRepository.deleteByOwnUserId(friendUserId);
+            //이벤트 상태 거절로 변경
+            eventRepository.updateEventFriendRequest(friendUserId, 2);
         } else {// 거절이 아니라면
             //수락했다면
             //요청한 유저 상태 수락으로 변경
@@ -124,7 +125,8 @@ public class FriendService {
                     .ChattingRoomId(friendResponse.getChattingRoomId()).build();
 
             friendRepository.save(friendEntity);
-
+            //이벤트 상태 수락으로 변경
+            eventRepository.updateEventFriendRequest(friendUserId, 1);
         }
     }
 

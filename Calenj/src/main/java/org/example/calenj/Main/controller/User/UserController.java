@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @RestController
@@ -36,6 +37,8 @@ public class UserController {
     @PostMapping("/api/postCookie")
     public boolean checkCookie(HttpServletRequest request) {
         Cookie[] requestCookie = request.getCookies();
+        System.out.println("실행 :" + Arrays.toString(requestCookie));
+        System.out.println("실행 :" + userService.checkUserToken(requestCookie));
         return userService.checkUserToken(requestCookie);
     }
 

@@ -14,6 +14,6 @@ import java.util.UUID;
 @Repository
 public interface Group_ScheduleRepository extends JpaRepository<GroupScheduleEntity, GroupScheduleId> {
     // 다섯 번째 쿼리: GroupScheduleEntity 조회
-    @Query("SELECT new org.example.calenj.Main.DTO.Group.GroupScheduleResponse(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
+    @Query("SELECT new org.example.calenj.Main.DTO.Response.Group.GroupScheduleResponse(gs.groupScheduleTitle, gs.groupScheduleContent, gs.groupScheduleLocation, gs.groupScheduleId) FROM Group_Schedule gs WHERE gs.groupUser.group.groupId = :groupId")
     List<GroupScheduleResponse> findGroupSchedule(@Param("groupId") UUID groupId);
 }

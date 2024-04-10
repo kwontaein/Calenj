@@ -110,7 +110,6 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
-
     }
 
     public String inviteCode(InviteCodeRequest inviteCodeRequest) {

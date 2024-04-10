@@ -157,4 +157,4 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     );
 }
 
-export default connect(null, mapDispatchToStompProps)(GroupDetail);
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupDetail);

@@ -60,7 +60,7 @@ public class EventEntity {
         private final String status;
 
         @JsonCreator
-        public static EventEntity.statusType userRoleParsing(String inputValue) {
+        public static EventEntity.statusType statusTypeParsing(String inputValue) {
             return Stream.of(EventEntity.statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
@@ -78,7 +78,7 @@ public class EventEntity {
         private final String eventName;
 
         @JsonCreator
-        public static EventEntity.eventType userRoleParsing(String inputValue) {
+        public static EventEntity.eventType eventTypeParsing(String inputValue) {
             return Stream.of(EventEntity.eventType.values())
                     .filter(eventType -> eventType.toString().equals(inputValue))
                     .findFirst()

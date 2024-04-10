@@ -58,7 +58,7 @@ const RequestFriend: React.FC = () => {
     const acceptFriend = async (friendUserId: string, isAccept: string) => {
         axios.post('/api/responseFriend', {
             friendUserId: friendUserId,
-            isAccept: isAccept,
+            isAccept: isAccept === "ACCEPT" ? 0 : 1
         }) // 객체의 속성명을 'id'로 설정;
             .then(() => window.alert(`친구 요청을 ${isAccept === "ACCEPT" ? "수락" : "거절"}했습니다.`))
             .catch((error) => {
@@ -72,7 +72,7 @@ const RequestFriend: React.FC = () => {
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <div>
-                    <h2>Friend List</h2>
+                    <h2>Request Friend List</h2>
                     <ul>
                         {friendListState.data.map((events) => (
                             <ListView key={events.eventId}>
@@ -80,8 +80,8 @@ const RequestFriend: React.FC = () => {
                                 <br/>
                                 -{events.createDate}-
                                 <br/>
-                                <button onClick={() => acceptFriend(events.eventUserId, "ACCEPT")}>친구 수락</button>
-                                <button onClick={() => acceptFriend(events.eventUserId, "REJECT")}>친구 거절</button>
+                                <button onClick={() => acceptFriend(events.ownUserId, "ACCEPT")}>친구 수락</button>
+                                <button onClick={() => acceptFriend(events.ownUserId, "REJECT")}>친구 거절</button>
                             </ListView>
                         ))}
                     </ul>
