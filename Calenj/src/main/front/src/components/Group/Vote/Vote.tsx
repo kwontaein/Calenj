@@ -45,8 +45,7 @@ const Vote :React.FC<GroupProps>=({member})=>{
     const getVoteList = async (): Promise<VoteList[]|null>=> {
         try{
             const response = await axios.post('/api/voteList',{groupId:groupInfo.groupId});
-            
-            
+
             return response.data
         }catch(error){
             const axiosError = error as AxiosError;

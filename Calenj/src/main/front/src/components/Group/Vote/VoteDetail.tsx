@@ -98,7 +98,7 @@ const VoteDetail:React.FC=()=>{
      
     }
     const viewVoterList =()=>{
-        setViewVoter(!viewVoter)
+            setViewVoter(!viewVoter) 
     }
 
 
@@ -193,7 +193,7 @@ const VoteDetail:React.FC=()=>{
                             {result.voter.map((voterUser, index) => (
                                 <RowFlexBox key={index}> 
                                     {checkCreater()&& 
-                                        <div style={{borderRadius:'50px',border:'border: 1px solid #ccc',backgroundColor:'#ccc', fontSize:'10px', height:'15px', width:'13px', marginTop:'4px',padding:'1px'}}>
+                                        <div id="voteMe">
                                             나
                                         </div>
                                     }  
