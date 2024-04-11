@@ -29,7 +29,8 @@ const Invite: React.FC<ParentProps> = ({groupId}) => {
     //usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
     function invite() {
         axios.post('/api/inviteCode', {
-            groupId: groupId
+            groupId: groupId,
+            during: 7
         }).then(response => {
             setInviteLink(response.data)
             setModalOpen(true);

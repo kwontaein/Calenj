@@ -26,18 +26,17 @@ public class FriendController {
     }
 
     @PostMapping("/api/requestFriend")
-    public void requestFriend(@RequestBody FriendRequest request) {
+    public String requestFriend(@RequestBody FriendRequest request) {
         //친구 요청 보내기
         //만약 상대가 보낸 요청이 있다면, 내 테이블에 추가 후 상태 변경하기
-        friendService.requestFriend(request.getFriendUserId());
+        return friendService.requestFriend(request.getFriendUserId());
     }
 
     @PostMapping("/api/responseFriend")
-    public void responseFriend(@RequestBody FriendRequest request) {
+    public String responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
-        System.out.println("request.getFriendUserId() : " + request.getFriendUserId() + "request.getIsAccept() : " + request.getIsAccept());
-        friendService.responseFriend(request.getFriendUserId(), request.getIsAccept());
+        return friendService.responseFriend(request.getFriendUserId(), request.getIsAccept());
     }
 
     @PostMapping("/api/myEvents")

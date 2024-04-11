@@ -51,6 +51,7 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
 
         // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
         return () => {
+            //엔드포인트 설정
             stompClient.deactivate();
         };
     }, []);
@@ -70,7 +71,7 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
             });
         }
     }
-    
+
     // JSX 반환
     return (
         <div>

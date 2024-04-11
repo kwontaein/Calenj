@@ -37,7 +37,7 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
         console.log(`cookie값 ${response.data}`);
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
-            sessionStorage.removeItem('userId')
+            localStorage.removeItem('userId')
             updateOnline({isOnline: false});
             queryClient.clear(); //캐시 삭제
         } else {

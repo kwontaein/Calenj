@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ChatMessageRequest {
+    private int state;
     private String groupMsg;
     private String friendMsg;
     private String nickName;

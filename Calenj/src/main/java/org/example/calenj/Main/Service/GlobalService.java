@@ -2,13 +2,16 @@ package org.example.calenj.Main.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,21 +34,32 @@ public class GlobalService {
         LocalDateTime now = LocalDateTime.now();
 
         // 7일을 더한 날짜와 시간 구하기
-        LocalDateTime sevenDaysLater = now.plusDays(7);
+        plusDate(now, 7);
+
+        // 날짜 형식 지정
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        System.out.println("오늘: " + now.format(dateFormatter) + " " + now.format(timeFormatter));
+
+        return now.format(dateFormatter) + " " + now.format(timeFormatter);
+    }
+
+    public String plusDate(LocalDateTime dateTime, int times) {
+        // 현재 날짜와 시간 가져오기
+        // 7일을 더한 날짜와 시간 구하기
+        LocalDateTime sevenDaysLater = dateTime.plusDays(times);
 
         // 날짜 형식 지정
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         // 7일 후의 날짜와 시간 출력
-        System.out.println("오늘: " + now.format(dateFormatter) + " " + now.format(timeFormatter));
+        System.out.println("오늘: " + dateTime.format(dateFormatter) + " " + dateTime.format(timeFormatter));
         System.out.println("7일 뒤: " + sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter));
 
-        // 오늘로부터 7일 뒤의 날짜 구하기 (시간은 무시)
-        LocalDate today = LocalDate.now();
-        LocalDate sevenDaysLaterDate = today.plusDays(7);
 
-        return sevenDaysLaterDate.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter);
+        return sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter);
     }
 
     public String compareDate(String endDate) {
@@ -77,5 +91,19 @@ public class GlobalService {
         } catch (JsonProcessingException e) {
             return e.getMessage();
         }
+    }
+
+    public void createCookie(HttpServletResponse response, String tokenName, String tokenValue) {
+
+        // 만료 시간 정보 얻기
+        Cookie cookie;
+        cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, StandardCharsets.UTF_8));
+
+        // 쿠키 속성 설정
+        cookie.setHttpOnly(true);  //httponly 옵션 설정
+        cookie.setSecure(true); //https 옵션 설정
+        cookie.setPath("/"); // 모든 곳에서 쿠키열람이 가능하도록 설정
+        cookie.setMaxAge(24 * 60 * 60 * 1000); //쿠키 만료시간 설정
+        response.addCookie(cookie);
     }
 }

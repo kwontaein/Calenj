@@ -10,9 +10,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InviteCodeRequest {
-    
+
     private UUID groupId;
     private String inviteCode;
+    private int during;
 }
-
 

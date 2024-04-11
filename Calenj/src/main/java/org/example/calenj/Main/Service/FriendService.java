@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,18 +30,39 @@ public class FriendService {
         return friendRepository.findFriendListById(globalService.extractFromSecurityContext().getUsername()).orElseThrow(() -> new RuntimeException("친구 목록이 비었습니다"));
     }
 
-    public void requestFriend(String friendUserId) {
+    public String requestFriend(String friendUserId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
+
+        if (friendUserId.equals(userDetails.getUsername())) {
+            System.out.println("나에게 친구 추가는 불가능합니다.");
+            return "나에게 친구 추가는 불가능합니다.";
+        }
+
         //로그인된 유저 정보
-        UserEntity ownUser = userRepository.findByUserEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        // 로그인된 유저 정보 조회
+        Optional<UserEntity> ownUserOptional = userRepository.findByUserEmail(userDetails.getUsername());
 
-        //친구추가할 유저 정보
-        UserEntity friendUser = userRepository.findByUserEmail(friendUserId)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        // 친구 추가할 유저 정보 조회
+        Optional<UserEntity> friendUserOptional = userRepository.findByUserEmail(friendUserId);
 
-        try {
-            FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElseThrow(() -> new RuntimeException("친구 요청이 없습니다"));
+        // 로그인된 유저가 존재하지 않는 경우
+        if (ownUserOptional.isEmpty()) {
+            return "내 정보 인증에 문제가 생겼습니다.";
+        }
+        // 친구 추가할 유저가 존재하지 않는 경우
+        if (friendUserOptional.isEmpty()) {
+            return "존재하지 않는 유저입니다.";
+        }
+
+        // 유저 정보 할당
+        UserEntity ownUser = ownUserOptional.get();
+        UserEntity friendUser = friendUserOptional.get();
+
+        //상대방 요청 정보가 있다면
+        Optional<FriendResponse> friendResponseOptional = friendRepository.findFriendById(friendUserId);
+
+        if (friendResponseOptional.isPresent()) {
+            FriendResponse friendResponse = friendResponseOptional.get();
             //이미 상대가 요청했다면
             //상대 수락으로 변경 후 내 친구에 추가
             friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
@@ -58,7 +80,8 @@ public class FriendService {
             friendRepository.save(friendEntity);
             eventRepository.updateEventFriendRequest(friendUserId, 1);
 
-        } catch (Exception e) {
+            return "상대가 보낸 요청이 이미 있기에, 친구 추가합니다.";
+        } else {
             //동일한 요청 정보가 있다면? -> 저장x
             if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserEmail(), friendUserId)) {
                 // 아니라면 내 친구 테이블에 추가
@@ -84,12 +107,14 @@ public class FriendService {
 
                 friendRepository.save(friendEntity);
                 eventRepository.save(eventEntity);
+                return "친구 요청에 성공했습니다";
             }
+            return "이미 요청한 유저입니다";
         }
         //요청한 친구에게 알림 보내기(보류)
     }
 
-    public void responseFriend(String friendUserId, int isAccept) {
+    public String responseFriend(String friendUserId, int isAccept) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
         //로그인된 유저 정보
@@ -109,6 +134,7 @@ public class FriendService {
             friendRepository.deleteByOwnUserId(friendUserId);
             //이벤트 상태 거절로 변경
             eventRepository.updateEventFriendRequest(friendUserId, 2);
+            return "친구 요청을 거절했습니다.";
         } else {// 거절이 아니라면
             //수락했다면
             //요청한 유저 상태 수락으로 변경
@@ -127,6 +153,7 @@ public class FriendService {
             friendRepository.save(friendEntity);
             //이벤트 상태 수락으로 변경
             eventRepository.updateEventFriendRequest(friendUserId, 1);
+            return "친구 요청을 수락했습니다.";
         }
     }
 
@@ -138,14 +165,14 @@ public class FriendService {
     public List<EventResponse> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         System.out.println(userDetails.getUsername());
-        return eventRepository.ResponseEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+        return eventRepository.ResponseEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("요청받은 목록이 존재하지 않습니다."));
     }
 
     //내가 보낸 요청 목록
     public List<EventResponse> RequestFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         System.out.println(userDetails.getUsername());
-        return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException(""));
+        return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("요청한 목록이 존재하지 않습니다."));
     }
 
 }

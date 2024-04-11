@@ -1,12 +1,14 @@
-import { CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
+import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { call ,put, race,delay,take,fork} from 'redux-saga/effects';
-import { eventChannel ,buffers } from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG,UPDATE_DESTINATION,UPDATE_APP,Destination} from "./StompReducer"
+import {call, put, race, delay, take, fork} from 'redux-saga/effects';
+import {eventChannel, buffers} from 'redux-saga';
+import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, UPDATE_APP, Destination} from "./StompReducer"
 
 interface StompData {
-    [type:string]: string|number,
-    message: string
+    [type: string]: string | number,
+
+    message: string,
+    state: number,
 }
 
 const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
@@ -19,7 +21,8 @@ function* sendStomp(stompClient: CompatClient) {
         console.log(payload);
         const data: StompData = {
             [target]: `${params}`,
-            message: `${message}`
+            message: `${message}`,
+            state: 1,
         }
         const url = `/app/${target}`
         stompClient.publish({
@@ -113,16 +116,28 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                 sub.map((params: (string | number)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (isOnline: IMessage) => {
                         emit(JSON.parse(isOnline.body));
-                        console.log(`/topic/${subscribeDirection[index]}/${params}`);
-                        console.log("Received message:", JSON.parse(isOnline.body));
+                    })
+
+                    const data = {
+                        [subscribeDirection[index]]: `${params}`,
+                        state: 0
+                    }
+
+                    console.log("data : ", data)
+                    const url = `/app/${subscribeDirection[index]}`
+                    stompClient.publish({
+                        destination: `${url}`,
+                        body: JSON.stringify(data),
                     })
                 })
             })
         };
+
         subscribeMessage();
         return function unsubscribe() {
             stompClient.deactivate() //연결 끊기
         };
+
         //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
         //인자로는 확장의 최장크기(크기제한)
     }, buffers.expanding<number>(1000) || buffers.none())

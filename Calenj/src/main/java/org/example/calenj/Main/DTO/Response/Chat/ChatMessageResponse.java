@@ -8,4 +8,5 @@ public class ChatMessageResponse {
     private String friendMsg;
     private String nickName;
     private String message;
+   
 }

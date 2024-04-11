@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -113,7 +114,7 @@ public class GroupService {
     }
 
     public String inviteCode(InviteCodeRequest inviteCodeRequest) {
-
+        LocalDateTime now = LocalDateTime.now();
         Random rnd = new Random();
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < 8; i++) {
@@ -135,7 +136,7 @@ public class GroupService {
                 .inviteCode(buf.toString())
                 .group(groupEntity)
                 .user(userEntity)
-                .endDateTime(globalService.nowTime())
+                .endDateTime(globalService.plusDate(now, inviteCodeRequest.getDuring()))
                 .build());
 
         return buf.toString();

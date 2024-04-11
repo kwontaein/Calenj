@@ -16,6 +16,7 @@ interface FriendList {
 export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
 
 const FriendList: React.FC = () => {
+    const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
     const getFriendList = async (): Promise<FriendList[] | null> => {
         try {
@@ -43,17 +44,24 @@ const FriendList: React.FC = () => {
     });
 
     const addFriend = async () => {
-        axios.post('/api/requestFriend', {friendUserId: "zodls1128@gmail.com"}) // 객체의 속성명을 'id'로 설정;
+        axios.post('/api/requestFriend', {friendUserId: inputValue}) // 객체의 속성명을 'id'로 설정;
             .then(() => window.alert('친구 요청이 성공적으로 전송되었습니다.'))
             .catch((error) => {
-                window.alert('친구 요청이 모종의 이유로 취소되었습니다.');
+                window.alert('존재하지 않는 아이디 같아요.');
                 console.log(error.response.status);
             })
     }
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.target.value);
+    };
 
     return (
         <div>
-            <button onClick={() => addFriend()}>친구 추가</button>
+            <div>
+                <input type="text" value={inputValue} onChange={handleInputChange}/>
+                <button onClick={() => addFriend()}>친구 추가</button>
+
+            </div>
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <div>
