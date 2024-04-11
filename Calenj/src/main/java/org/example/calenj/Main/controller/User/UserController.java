@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping("/api/postCookie")
     public boolean checkCookie(HttpServletRequest request) {
         Cookie[] requestCookie = request.getCookies();
-        System.out.println("실행 :" + Arrays.toString(requestCookie));
+        System.out.println("Arrays.toString(requestCookie) :" + Arrays.toString(requestCookie));
         System.out.println("실행 :" + userService.checkUserToken(requestCookie));
         return userService.checkUserToken(requestCookie);
     }
