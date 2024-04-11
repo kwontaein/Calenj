@@ -117,7 +117,7 @@ public class JwtTokenProvider {
 
         newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
-        if (validateToken(refreshToken).equals("Expired JWT Token") || remainingTime <= oneDay) {
+        if (validateToken(refreshToken).equals("Expired JWT Token") /*|| remainingTime <= oneDay*/) {
             // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
             newRefreshToken = generateRefreshToken();
             userRepository.updateUserRefreshToken(newRefreshToken, userEntity.getUserEmail());
