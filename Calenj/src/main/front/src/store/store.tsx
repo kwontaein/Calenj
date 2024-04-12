@@ -40,19 +40,18 @@ const store = configureStore({
 export const sagaTask =sagaMiddleware.run(rootSaga);
 
 export function sagaMutation(login:boolean){
-  if(login){
-    if(!sagaTask.isRunning()){
-      sagaMiddleware.run(rootSaga)
-      console.log("Saga재시작")
-    }
+  if(!login) return;
+
+  if(!sagaTask.isRunning()){
+    sagaMiddleware.run(rootSaga)
   }else{
-    if(sagaTask.isRunning()){
-      sagaTask.cancel();
-    }
+    sagaTask.cancel();
+    sagaMiddleware.run(rootSaga)
   }
-  
- 
+  console.log("Saga재시작")
+
 }
+
 export default store;
 
 //Redux를 사용하기 위한 type들, 유틸리티 타입을 정의할 때 사용
