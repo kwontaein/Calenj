@@ -3,23 +3,24 @@ import {Dispatch} from 'redux';
 import {RootState} from '../store'
 
 
-const UPDATE_APP_DIRECT = 'UPDATE_APP_DIRECT'
+export const UPDATE_APP_POSITION = 'UPDATE_APP_POSITION'
 
 export interface AppState{
-    appPosition:string;
+    target:string;
     messageParams:string;
+    state : number;
 }
 
-interface AppData{
+export interface AppData{
     app:AppState
 }
 export interface DispatchAppProps {
-    updateAppDirect: (payload:{appPosition: string, messageParams:string }) => void;
+    updateAppDirect: (payload:{target: string, messageParams:string }) => void;
 }
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToAppProps = (dispatch: Dispatch): DispatchAppProps => ({
-    updateAppDirect: (payload:{appPosition: string, messageParams:string }) => dispatch(updateAppDirect(payload)),
+    updateAppDirect: (payload:{target: string, messageParams:string }) => dispatch(updateAppDirect(payload)),
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -32,24 +33,26 @@ export const mapStateToAppProps = (state: RootState): AppData => ({
 
 
 // action 함수 정의, 외부 컴포넌트에서 접근하여 payload를 전달하여 store를 수정, (state, action)
-export const updateAppDirect = (payload: { appPosition: string, messageParams:string }) => ({
-    type: UPDATE_APP_DIRECT,
+export const updateAppDirect = (payload: { target: string, messageParams:string }) => ({
+    type: UPDATE_APP_POSITION,
     payload: payload,
 });
 
 
 // Reducer-saga : 초기 State
 const initialState :AppState= {
-    appPosition:'',
+    target:'',
     messageParams:'',
+    state:0,
 };
 
 const MessageReducer = handleActions(
     {
-        [UPDATE_APP_DIRECT]:(state, action)=>({
+        [UPDATE_APP_POSITION]:(state, action)=>({
             ...state,
-            appPosition: action.payload.appPosition,
-            messageParams:action.payload.messageParams
+            target: action.payload.target,
+            messageParams:action.payload.messageParams,
+            state:action.payload.state
         }),
     },initialState
 )

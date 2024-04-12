@@ -93,8 +93,9 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     });
 
     const sendMsg = () => {
+        let megContent='아니 이게 맞음? \\n 흠';
         if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: '권태인 븅진 ㅋㅋ'})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent})
         }
 
     }

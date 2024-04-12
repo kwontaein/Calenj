@@ -64,6 +64,8 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
+
+
     }
 
     //그룹 목록 가져오기
