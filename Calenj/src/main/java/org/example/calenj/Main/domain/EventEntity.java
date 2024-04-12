@@ -6,6 +6,7 @@ import lombok.*;
 import org.example.calenj.Main.domain.Ids.EventId;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Entity(name = "Events")
@@ -21,7 +22,7 @@ public class EventEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "event_id", columnDefinition = "BINARY(16)")
-    private String eventId;
+    private UUID eventId;
 
     @Id
     @ManyToOne
@@ -59,7 +60,7 @@ public class EventEntity {
         private final String status;
 
         @JsonCreator
-        public static EventEntity.statusType userRoleParsing(String inputValue) {
+        public static EventEntity.statusType statusTypeParsing(String inputValue) {
             return Stream.of(EventEntity.statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
@@ -77,7 +78,7 @@ public class EventEntity {
         private final String eventName;
 
         @JsonCreator
-        public static EventEntity.eventType userRoleParsing(String inputValue) {
+        public static EventEntity.eventType eventTypeParsing(String inputValue) {
             return Stream.of(EventEntity.eventType.values())
                     .filter(eventType -> eventType.toString().equals(inputValue))
                     .findFirst()

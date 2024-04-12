@@ -2,7 +2,7 @@ package org.example.calenj.Main.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.model.MainService;
+import org.example.calenj.Main.Service.MainService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

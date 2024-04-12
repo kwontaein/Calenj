@@ -12,6 +12,7 @@ import java.util.Map;
 @Component
 @Data
 public class ValidateDTO {
+
     private String email;
     private String code;
     private String emailToken;

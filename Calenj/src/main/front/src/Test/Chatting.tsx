@@ -31,7 +31,7 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
         stompClient.onConnect = (frame: Frame) => {
             // '/topic/chat/room/${groupId}' 구독하고 메시지 수신시 showGreeting 함수 호출
             stompClient.subscribe(`/topic/chat/room/${groupId}`, (greeting: IMessage) => {
-                showGreeting(JSON.parse(greeting.body));
+                setMessages(prevMessages => [...prevMessages, JSON.parse(greeting.body)]);
             });
         };
 
@@ -51,6 +51,7 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
 
         // 컴포넌트 언마운트시 Stomp 클라이언트 비활성화
         return () => {
+            //엔드포인트 설정
             stompClient.deactivate();
         };
     }, []);
@@ -69,11 +70,6 @@ const Chatting: React.FC<Room> = ({groupName, groupId}) => { // 상태 변수들
                 }) // JSON 형태의 데이터 전송
             });
         }
-    }
-
-    // 새로운 메시지를 수신하여 메시지 배열에 추가하는 함수
-    function showGreeting(message: Message): void {
-        setMessages(prevMessages => [...prevMessages, message]);
     }
 
     // JSX 반환

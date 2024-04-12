@@ -2,11 +2,11 @@ import {configureStore,createSelector} from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import thunkMiddleware from 'redux-thunk'//비동기 논리를 모두 사용하는 데 가장 일반적으로 사용되는 미들웨어
 import createSagaMiddleware from 'redux-saga';
-import StompReducer from './module/StompReducer';
 import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
-
+import StompReducer from './module/StompReducer';
+import MessageReducer from './module/MessageReducer'
 
 
 
@@ -25,7 +25,7 @@ function* rootSaga() {
 }
 
 //여려 reducer를 묶는용 (dispatch함수 X)
-const rootReducer = combineReducers({stomp: StompReducer, emailValidation: emailValidationReducer});
+const rootReducer = combineReducers({stomp: StompReducer,app:MessageReducer, emailValidation: emailValidationReducer});
 
 
 // 사가 미들웨어 생성

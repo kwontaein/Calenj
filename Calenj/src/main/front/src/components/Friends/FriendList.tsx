@@ -6,36 +6,25 @@ import {stateFilter} from '../../stateFunc/actionFun'
 import {ListView, MiniText} from '../../style/FormStyle'
 
 
-interface GroupList {
-    groupId: number | string;
-    groupTitle: string;
-    groupCreated: string;
+interface FriendList {
+    friendId: string;
+    nickName: string;
+    chattingRoomId: number;
+    friendAddDate: string;
 }
 
-interface cookieState {
-    cookie: boolean;
-}
-
-interface error {
-    message: string;
-}
-
-
-export const QUERY_GROUP_LIST_KEY: string = 'groupList'
+export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
 
 const FriendList: React.FC = () => {
-    const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState<boolean>(false);
-
+    const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
-    const getGroupList = async (): Promise<GroupList[] | null> => {
+    const getFriendList = async (): Promise<FriendList[] | null> => {
         try {
             const response = await axios.get('/api/getFriendList');
             console.log('친구 목록을 불러옵니다.');
-            const data = response.data as GroupList[];
+            const data = response.data as FriendList[];
             const dataSort = data.sort((a, b) => {
-                return (Number(b.groupCreated) - Number(a.groupCreated));
+                return (Number(b.friendAddDate) - Number(a.friendAddDate));
             })
             return dataSort;
         } catch (error) {
@@ -49,28 +38,38 @@ const FriendList: React.FC = () => {
         }
     }
 
-
-    const groupListState = useQuery<GroupList[] | null, Error>({
-        queryKey: [QUERY_GROUP_LIST_KEY],
-        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
+    const friendListState = useQuery<FriendList[] | null, Error>({
+        queryKey: [QUERY_FRIEND_LIST_KEY],
+        queryFn: getFriendList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    const redirectDetail = (groupId: number) => {
-        navigate("/details", {state: {groupId: groupId}});
+    const addFriend = async () => {
+        axios.post('/api/requestFriend', {friendUserId: inputValue}) // 객체의 속성명을 'id'로 설정;
+            .then(() => window.alert('친구 요청이 성공적으로 전송되었습니다.'))
+            .catch((error) => {
+                window.alert('존재하지 않는 아이디 같아요.');
+                console.log(error.response.status);
+            })
     }
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.target.value);
+    };
 
     return (
         <div>
-            <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
-            {groupListState.isLoading && <div>Loading...</div>}
-            {groupListState.data && (
+            <div>
+                <input type="text" value={inputValue} onChange={handleInputChange}/>
+                <button onClick={() => addFriend()}>친구 추가</button>
+
+            </div>
+            {friendListState.isLoading && <div>Loading...</div>}
+            {friendListState.data && (
                 <div>
-                    <h2>Group List</h2>
+                    <h2>Friend List</h2>
                     <ul>
-                        {groupListState.data.map((group) => (
-                            <ListView key={group.groupId}
-                                      onClick={() => redirectDetail(group.groupId as number)}>
-                                {group.groupTitle}
+                        {friendListState.data.map((friends) => (
+                            <ListView key={friends.friendId}>
+                                {friends.nickName}
                             </ListView>
                         ))}
                     </ul>
@@ -78,6 +77,5 @@ const FriendList: React.FC = () => {
             )}
         </div>
     )
-
 }
 export default FriendList;

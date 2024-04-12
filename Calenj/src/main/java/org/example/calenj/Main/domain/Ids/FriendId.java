@@ -5,14 +5,11 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@Setter
-@Embeddable
+//@Embeddable
 public class FriendId implements Serializable {
     private UUID friendId;
-    private UUID ownUserId;
+    private String ownUserId;
 }

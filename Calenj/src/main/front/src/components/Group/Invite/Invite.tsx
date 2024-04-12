@@ -1,10 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import {ListView} from '../../../style/FormStyle'
-import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
+import {Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
 import InviteModal from './InviteModal'
+
 // import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
@@ -14,12 +15,12 @@ interface Friends {
     nickName: string;
 }
 
-interface ParentProps{
-    groupId : number
+interface ParentProps {
+    groupId: number
 }
 
 
-const Invite :React.FC<ParentProps> =({groupId})=>{
+const Invite: React.FC<ParentProps> = ({groupId}) => {
     const [inviteLink, setInviteLink] = useState<string>("");
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [friends, setFriends] = useState<Friends[] | null>(null);
@@ -28,7 +29,8 @@ const Invite :React.FC<ParentProps> =({groupId})=>{
     //usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
     function invite() {
         axios.post('/api/inviteCode', {
-            groupId: groupId
+            groupId: groupId,
+            during: 7
         }).then(response => {
             setInviteLink(response.data)
             setModalOpen(true);
@@ -47,7 +49,7 @@ const Invite :React.FC<ParentProps> =({groupId})=>{
         setModalOpen(false);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
 
     })
 
@@ -61,13 +63,13 @@ const Invite :React.FC<ParentProps> =({groupId})=>{
     }
 
 
-    return(
+    return (
         <div>
             <div className={'btn_wrapper'}>
                 <button className={'btn_modalOpen'} onClick={invite}>
                     초대하기
                 </button>
-                {modalOpen && <InviteModal onClose={closeModal} groupId={groupId}/>}
+                {modalOpen && <InviteModal onClose={closeModal} groupId={groupId} inviteLink={inviteLink}/>}
             </div>
 
         </div>
