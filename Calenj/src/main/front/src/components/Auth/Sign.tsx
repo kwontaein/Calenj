@@ -35,7 +35,6 @@ const Sign: React.FC = () => {
 
     const login = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        console.log(data);
         axios.post('/api/login', data)
             .then(() => {
                 localStorage.setItem('userId', data.userEmail);

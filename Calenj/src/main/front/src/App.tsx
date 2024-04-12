@@ -3,10 +3,8 @@ import SignUp from './components/Auth/Sign_up';
 import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
 import GroupDetail from "./components/Group/GroupDetail";
-import Chatting from "./Test/Chatting";
 import NoticeDetail from './components/Group/Notice/NoticeDetail';
 import VoteDetail from './components/Group/Vote/VoteDetail';
-import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
@@ -16,6 +14,7 @@ import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
+import { subscribe } from 'diagnostics_channel';
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
@@ -26,6 +25,9 @@ interface SubScribe {
     friendId: number;
 }
 
+export const subscribeCheck =()=>{
+
+}
 
 const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) => {
     const queryClient = useQueryClient();
@@ -34,13 +36,14 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
-        console.log(`cookie값 ${response.data}`);
+
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
             queryClient.clear(); //캐시 삭제
         } else {
+           
             axios.get(`/api/subscribeCheck`)
                 .then((res) => {
                     let arr = res.data
@@ -53,7 +56,7 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
                     updateDestination({destination: subScribe});
                     updateOnline({isOnline: true});
-                })
+                }).catch(()=>{})
         }
         return response.data;
     }

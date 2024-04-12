@@ -41,20 +41,20 @@ interface AppData{
 function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams,isUpdate} = yield payload;
+        const {target, messageParams} = yield payload;
+
         console.log(payload);
-        // const data:AppData={
-        //     [target] :`${messageParams}`,//메시지 주소
-        // }
-        // const url = `/app/${target}`
-        // stompClient.send(url,{}, JSON.stringify(data))
+        const data:AppData={
+            [target] :`${messageParams}`,//메시지 주소
+        }
+        const url = `/app/${target}`
+        stompClient.send(url,{}, JSON.stringify(data))
     }
 }
 
 
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
-    console.log('Saga실행')
     const {payload} = yield take(UPDATE_DESTINATION)//액션을 기다린 후 dipstch가 완료되면 실행
     yield startStomp(payload.destination);
 }
@@ -68,7 +68,7 @@ function* startStomp(destination: Destination): any {
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
     const lastWriteTask = yield fork(sendStomp, stompClient) 
-    const lastSendTask = yield fork(sendAppPosition,stompClient)
+    const positionTask = yield fork(sendAppPosition,stompClient)
 
     let isRunning = true;
 
@@ -81,7 +81,6 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
-        console.log("receivedStompMsg(message)", receivedStompMsg(message))
         yield put(receivedStompMsg(message)); //action dipatch
     }
 
@@ -139,17 +138,16 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                         emit(JSON.parse(isOnline.body));
                     })
 
-                    const data = {
-                        [subscribeDirection[index]]: `${params}`,
-                        state: 0
-                    }
-
-                    console.log("data : ", data)
-                    const url = `/app/${subscribeDirection[index]}`
-                    stompClient.publish({
-                        destination: `${url}`,
-                        body: JSON.stringify(data),
-                    })
+                    // const data = {
+                    //     [subscribeDirection[index]]: `${params}`,
+                    //     state: 0
+                    // }
+                    // const url = `/app/${subscribeDirection[index]}`
+                    // stompClient.publish({
+                    //     destination: `${url}`,
+                    //     body: JSON.stringify(data),
+                    
+                    // })
                 })
             })
         };
