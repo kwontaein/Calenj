@@ -9,16 +9,20 @@ import org.example.calenj.Main.DTO.Response.Group.InviteCodeResponse;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.Group.InviteCodeRepository;
+import org.example.calenj.Main.Repository.MessageEventRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.Group.InviteCodeEntity;
+import org.example.calenj.Main.domain.MessageEventEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +39,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final InviteCodeRepository inviteCodeRepository;
-
+    private final MessageEventRepository messageEventRepository;
 
     //그룹 만들기
     public void makeGroup(String groupTitle) {
@@ -66,6 +70,26 @@ public class GroupService {
         group_userRepository.save(groupUserEntity);
 
 
+
+        // 그룹 파일생성
+        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + groupUserEntity.getGroup().getGroupId(), true)) {
+            String nowTime =globalService.nowTime();
+            stream.write(groupTitle.getBytes(StandardCharsets.UTF_8));
+            stream.write("캘린룸, 생성일자 :".getBytes(StandardCharsets.UTF_8));
+            stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        MessageEventEntity messageEventEntity = MessageEventEntity.builder()
+                .userId(userEntity)
+                .paramsId(groupEntity.getGroupId())
+                .paramsType(MessageEventEntity.ParmasType.GROUP)
+                .endPoiont(0)
+                .build();
+
+        messageEventRepository.save(messageEventEntity);
     }
 
     //그룹 목록 가져오기

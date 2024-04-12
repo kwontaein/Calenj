@@ -8,19 +8,18 @@ export const UPDATE_APP_POSITION = 'UPDATE_APP_POSITION'
 export interface AppState{
     target:string;
     messageParams:string;
-    state : number;
 }
 
 export interface AppData{
     app:AppState
 }
 export interface DispatchAppProps {
-    updateAppDirect: (payload:{target: string, messageParams:string }) => void;
+    updateAppDirect: (payload:{target: string, messageParams:string}) => void;
 }
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToAppProps = (dispatch: Dispatch): DispatchAppProps => ({
-    updateAppDirect: (payload:{target: string, messageParams:string }) => dispatch(updateAppDirect(payload)),
+    updateAppDirect: (payload:{target: string, messageParams:string}) => dispatch(updateAppDirect(payload)),
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -39,11 +38,12 @@ export const updateAppDirect = (payload: { target: string, messageParams:string 
 });
 
 
+//state 0:생성, 1:
+
 // Reducer-saga : 초기 State
 const initialState :AppState= {
     target:'',
     messageParams:'',
-    state:0,
 };
 
 const MessageReducer = handleActions(
@@ -52,7 +52,6 @@ const MessageReducer = handleActions(
             ...state,
             target: action.payload.target,
             messageParams:action.payload.messageParams,
-            state:action.payload.state
         }),
     },initialState
 )

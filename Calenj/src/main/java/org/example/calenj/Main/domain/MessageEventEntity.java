@@ -45,7 +45,7 @@ public class MessageEventEntity {
         GROUP("그룹"); //그룹
 
 
-        private final String status;
+        private final String paramsType;
 
         @JsonCreator
         public static ParmasType parmasTypeParsing(String inputValue) {

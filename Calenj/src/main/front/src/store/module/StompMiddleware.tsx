@@ -18,12 +18,12 @@ function* sendStomp(stompClient: CompatClient) {
 
     while (true) {
         const {payload} = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
-        const {params, target, message} = yield payload;
+        const {params, target, message,state} = yield payload;
 
         const data: StompData = {
             [target]: `${params}`,
             message: `${message}`,
-            state: 1,
+            state: state,
         }
         const url = `/app/${target}`
         stompClient.publish({
@@ -35,20 +35,19 @@ function* sendStomp(stompClient: CompatClient) {
 
 interface AppData{
     [type:string] :string|number,
-    state:number;
 }
 
-
+//endPoint Update를 위한 url위치에 기반한 위치 업데이트
 function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams, state} = yield payload;
-        const data:AppData={
-            [target] :`${messageParams}`,//메시지 주소
-            state: state,
-        }
-        const url = `/app/${target}`
-        stompClient.send(url,{}, JSON.stringify(data))
+        const {target, messageParams,isUpdate} = yield payload;
+        console.log(payload);
+        // const data:AppData={
+        //     [target] :`${messageParams}`,//메시지 주소
+        // }
+        // const url = `/app/${target}`
+        // stompClient.send(url,{}, JSON.stringify(data))
     }
 }
 

@@ -13,6 +13,16 @@ interface Message {
     message: string;
 }
 
+//초기상태 정의
+export interface StompState {
+    destination: Destination;
+    target: string;
+    params: string | number;
+    message: string;
+    isOnline: boolean;
+}
+
+
 export interface StompData {
     stomp: StompState
 }
@@ -76,15 +86,6 @@ export interface Destination {
     [index: number]: (string | number)[];
 }
 
-
-//초기상태 정의
-export interface StompState {
-    destination: Destination;
-    target: string;
-    params: string | number;
-    message: string;
-    isOnline: boolean;
-}
 
 
 // Reducer-saga : 초기 State

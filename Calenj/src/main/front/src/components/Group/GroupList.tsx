@@ -64,7 +64,6 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
     const closeModal = () => {
         setShowMakeGroup(false);
-        groupListState.refetch();
     };
 
 
@@ -72,7 +71,7 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
 
         <div>
             <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
-            {showMakeGroup && <MakeGroup onClose={closeModal}></MakeGroup>}
+            {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <div>
