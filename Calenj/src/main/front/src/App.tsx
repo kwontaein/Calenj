@@ -1,4 +1,3 @@
-import React from 'react';
 import Home from './Home';
 import SignUp from './components/Auth/Sign_up';
 import Sign from './components/Auth/Sign';
@@ -11,6 +10,7 @@ import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
+import React, {useEffect, useState } from 'react';
 import stompReducer, {DispatchStompProps, mapDispatchToStompProps, sendStompMsg} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
@@ -58,6 +58,7 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
         return response.data;
     }
 
+    
     function subScribeFilter(friendList: number[], groupList: number[], userId: string) {
         let parmasList = [];
         parmasList.push([userId]) //친구요청
@@ -72,6 +73,10 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
         queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
+    useEffect(()=>{
+        console.log('ㅎㅇ')
+        return ()=>{console.log('ㅂㅇ')}
+    },[])
     // useQuery는 실시간 데이터 갱신(위치, 그래프 등)에 더욱 적합하다함
 
     return (

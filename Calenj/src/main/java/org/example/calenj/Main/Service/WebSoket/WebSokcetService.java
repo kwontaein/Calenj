@@ -36,7 +36,7 @@ public class WebSokcetService {
         String nowTime = globalService.nowTime() + "\n";
 
         // 파일을 저장한다.
-        try (FileOutputStream stream = new FileOutputStream("E:\\chat\\chat" + message.getGroupMsg(), true)) {
+        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getGroupMsg(), true)) {
             stream.write(msg.getBytes(StandardCharsets.UTF_8));
             stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
         } catch (Throwable e) {
@@ -47,7 +47,7 @@ public class WebSokcetService {
     public String readChattingFile(ChatMessageRequest message) {
         System.out.println("파일 읽기 : " + message.getGroupMsg());
         // d드라이브의 chat 폴더의 chat 파일
-        File file = new File("E:\\chat\\chat" + message.getGroupMsg());
+        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
         // 파일 있는지 검사
         if (!file.exists()) {
             System.out.println("파일이 없어요");

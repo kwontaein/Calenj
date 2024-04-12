@@ -99,9 +99,9 @@ public class GroupService {
     public void joinGroup(UUID groupId) {
         // 유저를 그룹에 추가하는 코드
         // SecurityContext 에서 유저 정보 추출하는 메소드
-        // UserDetails userDetails = globalService.extractFromSecurityContext();
+         UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-        UserEntity userEntity = userRepository.findByUserEmail("zodls1128@gmail.com").orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()

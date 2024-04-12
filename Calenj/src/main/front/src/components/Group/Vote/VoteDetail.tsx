@@ -8,7 +8,7 @@ import '../../../style/Detail.scss'
 import { useId } from 'react';
 
 
-interface voteChoiceDTO{
+interface voteChoiceResponse{
     voteItem:string;
     voter:string[];
     voteIndex:number
@@ -24,14 +24,14 @@ interface VoteDetails{
     voteWatcher:string[]
     voter:string[];
     countVoter:string[];
-    voteChoiceDTO:voteChoiceDTO[];
+    voteChoiceResponse:voteChoiceResponse[];
     
 }
 interface VoteDetailProps{
     //전체 디테일정보
     detail:VoteDetails;
     //투표 목록별 값
-    voteChoiceDTO:voteChoiceDTO[]|null;
+    voteChoiceResponse:voteChoiceResponse[]|null;
     //사용자가 투표 현황
     myVote :boolean[];
     //처음 데이터를 불러올 때 사용자가 투표했는지 여부
@@ -52,7 +52,7 @@ interface VoteDetailProps{
 
 const VoteDetail:React.FC=()=>{
     const [detail, setDetail] = useState<VoteDetails | null>(null);
-    const [voted, setVoted] = useState<voteChoiceDTO[]|null>(null);
+    const [voted, setVoted] = useState<voteChoiceResponse[]|null>(null);
     const [myVote,setMyVote] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const [dbVoter,setDbMyBoter] =useState<boolean>(false);
     const [voteEnd,setVoteEnd] = useState<boolean>();
@@ -73,7 +73,7 @@ const VoteDetail:React.FC=()=>{
             .then(response => {
                 const voteDetail = response.data
                 setDetail(voteDetail);
-                BeforCheckVoter(voteDetail.voteChoiceDTO)                
+                BeforCheckVoter(voteDetail.voteChoiceResponse)                
                 TimeOperation(voteDetail.voteEndDate)
                 setVoteEnd(checkVoteEnd(voteDetail.voteEndDate))
                 setIsLoading(true);
@@ -102,7 +102,7 @@ const VoteDetail:React.FC=()=>{
     }
 
 
-    const BeforCheckVoter=(voteList:voteChoiceDTO[])=>{
+    const BeforCheckVoter=(voteList:voteChoiceResponse[])=>{
         let newList = voteList.sort((a,b)=>{return a.voteIndex-b.voteIndex})
         let userVoter = new Array(voteList.length).fill(false);
         let userEmail = localStorage.getItem('userId')
@@ -163,7 +163,7 @@ const VoteDetail:React.FC=()=>{
                      
                         <VoteContent 
                             detail={detail} 
-                            voteChoiceDTO={voted} 
+                            voteChoiceResponse={voted} 
                             participation={dbVoter} 
                             voteEnd={voteEnd as boolean} 
                             pickVote={pickVote} 
@@ -216,7 +216,7 @@ const VoteDetail:React.FC=()=>{
 
 
 export default VoteDetail
-const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participation, myVote, voteEnd,refetchVoteDetail, pickVote,viewVoterList})=>{
+const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceResponse,participation, myVote, voteEnd,refetchVoteDetail, pickVote,viewVoterList})=>{
     const id = useId();
     const [votecomplete,setVoteComplete] = useState<boolean>();
     const location = useLocation();
@@ -293,7 +293,7 @@ const VoteContent:React.FC<VoteDetailProps> =({detail,voteChoiceDTO,participatio
     return(
         <div style={{marginTop:'20px'}}>
         
-        {voteChoiceDTO?.map((Item,index) => (
+        {voteChoiceResponse?.map((Item,index) => (
             <div  key={id+index}>
             <RowFlexBox style={{width:'88vw'}}>
                 <label style={{display:'flex', alignItems:'center', marginBlock:'0.5vw', width:'88vw'}} >
