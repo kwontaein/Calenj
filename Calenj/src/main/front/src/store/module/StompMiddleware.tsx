@@ -12,6 +12,9 @@ interface StompData {
     state: number,
 }
 
+
+export const endPointMap = new Map();
+
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
@@ -53,6 +56,7 @@ function* sendAppPosition(stompClient: CompatClient){
 }
 
 
+
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
     const {payload} = yield take(UPDATE_DESTINATION)//액션을 기다린 후 dipstch가 완료되면 실행
@@ -69,7 +73,7 @@ function* startStomp(destination: Destination): any {
     //함수 실행 후 백그라운드에도 유지
     const lastWriteTask = yield fork(sendStomp, stompClient) 
     const positionTask = yield fork(sendAppPosition,stompClient)
-
+    
     let isRunning = true;
 
     //put == dispatch랑 동일
@@ -81,7 +85,10 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
+        console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
         yield put(receivedStompMsg(message)); //action dipatch
+
+
     }
 
 }
