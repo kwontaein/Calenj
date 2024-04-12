@@ -20,6 +20,7 @@ export interface StompState {
     params: string | number;
     message: string;
     isOnline: boolean;
+    state : number;
 }
 
 
@@ -29,7 +30,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
-    sendStompMsg: (payload: { target: string, params: string | number, message: string }) => void;
+    sendStompMsg: (payload: { target: string, params: string | number, message: string, state: number }) => void;
     receivedStompMsg: (payload: { message: Message }) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
 }
@@ -40,7 +41,8 @@ export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps 
     sendStompMsg: (payload: {
         target: string,
         params: string | number,
-        message: string
+        message: string,
+        state:number
     }) => dispatch(sendStompMsg(payload)),
     receivedStompMsg: (payload: { message: Message }) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
@@ -62,7 +64,7 @@ export const updateDestination = (payload: { destination: Destination }) => ({
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, params: string | number, message: string }) => ({
+export const sendStompMsg = (payload: { target: string, params: string | number, message: string ,state:number}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -82,7 +84,6 @@ export const updateOnline = (payload: { isOnline: boolean }) => ({
 
 export interface Destination {
     map: any;
-
     [index: number]: (string | number)[];
 }
 
@@ -95,6 +96,7 @@ const initialState: StompState = {
     params: '', // (sub/pub 시)식별하기 위한 값
     message: '', // 초기 message 상태
     isOnline: false,
+    state: 0,
 };
 
 
@@ -110,7 +112,8 @@ const StompReducer = handleActions(
             ...state,
             target: action.payload.target,
             params: action.payload.params,
-            message: action.payload.message
+            message: action.payload.message,
+            state: action.payload.state
         }),
         [RECEIVED_STOMP_MSG]: (state, action) => ({
             ...state,

@@ -36,9 +36,10 @@ public class WebSocketController {
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
         String file = webSokcetService.readGroupChattingFile(message);
-        System.out.println(file);
+//        System.out.println(file);
+        System.out.println(message.getGroupMsg());
         if (message.getState() == 0) {
-
+            System.out.println("파일로드");
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 message.setMessage(file);
