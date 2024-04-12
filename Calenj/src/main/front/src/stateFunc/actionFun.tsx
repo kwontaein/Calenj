@@ -95,7 +95,7 @@ export function saveDBFormat(date:Date):string{
 
 
 // YYYY.MM.DD HH:mm 형식의 데이터를 받아 Date를 생성해주는 함수
-export function changeDateForm(date:string){
+export function changeDateForm(date:string):Date{
     let list = date.split(' ');
     let YYMMDD :number[]= list[0].split('.').map((yymmdd)=> Number(yymmdd));
 
@@ -106,7 +106,7 @@ export function changeDateForm(date:string){
 
 
 //남은시간 계산
-export const TimeOperation =(endDate:string)=>{
+export const TimeOperation =(endDate:string):string=>{
     const now = new Date();
     const end = changeDateForm(endDate);
     const remaining =Number(end)-Number(now);
