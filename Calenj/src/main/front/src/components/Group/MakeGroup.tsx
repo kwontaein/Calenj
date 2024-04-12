@@ -1,17 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
-
-
+import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
+import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/MessageReducer'
+import {connect} from "react-redux";
+import {QUERY_COOKIE_KEY} from '../../App'
 interface ModalProps {
     onClose: () => void;
+    queryState: UseQueryResult;
 }
 
 
 //단순 그룹 생성을 위한 컴포넌트
-const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
+const MakeGroup: React.FC<ModalProps&DispatchAppProps> = ({onClose,queryState,updateAppDirect}) => {
     const [groupTitle, setGroupTitle] = useState<string>("");
+    const queryClient = useQueryClient();
 
+    
     const makeGroup = () => {
 
         axios.post('/api/makeGroup', {groupTitle: groupTitle})
@@ -36,8 +41,12 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
         if (groupTitle === "") {
             window.alert("생성할 방이름을 지어주세요.")
         } else {
-            useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle);
-
+            useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle,queryState);
+            setTimeout(()=>{
+                queryClient.invalidateQueries({queryKey:[QUERY_COOKIE_KEY]}) //업데이트 이후 connect를 위한 함수
+                console.log('재연결')
+            },500)
+            
         }
     }
 
@@ -51,4 +60,4 @@ const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
     );
 }
 
-export default MakeGroup;
+export default connect(null,mapDispatchToAppProps) (MakeGroup);

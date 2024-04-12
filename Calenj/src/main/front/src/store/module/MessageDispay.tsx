@@ -16,7 +16,6 @@ class MessageDisplay extends React.Component<MessageDisplayProps> {
     render() {
         const {message, params} = this.props.stomp; // Redux store로부터 받은 메시지
         const {groupId} = this.props;
-        console.log(params)
         if (params === groupId) {
             return (
                 <div>
@@ -34,3 +33,4 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 export default connect(mapStateToProps)(MessageDisplay);
+  
