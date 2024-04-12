@@ -5,5 +5,5 @@ import java.util.UUID;
 
 public class EventId implements Serializable {
     private UUID eventId;
-    private UUID ownUserId;
+    private String ownUserId;
 }

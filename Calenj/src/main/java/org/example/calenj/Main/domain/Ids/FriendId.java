@@ -14,5 +14,5 @@ import java.util.UUID;
 @Embeddable
 public class FriendId implements Serializable {
     private UUID friendId;
-    private UUID ownUserId;
+    private String ownUserId;
 }

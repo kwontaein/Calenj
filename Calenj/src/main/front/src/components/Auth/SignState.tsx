@@ -19,6 +19,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
             const response = await axios.post('/api/logout');
             console.log(response.data);
             document.location.replace('/')
+            queryClient.clear();
             return response.data;
         }catch(error){ 
             document.location.replace('/')
@@ -27,7 +28,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
     };
 
 
-    
+
     return (
         <div>
             {stomp.isOnline ?

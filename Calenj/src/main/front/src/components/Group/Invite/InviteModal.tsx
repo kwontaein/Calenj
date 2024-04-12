@@ -1,9 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import {ListView} from '../../../style/FormStyle'
-import { Stomp, IMessage, CompatClient} from '@stomp/stompjs';
+import {Stomp, IMessage, CompatClient} from '@stomp/stompjs';
 import {RootState} from '../../../store/store'
 import {connect} from "react-redux";
+
 // import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
 
 interface Friends {
@@ -16,18 +17,16 @@ interface Friends {
 interface ModalProps {
     onClose: () => void;
     groupId: number;
+    inviteLink: string;
 }
 
 
-
-
-const InviteModal :React.FC<ModalProps> =({onClose})=>{
-    const [inviteLink, setInviteLink] = useState<string>("");
+const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink}) => {
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const modalBackground = useRef<HTMLDivElement>(null);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         // updateTopic({topicLogic:'',})
     })
 
@@ -37,9 +36,9 @@ const InviteModal :React.FC<ModalProps> =({onClose})=>{
         // stompClient?.send('/app/online', {}, JSON.stringify({inviteLink}));
     }
 
-    return(
+    return (
         <div>
-      
+
             <div ref={modalBackground} className={'modal_container'} onClick={e => {
                 if (e.target === modalBackground.current) {
                     onClose();
@@ -48,26 +47,26 @@ const InviteModal :React.FC<ModalProps> =({onClose})=>{
                 <div className={'modalContent'}>
                     <div className={'FriendList'}>
                         {friends && friends.length > 0 ?
-                        <ul>
-                            {friends.map((friend) => (
-                                <ListView>
-                                     <div>{friend.nickName}({friend.friendUserId})</div>
-                                    <button onClick={() => sendToFriend(friend.friendUserId, inviteLink)}>
-                                         친구에게 보내기
-                                    </button>
-                                </ListView>
-                            ))}
-                        </ul>: 
-                        <div className={'noFriends'}>
-                            <p>친구가 없으신가요?</p>
-                            <p>친구를 만들어 보세요!</p>
-                        </div>
+                            <ul>
+                                {friends.map((friend) => (
+                                    <ListView>
+                                        <div>{friend.nickName}({friend.friendUserId})</div>
+                                        <button onClick={() => sendToFriend(friend.friendUserId, inviteLink)}>
+                                            친구에게 보내기
+                                        </button>
+                                    </ListView>
+                                ))}
+                            </ul> :
+                            <div className={'noFriends'}>
+                                <p>친구가 없으신가요?</p>
+                                <p>친구를 만들어 보세요!</p>
+                            </div>
                         }
                     </div>
                     {inviteLink && <div className={'issueLink'}><b>{inviteLink}</b>
                         <button>복사하기</button>
-                </div>}
-                <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>
+                    </div>}
+                    <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>
                 </div>
             </div>
 
