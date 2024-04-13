@@ -27,7 +27,6 @@ interface SubScribe {
 }
 
 
-export const endPointMap = new Map();
 
 const App: React.FC<DispatchStompProps&StompData> = ({updateDestination, updateOnline,sendStompMsg,stomp}) => {
     const queryClient = useQueryClient();
@@ -58,17 +57,6 @@ const App: React.FC<DispatchStompProps&StompData> = ({updateDestination, updateO
                     
                     updateDestination({destination: subScribe});
                     updateOnline({isOnline: true});
-                    
-                    let subLength:number = subScribe.flat().length;
-
-                    setTimeout(()=>{
-                        subScribe.map((subList,index)=>{
-                            subList.map((params)=>{
-                                sendStompMsg({target:subscribeDirection[index],params:params,message:'', state:0})
-                            })
-                        })
-                    },(50*subLength)) //sub를 기다린 후 시작, sub할게 많을 수록 더 기다려야함
-                    
                 })
                 .catch(()=>{})
         }

@@ -53,6 +53,8 @@ public class WebSocketController {
             webSokcetService.saveChattingToFile(message);
             message.setMessage(username + " : " + message.getMessage());
             template.convertAndSend("/topic/groupMsg/" + message.getGroupMsg(), message);
+        } else if (message.getState() == 2) {
+            System.out.println("위치 변경" + message.getGroupMsg());
         }
     }
 
