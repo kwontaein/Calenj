@@ -51,8 +51,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [loading,setLoading] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
 
     //그룹 디테일 불러오기
@@ -82,18 +81,18 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     });
 
     const sendMsg = () => {
-        let megContent='아니 이게 맞음? \\n 흠';
+        let megContent = '테스트 메시지입니다.';
         if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 1})
         }
 
     }
 
     useEffect(() => {
         const handleBeforeUnload = () => {
-            let megContent='아니 이게 맞음? \\n 흠';
+            let megContent = 'EndPoint';
             if (groupDetailState.data) {
-                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
+                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 2})
             }
         };
 
