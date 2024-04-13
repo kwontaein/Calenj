@@ -13,7 +13,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +29,16 @@ public class WebSokcetService {
 
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
-        String nowTime =globalService.nowTime();
-        String msg = " "+message.getNickName() + " : " + message.getMessage() + "\n";
+        String nowTime = globalService.nowTime();
+        String msg;
 
+        if (message.getState() == 1) {
+            msg = " " + message.getNickName() + " : " + message.getMessage() + " [" + nowTime + " ]" + "\n";
+        } else {
+            msg = "\" " + message.getNickName() + " " + message.getMessage() + "\"\n";
+        }
         // 파일을 저장한다.
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getGroupMsg(), true)) {
-            stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
             stream.write(msg.getBytes(StandardCharsets.UTF_8));
         } catch (Throwable e) {
             e.printStackTrace();
@@ -75,7 +78,6 @@ public class WebSokcetService {
             return "";
         }
 
-
         //TODO 2차원배열로 짤라서 최대 행 갯수가 넘어가면 다음 으로 넘어가게
         //TODO 안읽은데 표시까지 전부 불러오는거 1개
         //그 위부터는 끊어서 무한스크롤
@@ -90,13 +92,15 @@ public class WebSokcetService {
     }
 
     //엔드포인트까지 읽어오는 메소드
-    public String readChattingFile2(ChatMessageRequest message) {
-        File file = new File("E:\\chat\\chat" + message.getGroupMsg());
+    public String readChattingFileToEndPoint(ChatMessageRequest message) {
+        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
+
         // 파일 있는지 검사
         if (!file.exists()) {
             System.out.println("파일이 없어요");
             return "";
         }
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
@@ -113,7 +117,33 @@ public class WebSokcetService {
             return "";
         }
     }
+
     //엔드포인트부터의 알림 갯수 저장하는 메소드
+    public int countLinesUntilEndPoint(ChatMessageRequest message) {
+        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
+        int lineCount = 0;
+
+        // 파일 있는지 검사
+        if (!file.exists()) {
+            System.out.println("파일이 없어요");
+            return 0;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lineCount++;
+                if (line.contains("\" " + message.getNickName() + " EndPoint\"")) {
+                    break;
+                }
+            }
+            return lineCount;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("파일 읽기 실패");
+            return 0;
+        }
+    }
 
     //파일 불러오는 메소드
     public class ScrollableFileReader {

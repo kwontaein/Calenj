@@ -29,7 +29,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
-    sendStompMsg: (payload: { target: string, params: string | number, message: string }) => void;
+    sendStompMsg: (payload: { target: string, params: string | number, message: string, state: number }) => void;
     receivedStompMsg: (payload: { message: Message }) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
 }
@@ -85,7 +85,6 @@ export interface Destination {
 
     [index: number]: (string | number)[];
 }
-
 
 
 // Reducer-saga : 초기 State

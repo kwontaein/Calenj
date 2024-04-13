@@ -9,4 +9,6 @@ public class ChatMessageRequest {
     private String friendMsg;
     private String nickName;
     private String message;
+
+    private int endPoint;
 }

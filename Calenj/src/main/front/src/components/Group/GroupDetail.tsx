@@ -53,10 +53,9 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const id = useId();
 
 
-    
-    useEffect(()=>{
+    useEffect(() => {
         console.log('Route changed to:', location.pathname);
-        },[location.pathname])
+    }, [location.pathname])
 
 
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
@@ -93,13 +92,22 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     });
 
     const sendMsg = () => {
-        let megContent='아니 이게 맞음? \\n 흠';
+        let megContent = '테스트 전송';
         if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 1})
         }
 
     }
 
+    useEffect(() => {
+        return () => {
+            let megContent = 'EndPoint';
+            console.log('groupDetailState.data', groupDetailState.data)
+            if (groupDetailState.data) {
+                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 2})
+            }
+        }
+    }, [groupDetailState.isLoading])
 
     const onlineCheck = (isOnline: string): string => {
         let status;
