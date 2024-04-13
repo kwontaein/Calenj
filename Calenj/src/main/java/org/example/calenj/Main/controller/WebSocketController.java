@@ -7,9 +7,13 @@ import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
 import org.example.calenj.Main.DTO.Response.User.UserSubscribeResponse;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +31,9 @@ public class WebSocketController {
     }
 
     //그룹 채팅
+    //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
-
         String username = webSokcetService.returnNickname(authentication);
         String file = webSokcetService.readGroupChattingFile(message);
         System.out.println(message);

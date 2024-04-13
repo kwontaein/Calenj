@@ -44,7 +44,6 @@ const MakeGroup: React.FC<ModalProps&DispatchAppProps> = ({onClose,queryState,up
             useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle,queryState);
             setTimeout(()=>{
                 queryClient.invalidateQueries({queryKey:[QUERY_COOKIE_KEY]}) //업데이트 이후 connect를 위한 함수
-                console.log('재연결')
             },500)
             
         }

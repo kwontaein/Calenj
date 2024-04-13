@@ -51,20 +51,9 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
+    const [loading,setLoading] = useState(false);
 
 
-    useEffect(() => {
-        console.log('Route changed to:', location.pathname);
-    }, [location.pathname])
-
-
-    // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
-    //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
-    useLayoutEffect(() => {
-        // updateTopic({topicLogic:'userOnline',params:groupInfo.groupId,target:'groupId'})
-        return;
-
-    }, []);
 
     //그룹 디테일 불러오기
     const getGroupList = async (): Promise<Details | null> => {
@@ -73,6 +62,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
                 groupId: groupInfo.groupId
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
+            setLoading(true);
             return data;
         } catch (error) {
             const axiosError = error as AxiosError;
@@ -92,22 +82,26 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     });
 
     const sendMsg = () => {
-        let megContent = '테스트 전송';
+        let megContent='아니 이게 맞음? \\n 흠';
         if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 1})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
         }
 
     }
 
     useEffect(() => {
-        return () => {
-            let megContent = 'EndPoint';
-            console.log('groupDetailState.data', groupDetailState.data)
+        const handleBeforeUnload = () => {
+            let megContent='아니 이게 맞음? \\n 흠';
             if (groupDetailState.data) {
-                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 2})
+                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
             }
-        }
-    }, [groupDetailState.isLoading])
+        };
+
+        return () => {
+            handleBeforeUnload();
+        };
+    }, [groupDetailState.isLoading]);
+
 
     const onlineCheck = (isOnline: string): string => {
         let status;

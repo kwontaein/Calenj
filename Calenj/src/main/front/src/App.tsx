@@ -3,19 +3,19 @@ import SignUp from './components/Auth/Sign_up';
 import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
 import GroupDetail from "./components/Group/GroupDetail";
-import Chatting from "./Test/Chatting";
 import NoticeDetail from './components/Group/Notice/NoticeDetail';
 import VoteDetail from './components/Group/Vote/VoteDetail';
-import inviteCode from "./Test/InviteCode";
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
 import React, {useEffect, useState } from 'react';
-import stompReducer, {DispatchStompProps, mapDispatchToStompProps, sendStompMsg} from './store/module/StompReducer';
+import stompReducer, {DispatchStompProps, mapDispatchToStompProps, StompData, mapStateToStompProps} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
+import {subscribeDirection} from './store/module/StompMiddleware'
+
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
@@ -27,20 +27,24 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) => {
+export const endPointMap = new Map();
+
+const App: React.FC<DispatchStompProps&StompData> = ({updateDestination, updateOnline,sendStompMsg,stomp}) => {
     const queryClient = useQueryClient();
+
 
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
-        console.log(`cookie값 ${response.data}`);
+
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
             queryClient.clear(); //캐시 삭제
         } else {
+           
             axios.get(`/api/subscribeCheck`)
                 .then((res) => {
                     let arr = res.data
@@ -51,9 +55,22 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
                         return value.groupId;
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
+                    
                     updateDestination({destination: subScribe});
                     updateOnline({isOnline: true});
+                    
+                    let subLength:number = subScribe.flat().length;
+
+                    setTimeout(()=>{
+                        subScribe.map((subList,index)=>{
+                            subList.map((params)=>{
+                                sendStompMsg({target:subscribeDirection[index],params:params,message:'', state:0})
+                            })
+                        })
+                    },(50*subLength)) //sub를 기다린 후 시작, sub할게 많을 수록 더 기다려야함
+                    
                 })
+                .catch(()=>{})
         }
         return response.data;
     }
@@ -73,14 +90,16 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
         queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    useEffect(()=>{
-        console.log('ㅎㅇ')
-        return ()=>{console.log('ㅂㅇ')}
-    },[])
+    // useEffect(()=>{
+    //     console.log('ㅎㅇ')
+    //     return ()=>{console.log('ㅂㅇ')}
+    // },[])
+
     // useQuery는 실시간 데이터 갱신(위치, 그래프 등)에 더욱 적합하다함
 
     return (
         <div className="App">
+
             <BrowserRouter>
                 <Routes>
                     <Route path={"/"} element={<Home/>}/>
@@ -99,5 +118,5 @@ const App: React.FC<DispatchStompProps> = ({updateDestination, updateOnline}) =>
         </div>
     );
 }
-export default connect(null, mapDispatchToStompProps)(App);
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(App);
 

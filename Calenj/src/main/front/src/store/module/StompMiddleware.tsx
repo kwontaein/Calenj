@@ -1,18 +1,21 @@
 import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {call, put, race, delay, take, fork} from 'redux-saga/effects';
+import {call, put, race, delay, take, fork,select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, UPDATE_APP, Destination} from "./StompReducer"
+import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination,sendStompMsg,mapStateToStompProps} from "./StompReducer"
 import {UPDATE_APP_POSITION} from './MessageReducer';
+import { time } from "console";
 
 interface StompData {
     [type: string]: string | number,
-
     message: string,
     state: number,
 }
 
-const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
+
+export const endPointMap = new Map();
+
+export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
 
@@ -21,9 +24,9 @@ function* sendStomp(stompClient: CompatClient) {
         const {params, target, message,state} = yield payload;
 
         const data: StompData = {
-            [target]: `${params}`,
+            [target]: `${params}`, //groupMsg,friendMsg
             message: `${message}`,
-            state: state,
+            state: state, //0:endpoint 로드
         }
         const url = `/app/${target}`
         stompClient.publish({
@@ -41,20 +44,21 @@ interface AppData{
 function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams,isUpdate} = yield payload;
+        const {target, messageParams} = yield payload;
+
         console.log(payload);
-        // const data:AppData={
-        //     [target] :`${messageParams}`,//메시지 주소
-        // }
-        // const url = `/app/${target}`
-        // stompClient.send(url,{}, JSON.stringify(data))
+        const data:AppData={
+            [target] :`${messageParams}`,//메시지 주소
+        }
+        const url = `/app/${target}`
+        stompClient.send(url,{}, JSON.stringify(data))
     }
 }
 
 
+
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
-    console.log('Saga실행')
     const {payload} = yield take(UPDATE_DESTINATION)//액션을 기다린 후 dipstch가 완료되면 실행
     yield startStomp(payload.destination);
 }
@@ -68,8 +72,8 @@ function* startStomp(destination: Destination): any {
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
     const lastWriteTask = yield fork(sendStomp, stompClient) 
-    const lastSendTask = yield fork(sendAppPosition,stompClient)
-
+    const positionTask = yield fork(sendAppPosition,stompClient)
+    
     let isRunning = true;
 
     //put == dispatch랑 동일
@@ -81,8 +85,10 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
-        console.log("receivedStompMsg(message)", receivedStompMsg(message))
+        console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
         yield put(receivedStompMsg(message)); //action dipatch
+
+
     }
 
 }
@@ -135,20 +141,8 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         const subscribeMessage = () => {
             destination.map((sub: (string | number)[], index: number) => {
                 sub.map((params: (string | number)) => {
-                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (isOnline: IMessage) => {
-                        emit(JSON.parse(isOnline.body));
-                    })
-
-                    const data = {
-                        [subscribeDirection[index]]: `${params}`,
-                        state: 0
-                    }
-
-                    console.log("data : ", data)
-                    const url = `/app/${subscribeDirection[index]}`
-                    stompClient.publish({
-                        destination: `${url}`,
-                        body: JSON.stringify(data),
+                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
+                        emit(JSON.parse(iMessage.body));
                     })
                 })
             })

@@ -74,7 +74,7 @@ public class GroupService {
             String nowTime = globalService.nowTime();
             stream.write(groupTitle.getBytes(StandardCharsets.UTF_8));
             stream.write("캘린룸, 생성일자 :".getBytes(StandardCharsets.UTF_8));
-            stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+            stream.write((nowTime+"\n").getBytes(StandardCharsets.UTF_8));
 
         } catch (Throwable e) {
             e.printStackTrace();
