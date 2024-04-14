@@ -13,7 +13,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +29,8 @@ public class WebSokcetService {
 
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
-        String nowTime =globalService.nowTime();
-        String msg = " "+message.getNickName() + " : " + message.getMessage() + "\n";
+        String nowTime = globalService.nowTime();
+        String msg = " " + message.getNickName() + " : " + message.getMessage() + "\n";
 
         // 파일을 저장한다.
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getGroupMsg(), true)) {
@@ -160,6 +159,7 @@ public class WebSokcetService {
                 currentPosition = randomAccessFile.getFilePointer(); // 현재 위치 갱신
                 linesRead++; // 읽은 라인 수 증가
             }
+
             return stringBuilder.toString(); // 읽은 라인들을 문자열로 반환
         }
 
