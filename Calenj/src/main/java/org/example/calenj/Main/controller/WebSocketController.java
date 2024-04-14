@@ -27,6 +27,9 @@ public class WebSocketController {
         String userEmail = webSokcetService.returnEmail(username);
         List<String> file = webSokcetService.readGroupChattingFile(message);
 
+        System.out.println("userEmail: " + userEmail);
+        System.out.println("username: " + username);
+
         message.setNickName(username);
         message.setUseEmail(userEmail);
 
@@ -46,6 +49,8 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            response.setMessage(webSokcetService.readGroupChattingFile(message));
+            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
@@ -110,10 +115,13 @@ public class WebSocketController {
             filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
         }
         if (request.getNickName() != null) {
-            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+            filteredResponse.setNickName(request.getNickName());
+        }
+        if (request.getUseEmail() != null) {
+            filteredResponse.setUseEmail(request.getUseEmail());
         }
         if (request.getFriendMsg() != null) {
-            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+            filteredResponse.setFriendMsg(request.getFriendMsg());
         }
         filteredResponse.setState(request.getState());
         filteredResponse.setEndPoint(request.getEndPoint());
