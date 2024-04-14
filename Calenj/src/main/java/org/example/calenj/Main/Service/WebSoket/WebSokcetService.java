@@ -45,9 +45,9 @@ public class WebSokcetService {
         String nowTime = globalService.nowTime();
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getGroupMsg());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                message.getUseEmail() + " : " + message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
+                message.getNickName() + " : " + message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
                         " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n" :
-                message.getUseEmail() + " EndPoint" + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
+                message.getNickName() + "EndPoint" + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
 
         // 파일을 저장한다.
         String uuid = message.getGroupMsg() != null ? message.getGroupMsg() : message.getFriendMsg();
@@ -65,7 +65,7 @@ public class WebSokcetService {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
-            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + " EndPoint") && !line.contains(message.getGroupMsg()))
+            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getNickName() + " EndPoint") && !line.contains(message.getGroupMsg()))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
                     .collect(Collectors.toList());
 
@@ -112,19 +112,30 @@ public class WebSokcetService {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
+            String contains1 = (message.getUseEmail() + "EndPoint");
+            System.out.println(contains1);
+
             List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + " EndPoint") && !line.contains(message.getGroupMsg()))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
-                    .toList();
+                    .collect(Collectors.toList());
+
+            Collections.reverse(previousLines);
+
+            System.out.println("previousLines : " + previousLines);
 
             if (previousLines.isEmpty()) {
+                System.out.println(0);
                 return 0;
             }
+            System.out.println(previousLines.size());
             return previousLines.size();
         } catch (IOException e) {
-            System.out.println("파일 읽기 실패");
+            System.out.println(0);
+            System.out.println("엔드포인트 파일 읽기 실패");
             return 0;
         }
     }
 }
+
 
 

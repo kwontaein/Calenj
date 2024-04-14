@@ -26,6 +26,7 @@ public class WebSocketController {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
         List<String> file = webSokcetService.readGroupChattingFile(message);
+        int setPoint = webSokcetService.countLinesUntilEndPoint(message);
 
         System.out.println("userEmail: " + userEmail);
         System.out.println("username: " + username);
@@ -35,13 +36,14 @@ public class WebSocketController {
 
         ChatMessageResponse response = filterNullFields(message);
         System.out.println(message);
+        System.out.println("setPoint : " + setPoint);
 
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 response.setMessage(file);
-                response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
+                response.setEndPoint(setPoint);
                 template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
