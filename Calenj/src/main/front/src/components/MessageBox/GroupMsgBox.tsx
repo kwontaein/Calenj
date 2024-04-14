@@ -26,10 +26,11 @@ const GroupMsgBox:React.FC<groupMsgProps> =({groupId,stomp,sendStompMsg,updateEn
     const sendMsg =()=>{
         if(content==='') return;
         sendStompMsg({target:'groupMsg', params:groupId, message:content})
+        updateEndpoint();
     }
     useEffect(()=>{
         if(stomp.params === groupId){
-
+        updateEndpoint();
         }
     },[stomp])
     return(
@@ -39,7 +40,7 @@ const GroupMsgBox:React.FC<groupMsgProps> =({groupId,stomp,sendStompMsg,updateEn
             </ScrollableDiv>
             <RowFlexBox>
                 <input type='text' onChange={(e : ChangeEvent<HTMLInputElement>)=>{setContent(e.target.value)}}></input>
-                <button onClick={updateEndpoint}>send</button>
+                <button onClick={sendMsg}>send</button>
             </RowFlexBox>
         </div>
     )
