@@ -9,7 +9,6 @@ import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,7 +36,7 @@ public class WebSokcetService {
 
     public String returnEmail(String nickName) {
         UserEntity userEntity = userRepository.findByNickname(nickName).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
-        return userEntity.getNickname();
+        return userEntity.getUserEmail();
     }
 
 
@@ -99,7 +98,7 @@ public class WebSokcetService {
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
                     .limit(50)
                     .collect(Collectors.toList());
-            
+
             Collections.reverse(previousLines);
             return previousLines;
         } catch (IOException e) {
@@ -108,8 +107,27 @@ public class WebSokcetService {
         }
     }
 
-    //엔드포인트부터의 알림 갯수 저장하는 메소드
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
+            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+
+            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + " EndPoint") && !line.contains(message.getGroupMsg()))
+                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
+                    .toList();
+
+            if (previousLines.isEmpty()) {
+                return 0;
+            }
+            return previousLines.size();
+        } catch (IOException e) {
+            System.out.println("파일 읽기 실패");
+            return 0;
+        }
+    }
+
+    //엔드포인트부터의 알림 갯수 저장하는 메소드
+    /*public int countLinesUntilEndPoint(ChatMessageRequest message) {
         File file = new File("C:\\chat\\chat" + message.getGroupMsg());
         int lineCount = 0;
         boolean endPointFound = false; // 엔드포인트를 찾았는지 여부를 나타내는 변수
@@ -140,7 +158,7 @@ public class WebSokcetService {
             System.out.println("파일 읽기 실패");
             return 0;
         }
-    }
+    }*/
 }
 
 
