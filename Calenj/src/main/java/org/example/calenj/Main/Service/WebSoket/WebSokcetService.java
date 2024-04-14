@@ -125,40 +125,6 @@ public class WebSokcetService {
             return 0;
         }
     }
-
-    //엔드포인트부터의 알림 갯수 저장하는 메소드
-    /*public int countLinesUntilEndPoint(ChatMessageRequest message) {
-        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
-        int lineCount = 0;
-        boolean endPointFound = false; // 엔드포인트를 찾았는지 여부를 나타내는 변수
-
-        // 파일 있는지 검사
-        if (!file.exists()) {
-            System.out.println("파일이 없어요");
-            return 0;
-        }
-
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
-            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
-
-            for (String line : lines) {
-                if (!endPointFound) {
-                    lineCount++;
-                } else {
-                    break;
-                }
-                if (line.contains(message.getNickName() + " EndPoint")) {
-                    endPointFound = true; // 엔드포인트를 찾았음을 표시
-                }
-            }
-            return lineCount;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일 읽기 실패");
-            return 0;
-        }
-    }*/
 }
 
 
