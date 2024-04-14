@@ -2,14 +2,19 @@ import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork,select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination,sendStompMsg,mapStateToStompProps} from "./StompReducer"
+import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination} from "./StompReducer"
 import {UPDATE_APP_POSITION} from './AppPositionReducer';
 import { time } from "console";
 
-interface StompData {
-    [type: string]: string | number,
-    message: string,
-    state: number,
+
+type stateType = "ALARM"| "READ" | "SEND" | "ENDPOINT";
+
+interface AppData{
+    [type:string] :string|number,
+    state:stateType,
+}
+interface StompData extends  AppData{
+    message:string;
 }
 
 
@@ -26,7 +31,7 @@ function* sendStomp(stompClient: CompatClient) {
         const data: StompData = {
             [target]: `${params}`, //groupMsg,friendMsg
             message: `${message}`,
-            state: 1, //0:endpoint 로드
+            state: "SEND", //0:endpoint 로드
         }
         const url = `/app/${target}`
         stompClient.publish({
@@ -36,16 +41,13 @@ function* sendStomp(stompClient: CompatClient) {
     }
 }
 
-interface AppData{
-    [type:string] :string|number,
-    state:number
-}
+
 
 //endPoint Update를 위한 url위치에 기반한 위치 업데이트
 function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams,state} = yield payload;
+        const {target, messageParams, state} = yield payload;
         
         const data:AppData={
             [target] :`${messageParams}`,//메시지 주소
@@ -62,10 +64,9 @@ function* sendPublish(destination:Destination,stompClient:CompatClient){
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((params: (string | number)) => {
                     
-            const data: StompData = {
+            const data: AppData = {
                 [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
-                message: ``,
-                state: 0, //0:endpoint 로드
+                state: "ALARM", //0:endpoint 로드
             }
             const url = `/app/${subscribeDirection[index]}`
             stompClient.publish({
