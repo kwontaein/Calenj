@@ -19,15 +19,7 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
 
-    @MessageMapping("/online")
-//    @SendTo("/topic/online-users")
-    public String handleOnlineMessage(UserSubscribeResponse message) {
-        // 메시지를 처리하는 로직을 구현
-        System.out.println("Received message: " + message.getUserId());
-        return "Received message: " + message;
-    }
 
-    //그룹 채팅
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
@@ -49,22 +41,16 @@ public class WebSocketController {
             webSokcetService.saveChattingToFile(message);
             message.setMessage(username + " : " + message.getMessage());
             template.convertAndSend("/topic/groupMsg/" + message.getGroupMsg(), message);
+        } else { //그 외 state
+            //CheckEndPoint
+            message.setMessage(username + " : " + message.getMessage());
+            webSokcetService.saveChattingToFile(message);
         }
     }
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
     @MessageMapping("/personalTopic")
     public void personalTopic(AlarmRequest alarmRequest) throws Exception {
-        // 개인 토픽 DB 저장(?)
-        // EventEntity 저장 ?
-
-        // DB 저장? -> 웹소켓 (실시간 알림 가능하다) -> 알림을 어떻게 보내야 하는가
-        // 로그아웃시 -> 엔드포인트 저장
-
-        // 나만 로그인 ->
-        // 나빼고 로그인 ->
-        // 아무도 안함 ->
-        // 다 함 ->
         System.out.println("alarmDTO : " + alarmRequest);
         System.out.println("/topic/personalTopic/" + alarmRequest.getPersonalTopic());
         template.convertAndSend("/topic/personalTopic/" + alarmRequest.getPersonalTopic(), alarmRequest);

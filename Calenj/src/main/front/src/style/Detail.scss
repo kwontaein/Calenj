@@ -26,6 +26,7 @@
   margin-left: 0.25vw;
 }
 
+//투표한 리스트를 보여주는 버튼
 #viewVoter{
   width: 7px;
   height: 7px;
@@ -49,6 +50,16 @@
   margin-inline: 3vw;
   padding: 2vw;
   margin-Top: 20px;
+}
+
+#voteMe{
+  border-radius: 50px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 550;
+  font-size: 10px;
+  padding: 3px;
+  margin-top: 1px;
 }
 
 .checkbox  {
