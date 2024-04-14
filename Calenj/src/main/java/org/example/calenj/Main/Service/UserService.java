@@ -152,6 +152,7 @@ public class UserService {
         String userEmail = userDetails.getUsername();
         List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
         List<FriendResponse> friendResponse = friendRepository.findFriendListById(userEmail).orElse(null);
+        System.out.println(friendResponse);
         return new UserSubscribeResponse(friendResponse, groupResponse, userEmail);
     }
 

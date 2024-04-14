@@ -52,6 +52,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const groupInfo = {...location.state};
     const id = useId();
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
 
     //그룹 디테일 불러오기
@@ -81,11 +82,21 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     });
 
     const sendMsg = () => {
-        let megContent = '테스트 메시지입니다.';
-        if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state: 1})
+        if (message != null) {
+            console.log(message)
+            // const processedMessage = message.replace(/\n/g, '\\a'); // 개행 처리
+            // console.log(processedMessage);
+            if (groupDetailState.data) {
+                sendStompMsg({
+                    target: 'groupMsg',
+                    params: groupDetailState.data.groupId,
+                    message: message,
+                    state: 1
+                })
+            }
+        } else {
+            window.alert("메세지를 입력하세요")
         }
-
     }
 
     useEffect(() => {
@@ -141,10 +152,12 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
                             ))}
                         </ul>
                     </div>
+                    <textarea rows={5} placeholder='채팅 입력'
+                              onChange={(e) => setMessage(e.target.value)}></textarea>
                     <div onClick={() => {
                         sendMsg()
                     }}>
-                        타겟설정
+                        메세지 전송
                     </div>
                     <hr/>
                     <div>
