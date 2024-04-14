@@ -9,15 +9,8 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import MessageDisplay from "../../store/module/MessageDispay";
-import {
-    DispatchStompProps,
-    StompData,
-    mapDispatchToStompProps,
-    mapStateToStompProps, updateDestination, updateOnline
-} from '../../store/module/StompReducer';
-import {RootState} from "../../store/store";
-
+import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
+import GroupMsgBox from './../MessageBox/GroupMsgBox';
 
 interface Details {
     groupId: number;
@@ -36,18 +29,13 @@ interface Members {
 }
 
 
-interface Message {
-    from: string;
-    message: string;
-}
-
 const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
 /* console = window.console || {};  //콘솔 출력 막는 코드.근데 전체 다 막는거라 걍 배포할때 써야할듯
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, receivedStompMsg}) => {
+const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
@@ -81,26 +69,14 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    const sendMsg = () => {
-        let megContent='아니 이게 맞음? \\n 흠';
-        if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
+
+
+    useEffect(()=>{
+        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:2});
+        return ()=>{
+            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:2});
         }
-
-    }
-
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            let megContent='아니 이게 맞음? \\n 흠';
-            if (groupDetailState.data) {
-                sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent, state:1})
-            }
-        };
-    
-        return () => {
-            handleBeforeUnload();
-        };
-    }, [groupDetailState.isLoading]);
+    },[])
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -119,6 +95,17 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
                 status = '오프라인';
         }
         return status
+    }
+
+    const endPointRef = useRef<NodeJS.Timeout | undefined>();
+    
+    const updateEndpoint =()=>{
+        if(endPointRef.current!=undefined){
+            clearTimeout(endPointRef.current)
+        }
+        endPointRef.current = setTimeout(()=>{
+            console.log('ㅎㅇ')
+        },2000)
     }
 
     return (
@@ -142,18 +129,7 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
                             ))}
                         </ul>
                     </div>
-                    <div onClick={() => {
-                        sendMsg()
-                    }}>
-                        타겟설정
-                    </div>
-                    <hr/>
-                    <div>
-                        <MessageDisplay
-                            receivedStompMsg={receivedStompMsg}
-                            groupId={groupDetailState.data.groupId}
-                        />
-                    </div>
+                    <GroupMsgBox groupId={groupInfo.groupId} updateEndpoint={updateEndpoint}/>
                     <hr/>
                     <div>
                         <Notice/>
@@ -165,4 +141,4 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     );
 }
 
-export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupDetail);
+export default connect(null, mapDispatchToAppProps)(GroupDetail);

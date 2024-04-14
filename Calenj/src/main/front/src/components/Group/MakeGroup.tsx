@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
 import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
-import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/MessageReducer'
+import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
 import {connect} from "react-redux";
 import {QUERY_COOKIE_KEY} from '../../App'
 interface ModalProps {
@@ -12,7 +12,7 @@ interface ModalProps {
 
 
 //단순 그룹 생성을 위한 컴포넌트
-const MakeGroup: React.FC<ModalProps&DispatchAppProps> = ({onClose,queryState,updateAppDirect}) => {
+const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
     const [groupTitle, setGroupTitle] = useState<string>("");
     const queryClient = useQueryClient();
 
@@ -59,4 +59,4 @@ const MakeGroup: React.FC<ModalProps&DispatchAppProps> = ({onClose,queryState,up
     );
 }
 
-export default connect(null,mapDispatchToAppProps) (MakeGroup);
+export default MakeGroup;

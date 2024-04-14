@@ -34,7 +34,6 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
     const getGroupList = async (): Promise<GroupList[] | null> => {
         try {
             const response = await axios.get('/api/groupList');
-            console.log('그룹 목록을 불러옵니다.');
             const data = response.data as GroupList[];
             const dataSort = data.sort((a, b) => {
                 return (Number(b.groupCreated) - Number(a.groupCreated));
