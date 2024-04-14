@@ -46,8 +46,7 @@ function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
         const {target, messageParams,state} = yield payload;
-
-        console.log(payload);
+        
         const data:AppData={
             [target] :`${messageParams}`,//메시지 주소
             state: state,
@@ -59,25 +58,23 @@ function* sendAppPosition(stompClient: CompatClient){
 
 
 function* sendPublish(destination:Destination,stompClient:CompatClient){
-    let isRunning = true;
-    while(isRunning){
-            destination.map((sub: (string | number)[], index: number) => {
-                sub.map((params: (string | number)) => {
+
+    destination.map((sub: (string | number)[], index: number) => {
+        sub.map((params: (string | number)) => {
                     
-                    const data: StompData = {
-                        [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
-                        message: ``,
-                        state: 0, //0:endpoint 로드
-                    }
-                    const url = `/app/${subscribeDirection[index]}`
-                    stompClient.publish({
-                        destination: `${url}`,
-                        body: JSON.stringify(data),
-                    })
-                })
+            const data: StompData = {
+                [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
+                message: ``,
+                state: 0, //0:endpoint 로드
+            }
+            const url = `/app/${subscribeDirection[index]}`
+            stompClient.publish({
+                destination: `${url}`,
+                body: JSON.stringify(data),
             })
-            isRunning = false
-    }
+        })
+    })
+
 } 
 
 

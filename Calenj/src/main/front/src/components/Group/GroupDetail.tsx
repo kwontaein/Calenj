@@ -9,10 +9,8 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import MessageDisplay from "../../store/module/MessageDispay";
 import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
-import {RootState} from "../../store/store";
-
+import GroupMsgBox from './../MessageBox/GroupMsgBox';
 
 interface Details {
     groupId: number;
@@ -71,12 +69,6 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    // const sendMsg = () => {
-    //     let megContent='아니 이게 맞음? \\n 흠';
-    //     if (groupDetailState.data) {
-    //         sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: megContent})
-    //     }
-    // }
 
 
     useEffect(()=>{
@@ -105,6 +97,17 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         return status
     }
 
+    const endPointRef = useRef<NodeJS.Timeout | undefined>();
+    
+    const updateEndpoint =()=>{
+        if(endPointRef.current!=undefined){
+            clearTimeout(endPointRef.current)
+        }
+        endPointRef.current = setTimeout(()=>{
+            console.log('ㅎㅇ')
+        },2000)
+    }
+
     return (
         <div>
             {groupDetailState.isLoading && <div>Loading...</div>}
@@ -126,18 +129,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                             ))}
                         </ul>
                     </div>
-                    {/* <div onClick={() => {
-                        // sendMsg()
-                    }}>
-                        타겟설정
-                    </div> */}
-                    <hr/>
-                    <div>
-                        {/* <MessageDisplay
-                            receivedStompMsg={receivedStompMsg}
-                            groupId={groupDetailState.data.groupId}
-                        /> */}
-                    </div>
+                    <GroupMsgBox groupId={groupInfo.groupId} updateEndpoint={updateEndpoint}/>
                     <hr/>
                     <div>
                         <Notice/>
