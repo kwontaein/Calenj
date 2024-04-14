@@ -43,7 +43,7 @@ public class WebSocketController {
         System.out.println(file);
 
         //알림 갯수 반환
-        if (message.getState() == 0) {
+        if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 response.setMessage(file);
@@ -54,11 +54,12 @@ public class WebSocketController {
                 e.printStackTrace();
             }
             // State가 1이라면 일반 메시지
-        } else if (message.getState() == 1) {
+        } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+        } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             //template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             //2라면 나갈 때 엔드포인트 설정
-        } else if (message.getState() == 2) {
+        } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
         }
@@ -85,7 +86,7 @@ public class WebSocketController {
         response.setMessage(Collections.singletonList(username + message.getMessage()));
 
         //알림 갯수 반환
-        if (message.getState() == 0) {
+        if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 response.setMessage(file);
@@ -96,15 +97,15 @@ public class WebSocketController {
                 e.printStackTrace();
             }
             // State가 1이라면 일반 메시지
-        } else if (message.getState() == 1) {
+        } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+        } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             //template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             //2라면 나갈 때 엔드포인트 설정
-        } else if (message.getState() == 2) {
+        } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
         }
-
 
     }
 

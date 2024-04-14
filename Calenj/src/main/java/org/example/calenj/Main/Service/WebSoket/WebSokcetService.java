@@ -36,8 +36,7 @@ public class WebSokcetService {
         UUID messageUUid = UUID.randomUUID();
 
         message.setMessage(message.getMessage().replace("\n", "\\lineChange"));
-
-        if (message.getState() == 1) {
+        if (message.getState() == ChatMessageRequest.fileType.SEND) {
             msg = message.getNickName() + " : " + message.getMessage() + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
         } else {
             msg = message.getNickName() + " " + message.getMessage() + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
