@@ -10,12 +10,12 @@ import java.util.stream.Stream;
 
 @Data
 public class ChatMessageRequest {
+    private String useEmail;
     private fileType state;
     private String groupMsg;
     private String friendMsg;
     private String nickName;
     private String message;
-
     private int endPoint;
 
     @Getter

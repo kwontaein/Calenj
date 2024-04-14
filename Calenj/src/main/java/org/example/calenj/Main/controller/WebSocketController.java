@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Request.Chat.AlarmRequest;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
-import org.example.calenj.Main.DTO.Response.User.UserSubscribeResponse;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,26 +20,18 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
 
-    @MessageMapping("/online")
-//    @SendTo("/topic/online-users")
-    public String handleOnlineMessage(UserSubscribeResponse message) {
-        // 메시지를 처리하는 로직을 구현
-        System.out.println("Received message: " + message.getUserId());
-        return "Received message: " + message;
-    }
-
-    //그룹 채팅
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
+        String userEmail = webSokcetService.returnEmail(username);
         List<String> file = webSokcetService.readGroupChattingFile(message);
 
         message.setNickName(username);
-        ChatMessageResponse response = filterNullFields(message);
+        message.setUseEmail(userEmail);
 
+        ChatMessageResponse response = filterNullFields(message);
         System.out.println(message);
-        System.out.println(file);
 
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
@@ -57,7 +48,7 @@ public class WebSocketController {
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
-            //template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
