@@ -10,6 +10,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class WebSocketController {
@@ -17,36 +20,38 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
 
-   /* //나간 위치를 받기 위한 정보
-    @MessageMapping("/checkEndPoint")
-    public void checkEndPoint(ChatMessageRequest message) throws Exception {
-        //파일에 나간 위치 저장
-    }*/
-
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
-        String file = webSokcetService.readChattingFile(message);
-        if (message.getState() == 0) {
+        String userEmail = webSokcetService.returnEmail(username);
+        List<String> file = webSokcetService.readGroupChattingFile(message);
+
+        message.setNickName(username);
+        message.setUseEmail(userEmail);
+
+        ChatMessageResponse response = filterNullFields(message);
+        System.out.println(message);
+
+        //알림 갯수 반환
+        if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
-                message.setNickName(username);
-                message.setMessage(username + " 님이 접속하셨습니다");
-                webSokcetService.saveChattingToFile(message);
-                message.setMessage(file);
-                template.convertAndSend("/topic/groupMsg/" + message.getGroupMsg(), message);
+                response.setMessage(file);
+                response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
+                template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
-            }    // State가 1이라면 일반 메시지
-        } else if (message.getState() == 1) {
+            }
+            // State가 1이라면 일반 메시지
+        } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+        } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
-            message.setMessage(username + " : " + message.getMessage());
-            template.convertAndSend("/topic/groupMsg/" + message.getGroupMsg(), message);
-        } else { //그 외 state
-            //CheckEndPoint
-            message.setMessage(username + " : " + message.getMessage());
+            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+            //2라면 나갈 때 엔드포인트 설정
+        } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
+            //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
         }
     }
@@ -61,11 +66,58 @@ public class WebSocketController {
 
     //친구에게 알림 보내기
     @MessageMapping("/friendMsg")
-    public void friendMsg(Authentication authentication, ChatMessageResponse message) throws Exception {
+    public void friendMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
+
         String username = webSokcetService.returnNickname(authentication);
-        message.setMessage(username + message.getMessage());
         System.out.println(message.getMessage());
-        template.convertAndSend("/topic/friendMsg/" + message.getFriendMsg(), message);
+        List<String> file = webSokcetService.readGroupChattingFile(message);
+
+        ChatMessageResponse response = filterNullFields(message);
+        response.setNickName(username);
+        response.setMessage(Collections.singletonList(username + message.getMessage()));
+
+        //알림 갯수 반환
+        if (message.getState() == ChatMessageRequest.fileType.ALARM) {
+            try {
+                // 파일로부터 채팅 내용을 읽어와서 보내기
+                response.setMessage(file);
+                response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
+                template.convertAndSend("/topic/friendMsg/" + message.getFriendMsg(), message);
+            } catch (Throwable e) {
+                // 에러가 발생할 경우.
+                e.printStackTrace();
+            }
+            // State가 1이라면 일반 메시지
+        } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+        } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
+            webSokcetService.saveChattingToFile(message);
+            //template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+            //2라면 나갈 때 엔드포인트 설정
+        } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
+            //파일에 엔드포인트 저장
+            webSokcetService.saveChattingToFile(message);
+        }
+
     }
 
+    // null이 아닌 필드만 포함시키는 메소드
+    private ChatMessageResponse filterNullFields(ChatMessageRequest request) {
+        ChatMessageResponse filteredResponse = new ChatMessageResponse();
+        if (request.getGroupMsg() != null) {
+            filteredResponse.setGroupMsg(request.getGroupMsg());
+        }
+        if (request.getMessage() != null) {
+            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+        }
+        if (request.getNickName() != null) {
+            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+        }
+        if (request.getFriendMsg() != null) {
+            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+        }
+        filteredResponse.setState(request.getState());
+        filteredResponse.setEndPoint(request.getEndPoint());
+        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
+        return filteredResponse;
+    }
 }

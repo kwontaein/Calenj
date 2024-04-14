@@ -6,7 +6,7 @@ import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
 import StompReducer from './module/StompReducer';
-import MessageReducer from './module/MessageReducer'
+import AppPositionReducer from './module/AppPositionReducer'
 
 
 
@@ -25,7 +25,7 @@ function* rootSaga() {
 }
 
 //여려 reducer를 묶는용 (dispatch함수 X)
-const rootReducer = combineReducers({stomp: StompReducer,app:MessageReducer, emailValidation: emailValidationReducer});
+const rootReducer = combineReducers({stomp: StompReducer,app:AppPositionReducer, emailValidation: emailValidationReducer});
 
 
 // 사가 미들웨어 생성
@@ -40,19 +40,18 @@ const store = configureStore({
 export const sagaTask =sagaMiddleware.run(rootSaga);
 
 export function sagaMutation(login:boolean){
-  if(login){
-    if(!sagaTask.isRunning()){
-      sagaMiddleware.run(rootSaga)
-      console.log("Saga재시작")
-    }
+  if(!login) return;
+
+  if(!sagaTask.isRunning()){
+    sagaMiddleware.run(rootSaga)
   }else{
-    if(sagaTask.isRunning()){
-      sagaTask.cancel();
-    }
+    sagaTask.cancel();
+    sagaMiddleware.run(rootSaga)
   }
-  
- 
+  console.log("Saga재시작")
+
 }
+
 export default store;
 
 //Redux를 사용하기 위한 type들, 유틸리티 타입을 정의할 때 사용

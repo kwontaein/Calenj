@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByUserEmail(@Param("user_email") String username);
 
+    Optional<UserEntity> findByNickname(@Param("nickName") String nickName);
+
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
 
     //refreshToken 저장 쿼리
@@ -33,4 +35,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE User u SET isOnline =:isOnline WHERE user_email = :email", nativeQuery = true)
     void updateIsOnline(@Param("email") String email, @Param("isOnline") String isOnline);
+
 }

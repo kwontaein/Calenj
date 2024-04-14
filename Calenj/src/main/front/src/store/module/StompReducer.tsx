@@ -13,6 +13,16 @@ interface Message {
     message: string;
 }
 
+//초기상태 정의
+export interface StompState {
+    destination: Destination;
+    target: string;
+    params: string | number;
+    message?: string;
+    isOnline: boolean;
+}
+
+
 export interface StompData {
     stomp: StompState
 }
@@ -27,11 +37,7 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
-    sendStompMsg: (payload: {
-        target: string,
-        params: string | number,
-        message: string
-    }) => dispatch(sendStompMsg(payload)),
+    sendStompMsg: (payload: {target: string, params: string | number, message: string}) => dispatch(sendStompMsg(payload)),
     receivedStompMsg: (payload: { message: Message }) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
 });
@@ -52,7 +58,7 @@ export const updateDestination = (payload: { destination: Destination }) => ({
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, params: string | number, message: string }) => ({
+export const sendStompMsg = (payload: { target: string, params: string | number, message: string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -72,18 +78,7 @@ export const updateOnline = (payload: { isOnline: boolean }) => ({
 
 export interface Destination {
     map: any;
-
     [index: number]: (string | number)[];
-}
-
-
-//초기상태 정의
-export interface StompState {
-    destination: Destination;
-    target: string;
-    params: string | number;
-    message: string;
-    isOnline: boolean;
 }
 
 
@@ -109,7 +104,7 @@ const StompReducer = handleActions(
             ...state,
             target: action.payload.target,
             params: action.payload.params,
-            message: action.payload.message
+            message: action.payload.message,
         }),
         [RECEIVED_STOMP_MSG]: (state, action) => ({
             ...state,
