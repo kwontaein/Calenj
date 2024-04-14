@@ -14,6 +14,7 @@ export function loginFilter(error: string): void {
 }
 
 export function stateFilter(error: string): void {
+    console.log(error)
     if (error === "302") {
         window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
         document.location.replace('/sign')

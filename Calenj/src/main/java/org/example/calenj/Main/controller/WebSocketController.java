@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Request.Chat.AlarmRequest;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
+import org.example.calenj.Main.DTO.Response.User.UserSubscribeResponse;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +19,6 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
 
-   /* //나간 위치를 받기 위한 정보
-    @MessageMapping("/checkEndPoint")
-    public void checkEndPoint(ChatMessageRequest message) throws Exception {
-        //파일에 나간 위치 저장
-    }*/
 
     //그룹 채팅
     @MessageMapping("/groupMsg")

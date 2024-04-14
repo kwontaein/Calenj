@@ -1,9 +1,8 @@
-import React, {useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
-import Chatting from "../../Test/Chatting";
 import Notice from './Notice/Notice'
 import {ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
@@ -54,6 +53,12 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
     const id = useId();
 
 
+    
+    useEffect(()=>{
+        console.log('Route changed to:', location.pathname);
+        },[location.pathname])
+
+
     // 컴포넌트가 마운트될 때 Stomp 클라이언트 초기화 및 설정
     //컴포넌트가 랜더링 전에 다른 컴포넌트의 랜더링을 막음
     useLayoutEffect(() => {
@@ -89,9 +94,9 @@ const GroupDetail: React.FC<DispatchStompProps & StompData> = ({sendStompMsg, re
 
     const sendMsg = () => {
         if (groupDetailState.data) {
-            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: '강승재 븅진 ㅋㅋ'})
+            sendStompMsg({target: 'groupMsg', params: groupDetailState.data.groupId, message: '권태인 븅진 ㅋㅋ'})
         }
-        console.log('ㅎㅇ')
+
     }
 
 
