@@ -18,7 +18,7 @@ export interface StompState {
     destination: Destination;
     target: string;
     params: string | number;
-    message: string;
+    message?: string;
     isOnline: boolean;
 }
 
