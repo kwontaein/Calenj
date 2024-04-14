@@ -72,9 +72,9 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
 
 
     useEffect(()=>{
-        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+        // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
         return ()=>{
-            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+            // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
         }
     },[])
 

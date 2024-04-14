@@ -6,6 +6,8 @@ import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {ListView, MiniText} from '../../style/FormStyle'
 import {sagaTask} from '../../store/store'
+import {endPointMap} from '../../store/module/StompMiddleware'
+import {RowFlexBox} from '../../style/FormStyle'
 
 interface GroupList {
     groupId: number | string;
@@ -65,6 +67,8 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
         setShowMakeGroup(false);
     };
 
+    
+
 
     return (
 
@@ -79,7 +83,10 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
                         {groupListState.data.map((group) => (
                             <ListView key={group.groupId}
                                       onClick={() => redirectDetail(group.groupId as number)}>
+                                <RowFlexBox style={{width:'90vw'}}>
                                 {group.groupTitle}
+                                <div style={{marginLeft:'auto'}}>{endPointMap.get(group.groupId) && endPointMap.get(group.groupId)}</div>
+                                </RowFlexBox>
                             </ListView>
                         ))}
                     </ul>

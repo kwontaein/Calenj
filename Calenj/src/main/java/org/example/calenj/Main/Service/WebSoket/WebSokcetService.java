@@ -37,7 +37,7 @@ public class WebSokcetService {
 
     public String returnEmail(String nickName) {
         UserEntity userEntity = userRepository.findByNickname(nickName).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
-        return userEntity.getNickname();
+        return userEntity.getUserEmail();
     }
 
 

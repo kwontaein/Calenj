@@ -20,6 +20,7 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
 
+
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
@@ -37,7 +38,6 @@ public class WebSocketController {
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
-                response.setMessage(file);
                 response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
                 template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             } catch (Throwable e) {
@@ -48,6 +48,7 @@ public class WebSocketController {
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
+
             template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
@@ -101,6 +102,7 @@ public class WebSocketController {
     }
 
     // null이 아닌 필드만 포함시키는 메소드
+    // null이 아닌 필드만 포함시키는 메소드
     private ChatMessageResponse filterNullFields(ChatMessageRequest request) {
         ChatMessageResponse filteredResponse = new ChatMessageResponse();
         if (request.getGroupMsg() != null) {
@@ -110,10 +112,13 @@ public class WebSocketController {
             filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
         }
         if (request.getNickName() != null) {
-            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+            filteredResponse.setNickName(request.getNickName());
+        }
+        if (request.getUseEmail() != null) {
+            filteredResponse.setUseEmail(request.getUseEmail());
         }
         if (request.getFriendMsg() != null) {
-            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
+            filteredResponse.setFriendMsg(request.getFriendMsg());
         }
         filteredResponse.setState(request.getState());
         filteredResponse.setEndPoint(request.getEndPoint());
