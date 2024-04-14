@@ -109,8 +109,28 @@ function* startStomp(destination: Destination): any {
         if (timeout) isRunning = false;
 
         console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
-        yield put(receivedStompMsg(message)); //action dipatch
-    }
+        const messageData =yield put(receivedStompMsg(message)); //action dipatch
+        
+
+        // && (localStorage.getItem('userId')!== messageData.payload.useEmail)
+        if(messageData.payload.state ==="SEND"&& (localStorage.getItem('userId')!== messageData.payload.useEmail)){
+            if(messageData.payload.hasOwnProperty('groupMsg')){
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)+1)
+            }else if(messageData.payload.hasOwnProperty('friendMsg')){
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)+1)
+
+            }
+        }else if(messageData.payload.state ==="ALARM"){
+            if(messageData.payload.hasOwnProperty('groupMsg')){
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint-1))
+            }else if(messageData.payload.hasOwnProperty('friendMsg')){
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint-1))
+            }
+        }
+        
+     
+        
+    }  
 }
 
 
