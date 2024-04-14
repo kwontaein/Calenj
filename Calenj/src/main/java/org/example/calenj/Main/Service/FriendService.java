@@ -5,13 +5,18 @@ import org.example.calenj.Main.DTO.Response.User.EventResponse;
 import org.example.calenj.Main.DTO.Response.User.FriendResponse;
 import org.example.calenj.Main.Repository.EventRepository;
 import org.example.calenj.Main.Repository.FriendRepository;
+import org.example.calenj.Main.Repository.MessageEventRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.EventEntity;
 import org.example.calenj.Main.domain.FriendEntity;
+import org.example.calenj.Main.domain.MessageEventEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +30,8 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final MessageEventRepository messageEventRepository;
+
 
     public List<FriendResponse> friendList() {
         return friendRepository.findFriendListById(globalService.extractFromSecurityContext().getUsername()).orElseThrow(() -> new RuntimeException("친구 목록이 비었습니다"));
@@ -33,6 +40,9 @@ public class FriendService {
     public String requestFriend(String friendUserId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
+
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         if (friendUserId.equals(userDetails.getUsername())) {
             System.out.println("나에게 친구 추가는 불가능합니다.");
             return "나에게 친구 추가는 불가능합니다.";
@@ -80,6 +90,28 @@ public class FriendService {
             friendRepository.save(friendEntity);
             eventRepository.updateEventFriendRequest(friendUserId, 1);
 
+
+            //:TODO 확인필요
+            // 파일을 저장한다.
+            try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
+                String nowTime =globalService.nowTime();
+                stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
+                stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
+                stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+            MessageEventEntity messageEventEntity = MessageEventEntity.builder()
+                    .userId(userEntity)
+                    .paramsId(friendEntity.getFriendId())
+                    .paramsType(MessageEventEntity.ParmasType.FRIEND)
+                    .endPoiont(0)
+                    .build();
+
+            messageEventRepository.save(messageEventEntity);
+
             return "상대가 보낸 요청이 이미 있기에, 친구 추가합니다.";
         } else {
             //동일한 요청 정보가 있다면? -> 저장x
@@ -117,6 +149,9 @@ public class FriendService {
     public String responseFriend(String friendUserId, int isAccept) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
         //로그인된 유저 정보
         UserEntity ownUser = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
@@ -153,6 +188,28 @@ public class FriendService {
             friendRepository.save(friendEntity);
             //이벤트 상태 수락으로 변경
             eventRepository.updateEventFriendRequest(friendUserId, 1);
+
+            //:TODO 확인필요
+            // 파일을 저장한다.
+            try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
+                String nowTime =globalService.nowTime();
+                stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
+                stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
+                stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+            MessageEventEntity messageEventEntity = MessageEventEntity.builder()
+                    .userId(userEntity)
+                    .paramsId(friendEntity.getFriendId())
+                    .paramsType(MessageEventEntity.ParmasType.FRIEND)
+                    .endPoiont(0)
+                    .build();
+
+            messageEventRepository.save(messageEventEntity);
+
             return "친구 요청을 수락했습니다.";
         }
     }

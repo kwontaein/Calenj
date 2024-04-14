@@ -14,6 +14,7 @@ export function loginFilter(error: string): void {
 }
 
 export function stateFilter(error: string): void {
+    console.log(error)
     if (error === "302") {
         window.alert("모든 토큰이 만료되었습니다. 재로그인하세요.")
         document.location.replace('/sign')
@@ -29,6 +30,7 @@ export function stateFilter(error: string): void {
 
 
 export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () => void, refetchQuery?:UseQueryResult) {
+    let result;
     if (typeof onConfirm !== "function") {
         return;
     }
@@ -40,16 +42,17 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
             onConfirm();
             setTimeout(()=>{
                 if(refetchQuery){
-                    console.log('refetch')
                     refetchQuery.refetch();
                 }
             },500)
-            
+            result=true;
         } else {
             onCancel(); //취소 누르면 실행
+            result=false;
         }
     };
-    return confrimAction();
+    confrimAction()
+    return result;
 }
 
 

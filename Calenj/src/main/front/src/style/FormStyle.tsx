@@ -126,7 +126,7 @@ export const MiniText = styled.div`
     font-size: 12px;
 `
 
-//isPick을 통해 항목을 선택했는지 체크
+//isPick을 통해 투표 항목을 선택했는지 체크하고 ui변경
 export const TrasformButton = styled.button<VoteProps>`
     
     width: ${props=>props.$isCreater? '43.5vw': '88vw'};
@@ -151,6 +151,7 @@ export const TrasformButton = styled.button<VoteProps>`
    
 `;
 
+//투표에서 활용되는 div로 투표가 만료되면 투명도를 저절
 export const TransVoteContainer = styled.div<VoteAble>`
     margin-top: 20px;
     
@@ -161,3 +162,8 @@ export const TransVoteContainer = styled.div<VoteAble>`
     `}
 `;
 
+
+export const ScrollableDiv = styled.div`
+  overflow: auto; /* 내용이 넘칠 경우 스크롤을 추가함 */
+  max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
+`;
