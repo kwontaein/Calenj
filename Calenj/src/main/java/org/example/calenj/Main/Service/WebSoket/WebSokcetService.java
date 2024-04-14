@@ -10,9 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,72 +32,81 @@ public class WebSokcetService {
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
         String nowTime = globalService.nowTime();
-        String msg = " " + message.getNickName() + " : " + message.getMessage() + "\n";
+        String msg;
+        UUID messageUUid = UUID.randomUUID();
 
+        message.setMessage(message.getMessage().replace("\n", "\\lineChange"));
+        if (message.getState() == ChatMessageRequest.fileType.SEND) {
+            msg = message.getNickName() + " : " + message.getMessage() + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
+        } else {
+            msg = message.getNickName() + " " + message.getMessage() + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
+        }
+
+        String uuid = null;
         // 파일을 저장한다.
-        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getGroupMsg(), true)) {
-            stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+        if (message.getGroupMsg() != null) {
+            uuid = message.getGroupMsg();
+        } else if (message.getFriendMsg() != null) {
+            uuid = message.getFriendMsg();
+        }
+        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + uuid, true)) {
             stream.write(msg.getBytes(StandardCharsets.UTF_8));
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
-    //파일 메시지 Size를 반환
-    public int getChattingFileSize(String paramsId) throws IOException {
-        File file = new File("C:\\chat\\chat" + paramsId);
-
-        // 파일 있는지 검사
-        if (!file.exists()) {
-            System.out.println("파일이 없어요");
-            return 0;
-        }
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            int newlineCount = 0;
-            String line;
-            while ((line = br.readLine()) != null) {
-                newlineCount++;
-            }
-            return newlineCount;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일 읽기 실패");
-            throw e; // IOException 예외를 호출한 곳으로 던짐
-        }
-    }
-
-    public String readGroupChattingFile(ChatMessageRequest message) {
-        System.out.println("파일 읽기 : " + message.getGroupMsg());
-        // d드라이브의 chat 폴더의 chat 파일
+    //엔드포인트부터의 채팅 반환
+    public List<String> readGroupChattingFile(ChatMessageRequest message) {
         File file = new File("C:\\chat\\chat" + message.getGroupMsg());
+        int lineCount = 0;
+        boolean endPointFound = false; // 엔드포인트를 찾았는지 여부를 나타내는 변수
+
         // 파일 있는지 검사
         if (!file.exists()) {
             System.out.println("파일이 없어요");
-            return "";
+            return null;
         }
 
-
-        //TODO 2차원배열로 짤라서 최대 행 갯수가 넘어가면 다음 으로 넘어가게
-        //TODO 안읽은데 표시까지 전부 불러오는거 1개
-        //그 위부터는 끊어서 무한스크롤
-        try (FileInputStream stream = new FileInputStream(file)) {
-
-            return new String(stream.readAllBytes());
-        } catch (Throwable e) {
-            e.printStackTrace();
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
+            List<String> previousLines = new ArrayList<>(); // 이전 50줄을 담을 리스트
+            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+            for (String line : lines) {
+                if (!endPointFound) {
+                    lineCount++;
+                    previousLines.add(line);
+                } else {
+                    break;
+                }
+                if (line.contains(message.getNickName() + " EndPoint")) {
+                    endPointFound = true; // 엔드포인트를 찾았음을 표시
+                }
+            }
+            Collections.reverse(previousLines);
+            List<String> fiftyLines;
+            if (previousLines.size() >= 50) {
+                fiftyLines = new ArrayList<>(previousLines.subList(0, 50));
+            } else {
+                fiftyLines = new ArrayList<>(previousLines);
+            }
+            return fiftyLines;
+        } catch (IOException e) {
             System.out.println("파일 읽기 실패");
-            return "";
+            return null;
         }
     }
 
     //엔드포인트까지 읽어오는 메소드
-    public String readChattingFile2(ChatMessageRequest message) {
-        File file = new File("E:\\chat\\chat" + message.getGroupMsg());
+    public String readChattingFileToEndPoint(ChatMessageRequest message) {
+        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
+
         // 파일 있는지 검사
         if (!file.exists()) {
             System.out.println("파일이 없어요");
             return "";
         }
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
@@ -112,7 +123,41 @@ public class WebSokcetService {
             return "";
         }
     }
+
     //엔드포인트부터의 알림 갯수 저장하는 메소드
+    public int countLinesUntilEndPoint(ChatMessageRequest message) {
+        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
+        int lineCount = 0;
+        boolean endPointFound = false; // 엔드포인트를 찾았는지 여부를 나타내는 변수
+
+        // 파일 있는지 검사
+        if (!file.exists()) {
+            System.out.println("파일이 없어요");
+            return 0;
+        }
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
+            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+
+            for (String line : lines) {
+                if (!endPointFound) {
+                    lineCount++;
+                } else {
+                    break;
+                }
+                if (line.contains(message.getNickName() + " EndPoint")) {
+                    endPointFound = true; // 엔드포인트를 찾았음을 표시
+                }
+            }
+            return lineCount;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("파일 읽기 실패");
+            return 0;
+        }
+    }
+
 
     //파일 불러오는 메소드
     public class ScrollableFileReader {
@@ -159,7 +204,6 @@ public class WebSokcetService {
                 currentPosition = randomAccessFile.getFilePointer(); // 현재 위치 갱신
                 linesRead++; // 읽은 라인 수 증가
             }
-
             return stringBuilder.toString(); // 읽은 라인들을 문자열로 반환
         }
 
