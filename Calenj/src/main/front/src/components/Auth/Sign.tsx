@@ -1,6 +1,6 @@
-import React, {useState,useEffect,useRef} from 'react';
-import axios, {AxiosResponse,AxiosError} from 'axios';
-import {stateFilter,loginFilter} from '../../stateFunc/actionFun'
+import React, {useState, useEffect, useRef} from 'react';
+import axios, {AxiosResponse, AxiosError} from 'axios';
+import {stateFilter, loginFilter} from '../../stateFunc/actionFun'
 import {Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
@@ -13,8 +13,6 @@ interface MyData {
     userEmail: string;
     userPassword: string;
 }
-
-
 
 
 const Sign: React.FC = () => {
@@ -41,9 +39,10 @@ const Sign: React.FC = () => {
                 document.location.replace("/");
 
             })
-                
+
             .catch(error => {
                 loginFilter(error.response?.data || "An unexpected error occurred");
+                stateFilter(error.response?.data || "An unexpected error occurred");
             })
     };
 
@@ -55,7 +54,7 @@ const Sign: React.FC = () => {
 
     return (
         <div>
-            <form onSubmit={login}> 
+            <form onSubmit={login}>
                 <div>id: <input ref={inputRef} onChange={(event) => {
                     SignHandeler("userEmail", event.target.value)
                 }}></input></div>

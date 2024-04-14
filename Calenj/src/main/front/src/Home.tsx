@@ -1,5 +1,5 @@
 import {QueryClient, useQueryClient} from '@tanstack/react-query';
-import React, {useLayoutEffect, useState, useRef} from 'react'
+import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
 import FriendList from "./components/Friends/FriendList";
@@ -17,6 +17,9 @@ const Home: React.FC = () => {
         }, 400)
     }, [])
 
+    useEffect(()=>{
+
+    })
 
     return (
 

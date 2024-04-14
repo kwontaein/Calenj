@@ -82,7 +82,6 @@ export interface Destination {
 }
 
 
-
 // Reducer-saga : 초기 State
 const initialState: StompState = {
     destination: [], // topic/app의 경로

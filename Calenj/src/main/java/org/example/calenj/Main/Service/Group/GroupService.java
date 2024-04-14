@@ -69,11 +69,9 @@ public class GroupService {
 
         group_userRepository.save(groupUserEntity);
 
-
-
         // 그룹 파일생성
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + groupUserEntity.getGroup().getGroupId(), true)) {
-            String nowTime =globalService.nowTime();
+            String nowTime = globalService.nowTime();
             stream.write(groupTitle.getBytes(StandardCharsets.UTF_8));
             stream.write("캘린룸, 생성일자 :".getBytes(StandardCharsets.UTF_8));
             stream.write((nowTime+"\n").getBytes(StandardCharsets.UTF_8));
@@ -125,7 +123,7 @@ public class GroupService {
     public void joinGroup(UUID groupId) {
         // 유저를 그룹에 추가하는 코드
         // SecurityContext 에서 유저 정보 추출하는 메소드
-         UserDetails userDetails = globalService.extractFromSecurityContext();
+        UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 

@@ -11,6 +11,7 @@ interface FriendList {
     nickName: string;
     chattingRoomId: number;
     friendAddDate: string;
+    ChattingRoomId: number;
 }
 
 export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
