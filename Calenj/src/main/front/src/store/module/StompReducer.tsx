@@ -20,7 +20,6 @@ export interface StompState {
     params: string | number;
     message: string;
     isOnline: boolean;
-    state : number;
 }
 
 
@@ -30,7 +29,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
-    sendStompMsg: (payload: { target: string, params: string | number, message: string, state: number }) => void;
+    sendStompMsg: (payload: { target: string, params: string | number, message: string }) => void;
     receivedStompMsg: (payload: { message: Message }) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
 }
@@ -38,12 +37,7 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
-    sendStompMsg: (payload: {
-        target: string,
-        params: string | number,
-        message: string,
-        state:number
-    }) => dispatch(sendStompMsg(payload)),
+    sendStompMsg: (payload: {target: string, params: string | number, message: string}) => dispatch(sendStompMsg(payload)),
     receivedStompMsg: (payload: { message: Message }) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
 });
@@ -64,7 +58,7 @@ export const updateDestination = (payload: { destination: Destination }) => ({
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, params: string | number, message: string ,state:number}) => ({
+export const sendStompMsg = (payload: { target: string, params: string | number, message: string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -95,7 +89,6 @@ const initialState: StompState = {
     params: '', // (sub/pub 시)식별하기 위한 값
     message: '', // 초기 message 상태
     isOnline: false,
-    state: 0,
 };
 
 
@@ -112,7 +105,6 @@ const StompReducer = handleActions(
             target: action.payload.target,
             params: action.payload.params,
             message: action.payload.message,
-            state: action.payload.state
         }),
         [RECEIVED_STOMP_MSG]: (state, action) => ({
             ...state,

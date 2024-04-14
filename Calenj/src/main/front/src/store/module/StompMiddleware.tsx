@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork,select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
 import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination,sendStompMsg,mapStateToStompProps} from "./StompReducer"
-import {UPDATE_APP_POSITION} from './MessageReducer';
+import {UPDATE_APP_POSITION} from './AppPositionReducer';
 import { time } from "console";
 
 interface StompData {
@@ -21,12 +21,12 @@ function* sendStomp(stompClient: CompatClient) {
 
     while (true) {
         const {payload} = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
-        const {params, target, message,state} = yield payload;
+        const {params, target, message} = yield payload;
 
         const data: StompData = {
             [target]: `${params}`, //groupMsg,friendMsg
             message: `${message}`,
-            state: state, //0:endpoint 로드
+            state: 1, //0:endpoint 로드
         }
         const url = `/app/${target}`
         stompClient.publish({
@@ -38,23 +38,44 @@ function* sendStomp(stompClient: CompatClient) {
 
 interface AppData{
     [type:string] :string|number,
+    state:number
 }
 
 //endPoint Update를 위한 url위치에 기반한 위치 업데이트
 function* sendAppPosition(stompClient: CompatClient){
     while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams} = yield payload;
-
-        console.log(payload);
+        const {target, messageParams,state} = yield payload;
+        
         const data:AppData={
             [target] :`${messageParams}`,//메시지 주소
+            state: state,
         }
         const url = `/app/${target}`
         stompClient.send(url,{}, JSON.stringify(data))
     }
 }
 
+
+function* sendPublish(destination:Destination,stompClient:CompatClient){
+
+    destination.map((sub: (string | number)[], index: number) => {
+        sub.map((params: (string | number)) => {
+                    
+            const data: StompData = {
+                [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
+                message: ``,
+                state: 0, //0:endpoint 로드
+            }
+            const url = `/app/${subscribeDirection[index]}`
+            stompClient.publish({
+                destination: `${url}`,
+                body: JSON.stringify(data),
+            })
+        })
+    })
+
+} 
 
 
 //제너레이터를 활용한 비동기식 처리
@@ -71,9 +92,10 @@ function* startStomp(destination: Destination): any {
     const stompClient = yield call(createStompConnection) //Stomp를 connect하는 함수, 성공 시 다음 명령 실행
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
-    const lastWriteTask = yield fork(sendStomp, stompClient) 
-    const positionTask = yield fork(sendAppPosition,stompClient)
-    
+    yield fork(sendStomp, stompClient) 
+    yield fork(sendAppPosition,stompClient)
+    yield fork(sendPublish,destination,stompClient)
+
     let isRunning = true;
 
     //put == dispatch랑 동일
@@ -87,10 +109,7 @@ function* startStomp(destination: Destination): any {
 
         console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
         yield put(receivedStompMsg(message)); //action dipatch
-
-
     }
-
 }
 
 

@@ -8,13 +8,8 @@ import VoteDetail from './components/Group/Vote/VoteDetail';
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
-import stompReducer, {
-    DispatchStompProps,
-    mapDispatchToStompProps,
-    StompData,
-    mapStateToStompProps
-} from './store/module/StompReducer';
+import React, {useEffect, useState } from 'react';
+import stompReducer, {DispatchStompProps, mapDispatchToStompProps, StompData, mapStateToStompProps} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
@@ -28,13 +23,12 @@ export const QUERY_COOKIE_KEY: string = 'cookie';
 
 interface SubScribe {
     groupId: number;
-    ChattingRoomId: number;
+    friendId: number;
 }
 
 
-export const endPointMap = new Map();
 
-const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, sendStompMsg, stomp}) => {
+const App: React.FC<DispatchStompProps&StompData> = ({updateDestination, updateOnline,sendStompMsg,stomp}) => {
     const queryClient = useQueryClient();
 
 
@@ -49,29 +43,27 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
             updateOnline({isOnline: false});
             queryClient.clear(); //캐시 삭제
         } else {
-
+           
             axios.get(`/api/subscribeCheck`)
                 .then((res) => {
                     let arr = res.data
                     let friendArr = Array.from(arr.friendList, (value: SubScribe) => {
-                        return value.ChattingRoomId;
+                        return value.friendId
                     })
                     let groupArr = Array.from(arr.groupList, (value: SubScribe) => {
                         return value.groupId;
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
-
+                    
                     updateDestination({destination: subScribe});
                     updateOnline({isOnline: true});
-                    
                 })
-                .catch(() => {
-                })
+                .catch(()=>{})
         }
         return response.data;
     }
 
-
+    
     function subScribeFilter(friendList: number[], groupList: number[], userId: string) {
         let parmasList = [];
         parmasList.push([userId]) //친구요청
