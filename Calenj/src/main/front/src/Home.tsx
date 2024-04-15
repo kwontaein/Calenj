@@ -9,14 +9,17 @@ const Home: React.FC = () => {
     const queryClient = useQueryClient();
     const [cookie, setCookie] = useState<boolean>(false);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         setTimeout(() => {
             setCookie(queryClient.getQueryData([QUERY_COOKIE_KEY]) as boolean);
             setLoding(true);
-        }, 2000)
-    },[])
+        }, 400)
+    }, [])
 
+    useEffect(()=>{
+
+    })
 
     return (
 

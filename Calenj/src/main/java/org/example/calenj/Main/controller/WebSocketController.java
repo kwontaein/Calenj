@@ -47,6 +47,7 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            response.setMessage(file);
             template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);

@@ -108,9 +108,10 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
-        console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
+        // console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
         const messageData =yield put(receivedStompMsg(message)); //action dipatch
 
+        console.log(messageData)
 
         // && (localStorage.getItem('userId')!== messageData.payload.useEmail)
         if(messageData.payload.state ==="SEND"&& (localStorage.getItem('userId')!== messageData.payload.useEmail)){
@@ -181,7 +182,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] == "groupMsg")
+                    if (subscribeDirection[index] === "groupMsg")
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })
