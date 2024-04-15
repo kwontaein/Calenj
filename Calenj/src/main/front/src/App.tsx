@@ -9,12 +9,7 @@ import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import stompReducer, {
-    DispatchStompProps,
-    mapDispatchToStompProps,
-    StompData,
-    mapStateToStompProps
-} from './store/module/StompReducer';
+import stompReducer, {DispatchStompProps,mapDispatchToStompProps,StompData,mapStateToStompProps} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
@@ -45,7 +40,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
-            queryClient.clear(); //캐시 삭제
         } else {
 
             axios.get(`/api/subscribeCheck`)
@@ -77,7 +71,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         return parmasList;
     }
 
-    //v5이후로 인자를 객체 형태로 전달해야함
+    // //v5이후로 인자를 객체 형태로 전달해야함
     const logState = useQuery<boolean, Error>({
         queryKey: [QUERY_COOKIE_KEY],
         queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)

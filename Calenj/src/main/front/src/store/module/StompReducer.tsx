@@ -10,11 +10,12 @@ export const SEND_STOMP_MSG = 'SEND_STOMP_MSG';
 export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 
 interface Message {
+    freindMsg:string;
+    groupMsg:string;
     message: string;
     nickname:string;
     userEmail:string;
     sendData:string;
-    
 }
 
 //초기상태 정의
