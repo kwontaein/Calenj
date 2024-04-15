@@ -24,21 +24,17 @@ public class WebSocketController {
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
-        List<String> file = webSokcetService.readGroupChattingFile(message);
-        int setPoint = webSokcetService.countLinesUntilEndPoint(message);
 
         message.setNickName(username);
         message.setUseEmail(userEmail);
 
         ChatMessageResponse response = filterNullFields(message);
-        System.out.println(message);
-        System.out.println("setPoint : " + setPoint);
 
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
-                response.setMessage(file);
+                int setPoint = webSokcetService.countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
             } catch (Throwable e) {
@@ -47,6 +43,7 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
@@ -65,24 +62,18 @@ public class WebSocketController {
     public void friendMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
-        List<String> file = webSokcetService.readGroupChattingFile(message);
-        int setPoint = webSokcetService.countLinesUntilEndPoint(message);
-
-        System.out.println("username : " + username);
-        System.out.println("userEmail : " + userEmail);
 
         message.setNickName(username);
         message.setUseEmail(userEmail);
 
         ChatMessageResponse response = filterNullFields(message);
 
-
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
-                response.setMessage(file);
-                response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
+                int setPoint = webSokcetService.countLinesUntilEndPoint(message);
+                response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUseEmail(), "/topic/friendMsg/" + response.getFriendMsg(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
@@ -90,16 +81,18 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            List<String> file = webSokcetService.readGroupChattingFile(message);
+            response.setMessage(file);
             template.convertAndSendToUser(response.getUseEmail(), "/topic/friendMsg/" + response.getFriendMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
+            response.setMessage(Collections.singletonList(message.getMessage()));
             template.convertAndSend("/topic/friendMsg/" + response.getFriendMsg(), response);
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
         }
-
     }
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)

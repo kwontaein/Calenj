@@ -39,8 +39,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [loading,setLoading] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
 
     //그룹 디테일 불러오기
@@ -70,16 +69,12 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-
-    useEffect(()=>{
-        setTimeout(()=>{
-            console.log('ㅎㅇ')
-            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
-        },1000)
-        return ()=>{
-            // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
-        }
-    },[])
+    useEffect(() => {
+        /*    updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+            return ()=>{
+                updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+            }*/
+    }, [])
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -101,7 +96,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     }
 
     const endPointRef = useRef<NodeJS.Timeout | undefined>();
-    
+
     const updateEndpoint =()=>{
         if(endPointRef.current!=undefined){
             clearTimeout(endPointRef.current)
