@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
 import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
+import {endPointMap} from '../../store/module/StompMiddleware';
 
 interface Details {
     groupId: number;
@@ -70,16 +71,15 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-
     useEffect(()=>{
         setTimeout(()=>{
-            console.log('ㅎㅇ')
             updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
         },1000)
         return ()=>{
             // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
         }
     },[])
+
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -108,7 +108,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         }
         endPointRef.current = setTimeout(()=>{
             updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
-        },1000)
+        },500)
     }
 
     return (

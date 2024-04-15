@@ -9,13 +9,12 @@ import { time } from "console";
 
 type stateType = "ALARM"| "READ" | "SEND" | "ENDPOINT";
 
-interface AppData{
-    [type:string] :string|number,
+interface StompData{
+    param :string|number,
     state:stateType,
+    message?:string;
 }
-interface StompData extends  AppData{
-    message:string;
-}
+
 
 
 export const endPointMap = new Map();
@@ -29,7 +28,7 @@ function* sendStomp(stompClient: CompatClient) {
         const {params, target, message} = yield payload;
 
         const data: StompData = {
-            [target]: `${params}`, //groupMsg,friendMsg
+            param: `${params}`, //groupMsg,friendMsg
             message: `${message}`,
             state: "SEND", //0:endpoint 로드
         }
@@ -49,8 +48,8 @@ function* sendAppPosition(stompClient: CompatClient){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
         const {target, messageParams, state} = yield payload;
         
-        const data:AppData={
-            [target] :`${messageParams}`,//메시지 주소
+        const data:StompData={
+            param :`${messageParams}`,//메시지 주소
             state: state,
         }
         const url = `/app/${target}`
@@ -64,8 +63,8 @@ function* sendPublish(destination:Destination,stompClient:CompatClient){
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((params: (string | number)) => {
                     
-            const data: AppData = {
-                [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
+            const data: StompData = {
+                param: `${params}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
             }
             const url = `/app/${subscribeDirection[index]}`
@@ -102,15 +101,16 @@ function* startStomp(destination: Destination): any {
     //put == dispatch랑 동일
     while (isRunning) {
         //race : 경주랑 비슷하게 여러개의 사가 효과가 동시에 실행하고 먼저 완료되는 효과만 처리함
-        const {message, timeout} = yield race({
+        const {reciveMessage, timeout} = yield race({
             timeout: delay(60 * 60 * 1000), //1시간 뒤 stomp끊기게 설정 => delay :작업을 지연 시키는 메서드
-            message: take(channel), //액션을 기다린 후 dipstch가 완료되면 실행
+            reciveMessage: take(channel), //액션을 기다린 후 dipstch가 완료되면 실행
         });
         if (timeout) isRunning = false;
 
-        console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
-        const messageData =yield put(receivedStompMsg(message)); //action dipatch
-        
+        // console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
+        const messageData =yield put(receivedStompMsg(reciveMessage)); //action dipatch
+
+        console.log(messageData)
 
         // && (localStorage.getItem('userId')!== messageData.payload.useEmail)
         if(messageData.payload.state ==="SEND"&& (localStorage.getItem('userId')!== messageData.payload.useEmail)){
@@ -118,16 +118,15 @@ function* startStomp(destination: Destination): any {
                 endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)+1)
             }else if(messageData.payload.hasOwnProperty('friendMsg')){
                 endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)+1)
-
             }
         }else if(messageData.payload.state ==="ALARM"){
             if(messageData.payload.hasOwnProperty('groupMsg')){
-                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint))
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint-1))
             }else if(messageData.payload.hasOwnProperty('friendMsg')){
-                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint))
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint-1))
             }
-        }    
-    }  
+        }
+    }
 }
 
 
@@ -181,6 +180,10 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
+                    if (subscribeDirection[index] === "groupMsg")
+                        stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
+                            emit(JSON.parse(iMessage.body));
+                        })
                 })
             })
         };
