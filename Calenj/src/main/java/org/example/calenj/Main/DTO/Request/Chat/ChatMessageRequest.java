@@ -14,9 +14,13 @@ public class ChatMessageRequest {
     private fileType state;
     private String groupMsg;
     private String friendMsg;
+    private String personalTopic;
     private String nickName;
     private String message;
     private int endPoint;
+
+    private String nowLine;
+    private boolean upDown;
 
     @Getter
     @RequiredArgsConstructor

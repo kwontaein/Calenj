@@ -45,7 +45,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
-            queryClient.clear(); //캐시 삭제
         } else {
 
             axios.get(`/api/subscribeCheck`)
