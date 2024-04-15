@@ -12,9 +12,7 @@ import java.util.stream.Stream;
 public class ChatMessageRequest {
     private String useEmail;
     private fileType state;
-    private String groupMsg;
-    private String friendMsg;
-    private String personalTopic;
+    private String param;
     private String nickName;
     private String message;
     private int endPoint;
