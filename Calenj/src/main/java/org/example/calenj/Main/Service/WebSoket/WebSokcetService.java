@@ -47,7 +47,7 @@ public class WebSokcetService {
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 message.getUseEmail() + " : " + message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
                         " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n" :
-                message.getUseEmail() + "EndPoint" + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
+                message.getUseEmail() + "EndPoint" + " [ " + messageUUid + " ]" + "\n";
 
         // 파일을 저장한다.
         String uuid = message.getGroupMsg() != null ? message.getGroupMsg() : message.getFriendMsg();
@@ -64,11 +64,16 @@ public class WebSokcetService {
         try {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+            //takeWhile에 걸리지 않는 문제 발생!
+            //takeWhile문은 해당 조건문이 거짓일 경우 바로 정지한다.
+            //참일 경우에만 라인을 가져옴
 
             List<String> previousLines = lines.stream()
-                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint") && !line.contains(message.getGroupMsg()))
+                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [ " + message.getGroupMsg() + " ]"))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
                     .collect(Collectors.toList());
+
+            System.out.println("previousLines : " + previousLines);
 
             if (previousLines.isEmpty()) { // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기
                 previousLines = lines.stream()
@@ -112,13 +117,14 @@ public class WebSokcetService {
             String contains1 = (message.getUseEmail() + "EndPoint");
             System.out.println(contains1);
 
-            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint") && !line.contains(message.getGroupMsg()))
+            List<String> previousLines = lines.stream()
+                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [ " + message.getGroupMsg() + " ]"))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
                     .collect(Collectors.toList());
 
             Collections.reverse(previousLines);
 
-            System.out.println("previousLines : " + previousLines);
+            System.out.println("previousLinesInCount : " + previousLines);
 
             if (previousLines.isEmpty()) {
                 System.out.println(0);
