@@ -14,7 +14,7 @@ const Home: React.FC = () => {
         setTimeout(() => {
             setCookie(queryClient.getQueryData([QUERY_COOKIE_KEY]) as boolean);
             setLoding(true);
-        }, 200)
+        }, 400)
     }, [])
 
     useEffect(()=>{

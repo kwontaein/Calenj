@@ -9,8 +9,9 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchAppProps, mapDispatchToAppProps} from '../../store/module/AppPositionReducer'
+import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
+import {endPointMap} from '../../store/module/StompMiddleware';
 
 interface Details {
     groupId: number;
@@ -39,7 +40,8 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [loading, setLoading] = useState(false);
+    const [loading,setLoading] = useState(false);
+
 
 
     //그룹 디테일 불러오기
@@ -69,12 +71,15 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-    useEffect(() => {
-        /*    updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});*/
-        return () => {
-            updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "ENDPOINT"});
+    useEffect(()=>{
+        setTimeout(()=>{
+            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
+        },1000)
+        return ()=>{
+            // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
         }
-    }, [])
+    },[])
+
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -96,14 +101,14 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     }
 
     const endPointRef = useRef<NodeJS.Timeout | undefined>();
-
-    const updateEndpoint = () => {
-        if (endPointRef.current != undefined) {
+    
+    const updateEndpoint =()=>{
+        if(endPointRef.current!=undefined){
             clearTimeout(endPointRef.current)
         }
-        endPointRef.current = setTimeout(() => {
-            updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "ENDPOINT"});
-        }, 2000)
+        endPointRef.current = setTimeout(()=>{
+            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+        },500)
     }
 
     return (
