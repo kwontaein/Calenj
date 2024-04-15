@@ -14,12 +14,9 @@ import java.util.stream.Stream;
 public class ChatMessageResponse {
     private String useEmail;
     private ChatMessageRequest.fileType state;
-    private String groupMsg;
-    private String friendMsg;
+    private String param;
     private String nickName;
     private List<String> message;
-    private boolean lastLine;
-    
     private int endPoint;
 
     @Getter

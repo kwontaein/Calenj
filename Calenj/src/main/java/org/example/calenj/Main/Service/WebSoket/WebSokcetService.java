@@ -43,14 +43,14 @@ public class WebSokcetService {
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
         String nowTime = globalService.nowTime();
-        UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getGroupMsg());
+        UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                message.getUseEmail() + " : " + message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
-                        " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n" :
-                message.getUseEmail() + "EndPoint" + " [ " + messageUUid + " ]" + "\n";
+                message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
+                        "[" + nowTime + "]" + "[" + messageUUid + "]" + "\n" :
+                message.getUseEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         // 파일을 저장한다.
-        String uuid = message.getGroupMsg() != null ? message.getGroupMsg() : message.getFriendMsg();
+        String uuid = message.getParam();
         String filePath = "C:\\chat\\chat" + uuid;
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
@@ -62,25 +62,29 @@ public class WebSokcetService {
 
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
-            //takeWhile에 걸리지 않는 문제 발생!
-            //takeWhile문은 해당 조건문이 거짓일 경우 바로 정지한다.
-            //참일 경우에만 라인을 가져옴
 
             List<String> previousLines = lines.stream()
-                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [ " + message.getGroupMsg() + " ]"))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
+                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
+                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
+                    .map(str -> str.replaceAll("\\[\\]", ""))
                     .collect(Collectors.toList());
-
-            System.out.println("previousLines : " + previousLines);
 
             if (previousLines.isEmpty()) { // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기
                 previousLines = lines.stream()
-                        .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
+                        .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
                         .limit(50)
+                        .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
+                        .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
+                        .map(str -> str.replaceAll("\\[\\]", ""))
                         .collect(Collectors.toList());
             }
+
+            message.setNowLine(previousLines.size());
+            message.setLastLine(previousLines.get(previousLines.size() - 1));
 
             Collections.reverse(previousLines);
             return previousLines;
@@ -91,17 +95,25 @@ public class WebSokcetService {
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
-
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
-            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            Collections.reverse(lines);
+
+            int batchSize = 50;
+            //위로 아래로인지 구분
+            //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
+            int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
 
             List<String> previousLines = lines.stream()
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
-                    .limit(50)
+                    .skip(startIndex)
+                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
+                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
+                    .map(str -> str.replaceAll("\\[\\]", ""))
+                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .limit(batchSize)
                     .collect(Collectors.toList());
 
-            Collections.reverse(previousLines);
+            message.setNowLine(startIndex + previousLines.size());
             return previousLines;
         } catch (IOException e) {
             System.out.println("파일 읽기 실패");
@@ -109,17 +121,21 @@ public class WebSokcetService {
         }
     }
 
+
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
             String contains1 = (message.getUseEmail() + "EndPoint");
             System.out.println(contains1);
 
             List<String> previousLines = lines.stream()
-                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [ " + message.getGroupMsg() + " ]"))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
+                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
+                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
+                    .map(str -> str.replaceAll("\\[\\]", ""))
+                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
                     .collect(Collectors.toList());
 
             Collections.reverse(previousLines);
