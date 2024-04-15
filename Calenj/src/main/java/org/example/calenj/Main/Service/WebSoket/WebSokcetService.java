@@ -42,30 +42,31 @@ public class WebSokcetService {
 
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
-
+        String nowTime = globalService.nowTime();
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getGroupMsg());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 message.getUseEmail() + " : " + message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
-                        " [" + message.getSendDate() + "]" + " [ " + messageUUid + " ]" + "\n" :
-                message.getUseEmail() + " EndPoint" + " [" + message.getSendDate() + "]" + " [ " + messageUUid + " ]" + "\n";
+                        " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n" :
+                message.getUseEmail() + "EndPoint" + " [" + nowTime + "]" + " [ " + messageUUid + " ]" + "\n";
 
         // 파일을 저장한다.
         String uuid = message.getGroupMsg() != null ? message.getGroupMsg() : message.getFriendMsg();
         String filePath = "C:\\chat\\chat" + uuid;
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
+            message.setMessage(messageContent.replace("\\lineChange", "\n"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
-            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + " EndPoint") && !line.contains(message.getGroupMsg()))
+            List<String> previousLines = lines.stream()
+                    .takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint") && !line.contains(message.getGroupMsg()))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
                     .collect(Collectors.toList());
 
@@ -85,11 +86,7 @@ public class WebSokcetService {
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
-        //처음 라인 , 끝 라인(시간+ 아이디+ 내용)
-        //끝 라인 받아서 해당 위치부터 받아올거임 ->
-        //맨위, 맨아래 닿았을때 특정 조건을 통해 동작을 막을 건데
-        //
-        //무한로딩 버그 해결해야함 -> 두 메시지가 같고, 사이즈가 0 반환값()
+
         try {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
@@ -112,53 +109,30 @@ public class WebSokcetService {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getGroupMsg()), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
-            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + " EndPoint") && !line.contains(message.getGroupMsg()))
+            String contains1 = (message.getUseEmail() + "EndPoint");
+            System.out.println(contains1);
+
+            List<String> previousLines = lines.stream().takeWhile(line -> !line.contains(message.getUseEmail() + "EndPoint") && !line.contains(message.getGroupMsg()))
                     .filter(line -> !line.contains("EndPoint") && !line.contains(message.getGroupMsg()))
-                    .toList();
+                    .collect(Collectors.toList());
+
+            Collections.reverse(previousLines);
+
+            System.out.println("previousLines : " + previousLines);
 
             if (previousLines.isEmpty()) {
+                System.out.println(0);
                 return 0;
             }
+            System.out.println(previousLines.size());
             return previousLines.size();
         } catch (IOException e) {
-            System.out.println("파일 읽기 실패");
+            System.out.println(0);
+            System.out.println("엔드포인트 파일 읽기 실패");
             return 0;
         }
     }
-
-    //엔드포인트부터의 알림 갯수 저장하는 메소드
-    /*public int countLinesUntilEndPoint(ChatMessageRequest message) {
-        File file = new File("C:\\chat\\chat" + message.getGroupMsg());
-        int lineCount = 0;
-        boolean endPointFound = false; // 엔드포인트를 찾았는지 여부를 나타내는 변수
-
-        // 파일 있는지 검사
-        if (!file.exists()) {
-            System.out.println("파일이 없어요");
-            return 0;
-        }
-
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
-            Collections.reverse(lines); // 파일 내용을 역순으로 정렬
-
-            for (String line : lines) {
-                if (!endPointFound) {
-                    lineCount++;
-                } else {
-                    break;
-                }
-                if (line.contains(message.getNickName() + " EndPoint")) {
-                    endPointFound = true; // 엔드포인트를 찾았음을 표시
-                }
-            }
-            return lineCount;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일 읽기 실패");
-            return 0;
-        }
-    }*/
 }
+
 
 
