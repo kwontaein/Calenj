@@ -17,6 +17,7 @@ public class ChatMessageRequest {
     private String nickName;
     private String message;
     private int endPoint;
+    private String sendDate;
 
     @Getter
     @RequiredArgsConstructor

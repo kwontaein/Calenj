@@ -18,7 +18,7 @@ public class ChatMessageResponse {
     private String friendMsg;
     private String nickName;
     private List<String> message;
-
+    private String sendDate;
     private int endPoint;
 
     @Getter

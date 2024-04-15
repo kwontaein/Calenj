@@ -122,14 +122,11 @@ function* startStomp(destination: Destination): any {
             }
         }else if(messageData.payload.state ==="ALARM"){
             if(messageData.payload.hasOwnProperty('groupMsg')){
-                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint-1))
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint))
             }else if(messageData.payload.hasOwnProperty('friendMsg')){
-                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint-1))
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint))
             }
-        }
-        
-     
-        
+        }    
     }  
 }
 
