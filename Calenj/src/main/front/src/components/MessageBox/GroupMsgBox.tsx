@@ -18,9 +18,6 @@ const GroupMsgBox:React.FC<groupMsgProps> =({groupId,stomp,sendStompMsg,updateEn
     const [messageList,setMessageList] = useState<MessageData[]>([]);
     const [content, setContent] = useState<string>('');
 
-    useEffect(()=>{
-        console.log(content)
-    },[content])
 
     
     const sendMsg =()=>{
@@ -29,8 +26,9 @@ const GroupMsgBox:React.FC<groupMsgProps> =({groupId,stomp,sendStompMsg,updateEn
         updateEndpoint();
     }
     useEffect(()=>{
+        console.log(stomp)
         if(stomp.params === groupId){
-        updateEndpoint();
+            
         }
     },[stomp])
     return(

@@ -1,22 +1,20 @@
 import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {call, put, race, delay, take, fork, select} from 'redux-saga/effects';
+import {call, put, race, delay, take, fork,select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
 import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination} from "./StompReducer"
 import {UPDATE_APP_POSITION} from './AppPositionReducer';
-import {time} from "console";
+import { time } from "console";
 
 
-type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT";
+type stateType = "ALARM"| "READ" | "SEND" | "ENDPOINT";
 
-interface AppData {
-    [type: string]: string | number,
-
-    state: stateType,
+interface AppData{
+    [type:string] :string|number,
+    state:stateType,
 }
-
-interface StompData extends AppData {
-    message: string;
+interface StompData extends  AppData{
+    message:string;
 }
 
 
@@ -44,27 +42,28 @@ function* sendStomp(stompClient: CompatClient) {
 }
 
 
+
 //endPoint Update를 위한 url위치에 기반한 위치 업데이트
-function* sendAppPosition(stompClient: CompatClient) {
-    while (true) {
+function* sendAppPosition(stompClient: CompatClient){
+    while(true){
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
         const {target, messageParams, state} = yield payload;
-
-        const data: AppData = {
-            [target]: `${messageParams}`,//메시지 주소
+        
+        const data:AppData={
+            [target] :`${messageParams}`,//메시지 주소
             state: state,
         }
         const url = `/app/${target}`
-        stompClient.send(url, {}, JSON.stringify(data))
+        stompClient.send(url,{}, JSON.stringify(data))
     }
 }
 
 
-function* sendPublish(destination: Destination, stompClient: CompatClient) {
+function* sendPublish(destination:Destination,stompClient:CompatClient){
 
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((params: (string | number)) => {
-
+                    
             const data: AppData = {
                 [subscribeDirection[index]]: `${params}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
@@ -77,7 +76,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
         })
     })
 
-}
+} 
 
 
 //제너레이터를 활용한 비동기식 처리
@@ -94,9 +93,9 @@ function* startStomp(destination: Destination): any {
     const stompClient = yield call(createStompConnection) //Stomp를 connect하는 함수, 성공 시 다음 명령 실행
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
-    yield fork(sendStomp, stompClient)
-    yield fork(sendAppPosition, stompClient)
-    yield fork(sendPublish, destination, stompClient)
+    yield fork(sendStomp, stompClient) 
+    yield fork(sendAppPosition,stompClient)
+    yield fork(sendPublish,destination,stompClient)
 
     let isRunning = true;
 
@@ -109,8 +108,25 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
-        console.log('receivedStompMsg(message)', receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
-        yield put(receivedStompMsg(message)); //action dipatch
+        console.log('receivedStompMsg(message)',receivedStompMsg(message)) //이거 받은 거 map에 저장하면 됨
+        const messageData =yield put(receivedStompMsg(message)); //action dipatch
+
+
+        // && (localStorage.getItem('userId')!== messageData.payload.useEmail)
+        if(messageData.payload.state ==="SEND"&& (localStorage.getItem('userId')!== messageData.payload.useEmail)){
+            if(messageData.payload.hasOwnProperty('groupMsg')){
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)+1)
+            }else if(messageData.payload.hasOwnProperty('friendMsg')){
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)+1)
+
+            }
+        }else if(messageData.payload.state ==="ALARM"){
+            if(messageData.payload.hasOwnProperty('groupMsg')){
+                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg)||(messageData.payload.endPoint))
+            }else if(messageData.payload.hasOwnProperty('friendMsg')){
+                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg)||(messageData.payload.endPoint))
+            }
+        }
     }
 }
 
