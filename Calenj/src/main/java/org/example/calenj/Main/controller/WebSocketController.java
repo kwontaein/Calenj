@@ -79,7 +79,6 @@ public class WebSocketController {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
             }
-            // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);

@@ -8,23 +8,26 @@ export const UPDATE_APP = 'UPDATE_APP';
 export const RECEIVED_STOMP_MSG = 'RECEIVED_STOMP_MSG';
 export const SEND_STOMP_MSG = 'SEND_STOMP_MSG';
 export const UPDATE_ONLINE = 'UPDATE_ONLINE'
+export const RELOAD_MSG = 'RELOAD_MSG'
 
 interface Message {
-    freindMsg:string;
-    groupMsg:string;
-    message: string;
-    nickname:string;
-    userEmail:string;
-    sendData:string;
+    params:string,
+    message: string|string[],
+    nickname:string,
+    userEmail:string,
+    Date:string,
 }
 
 //초기상태 정의
 export interface StompState {
-    destination: Destination;
-    target: string;
-    params: string | number;
-    message: string;
-    isOnline: boolean;
+    destination: Destination,
+    target: string,
+    params: string | number,
+    sendMessage:string,
+    reciveMessage: Message,
+    isOnline: boolean,
+    lastLine:string,
+    nowLine:number,
 }
 
 
@@ -34,16 +37,18 @@ export interface StompData {
 
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
-    sendStompMsg: (payload: { target: string, params: string | number, message: string }) => void;
-    receivedStompMsg: (payload: { message: Message }) => void;
+    sendStompMsg: (payload: { target: string, params: string | number, sendMessage: string }) => void;
+    reLoadMsg: (payload: { target: string, params: string | number, lastLine:string, nowLine:number }) => void;
+    receivedStompMsg: (payload: {params:string, message:string, nickname:string, userEmail:string, Date:string}) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
 }
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
-    sendStompMsg: (payload: {target: string, params: string | number, message: string}) => dispatch(sendStompMsg(payload)),
-    receivedStompMsg: (payload: { message: Message }) => dispatch(receivedStompMsg(payload)),
+    reLoadMsg: (payload: { target: string, params: string | number, lastLine:string, nowLine:number }) =>  dispatch(reLoadMsg(payload)),
+    sendStompMsg: (payload: {target: string, params: string | number, sendMessage: string}) => dispatch(sendStompMsg(payload)),
+    receivedStompMsg: (payload: {params:string, message:string, nickname:string, userEmail:string}) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
 });
 
@@ -63,15 +68,19 @@ export const updateDestination = (payload: { destination: Destination }) => ({
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, params: string | number, message: string}) => ({
+export const sendStompMsg = (payload: { target: string, params: string | number, sendMessage: string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
 
+export const reLoadMsg = (payload:{ target: string, params: string | number, lastLine: string, nowLine:number}) => ({
+    type: RELOAD_MSG,
+    payload: payload,
+})
 
 //메시지 받기
 //채널에서 take로 받아온 message를 받아 action에 대한 payload전달 (dispatch)
-export const receivedStompMsg = (payload: { message: Message }) => ({
+export const receivedStompMsg = (payload: {params:string, message:string, nickname:string, userEmail:string} ) => ({
     type: RECEIVED_STOMP_MSG,
     payload: payload,
 });
@@ -93,7 +102,16 @@ const initialState: StompState = {
     destination: [], // topic/app의 경로
     target: '',//초기 publish 대상
     params: '', // (sub/pub 시)식별하기 위한 값
-    message: '', // 초기 message 상태
+    sendMessage:'',
+    lastLine:'',
+    nowLine:0,
+    reciveMessage: {
+        params:'',
+        message: '',
+        nickname:'',
+        userEmail:'',
+        Date:'',
+    }, // 초기 message 상태
     isOnline: false,
 };
 
@@ -110,11 +128,25 @@ const StompReducer = handleActions(
             ...state,
             target: action.payload.target,
             params: action.payload.params,
-            message: action.payload.message,
+            sendMessage:action.payload.sendMessage,
+        }),
+        [RELOAD_MSG]: (state, action)=> ({
+            ...state,
+            target: action.payload.target,
+            params: action.payload.params,
+            lastLine:action.payload.lastLine,
+            nowLine:action.payload.nowLine,
         }),
         [RECEIVED_STOMP_MSG]: (state, action) => ({
             ...state,
-            message: action.payload.message
+            reciveMessage:{
+                ...state.reciveMessage,
+                params:action.payload.reciveMessage.params,
+                message:action.payload.reciveMessage.message,
+                nickname:action.payload.reciveMessage.nickname,
+                userEmail:action.payload.reciveMessage.userEmail,
+                Date:action.payload.reciveMessage.Date,
+            }
         }),
         [UPDATE_ONLINE]: (state, action) => ({
             ...state,
