@@ -44,15 +44,14 @@ public class WebSocketController {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 response.setMessage(file);
                 response.setEndPoint(setPoint);
-                template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+                template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
-            response.setMessage(webSokcetService.readGroupChattingFile(message));
-            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+            template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
@@ -89,13 +88,14 @@ public class WebSocketController {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 response.setMessage(file);
                 response.setEndPoint(webSokcetService.countLinesUntilEndPoint(message));
-                template.convertAndSend("/topic/friendMsg/" + message.getFriendMsg(), message);
+                template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getFriendMsg(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getFriendMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             //template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
