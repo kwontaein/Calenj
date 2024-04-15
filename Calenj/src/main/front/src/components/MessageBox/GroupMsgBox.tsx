@@ -22,14 +22,14 @@ const GroupMsgBox:React.FC<groupMsgProps> =({groupId,stomp,sendStompMsg,updateEn
     
     const sendMsg =()=>{
         if(content==='') return;
-        sendStompMsg({target:'groupMsg', params:groupId, sendMessage:content})
+        sendStompMsg({target:'groupMsg', param:groupId, sendMessage:content})
         updateEndpoint();
     }
 
 
     useEffect(()=>{
         console.log(stomp)
-        if(stomp.params === groupId){
+        if(stomp.param === groupId){
         }
     },[stomp])
     return(

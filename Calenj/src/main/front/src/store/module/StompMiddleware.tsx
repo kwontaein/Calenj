@@ -25,10 +25,10 @@ function* sendStomp(stompClient: CompatClient) {
 
     while (true) {
         const {payload} = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dipstch가 완료되면 실행
-        const {params, target, message} = yield payload;
+        const {param, target, message} = yield payload;
 
         const data: StompData = {
-            param: `${params}`, //groupMsg,friendMsg
+            param: `${param}`, //groupMsg,friendMsg
             message: `${message}`,
             state: "SEND", //0:endpoint 로드
         }
@@ -61,10 +61,10 @@ function* sendAppPosition(stompClient: CompatClient){
 function* sendPublish(destination:Destination,stompClient:CompatClient){
 
     destination.map((sub: (string | number)[], index: number) => {
-        sub.map((params: (string | number)) => {
+        sub.map((param: (string | number)) => {
                     
             const data: StompData = {
-                param: `${params}`, //groupMsg,friendMsg
+                param: `${param}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
             }
             const url = `/app/${subscribeDirection[index]}`
@@ -176,12 +176,12 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string | number)[], index: number) => {
-                sub.map((params: (string | number)) => {
-                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
+                sub.map((param: (string | number)) => {
+                    stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
                     if (subscribeDirection[index] === "groupMsg")
-                        stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${params}`, (iMessage: IMessage) => {
+                        stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })
                 })
