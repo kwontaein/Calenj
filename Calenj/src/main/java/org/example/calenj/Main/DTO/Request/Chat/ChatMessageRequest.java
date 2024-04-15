@@ -20,7 +20,8 @@ public class ChatMessageRequest {
     private int endPoint;
     private String sendDate;
 
-    private String nowLine;
+    private int nowLine;
+    private String lastLine;
     private boolean upDown;
 
     @Getter
