@@ -11,6 +11,10 @@ export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 
 interface Message {
     message: string;
+    nickname:string;
+    userEmail:string;
+    sendData:string;
+    
 }
 
 //초기상태 정의
@@ -18,7 +22,7 @@ export interface StompState {
     destination: Destination;
     target: string;
     params: string | number;
-    message?: string;
+    message: string;
     isOnline: boolean;
 }
 
@@ -80,6 +84,7 @@ export interface Destination {
     map: any;
     [index: number]: (string | number)[];
 }
+
 
 
 // Reducer-saga : 초기 State

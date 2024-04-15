@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Request.Chat.AlarmRequest;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
+import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,6 +20,7 @@ public class WebSocketController {
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
+    private final GlobalService globalService;
 
 
     //그룹 채팅
@@ -27,9 +29,14 @@ public class WebSocketController {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
         List<String> file = webSokcetService.readGroupChattingFile(message);
+        String nowTime = globalService.nowTime();
+
+        System.out.println("userEmail: " + userEmail);
+        System.out.println("username: " + username);
 
         message.setNickName(username);
         message.setUseEmail(userEmail);
+        message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
         System.out.println(message);
@@ -46,6 +53,8 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+            response.setMessage(webSokcetService.readGroupChattingFile(message));
+            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
 
@@ -107,6 +116,9 @@ public class WebSocketController {
         ChatMessageResponse filteredResponse = new ChatMessageResponse();
         if (request.getGroupMsg() != null) {
             filteredResponse.setGroupMsg(request.getGroupMsg());
+        }
+        if(request.getSendDate() != null){
+            filteredResponse.setSendDate(request.getSendDate());
         }
         if (request.getMessage() != null) {
             filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
