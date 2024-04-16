@@ -93,6 +93,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
             default:
                 status = '오프라인';
         }
+        console.log('온라인체크')
         return status
     }
 

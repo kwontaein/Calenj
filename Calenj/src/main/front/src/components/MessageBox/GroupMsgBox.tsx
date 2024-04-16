@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState,useLayoutEffect, useId,useRef} from "react";
+import {ChangeEvent, useEffect, useState,useRef, useCallback,useMemo} from "react";
 import {connect} from "react-redux";
 import {DispatchStompProps, mapDispatchToStompProps, StompData, mapStateToStompProps} from '../../store/module/StompReducer'
 import {RowFlexBox,ScrollableDiv,MessageBoxContainer,MessageContainer,MessageContainer2,ProfileContainer,DateContainer,DateContainer2,NickNameContainer} from '../../style/FormStyle'
@@ -38,24 +38,24 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         updateEndpoint();
         setTimeout(()=>{
             scrollToBottom()
-        },100)
+        },50)
         
     }
 
 
 
     
-    const settingMessage = ()=>{
+    const settingMessage =()=>{
         if (stomp.receiveMessage.param !== param ||stomp.receiveMessage.message===null) {
             return
         }
         if(stomp.receiveMessage.state ==="READ"&&!loading){
                  let file = stomp.receiveMessage.message as string[]
-                 file.map((fileMessage,index)=>{
+                 file.map((fileMessage)=>{
                     let msgInfo =fileMessage.split("$",5)
                     const loadMsg:Message = {
                         chatUUID:msgInfo[0],
-                        sendDate:msgInfo[1],
+                        sendDate:msgInfo[1].slice(1,17),
                         userEmail:msgInfo[2],
                         nickName:msgInfo[3],
                         message: msgInfo[4],
@@ -74,8 +74,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 userEmail:stomp.receiveMessage.userEmail,
                 nickName:stomp.receiveMessage.nickName,
                 message: stomp.receiveMessage.message[0].split("$",5)[4]
-            }
-            
+            }            
             setBeforUUID(stomp.receiveMessage.message[0].split("$",5)[0]) 
             setMessageList((prev)=>{
                 return [...prev,loadMsg]
@@ -84,57 +83,55 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
 
     }
 
-    const scrollToBottom = () => {
-        if (messageEndRef.current) {
-            console.log( messageEndRef.current.scrollHeight)
-            messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
-        }
-    };
-
-
-
     useEffect(() => {
         settingMessage()
     }, [stomp])
 
+
+    const scrollToBottom = () => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+        }
+    };
+
+    const MessageBox = useMemo(() => {
+        if (loading) {
+            return (
+                <ScrollableDiv ref={messageEndRef}>
+                    {messageList.map((message, index) => (
+                        <MessageBoxContainer key={message.chatUUID + index}>
+                            {!message.nickName && '캘린룸에 오신 걸 환영합니다.'}
+                            {message.nickName &&
+                                (index && messageList[index - 1].userEmail === message.userEmail ? (
+                                    <MessageContainer2>
+                                        <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                        <div>{message.message}</div>
+                                    </MessageContainer2>
+                                ) : (
+                                    <RowFlexBox style={{ width: 'auto' }}>
+                                        <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
+                                        <div>
+                                            <RowFlexBox style={{ marginLeft: '10px' }}>
+                                                <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
+                                            </RowFlexBox>
+                                            <MessageContainer>{message.message}</MessageContainer>
+                                        </div>
+                                    </RowFlexBox>
+                                ))}
+                        </MessageBoxContainer>
+                    ))}
+                </ScrollableDiv>
+            );
+        }
+        return null;
+    }, [messageList, loading]);
+
+
+  
     return (
         <div>
-            {loading &&
-            <ScrollableDiv ref={messageEndRef}>
-               {messageList.map((message,index)=>(
-                <MessageBoxContainer key={message.chatUUID+index}>
-                    {!message.nickName && '캘린룸에 오신 걸 환영합니다.'}
-                    
-                    {message.nickName&& 
-                            (index&&(messageList[index-1].userEmail===message.userEmail)?
-                            <MessageContainer2>
-                                <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(1,17)))}</DateContainer2>
-                                <div>{message.message}</div>
-                            </MessageContainer2>
-                            :
-                            <RowFlexBox style={{width:'auto'}}>
-                            <ProfileContainer>{message.userEmail.slice(0,1)}</ProfileContainer>
-                            <div>
-                                <RowFlexBox style={{marginLeft:'10px'}}>
-                                    <NickNameContainer>
-                                        {message.nickName}
-                                    </NickNameContainer>
-                                    <DateContainer>
-                                        {AHMFormatV2(changeDateForm(message.sendDate.slice(1,17)))}
-                                    </DateContainer>
-                                </RowFlexBox>
-                                <MessageContainer>
-                                    {message.message}
-                                </MessageContainer>
-                            </div>
-                        </RowFlexBox>
-                            )
-                    }
-                </MessageBoxContainer>
-               ))}
-        
-            </ScrollableDiv>
-            }
+            {MessageBox}
             <RowFlexBox>
                 <form onSubmit={sendMsg}>
                 <input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {

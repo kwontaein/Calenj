@@ -75,13 +75,16 @@ export function AHMFormat(date:Date):string{
 
 export function AHMFormatV2(date:Date):string{
     const now = new Date();
-    if(+now-(+date)<oneDay){
+
+    const lastTime = Number(now.getDate())-Number(date.getDate())
+    if(lastTime===0){
         return dayjs(date).locale('ko').format('오늘 A hh:mm')
-    }else if(+now-(+date)<(oneDay*2)){
+    }else if(lastTime===1){
         return dayjs(date).locale('ko').format('어제 A hh:mm')
     }else{
         return dayjs(date).locale('ko').format('YYYY.MM.DD. A hh:mm')
     }
+
 }
 
 export function shortAHMFormat(date:Date):string{
