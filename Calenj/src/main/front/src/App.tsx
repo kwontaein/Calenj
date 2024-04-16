@@ -27,23 +27,24 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, sendStompMsg, stomp}) => {
+const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, stomp, updateLoading}) => {
     const queryClient = useQueryClient();
-
+    const [loading,setLoading]= useState<boolean>(false);
 
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
     const checkCookie = async (): Promise<boolean> => {
         const response = await axios.post('/api/postCookie');
-
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
+            updateLoading({loading:true});
         } else {
 
             axios.get(`/api/subscribeCheck`)
                 .then((res) => {
+                    updateOnline({isOnline: true})
                     let arr = res.data
                     let friendArr = Array.from(arr.friendList, (value: SubScribe) => {
                         return value.chattingRoomId;
@@ -52,16 +53,18 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
                         return value.groupId;
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
-
                     updateDestination({destination: subScribe});
-                    updateOnline({isOnline: true});
                 })
                 .catch(() => {
+                    window.alert('잘못된 접근입니다. 재시작을 해주세요.')
                 })
         }
         return response.data;
     }
 
+    useEffect(()=>{
+        setLoading(stomp.loading)
+    },[stomp.loading])
 
     function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
         let parmasList = [];
@@ -77,16 +80,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         queryFn: checkCookie, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-    // useEffect(()=>{
-    //     console.log('ㅎㅇ')
-    //     return ()=>{console.log('ㅂㅇ')}
-    // },[])
-
-    // useQuery는 실시간 데이터 갱신(위치, 그래프 등)에 더욱 적합하다함
-
     return (
         <div className="App">
-
+            {loading &&
             <BrowserRouter>
                 <Routes>
                     <Route path={"/"} element={<Home/>}/>
@@ -102,6 +98,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
                     <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                 </Routes>
             </BrowserRouter>
+            }
         </div>
     );
 }

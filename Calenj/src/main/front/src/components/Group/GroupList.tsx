@@ -8,6 +8,8 @@ import {ListView, MiniText} from '../../style/FormStyle'
 import {sagaTask} from '../../store/store'
 import {endPointMap} from '../../store/module/StompMiddleware'
 import {RowFlexBox} from '../../style/FormStyle'
+import {connect} from 'react-redux'
+import{mapStateToStompProps,StompData} from '../../store/module/StompReducer'
 
 interface GroupList {
     groupId: number | string;
@@ -15,9 +17,7 @@ interface GroupList {
     groupCreated: string;
 }
 
-interface cookieState {
-    cookie: boolean;
-}
+
 
 interface error {
     message: string;
@@ -26,7 +26,7 @@ interface error {
 
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
-const GroupList: React.FC<cookieState> = ({cookie}) => {
+const GroupList: React.FC<StompData> = ({stomp}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -56,7 +56,7 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
     const groupListState = useQuery<GroupList[] | null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
-        enabled: cookie,
+        enabled: stomp.isOnline,
     });
 
     const redirectDetail = (groupId: number) => {
@@ -96,4 +96,4 @@ const GroupList: React.FC<cookieState> = ({cookie}) => {
     )
 
 }
-export default GroupList;
+export default connect(mapStateToStompProps,null) (GroupList);

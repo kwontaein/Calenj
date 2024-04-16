@@ -3,6 +3,7 @@ package org.example.calenj.Main.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
+import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.Service.WebSoket.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,25 +19,26 @@ public class WebSocketController {
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
-
+    private final GlobalService globalService;
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
-
+        String nowTime = globalService.nowTime();
         message.setNickName(username);
-        message.setUseEmail(userEmail);
+        message.setUserEmail(userEmail);
+        message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
-
+        System.out.println("groupMsg response : " + response);
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 int setPoint = webSokcetService.countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
-                template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
+                template.convertAndSendToUser(response.getUserEmail(), "/topic/groupMsg/" + response.getParam(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
@@ -45,11 +47,11 @@ public class WebSocketController {
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
-            template.convertAndSendToUser(response.getUseEmail(), "/topic/groupMsg/" + response.getGroupMsg(), response);
+            template.convertAndSendToUser(response.getUserEmail(), "/topic/groupMsg/" + response.getParam(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             response.setMessage(Collections.singletonList(message.getMessage()));
-            template.convertAndSend("/topic/groupMsg/" + response.getGroupMsg(), response);
+            template.convertAndSend("/topic/groupMsg/" + response.getParam(), response);
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
@@ -64,17 +66,17 @@ public class WebSocketController {
         String userEmail = webSokcetService.returnEmail(username);
 
         message.setNickName(username);
-        message.setUseEmail(userEmail);
+        message.setUserEmail(userEmail);
 
         ChatMessageResponse response = filterNullFields(message);
-
+        System.out.println("friendMsg response : " + response);
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
             try {
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 int setPoint = webSokcetService.countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
-                template.convertAndSendToUser(response.getUseEmail(), "/topic/friendMsg/" + response.getFriendMsg(), response);
+                template.convertAndSendToUser(response.getUserEmail(), "/topic/friendMsg/" + response.getParam(), response);
             } catch (Throwable e) {
                 // 에러가 발생할 경우.
                 e.printStackTrace();
@@ -82,11 +84,11 @@ public class WebSocketController {
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
-            template.convertAndSendToUser(response.getUseEmail(), "/topic/friendMsg/" + response.getFriendMsg(), response);
+            template.convertAndSendToUser(response.getUserEmail(), "/topic/friendMsg/" + response.getParam(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             response.setMessage(Collections.singletonList(message.getMessage()));
-            template.convertAndSend("/topic/friendMsg/" + response.getFriendMsg(), response);
+            template.convertAndSend("/topic/friendMsg/" + response.getParam(), response);
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
             //파일에 엔드포인트 저장
@@ -97,16 +99,24 @@ public class WebSocketController {
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
     @MessageMapping("/personalTopic")
     public void personalTopic(Authentication authentication, ChatMessageRequest message) throws Exception {
+        String username = webSokcetService.returnNickname(authentication);
+        String userEmail = webSokcetService.returnEmail(username);
+
+        message.setNickName(username);
+        message.setUserEmail(userEmail);
+        message.setMessage("Message");
+
         ChatMessageResponse response = filterNullFields(message);
-        template.convertAndSend("/topic/personalTopic/" + message.getPersonalTopic(), response);
+        System.out.println("personalTopic Response : " + response);
+        template.convertAndSend("/topic/personalTopic/" + message.getParam(), response);
     }
 
 
     // null이 아닌 필드만 포함시키는 메소드
     private ChatMessageResponse filterNullFields(ChatMessageRequest request) {
         ChatMessageResponse filteredResponse = new ChatMessageResponse();
-        if (request.getGroupMsg() != null) {
-            filteredResponse.setGroupMsg(request.getGroupMsg());
+        if (request.getParam() != null) {
+            filteredResponse.setParam(request.getParam());
         }
         if (request.getMessage() != null) {
             filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
@@ -114,12 +124,13 @@ public class WebSocketController {
         if (request.getNickName() != null) {
             filteredResponse.setNickName(request.getNickName());
         }
-        if (request.getUseEmail() != null) {
-            filteredResponse.setUseEmail(request.getUseEmail());
+        if (request.getUserEmail() != null) {
+            filteredResponse.setUserEmail(request.getUserEmail());
+        }if (request.getSendDate() != null) {
+            filteredResponse.setSendDate(request.getSendDate());
         }
-        if (request.getFriendMsg() != null) {
-            filteredResponse.setFriendMsg(request.getFriendMsg());
-        }
+
+
         filteredResponse.setState(request.getState());
         filteredResponse.setEndPoint(request.getEndPoint());
         // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정

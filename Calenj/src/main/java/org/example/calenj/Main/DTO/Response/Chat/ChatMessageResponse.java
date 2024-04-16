@@ -12,15 +12,13 @@ import java.util.stream.Stream;
 
 @Data
 public class ChatMessageResponse {
-    private String useEmail;
+    private String userEmail;
     private ChatMessageRequest.fileType state;
-    private String groupMsg;
-    private String friendMsg;
+    private String param;
     private String nickName;
     private List<String> message;
-    private boolean lastLine;
-    
     private int endPoint;
+    private String sendDate;
 
     @Getter
     @RequiredArgsConstructor
