@@ -61,7 +61,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((param: (string | number)) => {
-
+           
             const data: StompData = {
                 param: `${param}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
@@ -107,10 +107,8 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
 
-
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
-        console.log(receiveData)
-        // && (localStorage.getItem('userId')!== receiveData.payload.useEmail)
+        console.log(receiveData.payload.receiveMessage.state)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
                 endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
@@ -165,8 +163,9 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
     return eventChannel(emit => {
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
-            destination.map((sub: (string | number)[], index: number) => {
-                sub.map((param: (string | number)) => {
+            destination.map((sub: (string)[], index: number) => {
+                if(!index) localStorage.setItem('userId',sub[index])
+                sub.map((param: (string)) => {                        
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })

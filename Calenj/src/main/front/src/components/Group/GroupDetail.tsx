@@ -40,7 +40,6 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const location = useLocation();
     const groupInfo = {...location.state};
     const id = useId();
-    const [loading,setLoading] = useState(false);
 
 
 
@@ -70,7 +69,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-    useLayoutEffect(()=>{
+    useEffect(()=>{
         updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
         return ()=>{
         }
@@ -93,7 +92,6 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
             default:
                 status = '오프라인';
         }
-        console.log('온라인체크')
         return status
     }
 
@@ -105,6 +103,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         }
         endPointRef.current = setTimeout(()=>{
             updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+            console.log('엔드포인트 갱신')
         },2000)
     }
 
