@@ -51,7 +51,6 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                 groupId: groupInfo.groupId
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
-            setLoading(true);
             return data;
         } catch (error) {
             const axiosError = error as AxiosError;
@@ -71,12 +70,9 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-    useEffect(()=>{
-        setTimeout(()=>{
-            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
-        },1000)
+    useLayoutEffect(()=>{
+        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
         return ()=>{
-            // updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
         }
     },[])
 
@@ -108,7 +104,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         }
         endPointRef.current = setTimeout(()=>{
             updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
-        },500)
+        },2000)
     }
 
     return (
@@ -132,7 +128,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                             ))}
                         </ul>
                     </div>
-                    <GroupMsgBox groupId={groupInfo.groupId} updateEndpoint={updateEndpoint}/>
+                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint} target={'group'}/>
                     <hr/>
                     <div>
                         <Notice/>

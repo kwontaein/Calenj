@@ -2,7 +2,7 @@ import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork, select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination} from "./StompReducer"
+import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination,updateLoading} from "./StompReducer"
 import {UPDATE_APP_POSITION} from './AppPositionReducer';
 import {time} from "console";
 
@@ -37,6 +37,7 @@ function* sendStomp(stompClient: CompatClient) {
             body: JSON.stringify(data),
         })
     }
+   
 }
 
 
@@ -72,6 +73,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
             })
         })
     })
+    yield put(updateLoading({loading: true}));
 
 }
 
@@ -99,30 +101,20 @@ function* startStomp(destination: Destination): any {
     //put == dispatch랑 동일
     while (isRunning) {
         //race : 경주랑 비슷하게 여러개의 사가 효과가 동시에 실행하고 먼저 완료되는 효과만 처리함
-        const {reciveMessage, timeout} = yield race({
+        const {receiveMessage, timeout} = yield race({
             timeout: delay(60 * 60 * 1000), //1시간 뒤 stomp끊기게 설정 => delay :작업을 지연 시키는 메서드
-            reciveMessage: take(channel), //액션을 기다린 후 dipstch가 완료되면 실행
+            receiveMessage: take(channel), //액션을 기다린 후 dipstch가 완료되면 실행
         });
         if (timeout) isRunning = false;
 
-        const {param, message, nickname, userEmail, Date} = reciveMessage;
-        const messageData = yield put(receivedStompMsg({param, message, nickname, userEmail, Date}));
 
-        console.log(messageData)
+        const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
-        // && (localStorage.getItem('userId')!== messageData.payload.useEmail)
-        if (messageData.payload.state === "SEND" && (localStorage.getItem('userId') !== messageData.payload.useEmail)) {
-            if (messageData.payload.hasOwnProperty('groupMsg')) {
-                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg) + 1)
-            } else if (messageData.payload.hasOwnProperty('friendMsg')) {
-                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg) + 1)
-            }
-        } else if (messageData.payload.state === "ALARM") {
-            if (messageData.payload.hasOwnProperty('groupMsg')) {
-                endPointMap.set(messageData.payload.groupMsg, endPointMap.get(messageData.payload.groupMsg) || (messageData.payload.endPoint - 1))
-            } else if (messageData.payload.hasOwnProperty('friendMsg')) {
-                endPointMap.set(messageData.payload.friendMsg, endPointMap.get(messageData.payload.friendMsg) || (messageData.payload.endPoint - 1))
-            }
+        // && (localStorage.getItem('userId')!== receiveData.payload.useEmail)
+        if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
+                endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
+        } else if (receiveData.payload.receiveMessage.state === "ALARM") {
+            endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endPoint))
         }
     }
 }

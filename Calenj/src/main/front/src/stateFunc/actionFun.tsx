@@ -73,7 +73,24 @@ export function AHMFormat(date:Date):string{
 }
 
 
-export const createTimePassed =(date:string)=>{
+export function AHMFormatV2(date:Date):string{
+    const now = new Date();
+    if(+now-(+date)<oneDay){
+        return dayjs(date).locale('ko').format('오늘 A hh:mm')
+    }else if(+now-(+date)<(oneDay*2)){
+        return dayjs(date).locale('ko').format('어제 A hh:mm')
+    }else{
+        return dayjs(date).locale('ko').format('YYYY.MM.DD. A hh:mm')
+    }
+}
+
+export function shortAHMFormat(date:Date):string{
+    return dayjs(date).locale('ko').format('A hh:mm')
+}
+
+
+
+export const createTimePassed =(date:string):string=>{
     const now = new Date();
     const created = changeDateForm(date);
     const lastTime = (Number(now)-Number(created));

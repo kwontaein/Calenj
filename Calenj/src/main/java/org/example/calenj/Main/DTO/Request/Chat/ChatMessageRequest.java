@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 @Data
 public class ChatMessageRequest {
-    private String useEmail;
+    private String userEmail;
     private fileType state;
     private String param;
     private String nickName;

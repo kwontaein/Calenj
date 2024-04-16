@@ -144,7 +144,7 @@ export const TrasformButton = styled.button<VoteProps>`
         }`
     :
     `
-    background-color :  #fafafa;
+    background-color : #fafafa;
     color :#d6d6d6;
     border: 1px solid rgb(219, 219, 219);
     `}
@@ -164,6 +164,64 @@ export const TransVoteContainer = styled.div<VoteAble>`
 
 
 export const ScrollableDiv = styled.div`
-  overflow: auto; /* 내용이 넘칠 경우 스크롤을 추가함 */
-  max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
+    height: 300px;
+    overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
+    max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
+    padding-left:5px;
+    margin-bottom:-5px
 `;
+
+
+
+/** 메시지 관련 styled */
+export const MessageBoxContainer = styled.div`
+    padding:10px;
+`
+export const ProfileContainer = styled.div`
+    width:35px;
+    height:35px;
+    padding:5px;
+    border-radius: 50px;
+    background-color: #007bff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display:flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    font-size:20px;
+    color:white;
+    font-weight:550;
+`
+export const MessageContainer = styled.div`
+    margin-left:10px;
+`
+export const NickNameContainer = styled.div`
+    font-weight:550;
+`
+
+export const DateContainer = styled.div`
+    margin-left:10px;
+    color: gray;
+    margin-top: 5px;
+    font-size: 12px;
+    margin-top: 2px;
+`
+export const DateContainer2 = styled.div`
+    color: transparent;
+    margin-top: 5px;
+    font-size: 12px;
+    margin-top: 2px;
+    letter-spacing:-1px;
+    width:55px;
+`
+
+export const MessageContainer2 = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: -15px;
+    &:hover {
+        ${DateContainer2} {
+            color: gray; 
+        }
+    }
+`

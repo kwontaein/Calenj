@@ -17,9 +17,6 @@ const Home: React.FC = () => {
         }, 400)
     }, [])
 
-    useEffect(()=>{
-
-    })
 
     return (
 
@@ -28,7 +25,7 @@ const Home: React.FC = () => {
             <h1>여기는 초기 페이지임</h1>
             {isLoding ?
                 <div>
-                    <div> {cookie && <GroupList cookie={cookie}/>}</div>
+                    <div> {cookie && <GroupList/>}</div>
                 </div> :
                 <div style={{marginLeft: '10px'}}>isLoding..</div>}
 
