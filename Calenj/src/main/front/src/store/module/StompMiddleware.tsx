@@ -109,7 +109,7 @@ function* startStomp(destination: Destination): any {
 
 
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
-
+        console.log(receiveData)
         // && (localStorage.getItem('userId')!== receiveData.payload.useEmail)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
                 endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
