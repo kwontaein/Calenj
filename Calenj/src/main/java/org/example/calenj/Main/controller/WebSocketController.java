@@ -64,21 +64,27 @@ public class WebSocketController {
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
+
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+
         } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
-            System.out.println("Reload 실행");
-            System.out.println("message.getNowLine() : " + message.getNowLine());
+
             List<String> file = webSokcetService.readGroupChattingFileSlide(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
+
             webSokcetService.saveChattingToFile(message);
             response.setMessage(Collections.singletonList(message.getMessage()));
+            response.setChatUUID(message.getChatUUID());
             template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
+
             //2라면 나갈 때 엔드포인트 설정
         } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
+
             //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
         }

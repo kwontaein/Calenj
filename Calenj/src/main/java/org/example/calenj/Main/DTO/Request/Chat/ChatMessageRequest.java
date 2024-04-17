@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.Main.domain.UserEntity;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Data
@@ -17,6 +18,7 @@ public class ChatMessageRequest {
     private String message;
     private int endPoint;
     private String sendDate;
+    private UUID chatUUID;
 
     private int nowLine;
     private int fileSize;

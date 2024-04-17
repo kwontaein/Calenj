@@ -177,16 +177,16 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 }
             })
             setReload(false);
-        } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message[0].split("$", 5)[0]) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
+        } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
             const loadMsg: Message = {
-                chatUUID: stomp.receiveMessage.message[0].split("$", 5)[0],
+                chatUUID: stomp.receiveMessage.chatUUID,
                 sendDate: stomp.receiveMessage.sendDate,
                 userEmail: stomp.receiveMessage.userEmail,
                 nickName: stomp.receiveMessage.nickName,
-                message: stomp.receiveMessage.message[0].split("$", 5)[4]
+                message: stomp.receiveMessage.message as string
             }
-            setBeforUUID(stomp.receiveMessage.message[0].split("$", 5)[0])
+            setBeforUUID(stomp.receiveMessage.message as string)
             setMessageList((prev) => {
                 return [...prev, loadMsg]
             })
