@@ -11,18 +11,19 @@ export interface AppState{
     target:string;
     messageParams:string;
     state:stateType;
+    nowLine:number;
 }
 
 export interface AppData{
     app:AppState
 }
 export interface DispatchAppProps {
-    updateAppDirect: (payload:{target: string, messageParams:string, state:stateType}) => void;
+    updateAppDirect: (payload:{target: string, messageParams:string, state:stateType, nowLine:number}) => void;
 }
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToAppProps = (dispatch: Dispatch): DispatchAppProps => ({
-    updateAppDirect: (payload:{target: string, messageParams:string, state:stateType}) => dispatch(updateAppDirect(payload)),
+    updateAppDirect: (payload:{target: string, messageParams:string, state:stateType, nowLine:number}) => dispatch(updateAppDirect(payload)),
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -48,6 +49,7 @@ const initialState :AppState= {
     target:'',
     messageParams:'',
     state:"READ",
+    nowLine:-1,
 };
 
 const MessageReducer = handleActions(
@@ -56,7 +58,8 @@ const MessageReducer = handleActions(
             ...state,
             target: action.payload.target,
             messageParams:action.payload.messageParams,
-            state:action.payload.state
+            state:action.payload.state,
+            nowLine:action.payload.nowLine,
         }),
     },initialState
 )

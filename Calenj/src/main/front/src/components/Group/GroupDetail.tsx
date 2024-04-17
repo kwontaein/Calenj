@@ -70,11 +70,15 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
 
 
     useEffect(()=>{
-        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ"});
+        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ",nowLine:endPointMap.get(groupInfo.groupId)});
         return ()=>{
         }
     },[])
 
+    const readTopMessage = (nowLine:number)=>{
+        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ",nowLine:nowLine})
+
+    }
 
 
     const onlineCheck = (isOnline: string): string => {
@@ -102,7 +106,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
             clearTimeout(endPointRef.current)
         }
         endPointRef.current = setTimeout(()=>{
-            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT"});
+            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT",nowLine:0});
             console.log('엔드포인트 갱신')
         },2000)
     }
@@ -128,7 +132,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                             ))}
                         </ul>
                     </div>
-                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint} target={'group'}/>
+                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint} readTopMessage={readTopMessage} target={'group'}/>
                     <hr/>
                     <div>
                         <Notice/>

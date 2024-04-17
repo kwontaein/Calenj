@@ -9,6 +9,7 @@ interface groupDetailProps {
     target:string;
     param: string;
     updateEndpoint: () => void;
+    readTopMessage: (nowLine:number) => void;
 }
 
 interface Message{
@@ -19,7 +20,7 @@ interface Message{
     message: string,
 }
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
-const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint}) => {
+const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint,readTopMessage}) => {
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [content, setContent] = useState<string>('');
     const [loading,setLoading] =useState<boolean>(false);
@@ -27,6 +28,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const scrollTimerRef = useRef<NodeJS.Timeout | undefined>(); //채팅스크롤 디바운싱 Ref
     const chatRef = useRef<HTMLInputElement>(null);// 채팅 input Ref
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
+    const [reload,setReload] = useState<boolean>(true);
 
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -51,6 +53,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     
     //스크롤 위치 디바운싱
     useEffect(() => {
+
         const handleScroll = () => {
                 if(scrollTimerRef.current){
                     clearTimeout(scrollTimerRef.current);
@@ -59,15 +62,19 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                     updateScroll()
                 },500)               
         };
+
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
+  
         }
         return () => {
             if (scrollRef.current) {
                 scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         };
+
     }, [scrollRef,loading]);
+
 
 
     //스크롤 상태에 따른 endPoint업데이트
@@ -88,6 +95,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 updateEndpoint();
                 endPointMap.set(param,0)
                 return;          
+            }
+            //최상단에 있을경우 리로드
+            if(scrollTop===0){
+                console.log('리로드실행')
+                setReload(true);
+                readTopMessage(messageList.length)
             }  
         }
     }
@@ -103,6 +116,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         if (stomp.receiveMessage.param !== param ||stomp.receiveMessage.message===null) {
             return
         }
+        //로딩까지 딱 1번만 실행하도록
         if(stomp.receiveMessage.state ==="READ"&&!loading){
                  let file = stomp.receiveMessage.message as string[]
                  file.map((fileMessage)=>{
@@ -122,6 +136,24 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                     }
                  })      
                 setLoading(true);
+        }else if(stomp.receiveMessage.state ==="REROAD" && reload){
+            let file = stomp.receiveMessage.message as string[]
+                 file.map((fileMessage)=>{
+                    
+                    let msgInfo =fileMessage.split("$",5)
+                    if(msgInfo[1]!=null){
+                        const loadMsg:Message = {
+                            chatUUID:msgInfo[0],
+                            sendDate:msgInfo[1].slice(1,17),
+                            userEmail:msgInfo[2],
+                            nickName:msgInfo[3],
+                            message: msgInfo[4],
+                        }
+                        setMessageList((prev)=>{
+                            return [loadMsg,...prev,]
+                        })
+                    }
+                 })      
         }else if(stomp.receiveMessage.state ==="SEND" && beforeUUID!==stomp.receiveMessage.message[0].split("$",5)[0]){  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함       
             
             const loadMsg:Message = {
