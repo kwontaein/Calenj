@@ -94,9 +94,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
 
     const scrollToBottom = () => {
         setTimeout(()=>{
-            if (scrollRef.current) {
-                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-            }
+            if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         },50) 
     };
 
