@@ -35,9 +35,7 @@ const Sign: React.FC = () => {
         e.preventDefault();
         axios.post('/api/login', data)
             .then(() => {
-                localStorage.setItem('userId', data.userEmail);
                 document.location.replace("/");
-
             })
 
             .catch(error => {

@@ -164,7 +164,6 @@ export const TransVoteContainer = styled.div<VoteAble>`
 
 
 export const ScrollableDiv = styled.div`
-    height: 300px;
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
     max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
     padding-left:5px;
@@ -218,7 +217,7 @@ export const DateContainer2 = styled.div`
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
-    margin-top: -15px;
+    margin-top: -18px;
     &:hover {
         ${DateContainer2} {
             color: gray; 
