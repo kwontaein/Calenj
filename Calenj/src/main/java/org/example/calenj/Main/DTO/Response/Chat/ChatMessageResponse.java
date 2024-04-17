@@ -8,6 +8,7 @@ import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.domain.UserEntity;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Data
@@ -19,6 +20,7 @@ public class ChatMessageResponse {
     private List<String> message;
     private int endPoint;
     private String sendDate;
+    private UUID chatUUID;
 
     @Getter
     @RequiredArgsConstructor
