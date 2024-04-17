@@ -43,14 +43,17 @@ public class WebSokcetService {
 
 
     public void saveChattingToFile(ChatMessageRequest message) {
+        // 파일을 저장한다.
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         // 메시지 내용
         List<String> lines;
+        
         try {
-            lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
         } catch (IOException e) {
             lines = null;
         }
-
 
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
@@ -58,9 +61,6 @@ public class WebSokcetService {
                         message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-        // 파일을 저장한다.
-        String uuid = message.getParam();
-        String filePath = "C:\\chat\\chat" + uuid;
 
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
             if (lines == null) {
@@ -76,8 +76,10 @@ public class WebSokcetService {
     }
 
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
             List<String> previousLines = lines.stream()
@@ -94,6 +96,9 @@ public class WebSokcetService {
                         .collect(Collectors.toList());
             }
 
+            List<String> fileSize = lines.stream().filter(createFilterCondition(message.getParam())).toList();
+            message.setFileSize(fileSize.size());
+
             Collections.reverse(previousLines);
             System.out.println("previousLines : " + previousLines);
             return previousLines;
@@ -104,9 +109,11 @@ public class WebSokcetService {
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
-        System.out.println(message);
+
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines);
 
             int batchSize = 20;
@@ -134,8 +141,10 @@ public class WebSokcetService {
 
 
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
             String contains1 = (message.getUserEmail() + "EndPoint");

@@ -19,6 +19,7 @@ public class ChatMessageRequest {
     private String sendDate;
 
     private int nowLine;
+    private int fileSize;
 
     @Getter
     @RequiredArgsConstructor

@@ -114,6 +114,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             if (scrollTop === 0) {
                 console.log('리로드실행')
                 setReload(true);
+                console.log(messageList.length)
                 readTopMessage(messageList.length)
             }
         }
@@ -183,7 +184,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             })
             updateScroll(scrollToBottom)
         }
-
+        console.log(messageList.length)
     }
 
     useEffect(() => {
