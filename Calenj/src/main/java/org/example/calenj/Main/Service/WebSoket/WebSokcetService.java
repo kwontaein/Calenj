@@ -91,8 +91,8 @@ public class WebSokcetService {
             int startIndex = previousLines.size();
 
             if (startIndex != 0) {
-                UUID readPoint = UUID.randomUUID();
-                previousLines.add("[" + readPoint + "] $" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
+
+                previousLines.add("엔드포인트$" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
                         " $ " + "-----------------새로운 메세지-----------------");
                 System.out.println("previousLines in if-else: " + previousLines);
             }

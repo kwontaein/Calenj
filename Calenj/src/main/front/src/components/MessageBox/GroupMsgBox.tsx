@@ -15,7 +15,8 @@ import {
     ProfileContainer,
     DateContainer,
     DateContainer2,
-    NickNameContainer
+    NickNameContainer,
+    HR_ChatEndPoint,
 } from '../../style/FormStyle'
 import {endPointMap} from '../../store/module/StompMiddleware';
 import {changeDateForm, AHMFormatV2, shortAHMFormat} from '../../stateFunc/actionFun'
@@ -139,62 +140,65 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             return
         }
         //로딩까지 딱 1번만 실행하도록
-        if (stomp.receiveMessage.state === "READ" && !loading) {
-            let file = stomp.receiveMessage.message as string[]
-            file.map((fileMessage) => {
-
-                let msgInfo = fileMessage.split("$", 5)
-                if (msgInfo[1] != null) {
-                    const loadMsg: Message = {
-                        chatUUID: msgInfo[0],
-                        sendDate: msgInfo[1].slice(1, 17),
-                        userEmail: msgInfo[2],
-                        nickName: msgInfo[3],
-                        message: msgInfo[4],
+        if(!loading){
+            if (stomp.receiveMessage.state === "READ") {
+                let file = stomp.receiveMessage.message as string[]
+                file.map((fileMessage) => {
+    
+                    let msgInfo = fileMessage.split("$", 5)
+                    if (msgInfo[1] != null) {
+                        const loadMsg: Message = {
+                            chatUUID: msgInfo[0],
+                            sendDate: msgInfo[1].slice(1, 17),
+                            userEmail: msgInfo[2],
+                            nickName: msgInfo[3],
+                            message: msgInfo[4],
+                        }
+                        setMessageList((prev) => {
+                            return [...prev, loadMsg]
+                        })
                     }
-                    setMessageList((prev) => {
-                        return [...prev, loadMsg]
-                    })
-                }
-            })
-            setLoading(true);
-        } else if (stomp.receiveMessage.state === "RELOAD" && loading && reload) {
-            let file = stomp.receiveMessage.message as string[]
-            file.map((fileMessage) => {
-
-                let msgInfo = fileMessage.split("$", 5)
-                if (msgInfo[1] != null) {
-                    const loadMsg: Message = {
-                        chatUUID: msgInfo[0],
-                        sendDate: msgInfo[1].slice(1, 17),
-                        userEmail: msgInfo[2],
-                        nickName: msgInfo[3],
-                        message: msgInfo[4],
-                    }
-                    setMessageList((prev) => {
-                        return [loadMsg, ...prev,]
-                    })
-                }
-            })
-            setReload(false);
-        } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
-
-            const loadMsg: Message = {
-                chatUUID: stomp.receiveMessage.chatUUID,
-                sendDate: stomp.receiveMessage.sendDate,
-                userEmail: stomp.receiveMessage.userEmail,
-                nickName: stomp.receiveMessage.nickName,
-                message: stomp.receiveMessage.message as string
-            }
-            setBeforUUID(stomp.receiveMessage.message as string)
-            setMessageList((prev) => {
-                return [...prev, loadMsg]
-            })
-            updateScroll(scrollToBottom)
+                })
+                setLoading(true);
         }
+        }else{
+            if (stomp.receiveMessage.state === "RELOAD" && reload) {
+                let file = stomp.receiveMessage.message as string[]
+                file.map((fileMessage) => {
 
+                    let msgInfo = fileMessage.split("$", 5)
+                    if (msgInfo[1] != null) {
+                        const loadMsg: Message = {
+                            chatUUID: msgInfo[0],
+                            sendDate: msgInfo[1].slice(1, 17),
+                            userEmail: msgInfo[2],
+                            nickName: msgInfo[3],
+                            message: msgInfo[4],
+                        }
+                        setMessageList((prev) => {
+                            return [loadMsg, ...prev,]
+                        })
+                    }
+                })
+                setReload(false);
+            } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
+                const loadMsg: Message = {
+                    chatUUID: stomp.receiveMessage.chatUUID,
+                    sendDate: stomp.receiveMessage.sendDate,
+                    userEmail: stomp.receiveMessage.userEmail,
+                    nickName: stomp.receiveMessage.nickName,
+                    message: stomp.receiveMessage.message as string
+                }
+                setBeforUUID(stomp.receiveMessage.message as string)
+                setMessageList((prev) => {
+                    return [...prev, loadMsg]
+                })
+                updateScroll(scrollToBottom)
+            }
+        }
     }
+    
 
     useEffect(() => {
         settingMessage()
@@ -206,27 +210,28 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             return (
                 <div style={{height: '300px'}}>
                     <ScrollableDiv ref={scrollRef}>
-                        {messageList.map((message, index) => (
+                        {messageList.map((message:Message, index:number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
-                                {!message.nickName && '캘린룸에 오신 걸 환영합니다.'}
-                                {message.nickName &&
-                                    (index && messageList[index - 1].userEmail === message.userEmail ? (
-                                        <MessageContainer2>
-                                            <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                            <div>{message.message}</div>
-                                        </MessageContainer2>
-                                    ) : (
-                                        <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
-                                            <div>
-                                                <RowFlexBox style={{marginLeft: '10px'}}>
-                                                    <NickNameContainer>{message.nickName}</NickNameContainer>
-                                                    <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
-                                                </RowFlexBox>
-                                                <MessageContainer>{message.message}</MessageContainer>
-                                            </div>
-                                        </RowFlexBox>
-                                    ))}
+                                {message.chatUUID==='엔드포인트'? <HR_ChatEndPoint></HR_ChatEndPoint>:
+                                    (message.nickName &&
+                                        (index && messageList[index - 1].userEmail === message.userEmail ? (
+                                            <MessageContainer2>
+                                                <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                                <div>{message.message}</div>
+                                            </MessageContainer2>
+                                        ) : (
+                                            <RowFlexBox style={{width: 'auto'}}>
+                                                <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
+                                                <div>
+                                                    <RowFlexBox style={{marginLeft: '10px'}}>
+                                                        <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                        <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
+                                                    </RowFlexBox>
+                                                    <MessageContainer>{message.message}</MessageContainer>
+                                                </div>
+                                            </RowFlexBox>
+                                        )))
+                            }
                             </MessageBoxContainer>
                         ))}
                     </ScrollableDiv>
