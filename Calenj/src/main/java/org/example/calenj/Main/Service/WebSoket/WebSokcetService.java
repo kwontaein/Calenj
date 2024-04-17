@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,20 +44,30 @@ public class WebSokcetService {
 
     public void saveChattingToFile(ChatMessageRequest message) {
         // 메시지 내용
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+        } catch (IOException e) {
+            lines = null;
+        }
+
 
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                "[" + messageUUid + "] $"+  "[" + message.getSendDate() + "] $"+ message.getUserEmail() +" $ "+
-                message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") +"\n":
+                "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
+                        message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-//                message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
-//                        "[" + message.getSendDate() + "]" + "[" + messageUUid + "]" + "\n" :
-//                message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         // 파일을 저장한다.
         String uuid = message.getParam();
         String filePath = "C:\\chat\\chat" + uuid;
+
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
+            if (lines == null) {
+                stream.write(message.getParam().getBytes(StandardCharsets.UTF_8));
+                stream.write("캘린룸, 생성일자 :".getBytes(StandardCharsets.UTF_8));
+                stream.write((message.getSendDate() + "\n").getBytes(StandardCharsets.UTF_8));
+            }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
             message.setMessage(messageContent.replace("\\lineChange", "\n"));
         } catch (IOException e) {
@@ -70,27 +82,20 @@ public class WebSokcetService {
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
-//                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-//                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
+                    .filter(createFilterCondition(message.getParam()))
+                    .map(stringTransformer)
                     .collect(Collectors.toList());
 
             if (previousLines.isEmpty()) { // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기
                 previousLines = lines.stream()
-                        .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
-                        .limit(50)
-//                        .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-//                        .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                        .map(str -> str.replaceAll("\\[\\]", ""))
+                        .filter(createFilterCondition(message.getParam()))
+                        .limit(20)
+                        .map(stringTransformer)
                         .collect(Collectors.toList());
             }
 
-            message.setNowLine(previousLines.size());
-            message.setLastLine(previousLines.get(previousLines.size() - 1));
-
             Collections.reverse(previousLines);
-            System.out.println("previousLines : "+previousLines);
+            System.out.println("previousLines : " + previousLines);
             return previousLines;
         } catch (IOException e) {
             System.out.println("파일 읽기 실패");
@@ -99,25 +104,27 @@ public class WebSokcetService {
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
+        System.out.println(message);
         try {
             List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
             Collections.reverse(lines);
 
-            int batchSize = 50;
+            int batchSize = 20;
             //위로 아래로인지 구분
             //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
-            int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
+            //int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
 
+            System.out.println("message.getNowLine() : " + message.getNowLine());
             List<String> previousLines = lines.stream()
-                    .skip(startIndex)
-//                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .filter(createFilterCondition(message.getParam()))
+                    .skip(message.getNowLine())
+                    .map(stringTransformer)
                     .limit(batchSize)
                     .collect(Collectors.toList());
 
-            message.setNowLine(startIndex + previousLines.size());
+            System.out.println(previousLines);
+
+            //message.setNowLine(startIndex + previousLines.size());
             return previousLines;
         } catch (IOException e) {
             System.out.println("파일 읽기 실패");
@@ -136,10 +143,7 @@ public class WebSokcetService {
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
-                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .map(stringTransformer)
                     .collect(Collectors.toList());
 
             Collections.reverse(previousLines);
@@ -157,6 +161,18 @@ public class WebSokcetService {
             System.out.println("엔드포인트 파일 읽기 실패");
             return 0;
         }
+    }
+
+    public static Function<String, String> stringTransformer = str -> {
+        /*
+        str = str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", "");
+        str = str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", "");*/
+        str = str.replaceAll("\\[\\]", "");
+        return str;
+    };
+
+    public static Predicate<String> createFilterCondition(String param) {
+        return line -> !line.contains("EndPoint") && !line.contains(param);
     }
 }
 

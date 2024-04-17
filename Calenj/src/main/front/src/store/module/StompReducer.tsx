@@ -19,6 +19,7 @@ export interface Message {
     userEmail:string,
     sendDate:string,
     state:string,
+    fileSize:number,
 }
 
 //초기상태 정의
@@ -29,9 +30,7 @@ export interface StompState {
     message:string,
     receiveMessage: Message,
     isOnline: boolean,
-    lastLine:string,
-    nowLine:number,
-    loading:boolean;
+    loading:boolean
 }
 
 
@@ -42,8 +41,7 @@ export interface StompData {
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
     sendStompMsg: (payload: { target: string, param: string | number, message: string }) => void;
-    reLoadMsg: (payload: { target: string, param: string | number, lastLine:string, nowLine:number }) => void;
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string}}) => void;
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
     updateLoading: (payload: { loading: boolean }) => void;
 }
@@ -51,9 +49,8 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
-    reLoadMsg: (payload: { target: string, param: string | number, lastLine:string, nowLine:number }) =>  dispatch(reLoadMsg(payload)),
     sendStompMsg: (payload: {target: string, param: string | number, message: string}) => dispatch(sendStompMsg(payload)),
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string}}) => dispatch(receivedStompMsg(payload)),
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
     updateLoading: (payload: { loading: boolean }) => dispatch(updateLoading(payload)),
 });
@@ -79,14 +76,10 @@ export const sendStompMsg = (payload: { target: string, param: string | number, 
     payload: payload,
 });
 
-export const reLoadMsg = (payload:{ target: string, param: string | number, lastLine: string, nowLine:number}) => ({
-    type: RELOAD_MSG,
-    payload: payload,
-})
 
 //메시지 받기
 //채널에서 take로 받아온 message를 받아 action에 대한 payload전달 (dispatch)
-export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string}}) => ({
+export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => ({
     type: RECEIVED_STOMP_MSG,
     payload: payload,
 });
@@ -115,8 +108,6 @@ const initialState: StompState = {
     target: '',//초기 publish 대상
     param: '', // (sub/pub 시)식별하기 위한 값
     message:'',
-    lastLine:'',
-    nowLine:0,
     receiveMessage: {
         param:'',
         message: '',
@@ -124,6 +115,7 @@ const initialState: StompState = {
         userEmail:'',
         sendDate:'',
         state:'',
+        fileSize:0,
     }, // 초기 message 상태
     isOnline: false,
     loading:false,
@@ -143,14 +135,6 @@ const StompReducer = handleActions(
             target: action.payload.target,
             param: action.payload.param,
             message: action.payload.message,
-        }),
-
-        [RELOAD_MSG]: (state, action) => ({
-            ...state,
-            target: action.payload.target,
-            param: action.payload.param,
-            lastLine: action.payload.lastLine,
-            nowLine: action.payload.nowLine,
         }),
 
         [RECEIVED_STOMP_MSG]: (state, action) => ({

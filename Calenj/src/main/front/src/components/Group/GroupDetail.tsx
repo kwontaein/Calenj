@@ -9,7 +9,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchAppProps, mapDispatchToAppProps}from '../../store/module/AppPositionReducer'
+import {DispatchAppProps, mapDispatchToAppProps} from '../../store/module/AppPositionReducer'
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
 import {endPointMap} from '../../store/module/StompMiddleware';
 
@@ -42,7 +42,6 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const id = useId();
 
 
-
     //그룹 디테일 불러오기
     const getGroupList = async (): Promise<Details | null> => {
         try {
@@ -69,17 +68,22 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     });
 
 
-    useEffect(()=>{
-        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ",nowLine:endPointMap.get(groupInfo.groupId)});
-        return ()=>{
+    useEffect(() => {
+        updateAppDirect({
+            target: 'groupMsg',
+            messageParams: groupInfo.groupId,
+            state: "READ",
+            nowLine: endPointMap.get(groupInfo.groupId)
+        });
+        return () => {
         }
-    },[])
+    }, [])
 
-    const readTopMessage = (nowLine:number)=>{
-        updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"READ",nowLine:nowLine})
+    const readTopMessage = (nowLine: number) => {
+        console.log(nowLine)
+        updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "RELOAD", nowLine: nowLine})
 
     }
-
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -100,15 +104,15 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     }
 
     const endPointRef = useRef<NodeJS.Timeout | undefined>();
-    
-    const updateEndpoint =()=>{
-        if(endPointRef.current!=undefined){
+
+    const updateEndpoint = () => {
+        if (endPointRef.current != undefined) {
             clearTimeout(endPointRef.current)
         }
-        endPointRef.current = setTimeout(()=>{
-            updateAppDirect({target:'groupMsg', messageParams:groupInfo.groupId, state:"ENDPOINT",nowLine:0});
+        endPointRef.current = setTimeout(() => {
+            updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "ENDPOINT", nowLine: 0});
             console.log('엔드포인트 갱신')
-        },2000)
+        }, 2000)
     }
 
     return (
@@ -132,7 +136,8 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                             ))}
                         </ul>
                     </div>
-                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint} readTopMessage={readTopMessage} target={'group'}/>
+                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint}
+                                 readTopMessage={readTopMessage} target={'group'}/>
                     <hr/>
                     <div>
                         <Notice/>
