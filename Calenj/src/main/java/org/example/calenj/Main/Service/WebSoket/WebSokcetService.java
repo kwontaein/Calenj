@@ -103,7 +103,7 @@ public class WebSokcetService {
                     .skip(startIndex)
                     .limit(20)
                     .map(stringTransformer)
-                    .collect(Collectors.toList());
+                    .toList();
 
             previousLines.addAll(previousLines2);
 
