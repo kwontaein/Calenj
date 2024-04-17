@@ -65,9 +65,14 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     useLayoutEffect(() => {
         updateScroll()
         if (endPointMap.get(param) === 0) scrollToBottom();
-        // messageLength.current=messageList.length;
-        // console.log(messageLength.current)
     }, [loading])
+
+    
+    //메시지 리스트가 변하면 의존성 부여하고 갱신
+    useEffect(()=>{
+        messageLength.current = messageList.length;
+        console.log(messageLength.current)
+    },[messageList])
 
     //스크롤 위치 디바운싱
     useEffect(() => {
@@ -79,10 +84,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 updateScroll()
             }, 500)
         };
-
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
-
         }
         return () => {
             if (scrollRef.current) {
@@ -91,6 +94,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         };
 
     }, [scrollRef, loading]);
+
+
+        useEffect(() => {
+        settingMessage()
+    }, [stomp])
 
 
     //스크롤 상태에 따른 endPoint업데이트
@@ -128,11 +136,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     };
 
 
-    useEffect(()=>{
-        messageLength.current = messageList.length;
-                console.log(messageLength.current)
 
-    },[messageList])
 
     const settingMessage = () => {
         if (stomp.receiveMessage.param !== param || stomp.receiveMessage.message === null) {
@@ -158,9 +162,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 }
             })
             setLoading(true);
-        } else if (stomp.receiveMessage.state === "RELOAD" && loading&&reload) {
-            messageLength.current= messageList.length
-            console.log(messageLength.current)
+        } else if (stomp.receiveMessage.state === "RELOAD" && loading && reload) {
             let file = stomp.receiveMessage.message as string[]
             file.map((fileMessage) => {
 
@@ -179,7 +181,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 }
             })
             setReload(false);
-        } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message[0].split("$", 5)[0]) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
+        } else if (stomp.receiveMessage.state === "SEND" && loading &&beforeUUID !== stomp.receiveMessage.message[0].split("$", 5)[0]) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
             const loadMsg: Message = {
                 chatUUID: stomp.receiveMessage.message[0].split("$", 5)[0],
@@ -194,13 +196,9 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             })
             updateScroll(scrollToBottom)
         }
-        
-        
     }
 
-    useEffect(() => {
-        settingMessage()
-    }, [stomp])
+
 
 
     const MessageBox = useMemo(() => {
