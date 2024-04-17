@@ -88,14 +88,15 @@ public class WebSokcetService {
                     .map(stringTransformer)
                     .collect(Collectors.toList());
 
-            int startIndex = lines.indexOf(previousLines.size());
+            int startIndex = previousLines.size();
 
-            if (startIndex == -1) {
-                startIndex = 0;
+            if (startIndex != 0) {
+                UUID readPoint = UUID.randomUUID();
+                previousLines.add("[" + readPoint + "] $" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
+                        " $ " + "-----------------새로운 메세지-----------------");
+                System.out.println("previousLines in if-else: " + previousLines);
             }
 
-            System.out.println("startIndex : " + startIndex);
-            System.out.println("previousLines.size : " + previousLines.size());
             // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기 + 엔드포인트부터 위에 20개 불러오기
             List<String> previousLines2 = lines.stream()
                     .filter(createFilterCondition(message.getParam()))
@@ -103,11 +104,11 @@ public class WebSokcetService {
                     .limit(20)
                     .map(stringTransformer)
                     .collect(Collectors.toList());
+
             previousLines.addAll(previousLines2);
 
-            Collections.reverse(previousLines2);
-
-            return previousLines2;
+            Collections.reverse(previousLines);
+            return previousLines;
         } catch (IOException e) {
             return null;
         }
