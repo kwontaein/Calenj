@@ -2,7 +2,7 @@ import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork, select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination,updateLoading} from "./StompReducer"
+import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination, updateLoading} from "./StompReducer"
 import {UPDATE_APP_POSITION} from './AppPositionReducer';
 import {time} from "console";
 
@@ -12,7 +12,8 @@ type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT";
 interface StompData {
     param: string | number,
     state: stateType,
-    message?: string;
+    message?: string,
+    nowLine?: number;
 }
 
 
@@ -37,7 +38,7 @@ function* sendStomp(stompClient: CompatClient) {
             body: JSON.stringify(data),
         })
     }
-   
+
 }
 
 
@@ -45,11 +46,12 @@ function* sendStomp(stompClient: CompatClient) {
 function* sendAppPosition(stompClient: CompatClient) {
     while (true) {
         const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams, state} = yield payload;
+        const {target, messageParams, state, nowLine} = yield payload;
 
         const data: StompData = {
             param: `${messageParams}`,//메시지 주소
             state: state,
+            nowLine: nowLine,
         }
         const url = `/app/${target}`
         stompClient.send(url, {}, JSON.stringify(data))
@@ -61,7 +63,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((param: (string | number)) => {
-           
+
             const data: StompData = {
                 param: `${param}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
@@ -110,7 +112,7 @@ function* startStomp(destination: Destination): any {
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
         console.log(receiveData.payload.receiveMessage.state)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
-                endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
+            endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endPoint))
         }
@@ -164,8 +166,8 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string)[], index: number) => {
-                if(!index) localStorage.setItem('userId',sub[index])
-                sub.map((param: (string)) => {                        
+                if (!index) localStorage.setItem('userId', sub[index])
+                sub.map((param: (string)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })

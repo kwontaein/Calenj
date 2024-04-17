@@ -19,8 +19,6 @@ public class ChatMessageRequest {
     private String sendDate;
 
     private int nowLine;
-    private String lastLine;
-    private boolean upDown;
 
     @Getter
     @RequiredArgsConstructor
