@@ -65,14 +65,9 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     useLayoutEffect(() => {
         updateScroll()
         if (endPointMap.get(param) === 0) scrollToBottom();
+        // messageLength.current=messageList.length;
+        // console.log(messageLength.current)
     }, [loading])
-
-    
-    //메시지 리스트가 변하면 의존성 부여하고 갱신
-    useEffect(()=>{
-        messageLength.current = messageList.length;
-        console.log(messageLength.current)
-    },[messageList])
 
     //스크롤 위치 디바운싱
     useEffect(() => {
@@ -84,8 +79,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 updateScroll()
             }, 500)
         };
+
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
+
         }
         return () => {
             if (scrollRef.current) {
@@ -94,11 +91,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         };
 
     }, [scrollRef, loading]);
-
-
-        useEffect(() => {
-        settingMessage()
-    }, [stomp])
 
 
     //스크롤 상태에 따른 endPoint업데이트
@@ -125,7 +117,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 console.log('리로드실행')
                 setReload(true);
                 readTopMessage(messageLength.current)
-            }            
+            }
         }
     }
 
@@ -136,7 +128,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     };
 
 
+    useEffect(() => {
+        messageLength.current = messageList.length;
+        console.log(messageLength.current)
 
+    }, [messageList])
 
     const settingMessage = () => {
         if (stomp.receiveMessage.param !== param || stomp.receiveMessage.message === null) {
@@ -181,24 +177,28 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 }
             })
             setReload(false);
-        } else if (stomp.receiveMessage.state === "SEND" && loading &&beforeUUID !== stomp.receiveMessage.message[0].split("$", 5)[0]) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
+        } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
             const loadMsg: Message = {
-                chatUUID: stomp.receiveMessage.message[0].split("$", 5)[0],
+                chatUUID: stomp.receiveMessage.chatUUID,
                 sendDate: stomp.receiveMessage.sendDate,
                 userEmail: stomp.receiveMessage.userEmail,
                 nickName: stomp.receiveMessage.nickName,
-                message: stomp.receiveMessage.message[0].split("$", 5)[4]
+                message: stomp.receiveMessage.message as string
             }
-            setBeforUUID(stomp.receiveMessage.message[0].split("$", 5)[0])
+            setBeforUUID(stomp.receiveMessage.message as string)
             setMessageList((prev) => {
                 return [...prev, loadMsg]
             })
             updateScroll(scrollToBottom)
         }
+
+
     }
 
-
+    useEffect(() => {
+        settingMessage()
+    }, [stomp])
 
 
     const MessageBox = useMemo(() => {

@@ -43,14 +43,17 @@ public class WebSokcetService {
 
 
     public void saveChattingToFile(ChatMessageRequest message) {
+        // 파일을 저장한다.
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         // 메시지 내용
         List<String> lines;
+
         try {
-            lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
         } catch (IOException e) {
             lines = null;
         }
-
 
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
@@ -58,9 +61,6 @@ public class WebSokcetService {
                         message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-        // 파일을 저장한다.
-        String uuid = message.getParam();
-        String filePath = "C:\\chat\\chat" + uuid;
 
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
             if (lines == null) {
@@ -69,15 +69,17 @@ public class WebSokcetService {
                 stream.write((message.getSendDate() + "\n").getBytes(StandardCharsets.UTF_8));
             }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
-            message.setMessage(messageContent.replace("\\lineChange", "\n"));
+            message.setChatUUID(messageUUid);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
 
             List<String> previousLines = lines.stream()
@@ -86,27 +88,38 @@ public class WebSokcetService {
                     .map(stringTransformer)
                     .collect(Collectors.toList());
 
-            if (previousLines.isEmpty()) { // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기
-                previousLines = lines.stream()
-                        .filter(createFilterCondition(message.getParam()))
-                        .limit(20)
-                        .map(stringTransformer)
-                        .collect(Collectors.toList());
+            int startIndex = previousLines.size();
+
+            if (startIndex != 0) {
+                UUID readPoint = UUID.randomUUID();
+                previousLines.add("[" + readPoint + "] $" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
+                        " $ " + "-----------------새로운 메세지-----------------");
+                System.out.println("previousLines in if-else: " + previousLines);
             }
 
+            // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기 + 엔드포인트부터 위에 20개 불러오기
+            List<String> previousLines2 = lines.stream()
+                    .filter(createFilterCondition(message.getParam()))
+                    .skip(startIndex)
+                    .limit(20)
+                    .map(stringTransformer)
+                    .toList();
+
+            previousLines.addAll(previousLines2);
+
             Collections.reverse(previousLines);
-            System.out.println("previousLines : " + previousLines);
             return previousLines;
         } catch (IOException e) {
-            System.out.println("파일 읽기 실패");
             return null;
         }
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
-        System.out.println(message);
+
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines);
 
             int batchSize = 20;
@@ -114,32 +127,26 @@ public class WebSokcetService {
             //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
             //int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
 
-            System.out.println("message.getNowLine() : " + message.getNowLine());
             List<String> previousLines = lines.stream()
                     .filter(createFilterCondition(message.getParam()))
                     .skip(message.getNowLine())
                     .map(stringTransformer)
                     .limit(batchSize)
                     .collect(Collectors.toList());
-
-            System.out.println(previousLines);
-
             //message.setNowLine(startIndex + previousLines.size());
             return previousLines;
         } catch (IOException e) {
-            System.out.println("파일 읽기 실패");
             return null;
         }
     }
 
 
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
+        String uuid = message.getParam();
+        String filePath = "C:\\chat\\chat" + uuid;
         try {
-            List<String> lines = Files.readAllLines(Paths.get("C:\\chat\\chat" + message.getParam()), Charset.defaultCharset());
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
             Collections.reverse(lines); // 파일 내용을 역순으로 정렬
-
-            String contains1 = (message.getUserEmail() + "EndPoint");
-            System.out.println(contains1);
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
@@ -148,17 +155,11 @@ public class WebSokcetService {
 
             Collections.reverse(previousLines);
 
-            System.out.println("previousLinesInCount : " + previousLines);
-
             if (previousLines.isEmpty()) {
-                System.out.println(0);
                 return 0;
             }
-            System.out.println(previousLines.size());
             return previousLines.size();
         } catch (IOException e) {
-            System.out.println(0);
-            System.out.println("엔드포인트 파일 읽기 실패");
             return 0;
         }
     }
