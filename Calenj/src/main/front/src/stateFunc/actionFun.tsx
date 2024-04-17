@@ -112,7 +112,6 @@ export function saveDBFormat(date: Date): string {
 // YYYY.MM.DD HH:mm 형식의 데이터를 받아 Date를 생성해주는 함수
 export function changeDateForm(date: string): Date {
     let list = date.split(' ');
-    console.log(list)
     let YYMMDD: number[] = list[0].split('.').map((yymmdd) => Number(yymmdd));
 
     let hhmm: number[] = list[1].split(':').map((hm) => Number(hm));
