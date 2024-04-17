@@ -117,7 +117,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 console.log('리로드실행')
                 setReload(true);
                 readTopMessage(messageLength.current)
-            }            
+            }
         }
     }
 
@@ -128,11 +128,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     };
 
 
-    useEffect(()=>{
+    useEffect(() => {
         messageLength.current = messageList.length;
-                console.log(messageLength.current)
+        console.log(messageLength.current)
 
-    },[messageList])
+    }, [messageList])
 
     const settingMessage = () => {
         if (stomp.receiveMessage.param !== param || stomp.receiveMessage.message === null) {
@@ -158,9 +158,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 }
             })
             setLoading(true);
-        } else if (stomp.receiveMessage.state === "RELOAD" && loading&&reload) {
-            messageLength.current= messageList.length
-            console.log(messageLength.current)
+        } else if (stomp.receiveMessage.state === "RELOAD" && loading && reload) {
             let file = stomp.receiveMessage.message as string[]
             file.map((fileMessage) => {
 
@@ -194,8 +192,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             })
             updateScroll(scrollToBottom)
         }
-        
-        
+
+
     }
 
     useEffect(() => {
