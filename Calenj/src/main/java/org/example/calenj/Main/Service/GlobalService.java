@@ -37,7 +37,7 @@ public class GlobalService {
         plusDate(now, 7);
 
         // 날짜 형식 지정
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         System.out.println("오늘: " + now.format(dateFormatter) + " " + now.format(timeFormatter));

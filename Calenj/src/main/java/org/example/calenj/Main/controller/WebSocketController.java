@@ -20,6 +20,7 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
     private final GlobalService globalService;
+
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
@@ -48,6 +49,10 @@ public class WebSocketController {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/groupMsg/" + response.getParam(), response);
+        } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
+            List<String> file = webSokcetService.readGroupChattingFileSlide(message);
+            response.setMessage(file);
+            template.convertAndSendToUser(response.getUserEmail(), "/topic/friendMsg/" + response.getParam(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
             webSokcetService.saveChattingToFile(message);
             response.setMessage(Collections.singletonList(message.getMessage()));
@@ -83,6 +88,10 @@ public class WebSocketController {
             }
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
             List<String> file = webSokcetService.readGroupChattingFile(message);
+            response.setMessage(file);
+            template.convertAndSendToUser(response.getUserEmail(), "/topic/friendMsg/" + response.getParam(), response);
+        } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
+            List<String> file = webSokcetService.readGroupChattingFileSlide(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/friendMsg/" + response.getParam(), response);
         } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
@@ -126,7 +135,8 @@ public class WebSocketController {
         }
         if (request.getUserEmail() != null) {
             filteredResponse.setUserEmail(request.getUserEmail());
-        }if (request.getSendDate() != null) {
+        }
+        if (request.getSendDate() != null) {
             filteredResponse.setSendDate(request.getSendDate());
         }
 

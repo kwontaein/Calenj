@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,12 +47,9 @@ public class WebSokcetService {
 
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                "[" + messageUUid + "] $"+  "[" + message.getSendDate() + "] $"+ message.getUserEmail() +" $ "+
-                message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") +"\n":
+                "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
+                        message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-//                message.getNickName() + " : " + message.getMessage().replace("\n", "\\lineChange") +
-//                        "[" + message.getSendDate() + "]" + "[" + messageUUid + "]" + "\n" :
-//                message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         // 파일을 저장한다.
         String uuid = message.getParam();
@@ -70,27 +69,20 @@ public class WebSokcetService {
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
-//                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-//                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
+                    .filter(createFilterCondition(message.getParam()))
+                    .map(stringTransformer)
                     .collect(Collectors.toList());
 
             if (previousLines.isEmpty()) { // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기
                 previousLines = lines.stream()
-                        .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                        .filter(createFilterCondition(message.getParam()))
                         .limit(50)
-//                        .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-//                        .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                        .map(str -> str.replaceAll("\\[\\]", ""))
+                        .map(stringTransformer)
                         .collect(Collectors.toList());
             }
 
-            message.setNowLine(previousLines.size());
-            message.setLastLine(previousLines.get(previousLines.size() - 1));
-
             Collections.reverse(previousLines);
-            System.out.println("previousLines : "+previousLines);
+            System.out.println("previousLines : " + previousLines);
             return previousLines;
         } catch (IOException e) {
             System.out.println("파일 읽기 실패");
@@ -109,11 +101,9 @@ public class WebSokcetService {
             int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
 
             List<String> previousLines = lines.stream()
+                    .filter(createFilterCondition(message.getParam()))
                     .skip(startIndex)
-//                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .map(stringTransformer)
                     .limit(batchSize)
                     .collect(Collectors.toList());
 
@@ -136,10 +126,7 @@ public class WebSokcetService {
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
-                    .map(str -> str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", ""))
-                    .map(str -> str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", ""))
-                    .map(str -> str.replaceAll("\\[\\]", ""))
-                    .filter(line -> !line.contains("EndPoint") && !line.contains(message.getParam()))
+                    .map(stringTransformer)
                     .collect(Collectors.toList());
 
             Collections.reverse(previousLines);
@@ -157,6 +144,17 @@ public class WebSokcetService {
             System.out.println("엔드포인트 파일 읽기 실패");
             return 0;
         }
+    }
+
+    public static Function<String, String> stringTransformer = str -> {
+        str = str.replaceAll("\\b\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", "");
+        str = str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", "");
+        str = str.replaceAll("\\[\\]", "");
+        return str;
+    };
+
+    public static Predicate<String> createFilterCondition(String param) {
+        return line -> !line.contains("EndPoint") && !line.contains(param);
     }
 }
 
