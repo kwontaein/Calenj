@@ -19,7 +19,7 @@ export interface Message {
     userEmail:string,
     sendDate:string,
     state:string,
-    fileSize:number,
+    chatUUID:string,
 }
 
 //초기상태 정의
@@ -41,7 +41,7 @@ export interface StompData {
 export interface DispatchStompProps {
     updateDestination: (payload: { destination: Destination }) => void;
     sendStompMsg: (payload: { target: string, param: string | number, message: string }) => void;
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => void;
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
     updateLoading: (payload: { loading: boolean }) => void;
 }
@@ -50,7 +50,7 @@ export interface DispatchStompProps {
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
     sendStompMsg: (payload: {target: string, param: string | number, message: string}) => dispatch(sendStompMsg(payload)),
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => dispatch(receivedStompMsg(payload)),
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
     updateLoading: (payload: { loading: boolean }) => dispatch(updateLoading(payload)),
 });
@@ -79,7 +79,7 @@ export const sendStompMsg = (payload: { target: string, param: string | number, 
 
 //메시지 받기
 //채널에서 take로 받아온 message를 받아 action에 대한 payload전달 (dispatch)
-export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, fileSize:number}}) => ({
+export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => ({
     type: RECEIVED_STOMP_MSG,
     payload: payload,
 });
@@ -115,7 +115,7 @@ const initialState: StompState = {
         userEmail:'',
         sendDate:'',
         state:'',
-        fileSize:0,
+        chatUUID:'',
     }, // 초기 message 상태
     isOnline: false,
     loading:false,
