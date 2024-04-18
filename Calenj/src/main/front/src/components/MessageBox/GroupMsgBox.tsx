@@ -16,7 +16,7 @@ import {
     DateContainer,
     DateContainer2,
     NickNameContainer,
-    HR_ChatEndPoint,
+    HR_ChatEndPoint, GlobalStyles, SEND_INPUT, INPUT_DIV, SEND_BUTTON, IMG_SIZE, FORM_SENDMSG,
 } from '../../style/FormStyle'
 import {endPointMap} from '../../store/module/StompMiddleware';
 import {changeDateForm, AHMFormatV2, shortAHMFormat} from '../../stateFunc/actionFun'
@@ -140,11 +140,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             return
         }
         //로딩까지 딱 1번만 실행하도록
-        if(!loading){
+        if (!loading) {
             if (stomp.receiveMessage.state === "READ") {
                 let file = stomp.receiveMessage.message as string[]
                 file.map((fileMessage) => {
-    
+
                     let msgInfo = fileMessage.split("$", 5)
                     if (msgInfo[1] != null) {
                         const loadMsg: Message = {
@@ -160,8 +160,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                     }
                 })
                 setLoading(true);
-        }
-        }else{
+            }
+        } else {
             if (stomp.receiveMessage.state === "RELOAD" && reload) {
                 let file = stomp.receiveMessage.message as string[]
                 file.map((fileMessage) => {
@@ -198,7 +198,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             }
         }
     }
-    
+
 
     useEffect(() => {
         settingMessage()
@@ -208,11 +208,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const MessageBox = useMemo(() => {
         if (loading) {
             return (
-                <div style={{height: '300px'}}>
+                <GlobalStyles style={{height: '300px'}}>
                     <ScrollableDiv ref={scrollRef}>
-                        {messageList.map((message:Message, index:number) => (
+                        {messageList.map((message: Message, index: number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
-                                {message.chatUUID==='엔드포인트'? <HR_ChatEndPoint></HR_ChatEndPoint>:
+                                {message.chatUUID === '엔드포인트' ?
+                                    <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
                                     (message.nickName &&
                                         (index && messageList[index - 1].userEmail === message.userEmail ? (
                                             <MessageContainer2>
@@ -231,11 +232,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                                                 </div>
                                             </RowFlexBox>
                                         )))
-                            }
+                                }
                             </MessageBoxContainer>
                         ))}
                     </ScrollableDiv>
-                </div>
+                </GlobalStyles>
             );
         }
         return null;
@@ -245,14 +246,16 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     return (
         <div>
             {MessageBox}
-            <RowFlexBox>
-                <form onSubmit={sendMsg}>
-                    <input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            <INPUT_DIV>
+                <FORM_SENDMSG onSubmit={sendMsg}>
+                    <SEND_INPUT type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setContent(e.target.value)
-                    }} ref={chatRef}></input>
-                    <button>send</button>
-                </form>
-            </RowFlexBox>
+                    }} ref={chatRef}></SEND_INPUT>
+                    <SEND_BUTTON>
+                        <IMG_SIZE src={"/image/send.png"} alt={"?"}/>
+                    </SEND_BUTTON>
+                </FORM_SENDMSG>
+            </INPUT_DIV>
         </div>
     )
 }

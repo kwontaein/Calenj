@@ -4,7 +4,7 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Notice from './Notice/Notice'
-import {ListView, RowFlexBox} from '../../style/FormStyle'
+import {DEFAULT_HR, GlobalStyles, ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
@@ -116,7 +116,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     }
 
     return (
-        <div>
+        <GlobalStyles>
             {groupDetailState.isLoading && <div>Loading...</div>}
             {groupDetailState.data && (
                 <div>
@@ -138,14 +138,15 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                     </div>
                     <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint}
                                  readTopMessage={readTopMessage} target={'group'}/>
-                    <hr/>
+                    <DEFAULT_HR/>
                     <div>
                         <Notice/>
+                        <DEFAULT_HR/>
                         <Vote member={groupDetailState.data.members.length}/>
                     </div>
                 </div>
             )}
-        </div>
+        </GlobalStyles>
     );
 }
 
