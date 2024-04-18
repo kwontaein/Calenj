@@ -3,6 +3,7 @@ import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import GroupList from './components/Group/GroupList';
 import FriendList from "./components/Friends/FriendList";
+import {GlobalStyles} from "./style/FormStyle";
 
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
@@ -20,17 +21,15 @@ const Home: React.FC = () => {
 
     return (
 
-        <div style={{display: "flex", flexDirection: "column"}}>
+        <GlobalStyles style={{display: "flex", flexDirection: "column"}}>
             <SignState/>
-            <h1>여기는 초기 페이지임</h1>
             {isLoding ?
                 <div>
                     <div> {cookie && <GroupList/>}</div>
                 </div> :
                 <div style={{marginLeft: '10px'}}>isLoding..</div>}
-
-
-        </div>
+            
+        </GlobalStyles>
 
 
     )

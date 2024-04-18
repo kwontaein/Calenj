@@ -4,16 +4,21 @@ import styled from 'styled-components'
 interface UnfocusBackgroundProps {
     focus: string;
 }
-interface VoteProps{
-    $isCreater :boolean;
-    $ableClick : boolean;
-}
-interface VoteAble{
-    $end:boolean
+
+interface VoteProps {
+    $isCreater: boolean;
+    $ableClick: boolean;
 }
 
+interface VoteAble {
+    $end: boolean
+}
 
-
+export const GlobalStyles = styled.div`
+    background-color: #222831; /* 전체 페이지 배경색 */
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    /* 기타 전역 스타일 */
+`;
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
     position: relative;
     z-index: ${props => (props.focus === "true" ? -1 : 1)}
@@ -106,20 +111,64 @@ export const OveflowBlock = styled.div`
     text-overflow: ellipsis;
     padding-left: 5px
 `
-
-
+export const GROUP_USER_LIST = styled.ul`
+    width: 110px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+`
+export const GROUP_LIST = styled.ul`
+    width: 72px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-right: 1px solid #76ABAE;
+    background-color: #393E46;
+`
 export const ListView = styled.li`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: 0.5px solid #ccc;
-    padding-left: 40px;
-    margin-left: -40px;
     margin-top: -1px;
     padding-top: 10px;
     padding-bottom: 10px;
-`
 
+    &:hover {
+        background-color: #393E46;
+    }
+`
+export const GROUP_LIST_VIEW = styled.li`
+    width: 48px;
+    height: 48px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 10px;
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center;
+    margin-bottom: 10px;
+    background-color: #31363F;
+
+    &:hover {
+        color: black;
+    }
+`
+export const NotificationCount = styled.div`
+    background-color: #FFD369;
+    color: black;
+    padding: 1px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    position: absolute;
+    margin-top: 2.5em;
+    left: 4em;
+`;
 export const MiniText = styled.div`
     color: gray;
     margin-top: 5px;
@@ -128,33 +177,33 @@ export const MiniText = styled.div`
 
 //isPick을 통해 투표 항목을 선택했는지 체크하고 ui변경
 export const TrasformButton = styled.button<VoteProps>`
-    
-    width: ${props=>props.$isCreater? '43.5vw': '88vw'};
-    padding: ${props=>props.$isCreater ? '1.2vw': '15px'};
-    margin-top:2vw;
-    font-size:15px;
+
+    width: ${props => props.$isCreater ? '43.5vw' : '88vw'};
+    padding: ${props => props.$isCreater ? '1.2vw' : '15px'};
+    margin-top: 2vw;
+    font-size: 15px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    ${props=>props.$ableClick?
-        `cursor: pointer;
+    ${props => props.$ableClick ?
+            `cursor: pointer;
         hover:#ccc;
         transition : background-color 0.3s ease;
         &:hover{
             background-color: rgb(228, 227, 227);
         }`
-    :
-    `
+            :
+            `
     background-color : #fafafa;
     color :#d6d6d6;
     border: 1px solid rgb(219, 219, 219);
     `}
-   
+
 `;
 
 //투표에서 활용되는 div로 투표가 만료되면 투명도를 저절
 export const TransVoteContainer = styled.div<VoteAble>`
     margin-top: 20px;
-    
+
     ${props => props.$end && `
         & > * {
             opacity: 0.7;
@@ -166,41 +215,40 @@ export const TransVoteContainer = styled.div<VoteAble>`
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
     max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
-    padding-left:5px;
-    margin-bottom:-5px
+    padding-left: 5px;
+    margin-bottom: -5px
 `;
-
 
 
 /** 메시지 관련 styled */
 export const MessageBoxContainer = styled.div`
-    padding:10px;
+    padding: 10px;
 `
 export const ProfileContainer = styled.div`
-    width:35px;
-    height:35px;
-    padding:5px;
+    width: 35px;
+    height: 35px;
+    padding: 5px;
     border-radius: 50px;
     background-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
-    display:flex;
+    display: flex;
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
-    font-size:20px;
-    color:white;
-    font-weight:550;
+    font-size: 20px;
+    color: white;
+    font-weight: 550;
 `
 export const MessageContainer = styled.div`
-    margin-left:10px;
+    margin-left: 10px;
 `
 export const NickNameContainer = styled.div`
-    font-weight:550;
+    font-weight: 550;
 `
 
 export const DateContainer = styled.div`
-    margin-left:10px;
-    color: gray;
+    margin-left: 10px;
+    color: #FFD369;
     margin-top: 5px;
     font-size: 12px;
     margin-top: 2px;
@@ -210,53 +258,135 @@ export const DateContainer2 = styled.div`
     margin-top: 5px;
     font-size: 12px;
     margin-top: 2px;
-    letter-spacing:-1px;
-    width:55px;
+    letter-spacing: -1px;
+    width: 55px;
 `
 
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
     margin-top: -18px;
+
     &:hover {
         ${DateContainer2} {
-            color: gray; 
+            color: gray;
         }
     }
 `
+//div 가로로 나열
+export const INPUT_DIV = styled.div`
+`
 
+export const SEND_INPUT = styled.input`
+    background-color: #393E46;
+    color: #EEEEEE;
+    border-radius: 10px;
+    border: 1px solid #797979;
+    width: 90%;
+    height: 30px;
+    margin: 0 5px 0 5px;
+`
+export const IMG_SIZE = styled.img`
 
+    width: 32px;
+    height: 32px;
+    filter: invert(87%) sepia(53%) saturate(635%) hue-rotate(320deg) brightness(101%) contrast(101%);
+`
 
+export const SEND_BUTTON = styled.button`
+    background-color: #222831;
+    color: #EEEEEE;
+    border-radius: 5px;
+    border: 0;
+    width: 34px;
+    height: 34px;
+    display: inline-block;
+    padding: 1px;
+
+    &:hover {
+        background-color: #393E46;
+    }
+`
+
+export const FORM_SENDMSG = styled.form`
+    height: 34px;
+    display: flex;
+`
 //채팅 endPoint선
 export const HR_ChatEndPoint = styled.hr`
-  line-height: 1em;
-  position: relative;
-  outline: 0;
-  border: 0;
-  color: black;
-  text-align: center;
-  height: 1.5em;
-  opacity: 0.8;
-  &:before {
-    content: '';
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), darkred, darkred);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 2px;
-  }
-  &:after {
-    content: attr(data-content);
+    line-height: 1em;
     position: relative;
-    display: inline-block;
-    padding: 0 .5em;
-    margin-top: 3px;
-    line-height: 1.5em;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    background-color: darkred;
-    text-align: right; /* 텍스트를 오른쪽으로 정렬 */
-  }
+    outline: 0;
+    border: 0;
+    color: black;
+    text-align: center;
+    height: 1.5em;
+
+    &:before {
+        content: '';
+        background: linear-gradient(to right, rgba(0, 0, 0, 0), #b24ad0, #802bc2);
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+    }
+
+    &:after {
+        content: attr(data-content);
+        position: relative;
+        display: inline-block;
+        padding: 0 .3em;
+        line-height: 1.5em;
+        margin-left: 90vw;
+        color: white;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: bold;
+        font-family: sans-serif;
+        background-color: #b24ad0;
+    }
+`
+
+export const DEFAULT_HR = styled.hr`
+    position: relative;
+    outline: 0;
+    border: 0;
+    color: black;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, #393E46);
+    height: .1em;
+`
+export const DEFAULT_HR2 = styled.hr`
+    position: relative;
+    outline: 0;
+    border: 0;
+    background: black;
+    height: .1em;
+    min-width: 40px;
+    margin: 0;
+    margin-bottom: 10px;
+`
+export const SIGN_STATE_FORM = styled.div`
+    background-color: #393E46; /* 전체 페이지 배경색 */
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+`;
+export const SIGN_STATE_BUTTON = styled.button`
+    background-color: #31363F; /* 전체 페이지 배경색 */
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 30px;
+    border-radius: 20px;
+    border: 0;
+`;
+export const SIGN_STATE_TEXT = styled.span`
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 30px;
+    border-radius: 20px;
+    border: 0;
+    display: flex;
+    align-items: center;
 `;
