@@ -229,21 +229,34 @@ export const MessageContainer2 = styled.div`
 
 //채팅 endPoint선
 export const HR_ChatEndPoint = styled.hr`
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: 0.8;
+  &:before {
+    content: '';
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), darkred, darkred);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+  }
+  &:after {
+    content: attr(data-content);
     position: relative;
-    height: 1px;
-    margin: 10px 0; /* 필요에 따라 여백 조절 */
-   ;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 140, 186, 0.75), rgba(0, 0, 0, 0));
-
-    &::after {
-        content: "여기까지 읽음";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #fff; /* 텍스트 배경색 설정 */
-        padding: 0 5px; /* 텍스트 주변 여백 설정 */
-        font-size: 12px;
-        color: #666; /* 텍스트 색상 설정 */
-    }
+    display: inline-block;
+    padding: 0 .5em;
+    margin-top: 3px;
+    line-height: 1.5em;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: darkred;
+    text-align: right; /* 텍스트를 오른쪽으로 정렬 */
+  }
 `;

@@ -212,7 +212,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                     <ScrollableDiv ref={scrollRef}>
                         {messageList.map((message:Message, index:number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
-                                {message.chatUUID==='엔드포인트'? <HR_ChatEndPoint></HR_ChatEndPoint>:
+                                {message.chatUUID==='엔드포인트'? <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint>:
                                     (message.nickName &&
                                         (index && messageList[index - 1].userEmail === message.userEmail ? (
                                             <MessageContainer2>
