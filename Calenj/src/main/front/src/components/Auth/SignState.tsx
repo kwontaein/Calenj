@@ -2,13 +2,11 @@
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
-import {group} from 'console';
 import {connect} from "react-redux";
-import {sagaMutation} from '../../store/store'
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
 import {StompData, mapStateToStompProps} from '../../store/module/StompReducer';
-import {GlobalStyles, SIGN_STATE_BUTTON, SIGN_STATE_FORM, SIGN_STATE_TEXT} from "../../style/FormStyle";
+import { SIGN_STATE_BUTTON, SIGN_STATE_FORM, SIGN_STATE_TEXT} from "../../style/FormStyle";
 
 
 const SignState: React.FC<StompData> = ({stomp}) => {

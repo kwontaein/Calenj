@@ -7,8 +7,6 @@ import {
     mapStateToStompProps
 } from '../../store/module/StompReducer'
 import {
-    RowFlexBox,
-    ScrollableDiv,
     MessageBoxContainer,
     MessageContainer,
     MessageContainer2,
@@ -16,7 +14,16 @@ import {
     DateContainer,
     DateContainer2,
     NickNameContainer,
-    HR_ChatEndPoint, GlobalStyles, SEND_INPUT, INPUT_DIV, SEND_BUTTON, IMG_SIZE, FORM_SENDMSG,
+    ScrollableDiv,
+    HR_ChatEndPoint,
+    SEND_INPUT,
+    SEND_BUTTON,
+    IMG_SIZE,
+    FORM_SENDMSG,
+} from '../../style/ChatBoxStyle'
+import {
+    RowFlexBox,
+
 } from '../../style/FormStyle'
 import {endPointMap} from '../../store/module/StompMiddleware';
 import {changeDateForm, AHMFormatV2, shortAHMFormat} from '../../stateFunc/actionFun'
@@ -37,7 +44,7 @@ interface Message {
 }
 
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
-const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint, readTopMessage}) => {
+const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint,readTopMessage}) => {
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [content, setContent] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -59,12 +66,18 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         updateEndpoint();
         scrollToBottom();
 
-
     }
+
+    /**param이 바뀌면 다시 세팅*/
+    useEffect(()=>{
+        setLoading(false);
+        setReload(false);
+        setMessageList([]);
+    },[param])
 
     //처음 들어갔을 때 스크롤에따른 상태체크
     useLayoutEffect(() => {
-        updateScroll()
+        updateScroll();
         if (endPointMap.get(param) === 0) scrollToBottom();
         // messageLength.current=messageList.length;
         // console.log(messageLength.current)
@@ -129,11 +142,37 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     };
 
 
+    //메시지 리스트의 길이를 갱신
     useEffect(() => {
         messageLength.current = messageList.length;
-        console.log(messageLength.current)
-
     }, [messageList])
+
+
+    const setFileLog =()=>{
+        let file = stomp.receiveMessage.message as string[]
+        file.map((fileMessage) => {
+
+        let msgInfo = fileMessage.split("$", 5)
+        if (!msgInfo[1]) return
+            const loadMsg: Message = {
+                chatUUID: msgInfo[0],
+                sendDate: msgInfo[1].slice(1, 17),
+                userEmail: msgInfo[2],
+                nickName: msgInfo[3],
+                message: msgInfo[4],
+            }
+
+            if(!loading){
+                setMessageList((prev) => {
+                    return [...prev, loadMsg]
+                })
+            }else{
+                setMessageList((prev) => {
+                    return [loadMsg, ...prev,]
+                })
+            }
+        })
+    }
 
     const settingMessage = () => {
         if (stomp.receiveMessage.param !== param || stomp.receiveMessage.message === null) {
@@ -143,54 +182,24 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         if (!loading) {
             if (stomp.receiveMessage.state === "READ") {
                 let file = stomp.receiveMessage.message as string[]
-                file.map((fileMessage) => {
-
-                    let msgInfo = fileMessage.split("$", 5)
-                    if (msgInfo[1] != null) {
-                        const loadMsg: Message = {
-                            chatUUID: msgInfo[0],
-                            sendDate: msgInfo[1].slice(1, 17),
-                            userEmail: msgInfo[2],
-                            nickName: msgInfo[3],
-                            message: msgInfo[4],
-                        }
-                        setMessageList((prev) => {
-                            return [...prev, loadMsg]
-                        })
-                    }
-                })
+                setFileLog();
                 setLoading(true);
             }
         } else {
             if (stomp.receiveMessage.state === "RELOAD" && reload) {
-                let file = stomp.receiveMessage.message as string[]
-                file.map((fileMessage) => {
-
-                    let msgInfo = fileMessage.split("$", 5)
-                    if (msgInfo[1] != null) {
-                        const loadMsg: Message = {
-                            chatUUID: msgInfo[0],
-                            sendDate: msgInfo[1].slice(1, 17),
-                            userEmail: msgInfo[2],
-                            nickName: msgInfo[3],
-                            message: msgInfo[4],
-                        }
-                        setMessageList((prev) => {
-                            return [loadMsg, ...prev,]
-                        })
-                    }
-                })
+                setFileLog();
                 setReload(false);
             } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
+                if(typeof stomp.receiveMessage.message !== "string") return
                 const loadMsg: Message = {
                     chatUUID: stomp.receiveMessage.chatUUID,
                     sendDate: stomp.receiveMessage.sendDate,
                     userEmail: stomp.receiveMessage.userEmail,
                     nickName: stomp.receiveMessage.nickName,
-                    message: stomp.receiveMessage.message as string
+                    message: stomp.receiveMessage.message
                 }
-                setBeforUUID(stomp.receiveMessage.message as string)
+                setBeforUUID(stomp.receiveMessage.message)
                 setMessageList((prev) => {
                     return [...prev, loadMsg]
                 })
@@ -208,7 +217,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const MessageBox = useMemo(() => {
         if (loading) {
             return (
-                <GlobalStyles style={{height: '300px'}}>
+                <div style={{height: '300px'}}>
                     <ScrollableDiv ref={scrollRef}>
                         {messageList.map((message: Message, index: number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
@@ -236,7 +245,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                             </MessageBoxContainer>
                         ))}
                     </ScrollableDiv>
-                </GlobalStyles>
+                </div>
             );
         }
         return null;
@@ -246,7 +255,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     return (
         <div>
             {MessageBox}
-            <INPUT_DIV>
+            <div>
                 <FORM_SENDMSG onSubmit={sendMsg}>
                     <SEND_INPUT type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setContent(e.target.value)
@@ -255,7 +264,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                         <IMG_SIZE src={"/image/send.png"} alt={"?"}/>
                     </SEND_BUTTON>
                 </FORM_SENDMSG>
-            </INPUT_DIV>
+            </div>
         </div>
     )
 }
