@@ -114,7 +114,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             //만약 스크롤이 없는데 받은 메시지가 있다면
             if (scrollHeight < 400 && endPointMap.get(param) != 0) {
                 updateEndpoint();
-                endPointMap.set(param, 0)
                 return;
             }
             //현재위치랑 스크롤의 맨아래 위치랑 같은데 받은 메시지가 있다면
@@ -191,15 +190,14 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 setReload(false);
             } else if (stomp.receiveMessage.state === "SEND" && beforeUUID !== stomp.receiveMessage.message) {  //재저장을 막기위해 이전 chatUUID를 저장하고 비교함
 
-                if(typeof stomp.receiveMessage.message !== "string") return
                 const loadMsg: Message = {
                     chatUUID: stomp.receiveMessage.chatUUID,
                     sendDate: stomp.receiveMessage.sendDate,
                     userEmail: stomp.receiveMessage.userEmail,
                     nickName: stomp.receiveMessage.nickName,
-                    message: stomp.receiveMessage.message
+                    message: stomp.receiveMessage.message as string
                 }
-                setBeforUUID(stomp.receiveMessage.message)
+                setBeforUUID(stomp.receiveMessage.message as string)
                 setMessageList((prev) => {
                     return [...prev, loadMsg]
                 })
