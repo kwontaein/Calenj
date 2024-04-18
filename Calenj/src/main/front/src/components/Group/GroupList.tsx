@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {
-    DEFAULT_HR, DEFAULT_HR2,
+    DEFAULT_HR, DEFAULT_HR2, DIV_FULL_HEIGHT,
     GlobalStyles,
     GROUP_LIST,
     GROUP_LIST_VIEW,
@@ -76,12 +76,11 @@ const GroupList: React.FC<StompData> = ({stomp}) => {
     };
 
     return (
-
         <GlobalStyles>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
-                <div>
+                <DIV_FULL_HEIGHT style={{height: "100%"}}>
                     <GROUP_LIST>
                         <GROUP_LIST_VIEW onClick={() => goHome()}>CalenJ</GROUP_LIST_VIEW>
                         <DEFAULT_HR2/>
@@ -97,10 +96,9 @@ const GroupList: React.FC<StompData> = ({stomp}) => {
                         ))}
                         <GROUP_LIST_VIEW onClick={() => setShowMakeGroup(true)}>+</GROUP_LIST_VIEW>
                     </GROUP_LIST>
-                </div>
+                </DIV_FULL_HEIGHT>
             )}
         </GlobalStyles>
     )
-
 }
 export default connect(mapStateToStompProps, null)(GroupList);

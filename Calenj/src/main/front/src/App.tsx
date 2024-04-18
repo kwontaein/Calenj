@@ -9,7 +9,12 @@ import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import stompReducer, {DispatchStompProps,mapDispatchToStompProps,StompData,mapStateToStompProps} from './store/module/StompReducer';
+import stompReducer, {
+    DispatchStompProps,
+    mapDispatchToStompProps,
+    StompData,
+    mapStateToStompProps
+} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
@@ -30,7 +35,7 @@ interface SubScribe {
 
 const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, stomp, updateLoading}) => {
     const queryClient = useQueryClient();
-    const [loading,setLoading]= useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
@@ -40,7 +45,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         if (!response.data) {
             localStorage.removeItem('userId')
             updateOnline({isOnline: false});
-            updateLoading({loading:true});
+            updateLoading({loading: true});
         } else {
 
             axios.get(`/api/subscribeCheck`)
@@ -63,9 +68,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         return response.data;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(stomp.loading)
-    },[stomp.loading])
+    }, [stomp.loading])
 
     function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
         let parmasList = [];
@@ -82,23 +87,23 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
     });
 
     return (
-        <div className="App">
+        <div className="App" style={{height: "100%"}}>
             {loading &&
-            <BrowserRouter>
-                <Routes>
-                    <Route path={"/"} element={<Home/>}/>
-                    <Route path={"/signup"} element={<SignUp/>}/>
-                    <Route path={"/sign"} element={<Sign/>}/>
-                    <Route path={"/details"} element={<GroupDetail/>}/>
-                    <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                    <Route path={"/vote/detail"} element={<VoteDetail/>}/>
-                    <Route path={"/inviteGroup/"}>
-                        <Route path={":inviteCode"} element={<InviteGroup/>}/>
-                    </Route>
-                    <Route path={"/friend"} element={<FriendList/>}/>
-                    <Route path={"/requestFriend"} element={<RequestFriend/>}/>
-                </Routes>
-            </BrowserRouter>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path={"/"} element={<Home/>}/>
+                        <Route path={"/signup"} element={<SignUp/>}/>
+                        <Route path={"/sign"} element={<Sign/>}/>
+                        <Route path={"/details"} element={<GroupDetail/>}/>
+                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
+                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
+                        <Route path={"/inviteGroup/"}>
+                            <Route path={":inviteCode"} element={<InviteGroup/>}/>
+                        </Route>
+                        <Route path={"/friend"} element={<FriendList/>}/>
+                        <Route path={"/requestFriend"} element={<RequestFriend/>}/>
+                    </Routes>
+                </BrowserRouter>
             }
         </div>
     );

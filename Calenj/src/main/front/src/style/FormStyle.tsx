@@ -15,10 +15,18 @@ interface VoteAble {
 }
 
 export const GlobalStyles = styled.div`
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
     background-color: #222831; /* 전체 페이지 배경색 */
     color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 100%;
+
     /* 기타 전역 스타일 */
 `;
+
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
     position: relative;
     z-index: ${props => (props.focus === "true" ? -1 : 1)}
@@ -124,11 +132,11 @@ export const GROUP_LIST = styled.ul`
     padding: 0;
     margin: 0;
     font-size: 13px;
-    display: flex;
     justify-content: center;
     flex-wrap: wrap;
     border-right: 1px solid #76ABAE;
     background-color: #393E46;
+    height: 100%;
 `
 export const ListView = styled.li`
     white-space: nowrap;
@@ -152,7 +160,7 @@ export const GROUP_LIST_VIEW = styled.li`
     display: flex;
     align-items: center; /* 수직 가운데 정렬 */
     justify-content: center;
-    margin-bottom: 10px;
+    margin: 0 12px 10px 12px;
     background-color: #31363F;
 
     &:hover {
@@ -390,3 +398,7 @@ export const SIGN_STATE_TEXT = styled.span`
     display: flex;
     align-items: center;
 `;
+
+export const DIV_FULL_HEIGHT = styled.div`
+    height: 100%;
+`
