@@ -177,7 +177,7 @@ export const MiniText = styled.div`
 
 //isPick을 통해 투표 항목을 선택했는지 체크하고 ui변경
 export const TrasformButton = styled.button<VoteProps>`
-
+    
     width: ${props => props.$isCreater ? '43.5vw' : '88vw'};
     padding: ${props => props.$isCreater ? '1.2vw' : '15px'};
     margin-top: 2vw;
@@ -185,25 +185,25 @@ export const TrasformButton = styled.button<VoteProps>`
     border-radius: 5px;
     border: 1px solid #ccc;
     ${props => props.$ableClick ?
-            `cursor: pointer;
+        `cursor: pointer;
         hover:#ccc;
         transition : background-color 0.3s ease;
         &:hover{
             background-color: rgb(228, 227, 227);
         }`
-            :
-            `
+    :
+    `
     background-color : #fafafa;
     color :#d6d6d6;
     border: 1px solid rgb(219, 219, 219);
     `}
-
+   
 `;
 
 //투표에서 활용되는 div로 투표가 만료되면 투명도를 저절
 export const TransVoteContainer = styled.div<VoteAble>`
     margin-top: 20px;
-
+    
     ${props => props.$end && `
         & > * {
             opacity: 0.7;
@@ -269,7 +269,7 @@ export const MessageContainer2 = styled.div`
 
     &:hover {
         ${DateContainer2} {
-            color: gray;
+            color: gray; 
         }
     }
 `
@@ -314,32 +314,32 @@ export const FORM_SENDMSG = styled.form`
 `
 //채팅 endPoint선
 export const HR_ChatEndPoint = styled.hr`
-    line-height: 1em;
-    position: relative;
-    outline: 0;
-    border: 0;
-    color: black;
-    text-align: center;
-    height: 1.5em;
+line-height: 1em;
+position: relative;
+outline: 0;
+border: 0;
+color: black;
+text-align: center;
+height: 1.5em;
 
     &:before {
-        content: '';
+    content: '';
         background: linear-gradient(to right, rgba(0, 0, 0, 0), #b24ad0, #802bc2);
-        position: absolute;
-        left: 0;
-        top: 50%;
-        width: 100%;
-        height: 2px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
     }
 
     &:after {
-        content: attr(data-content);
-        position: relative;
-        display: inline-block;
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
         padding: 0 .3em;
-        line-height: 1.5em;
+    line-height: 1.5em;
         margin-left: 90vw;
-        color: white;
+    color: white;
         border-radius: 10px;
         font-size: 15px;
         font-weight: bold;
