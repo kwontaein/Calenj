@@ -4,12 +4,20 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import {ListView, MiniText} from '../../style/FormStyle'
+import {
+    DEFAULT_HR, DEFAULT_HR2,
+    GlobalStyles,
+    GROUP_LIST,
+    GROUP_LIST_VIEW,
+    ListView,
+    MiniText,
+    NotificationCount
+} from '../../style/FormStyle'
 import {sagaTask} from '../../store/store'
 import {endPointMap} from '../../store/module/StompMiddleware'
 import {RowFlexBox} from '../../style/FormStyle'
 import {connect} from 'react-redux'
-import{mapStateToStompProps,StompData} from '../../store/module/StompReducer'
+import {mapStateToStompProps, StompData} from '../../store/module/StompReducer'
 
 interface GroupList {
     groupId: number | string;
@@ -17,12 +25,9 @@ interface GroupList {
     groupCreated: string;
 }
 
-
-
 interface error {
     message: string;
 }
-
 
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
@@ -66,34 +71,36 @@ const GroupList: React.FC<StompData> = ({stomp}) => {
     const closeModal = () => {
         setShowMakeGroup(false);
     };
-
-    
-
+    const goHome = () => {
+        navigate("/");
+    };
 
     return (
 
-        <div>
-            <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
+        <GlobalStyles>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <div>
-                    <h2>Group List</h2>
-                    <ul>
+                    <GROUP_LIST>
+                        <GROUP_LIST_VIEW onClick={() => goHome()}>CalenJ</GROUP_LIST_VIEW>
+                        <DEFAULT_HR2/>
                         {groupListState.data.map((group) => (
-                            <ListView key={group.groupId}
-                                      onClick={() => redirectDetail(group.groupId as number)}>
-                                <RowFlexBox style={{width:'90vw'}}>
-                                {group.groupTitle}
-                                <div style={{marginLeft:'auto'}}>{endPointMap.get(group.groupId) && endPointMap.get(group.groupId)}</div>
-                                </RowFlexBox>
-                            </ListView>
+                            <GROUP_LIST_VIEW key={group.groupId}
+                                             onClick={() => redirectDetail(group.groupId as number)}>
+                                <div style={{textAlign: "center"}}>
+                                    {group.groupTitle}
+                                </div>
+                                <NotificationCount
+                                    style={{marginLeft: 'auto'}}>{endPointMap.get(group.groupId) && endPointMap.get(group.groupId)}</NotificationCount>
+                            </GROUP_LIST_VIEW>
                         ))}
-                    </ul>
+                        <GROUP_LIST_VIEW onClick={() => setShowMakeGroup(true)}>+</GROUP_LIST_VIEW>
+                    </GROUP_LIST>
                 </div>
             )}
-        </div>
+        </GlobalStyles>
     )
 
 }
-export default connect(mapStateToStompProps,null) (GroupList);
+export default connect(mapStateToStompProps, null)(GroupList);

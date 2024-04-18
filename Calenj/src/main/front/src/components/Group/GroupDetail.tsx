@@ -4,7 +4,7 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Notice from './Notice/Notice'
-import {DEFAULT_HR, GlobalStyles, ListView, RowFlexBox} from '../../style/FormStyle'
+import {DEFAULT_HR, GlobalStyles, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
@@ -127,15 +127,17 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                             <div><Invite groupId={groupInfo.groupId}/></div>
                         </RowFlexBox>
                     </div>
+                    <DEFAULT_HR/>
                     <div>
-                        <ul>
+                        <GROUP_USER_LIST>
                             {groupDetailState.data.members.map((member) => (
                                 <ListView key={member.userEmail}>
                                     {member.nickName} : {onlineCheck(member.onlineStatus)}
                                 </ListView>
                             ))}
-                        </ul>
+                        </GROUP_USER_LIST>
                     </div>
+                    <DEFAULT_HR/>
                     <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint}
                                  readTopMessage={readTopMessage} target={'group'}/>
                     <DEFAULT_HR/>

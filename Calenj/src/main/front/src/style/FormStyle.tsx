@@ -111,14 +111,29 @@ export const OveflowBlock = styled.div`
     text-overflow: ellipsis;
     padding-left: 5px
 `
-
-
+export const GROUP_USER_LIST = styled.ul`
+    width: 110px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+`
+export const GROUP_LIST = styled.ul`
+    width: 72px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-right: 1px solid #76ABAE;
+    background-color: #393E46;
+`
 export const ListView = styled.li`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-left: 40px;
-    margin-left: -40px;
     margin-top: -1px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -127,7 +142,33 @@ export const ListView = styled.li`
         background-color: #393E46;
     }
 `
+export const GROUP_LIST_VIEW = styled.li`
+    width: 48px;
+    height: 48px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 10px;
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center;
+    margin-bottom: 10px;
+    background-color: #31363F;
 
+    &:hover {
+        color: black;
+    }
+`
+export const NotificationCount = styled.div`
+    background-color: #FFD369;
+    color: black;
+    padding: 1px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    position: absolute;
+    margin-top: 2.5em;
+    left: 4em;
+`;
 export const MiniText = styled.div`
     color: gray;
     margin-top: 5px;
@@ -315,3 +356,37 @@ export const DEFAULT_HR = styled.hr`
     background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, #393E46);
     height: .1em;
 `
+export const DEFAULT_HR2 = styled.hr`
+    position: relative;
+    outline: 0;
+    border: 0;
+    background: black;
+    height: .1em;
+    min-width: 40px;
+    margin: 0;
+    margin-bottom: 10px;
+`
+export const SIGN_STATE_FORM = styled.div`
+    background-color: #393E46; /* 전체 페이지 배경색 */
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+`;
+export const SIGN_STATE_BUTTON = styled.button`
+    background-color: #31363F; /* 전체 페이지 배경색 */
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 30px;
+    border-radius: 20px;
+    border: 0;
+`;
+export const SIGN_STATE_TEXT = styled.span`
+    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    height: 30px;
+    border-radius: 20px;
+    border: 0;
+    display: flex;
+    align-items: center;
+`;
