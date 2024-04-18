@@ -109,8 +109,10 @@ const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDir
         if (endPointRef.current != undefined) {
             clearTimeout(endPointRef.current)
         }
+        endPointMap.set(groupId, 0)
         endPointRef.current = setTimeout(() => {
             updateAppDirect({target: 'groupMsg', messageParams: groupId, state: "ENDPOINT", nowLine: 0});
+
             console.log('엔드포인트 갱신')
         }, 2000)
     }

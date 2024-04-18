@@ -1,7 +1,7 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useEffect, useState} from 'react';
+import {useEffect, useState,useMemo} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {
@@ -29,7 +29,7 @@ interface NavigationProps{
 }
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
-const GroupList: React.FC<StompData & NavigationProps> = ({stomp,redirectDetail}) => {
+const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -73,30 +73,37 @@ const GroupList: React.FC<StompData & NavigationProps> = ({stomp,redirectDetail}
         navigate("/");
     };
 
-    return (
-        <div>
+    const GroupListComponent = useMemo(()=> {
+        console.log('재랜더링')
+        return <div>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
-                        <Btn_CalenJ_Icon onClick={() => goHome()}></Btn_CalenJ_Icon>
-                        <GroupList_HR/>
+                    <Btn_CalenJ_Icon onClick={() => goHome()}></Btn_CalenJ_Icon>
+                    <GroupList_HR/>
                     <GroupListSub_Container>
                         {groupListState.data.map((group) => (
                             <Li_GroupList_Item key={group.groupId}
-                                             onClick={() =>redirectDetail("group",group.groupId)}>
+                                               onClick={() => redirectDetail("group", group.groupId)}>
                                 <GroupListTitle>
                                     {group.groupTitle}
                                 </GroupListTitle>
-                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) ===0}>
-                                    {endPointMap.get(group.groupId) !==0&& endPointMap.get(group.groupId)}
+                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) === 0}>
+                                    {endPointMap.get(group.groupId) !== 0 && endPointMap.get(group.groupId)}
                                 </SignOfMessageNum>
                             </Li_GroupList_Item>
                         ))}
                     </GroupListSub_Container>
-                        <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
+                    <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
                 </GroupList_Container>
             )}
+        </div>
+    },[groupListState.data])
+
+    return (
+        <div>
+            {GroupListComponent}
         </div>
     )
 }
