@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useCallback, useEffect, useState} from 'react';
+import { useEffect, useState} from 'react';
 import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable,UnfocusBackgound} from '../../style/FormStyle';
 import EmailValidationComponent from './EmailValidationComponent';
 import schema from '../../formShema/signSchema';

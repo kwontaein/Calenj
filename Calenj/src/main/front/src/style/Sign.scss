@@ -1,9 +1,4 @@
-body {
-   margin: 0;
-   width: 100vw;
-   height: 100vh;
- }
- 
+
  #SignUp_Parent_Box{
    width: 100vw;
    display: flex;
@@ -12,7 +7,7 @@ body {
  }
 
 .btn{
-   font: size 15px;
+   font-size :15px;
    border: 1.8px solid;
    text-align: center;
    width:50px;

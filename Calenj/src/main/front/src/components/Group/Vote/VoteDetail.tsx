@@ -3,7 +3,8 @@ import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {saveDBFormat, stateFilter,TimeOperation, useConfirm,changeDateForm} from '../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
-import { MiniText, RowFlexBox ,TrasformButton,TransVoteContainer} from '../../../style/FormStyle';
+import { MiniText, RowFlexBox } from '../../../style/FormStyle';
+import { TrasformButton,TransVoteContainer} from '../../../style/VoteStyle'
 import '../../../style/Detail.scss'
 import { useId } from 'react';
 

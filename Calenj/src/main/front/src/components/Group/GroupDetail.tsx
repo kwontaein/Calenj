@@ -1,10 +1,9 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import React, {useEffect, useRef,useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Notice from './Notice/Notice'
-import {DEFAULT_HR, GlobalStyles, ListView, RowFlexBox} from '../../style/FormStyle'
+import {DEFAULT_HR, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
@@ -29,6 +28,9 @@ interface Members {
     userEmail: string;
 }
 
+interface NavigationProps{
+    groupId: string
+}
 
 const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
@@ -36,9 +38,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
-    const location = useLocation();
-    const groupInfo = {...location.state};
+const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDirect,groupId}) => {
     const id = useId();
 
 
@@ -46,7 +46,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const getGroupList = async (): Promise<Details | null> => {
         try {
             const response = await axios.post('/api/groupDetail', {
-                groupId: groupInfo.groupId
+                groupId: groupId
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
             return data;
@@ -63,25 +63,25 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
 
 
     const groupDetailState = useQuery<Details | null, Error>({
-        queryKey: [QUERY_GROUP_DETAIL_KEY, groupInfo.groupId],
+        queryKey: [QUERY_GROUP_DETAIL_KEY, groupId],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
 
-    useEffect(() => {
+     useEffect(() => {
         updateAppDirect({
             target: 'groupMsg',
-            messageParams: groupInfo.groupId,
+            messageParams: groupId,
             state: "READ",
-            nowLine: endPointMap.get(groupInfo.groupId)
+            nowLine: endPointMap.get(groupId)
         });
         return () => {
         }
-    }, [])
+    }, [groupId])
 
     const readTopMessage = (nowLine: number) => {
         console.log(nowLine)
-        updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "RELOAD", nowLine: nowLine})
+        updateAppDirect({target: 'groupMsg', messageParams: groupId, state: "RELOAD", nowLine: nowLine})
 
     }
 
@@ -110,13 +110,13 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
             clearTimeout(endPointRef.current)
         }
         endPointRef.current = setTimeout(() => {
-            updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "ENDPOINT", nowLine: 0});
+            updateAppDirect({target: 'groupMsg', messageParams: groupId, state: "ENDPOINT", nowLine: 0});
             console.log('엔드포인트 갱신')
         }, 2000)
     }
 
     return (
-        <GlobalStyles>
+        <div>
             {groupDetailState.isLoading && <div>Loading...</div>}
             {groupDetailState.data && (
                 <div>
@@ -124,19 +124,21 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                         <div>방아이디: {groupDetailState.data.groupId.toString().slice(0, 9).padEnd(20, '*')}</div>
                         <RowFlexBox style={{justifyContent: 'space-between'}}>
                             <div>방이름: {groupDetailState.data.groupTitle}</div>
-                            <div><Invite groupId={groupInfo.groupId}/></div>
+                            <div><Invite groupId={groupId}/></div>
                         </RowFlexBox>
                     </div>
+                    <DEFAULT_HR/>
                     <div>
-                        <ul>
+                        <GROUP_USER_LIST>
                             {groupDetailState.data.members.map((member) => (
                                 <ListView key={member.userEmail}>
                                     {member.nickName} : {onlineCheck(member.onlineStatus)}
                                 </ListView>
                             ))}
-                        </ul>
+                        </GROUP_USER_LIST>
                     </div>
-                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint}
+                    <DEFAULT_HR/>
+                    <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
                                  readTopMessage={readTopMessage} target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
@@ -146,7 +148,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                     </div>
                 </div>
             )}
-        </GlobalStyles>
+        </div>
     );
 }
 

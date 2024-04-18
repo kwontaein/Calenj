@@ -4,29 +4,32 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import {ListView, MiniText} from '../../style/FormStyle'
-import {sagaTask} from '../../store/store'
+import {
+    GroupList_Container,
+    GroupListSub_Container,
+    Btn_CalenJ_Icon,
+    Li_GroupList_Item,
+    GroupListTitle,
+    GroupList_HR,
+    Btn_MakeGroup,
+    SignOfMessageNum,
+} from '../../style/Group/GroupListStyle';
 import {endPointMap} from '../../store/module/StompMiddleware'
-import {RowFlexBox} from '../../style/FormStyle'
 import {connect} from 'react-redux'
-import{mapStateToStompProps,StompData} from '../../store/module/StompReducer'
+import {mapStateToStompProps, StompData} from '../../store/module/StompReducer'
 
 interface GroupList {
-    groupId: number | string;
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
 }
 
-
-
-interface error {
-    message: string;
+interface NavigationProps{
+    redirectDetail : (navigate:string,groupId:string)=>void
 }
-
-
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
-const GroupList: React.FC<StompData> = ({stomp}) => {
+const GroupList: React.FC<StompData & NavigationProps> = ({stomp,redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -59,41 +62,42 @@ const GroupList: React.FC<StompData> = ({stomp}) => {
         enabled: stomp.isOnline,
     });
 
-    const redirectDetail = (groupId: number) => {
-        navigate("/details", {state: {groupId: groupId}});
-    }
+    useEffect(() => {
+        if(groupListState.data) redirectDetail("group",groupListState.data[0].groupId)
+    }, [groupListState.isLoading]);
 
     const closeModal = () => {
         setShowMakeGroup(false);
     };
-
-    
-
+    const goHome = () => {
+        navigate("/");
+    };
 
     return (
-
         <div>
-            <button onClick={() => setShowMakeGroup(true)}>그룹 생성</button>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
-                <div>
-                    <h2>Group List</h2>
-                    <ul>
+                <GroupList_Container>
+                        <Btn_CalenJ_Icon onClick={() => goHome()}></Btn_CalenJ_Icon>
+                        <GroupList_HR/>
+                    <GroupListSub_Container>
                         {groupListState.data.map((group) => (
-                            <ListView key={group.groupId}
-                                      onClick={() => redirectDetail(group.groupId as number)}>
-                                <RowFlexBox style={{width:'90vw'}}>
-                                {group.groupTitle}
-                                <div style={{marginLeft:'auto'}}>{endPointMap.get(group.groupId) && endPointMap.get(group.groupId)}</div>
-                                </RowFlexBox>
-                            </ListView>
+                            <Li_GroupList_Item key={group.groupId}
+                                             onClick={() =>redirectDetail("group",group.groupId)}>
+                                <GroupListTitle>
+                                    {group.groupTitle}
+                                </GroupListTitle>
+                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) ===0}>
+                                    {endPointMap.get(group.groupId) !==0&& endPointMap.get(group.groupId)}
+                                </SignOfMessageNum>
+                            </Li_GroupList_Item>
                         ))}
-                    </ul>
-                </div>
+                    </GroupListSub_Container>
+                        <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
+                </GroupList_Container>
             )}
         </div>
     )
-
 }
-export default connect(mapStateToStompProps,null) (GroupList);
+export default connect(mapStateToStompProps, null)(GroupList);

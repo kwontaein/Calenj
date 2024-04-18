@@ -9,13 +9,17 @@ import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import stompReducer, {DispatchStompProps,mapDispatchToStompProps,StompData,mapStateToStompProps} from './store/module/StompReducer';
+import stompReducer, {
+    DispatchStompProps,
+    mapDispatchToStompProps,
+    StompData,
+    mapStateToStompProps
+} from './store/module/StompReducer';
 import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
-import {subscribeDirection} from './store/module/StompMiddleware'
-
+import DefaultNaviation from './DefaultNavigation'
 
 //대표 색 : #007bff
 export const QUERY_COOKIE_KEY: string = 'cookie';
@@ -30,7 +34,7 @@ interface SubScribe {
 
 const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, stomp, updateLoading}) => {
     const queryClient = useQueryClient();
-    const [loading,setLoading]= useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     //api를 통하여 쿠키를 post하여 boolean값을 return 받는다.
     //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
@@ -39,6 +43,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
             localStorage.removeItem('userId')
+            localStorage.removeItem('nowPosition');
             updateOnline({isOnline: false});
             updateLoading({loading:true});
         } else {
@@ -89,7 +94,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
                     <Route path={"/"} element={<Home/>}/>
                     <Route path={"/signup"} element={<SignUp/>}/>
                     <Route path={"/sign"} element={<Sign/>}/>
-                    <Route path={"/details"} element={<GroupDetail/>}/>
                     <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
                     <Route path={"/vote/detail"} element={<VoteDetail/>}/>
                     <Route path={"/inviteGroup/"}>

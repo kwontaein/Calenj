@@ -1,9 +1,8 @@
 import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
-import GroupList from './components/Group/GroupList';
 import FriendList from "./components/Friends/FriendList";
-
+import DefaultNavigation from "./DefaultNavigation";
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
     const queryClient = useQueryClient();
@@ -19,20 +18,11 @@ const Home: React.FC = () => {
 
 
     return (
-
-        <div style={{display: "flex", flexDirection: "column"}}>
-            <SignState/>
-            <h1>여기는 초기 페이지임</h1>
+        <div>
             {isLoding ?
-                <div>
-                    <div> {cookie && <GroupList/>}</div>
-                </div> :
+                <DefaultNavigation/> :
                 <div style={{marginLeft: '10px'}}>isLoding..</div>}
-
-
         </div>
-
-
     )
 }
 export default Home
