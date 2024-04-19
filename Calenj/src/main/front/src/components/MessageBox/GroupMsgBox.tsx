@@ -44,7 +44,7 @@ interface Message {
 }
 
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
-const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint,reloadTopMessage}) => {
+const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint, reloadTopMessage}) => {
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [content, setContent] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -56,12 +56,14 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const messageLength = useRef<number>();
 
 
+    const prevScrollPosition = useRef<number>(0);
+
     /**param이 바뀌면 다시 세팅*/
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(false);
         setReload(false);
         setMessageList([]);
-    },[param])
+    }, [param])
 
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -78,7 +80,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     //처음 들어갔을 때 스크롤에따른 상태체크
     useLayoutEffect(() => {
         updateScroll();
-        if (endPointMap.get(param) === 0) scrollToBottom();
+        if (endPointMap.get(param) === 0) {
+            scrollToBottom();
+        } else {
+            scrollToTop();
+        }
     }, [loading])
 
     //스크롤 위치 디바운싱
@@ -108,33 +114,48 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const updateScroll = (updateScrollTop?: () => void) => {
         if (scrollRef.current) {
             const {scrollTop, scrollHeight} = scrollRef.current;
+            prevScrollPosition.current = scrollRef.current?.scrollHeight
+
+            console.log(scrollTop);
+            console.log(scrollHeight);
             //만약 스크롤이 없는데 받은 메시지가 있다면
             if (scrollHeight < 400 && endPointMap.get(param) != 0) {
                 updateEndpoint();
                 return;
             }
             //현재위치랑 스크롤의 맨아래 위치에 있으면
-            if (scrollTop + 300 === scrollHeight && endPointMap.get(param) !== 0) {
-                if (updateScrollTop) {
-                    updateScrollTop();
-                }
+            if (scrollTop + scrollRef.current.clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+                scrollToBottom();
                 updateEndpoint();
                 return;
             }
             //최상단에 있을경우 리로드
             if (scrollTop === 0 && messageLength.current) {
                 setReload(true);
+                scrollToNowPostion();
                 reloadTopMessage(messageLength.current)
             }
         }
     }
 
+    //스크롤이 맨 밑에 있다면
     const scrollToBottom = () => {
         setTimeout(() => {
             if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }, 50)
     };
-
+//스크롤이 맨 밑에 있다면
+    const scrollToTop = () => {
+        setTimeout(() => {
+            if (scrollRef.current) scrollRef.current.scrollTop = 10;
+        }, 50)
+    };
+    //스크롤을 지금 위치로 이동
+    const scrollToNowPostion = () => {
+        setTimeout(() => {
+            if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current?.scrollHeight - prevScrollPosition.current;
+        }, 50)
+    };
 
     //메시지 리스트의 길이를 갱신
     useEffect(() => {
@@ -142,12 +163,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     }, [messageList])
 
 
-    const setFileLog =()=>{
+    const setFileLog = () => {
         let file = stomp.receiveMessage.message as string[]
         file.map((fileMessage) => {
 
-        let msgInfo = fileMessage.split("$", 5)
-        if (!msgInfo[1]) return
+            let msgInfo = fileMessage.split("$", 5)
+            if (!msgInfo[1]) return
             const loadMsg: Message = {
                 chatUUID: msgInfo[0],
                 sendDate: msgInfo[1].slice(1, 17),
@@ -156,11 +177,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 message: msgInfo[4],
             }
 
-            if(!loading){
+            if (!loading) {
                 setMessageList((prev) => {
                     return [...prev, loadMsg]
                 })
-            }else{
+            } else {
                 setMessageList((prev) => {
                     return [loadMsg, ...prev,]
                 })
@@ -206,6 +227,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         settingMessage()
     }, [stomp])
 
+    // 시간 차이 계산 함수
+    function calculateTimeDifference(prevDate: string, currentDate: string): boolean {
+        const prevTime = new Date(prevDate).getTime();
+        const currentTime = new Date(currentDate).getTime();
+        const threeMinutesInMillis = 3 * 60 * 1000; // 3분을 밀리초로 변환
+        return Math.abs(currentTime - prevTime) < threeMinutesInMillis;
+    }
 
     const MessageBox = useMemo(() => {
         if (loading) {
@@ -217,7 +245,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                                 {message.chatUUID === '엔드포인트' ?
                                     <hr data-content={"NEW"}></hr> :
                                     (message.nickName &&
-                                        (index && messageList[index - 1].userEmail === message.userEmail ? (
+                                        (index && messageList[index - 1].userEmail === message.userEmail && calculateTimeDifference(messageList[index - 1].sendDate, message.sendDate) ? (
                                             <MessageContainer2>
                                                 <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                                 <div>{message.message}</div>
