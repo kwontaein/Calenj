@@ -91,10 +91,8 @@ public class WebSokcetService {
             int startIndex = previousLines.size();
 
             if (startIndex != 0) {
-
                 previousLines.add("엔드포인트$" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
                         " $ " + "-----------------새로운 메세지-----------------");
-                System.out.println("previousLines in if-else: " + previousLines);
             }
 
             // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기 + 엔드포인트부터 위에 20개 불러오기
@@ -150,6 +148,7 @@ public class WebSokcetService {
 
             List<String> previousLines = lines.stream()
                     .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                    .filter(createFilterCondition(message.getParam()))
                     .map(stringTransformer)
                     .collect(Collectors.toList());
 
