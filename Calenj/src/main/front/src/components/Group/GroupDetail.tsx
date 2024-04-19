@@ -8,9 +8,10 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchAppProps, mapDispatchToAppProps} from '../../store/module/AppPositionReducer'
+import { DispatchStompProps, mapDispatchToStompProps } from '../../store/module/StompReducer';
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
 import {endPointMap} from '../../store/module/StompMiddleware';
+import group from "./index";
 
 interface Details {
     groupId: number;
@@ -38,7 +39,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDirect,groupId}) => {
+const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile,groupId}) => {
     const id = useId();
 
 
@@ -69,19 +70,18 @@ const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDir
 
 
      useEffect(() => {
-        updateAppDirect({
+        requestFile({
             target: 'groupMsg',
-            messageParams: groupId,
-            state: "READ",
+            param: groupId,
+            requestFile: "READ",
             nowLine: endPointMap.get(groupId)
         });
         return () => {
         }
     }, [groupId])
 
-    const readTopMessage = (nowLine: number) => {
-        console.log(nowLine)
-        updateAppDirect({target: 'groupMsg', messageParams: groupId, state: "RELOAD", nowLine: nowLine})
+    const reloadTopMessage = (nowLine: number) => {
+        requestFile({target: 'groupMsg', param: groupId, requestFile: "RELOAD", nowLine: nowLine})
 
     }
 
@@ -111,11 +111,12 @@ const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDir
         }
         endPointMap.set(groupId, 0)
         endPointRef.current = setTimeout(() => {
-            updateAppDirect({target: 'groupMsg', messageParams: groupId, state: "ENDPOINT", nowLine: 0});
+            requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0});
 
             console.log('엔드포인트 갱신')
         }, 2000)
     }
+
 
     return (
         <div>
@@ -141,7 +142,7 @@ const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDir
                     </div>
                     <DEFAULT_HR/>
                     <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
-                                 readTopMessage={readTopMessage} target={'group'}/>
+                                 reloadTopMessage={reloadTopMessage} target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
                         <Notice/>
@@ -154,4 +155,4 @@ const GroupDetail: React.FC<DispatchAppProps & NavigationProps> = ({updateAppDir
     );
 }
 
-export default connect(null, mapDispatchToAppProps)(GroupDetail);
+export default connect(null, mapDispatchToStompProps)(GroupDetail);
