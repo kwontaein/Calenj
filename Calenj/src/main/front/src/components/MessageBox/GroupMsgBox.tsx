@@ -222,7 +222,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         }
     }
 
-
     useEffect(() => {
         settingMessage()
     }, [stomp])
@@ -238,7 +237,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const MessageBox = useMemo(() => {
         if (loading) {
             return (
-                <div style={{height: '300px'}}>
+                <div style={{height: '450px'}}>
                     <ScrollableDiv ref={scrollRef}>
                         {messageList.map((message: Message, index: number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
