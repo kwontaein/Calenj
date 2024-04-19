@@ -80,10 +80,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
         }
     }, [groupId])
 
-    const reloadTopMessage = (nowLine: number) => {
-        requestFile({target: 'groupMsg', param: groupId, requestFile: "RELOAD", nowLine: nowLine})
 
-    }
 
     const onlineCheck = (isOnline: string): string => {
         let status;
@@ -103,19 +100,6 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
         return status
     }
 
-    const endPointRef = useRef<NodeJS.Timeout | undefined>();
-
-    const updateEndpoint = () => {
-        if (endPointRef.current != undefined) {
-            clearTimeout(endPointRef.current)
-        }
-        endPointMap.set(groupId, 0)
-        endPointRef.current = setTimeout(() => {
-            requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0});
-
-            console.log('엔드포인트 갱신')
-        }, 2000)
-    }
 
 
     return (
@@ -141,8 +125,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                         </GROUP_USER_LIST>
                     </div>
                     <DEFAULT_HR/>
-                    <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
-                                 reloadTopMessage={reloadTopMessage} target={'group'}/>
+                    <GroupMsgBox param={groupId} target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
                         <Notice/>

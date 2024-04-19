@@ -31,8 +31,6 @@ import {changeDateForm, AHMFormatV2, shortAHMFormat} from '../../stateFunc/actio
 interface groupDetailProps {
     target: string;
     param: string;
-    updateEndpoint: () => void;
-    reloadTopMessage: (nowLine: number) => void;
 }
 
 interface Message {
@@ -44,7 +42,7 @@ interface Message {
 }
 
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
-const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updateEndpoint,reloadTopMessage}) => {
+const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, requestFile}) => {
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [content, setContent] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -62,6 +60,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         setReload(false);
         setMessageList([]);
     },[param])
+
+    //메시지 리스트의 길이를 갱신
+    useEffect(() => {
+        messageLength.current = messageList.length;
+    }, [messageList])
 
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -104,6 +107,25 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     }, [scrollRef, loading]);
 
 
+    const endPointRef = useRef<NodeJS.Timeout | undefined>();
+
+    const updateEndpoint = () => {
+        if (endPointRef.current != undefined) {
+            clearTimeout(endPointRef.current)
+        }
+        endPointMap.set(param, 0)
+        endPointRef.current = setTimeout(() => {
+            requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
+
+            console.log('엔드포인트 갱신')
+        }, 1000)
+    }
+
+    const reloadTopMessage = (nowLine: number) => {
+        requestFile({target: 'groupMsg', param: param, requestFile: "RELOAD", nowLine: nowLine})
+
+    }
+
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = (updateScrollTop?: () => void) => {
         if (scrollRef.current) {
@@ -136,10 +158,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     };
 
 
-    //메시지 리스트의 길이를 갱신
-    useEffect(() => {
-        messageLength.current = messageList.length;
-    }, [messageList])
+
 
 
     const setFileLog =()=>{
@@ -175,7 +194,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
         //로딩까지 딱 1번만 실행하도록
         if (!loading) {
             if (stomp.receiveMessage.state === "READ") {
-                let file = stomp.receiveMessage.message as string[]
                 setFileLog();
                 setLoading(true);
             }
@@ -210,7 +228,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
     const MessageBox = useMemo(() => {
         if (loading) {
             return (
-                <div style={{height: '300px'}}>
                     <ScrollableDiv ref={scrollRef}>
                         {messageList.map((message: Message, index: number) => (
                             <MessageBoxContainer key={message.chatUUID + index}>
@@ -238,7 +255,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                             </MessageBoxContainer>
                         ))}
                     </ScrollableDiv>
-                </div>
             );
         }
         return null;
@@ -254,7 +270,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                         setContent(e.target.value)
                     }} ref={chatRef}></SEND_INPUT>
                     <SEND_BUTTON>
-                        <IMG_SIZE src={"/image/send.png"} alt={"?"}/>
+                        <IMG_SIZE src={"/image/send.png"} alt={"send"}/>
                     </SEND_BUTTON>
                 </FORM_SENDMSG>
             </div>
