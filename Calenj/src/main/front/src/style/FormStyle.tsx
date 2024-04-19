@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 interface UnfocusBackgroundProps {
     focus: string;
 }
@@ -293,6 +292,7 @@ export const SEND_INPUT = styled.input`
     width: 90%;
     height: 30px;
     margin: 0 5px 0 5px;
+    background-image: url("/image/send.png");
 `
 export const IMG_SIZE = styled.img`
 
