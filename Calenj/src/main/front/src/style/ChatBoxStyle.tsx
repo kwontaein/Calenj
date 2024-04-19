@@ -4,9 +4,9 @@ import styled from 'styled-components'
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
-    max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
-        height: 300px;
-        width: 300px;
+    max-height: 450px; /* 스크롤 가능한 div의 최대 높이 설정 */
+    min-height: 300px;
+    min-width: 300px;
     padding-left: 5px;
     margin-bottom: -5px
 `;
@@ -62,7 +62,7 @@ export const MessageContainer2 = styled.div`
 
     &:hover {
         ${DateContainer2} {
-            color: gray; 
+            color: gray;
         }
     }
 `
@@ -105,32 +105,32 @@ export const FORM_SENDMSG = styled.form`
 `
 //채팅 endPoint선
 export const HR_ChatEndPoint = styled.hr`
-line-height: 1em;
-position: relative;
-outline: 0;
-border: 0;
-color: black;
-text-align: center;
-height: 1.5em;
+    line-height: 1em;
+    position: relative;
+    outline: 0;
+    border: 0;
+    color: black;
+    text-align: center;
+    height: 1.5em;
 
     &:before {
-    content: '';
+        content: '';
         background: linear-gradient(to right, rgba(0, 0, 0, 0), #b24ad0, #802bc2);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 2px;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
     }
 
     &:after {
-    content: attr(data-content);
-    position: relative;
-    display: inline-block;
+        content: attr(data-content);
+        position: relative;
+        display: inline-block;
         padding: 0 .3em;
-    line-height: 1.5em;
+        line-height: 1.5em;
         margin-left: 90vw;
-    color: white;
+        color: white;
         border-radius: 10px;
         font-size: 15px;
         font-weight: bold;

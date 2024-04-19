@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { createGlobalStyle } from 'styled-components'
+import {createGlobalStyle} from 'styled-components'
 
 
 interface UnfocusBackgroundProps {
@@ -18,32 +18,34 @@ interface UnfocusBackgroundProps {
  *
  */
 export const GlobalStyle = createGlobalStyle`
-	body{
+    body {
         background-color: #222831; /* 전체 페이지 배경색 */
-        margin :0;
+        margin: 0;
         padding: 0;
         height: 100%;
     }
-    ul{
-        margin:0;
+
+    ul {
+        margin: 0;
     }
-    il{
+
+    il {
         list-style: none;
     }
-    
-    a{
+
+    a {
         text-decoration: none;
     }
-    
-    button{
+
+    button {
         appearance: none;
-        border:0;
+        border: 0;
         background-color: #393E46;
-        cursor:pointer;
+        cursor: pointer;
         color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
     }
-    
-    div{
+
+    div {
         color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
         font-size: 13px;
     }
@@ -60,9 +62,6 @@ export const RowFlexBox = styled.div`
     display: flex;
     flexdirection: row;
 `
-
-
-
 
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
@@ -138,8 +137,6 @@ export const FormLable = styled.label`
 `;
 
 
-
-
 export const OveflowBlock = styled.div`
     white-space: nowrap;
     overflow: hidden;
@@ -166,11 +163,6 @@ export const ListView = styled.li`
         background-color: #393E46;
     }
 `
-
-
-
-
-
 
 
 /** 메시지 관련 styled */
@@ -222,11 +214,10 @@ export const MessageContainer2 = styled.div`
 
     &:hover {
         ${DateContainer2} {
-            color: gray; 
+            color: gray;
         }
     }
 `
-
 
 
 export const DEFAULT_HR = styled.hr`

@@ -41,12 +41,14 @@ const inviteGroup: React.FC = () => {
     }, [])
 
     const JoinGroup = () => {
+        
         console.log("실행?")
         axios.post('/api/joinGroup', {
             groupId: info?.groupId
         })
             .then((res) => {
                 window.alert('그룹에 참여되었습니다')
+                document.location.replace("/");
             })
             .catch((error) => {
                 const axiosError = error as AxiosError;
