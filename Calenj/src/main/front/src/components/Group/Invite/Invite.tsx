@@ -16,7 +16,7 @@ interface Friends {
 }
 
 interface ParentProps {
-    groupId: number
+    groupId: string
 }
 
 

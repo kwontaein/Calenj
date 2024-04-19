@@ -6,8 +6,7 @@ import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
 import StompReducer from './module/StompReducer';
-import AppPositionReducer from './module/AppPositionReducer'
-
+import NavigateReducer from './slice/NavigateByComponent'
 
 
 // 액션 타입
@@ -25,7 +24,7 @@ function* rootSaga() {
 }
 
 //여려 reducer를 묶는용 (dispatch함수 X)
-const rootReducer = combineReducers({stomp: StompReducer,app:AppPositionReducer, emailValidation: emailValidationReducer});
+const rootReducer = combineReducers({stomp: StompReducer, emailValidation: emailValidationReducer, navigateInfo:NavigateReducer});
 
 
 // 사가 미들웨어 생성

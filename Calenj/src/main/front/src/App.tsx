@@ -19,8 +19,7 @@ import {connect} from "react-redux";
 import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
-import {subscribeDirection} from './store/module/StompMiddleware'
-
+import DefaultNaviation from './DefaultNavigation'
 
 //대표 색 : #  007bff
 export const QUERY_COOKIE_KEY: string = 'cookie';
@@ -33,7 +32,7 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, stomp, updateLoading}) => {
+const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, updateOnline, stomp, updateLoading}) => {
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,8 +43,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
             localStorage.removeItem('userId')
+            localStorage.removeItem('nowPosition');
             updateOnline({isOnline: false});
-            updateLoading({loading: true});
+            updateLoading({loading:true});
         } else {
 
             axios.get(`/api/subscribeCheck`)
@@ -59,7 +59,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
                         return value.groupId;
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
-                    updateDestination({destination: subScribe});
+                    synchronizationStomp({destination: subScribe});
                 })
                 .catch(() => {
                     window.alert('잘못된 접근입니다. 재시작을 해주세요.')
@@ -68,9 +68,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
         return response.data;
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         setLoading(stomp.loading)
-    }, [stomp.loading])
+    },[stomp.loading])
 
     function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
         let parmasList = [];
@@ -87,23 +87,22 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
     });
 
     return (
-        <div className="App" style={{height: "100%"}}>
+        <div className="App">
             {loading &&
-                <BrowserRouter>
-                    <Routes>
-                        <Route path={"/"} element={<Home/>}/>
-                        <Route path={"/signup"} element={<SignUp/>}/>
-                        <Route path={"/sign"} element={<Sign/>}/>
-                        <Route path={"/details"} element={<GroupDetail/>}/>
-                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
-                        <Route path={"/inviteGroup/"}>
-                            <Route path={":inviteCode"} element={<InviteGroup/>}/>
-                        </Route>
-                        <Route path={"/friend"} element={<FriendList/>}/>
-                        <Route path={"/requestFriend"} element={<RequestFriend/>}/>
-                    </Routes>
-                </BrowserRouter>
+            <BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<Home/>}/>
+                    <Route path={"/signup"} element={<SignUp/>}/>
+                    <Route path={"/sign"} element={<Sign/>}/>
+                    <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
+                    <Route path={"/vote/detail"} element={<VoteDetail/>}/>
+                    <Route path={"/inviteGroup/"}>
+                        <Route path={":inviteCode"} element={<InviteGroup/>}/>
+                    </Route>
+                    <Route path={"/friend"} element={<FriendList/>}/>
+                    <Route path={"/requestFriend"} element={<RequestFriend/>}/>
+                </Routes>
+            </BrowserRouter>
             }
         </div>
     );

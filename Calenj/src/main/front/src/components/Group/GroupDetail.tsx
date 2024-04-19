@@ -1,17 +1,17 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import React, {useEffect, useRef, useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useLocation} from 'react-router-dom';
 import {useId} from 'react';
 import Notice from './Notice/Notice'
-import {DEFAULT_HR, GlobalStyles, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
+import {DEFAULT_HR, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchAppProps, mapDispatchToAppProps} from '../../store/module/AppPositionReducer'
+import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
 import {endPointMap} from '../../store/module/StompMiddleware';
+import group from "./index";
 
 interface Details {
     groupId: number;
@@ -29,6 +29,9 @@ interface Members {
     userEmail: string;
 }
 
+interface NavigationProps {
+    groupId: string
+}
 
 const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
 
@@ -36,9 +39,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
-    const location = useLocation();
-    const groupInfo = {...location.state};
+const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
     const id = useId();
 
 
@@ -46,7 +47,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
     const getGroupList = async (): Promise<Details | null> => {
         try {
             const response = await axios.post('/api/groupDetail', {
-                groupId: groupInfo.groupId
+                groupId: groupId
             }) // 객체의 속성명을 'id'로 설정;
             const data = response.data as Details;
             return data;
@@ -63,44 +64,25 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
 
 
     const groupDetailState = useQuery<Details | null, Error>({
-        queryKey: [QUERY_GROUP_DETAIL_KEY, groupInfo.groupId],
+        queryKey: [QUERY_GROUP_DETAIL_KEY, groupId],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
 
     useEffect(() => {
-        updateAppDirect({
+        requestFile({
             target: 'groupMsg',
-            messageParams: groupInfo.groupId,
-            state: "READ",
-            nowLine: endPointMap.get(groupInfo.groupId)
+            param: groupId,
+            requestFile: "READ",
+            nowLine: endPointMap.get(groupId)
         });
         return () => {
         }
-    }, [])
+    }, [groupId])
 
-    const readTopMessage = (nowLine: number) => {
-        console.log(nowLine)
-        updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "RELOAD", nowLine: nowLine})
+    const reloadTopMessage = (nowLine: number) => {
+        requestFile({target: 'groupMsg', param: groupId, requestFile: "RELOAD", nowLine: nowLine})
 
-    }
-
-    const onlineCheck = (isOnline: string): string => {
-        let status;
-        switch (isOnline) {
-            case "ONLINE":
-                status = '온라인';
-                break;
-            case "SLEEP":
-                status = '자리비움';
-                break;
-            case "TOUCH":
-                status = '방해금지';
-                break;
-            default:
-                status = '오프라인';
-        }
-        return status
     }
 
     const endPointRef = useRef<NodeJS.Timeout | undefined>();
@@ -109,14 +91,17 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
         if (endPointRef.current != undefined) {
             clearTimeout(endPointRef.current)
         }
+        endPointMap.set(groupId, 0)
         endPointRef.current = setTimeout(() => {
-            updateAppDirect({target: 'groupMsg', messageParams: groupInfo.groupId, state: "ENDPOINT", nowLine: 0});
+            requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0});
+
             console.log('엔드포인트 갱신')
         }, 2000)
     }
 
+
     return (
-        <GlobalStyles>
+        <div style={{width: "100%"}}>
             {groupDetailState.isLoading && <div>Loading...</div>}
             {groupDetailState.data && (
                 <div>
@@ -124,7 +109,7 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                         <div>방아이디: {groupDetailState.data.groupId.toString().slice(0, 9).padEnd(20, '*')}</div>
                         <RowFlexBox style={{justifyContent: 'space-between'}}>
                             <div>방이름: {groupDetailState.data.groupTitle}</div>
-                            <div><Invite groupId={groupInfo.groupId}/></div>
+                            <div><Invite groupId={groupId}/></div>
                         </RowFlexBox>
                     </div>
                     <DEFAULT_HR/>
@@ -132,14 +117,20 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                         <GROUP_USER_LIST>
                             {groupDetailState.data.members.map((member) => (
                                 <ListView key={member.userEmail}>
-                                    {member.nickName} : {onlineCheck(member.onlineStatus)}
+                                    {localStorage.getItem(`userId`) === member.userEmail ?
+                                        <span>(나) {member.nickName} </span> :
+                                        <span>{member.nickName} </span>}
+                                    {member.onlineStatus === 'ONLINE' ?
+                                        <span style={{color: "green"}}> ● </span> :
+                                        <span style={{color: "red"}}> ● </span>
+                                    }
                                 </ListView>
                             ))}
                         </GROUP_USER_LIST>
                     </div>
                     <DEFAULT_HR/>
-                    <GroupMsgBox param={groupInfo.groupId} updateEndpoint={updateEndpoint}
-                                 readTopMessage={readTopMessage} target={'group'}/>
+                    <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
+                                 reloadTopMessage={reloadTopMessage} target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
                         <Notice/>
@@ -148,8 +139,8 @@ const GroupDetail: React.FC<DispatchAppProps> = ({updateAppDirect}) => {
                     </div>
                 </div>
             )}
-        </GlobalStyles>
+        </div>
     );
 }
 
-export default connect(null, mapDispatchToAppProps)(GroupDetail);
+export default connect(null, mapDispatchToStompProps)(GroupDetail);

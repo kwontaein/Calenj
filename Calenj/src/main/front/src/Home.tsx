@@ -1,10 +1,8 @@
 import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
-import GroupList from './components/Group/GroupList';
 import FriendList from "./components/Friends/FriendList";
-import {DIV_FULL_HEIGHT, GlobalStyles} from "./style/FormStyle";
-
+import DefaultNavigation from "./DefaultNavigation";
 const Home: React.FC = () => {
     const [isLoding, setLoding] = useState<boolean>(false);
     const queryClient = useQueryClient();
@@ -20,14 +18,11 @@ const Home: React.FC = () => {
 
 
     return (
-        <GlobalStyles style={{display: "flex", flexDirection: "column"}}>
-            <SignState/>
+        <div>
             {isLoding ?
-                <DIV_FULL_HEIGHT>
-                    <DIV_FULL_HEIGHT> {cookie && <GroupList/>}</DIV_FULL_HEIGHT>
-                </DIV_FULL_HEIGHT> :
+                <DefaultNavigation/> :
                 <div style={{marginLeft: '10px'}}>isLoding..</div>}
-        </GlobalStyles>
+        </div>
     )
 }
 export default Home

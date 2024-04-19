@@ -68,7 +68,6 @@ public class WebSocketController {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
-
         } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
 
             List<String> file = webSokcetService.readGroupChattingFileSlide(message);

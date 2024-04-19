@@ -16,7 +16,7 @@ interface Friends {
 
 interface ModalProps {
     onClose: () => void;
-    groupId: number;
+    groupId: string;
     inviteLink: string;
 }
 
