@@ -7,6 +7,7 @@ import NoticeDetail from './components/Group/Notice/NoticeDetail';
 import VoteDetail from './components/Group/Vote/VoteDetail';
 import InviteGroup from "./components/Group/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
+import NaverMap from "./components/Group/Map/NaverMap"
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import stompReducer, {
@@ -45,7 +46,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
             localStorage.removeItem('userId')
             localStorage.removeItem('nowPosition');
             updateOnline({isOnline: false});
-            updateLoading({loading:true});
+            updateLoading({loading: true});
         } else {
 
             axios.get(`/api/subscribeCheck`)
@@ -68,9 +69,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
         return response.data;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(stomp.loading)
-    },[stomp.loading])
+    }, [stomp.loading])
 
     function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
         let parmasList = [];
@@ -89,20 +90,21 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
     return (
         <div className="App">
             {loading &&
-            <BrowserRouter>
-                <Routes>
-                    <Route path={"/"} element={<Home/>}/>
-                    <Route path={"/signup"} element={<SignUp/>}/>
-                    <Route path={"/sign"} element={<Sign/>}/>
-                    <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                    <Route path={"/vote/detail"} element={<VoteDetail/>}/>
-                    <Route path={"/inviteGroup/"}>
-                        <Route path={":inviteCode"} element={<InviteGroup/>}/>
-                    </Route>
-                    <Route path={"/friend"} element={<FriendList/>}/>
-                    <Route path={"/requestFriend"} element={<RequestFriend/>}/>
-                </Routes>
-            </BrowserRouter>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path={"/"} element={<Home/>}/>
+                        <Route path={"/signup"} element={<SignUp/>}/>
+                        <Route path={"/sign"} element={<Sign/>}/>
+                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
+                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
+                        <Route path={"/inviteGroup/"}>
+                            <Route path={":inviteCode"} element={<InviteGroup/>}/>
+                        </Route>
+                        <Route path={"/friend"} element={<FriendList/>}/>
+                        <Route path={"/requestFriend"} element={<RequestFriend/>}/>
+                        <Route path={"/Map"} element={<NaverMap/>}/>
+                    </Routes>
+                </BrowserRouter>
             }
         </div>
     );

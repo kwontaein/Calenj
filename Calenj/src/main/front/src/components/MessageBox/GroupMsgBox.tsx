@@ -111,13 +111,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
 
 
     //스크롤 상태에 따른 endPoint업데이트
-    const updateScroll = (updateScrollTop?: () => void) => {
+    const updateScroll = () => {
         if (scrollRef.current) {
             const {scrollTop, scrollHeight} = scrollRef.current;
             prevScrollPosition.current = scrollRef.current?.scrollHeight
 
-            console.log(scrollTop);
-            console.log(scrollHeight);
             //만약 스크롤이 없는데 받은 메시지가 있다면
             if (scrollHeight < 400 && endPointMap.get(param) != 0) {
                 updateEndpoint();
@@ -129,8 +127,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 updateEndpoint();
                 return;
             }
-            //최상단에 있을경우 리로드
-            if (scrollTop === 0 && messageLength.current) {
+            //어느 정도 상단에 있을경우 리로드
+            if (scrollTop <= 300 && messageLength.current) {
                 setReload(true);
                 scrollToNowPostion();
                 reloadTopMessage(messageLength.current)
@@ -144,12 +142,14 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
             if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }, 50)
     };
+
 //스크롤이 맨 밑에 있다면
     const scrollToTop = () => {
         setTimeout(() => {
             if (scrollRef.current) scrollRef.current.scrollTop = 10;
         }, 50)
     };
+
     //스크롤을 지금 위치로 이동
     const scrollToNowPostion = () => {
         setTimeout(() => {
@@ -217,7 +217,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, updat
                 setMessageList((prev) => {
                     return [...prev, loadMsg]
                 })
-                updateScroll(scrollToBottom)
+                updateScroll()
             }
         }
     }

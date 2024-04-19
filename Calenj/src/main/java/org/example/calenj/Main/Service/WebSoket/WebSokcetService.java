@@ -64,9 +64,9 @@ public class WebSokcetService {
 
         try (FileOutputStream stream = new FileOutputStream(filePath, true)) {
             if (lines == null) {
-                stream.write(message.getParam().getBytes(StandardCharsets.UTF_8));
-                stream.write("캘린룸, 생성일자 :".getBytes(StandardCharsets.UTF_8));
-                stream.write((message.getSendDate() + "\n").getBytes(StandardCharsets.UTF_8));
+                String nowTime = globalService.nowTime();
+                String Title = "캘린룸의 시작 지점이에요! $어서오세요! \n";
+                stream.write(Title.getBytes(StandardCharsets.UTF_8));
             }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
             message.setChatUUID(messageUUid);
@@ -131,6 +131,8 @@ public class WebSokcetService {
                     .map(stringTransformer)
                     .limit(batchSize)
                     .collect(Collectors.toList());
+            System.out.println(previousLines);
+
             //message.setNowLine(startIndex + previousLines.size());
             return previousLines;
         } catch (IOException e) {
