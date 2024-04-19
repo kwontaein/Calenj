@@ -32,7 +32,7 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updateOnline, stomp, updateLoading}) => {
+const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, updateOnline, stomp, updateLoading}) => {
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -59,7 +59,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({updateDestination, updat
                         return value.groupId;
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
-                    updateDestination({destination: subScribe});
+                    synchronizationStomp({destination: subScribe});
                 })
                 .catch(() => {
                     window.alert('잘못된 접근입니다. 재시작을 해주세요.')

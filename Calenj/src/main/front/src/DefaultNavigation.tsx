@@ -23,7 +23,6 @@ const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({upda
             <RowFlexBox>
                 <GroupList redirectDetail={redirectDetail}/>
                 {(navigateInfo.navigate==="group" && navigateInfo.param!=='') &&
-
                     <GroupDetail groupId={navigateInfo.param}/>
                 }
             </RowFlexBox>

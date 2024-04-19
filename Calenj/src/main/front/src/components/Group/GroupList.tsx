@@ -31,7 +31,6 @@ export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
 const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
-    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
 
 
@@ -69,18 +68,20 @@ const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail})
     const closeModal = () => {
         setShowMakeGroup(false);
     };
-    const goHome = () => {
-        navigate("/");
-    };
 
-    const GroupListComponent = useMemo(()=> {
-        console.log('재랜더링')
-        return <div>
+    interface ALARM{
+        param:string;
+        alramNum:number;
+    }
+  
+
+    return (
+        <div>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
-                    <Btn_CalenJ_Icon onClick={() => goHome()}></Btn_CalenJ_Icon>
+                    <Btn_CalenJ_Icon></Btn_CalenJ_Icon>
                     <GroupList_HR/>
                     <GroupListSub_Container>
                         {groupListState.data.map((group) => (
@@ -98,12 +99,6 @@ const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail})
                     <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
                 </GroupList_Container>
             )}
-        </div>
-    },[groupListState.data])
-
-    return (
-        <div>
-            {GroupListComponent}
         </div>
     )
 }

@@ -5,6 +5,8 @@ import styled from 'styled-components'
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
     max-height: 300px; /* 스크롤 가능한 div의 최대 높이 설정 */
+        height: 300px;
+        width: 300px;
     padding-left: 5px;
     margin-bottom: -5px
 `;

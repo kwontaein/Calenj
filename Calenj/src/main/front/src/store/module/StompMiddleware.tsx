@@ -2,8 +2,8 @@ import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork, select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG, UPDATE_DESTINATION, Destination, updateLoading} from "./StompReducer"
-import {UPDATE_APP_POSITION} from './AppPositionReducer';
+import {receivedStompMsg, SEND_STOMP_MSG,REQUEST_FILE, SYNCHRONIZATION_STOMP, Destination, updateLoading} from "./StompReducer"
+
 import {time} from "console";
 
 
@@ -43,14 +43,14 @@ function* sendStomp(stompClient: CompatClient) {
 
 
 //endPoint Update를 위한 url위치에 기반한 위치 업데이트
-function* sendAppPosition(stompClient: CompatClient) {
+function* requestChatFile(stompClient: CompatClient) {
     while (true) {
-        const {payload} = yield take(UPDATE_APP_POSITION)//업데이트 될때까지 기다림
-        const {target, messageParams, state, nowLine} = yield payload;
+        const {payload} = yield take(REQUEST_FILE)//업데이트 될때까지 기다림
+        const {target, param, requestFile, nowLine} = yield payload;
 
         const data: StompData = {
-            param: `${messageParams}`,//메시지 주소
-            state: state,
+            param: param,//메시지 주소
+            state: requestFile,
             nowLine: nowLine,
         }
         const url = `/app/${target}`
@@ -82,7 +82,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
-    const {payload} = yield take(UPDATE_DESTINATION)//액션을 기다린 후 dipstch가 완료되면 실행
+    const {payload} = yield take(SYNCHRONIZATION_STOMP)//액션을 기다린 후 dipstch가 완료되면 실행
     yield startStomp(payload.destination);
 }
 
@@ -95,7 +95,7 @@ function* startStomp(destination: Destination): any {
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
     yield fork(sendStomp, stompClient)
-    yield fork(sendAppPosition, stompClient)
+    yield fork(requestChatFile, stompClient)
     yield fork(sendPublish, destination, stompClient)
 
     let isRunning = true;

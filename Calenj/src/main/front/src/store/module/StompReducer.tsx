@@ -1,16 +1,18 @@
 import {createAction, handleActions} from 'redux-actions';
 import {Dispatch} from 'redux';
 import {RootState} from '../store'
-import produce from 'immer'; // immer 라이브러리 import
 
 // Action Types
-export const UPDATE_DESTINATION = 'UPDATE_DESTINATION';
-export const UPDATE_APP = 'UPDATE_APP';
+export const SYNCHRONIZATION_STOMP = 'SYNCHRONIZATION_STOMP';
+export const REQUEST_FILE = 'REQUEST_FILE';
 export const RECEIVED_STOMP_MSG = 'RECEIVED_STOMP_MSG';
 export const SEND_STOMP_MSG = 'SEND_STOMP_MSG';
-export const RELOAD_MSG = 'RELOAD_MSG'
 export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 export const UPDATE_LOADING="UPDATE_LOADING"
+
+
+type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" |"" ;
+type requestType ="ENDPOINT" | "READ" | "RELOAD" | "";
 
 export interface Message {
     param:string,
@@ -18,19 +20,21 @@ export interface Message {
     nickName:string,
     userEmail:string,
     sendDate:string,
-    state:string,
     chatUUID:string,
+    state:stateType,
 }
 
 //초기상태 정의
 export interface StompState {
     destination: Destination,
     target: string,
-    param: string | number,
-    message:string,
-    receiveMessage: Message,
-    isOnline: boolean,
-    loading:boolean
+    param: string,
+    message:string, //송신한 메시지
+    receiveMessage: Message, //받은 메세지 정보
+    requestFile:requestType,
+    nowLine:number,
+    isOnline: boolean, //온라인여부
+    loading:boolean, //로딩여부 (stomp 셋팅 후 true)
 }
 
 
@@ -39,18 +43,20 @@ export interface StompData {
 }
 
 export interface DispatchStompProps {
-    updateDestination: (payload: { destination: Destination }) => void;
-    sendStompMsg: (payload: { target: string, param: string | number, message: string }) => void;
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => void;
+    synchronizationStomp: (payload: { destination: Destination }) => void;
+    requestFile: (payload: { target: string, param: string, requestFile:requestType, nowLine: number }) => void;
+    sendStompMsg: (payload: { target: string, param: string, message: string }) => void;
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:stateType, chatUUID:string}}) => void;
     updateOnline: (payload: { isOnline: boolean }) => void;
     updateLoading: (payload: { loading: boolean }) => void;
 }
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
-    updateDestination: (payload: { destination: Destination }) => dispatch(updateDestination(payload)),
-    sendStompMsg: (payload: {target: string, param: string | number, message: string}) => dispatch(sendStompMsg(payload)),
-    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => dispatch(receivedStompMsg(payload)),
+    synchronizationStomp: (payload: { destination: Destination }) => dispatch(synchronizationStomp(payload)),
+    requestFile: (payload: {target: string, param: string, requestFile:requestType, nowLine: number}) => dispatch(requestFile(payload)),
+    sendStompMsg: (payload: {target: string, param: string, message: string}) => dispatch(sendStompMsg(payload)),
+    receivedStompMsg: (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:stateType, chatUUID:string}}) => dispatch(receivedStompMsg(payload)),
     updateOnline: (payload: { isOnline: boolean }) => dispatch(updateOnline(payload)),
     updateLoading: (payload: { loading: boolean }) => dispatch(updateLoading(payload)),
 });
@@ -64,22 +70,29 @@ export const mapStateToStompProps = (state: RootState): StompData => ({
 
 
 // action 함수 정의, 외부 컴포넌트에서 접근하여 payload를 전달하여 store를 수정, (state, action)
-export const updateDestination = (payload: { destination: Destination }) => ({
-    type: UPDATE_DESTINATION,
+export const synchronizationStomp = (payload: { destination: Destination }) => ({
+    type: SYNCHRONIZATION_STOMP,
+    payload: payload,
+});
+
+
+export const requestFile = (payload: { target: string, param: string, requestFile:requestType, nowLine:number }) => ({
+    type: REQUEST_FILE,
     payload: payload,
 });
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, param: string | number, message: string}) => ({
+export const sendStompMsg = (payload: { target: string, param: string, message: string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
 
 
+
 //메시지 받기
 //채널에서 take로 받아온 message를 받아 action에 대한 payload전달 (dispatch)
-export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:string, chatUUID:string}}) => ({
+export const receivedStompMsg = (payload:{ receiveMessage:{param:string, message:string, nickName:string, userEmail:string, sendDate:string, state:stateType, chatUUID:string}}) => ({
     type: RECEIVED_STOMP_MSG,
     payload: payload,
 });
@@ -117,6 +130,8 @@ const initialState: StompState = {
         state:'',
         chatUUID:'',
     }, // 초기 message 상태
+    requestFile:'',
+    nowLine:-1,
     isOnline: false,
     loading:false,
 };
@@ -125,9 +140,17 @@ const initialState: StompState = {
 //Reducer를 통해 action type에 따른 수정, type을 받아 접근
 const StompReducer = handleActions(
     {
-        [UPDATE_DESTINATION]: (state, action) => ({
+        [SYNCHRONIZATION_STOMP]: (state, action) => ({
             ...state,
             destination: action.payload.destination, //[[userid],[userid],list<groupId>, list<friendId>]
+        }),
+
+        [REQUEST_FILE]: (state, action) => ({
+            ...state,
+            target: action.payload.target,
+            param: action.payload.param,
+            requestFile: action.payload.requestFile,
+            nowLine: action.payload.nowLine,
         }),
 
         [SEND_STOMP_MSG]: (state, action) => ({
