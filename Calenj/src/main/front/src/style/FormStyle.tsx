@@ -47,7 +47,7 @@ export const GlobalStyle = createGlobalStyle`
 
     div {
         color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
-        font-size: 13px;
+        font-size: 15px;
     }
 `;
 
