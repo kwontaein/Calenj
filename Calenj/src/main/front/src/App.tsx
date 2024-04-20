@@ -21,7 +21,7 @@ import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import DefaultNaviation from './DefaultNavigation'
 
-//대표 색 : #007bff
+//대표 색 : #  007bff
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
 // import GroupList from "./components/Group/GroupList";

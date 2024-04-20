@@ -29,7 +29,7 @@ interface Members {
     userEmail: string;
 }
 
-interface NavigationProps{
+interface NavigationProps {
     groupId: string
 }
 
@@ -39,7 +39,7 @@ const QUERY_GROUP_DETAIL_KEY = 'groupDetail'
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile,groupId}) => {
+const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
     const id = useId();
 
 
@@ -80,44 +80,6 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
         }
     }, [groupId])
 
-    const reloadTopMessage = (nowLine: number) => {
-        requestFile({target: 'groupMsg', param: groupId, requestFile: "RELOAD", nowLine: nowLine})
-
-    }
-
-    const onlineCheck = (isOnline: string): string => {
-        let status;
-        switch (isOnline) {
-            case "ONLINE":
-                status = '온라인';
-                break;
-            case "SLEEP":
-                status = '자리비움';
-                break;
-            case "TOUCH":
-                status = '방해금지';
-                break;
-            default:
-                status = '오프라인';
-        }
-        return status
-    }
-
-    const endPointRef = useRef<NodeJS.Timeout | undefined>();
-
-    const updateEndpoint = () => {
-        if (endPointRef.current != undefined) {
-            clearTimeout(endPointRef.current)
-        }
-        endPointMap.set(groupId, 0)
-        endPointRef.current = setTimeout(() => {
-            requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0});
-
-            console.log('엔드포인트 갱신')
-        }, 2000)
-    }
-
-
     return (
         <div>
             {groupDetailState.isLoading && <div>Loading...</div>}
@@ -135,14 +97,20 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                         <GROUP_USER_LIST>
                             {groupDetailState.data.members.map((member) => (
                                 <ListView key={member.userEmail}>
-                                    {member.nickName} : {onlineCheck(member.onlineStatus)}
+                                    {localStorage.getItem(`userId`) === member.userEmail ?
+                                        <span>(나) {member.nickName} </span> :
+                                        <span>{member.nickName} </span>}
+                                    {member.onlineStatus === 'ONLINE' ?
+                                        <span style={{color: "green"}}> ● </span> :
+                                        <span style={{color: "red"}}> ● </span>
+                                    }
                                 </ListView>
                             ))}
                         </GROUP_USER_LIST>
                     </div>
                     <DEFAULT_HR/>
-                    <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
-                                 reloadTopMessage={reloadTopMessage} target={'group'}/>
+                    <GroupMsgBox param={groupId}
+                                 target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
                         <Notice/>
