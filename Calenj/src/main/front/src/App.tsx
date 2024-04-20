@@ -20,7 +20,7 @@ import {useQuery,} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 
-//대표 색 : #007bff
+//대표 색 : #  007bff
 export const QUERY_COOKIE_KEY: string = 'cookie';
 
 

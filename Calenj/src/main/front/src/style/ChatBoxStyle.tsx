@@ -1,24 +1,35 @@
 import styled from 'styled-components'
 
 
+interface CheckbeforSender{
+    $sameUser:boolean,
+}
+
+export const ScrollMinWidth =400;
+export const ScrollMaxWidht = 500;
+export const ScrollMinHeight=450;
+export const ScrollMaxHeight=450;
+
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
-    max-height: 450px; /* 스크롤 가능한 div의 최대 높이 설정 */
-    min-height: 300px;
-    min-width: 300px;
+    max-height: ${ScrollMinHeight}px; /* 스크롤 가능한 div의 최대 높이 설정 */
+    min-height: ${ScrollMaxHeight}px;
+    min-width: ${ScrollMinWidth}px;
+    max-width: ${ScrollMaxWidht}px;
     padding-left: 5px;
-    margin-bottom: -5px
 `;
 
 /** 메시지 관련 styled */
-export const MessageBoxContainer = styled.div`
-    padding: 10px;
+export const MessageBoxContainer = styled.div<CheckbeforSender>`
+    padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
+    padding-inline: 12px;
+    padding-bottom:0px;
 `
 export const ProfileContainer = styled.div`
-    width: 35px;
-    height: 35px;
-    padding: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 3px;
     border-radius: 50px;
     background-color: #007bff;
     overflow: hidden;
@@ -31,41 +42,58 @@ export const ProfileContainer = styled.div`
     font-weight: 550;
 `
 
-/**메세지를 담는 컨테이너 1 */
-export const MessageContainer = styled.div`
-    margin-left: 10px;
-`
+
 export const NickNameContainer = styled.div`
     font-weight: 550;
 `
 
 export const DateContainer = styled.div`
-    margin-left: 10px;
     color: #FFD369;
-    margin-top: 5px;
     font-size: 12px;
     margin-top: 2px;
 `
+export const MessageContentContainer = styled.div`
+    max-width:${ScrollMinWidth-74}px;
+`
+
+/**메세지를 담는 컨테이너 1 */
+export const MessageContainer = styled.div`
+    margin-left: 10px;
+    ${NickNameContainer}{
+        padding:2px;
+    }
+    ${DateContainer}{
+        padding:2px;
+        margin-left:4px;
+    }
+    ${MessageContentContainer}{
+        padding:2px;
+    }
+
+`
 export const DateContainer2 = styled.div`
     color: transparent;
-    margin-top: 5px;
     font-size: 12px;
     margin-top: 2px;
     letter-spacing: -1px;
-    width: 55px;
+    width: 50px;
+`
+export const MessageContentContainer2 = styled.div`
+    margin-left:6px;
+    max-width:${ScrollMinWidth-74}px;
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
-    margin-top: -18px;
-
+    padding:2px;
     &:hover {
         ${DateContainer2} {
             color: gray;
         }
     }
 `
+
 
 export const SEND_INPUT = styled.input`
     background-color: #393E46;

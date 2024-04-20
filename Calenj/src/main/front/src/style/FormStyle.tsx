@@ -18,26 +18,6 @@ interface UnfocusBackgroundProps {
  *
  */
 export const GlobalStyle = createGlobalStyle`
-
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: radial-gradient(#6fc6e5, #3badcb, #00a1d2);
-        border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: skyblue;
-        border-radius: 5px;
-        border: 1px solid white;
-    }
-
-    ::-webkit-scrollbar-button {
-        display: none;
-    }
-
     body {
         background-color: #222831; /* 전체 페이지 배경색 */
         margin: 0;
@@ -67,7 +47,7 @@ export const GlobalStyle = createGlobalStyle`
 
     div {
         color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
-        font-size: 13px;
+        font-size: 15px;
     }
 `;
 

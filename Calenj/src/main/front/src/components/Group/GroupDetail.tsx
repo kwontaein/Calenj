@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef,useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useId} from 'react';
@@ -8,7 +8,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
+import { DispatchStompProps, mapDispatchToStompProps } from '../../store/module/StompReducer';
 import GroupMsgBox from './../MessageBox/GroupMsgBox';
 import {endPointMap} from '../../store/module/StompMiddleware';
 import group from "./index";
@@ -69,7 +69,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     });
 
 
-    useEffect(() => {
+     useEffect(() => {
         requestFile({
             target: 'groupMsg',
             param: groupId,
@@ -80,28 +80,8 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
         }
     }, [groupId])
 
-    const reloadTopMessage = (nowLine: number) => {
-        requestFile({target: 'groupMsg', param: groupId, requestFile: "RELOAD", nowLine: nowLine})
-
-    }
-
-    const endPointRef = useRef<NodeJS.Timeout | undefined>();
-
-    const updateEndpoint = () => {
-        if (endPointRef.current != undefined) {
-            clearTimeout(endPointRef.current)
-        }
-        endPointMap.set(groupId, 0)
-        endPointRef.current = setTimeout(() => {
-            requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0});
-
-            console.log('엔드포인트 갱신')
-        }, 2000)
-    }
-
-
     return (
-        <div style={{width: "100%"}}>
+        <div>
             {groupDetailState.isLoading && <div>Loading...</div>}
             {groupDetailState.data && (
                 <div>
@@ -129,8 +109,8 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                         </GROUP_USER_LIST>
                     </div>
                     <DEFAULT_HR/>
-                    <GroupMsgBox param={groupId} updateEndpoint={updateEndpoint}
-                                 reloadTopMessage={reloadTopMessage} target={'group'}/>
+                    <GroupMsgBox param={groupId}
+                                 target={'group'}/>
                     <DEFAULT_HR/>
                     <div>
                         <Notice/>
