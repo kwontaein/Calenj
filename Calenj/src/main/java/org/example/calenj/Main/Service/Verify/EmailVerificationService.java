@@ -6,19 +6,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.calenj.Main.DTO.ValidateDTO;
 import org.example.calenj.Main.Repository.UserRepository;
-import org.example.calenj.Main.domain.UserEntity;
 import org.example.calenj.Main.Service.UserService;
+import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
-
 public class EmailVerificationService {
     private final UserRepository userRepository;
 
@@ -79,26 +79,24 @@ public class EmailVerificationService {
     public void checkValidationCode(String validationCode, HttpServletRequest request, HttpServletResponse response) {
         String code = validateDTO.getCode();
 
-        if (!validationCode.isEmpty()) { //인증코드가 입력되지 않으면
+        if (validationCode.isEmpty()) {
+            //인증코드에 아무것도 입력하지 않으면
+            validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL);
+        }
 
-            //이메일 토큰검증
-            boolean enableEmailToken = emailTokenValidation(request, response);
+        //이메일 토큰검증
+        boolean enableEmailToken = emailTokenValidation(request, response);
 
-            if (!enableEmailToken) { //이메일토큰 재발급 가능 시 true 유효하면 false
-
-                if (validationCode.equals(code)) {
-                    validateDTO.setEmailValidState(ValidateDTO.EmailValidState.SUCCESS);
-                } else {
-                    validateDTO.setEmailValidState(ValidateDTO.EmailValidState.FAIL);
-                }
-                return;
+        if (!enableEmailToken) { //이메일토큰 재발급 가능 시 true 유효하면 false
+            if (validationCode.equals(code)) {
+                validateDTO.setEmailValidState(ValidateDTO.EmailValidState.SUCCESS);
+            } else {
+                validateDTO.setEmailValidState(ValidateDTO.EmailValidState.FAIL);
             }
-            //쿠키가 만료되면
-            validateDTO.setEmailValidState(ValidateDTO.EmailValidState.RETRY);
             return;
         }
-        //인증코드에 아무것도 입력하지 않으면
-        validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL);
+        //쿠키가 만료되면
+        validateDTO.setEmailValidState(ValidateDTO.EmailValidState.RETRY);
     }
 
 
@@ -138,19 +136,17 @@ public class EmailVerificationService {
 
         //쿠키 값이 존재하는지 확인
         if (request.getCookies() != null) {
-            Cookie[] requestCookie = request.getCookies();
 
-            Cookie enableSendEmail = Stream.of(requestCookie)
-                    .filter(cookieName -> cookieName.getName().equals("enableSendEmail"))
-                    .findFirst()
-                    .orElse(null);
-
+            Optional<Cookie> enableSendEmail = Arrays.stream(request.getCookies())
+                    .filter(cookie -> cookie.getName().equals("enableSendEmail") && cookie.getValue().equals(emailTokenUUID))
+                    .findFirst();
 
             //UUID 를 비교함 같으면 유효한 코인
-            if (enableSendEmail != null && enableSendEmail.getValue().equals(emailTokenUUID)) {
+            if (enableSendEmail.isPresent()) {
+
                 Long expirationTime = validateDTO.getExpirationTime();//UUID 로 token 의 유효기간을 가져옴
-                //토큰 유효기간 체크 , 시간이 유효할 경우
-                if (expirationTime != null && expirationTime > System.currentTimeMillis()) {
+
+                if (expirationTime != null && expirationTime > System.currentTimeMillis()) {//토큰 유효기간 체크 , 시간이 유효할 경우
 
                     return false; // 토큰기간 유효 -> 재발급 불가능
 

@@ -20,8 +20,6 @@ public class FriendController {
 
     @GetMapping("/api/getFriendList")
     public List<FriendResponse> friendList() {
-        List<FriendResponse> a = friendService.friendList();
-        System.out.println(a);
         return friendService.friendList();
     }
 
@@ -45,7 +43,7 @@ public class FriendController {
         //승인인지 거절인지 받아서 전달
         List<EventResponse> events = friendService.myEvents(request.getUserId());
         System.out.println(events.toString());
-        return events;
+        return friendService.myEvents(request.getUserId());
     }
 
     //내가 보낸 요청 목록

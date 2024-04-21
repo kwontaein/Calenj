@@ -18,7 +18,6 @@ public class GroupVoteController {
 
     @PostMapping("/api/makeVote")
     public void makeVote(@RequestBody GroupVoteRequest groupVoteRequest) {
-        System.out.println(groupVoteRequest);
         groupService.makeVote(groupVoteRequest);
     }
 
@@ -30,8 +29,7 @@ public class GroupVoteController {
     @PostMapping("/api/voteDetail")
     public GroupVoteResponse voteDetail(@RequestParam(name = "voteId") UUID voteId) {
         groupService.voteViewCount(voteId);
-        GroupVoteResponse voteDetail = groupService.voteDetail(voteId);
-        return voteDetail;
+        return groupService.voteDetail(voteId);
     }
 
     @PostMapping("/api/voteUpdate")

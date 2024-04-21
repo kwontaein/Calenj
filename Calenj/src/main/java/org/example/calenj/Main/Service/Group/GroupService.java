@@ -9,13 +9,11 @@ import org.example.calenj.Main.DTO.Response.Group.InviteCodeResponse;
 import org.example.calenj.Main.Repository.Group.GroupRepository;
 import org.example.calenj.Main.Repository.Group.Group_UserRepository;
 import org.example.calenj.Main.Repository.Group.InviteCodeRepository;
-import org.example.calenj.Main.Repository.MessageEventRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.Service.GlobalService;
 import org.example.calenj.Main.domain.Group.GroupEntity;
 import org.example.calenj.Main.domain.Group.GroupUserEntity;
 import org.example.calenj.Main.domain.Group.InviteCodeEntity;
-import org.example.calenj.Main.domain.MessageEventEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,8 +37,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final InviteCodeRepository inviteCodeRepository;
-    private final MessageEventRepository messageEventRepository;
-
+    
     //그룹 만들기
     public void makeGroup(String groupTitle) {
 
@@ -76,21 +73,11 @@ public class GroupService {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
-        MessageEventEntity messageEventEntity = MessageEventEntity.builder()
-                .userId(userEntity)
-                .paramsId(groupEntity.getGroupId())
-                .paramsType(MessageEventEntity.ParmasType.GROUP)
-                .endPoiont(0)
-                .build();
-
-        messageEventRepository.save(messageEventEntity);
     }
 
     //그룹 목록 가져오기
     public List<GroupResponse> groupList() {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        String userEmail = userDetails.getUsername();
+        String userEmail = globalService.extractFromSecurityContext().getUsername();
         return groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
     }
 
@@ -101,6 +88,7 @@ public class GroupService {
         if (groupOptional.isPresent()) {
             GroupResponse groupResponse = groupOptional.get();
             List<GroupUserResponse> groupUsers = group_userRepository.findGroupUsers(groupResponse.getGroupId());
+
             // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
             // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
             GroupDetailResponse groupDetailResponse = new GroupDetailResponse(
@@ -137,10 +125,9 @@ public class GroupService {
     public String inviteCode(InviteCodeRequest inviteCodeRequest) {
         LocalDateTime now = LocalDateTime.now();
         Random rnd = new Random();
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
+
         for (int i = 0; i < 8; i++) {
-            // rnd.nextBoolean() 는 랜덤으로 true, false 를 리턴. true일 시 랜덤 한 소문자를,
-            // false 일 시 랜덤 한 숫자를 StringBuffer 에 append 한다.
             if (rnd.nextBoolean()) {
                 buf.append((char) ((int) (rnd.nextInt(26)) + 97));
             } else {
@@ -148,8 +135,9 @@ public class GroupService {
             }
         }
 
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        String userName = globalService.extractFromSecurityContext().getUsername();
+
+        UserEntity userEntity = userRepository.findByUserEmail(userName).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         inviteCodeRepository.save(InviteCodeEntity
@@ -169,24 +157,17 @@ public class GroupService {
 
         InviteCodeResponse inviteCodeResponse = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
 
-        int onlineCnt = inviteCodeRepository.onlineUserCount(inviteCode).orElse(0);
-        int memberCnt = inviteCodeRepository.memberCount(inviteCode).orElse(0);
-
-        inviteCodeResponse.setOnlineCount(onlineCnt);
-        inviteCodeResponse.setOnlineCount(memberCnt);
+        inviteCodeResponse.setOnlineCount(inviteCodeRepository.onlineUserCount(inviteCode).orElse(0));
+        inviteCodeResponse.setOnlineCount(inviteCodeRepository.memberCount(inviteCode).orElse(0));
 
         String enableUse = globalService.compareDate(inviteCodeResponse.getEndDateTime());
-        System.out.println(enableUse);
 
         if (inviteCodeResponse.getGroupTitle() != null && enableUse.equals("useAble")) {
             inviteCodeResponse.setAbleCode("유효한 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         } else if (enableUse.equals("cannotUse")) {
             inviteCodeResponse.setAbleCode("만료된 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         } else {
             inviteCodeResponse.setAbleCode("잘못된 코드입니다");
-            System.out.println("inviteCodeDTO.getInviteCode() : " + inviteCodeResponse);
         }
         return inviteCodeResponse;
     }

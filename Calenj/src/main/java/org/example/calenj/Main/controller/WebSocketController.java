@@ -44,23 +44,28 @@ public class WebSocketController {
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
         String nowTime = globalService.nowTime();
+
         message.setNickName(username);
         message.setUserEmail(userEmail);
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
-        System.out.println("message : " + message);
-        System.out.println("response : " + response);
+
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
+
             try {
+
                 // 파일로부터 채팅 내용을 읽어와서 보내기
                 int setPoint = webSokcetService.countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+
             } catch (Throwable e) {
+
                 // 에러가 발생할 경우.
                 e.printStackTrace();
+
             }
             // State가 1이라면 일반 메시지
         } else if (message.getState() == ChatMessageRequest.fileType.READ) {
@@ -68,6 +73,7 @@ public class WebSocketController {
             List<String> file = webSokcetService.readGroupChattingFile(message);
             response.setMessage(file);
             template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+
         } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
 
             List<String> file = webSokcetService.readGroupChattingFileSlide(message);

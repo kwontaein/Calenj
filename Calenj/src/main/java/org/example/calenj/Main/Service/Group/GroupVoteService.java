@@ -30,9 +30,6 @@ public class GroupVoteService {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
 
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-        List<String> viewerList = new ArrayList<>();
-        //TODO :제거해야함
-        viewerList.add("dysj11@naver.com");
 
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
                 .voteCreater(userDetails.getUsername())
@@ -41,7 +38,6 @@ public class GroupVoteService {
                 .voteEndDate(request.getVoteEndDate())
                 .isMultiple(request.getIsMultiple())
                 .anonymous(request.getAnonymous())
-                .voteWatcher(viewerList)
                 .group(groupEntity)
                 .build();
 

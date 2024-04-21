@@ -54,56 +54,53 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
     const messageLength = useRef<number>();
     const prevScrollHeight = useRef<number>();//메시지 스크롤 증가 전 사이즈
-    const [loadAble,setloadAble] = useState<boolean>(false);
+    const [loadAble, setloadAble] = useState<boolean>(false);
 
     /**param이 바뀌면 다시 세팅*/
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(false);
         setMessageList([]);
-    },[param])
+    }, [param])
 
     //메시지 리스트의 길이를 갱신 이후 scroll셋팅
     useEffect(() => {
-        
+
         messageLength.current = messageList.length;
-        setTimeout(()=>{
-            setloadAble(true)
-            console.log('로드가능')
-        },200)
-        if(stomp.receiveMessage.state==="RELOAD"){
-            if(scrollRef.current && prevScrollHeight.current){
-                scrollRef.current.scrollTop = scrollRef.current.scrollHeight-prevScrollHeight.current;
+        setloadAble(true)
+        console.log('로드가능')
+        if (stomp.receiveMessage.state === "RELOAD") {
+            if (scrollRef.current && prevScrollHeight.current) {
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight.current;
             }
         }
     }, [messageList])
-    
 
 
     //처음 들어갔을 때 스크롤에따른 상태체크
     useEffect(() => {
-        if(scrollRef.current){
-            scrollRef.current.addEventListener('scroll',handleScroll);
-            if(endPointMap.get(param)===0) {
+        if (scrollRef.current) {
+            scrollRef.current.addEventListener('scroll', handleScroll);
+            if (endPointMap.get(param) === 0) {
                 console.log(scrollRef.current.scrollHeight)
-                scrollRef.current.scrollTop=scrollRef.current.scrollHeight;
-            }else{
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            } else {
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
                     const targetElementRect = targetElement.getBoundingClientRect();
-                    scrollRef.current.scrollTop= targetElementRect.bottom-300;
-                  }
+                    scrollRef.current.scrollTop = targetElementRect.bottom - 300;
+                }
             }
         }
-        if(!loading){
-            if(scrollRef.current){
-                scrollRef.current.removeEventListener('scroll',handleScroll);
+        if (!loading) {
+            if (scrollRef.current) {
+                scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         }
-        return ()=>{
-            if(scrollRef.current){
-                scrollRef.current.removeEventListener('scroll',handleScroll);
+        return () => {
+            if (scrollRef.current) {
+                scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         }
     }, [loading])
@@ -119,14 +116,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     };
 
 
-
-
-
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
         if (scrollRef.current) {
-            
-            const {scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+
+            const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
 
             //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
             if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
@@ -135,15 +129,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 return;
             }
             //최상단에 있을경우 리로드
-            if (scrollTop <50 && messageLength.current && loadAble) {
+            if (scrollTop < 50 && messageLength.current && loadAble) {
                 prevScrollHeight.current = scrollHeight;
                 setloadAble(false);
                 reloadTopMessage(messageLength.current)
             }
         }
     }
-    
- 
+
+
     const endPointRef = useRef<NodeJS.Timeout | undefined>();
 
     const updateEndpoint = () => {
@@ -162,28 +156,26 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }
 
 
- 
-
-
-    const setFileLog =()=>{
+    const setFileLog = () => {
         let file = stomp.receiveMessage.message as string[]
         file.map((fileMessage) => {
             let msgInfo = fileMessage.split("$", 5)
             if (!msgInfo[1]) return
-                const loadMsg: Message = {
-                    chatUUID: msgInfo[0],
-                    sendDate: msgInfo[1].slice(1, 17),
-                    userEmail: msgInfo[2],
-                    nickName: msgInfo[3],
-                    message: msgInfo[4],
-                }
+            const loadMsg: Message = {
+                chatUUID: msgInfo[0],
+                sendDate: msgInfo[1].slice(1, 17),
+                userEmail: msgInfo[2],
+                nickName: msgInfo[3],
+                message: msgInfo[4],
+            }
 
-            if(!loading){
+            if (!loading) {
                 setMessageList((prev) => {
                     return [...prev, loadMsg]
                 })
-            }else{
+            } else {
                 setMessageList((prev) => {
+                    console.log(loadMsg.message)
                     return [loadMsg, ...prev,]
                 })
             }
@@ -247,37 +239,36 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const MessageBox = useMemo(() => {
         if (loading) {
             return (
-                    <ScrollableDiv ref={scrollRef}>
-                        {messageList.map((message: Message, index: number) => (
-                            <MessageBoxContainer className={message.chatUUID}
-                                                key={message.chatUUID + index} 
-                                                $sameUser={index!==0 && messageList[index - 1].userEmail === message.userEmail
-                                                }>
-                                {message.chatUUID === '엔드포인트' ?
-            
-                                    <hr data-content={"NEW"}></hr> :
-                                        (index && messageList[index - 1].userEmail === message.userEmail ? (
-                                            <MessageContainer2>
-                                                <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                                <MessageContentContainer2>{message.message}</MessageContentContainer2>
-                                            </MessageContainer2>
-                                        ) : (
-                                            <RowFlexBox style={{width: 'auto'}}>
-                                                <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
-                                                <MessageContainer>
-                                                    <RowFlexBox>
-                                                        <NickNameContainer>{message.nickName}</NickNameContainer>
-                                                        <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
-                                                    </RowFlexBox>
-                                                    <MessageContentContainer>{message.message}</MessageContentContainer>
-                                                </MessageContainer>           
+                <ScrollableDiv ref={scrollRef}>
+                    {messageList.map((message: Message, index: number) => (
+                        <MessageBoxContainer className={message.chatUUID}
+                                             key={message.chatUUID + index}
+                                             $sameUser={index !== 0 && messageList[index - 1].userEmail === message.userEmail
+                                             }>
+                            {message.chatUUID === '엔드포인트' ?
+                                <hr data-content={"NEW"}></hr> :
+                                (index && messageList[index - 1].userEmail === message.userEmail ? (
+                                    <MessageContainer2>
+                                        <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                        <MessageContentContainer2>{message.message}</MessageContentContainer2>
+                                    </MessageContainer2>
+                                ) : (
+                                    <RowFlexBox style={{width: 'auto'}}>
+                                        <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
+                                        <MessageContainer>
+                                            <RowFlexBox>
+                                                <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                             </RowFlexBox>
-                                        ))
-                                }
-                            </MessageBoxContainer>
-                        ))}
-                        <div style={{marginTop:'10px'}}></div>
-                    </ScrollableDiv>
+                                            <MessageContentContainer>{message.message}</MessageContentContainer>
+                                        </MessageContainer>
+                                    </RowFlexBox>
+                                ))
+                            }
+                        </MessageBoxContainer>
+                    ))}
+                    <div style={{marginTop: '10px'}}></div>
+                </ScrollableDiv>
             );
         }
         return null;
