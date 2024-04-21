@@ -110,9 +110,7 @@ public class WebSokcetService {
             return null;
         }
 
-        Collections.reverse(previousLines);
         return previousLines;
-
     }
 
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
