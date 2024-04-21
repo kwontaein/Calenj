@@ -1,6 +1,8 @@
 import {UseQueryOptions, UseQueryResult} from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
+import { useRef } from 'react';
+import { delay } from 'redux-saga/effects';
 
 export function loginFilter(error: string): void {
     if (error === "NON_EXISTENT_ERROR") {
@@ -55,6 +57,43 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
     return result;
 }
 
+//requestAnimationFrame을 활용한 Throttle
+
+export const throttleByAnimationFrame = (handler: (...args: any[]) => void) =>
+ function (this: any, ...args: any[]) {
+   window.requestAnimationFrame(() => {
+     handler.apply(this, args)
+   })
+ }
+
+
+export const debounce=<T extends (...args:any[]) =>void>
+(func:T, delay:number) :((...args:Parameters<T>)=>void)=>{
+    let timeoutId: NodeJS.Timeout | null;
+
+    return (...args:Parameters<T>) => {
+       
+        if(timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    }
+}
+export const throttle = <T extends (...args:any[])=>void>
+(func:T, delay:number) : ((...args:Parameters<T>)=>void)=>{
+    let timeoutId : ReturnType<typeof setTimeout> | undefined;
+
+    return (...args:Parameters<T>)=>{
+        if(!timeoutId) {
+            console.log('실행')
+            func(...args)
+        };
+
+        timeoutId = setTimeout(()=>{
+            timeoutId=undefined;
+        },delay)
+    }
+}
 
 /*************************************날짜 관련 함수*************************************/
 
