@@ -9,7 +9,7 @@ import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
 import { DispatchStompProps, mapDispatchToStompProps } from '../../store/module/StompReducer';
-import GroupMsgBox from './../MessageBox/GroupMsgBox';
+import GroupMsgBox from './../MessageBox/GroupMsgBox2';
 import {endPointMap} from '../../store/module/StompMiddleware';
 import group from "./index";
 
@@ -70,12 +70,12 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
 
 
      useEffect(() => {
-        requestFile({
-            target: 'groupMsg',
-            param: groupId,
-            requestFile: "READ",
-            nowLine: endPointMap.get(groupId)
-        });
+        // requestFile({
+        //     target: 'groupMsg',
+        //     param: groupId,
+        //     requestFile: "READ",
+        //     nowLine: endPointMap.get(groupId)
+        // });
         return () => {
         }
     }, [groupId])
