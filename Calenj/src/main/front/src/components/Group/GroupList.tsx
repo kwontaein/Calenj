@@ -1,7 +1,7 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import MakeGroup from './MakeGroup';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useEffect, useState,useMemo} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {
@@ -24,12 +24,13 @@ interface GroupList {
     groupCreated: string;
 }
 
-interface NavigationProps{
-    redirectDetail : (navigate:string,groupId:string)=>void
+interface NavigationProps {
+    redirectDetail: (navigate: string, groupId: string) => void
 }
+
 export const QUERY_GROUP_LIST_KEY: string = 'groupList'
 
-const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail}) => {
+const GroupList: React.FC<StompData & NavigationProps> = ({stomp, redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -62,18 +63,18 @@ const GroupList: React.FC<StompData & NavigationProps> =({stomp,redirectDetail})
     });
 
     useEffect(() => {
-        if(groupListState.data) redirectDetail("group",groupListState.data[0].groupId)
+        if (groupListState.data) redirectDetail("group", groupListState.data[0].groupId)
     }, [groupListState.isLoading]);
 
     const closeModal = () => {
         setShowMakeGroup(false);
     };
 
-    interface ALARM{
-        param:string;
-        alramNum:number;
+    interface ALARM {
+        param: string;
+        alramNum: number;
     }
-  
+
 
     return (
         <div>

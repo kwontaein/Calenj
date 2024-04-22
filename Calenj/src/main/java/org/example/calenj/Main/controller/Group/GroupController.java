@@ -44,8 +44,7 @@ public class GroupController {
     @PostMapping("/api/joinGroup")
     public String joinGroup(@RequestBody GroupDetailRequest groupDetailrequest) {
         groupService.joinGroup(groupDetailrequest.getGroupId());
-        System.out.println("그룹 참가");
-        return "a";
+        return "그룹 참가";
     }
 
     // 초대 링크 발급
@@ -60,7 +59,6 @@ public class GroupController {
     //초대 코드로 정보 받아오기. 없을 시 잘못된 코드임을 반환
     @PostMapping("/api/inviteGroup")
     public InviteCodeResponse inviteGroup(@RequestBody InviteCodeRequest inviteCodeRequest) {
-        System.out.println(inviteCodeRequest.getInviteCode());
         return groupService.inviteGroup(inviteCodeRequest.getInviteCode());
         // 메소드 내부 로직
     }

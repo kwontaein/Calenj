@@ -1,4 +1,4 @@
-import React, {useEffect, useRef,useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useId} from 'react';
@@ -8,7 +8,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {connect} from "react-redux";
 import {stateFilter} from '../../stateFunc/actionFun';
-import { DispatchStompProps, mapDispatchToStompProps } from '../../store/module/StompReducer';
+import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
 import GroupMsgBox from './../MessageBox/GroupMsgBox2';
 import {endPointMap} from '../../store/module/StompMiddleware';
 import group from "./index";
@@ -69,7 +69,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     });
 
 
-     useEffect(() => {
+    useEffect(() => {
         requestFile({
             target: 'groupMsg',
             param: groupId,

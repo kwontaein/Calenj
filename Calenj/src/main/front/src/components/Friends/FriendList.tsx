@@ -61,7 +61,6 @@ const FriendList: React.FC = () => {
             <div>
                 <input type="text" value={inputValue} onChange={handleInputChange}/>
                 <button onClick={() => addFriend()}>친구 추가</button>
-
             </div>
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (

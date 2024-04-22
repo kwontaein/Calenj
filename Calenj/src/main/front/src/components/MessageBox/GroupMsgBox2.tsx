@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState, useRef, useCallback, useMemo,useId} from "react";
+import {ChangeEvent, useEffect, useState, useRef, useCallback, useMemo, useId} from "react";
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
@@ -28,10 +28,17 @@ import {
 
 } from '../../style/FormStyle'
 import {endPointMap} from '../../store/module/StompMiddleware';
-import {changeDateForm, AHMFormatV2, shortAHMFormat,throttleByAnimationFrame,throttle,debounce} from '../../stateFunc/actionFun'
-import { useInfiniteQuery} from '@tanstack/react-query';
+import {
+    changeDateForm,
+    AHMFormatV2,
+    shortAHMFormat,
+    throttleByAnimationFrame,
+    throttle,
+    debounce
+} from '../../stateFunc/actionFun'
+import {useInfiniteQuery} from '@tanstack/react-query';
 import store from '../../store/store';
-
+import useIntersect from "../../store/module/useIntersect";
 
 interface groupDetailProps {
     target: string;
@@ -46,8 +53,8 @@ interface Message {
     message: string,
 }
 
-interface receiveMsg{
-    recievedmessage:Message
+interface receiveMsg {
+    recievedmessage: Message
 }
 
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
@@ -59,76 +66,44 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const messageLength = useRef<number>(0);
     const prevScrollHeight = useRef<number>();//메시지 스크롤 증가 전 사이즈
 
-    const CHATTING_QUERY_KEY:string = "CHATTING_QUERY_KEY";
+    const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
 
-type IntersectHandler = (
-    entry: IntersectionObserverEntry, // Intersection Observer API에서 교차 상태의 변경을 나타내는 객체
-    observer: IntersectionObserver // 상태를 관측하는 observer, 대상요소를 지정하고 교차상태를 감지
-    ) => void
-    
-
-    
-   const useIntersect = (
-    onIntersect: IntersectHandler, //배열과 관측대상을 담음
-    options?: IntersectionObserverInit
-   ) => {
-    const ref = useRef<HTMLDivElement>(null)
-
-    //교차 상태가 변경된 요소 중에서 교차 상태에 있는 요소에 대해 지정된 콜백 함수를 실행하는 역할을 합니다.
-    const callback = useCallback(
-        //entries : 관측할 객체가 포함된 배열
-        //observer: 관측대상
-      (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-        entries.forEach((entry) => {
-            //교차상태가 됐는지 확인 = > 교차상태일 시 지정 onInteresct콜백함수 호출
-          if (entry.isIntersecting) onIntersect(entry, observer)
-        })
-      },
-      [onIntersect]
-    )
-    
-    useEffect(() => {
-      if (!ref.current) return
-      //관측할 타겟 지정
-      const observer = new IntersectionObserver(callback, options)
-      observer.observe(ref.current) //관측대상 지정
-      return () => observer.disconnect()
-    }, [ref, options, callback])
-    
-    return ref
-   }
-
-   const requestChatFile =()=>{
-    console.log("나 불렀어?");
-    if(!messageLength.current){
-        requestFile({
-            target: 'groupMsg',
-            param: param,
-            requestFile: "READ",
-            nowLine: endPointMap.get(param)
-        });
-    }else{
-        requestFile({
-            target: 'groupMsg',
-            param: param,
-            requestFile: "RELOAD",
-            nowLine: messageLength.current
-        });
+    //-----------------------------------------------------------------------------
+    const requestChatFile = () => {
+        // console.log(messageLength.current);
+        if (!messageLength.current) {
+            requestFile({
+                target: 'groupMsg',
+                param: param,
+                requestFile: "READ",
+                nowLine: endPointMap.get(param)
+            });
+        } else {
+            requestFile({
+                target: 'groupMsg',
+                param: param,
+                requestFile: "RELOAD",
+                nowLine: messageLength.current
+            });
+        }
     }
-   }
 
-   //axios를 대신해서 파일로드를 도움
-   const receiveChatFile=() =>{
-        const {message,state} =stomp.receiveMessage
-        
-        const getFileData = ()=>{
-            if(message){
-                return [...message] 
+    //-----------------------------------------------------------------------------
+    //axios를 대신해서 파일로드를 도움
+    const receiveChatFile = () => {
+        const {message, state} = stomp.receiveMessage
+
+        console.log(message);
+        if (state === "RELOAD" && !hasNextPage) return []
+        const getFileData = () => {
+            if (message) {
+                return [...message]
             }
             return [];
         }
-        const messageEntries =Array.from(getFileData(), (message: string) => {
-            const messageData = message.split("$",5)
+
+        const messageEntries = Array.from(getFileData(), (message: string) => {
+            const messageData = message.split("$", 5)
             if (!messageData[1]) return
             const loadMsg: Message = {
                 chatUUID: messageData[0],
@@ -137,114 +112,102 @@ type IntersectHandler = (
                 nickName: messageData[3],
                 message: messageData[4],
             }
+            console.log("loadMsg?", loadMsg);
             return loadMsg
         })
 
-        
-        if(state==="RELOAD"&& !hasNextPage) return []
-        if(data?.pages!==undefined && state==="READ"){
-            console.log('찌봉방 그만 READ해!!!!!!!!')
-        }
-        
-        return  messageEntries
-   }
+        return messageEntries
+    }
 
-   async function fetchData() {
+    async function fetchData() {
         try {
-            const result = await receiveChatFile();
-            return result; // 처리된 결과 출력
+            return receiveChatFile(); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
         }
     }
 
-   const { data, hasNextPage, isFetching, isLoading ,fetchNextPage, isError } = useInfiniteQuery({
+    const {data, hasNextPage, isFetching, isLoading, fetchNextPage, isError} = useInfiniteQuery({
         queryKey: [CHATTING_QUERY_KEY, param],
         queryFn: fetchData,
-        getNextPageParam: (messageList) => {   
-            const containsValue =messageList.some((item)=>item?.chatUUID!=="시작라인")
+        getNextPageParam: (messageList) => {
+            const containsValue = messageList.some((item) => item?.chatUUID !== "시작라인")
             return containsValue ? true : undefined;
-    }, //data의 값을 받아 처리할 수 있음
+        }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
-        enabled: param===stomp.receiveMessage.param,
-   });
+        enabled: param === stomp.receiveMessage.param,
+    });
+
+
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
-    
-    const topRef = useIntersect(async (entry, observer) => {
-        observer.unobserve(entry.target)
+    const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
-            requestChatFile()
-            const unsubscribe = store.subscribe(() => {
-                const currentStore = store.getState();
-                if (currentStore.stomp.receiveMessage.state === "RELOAD") {
-                    if (scrollRef.current) {
-                        const {scrollHeight} = scrollRef.current;
-                        prevScrollHeight.current = scrollHeight;
-                        
-                        const refetchFile = throttleByAnimationFrame(() => {
-                            fetchNextPage();
-                        });
-                        refetchFile();
-            
-                        // 구독 즉시 취소
-                        unsubscribe();
-                    } 
+            observer.unobserve(entry.target);
+            requestChatFile();
+            const currentStore = store.getState();
+            if (currentStore.stomp.receiveMessage.state === "RELOAD") {
+                if (scrollRef.current) {
+                    const {scrollHeight} = scrollRef.current;
+                    prevScrollHeight.current = scrollHeight;
+
+                    const refetchFile = throttleByAnimationFrame(() => {
+                        fetchNextPage();
+                    });
+                    refetchFile();
                 }
-            });
-             
-        }
-    })
-
-    useEffect(()=>{
-        scrollRef.current?.removeEventListener('scroll',handleScroll);
-    },[param])
-
-    const messageList = useMemo(()=>{
-        if(data&&!isFetching){
-            return [...data.pages.reduce((prev,current)=>prev.concat(current))]
-        }
-        return [];
-    },[data])
-
-    useEffect(()=>{
-        messageLength.current=messageList.length;//길이 세팅
-        console.log(messageLength.current)
-        if(stomp.receiveMessage.state==="RELOAD"){
-            if(scrollRef.current && prevScrollHeight.current){
-                scrollRef.current.scrollTop = scrollRef.current.scrollHeight-prevScrollHeight.current;
             }
         }
-    },[messageList])
+    });
 
-    
-  
+    const messageList = useMemo(() => {
+        if (data && !isFetching) {
+            return [...data.pages.reduce((prev, current) => prev.concat(current))]
+        }
+        return [];
+    }, [data])
+    //-----------------------------------------------------------------------------
+    useEffect(() => {
+        scrollRef.current?.removeEventListener('scroll', handleScroll);
+    }, [param])
+
+
+    useEffect(() => {
+        messageLength.current = messageList.length;//길이 세팅
+        console.log(messageLength.current)
+        if (stomp.receiveMessage.state === "RELOAD") {
+            if (scrollRef.current && prevScrollHeight.current) {
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight.current;
+            }
+        }
+    }, [messageList])
+
 
     //처음 들어갔을 때 스크롤에따른 상태체크
     useEffect(() => {
-        if(scrollRef.current){
-            scrollRef.current.addEventListener('scroll',handleScroll);
-            if(endPointMap.get(param)===0) {
-                scrollRef.current.scrollTop=scrollRef.current.scrollHeight;
+        if (scrollRef.current) {
+            scrollRef.current.addEventListener('scroll', handleScroll);
+            if (endPointMap.get(param) === 0) {
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
-            }else{
+            } else {
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
                     const targetElementRect = targetElement.getBoundingClientRect();
-                    scrollRef.current.scrollTop= targetElementRect.bottom-300;
+                    scrollRef.current.scrollTop = targetElementRect.bottom - 300;
                 }
             }
         }
-        return ()=>{
-            if(scrollRef.current){
-                scrollRef.current.removeEventListener('scroll',handleScroll);
+        return () => {
+            if (scrollRef.current) {
+                scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         }
     }, [isLoading])
-    
-    
+
+
     const handleScroll = () => {
         if (scrollTimerRef.current) {
             clearTimeout(scrollTimerRef.current);
@@ -258,10 +221,10 @@ type IntersectHandler = (
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
         if (scrollRef.current) {
-            const {scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+            const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
             //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
-            if (scrollTop + clientHeight===scrollHeight && endPointMap.get(param) !== 0) {
-                endPointMap.set(param,0)
+            if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+                endPointMap.set(param, 0)
                 scrollToBottom();
                 updateEndpoint();
                 return;
@@ -291,32 +254,31 @@ type IntersectHandler = (
     }
 
     const scrollToBottom = () => {
-        setTimeout(()=>{
+        setTimeout(() => {
             if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight
             }
-        },50) 
+        }, 50)
     };
 
-    
 
     const MessageBox = useMemo(() => {
 
         if (!isLoading) {
             return (
-                    <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
-                        <div className="scrollTop" ref ={topRef}></div>
-                    
-                        {messageList!==undefined&&
-                        messageList.reverse().map((message: Message|undefined, index: number) => (
-                            ((message!==undefined && message.chatUUID!=="시작라인")&&
-                            <MessageBoxContainer className={message.chatUUID}
-                                                key={message.chatUUID + index} 
-                                                $sameUser={index!==0 && messageList[index - 1]?.userEmail === message.userEmail
-                                                }>
-                                {message.chatUUID === '엔드포인트' ?
-            
-                                    <hr data-content={"NEW"}></hr> :
+                <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
+                    {!isLoading && <div className="scrollTop" ref={topRef}></div>}
+
+                    {messageList !== undefined &&
+                        messageList.reverse().map((message: Message | undefined, index: number) => (
+                            ((message !== undefined && message.chatUUID !== "시작라인") &&
+                                <MessageBoxContainer className={message.chatUUID}
+                                                     key={message.chatUUID + index}
+                                                     $sameUser={index !== 0 && messageList[index - 1]?.userEmail === message.userEmail
+                                                     }>
+                                    {message.chatUUID === '엔드포인트' ?
+
+                                        <hr data-content={"NEW"}></hr> :
                                         (index && messageList[index - 1]?.userEmail === message.userEmail ? (
                                             <MessageContainer2>
                                                 <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
@@ -331,18 +293,18 @@ type IntersectHandler = (
                                                         <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                     </RowFlexBox>
                                                     <MessageContentContainer>{message.message}</MessageContentContainer>
-                                                </MessageContainer>           
+                                                </MessageContainer>
                                             </RowFlexBox>
                                         ))
-                                }
-                            </MessageBoxContainer>)
+                                    }
+                                </MessageBoxContainer>)
                         ))}
-                        <div className="scrollBottom"style={{marginTop:'10px'}}></div>
-                    </ScrollableDiv>
+                    <div className="scrollBottom" style={{marginTop: '10px'}}></div>
+                </ScrollableDiv>
             );
         }
         return null;
-    }, [messageList,data]);
+    }, [messageList, data]);
 
 
     return (
