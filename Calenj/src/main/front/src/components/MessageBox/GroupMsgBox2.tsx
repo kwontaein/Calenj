@@ -143,7 +143,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
             requestChatFile();
-
             const unsubscribe = store.subscribe(() => {
                 const currentStore = store.getState();
                 if (currentStore.stomp.receiveMessage.state === "RELOAD") {

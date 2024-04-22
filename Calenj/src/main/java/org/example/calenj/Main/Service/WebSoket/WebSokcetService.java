@@ -109,7 +109,6 @@ public class WebSokcetService {
         if (previousLines.isEmpty()) {
             return null;
         }
-
         return previousLines;
     }
 
