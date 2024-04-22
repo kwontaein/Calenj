@@ -39,6 +39,7 @@ import {
 import {useInfiniteQuery} from '@tanstack/react-query';
 import store from '../../store/store';
 import useIntersect from "../../store/module/useIntersect";
+import { object } from "yup";
 
 interface groupDetailProps {
     target: string;
@@ -70,7 +71,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     //-----------------------------------------------------------------------------
     const requestChatFile = () => {
-        // console.log(messageLength.current);
         if (!messageLength.current) {
             requestFile({
                 target: 'groupMsg',
@@ -90,38 +90,52 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     //-----------------------------------------------------------------------------
     //axios를 대신해서 파일로드를 도움
-    const receiveChatFile = () => {
-        const {message, state} = stomp.receiveMessage
+    const receiveChatFile =  (messages:string[]) => {
 
-        console.log(message);
-        if (state === "RELOAD" && !hasNextPage) return []
-        const getFileData = () => {
-            if (message) {
-                return [...message]
-            }
-            return [];
-        }
-
-        const messageEntries = Array.from(getFileData(), (message: string) => {
-            const messageData = message.split("$", 5)
-            if (!messageData[1]) return
+        const {state} = stomp.receiveMessage      
+    
+        const messageEntries = Array.from(messages, (message: string) => {
+            const messageData = message.split("$", 5);
+            if (!messageData[1]) return null;
             const loadMsg: Message = {
                 chatUUID: messageData[0],
                 sendDate: messageData[1].slice(1, 17),
                 userEmail: messageData[2],
                 nickName: messageData[3],
                 message: messageData[4],
-            }
-            console.log("loadMsg?", loadMsg);
-            return loadMsg
-        })
+            };
+            return loadMsg;
+        }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
+        
 
         return messageEntries
     }
 
     async function fetchData() {
         try {
-            return receiveChatFile(); // 처리된 결과 출력
+            
+            const getFileData = () => {
+                //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
+                return new Promise((res, rej) => {
+                    if(!isFetching) {
+                        console.log('실행')
+                        requestChatFile()
+                    };
+                    const unsubscribe = store.subscribe(() => {
+                        const {receiveMessage} = store.getState().stomp;
+                        if (receiveMessage) {  
+                            res(receiveMessage.message); // 값 반환
+                            unsubscribe(); // 구독 취소
+                        }
+                    });
+                }).then((res) => {
+                    return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
+                }).catch(()=> {
+                    return [];
+                });
+            }
+            const message = await getFileData();
+            return receiveChatFile(message); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
@@ -132,8 +146,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         queryKey: [CHATTING_QUERY_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
-            const containsValue = messageList.some((item) => item?.chatUUID !== "시작라인")
-            return containsValue ? true : undefined;
+            const containsValue = messageList[messageList.length-1]?.chatUUID==="시작라인"
+            return containsValue ? undefined : true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
         enabled: param === stomp.receiveMessage.param,
@@ -144,30 +158,28 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
-            requestChatFile();
-            const currentStore = store.getState();
-            if (currentStore.stomp.receiveMessage.state === "RELOAD") {
-                if (scrollRef.current) {
-                    const {scrollHeight} = scrollRef.current;
-                    prevScrollHeight.current = scrollHeight;
+            
+            if (scrollRef.current) {
+                const {scrollHeight} = scrollRef.current;
+                prevScrollHeight.current = scrollHeight;
 
-                    const refetchFile = throttleByAnimationFrame(() => {
-                        fetchNextPage();
-                    });
-                    refetchFile();
-                }
-            }
+                const refetchFile = throttleByAnimationFrame(() => {
+                    fetchNextPage();
+                });
+                refetchFile();
+            }              
         }
     });
 
     const messageList = useMemo(() => {
-        if (data && !isFetching) {
+        if (data) {
             return [...data.pages.reduce((prev, current) => prev.concat(current))]
         }
         return [];
     }, [data])
     //-----------------------------------------------------------------------------
     useEffect(() => {
+        requestChatFile();
         scrollRef.current?.removeEventListener('scroll', handleScroll);
     }, [param])
 
@@ -267,11 +279,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (!isLoading) {
             return (
                 <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
-                    {!isLoading && <div className="scrollTop" ref={topRef}></div>}
+                    <div className="scrollTop" ref={topRef}></div>
 
-                    {messageList !== undefined &&
-                        messageList.reverse().map((message: Message | undefined, index: number) => (
-                            ((message !== undefined && message.chatUUID !== "시작라인") &&
+                    {messageList.reverse().map((message: Message | null, index: number) => (
+                            ((message !== null && message.chatUUID !== "시작라인") &&
                                 <MessageBoxContainer className={message.chatUUID}
                                                      key={message.chatUUID + index}
                                                      $sameUser={index !== 0 && messageList[index - 1]?.userEmail === message.userEmail
