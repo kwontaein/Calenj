@@ -68,6 +68,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
 
+    //-----------------------------------------------------------------------------
     const requestChatFile = () => {
         // console.log(messageLength.current);
         if (!messageLength.current) {
@@ -77,7 +78,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 requestFile: "READ",
                 nowLine: endPointMap.get(param)
             });
-            console.log("실행")
         } else {
             requestFile({
                 target: 'groupMsg',
@@ -85,14 +85,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 requestFile: "RELOAD",
                 nowLine: messageLength.current
             });
-            console.log("실행2")
         }
     }
 
+    //-----------------------------------------------------------------------------
     //axios를 대신해서 파일로드를 도움
     const receiveChatFile = () => {
         const {message, state} = stomp.receiveMessage
 
+        console.log(message);
         if (state === "RELOAD" && !hasNextPage) return []
         const getFileData = () => {
             if (message) {
@@ -100,6 +101,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             }
             return [];
         }
+
         const messageEntries = Array.from(getFileData(), (message: string) => {
             const messageData = message.split("$", 5)
             if (!messageData[1]) return
@@ -110,6 +112,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 nickName: messageData[3],
                 message: messageData[4],
             }
+            console.log("loadMsg?", loadMsg);
             return loadMsg
         })
 
@@ -118,8 +121,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     async function fetchData() {
         try {
-            const result = await receiveChatFile();
-            return result; // 처리된 결과 출력
+            return receiveChatFile(); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
@@ -136,36 +138,27 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         initialPageParam: null,
         enabled: param === stomp.receiveMessage.param,
     });
-    //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
 
+
+    //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
     const topRef = useIntersect((entry, observer) => {
-        console.log("실행?")
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
             requestChatFile();
-            const unsubscribe = store.subscribe(() => {
-                const currentStore = store.getState();
-                if (currentStore.stomp.receiveMessage.state === "RELOAD") {
-                    if (scrollRef.current) {
-                        const {scrollHeight} = scrollRef.current;
-                        prevScrollHeight.current = scrollHeight;
+            const currentStore = store.getState();
+            if (currentStore.stomp.receiveMessage.state === "RELOAD") {
+                if (scrollRef.current) {
+                    const {scrollHeight} = scrollRef.current;
+                    prevScrollHeight.current = scrollHeight;
 
-                        const refetchFile = throttleByAnimationFrame(() => {
-                            fetchNextPage();
-                        });
-                        refetchFile();
-
-                        // 구독 즉시 취소
-                        unsubscribe();
-                    }
+                    const refetchFile = throttleByAnimationFrame(() => {
+                        fetchNextPage();
+                    });
+                    refetchFile();
                 }
-            });
+            }
         }
     });
-
-    useEffect(() => {
-        scrollRef.current?.removeEventListener('scroll', handleScroll);
-    }, [param])
 
     const messageList = useMemo(() => {
         if (data && !isFetching) {
@@ -173,6 +166,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         }
         return [];
     }, [data])
+    //-----------------------------------------------------------------------------
+    useEffect(() => {
+        scrollRef.current?.removeEventListener('scroll', handleScroll);
+    }, [param])
+
 
     useEffect(() => {
         messageLength.current = messageList.length;//길이 세팅

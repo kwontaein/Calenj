@@ -85,6 +85,7 @@ public class WebSocketController {
             webSokcetService.saveChattingToFile(message);
             response.setMessage(Collections.singletonList(message.getMessage()));
             response.setChatUUID(message.getChatUUID());
+            System.out.println(response);
             template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
 
             //2라면 나갈 때 엔드포인트 설정
