@@ -92,8 +92,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     //axios를 대신해서 파일로드를 도움
     const receiveChatFile = () => {
         const {message, state} = stomp.receiveMessage
-
-        console.log(message);
+        console.log(stomp.receiveMessage.state)
         if (state === "RELOAD" && !hasNextPage) return []
         const getFileData = () => {
             if (message) {
@@ -112,7 +111,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 nickName: messageData[3],
                 message: messageData[4],
             }
-            console.log("loadMsg?", loadMsg);
             return loadMsg
         })
 
@@ -128,7 +126,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         }
     }
 
-    const {data, hasNextPage, isFetching, isLoading, fetchNextPage, isError} = useInfiniteQuery({
+    const {data, hasNextPage, isFetching, isFetchingNextPage, isLoading, fetchNextPage, isError} = useInfiniteQuery({
         queryKey: [CHATTING_QUERY_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
@@ -145,17 +143,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
             requestChatFile();
-            const currentStore = store.getState();
-            if (currentStore.stomp.receiveMessage.state === "RELOAD") {
-                if (scrollRef.current) {
-                    const {scrollHeight} = scrollRef.current;
-                    prevScrollHeight.current = scrollHeight;
-
-                    const refetchFile = throttleByAnimationFrame(() => {
-                        fetchNextPage();
-                    });
-                    refetchFile();
-                }
+            if (scrollRef.current) {
+                const {scrollHeight} = scrollRef.current;
+                prevScrollHeight.current = scrollHeight;
+                const refetchFile = throttleByAnimationFrame(() => {
+                    fetchNextPage().then(r => console.log("시발럼아 좀 되라고"));
+                });
+                refetchFile();
             }
         }
     });
