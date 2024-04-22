@@ -70,12 +70,12 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
 
 
      useEffect(() => {
-        // requestFile({
-        //     target: 'groupMsg',
-        //     param: groupId,
-        //     requestFile: "READ",
-        //     nowLine: endPointMap.get(groupId)
-        // });
+        requestFile({
+            target: 'groupMsg',
+            param: groupId,
+            requestFile: "READ",
+            nowLine: endPointMap.get(groupId)
+        });
         return () => {
         }
     }, [groupId])
