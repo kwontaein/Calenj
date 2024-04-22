@@ -34,13 +34,13 @@ public class GlobalService {
         LocalDateTime now = LocalDateTime.now();
 
         // 7일을 더한 날짜와 시간 구하기
-        plusDate(now, 7);
+        //plusDate(now, 7);
 
         // 날짜 형식 지정
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-        System.out.println("오늘: " + now.format(dateFormatter) + " " + now.format(timeFormatter));
+        //System.out.println("오늘: " + now.format(dateFormatter) + " " + now.format(timeFormatter));
 
         return now.format(dateFormatter) + " " + now.format(timeFormatter);
     }
@@ -55,10 +55,9 @@ public class GlobalService {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         // 7일 후의 날짜와 시간 출력
-        System.out.println("오늘: " + dateTime.format(dateFormatter) + " " + dateTime.format(timeFormatter));
-        System.out.println("7일 뒤: " + sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter));
-
-
+        // System.out.println("오늘: " + dateTime.format(dateFormatter) + " " + dateTime.format(timeFormatter));
+        // System.out.println("7일 뒤: " + sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter));
+        
         return sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter);
     }
 
