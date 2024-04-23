@@ -5,11 +5,9 @@ import org.example.calenj.Main.DTO.Response.User.EventResponse;
 import org.example.calenj.Main.DTO.Response.User.FriendResponse;
 import org.example.calenj.Main.Repository.EventRepository;
 import org.example.calenj.Main.Repository.FriendRepository;
-import org.example.calenj.Main.Repository.MessageEventRepository;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.EventEntity;
 import org.example.calenj.Main.domain.FriendEntity;
-import org.example.calenj.Main.domain.MessageEventEntity;
 import org.example.calenj.Main.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +28,6 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final MessageEventRepository messageEventRepository;
 
 
     public List<FriendResponse> friendList() {
@@ -94,23 +91,13 @@ public class FriendService {
             //:TODO 확인필요
             // 파일을 저장한다.
             try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
-                String nowTime =globalService.nowTime();
+                String nowTime = globalService.nowTime();
                 stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
                 stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
                 stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
-
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-
-            MessageEventEntity messageEventEntity = MessageEventEntity.builder()
-                    .userId(userEntity)
-                    .paramsId(friendEntity.getFriendId())
-                    .paramsType(MessageEventEntity.ParmasType.FRIEND)
-                    .endPoiont(0)
-                    .build();
-
-            messageEventRepository.save(messageEventEntity);
 
             return "상대가 보낸 요청이 이미 있기에, 친구 추가합니다.";
         } else {
@@ -192,7 +179,7 @@ public class FriendService {
             //:TODO 확인필요
             // 파일을 저장한다.
             try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
-                String nowTime =globalService.nowTime();
+                String nowTime = globalService.nowTime();
                 stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
                 stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
                 stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
@@ -200,16 +187,6 @@ public class FriendService {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-
-            MessageEventEntity messageEventEntity = MessageEventEntity.builder()
-                    .userId(userEntity)
-                    .paramsId(friendEntity.getFriendId())
-                    .paramsType(MessageEventEntity.ParmasType.FRIEND)
-                    .endPoiont(0)
-                    .build();
-
-            messageEventRepository.save(messageEventEntity);
-
             return "친구 요청을 수락했습니다.";
         }
     }

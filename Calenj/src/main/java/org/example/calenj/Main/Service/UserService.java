@@ -164,17 +164,15 @@ public class UserService {
         response.addCookie(cookie);
     }
 
-    public boolean OnOff(String userId, String online) {
+    public void OnOff(String userId, String online) {
         UserEntity userEntity = userRepository.findByUserEmail(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
         System.out.println(userEntity.getIsOnline());
         if (userEntity.getIsOnline() == UserEntity.OnlineStatus.OFFLINE) {//온/오프라인 전환
             System.out.println("온라인 : " + UserEntity.OnlineStatus.ONLINE);
             userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.ONLINE.toString());
-            return true;
         } else {
             System.out.println("오프라인 : " + UserEntity.OnlineStatus.OFFLINE);
             userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
-            return false;
         }
     }
 }

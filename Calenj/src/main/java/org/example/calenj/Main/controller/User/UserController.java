@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -37,8 +37,6 @@ public class UserController {
     @PostMapping("/api/postCookie")
     public boolean checkCookie(HttpServletRequest request) {
         Cookie[] requestCookie = request.getCookies();
-        System.out.println("Arrays.toString(requestCookie) :" + Arrays.toString(requestCookie));
-        System.out.println("실행 :" + userService.checkUserToken(requestCookie));
         return userService.checkUserToken(requestCookie);
     }
 
@@ -51,7 +49,6 @@ public class UserController {
 
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserRequest userRequest) {
-        System.out.println("로그인?");
         return userService.login(userRequest.getUserEmail(), userRequest.getUserPassword());
     }
 
@@ -118,11 +115,7 @@ public class UserController {
     @GetMapping("/api/emailTokenExpiration")
     public Long emailTokenExpiration() {
         Long expirationTime = validateDTO.getExpirationTime();
-
-        if (expirationTime != null) {
-            return expirationTime;
-        }
-        return 0L;
+        return Optional.ofNullable(expirationTime).orElse(0L);
     }
 
 }
