@@ -62,7 +62,7 @@ public class WebSokcetService {
                         message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-        message.setMessage(messageContent);
+//        message.setMessage(messageContent);
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
                 String Title = "캘린룸의 시작 지점이에요! $어서오세요! \n";

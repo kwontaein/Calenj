@@ -69,16 +69,23 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     });
 
 
+    const usedGroupIdsRef = useRef<string[]>([]);
+
     useEffect(() => {
-        requestFile({
-            target: 'groupMsg',
-            param: groupId,
-            requestFile: "READ",
-            nowLine: endPointMap.get(groupId)
-        });
-        return () => {
+        if (!usedGroupIdsRef.current.includes(groupId)) {
+            requestFile({
+                target: 'groupMsg',
+                param: groupId,
+                requestFile: "READ",
+                nowLine: endPointMap.get(groupId)
+            });
+            usedGroupIdsRef.current.push(groupId);
         }
-    }, [groupId])
+        return () => {
+            // cleanup 작업이 필요한 경우 여기서 처리
+        }
+    }, [groupId]);
+
 
     return (
         <div>

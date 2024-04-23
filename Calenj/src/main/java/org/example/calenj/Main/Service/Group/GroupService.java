@@ -68,7 +68,7 @@ public class GroupService {
 
         // 그룹 파일생성
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + groupUserEntity.getGroup().getGroupId(), true)) {
-            String Title = "캘린룸의 시작 지점이에요! $어서오세요 \n";
+            String Title = "시작라인$어서오세요$$$$ \n";
             stream.write(Title.getBytes(StandardCharsets.UTF_8));
         } catch (Throwable e) {
             e.printStackTrace();

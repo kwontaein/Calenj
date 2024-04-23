@@ -79,22 +79,35 @@ export const debounce=<T extends (...args:any[]) =>void>
         }, delay);
     }
 }
-export const throttle = <T extends (...args:any[])=>void>
-(func:T, delay:number) : ((...args:Parameters<T>)=>void)=>{
-    let timeoutId : ReturnType<typeof setTimeout> | undefined;
-
-    return (...args:Parameters<T>)=>{
-        if(!timeoutId) {
-            console.log('실행')
-            func(...args)
-        };
-
-        timeoutId = setTimeout(()=>{
-            timeoutId=undefined;
-        },delay)
-    }
-}
-
+export const throttle = <T extends (...args: any[]) => void>(
+    func: T,
+    delay: number
+  ): ((...args: Parameters<T>) => void) => {
+    let lastExecTime = 0;
+    let isThrottled = false;
+    let savedArgs: Parameters<T> | null = null;
+  
+    const execute = () => {
+      if (savedArgs) {
+        func(...savedArgs);
+        savedArgs = null;
+        lastExecTime = Date.now();
+        setTimeout(execute, delay);
+      }
+      isThrottled = false;
+    };
+  
+    return (...args: Parameters<T>) => {
+      if (isThrottled) {
+        savedArgs = args;
+      } else {
+        func(...args);
+        isThrottled = true;
+        lastExecTime = Date.now();
+        setTimeout(execute, delay);
+      }
+    };
+  };
 /*************************************날짜 관련 함수*************************************/
 
 const minute = 1000 * 60 //1분
