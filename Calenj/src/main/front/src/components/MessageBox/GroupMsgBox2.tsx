@@ -36,9 +36,10 @@ import {
     throttle,
     debounce
 } from '../../stateFunc/actionFun'
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
 import useIntersect from "../../store/module/useIntersect";
+import {queryClient} from "../../index";
 
 interface groupDetailProps {
     target: string;
@@ -54,7 +55,6 @@ interface Message {
 }
 
 
-
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
 const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, requestFile}) => {
     const [content, setContent] = useState<string>('');
@@ -67,6 +67,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
     const NEW_CAHT_QUERY_KEY: string = "NEW_CAHT_QUERY_KEY";
 
+    const queryClient = useQueryClient();
     //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
     const handleScroll = () => {
         if (scrollTimerRef.current) {
@@ -83,11 +84,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (scrollRef.current) {
             const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
             //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
-            if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
-                endPointMap.set(param, 0)
-                scrollToBottom();
-                updateEndpoint();
-                return;
+            if (scrollHeight > 450 && scrollTop + clientHeight > 450) {
+                if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+                    endPointMap.set(param, 0)
+                    scrollToBottom();
+                    updateEndpoint();
+                    return;
+                }
             }
         }
     }
@@ -110,6 +113,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (chatRef.current) {
             chatRef.current.value = ''
         }
+        updateEndpoint()
         scrollToBottom()
     }
 
@@ -122,7 +126,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     };
 
     //--------------------------------------------------------------------------------------------------------------- 파일 요청 READ/RELOAD 함수
-    const requestChatFile = () => {
+    const requestChatFileRead = () => {
         if (!messageLength.current) {
             requestFile({
                 target: 'groupMsg',
@@ -130,7 +134,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 requestFile: "READ",
                 nowLine: endPointMap.get(param)
             });
-        } else {
+        }
+    }
+    const requestChatFileReload = () => {
+        console.log("messageLength.current", messageLength.current)
+        console.log("messageList.length", messageList.length)
+        if (messageLength.current) {
             requestFile({
                 target: 'groupMsg',
                 param: param,
@@ -139,11 +148,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             });
         }
     }
-
     //--------------------------------------------------------------------------------------------------------------- 비동기식 함수 > WebSocket stomp를 받아 infiniteFetch
     //axios를 대신해서 파일로드를 도움
-    const receiveChatFile =  (messages:string[]) => {  
-    
+    const receiveChatFile = (messages: string[]) => {
+
         const messageEntries = Array.from(messages, (message: string) => {
             const messageData = message.split("$", 5);
             if (!messageData[1]) return null;
@@ -156,62 +164,67 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             };
             return loadMsg;
         }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
-        
+
 
         return messageEntries
     }
 
     async function fetchData() {
         try {
-            
             const getFileData = () => {
                 //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
                 return new Promise((res, rej) => {
-                    if(!isFetching) {
-                        requestChatFile()
-                    };
+                    if (!isFetching) {
+                        console.log("비동기 실행")
+                        requestChatFileReload()
+                    }
                     const unsubscribe = store.subscribe(() => {
+                        console.log("비동기 실행2")
                         const {receiveMessage} = store.getState().stomp;
-                        if (receiveMessage) {  
+                        if (receiveMessage) {
                             res(receiveMessage.message); // 값 반환
                             unsubscribe(); // 구독 취소
                         }
                     });
                 }).then((res) => {
+                    console.log("비동기 실행3")
                     return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
-                }).catch(()=> {
+                }).catch(() => {
                     return [];
                 });
             }
             const message = await getFileData();
+            messageLength.current += receiveChatFile(message).length;
+            console.log("비동기 실행4", receiveChatFile(message).length);
             return receiveChatFile(message); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
         }
     }
+
 //--------------------------------------------------------------------------------------------------------------- 새로 받은 메시지 관련
 
-    const fetchNewChat = ()=>{
+    const fetchNewChat = () => {
         //초기 세팅
-        if(!receiveNewMessage.data){
+        if (!receiveNewMessage.data) {
             const loadMsg: Message = {
                 chatUUID: "시작라인",
                 sendDate: "",
                 userEmail: "",
                 nickName: "",
                 message: "",
-            }; 
+            };
             return loadMsg
-        } 
-        const {chatUUID,sendDate,userEmail,nickName,message} = stomp.receiveMessage
+        }
+        const {chatUUID, sendDate, userEmail, nickName, message} = stomp.receiveMessage
         const loadMsg: Message = {
             chatUUID: chatUUID,
             sendDate: sendDate,
             userEmail: userEmail,
             nickName: nickName,
             message: message.toString(),
-        }; 
+        };
         return loadMsg;
     }
 //---------------------------------------------------------------------------------------------------------------
@@ -219,7 +232,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         queryKey: [CHATTING_QUERY_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
-            const containsValue = messageList[messageList.length-1]?.chatUUID==="시작라인"
+            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인"
             return containsValue ? undefined : true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
@@ -236,13 +249,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         enabled: param === stomp.receiveMessage.param && !isFetching,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
-    
+
     //---------------------------------------------------------------------------------------------------------------옵저버를 활용한 스크롤 관리 > 관측 시 stomp RELOAD 요청
 
     const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
-            
+
             if (scrollRef.current) {
                 const {scrollHeight} = scrollRef.current;
                 prevScrollHeight.current = scrollHeight;
@@ -251,7 +264,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                     fetchNextPage();
                 });
                 refetchFile();
-            }              
+            }
         }
     });
 
@@ -263,20 +276,21 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }, [data])
     //--------------------------------------------------------------------------------------------------------------- 새로 받은 메시지를 관리 SEDN 발생 시 infiniteQuery fetch
     //메시지를 받기위한 useEffect  => SEND감지 후 fetch()
-    useEffect(()=>{
-        const {state} =stomp.receiveMessage;
+    useEffect(() => {
+        const {state} = stomp.receiveMessage;
         //해당 방의 채팅내용만 받아옴
-        if(param !== stomp.receiveMessage.param) return 
+        if (param !== stomp.receiveMessage.param) return
         //셋팅 이후 send를 받음 =>1.READ한 파일 세팅 이후 처리
 
-        if((!receiveNewMessage.isFetching)&&state==="SEND"){
+        if ((!receiveNewMessage.isFetching) && state === "SEND") {
             receiveNewMessage.fetchNextPage();
+            updateScroll()
         }
-    },[stomp.receiveMessage.chatUUID])
+    }, [stomp.receiveMessage.chatUUID])
 
 
     const newMessageList = useMemo(() => {
-        updateScroll()
+
         if (receiveNewMessage.data) {
             return receiveNewMessage.data.pages
         }
@@ -284,26 +298,27 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }, [receiveNewMessage.data])
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
-    
+
     useEffect(() => {
-        requestChatFile()
+        if (endPointMap.get(param) <= 0) {
+            console.log("실행 렌더링")
+            requestChatFileRead();
+        }
         scrollRef.current?.removeEventListener('scroll', handleScroll);
-        console.log(param)
-        const alrem = endPointMap.get(param)
-        console.log(alrem)
-        //여기부분 수정해야함 해당 그룹채팅에 안들어가 있는 상태에서 메시지를 받으면 메시지를 다시 read해서 세팅
-        // if(endPointMap.get(param)>0){
-        //     console.log('refetch 좀 해라 제발 ')
-        //     requestChatFile();
-        //     refetch();
-        //     receiveNewMessage.refetch();
-        // }
+        if (endPointMap.get(param) > 0) {
+            messageLength.current = 0;
+            requestChatFileRead();
+            refetch().then(r => {
+                newMessageList.length = 0;
+                //updateEndpoint();
+                endPointMap.set(param, 0)
+            });
+        }
     }, [param])
 
 
     useEffect(() => {
-        messageLength.current = messageList.length;//길이 세팅
-        console.log(messageLength.current)
+        //messageLength.current = messageList.length;//길이 세팅
         if (stomp.receiveMessage.state === "RELOAD") {
             if (scrollRef.current && prevScrollHeight.current) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight.current;
@@ -337,43 +352,42 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }, [isLoading])
 
 
-
     const MessageBox = useMemo(() => {
-        const connectList = [...[...newMessageList].reverse(),...messageList].reverse() //얕은 복사를 활용한 복사 //최신 -> 오래된 방향을 reverse해서 스크롤에 띄움
+        const connectList = [...[...newMessageList].reverse(), ...messageList].reverse() //얕은 복사를 활용한 복사 //최신 -> 오래된 방향을 reverse해서 스크롤에 띄움
         if (!isLoading) {
             return (
                 <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
                     <div className="scrollTop" ref={topRef}></div>
 
                     {connectList.map((message: Message | null, index: number) => (
-                            ((message !== null && message.chatUUID !== "시작라인") &&
-                                <MessageBoxContainer className={message.chatUUID}
-                                                     key={message.chatUUID + index}
-                                                     $sameUser={index !== 0 && connectList[index - 1]?.userEmail === message.userEmail
-                                                     }>
-                                    {message.chatUUID === '엔드포인트' ?
+                        ((message !== null && message.chatUUID !== "시작라인") &&
+                            <MessageBoxContainer className={message.chatUUID}
+                                                 key={message.chatUUID + index}
+                                                 $sameUser={index !== 0 && connectList[index - 1]?.userEmail === message.userEmail
+                                                 }>
+                                {message.chatUUID === '엔드포인트' ?
 
-                                        <hr data-content={"NEW"}></hr> :
-                                        (index && connectList[index - 1]?.userEmail === message.userEmail ? (
-                                            <MessageContainer2>
-                                                <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                                <MessageContentContainer2>{message.message}</MessageContentContainer2>
-                                            </MessageContainer2>
-                                        ) : (
-                                            <RowFlexBox style={{width: 'auto'}}>
-                                                <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
-                                                <MessageContainer>
-                                                    <RowFlexBox>
-                                                        <NickNameContainer>{message.nickName}</NickNameContainer>
-                                                        <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
-                                                    </RowFlexBox>
-                                                    <MessageContentContainer>{message.message}</MessageContentContainer>
-                                                </MessageContainer>
-                                            </RowFlexBox>
-                                        ))
-                                    }
-                                </MessageBoxContainer>)
-                        ))}
+                                    <hr data-content={"NEW"}></hr> :
+                                    (index && connectList[index - 1]?.userEmail === message.userEmail ? (
+                                        <MessageContainer2>
+                                            <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                            <MessageContentContainer2>{message.message}</MessageContentContainer2>
+                                        </MessageContainer2>
+                                    ) : (
+                                        <RowFlexBox style={{width: 'auto'}}>
+                                            <ProfileContainer>{message.userEmail.slice(0, 1)}</ProfileContainer>
+                                            <MessageContainer>
+                                                <RowFlexBox>
+                                                    <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                    <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
+                                                </RowFlexBox>
+                                                <MessageContentContainer>{message.message}</MessageContentContainer>
+                                            </MessageContainer>
+                                        </RowFlexBox>
+                                    ))
+                                }
+                            </MessageBoxContainer>)
+                    ))}
                     <div className="scrollBottom" style={{marginTop: '10px'}}></div>
                 </ScrollableDiv>
             );
