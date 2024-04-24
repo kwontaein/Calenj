@@ -66,7 +66,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
-
+    const queryClient = useQueryClient();
 
     const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
     const NEW_CAHT_QUERY_KEY: string = "NEW_CAHT_QUERY_KEY";
@@ -85,10 +85,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (scrollRef.current) {
-            
             scrollRef.current.addEventListener('scroll', handleScroll);
-            //첫 로딩에만 세팅 이후엔 위치를 안바꿈
-            if (endPointMap.get(param) === 0 && newMessageList.length===0) { 
+            
+            //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
+            if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) { 
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 scrollPointMap.set(param, scrollRef.current.scrollTop)
             } else if(endPointMap.get(param)>0) {
@@ -103,9 +103,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                     scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
                     scrollPointMap.set(param, scrollRef.current.scrollTop)
                 }
+                //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
             }else {
                 scrollRef.current.scrollTop =  scrollPointMap.get(param)                
                 scrollPointMap.set(param, scrollRef.current.scrollTop)
+
             }
 
         }
@@ -169,7 +171,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         }
     }
     const requestChatFileReload = () => {
-        console.log("messageLength.current", messageLength.current)
         if (messageLength.current) {
             requestFile({
                 target: 'groupMsg',
@@ -336,8 +337,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             messageLength.current = 0;
             requestChatFileRead();
             refetch().then(() => {
+                //newMessage 비우기
                 newMessageList.length = 0;
-               
             });
         }
         return ()=>{
@@ -347,8 +348,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 scrollPointMap.set(param,berforeScrollTop.current);
             }
             
-            console.log(`param: ${param}\n beforeScrollHeight : ${beforeScrollHeight.current} \n beforeScrollTop : ${berforeScrollTop.current}`)
-
         }
         
     }, [param])
