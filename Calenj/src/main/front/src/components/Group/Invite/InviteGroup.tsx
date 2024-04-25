@@ -1,8 +1,8 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import {Route, useLocation, useParams} from "react-router-dom";
-import {saveDBFormat, stateFilter, useConfirm} from "../../stateFunc/actionFun";
+import {saveDBFormat, stateFilter, useConfirm} from "../../../stateFunc/actionFun";
 import axios, {AxiosError} from "axios";
-import {Mini_Textarea, RowFlexBox} from "../../style/FormStyle";
+import {Mini_Textarea, RowFlexBox} from "../../../style/FormStyle";
 import InviteGroup from "./InviteGroup";
 import {rejects} from "node:assert";
 

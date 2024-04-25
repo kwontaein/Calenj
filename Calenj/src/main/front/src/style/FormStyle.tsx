@@ -11,7 +11,7 @@ interface UnfocusBackgroundProps {
  * 전역적으로 설정할 스타일
  * 글자색:#EEEEEE
  * 배경 :31363F
- * 메인컬로 :
+ * 메인컬러 :
  * 서브컬러:#393E46
  * 기존 백그라운드 : #222831
  * hover컬로:#007bff
@@ -22,8 +22,9 @@ export const GlobalStyle = createGlobalStyle`
         background-color: #222831; /* 전체 페이지 배경색 */
         margin: 0;
         padding: 0;
-        height: 100%;
+        height: 100vh;
     }
+
 
     ul {
         margin: 0;
@@ -52,6 +53,10 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 
+export const FullScreen_div = styled.div`
+    width: 100%;
+    height: 100%;
+`
 export const MiniText = styled.div`
     color: gray;
     margin-top: 5px;

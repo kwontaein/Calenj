@@ -6,7 +6,7 @@ import {stateFilter} from '../../stateFunc/actionFun'
 import {ListView, MiniText} from '../../style/FormStyle'
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
-
+import {QUERY_FRIEND_LIST_KEY} from '../../store/ReactQuery/QueryKey'
 
 interface FriendList {
     friendId: string;
@@ -25,7 +25,6 @@ interface Event {
     ownUserId: string
 }
 
-export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
 
 const RequestFriend: React.FC = () => {
     //그룹 목록 불러오기

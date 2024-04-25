@@ -1,0 +1,9 @@
+export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";
+export const QUERY_NEW_CAHT_KEY: string = "QUERY_NEW_CAHT_KEY";
+export const QUERY_COOKIE_KEY: string = 'QUERY_COOKIE_KEY';
+export const QUERY_FRIEND_LIST_KEY: string = 'QUERY_FRIEND_LIST_KEY'
+export const QUERY_GROUP_DETAIL_KEY:string = 'QUERY_GROUP_DETAIL_KEY'
+export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
+export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
+
+export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
