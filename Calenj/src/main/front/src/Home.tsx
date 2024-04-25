@@ -1,28 +1,45 @@
 import {QueryClient, useQueryClient} from '@tanstack/react-query';
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
-import SignState, {QUERY_COOKIE_KEY} from "./components/Auth/SignState";
 import FriendList from "./components/Friends/FriendList";
-import DefaultNavigation from "./DefaultNavigation";
-const Home: React.FC = () => {
-    const [isLoding, setLoding] = useState<boolean>(false);
-    const queryClient = useQueryClient();
-    const [cookie, setCookie] = useState<boolean>(false);
+import {connect} from 'react-redux'
+import DefaultNavigation from "./components/Global/DefaultNavigation";
+import {FullScreen_div, RowFlexBox} from "./style/FormStyle";
+import EventManagementBar from "./components/Global/EventManagementBar";
+import SubNavigationbar from "./components/Global/SubNavigationbar";
+import GroupDetail from "./components/Group/GroupDetail";
+import {Content_Container} from "./style/Navigation/DefaultNavigationStyle";
+import {
+    NavigateState,
+    DispatchNavigationProps,
+    mapStateToNavigationProps,
+    mapDispatchToNavigationProps,
+    NavigationProps
+} from './store/slice/NavigateByComponent'
+const Home: React.FC<NavigateState &DispatchNavigationProps> = ({navigateInfo}) => {
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        if(navigateInfo.navigate ==="group"){
+            console.log(`redirectDetail ${navigateInfo.navigateParam}`)
+        }
 
-        setTimeout(() => {
-            setCookie(queryClient.getQueryData([QUERY_COOKIE_KEY]) as boolean);
-            setLoding(true);
-        }, 400)
-    }, [])
-
+    }, [navigateInfo]);
 
     return (
-        <div>
-            {isLoding ?
-                <DefaultNavigation/> :
-                <div style={{marginLeft: '10px'}}>isLoding..</div>}
-        </div>
+        <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+            <DefaultNavigation/>
+
+            <Content_Container>
+                <EventManagementBar navigate={navigateInfo.navigate}/>
+                <RowFlexBox style={{height:'calc(100% - 51px)'}}>
+                    <SubNavigationbar  navigate={navigateInfo.navigate}/>
+                    {(navigateInfo.navigate === "group" && navigateInfo.navigateParam !== '') &&
+                    <GroupDetail groupId={navigateInfo.navigateParam}/>
+                    }
+                </RowFlexBox>
+
+            </Content_Container>
+
+        </FullScreen_div>
     )
 }
-export default Home
+export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (Home)

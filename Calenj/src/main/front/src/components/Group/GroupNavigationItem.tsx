@@ -11,7 +11,7 @@ import {stateFilter} from '../../stateFunc/actionFun';
 import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
 import GroupMsgBox from '../MessageBox/MessageContainer';
 import {endPointMap} from '../../store/module/StompMiddleware';
-import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
+import {QUERY_GROUP_DETAIL_KEY} from '../../store/ReactQuery/QueryKey'
 import group from "./index";
 
 interface Details {
@@ -39,7 +39,7 @@ interface NavigationProps {
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
+const GroupNavigationItem: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
     const id = useId();
 
 
@@ -115,10 +115,6 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                             ))}
                         </GROUP_USER_LIST>
                     </div>
-                    <DEFAULT_HR/>
-                    <GroupMsgBox param={groupId}
-                                 target={'group'}/>
-                    <DEFAULT_HR/>
                     <div>
                         <Notice/>
                         <DEFAULT_HR/>
@@ -130,4 +126,4 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     );
 }
 
-export default connect(null, mapDispatchToStompProps)(GroupDetail);
+export default connect(null, mapDispatchToStompProps)(GroupNavigationItem);

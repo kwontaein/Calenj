@@ -4,7 +4,7 @@ import {Dispatch} from 'redux';
 
 export interface NavigationProps {
     navigate:string;
-    param:string;
+    navigateParam:string;
 }
 
 
@@ -15,11 +15,11 @@ export interface NavigateState{
 
 //dispatch 함수타입을 interface로 정의
 export interface DispatchNavigationProps {
-    updateNavigation: (payload: { navigate: string; param?: string }) => void;
+    updateNavigation: (payload: { navigate: string; navigateParam?: string }) => void;
 }
 
 export const mapDispatchToNavigationProps = (dispatch: Dispatch): DispatchNavigationProps => ({
-    updateNavigation: (payload: { navigate: string; param?: string }) => dispatch(updateNavigation(payload)),
+    updateNavigation: (payload: { navigate: string; navigateParam?: string }) => dispatch(updateNavigation(payload)),
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -34,7 +34,7 @@ export const mapStateToNavigationProps = (state: RootState): NavigateState => ({
 // 초기상태
 const initialState: NavigationProps ={
     navigate:'group',
-    param:'',
+    navigateParam:'',
 }
 
 
@@ -42,10 +42,10 @@ const navigation = createSlice({
     name:'navigationInfo',
     initialState,
     reducers:{
-        updateNavigation: (state, action :PayloadAction<{ navigate: string; param?: string; }>)=>{
+        updateNavigation: (state, action :PayloadAction<{ navigate: string; navigateParam?: string; }>)=>{
             state.navigate = action.payload.navigate;
-            if(action.payload.param){
-                state.param = action.payload.param;
+            if(action.payload.navigateParam){
+                state.navigateParam = action.payload.navigateParam;
             }
         },
 

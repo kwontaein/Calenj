@@ -38,8 +38,9 @@ import {
 } from '../../stateFunc/actionFun'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect from "../../store/module/useIntersect";
-import {queryClient} from "../../index";
+import useIntersect ,{requestCountManagement} from "../../store/module/useIntersect";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/QueryKey";
+
 
 interface groupDetailProps {
     target: string;
@@ -66,10 +67,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
-    const queryClient = useQueryClient();
-
-    const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
-    const NEW_CAHT_QUERY_KEY: string = "NEW_CAHT_QUERY_KEY";
 
 
     //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
@@ -201,14 +198,20 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         return messageEntries
     }
 
+
+
+
     async function fetchData() {
         try {
             const getFileData = () => {
+
                 //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
                 return new Promise((res, rej) => {
+
                     if (!isFetching) {
                         requestChatFileReload()
                     }
+
                     const unsubscribe = store.subscribe(() => {
                         const {receiveMessage} = store.getState().stomp;
                         if (receiveMessage) {
@@ -223,6 +226,23 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                 });
             }
             const message = await getFileData();
+            if(message.length ===0 &&!isFetching){
+                const debounceCount = debounce(()=>{
+                    const  requestCount = requestCountManagement()
+                    if(requestCount>10){ //10번이 넘억면 refetch하기
+                        messageLength.current = 0;
+                        requestCountManagement(true);//count 초기화
+                        requestChatFileRead();
+                        refetch().then(() => {
+                            //newMessage 비우기
+                            newMessageList.length = 0;
+                        });
+                    }
+                },500)
+                debounceCount()
+            }else{
+                requestCountManagement(true);//count 초기화
+            }
             messageLength.current += receiveChatFile(message).length;
             return receiveChatFile(message); // 처리된 결과 출력
         } catch (error) {
@@ -235,7 +255,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     const fetchNewChat = () => {
         //초기 세팅
-        if (!receiveNewMessage.data) {
+        if (!receiveNewMessage.data || stomp.receiveMessage.state!=="SEND") {
             const loadMsg: Message = {
                 chatUUID: "시작라인",
                 sendDate: "",
@@ -257,7 +277,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }
 //---------------------------------------------------------------------------------------------------------------
     const {data, hasNextPage, isFetching, isLoading, fetchNextPage, refetch} = useInfiniteQuery({
-        queryKey: [CHATTING_QUERY_KEY, param],
+        queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
             const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인"
@@ -265,16 +285,19 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
         enabled: param === stomp.receiveMessage.param,
+        staleTime: Infinity,
+        retry:3,
     });
 
     const receiveNewMessage = useInfiniteQuery({
-        queryKey: [NEW_CAHT_QUERY_KEY, param],
+        queryKey: [QUERY_NEW_CAHT_KEY, param],
         queryFn: fetchNewChat,
         getNextPageParam: () => {
             return true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
         enabled: param === stomp.receiveMessage.param && !isFetching,
+        staleTime: Infinity,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
 

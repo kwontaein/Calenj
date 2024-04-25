@@ -8,9 +8,7 @@ import {ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
-
-
-export const QUERY_VOTE_LIST_KEY: string = 'voteList'
+import {QUERY_VOTE_LIST_KEY} from "../../../store/ReactQuery/QueryKey";
 
 
 interface VoteList {
