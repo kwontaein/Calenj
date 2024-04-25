@@ -9,9 +9,12 @@ import {
     mapDispatchToNavigationProps,
     NavigationProps
 } from '../../store/slice/NavigateByComponent'
+import {useQueryClient} from "@tanstack/react-query";
+import {QUERY_COOKIE_KEY} from '.././../store/ReactQuery/QueryKey'
 
 const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
-
+    const queryClient = useQueryClient();
+    const cookie = queryClient.getQueryState([QUERY_COOKIE_KEY])
 
     const redirectDetail = (navigate:string, groupId?: string):NavigationProps => {
         if(navigate === "group" && groupId) {
@@ -25,7 +28,7 @@ const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({upda
 
     return(
         <div>
-            {/*<SignState/>*/}
+            {!cookie &&<SignState/>}
             <GroupList redirectDetail={redirectDetail}/>
         </div>
     )
