@@ -100,7 +100,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
                                 <GroupListTitle>
                                     {group.groupTitle}
                                 </GroupListTitle>
-                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId)||0 === 0}>
+                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId)||0 !== 0}>
                                     {endPointMap.get(group.groupId) !== 0 && endPointMap.get(group.groupId)}
                                 </SignOfMessageNum>
                             </Li_GroupList_Item>

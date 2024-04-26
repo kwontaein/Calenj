@@ -44,7 +44,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
 
 
     //그룹 디테일 불러오기
-    const getGroupList = async (): Promise<Details | null> => {
+    const getGroupDetail = async (): Promise<Details | null> => {
         try {
             const response = await axios.post('/api/groupDetail', {
                 groupId: groupId
@@ -65,26 +65,9 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
 
     const groupDetailState = useQuery<Details | null, Error>({
         queryKey: [QUERY_GROUP_DETAIL_KEY, groupId],
-        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
+        queryFn: getGroupDetail, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-
-    const usedGroupIdsRef = useRef<string[]>([]);
-
-    useEffect(() => {
-        if (!usedGroupIdsRef.current.includes(groupId)) {
-            requestFile({
-                target: 'groupMsg',
-                param: groupId,
-                requestFile: "READ",
-                nowLine: endPointMap.get(groupId)
-            });
-            usedGroupIdsRef.current.push(groupId);
-        }
-        return () => {
-            // cleanup 작업이 필요한 경우 여기서 처리
-        }
-    }, [groupId]);
 
 
     return (

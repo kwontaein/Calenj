@@ -15,6 +15,7 @@ import {
     mapDispatchToNavigationProps,
     NavigationProps
 } from './store/slice/NavigateByComponent'
+import SignState from "./components/Auth/SignState";
 const Home: React.FC<NavigateState &DispatchNavigationProps> = ({navigateInfo}) => {
 
     useEffect(() => {
@@ -26,6 +27,7 @@ const Home: React.FC<NavigateState &DispatchNavigationProps> = ({navigateInfo}) 
 
     return (
         <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+            {/*<SignState/>*/}
             <DefaultNavigation/>
 
             <Content_Container>
