@@ -114,10 +114,10 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
 /**그룹리스트별 알림 갯수 */
 export const SignOfMessageNum = styled.div<receivedMsg>`
  padding: 1px 6px;
- background-color:  ${props => (props.$existMessage  ? "transparent" : "#1AB5E6")};
+ background-color:  ${props => (props.$existMessage  ? "#1AB5E6" : "transparent")};
 
  color: white;
- padding: ${props => (props.$existMessage  ? "" : "1px 6px")}
+ padding: ${props => (props.$existMessage  ? "3px 3px" : "")};
  border-radius: 50%;
  font-size: 12px;
  position: absolute;

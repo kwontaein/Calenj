@@ -14,8 +14,10 @@ import {QUERY_COOKIE_KEY} from '.././../store/ReactQuery/QueryKey'
 
 const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
     const queryClient = useQueryClient();
-    const cookie = queryClient.getQueryState([QUERY_COOKIE_KEY])
 
+
+    useEffect(()=>{
+    },[navigateInfo])
     const redirectDetail = (navigate:string, groupId?: string):NavigationProps => {
         if(navigate === "group" && groupId) {
             updateNavigation({navigate: "group", navigateParam: ''})
@@ -28,7 +30,6 @@ const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({upda
 
     return(
         <div>
-            {!cookie &&<SignState/>}
             <GroupList redirectDetail={redirectDetail}/>
         </div>
     )

@@ -211,7 +211,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                     if (!isFetching) {
                         requestChatFileReload()
                     }
-
                     const unsubscribe = store.subscribe(() => {
                         const {receiveMessage} = store.getState().stomp;
                         if (receiveMessage) {
@@ -284,7 +283,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             return containsValue ? undefined : true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
-        enabled: param === stomp.receiveMessage.param,
+        enabled: param === stomp.param,
         staleTime: Infinity,
         retry:3,
     });
@@ -296,7 +295,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             return true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
-        enabled: param === stomp.receiveMessage.param && !isFetching,
+        enabled: param === stomp.param && !isFetching,
         staleTime: Infinity,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
@@ -370,10 +369,9 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             if(scrollRef.current.clientHeight < beforeScrollHeight.current){
                 scrollPointMap.set(param,berforeScrollTop.current);
             }
-            
         }
-        
     }, [param])
+
 
 
     useEffect(() => {
