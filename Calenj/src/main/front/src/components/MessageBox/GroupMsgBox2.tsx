@@ -84,8 +84,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         if (scrollRef.current) {
             const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
             //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
+            console.log(endPointMap.get(param))
             if (scrollHeight > 450 && scrollTop + clientHeight > 450) {
+                console.log("실행1")
                 if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+                    console.log("실행2")
                     endPointMap.set(param, 0)
                     scrollToBottom();
                     updateEndpoint();
@@ -304,14 +307,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             console.log("실행 렌더링")
             requestChatFileRead();
         }
-        scrollRef.current?.removeEventListener('scroll', handleScroll);
+        //scrollRef.current?.removeEventListener('scroll', handleScroll);
         if (endPointMap.get(param) > 0) {
             messageLength.current = 0;
             requestChatFileRead();
             refetch().then(r => {
                 newMessageList.length = 0;
-                //updateEndpoint();
-                endPointMap.set(param, 0)
             });
         }
     }, [param])
