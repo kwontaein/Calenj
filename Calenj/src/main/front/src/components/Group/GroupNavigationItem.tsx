@@ -49,8 +49,7 @@ const GroupNavigationItem: React.FC<DispatchStompProps & NavigationProps> = ({re
             const response = await axios.post('/api/groupDetail', {
                 groupId: groupId
             }) // 객체의 속성명을 'id'로 설정;
-            const data = response.data as Details;
-            return data;
+            return response.data;
         } catch (error) {
             const axiosError = error as AxiosError;
             console.log(axiosError);
