@@ -27,7 +27,7 @@ import {
     RowFlexBox,
 
 } from '../../style/FormStyle'
-import {endPointMap} from '../../store/module/StompMiddleware';
+import {endPointMap,scrollPointMap} from '../../store/module/StompMiddleware';
 import {
     changeDateForm,
     AHMFormatV2,
@@ -38,8 +38,9 @@ import {
 } from '../../stateFunc/actionFun'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect from "../../store/module/useIntersect";
-import {queryClient} from "../../index";
+import useIntersect ,{requestCountManagement} from "../../store/module/useIntersect";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/QueryKey";
+
 
 interface groupDetailProps {
     target: string;
@@ -63,11 +64,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
     const messageLength = useRef<number>(0);
     const prevScrollHeight = useRef<number>();//메시지 스크롤 증가 전 사이즈
+    const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
+    const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
-    const CHATTING_QUERY_KEY: string = "CHATTING_QUERY_KEY";
-    const NEW_CAHT_QUERY_KEY: string = "NEW_CAHT_QUERY_KEY";
 
-    const queryClient = useQueryClient();
+
     //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
     const handleScroll = () => {
         if (scrollTimerRef.current) {
@@ -77,27 +78,53 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
             updateScroll()
         }, 50)
     };
+    const addScrollEvent=()=>{
+        //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
+        //로딩된 이후엔 스크롤을 안 내려야함
+        if (scrollRef.current) {
+            scrollRef.current.addEventListener('scroll', handleScroll);
+            
+            //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
+            if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) { 
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                scrollPointMap.set(param, scrollRef.current.scrollTop)
+            } else if(endPointMap.get(param)>0) {
+                ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
+                
+                const scrollDiv = scrollRef.current;
+                const targetElement = scrollDiv.querySelector('.엔드포인트')
+                if (targetElement) {
+                    const targetElementRect = targetElement.getBoundingClientRect();
+                    //param이 변경되어도 이전 scrollTop을 가지고 있어 그만큼 다시 더해줘야함
+                    //만약 이전 스크롤 탑이 300인데 안 더해주면 300만큼 위로 올라감(-300돼서)
+                    scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
+                    scrollPointMap.set(param, scrollRef.current.scrollTop)
+                }
+                //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
+            }else {
+                scrollRef.current.scrollTop =  scrollPointMap.get(param)                
+                scrollPointMap.set(param, scrollRef.current.scrollTop)
+
+            }
+
+        }
+    }
 
 
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
-        if (scrollRef.current) {
-            const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-            //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
-            console.log(endPointMap.get(param))
-            if (scrollHeight > 450 && scrollTop + clientHeight > 450) {
-                console.log("실행1")
-                if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
-                    console.log("실행2")
-                    endPointMap.set(param, 0)
-                    scrollToBottom();
-                    updateEndpoint();
-                    return;
-                }
+        if (!scrollRef.current) return
+        const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
+        //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
+        if (scrollHeight > clientHeight && scrollTop + clientHeight > clientHeight) {
+            if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+                endPointMap.set(param, 0)
+                scrollToBottom();
+                updateEndpoint();   
             }
         }
+        berforeScrollTop.current=scrollRef.current.scrollTop;
     }
-
     const updateEndpoint = () => {
         const debouncedRequest = debounce(() => {
             requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
@@ -124,6 +151,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         setTimeout(() => {
             if (scrollRef.current) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+                berforeScrollTop.current=scrollRef.current.scrollTop
             }
         }, 50)
     };
@@ -140,8 +168,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         }
     }
     const requestChatFileReload = () => {
-        console.log("messageLength.current", messageLength.current)
-        console.log("messageList.length", messageList.length)
         if (messageLength.current) {
             requestFile({
                 target: 'groupMsg',
@@ -172,17 +198,20 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
         return messageEntries
     }
 
+
+
+
     async function fetchData() {
         try {
             const getFileData = () => {
+
                 //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
                 return new Promise((res, rej) => {
+
                     if (!isFetching) {
-                        console.log("비동기 실행")
                         requestChatFileReload()
                     }
                     const unsubscribe = store.subscribe(() => {
-                        console.log("비동기 실행2")
                         const {receiveMessage} = store.getState().stomp;
                         if (receiveMessage) {
                             res(receiveMessage.message); // 값 반환
@@ -190,15 +219,30 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
                         }
                     });
                 }).then((res) => {
-                    console.log("비동기 실행3")
                     return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
                 }).catch(() => {
                     return [];
                 });
             }
             const message = await getFileData();
+            if(message.length ===0 &&!isFetching){
+                const debounceCount = debounce(()=>{
+                    const  requestCount = requestCountManagement()
+                    if(requestCount>10){ //10번이 넘억면 refetch하기
+                        messageLength.current = 0;
+                        requestCountManagement(true);//count 초기화
+                        requestChatFileRead();
+                        refetch().then(() => {
+                            //newMessage 비우기
+                            newMessageList.length = 0;
+                        });
+                    }
+                },500)
+                debounceCount()
+            }else{
+                requestCountManagement(true);//count 초기화
+            }
             messageLength.current += receiveChatFile(message).length;
-            console.log("비동기 실행4", receiveChatFile(message).length);
             return receiveChatFile(message); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
@@ -210,7 +254,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     const fetchNewChat = () => {
         //초기 세팅
-        if (!receiveNewMessage.data) {
+        if (!receiveNewMessage.data || stomp.receiveMessage.state!=="SEND") {
             const loadMsg: Message = {
                 chatUUID: "시작라인",
                 sendDate: "",
@@ -232,24 +276,27 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
     }
 //---------------------------------------------------------------------------------------------------------------
     const {data, hasNextPage, isFetching, isLoading, fetchNextPage, refetch} = useInfiniteQuery({
-        queryKey: [CHATTING_QUERY_KEY, param],
+        queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
             const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인"
             return containsValue ? undefined : true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
-        enabled: param === stomp.receiveMessage.param,
+        enabled: param === stomp.param,
+        staleTime: Infinity,
+        retry:3,
     });
 
     const receiveNewMessage = useInfiniteQuery({
-        queryKey: [NEW_CAHT_QUERY_KEY, param],
+        queryKey: [QUERY_NEW_CAHT_KEY, param],
         queryFn: fetchNewChat,
         getNextPageParam: () => {
             return true;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
-        enabled: param === stomp.receiveMessage.param && !isFetching,
+        enabled: param === stomp.param && !isFetching,
+        staleTime: Infinity,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
 
@@ -293,7 +340,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
 
     const newMessageList = useMemo(() => {
-
+        
         if (receiveNewMessage.data) {
             return receiveNewMessage.data.pages
         }
@@ -302,20 +349,29 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
 
+    
     useEffect(() => {
-        if (endPointMap.get(param) <= 0) {
-            console.log("실행 렌더링")
+
+        if (endPointMap.get(param) === 0) {
             requestChatFileRead();
         }
-        //scrollRef.current?.removeEventListener('scroll', handleScroll);
         if (endPointMap.get(param) > 0) {
             messageLength.current = 0;
             requestChatFileRead();
-            refetch().then(r => {
+            refetch().then(() => {
+                //newMessage 비우기
                 newMessageList.length = 0;
             });
         }
+        return ()=>{
+            if(!beforeScrollHeight.current) return 
+            if(!scrollRef.current) return
+            if(scrollRef.current.clientHeight < beforeScrollHeight.current){
+                scrollPointMap.set(param,berforeScrollTop.current);
+            }
+        }
     }, [param])
+
 
 
     useEffect(() => {
@@ -330,31 +386,18 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({param, stomp, sendStompMsg, reque
 
     //처음 들어갔을 때 스크롤에따른 상태체크
     useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.addEventListener('scroll', handleScroll);
-            if (endPointMap.get(param) === 0) {
-                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-
-            } else {
-                ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
-                const scrollDiv = scrollRef.current;
-                const targetElement = scrollDiv.querySelector('.엔드포인트')
-                if (targetElement) {
-                    const targetElementRect = targetElement.getBoundingClientRect();
-                    scrollRef.current.scrollTop = targetElementRect.bottom - 300;
-                }
-            }
-        }
+        addScrollEvent()
         return () => {
             if (scrollRef.current) {
                 scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         }
-    }, [isLoading])
+    }, [isLoading,param])
 
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...newMessageList].reverse(), ...messageList].reverse() //얕은 복사를 활용한 복사 //최신 -> 오래된 방향을 reverse해서 스크롤에 띄움
+        beforeScrollHeight.current = scrollRef.current?.scrollHeight; //랜더링마다 높이 재저장
         if (!isLoading) {
             return (
                 <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>

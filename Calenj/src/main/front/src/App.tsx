@@ -4,11 +4,12 @@ import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import NoticeDetail from './components/Group/Notice/NoticeDetail';
 import VoteDetail from './components/Group/Vote/VoteDetail';
-import InviteGroup from "./components/Group/InviteGroup";
+import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import NaverMap from "./components/Group/Map/NaverMap"
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
+import {QUERY_COOKIE_KEY} from './store/ReactQuery/QueryKey'
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
@@ -19,9 +20,9 @@ import {connect} from "react-redux";
 import {useQuery,} from '@tanstack/react-query';
 import {sagaMutation} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
+import {FullScreen_div} from "./style/FormStyle";
 
 //대표 색 : #  007bff
-export const QUERY_COOKIE_KEY: string = 'cookie';
 
 
 interface SubScribe {
@@ -84,7 +85,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
     });
 
     return (
-        <div className="App">
+        <FullScreen_div>
             {loading &&
                 <BrowserRouter>
                     <Routes>
@@ -102,7 +103,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
                     </Routes>
                 </BrowserRouter>
             }
-        </div>
+        </FullScreen_div>
     );
 }
 export default connect(mapStateToStompProps, mapDispatchToStompProps)(App);

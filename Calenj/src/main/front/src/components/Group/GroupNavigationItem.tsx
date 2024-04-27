@@ -11,7 +11,7 @@ import {stateFilter} from '../../stateFunc/actionFun';
 import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
 import GroupMsgBox from '../MessageBox/MessageContainer';
 import {endPointMap} from '../../store/module/StompMiddleware';
-import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
+import {QUERY_GROUP_DETAIL_KEY} from '../../store/ReactQuery/QueryKey'
 import group from "./index";
 
 interface Details {
@@ -39,12 +39,12 @@ interface NavigationProps {
  console.log = function no_console() {}; // console log 막기
  console.warn = function no_console() {}; // console warning 막기
  console.error = function () {}; // console error 막기*/
-const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
+const GroupNavigationItem: React.FC<DispatchStompProps & NavigationProps> = ({requestFile, groupId}) => {
     const id = useId();
 
 
     //그룹 디테일 불러오기
-    const getGroupDetail = async (): Promise<Details | null> => {
+    const getGroupList = async (): Promise<Details | null> => {
         try {
             const response = await axios.post('/api/groupDetail', {
                 groupId: groupId
@@ -65,9 +65,26 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
 
     const groupDetailState = useQuery<Details | null, Error>({
         queryKey: [QUERY_GROUP_DETAIL_KEY, groupId],
-        queryFn: getGroupDetail, //HTTP 요청함수 (Promise를 반환하는 함수)
+        queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
+
+    const usedGroupIdsRef = useRef<string[]>([]);
+
+    useEffect(() => {
+        if (!usedGroupIdsRef.current.includes(groupId)) {
+            requestFile({
+                target: 'groupMsg',
+                param: groupId,
+                requestFile: "READ",
+                nowLine: endPointMap.get(groupId)
+            });
+            usedGroupIdsRef.current.push(groupId);
+        }
+        return () => {
+            // cleanup 작업이 필요한 경우 여기서 처리
+        }
+    }, [groupId]);
 
 
     return (
@@ -98,10 +115,6 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                             ))}
                         </GROUP_USER_LIST>
                     </div>
-                    <DEFAULT_HR/>
-                    <GroupMsgBox param={groupId}
-                                 target={'group'}/>
-                    <DEFAULT_HR/>
                     <div>
                         <Notice/>
                         <DEFAULT_HR/>
@@ -113,4 +126,4 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     );
 }
 
-export default connect(null, mapDispatchToStompProps)(GroupDetail);
+export default connect(null, mapDispatchToStompProps)(GroupNavigationItem);

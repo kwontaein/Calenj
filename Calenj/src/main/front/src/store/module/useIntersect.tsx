@@ -40,4 +40,17 @@ const useIntersect = (onIntersect: IntersectHandler, //배열과 관측대상을
     return ref
 }
 
+const requestCount = ()=>{
+    let requestCount=0;
+    return (complete?:boolean)=> {
+        if(complete){
+            requestCount=0;//완료되면 초기화
+        }else if(requestCount>10){
+            console.log('버그가 발생하여 refetch를 시작합니다')
+        }
+        return requestCount++;
+    }
+}
+export const requestCountManagement = requestCount()
+
 export default useIntersect;

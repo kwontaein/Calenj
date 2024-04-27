@@ -4,6 +4,12 @@ import styled, { keyframes } from 'styled-components';
 interface receivedMsg {
  $existMessage:boolean
 }
+interface navigatePram {
+  $isClick : boolean
+}
+
+
+export const GroupList_Container_width :number =72
 
 /** 흔드는 애니메이션 */
 const shakeAnimation = keyframes`
@@ -21,13 +27,14 @@ const shakeAnimation = keyframes`
   }
 `;
 
+
 /**
  * 그룹 리스트 컨테이너
  */
  export const GroupList_Container = styled.div`
- height:100vh;
+ height:100%;
  text-align: center;
- width: 80px;
+ width: ${GroupList_Container_width}px;
  align-items: center;
 `
 
@@ -56,10 +63,23 @@ export const GroupList_HR = styled.hr`
     max-width: 30px;
     margin-block: 10px;
 `
+
+export const NavigateState = styled.div<navigatePram>`
+ 
+ background-color : ${props=> props.$isClick ?`#EEEEEE`: "transParent"};
+ width:5px;
+ height: 5px;
+ border-radius: 50px;
+ display: flex;
+ position:absolute;
+ left:-26%;
+ 
+`
+
 /**
  * 그룹 리스트의 아이콘
  */
-export const Li_GroupList_Item = styled.li`
+export const Li_GroupList_Item = styled.li<navigatePram>`
  height: 50px;
  width: 50px;
  position: relative;
@@ -68,14 +88,21 @@ export const Li_GroupList_Item = styled.li`
  justify-content: center;
  list-style: none;
  margin-block: 8px;
- background-color: #393E46;
- border-radius: 50px;
+ background-color:  ${props => (props.$isClick  ? "#007bff" : "#393E46")};
+ border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
  white-space: nowrap;
  cursor: pointer;
  
  transition: background-color 0.3s ease;
  transition: border-radius 0.3s ease;
  &:hover {
+
+      ${NavigateState} {
+       transition: border-radius 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* 변경된 부분 */
+       border-radius: 15px;
+       height: 18px;
+       background-color: white;
+      }
   background-color: #007bff;
   border-radius: 19px;
  }
@@ -83,13 +110,14 @@ export const Li_GroupList_Item = styled.li`
 `
 
 
+
 /**그룹리스트별 알림 갯수 */
 export const SignOfMessageNum = styled.div<receivedMsg>`
  padding: 1px 6px;
- background-color:  ${props => (props.$existMessage  ? "transparent" : "#1AB5E6")};
+ background-color:  ${props => (props.$existMessage  ? "#1AB5E6" : "transparent")};
 
  color: white;
- padding: 1px 6px;
+ padding: ${props => (props.$existMessage  ? "3px 3px" : "")};
  border-radius: 50%;
  font-size: 12px;
  position: absolute;

@@ -3,7 +3,7 @@ import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
 import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
 
-import {QUERY_COOKIE_KEY} from '../../App'
+import {QUERY_GROUP_LIST_KEY} from '../../store/ReactQuery/QueryKey'
 interface ModalProps {
     onClose: () => void;
     queryState: UseQueryResult;
@@ -42,7 +42,7 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
         } else {
             useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle,queryState);
             setTimeout(()=>{
-                queryClient.invalidateQueries({queryKey:[QUERY_COOKIE_KEY]}) //업데이트 이후 connect를 위한 함수
+                queryClient.invalidateQueries({queryKey:[QUERY_GROUP_LIST_KEY]}) //업데이트 이후 connect를 위한 함수
             },500)
             
         }

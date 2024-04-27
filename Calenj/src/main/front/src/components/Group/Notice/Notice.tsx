@@ -6,8 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
 import {ListView, MiniText} from '../../../style/FormStyle'
-
-
+import {QUERY_NOTICE_LIST_KEY} from '../../../store/ReactQuery/QueryKey'
 
 interface NoticeList{
     noticeId : string;
@@ -16,7 +15,6 @@ interface NoticeList{
     noticeCreated : string;
 }
 
-export const QUERY_NOTICE_LIST_KEY: string = 'noticeList'
 const Notice :React.FC =()=>{
     const[makeNotice,setMakeNotice] = useState(false);
     const location = useLocation();
