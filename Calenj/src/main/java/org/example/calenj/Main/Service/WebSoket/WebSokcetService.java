@@ -1,6 +1,7 @@
 package org.example.calenj.Main.Service.WebSoket;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.Main.DTO.Request.Chat.AlarmRequest;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.Repository.UserRepository;
 import org.example.calenj.Main.domain.UserEntity;
@@ -177,6 +178,11 @@ public class WebSokcetService {
     public static Predicate<String> createFilterCondition(String param) {
         return line -> !line.contains("EndPoint") && !line.contains(param);
     }
+
+    public void OnlineChange(AlarmRequest request, String userEmail) {
+        userRepository.updateIsOnline(userEmail, request.getOnlineState());
+    }
+
 }
 
 

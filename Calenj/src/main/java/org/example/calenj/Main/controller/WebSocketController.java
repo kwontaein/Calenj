@@ -1,6 +1,7 @@
 package org.example.calenj.Main.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.Main.DTO.Request.Chat.AlarmRequest;
 import org.example.calenj.Main.DTO.Request.Chat.ChatMessageRequest;
 import org.example.calenj.Main.DTO.Response.Chat.ChatMessageResponse;
 import org.example.calenj.Main.Service.GlobalService;
@@ -35,8 +36,9 @@ public class WebSocketController {
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
     @MessageMapping("/personalTopic")
-    public void personalTopic(Authentication authentication, ChatMessageRequest message) throws Exception {
-        defaultSend(authentication, message, "personalTopic");
+    public void personalTopic(Authentication authentication, AlarmRequest request) throws Exception {
+        System.out.println("request.getOnlineState() : " + request.getOnlineState());
+        personalEvent(authentication, request);
     }
 
 
@@ -93,6 +95,15 @@ public class WebSocketController {
 
             //파일에 엔드포인트 저장
             webSokcetService.saveChattingToFile(message);
+        }
+    }
+
+    private void personalEvent(Authentication authentication, AlarmRequest request) {
+        String username = webSokcetService.returnNickname(authentication);
+        String userEmail = webSokcetService.returnEmail(username);
+
+        if (request.getOnlineState() != null) {
+            webSokcetService.OnlineChange(request, userEmail);
         }
     }
 

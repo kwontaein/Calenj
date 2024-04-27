@@ -16,32 +16,32 @@ import {
     NavigationProps
 } from './store/slice/NavigateByComponent'
 import SignState from "./components/Auth/SignState";
-const Home: React.FC<NavigateState &DispatchNavigationProps> = ({navigateInfo}) => {
+
+const Home: React.FC<NavigateState & DispatchNavigationProps> = ({navigateInfo}) => {
 
     useEffect(() => {
-        if(navigateInfo.navigate ==="group"){
+        if (navigateInfo.navigate === "group") {
             console.log(`redirectDetail ${navigateInfo.navigateParam}`)
         }
 
     }, [navigateInfo]);
 
     return (
-        <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+        <FullScreen_div style={{display: "flex", flexDirection: "row"}}>
             {/*<SignState/>*/}
             <DefaultNavigation/>
 
             <Content_Container>
                 <EventManagementBar navigate={navigateInfo.navigate}/>
-                <RowFlexBox style={{height:'calc(100% - 51px)'}}>
-                    <SubNavigationbar  navigate={navigateInfo.navigate}/>
+                <RowFlexBox style={{height: 'calc(100% - 51px)'}}>
+                    <SubNavigationbar navigate={navigateInfo.navigate}/>
                     {(navigateInfo.navigate === "group" && navigateInfo.navigateParam !== '') &&
-                    <GroupDetail groupId={navigateInfo.navigateParam}/>
+                        <GroupDetail groupId={navigateInfo.navigateParam}/>
                     }
                 </RowFlexBox>
-
             </Content_Container>
-
+            <SignState></SignState>
         </FullScreen_div>
     )
 }
-export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (Home)
+export default connect(mapStateToNavigationProps, mapDispatchToNavigationProps)(Home)

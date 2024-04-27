@@ -13,6 +13,7 @@ import GroupMsgBox from '../MessageBox/MessageContainer';
 import {endPointMap} from '../../store/module/StompMiddleware';
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
 import group from "./index";
+import GroupUserList from "./GroupUserList";
 
 interface Details {
     groupId: number;
@@ -69,7 +70,6 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
     });
 
 
-
     return (
         <div>
             {groupDetailState.isLoading && <div>Loading...</div>}
@@ -84,19 +84,7 @@ const GroupDetail: React.FC<DispatchStompProps & NavigationProps> = ({requestFil
                     </div>
                     <DEFAULT_HR/>
                     <div>
-                        <GROUP_USER_LIST>
-                            {groupDetailState.data.members.map((member) => (
-                                <ListView key={member.userEmail}>
-                                    {localStorage.getItem(`userId`) === member.userEmail ?
-                                        <span>(나) {member.nickName} </span> :
-                                        <span>{member.nickName} </span>}
-                                    {member.onlineStatus === 'ONLINE' ?
-                                        <span style={{color: "green"}}> ● </span> :
-                                        <span style={{color: "red"}}> ● </span>
-                                    }
-                                </ListView>
-                            ))}
-                        </GROUP_USER_LIST>
+                        <GroupUserList groupDetailState={groupDetailState.data}></GroupUserList>
                     </div>
                     <DEFAULT_HR/>
                     <GroupMsgBox param={groupId}

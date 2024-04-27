@@ -2,7 +2,14 @@ import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {call, put, race, delay, take, fork, select} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
-import {receivedStompMsg, SEND_STOMP_MSG,REQUEST_FILE, SYNCHRONIZATION_STOMP, Destination, updateLoading} from "./StompReducer"
+import {
+    receivedStompMsg,
+    SEND_STOMP_MSG,
+    REQUEST_FILE,
+    SYNCHRONIZATION_STOMP,
+    Destination,
+    updateLoading
+} from "./StompReducer"
 
 import {time} from "console";
 
@@ -63,16 +70,30 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((param: (string | number)) => {
-
-            const data: StompData = {
-                param: `${param}`, //groupMsg,friendMsg
-                state: "ALARM", //0:endpoint 로드
+            if (subscribeDirection[index] === "personalTopic") { //개인 토픽 구독 시 온라인 전환하기
+                const userId = localStorage.getItem("userId");
+                if (userId != null) {
+                    const data = {
+                        personalTopic: userId,
+                        onlineState: "ONLINE", //0:endpoint 로드
+                        alarmContent: "온라인 전환",
+                    }
+                    stompClient.publish({
+                        destination: `/app/personalTopic`,
+                        body: JSON.stringify(data),
+                    })
+                }
+            } else {
+                const data: StompData = {
+                    param: `${param}`, //groupMsg,friendMsg
+                    state: "ALARM", //0:endpoint 로드
+                }
+                const url = `/app/${subscribeDirection[index]}`
+                stompClient.publish({
+                    destination: `${url}`,
+                    body: JSON.stringify(data),
+                })
             }
-            const url = `/app/${subscribeDirection[index]}`
-            stompClient.publish({
-                destination: `${url}`,
-                body: JSON.stringify(data),
-            })
         })
     })
     yield put(updateLoading({loading: true}));
@@ -171,7 +192,8 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] === "groupMsg")
+                    console.log("구독", `/topic/${subscribeDirection[index]}/${param}`)
+                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg")
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })
@@ -181,7 +203,20 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
 
         subscribeMessage();
         return function unsubscribe() {
-            stompClient.deactivate() //연결 끊기
+            const userId = localStorage.getItem("userId");
+            if (userId != null) {
+                const data = {
+                    userId: userId,
+                    onlineState: "OFFLINE", //0:endpoint 로드
+                }
+                const url = `/app/personalTopic`
+                stompClient.publish({
+                    destination: `${url}`,
+                    body: JSON.stringify(data),
+                })
+            }
+            //stompClient.disconnect();//연결 끊기(완전히
+            stompClient.deactivate().then(r => console.log("임시 비활성화")); //연결 끊기(임시 비활성화
         };
 
         //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
