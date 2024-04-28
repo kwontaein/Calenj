@@ -4,21 +4,25 @@ import DefaultNavigation from "./components/Global/DefaultNavigation";
 import {FullScreen_div} from "./style/FormStyle";
 import NavigationComposition from './components/Global/NavigationComposition'
 import {
-    NavigateState,
-    DispatchNavigationProps,
-    mapStateToNavigationProps,
-    mapDispatchToNavigationProps,
-    NavigationProps
-} from './store/slice/NavigateByComponent'
+    DispatchStompProps,
+    mapDispatchToStompProps,
+    StompData,
+    mapStateToStompProps
+} from './store/module/StompReducer';
 import SignState from "./components/Auth/SignState";
-const Home: React.FC<NavigateState &DispatchNavigationProps> = ({navigateInfo}) => {
+const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
-            {/*<SignState/>*/}
-            <DefaultNavigation/>
-            <NavigationComposition/>
+            {stomp.isOnline ?
+                <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+                    <DefaultNavigation/>
+                    <NavigationComposition/>
+                </FullScreen_div> :
+                <SignState/>}
+
+
         </FullScreen_div>
     )
 }
-export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (Home)
+export default connect(mapStateToStompProps,mapDispatchToStompProps) (Home)
