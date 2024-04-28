@@ -9,6 +9,7 @@ export const RECEIVED_STOMP_MSG = 'RECEIVED_STOMP_MSG';
 export const SEND_STOMP_MSG = 'SEND_STOMP_MSG';
 export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 export const UPDATE_LOADING = "UPDATE_LOADING"
+export const UPDATE_APP_POSITION = "UPDATE_APP_POSITION"
 
 
 type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "";
@@ -44,6 +45,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     synchronizationStomp: (payload: { destination: Destination }) => void;
+    updateAppPosition: (payload: { target: string, param: string }) => void;
     requestFile: (payload: { target: string, param: string, requestFile: requestType, nowLine: number }) => void;
     sendStompMsg: (payload: { target: string, param: string, message: string }) => void;
     receivedStompMsg: (payload: {
@@ -64,6 +66,7 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     synchronizationStomp: (payload: { destination: Destination }) => dispatch(synchronizationStomp(payload)),
+    updateAppPosition: (payload: { target: string, param: string }) => dispatch(updateAppPosition(payload)),
     requestFile: (payload: {
         target: string,
         param: string,
@@ -100,6 +103,10 @@ export const synchronizationStomp = (payload: { destination: Destination }) => (
     payload: payload,
 });
 
+export const updateAppPosition = (payload: { target: string, param: string }) => ({
+    type: UPDATE_APP_POSITION,
+    payload: payload,
+})
 
 export const requestFile = (payload: { target: string, param: string, requestFile: requestType, nowLine: number }) => ({
     type: REQUEST_FILE,
@@ -177,6 +184,12 @@ const StompReducer = handleActions(
         [SYNCHRONIZATION_STOMP]: (state, action) => ({
             ...state,
             destination: action.payload.destination, //[[userid],[userid],list<groupId>, list<friendId>]
+        }),
+
+        [UPDATE_APP_POSITION]: (state, action) => ({
+            ...state,
+            target: action.payload.target,
+            param: action.payload.param,
         }),
 
         [REQUEST_FILE]: (state, action) => ({
