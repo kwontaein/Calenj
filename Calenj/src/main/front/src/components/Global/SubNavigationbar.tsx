@@ -44,7 +44,6 @@ const SubNavigationbar:React.FC<NavigateState> =({navigateInfo})=>{
             {navigateInfo.navigate === "group" &&
                 <div></div>
             }
-
         </SubNavigation_Container>
     )
 }
