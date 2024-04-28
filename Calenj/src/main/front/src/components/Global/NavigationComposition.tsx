@@ -68,7 +68,6 @@ const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({n
                 <RowFlexBox style={{height:'calc(100% - 51px)'}}>
                     <SubNavigationbar/>
                     <ContentsComposition/>
-                   {/*<GroupDetail groupId={navigateInfo.navigateParam}/>*/}
                 </RowFlexBox>
         </FullScreen_div>
     )

@@ -40,6 +40,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
         const response = await axios.post('/api/postCookie');
         sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         if (!response.data) {
+            console.log('ㅎㅇ')
             localStorage.removeItem('userId')
             localStorage.removeItem('nowPosition');
             updateOnline({isOnline: "OFFLINE"});

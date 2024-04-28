@@ -14,7 +14,7 @@ const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
-            {stomp.isOnline ?
+            {stomp.isOnline ==="ONLINE"?
                 <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
                     <DefaultNavigation/>
                     <NavigationComposition/>
