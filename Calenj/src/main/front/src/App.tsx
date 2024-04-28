@@ -42,13 +42,13 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
         if (!response.data) {
             localStorage.removeItem('userId')
             localStorage.removeItem('nowPosition');
-            updateOnline({isOnline: false});
+            updateOnline({isOnline: "OFFLINE"});
             updateLoading({loading: true});
         } else {
 
             axios.get(`/api/subscribeCheck`)
                 .then((res) => {
-                    updateOnline({isOnline: true})
+                    updateOnline({isOnline: "ONLINE"})
                     let arr = res.data
                     let friendArr = Array.from(arr.friendList, (value: SubScribe) => {
                         return value.chattingRoomId;

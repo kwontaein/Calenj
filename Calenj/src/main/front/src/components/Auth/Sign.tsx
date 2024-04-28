@@ -6,7 +6,7 @@ import SockJS from "sockjs-client";
 
 interface OnlineState {
     nickName: string;
-    isOnline: boolean;
+    isOnline: string;
 }
 
 interface MyData {

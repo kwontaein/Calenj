@@ -81,6 +81,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
      * 12. 스크롤 재세팅 (isLoading완료)
      * **/
 
+        //왜 첫번째 refetch에는 스크롤 이벤트가 작동하지 않는가?
         //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
     const handleScroll = () => {
             if (scrollTimerRef.current) {
@@ -91,7 +92,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
             }, 50)
         };
     const addScrollEvent = () => {
-        //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
+        //isLoading이 false가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
@@ -103,7 +104,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
 
             } else if (endPointMap.get(param) > 0) {
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
-
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
@@ -117,7 +117,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
             } else {
                 scrollRef.current.scrollTop = scrollPointMap.get(param)
                 scrollPointMap.set(param, scrollRef.current.scrollTop)
-
             }
 
         }
@@ -251,7 +250,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
             }
             const messageResult = receiveChatFile(message)
 
-
             // 건들지마라. 캐싱된 데이터 무시하고 새로 refetch 하기 위한 코드
             if (messageLength.current === messageResult.length) {
                 messageLength.current += messageResult.length;
@@ -261,7 +259,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, sendStompMs
             } else {
                 messageLength.current += messageResult.length;
             }
-
 
             return messageResult; // 처리된 결과 출력
         } catch (error) {

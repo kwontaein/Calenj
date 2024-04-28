@@ -165,6 +165,7 @@ public class UserService {
     }
 
     public void offlineChange(String userId) {
+        System.out.println("오프라인 전환");
         userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
     }
 }
