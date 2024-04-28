@@ -38,6 +38,7 @@ interface groupMembers {
 const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({navigateInfo})=>{
     const getGroupDetail = async (): Promise<groupDetails | null> => {
         try {
+            console.log('실행')
             const response = await axios.post('/api/groupDetail', {
                 groupId: navigateInfo.navigateParam
             }) // 객체의 속성명을 'id'로 설정;
