@@ -24,7 +24,7 @@ interface StompData {
 
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
+export const subscribeDirection = ['groupMsg', 'friendMsg','personalTopic']
 
 function* sendStomp(stompClient: CompatClient) {
 
@@ -68,30 +68,17 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((param: (string | number)) => {
-            if (subscribeDirection[index] === "personalTopic") { //개인 토픽 구독 시 온라인 전환하기
-                const userId = localStorage.getItem("userId");
-                if (userId != null) {
-                    const data = {
-                        personalTopic: userId,
-                        onlineState: "ONLINE", //0:endpoint 로드
-                        alarmContent: "온라인 전환",
-                    }
-                    stompClient.publish({
-                        destination: `/app/personalTopic`,
-                        body: JSON.stringify(data),
-                    })
-                }
-            } else {
-                const data: StompData = {
-                    param: `${param}`, //groupMsg,friendMsg
-                    state: "ALARM", //0:endpoint 로드
-                }
-                const url = `/app/${subscribeDirection[index]}`
-                stompClient.publish({
-                    destination: `${url}`,
-                    body: JSON.stringify(data),
-                })
+
+            const data: StompData = {
+                param: `${param}`, //groupMsg,friendMsg
+                state: "ALARM", //0:endpoint 로드
             }
+            const url = `/app/${subscribeDirection[index]}`
+            stompClient.publish({
+                destination: `${url}`,
+                body: JSON.stringify(data),
+            })
+
         })
     })
     yield put(updateLoading({loading: true}));
@@ -135,7 +122,6 @@ function* startStomp(destination: Destination): any {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endPoint))
-            console.log(endPointMap.get(receiveData.payload.receiveMessage.param))
         }
     }
 
@@ -188,7 +174,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string)[], index: number) => {
-                if (!index) localStorage.setItem('userId', sub[index])
+                if (index===2) localStorage.setItem('userId', sub[index])
                 sub.map((param: (string)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));

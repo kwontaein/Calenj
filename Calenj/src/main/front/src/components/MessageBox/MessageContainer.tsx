@@ -24,6 +24,7 @@ import {
     FORM_SENDMSG,
 } from '../../style/ChatBoxStyle'
 import {
+    FullScreen_div,
     RowFlexBox,
 
 } from '../../style/FormStyle'
@@ -243,20 +244,21 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             if(message.length ===0 &&!isFetching){
                 const debounceCount = debounce(()=>{
                     const  requestCount = requestCountManagement()
-                    if(requestCount>10){ //10번이 넘억면 refetch하기
-                        requestCountManagement(true);//count 초기화
-                        messageLength.current=-1
-                        refetch().then(() => {
-                            //newMessage 비우기
-                            messageLength.current=-1;
-                            if(receiveNewMessage.data) {
-                                queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                                    pages: data?.pages.slice(0, 1),
-                                    pageParams: data?.pageParams.slice(0, 1)
-                                }));
-                            }
+                    if(requestCount < 10) return
+
+                    requestCountManagement(true);//count 초기화
+                    messageLength.current=-1
+                    refetch().then(() => {
+                        //newMessage 비우기
+                        messageLength.current=-1;
+                        if(!receiveNewMessage.data) return
+
+                        queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                            pages: data?.pages.slice(0, 1),
+                            pageParams: data?.pageParams.slice(0, 1)
+                        }));
+
                         });
-                    }
                 },500)
                 debounceCount()
             }else{
@@ -475,7 +477,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     return (
-        <div>
+        <FullScreen_div>
             {MessageBox}
             <div>
                 <FORM_SENDMSG onSubmit={sendMsg}>
@@ -487,7 +489,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     </SEND_BUTTON>
                 </FORM_SENDMSG>
             </div>
-        </div>
+        </FullScreen_div>
     )
 }
 export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);

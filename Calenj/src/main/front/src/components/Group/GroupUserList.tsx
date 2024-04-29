@@ -1,28 +1,28 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useQuery} from '@tanstack/react-query';
-import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useId} from 'react';
-import Notice from './Notice/Notice'
-import {DEFAULT_HR, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
-import Vote from "./Vote/Vote";
-import Invite from "./Invite/Invite"
+import {UserListView} from '../../style/FormStyle'
 import {connect} from "react-redux";
-import {stateFilter} from '../../stateFunc/actionFun';
-import {DispatchStompProps, mapDispatchToStompProps} from '../../store/module/StompReducer';
-import GroupMsgBox from '../MessageBox/MessageContainer';
-import {endPointMap} from '../../store/module/StompMiddleware';
+import {
+    DispatchStompProps,
+    mapDispatchToStompProps,
+    StompData,
+    mapStateToStompProps
+} from '../../store/module/StompReducer';
+import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
-import group from "./index";
+import {GroupUserList_Container} from "../../style/Group/GroupUserListStyle";
 
-interface Details {
-    groupId: number;
+interface qeuryProps {
+    isLoading :boolean
+}
+interface groupDetails {
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;
-    members: Members[];
+    members: groupMembers[];
 }
 
-interface Members {
+interface groupMembers {
     groupRoleType: String;
     group_user_location: String;
     nickName: String;
@@ -30,15 +30,22 @@ interface Members {
     userEmail: string;
 }
 
-interface NavigationProps {
-    groupDetailState: Details
-}
 
-const GroupUserList: React.FC<DispatchStompProps & NavigationProps> = ({groupDetailState}) => {
+const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({stomp, isLoading}) => {
+    const [groupDetail,setGroupDetail] = useState<groupDetails>();
+    const queryClient = useQueryClient();
+
+
+    //그룹 디테일 불러오기
+    useEffect( () => {
+        setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,stomp.param]));
+    }, [isLoading,stomp.param]);
+
     return (
-        <GROUP_USER_LIST>
-            {groupDetailState.members.map((member) => (
-                <ListView key={member.userEmail}>
+        <GroupUserList_Container>
+            {groupDetail &&
+                (groupDetail.members.map((member) => (
+                <UserListView key={member.userEmail}>
                     {localStorage.getItem(`userId`) === member.userEmail ?
                         <span>(나) {member.nickName} </span> :
                         <span>{member.nickName} </span>}
@@ -46,10 +53,11 @@ const GroupUserList: React.FC<DispatchStompProps & NavigationProps> = ({groupDet
                         <span style={{color: "green"}}> ● </span> :
                         <span style={{color: "red"}}> ● </span>
                     }
-                </ListView>))}
-        </GROUP_USER_LIST>
+                </UserListView>)))
+            }
+        </GroupUserList_Container>
 
     );
 }
 
-export default connect(null, mapDispatchToStompProps)(GroupUserList);
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupUserList);

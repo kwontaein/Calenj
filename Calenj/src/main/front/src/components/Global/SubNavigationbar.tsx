@@ -1,5 +1,11 @@
 import {useEffect, useState} from "react";
-import {SubNavigation_Container, SubNavigateTopBar } from '../../style/Navigation/SubNavigationContainer'
+import {
+    SubNavigation_Container,
+    SubNavigateTopBar,
+    SubNavigateTopBar_leftContent,
+    SubNavigateTopBar_EventSelecter_Container,
+    SubNavigateTopBar_rightContent_item,
+} from '../../style/Navigation/SubNavigationContainer'
 import {connect} from 'react-redux'
 import {
     NavigateState,
@@ -7,7 +13,6 @@ import {
 } from '../../store/slice/NavigateByComponent'
 import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
-
 
 interface qeuryProps {
     isLoading :boolean
@@ -31,25 +36,39 @@ interface groupMembers {
 const SubNavigationbar:React.FC<NavigateState & qeuryProps> =({navigateInfo,isLoading})=>{
     const [groupDetail,setGroupDetail] = useState<groupDetails>();
     const queryClient = useQueryClient();
+    const [showEventSelecter,setShowEventSelecter] = useState<boolean>(false);
 
+    useEffect(() => {
+        setShowEventSelecter(false)
+    }, [navigateInfo]);
 
     //그룹 디테일 불러오기
     useEffect( () => {
         setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,navigateInfo.navigateParam]));
-        console.log('업데이트')
     }, [isLoading,navigateInfo.navigateParam]);
 
 
     return  (
         <SubNavigation_Container>
-            {navigateInfo.navigate === "group" &&
+            {(navigateInfo.navigate === "group" &&groupDetail )&&
             <SubNavigateTopBar>
-
-                {groupDetail&&
-                    <div>{groupDetail.groupTitle}</div>
-                }
+                    <SubNavigateTopBar_leftContent>
+                        {groupDetail.groupTitle}
+                    </SubNavigateTopBar_leftContent>
+                <SubNavigateTopBar_EventSelecter_Container>
+                    {showEventSelecter ?
+                        <SubNavigateTopBar_rightContent_item
+                            onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
+                            ×
+                        </SubNavigateTopBar_rightContent_item> :
+                            <i style={{fontSize:'21px', marginTop:'5px', cursor:'pointer'}} className="fi fi-rr-angle-small-down"
+                               onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
+                            </i>
+                    }
+                </SubNavigateTopBar_EventSelecter_Container>
             </SubNavigateTopBar>
             }
+
 
         </SubNavigation_Container>
     )

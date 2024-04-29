@@ -16,6 +16,7 @@ import {stateFilter} from "../../stateFunc/actionFun";
 import {useQuery} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
 import ContentsComposition from "./ContentsComposition";
+import GroupUserList from "../Group/GroupUserList";
 
 
 interface groupDetails {
@@ -64,7 +65,8 @@ const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({n
     return(
         <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
                     <SubNavigationbar isLoading={grooupDetailState.isLoading}/>
-                    <ContentsComposition/>
+                    <ContentsComposition isLoading={grooupDetailState.isLoading}/>
+
         </FullScreen_div>
     )
 
