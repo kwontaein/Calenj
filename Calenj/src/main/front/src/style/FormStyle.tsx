@@ -23,6 +23,8 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         height: 100vh;
+        overflow: hidden;
+        user-select: none; /* Standard */
     }
 
 
@@ -150,18 +152,32 @@ export const OveflowBlock = styled.div`
 `
 export const GROUP_USER_LIST = styled.ul`
     width: 110px;
-    list-style: none;
     padding: 0;
     margin: 0;
     font-size: 13px;
 `
 
-export const ListView = styled.li`
+export const UserListView = styled.li`
+    list-style: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: -1px;
-    padding-top: 10px;
+    padding: 10px;
+    padding-bottom: 10px;
+
+    &:hover {
+        background-color: #393E46;
+    }
+`
+
+export const ListView = styled.li`
+    list-style: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: -1px;
+    padding: 10px;
     padding-bottom: 10px;
 
     &:hover {

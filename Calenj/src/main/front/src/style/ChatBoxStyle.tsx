@@ -16,7 +16,7 @@ export const ScrollableDiv = styled.div`
     max-height: ${ScrollMinHeight}px; /* 스크롤 가능한 div의 최대 높이 설정 */
     min-height: ${ScrollMaxHeight}px;
     min-width: ${ScrollMinWidth}px;
-    max-width: ${ScrollMaxWidht}px;
+    max-width: 100%;
     padding-left: 5px;
 `;
 
@@ -25,6 +25,7 @@ export const MessageBoxContainer = styled.div<CheckbeforSender>`
     padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
     padding-inline: 12px;
     padding-bottom:0px;
+    user-select: text;
 `
 export const ProfileContainer = styled.div`
     width: 40px;
@@ -40,6 +41,8 @@ export const ProfileContainer = styled.div`
     font-size: 20px;
     color: white;
     font-weight: 550;
+    user-select: none;
+
 `
 
 

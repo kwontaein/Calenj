@@ -3,7 +3,7 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import {ListView, MiniText} from '../../style/FormStyle'
+import {UserListView, MiniText} from '../../style/FormStyle'
 
 
 interface FriendList {
@@ -68,9 +68,9 @@ const FriendList: React.FC = () => {
                     <h2>Friend List</h2>
                     <ul>
                         {friendListState.data.map((friends) => (
-                            <ListView key={friends.friendId}>
+                            <UserListView key={friends.friendId}>
                                 {friends.nickName}
-                            </ListView>
+                            </UserListView>
                         ))}
                     </ul>
                 </div>

@@ -1,4 +1,4 @@
-import {FullScreen_div} from '../../style/FormStyle'
+import {FullScreen_div, RowFlexBox} from '../../style/FormStyle'
 import React, {useEffect, useState} from "react";
 import {connect} from 'react-redux'
 import {
@@ -6,14 +6,15 @@ import {
     mapStateToNavigationProps,
 } from '../../store/slice/NavigateByComponent'
 import MessageContainer from "../MessageBox/MessageContainer";
-import {NavigateByEventTopBar} from "../../style/Navigation/ContentComposition";
+import {ContentsByEventTopBar, ContentsScreen_div} from "../../style/Navigation/ContentComposition";
+import GroupUserList from "../Group/GroupUserList"
 
-interface NavigationProps {
-    target : string;
-    param: string;
+
+interface qeuryProps {
+    isLoading :boolean
 }
 
-const ContentsComposition :React.FC<NavigateState>=({navigateInfo})=>{
+const ContentsComposition :React.FC<NavigateState&qeuryProps>=({navigateInfo, isLoading})=>{
 
 
 
@@ -21,11 +22,12 @@ const ContentsComposition :React.FC<NavigateState>=({navigateInfo})=>{
     return(
 
         <FullScreen_div>
+            <ContentsByEventTopBar/>
             {navigateInfo.navigate ==="group"&&
-                <div>
-                    <NavigateByEventTopBar/>
+                <ContentsScreen_div>
                     <MessageContainer target={navigateInfo.navigate} param ={navigateInfo.navigateParam}/>
-                </div>
+                    <GroupUserList  isLoading={isLoading}/>
+                </ContentsScreen_div>
             }
         </FullScreen_div>
     )

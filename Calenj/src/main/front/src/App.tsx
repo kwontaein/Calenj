@@ -73,9 +73,9 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
 
     function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
         let paramsList = [];
-        paramsList.push([userId]) //친구요청
         paramsList.push(groupList) //그룹채팅
         paramsList.push(friendList) //친구채팅
+        paramsList.push([userId]) //개인이벤트
         return paramsList;
     }
 
