@@ -30,7 +30,7 @@ public class FriendController {
         return friendService.requestFriend(request.getFriendUserId());
     }
 
-    @PostMapping("/api/responseFriend")
+    @PostMapping("/api/myResponse")
     public String responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
@@ -39,21 +39,20 @@ public class FriendController {
 
     @PostMapping("/api/myEvents")
     public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
-        //친구 요청 응답
-        //승인인지 거절인지 받아서 전달
+        //내 이벤트 목록...? 이거 왜 만들었노
         List<EventResponse> events = friendService.myEvents(request.getUserId());
         System.out.println(events.toString());
         return friendService.myEvents(request.getUserId());
     }
 
-    //내가 보낸 요청 목록
-    @GetMapping("/api/RequestFriendList")
+    //내가 보낸 요청
+    @GetMapping("/api/myRequestList")
     public List<EventResponse> RequestFriendList() {
         return friendService.RequestFriendList();
     }
 
-    //내가 받은 요청 목록
-    @GetMapping("/api/ResponseFriendList")
+    //내가 받은 요청
+    @GetMapping("/api/requestedList")
     public List<EventResponse> ResponseFriendList() {
         System.out.println(friendService.ResponseFriendList());
         return friendService.ResponseFriendList();

@@ -1,18 +1,22 @@
 package org.example.calenj.websocket.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.dto.request.AlarmRequest;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
-import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.service.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class WebSocketController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final WebSokcetService webSokcetService;
     private final GlobalService globalService;
+    private final SimpUserRegistry simpUserRegistry;
 
     //그룹 채팅
     @MessageMapping("/groupMsg")
@@ -32,6 +37,7 @@ public class WebSocketController {
     @MessageMapping("/friendMsg")
     public void friendMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
         defaultSend(authentication, message, "friendMsg");
+
     }
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
@@ -43,6 +49,7 @@ public class WebSocketController {
 
 
     private void defaultSend(Authentication authentication, ChatMessageRequest message, String target) {
+
         String username = webSokcetService.returnNickname(authentication);
         String userEmail = webSokcetService.returnEmail(username);
         String nowTime = globalService.nowTime();
@@ -52,6 +59,7 @@ public class WebSocketController {
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
+        response.setOnlineUserList(getUsers("topic/" + target + message.getParam()));
 
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
@@ -132,4 +140,18 @@ public class WebSocketController {
         // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
         return filteredResponse;
     }
+
+    public Set<String> getUsers(String param) {
+        Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
+
+        Set<String> filteredUserNames = simpUsers.stream()
+                .filter(simpUser -> simpUser.getSessions().stream()
+                        .anyMatch(session -> session.getSubscriptions().stream()
+                                .anyMatch(subscription -> subscription.getDestination().contains(param))))
+                .map(SimpUser::getName)
+                .collect(Collectors.toSet());
+        System.out.println("filteredUserNames : " + filteredUserNames);
+        return filteredUserNames;
+    }
+
 }

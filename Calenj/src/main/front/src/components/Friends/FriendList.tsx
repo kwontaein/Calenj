@@ -4,6 +4,8 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {ListView, MiniText} from '../../style/FormStyle'
+import RequestFriend from "./RequestFriend";
+import MyRequest from "./MyRequest";
 
 
 interface FriendList {
@@ -65,7 +67,7 @@ const FriendList: React.FC = () => {
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <div>
-                    <h2>Friend List</h2>
+                    <h2>친구</h2>
                     <ul>
                         {friendListState.data.map((friends) => (
                             <ListView key={friends.friendId}>
@@ -75,6 +77,10 @@ const FriendList: React.FC = () => {
                     </ul>
                 </div>
             )}
+            <hr/>
+            <RequestFriend/>
+            <hr/>
+            <MyRequest/>
         </div>
     )
 }

@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
 import {StompData, mapStateToStompProps} from '../../store/module/StompReducer';
-import { SIGN_STATE_BUTTON, SIGN_STATE_FORM, SIGN_STATE_TEXT} from "../../style/FormStyle";
+import {SIGN_STATE_BUTTON, SIGN_STATE_FORM, SIGN_STATE_TEXT} from "../../style/FormStyle";
 
 
 const SignState: React.FC<StompData> = ({stomp}) => {
@@ -30,7 +30,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
     return (
         <SIGN_STATE_FORM>
             <SIGN_STATE_TEXT>{localStorage.getItem(`userId`)}</SIGN_STATE_TEXT>
-            {stomp.isOnline ?
+            {stomp.isOnline === "ONLINE" ?
                 <SIGN_STATE_BUTTON onClick={() => logout()}>로그아웃</SIGN_STATE_BUTTON>
                 : <div>
                     <Link to="/sign" style={{textDecoration: "none"}}>

@@ -48,7 +48,6 @@ const GroupUserList: React.FC<DispatchStompProps & NavigationProps> = ({groupDet
                     }
                 </ListView>))}
         </GROUP_USER_LIST>
-
     );
 }
 
