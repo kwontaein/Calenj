@@ -1,17 +1,16 @@
 import {useEffect, useState} from "react";
-import {SubNavigation_Container} from '../../style/Navigation/SubNavigationContainer'
+import {SubNavigation_Container, SubNavigateTopBar } from '../../style/Navigation/SubNavigationContainer'
 import {connect} from 'react-redux'
 import {
     NavigateState,
     mapStateToNavigationProps,
 } from '../../store/slice/NavigateByComponent'
-import {useQueryClient} from "@tanstack/react-query";
+import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
 
 
-interface NavigationProps {
-    target : string;
-    param: string;
+interface qeuryProps {
+    isLoading :boolean
 }
 interface groupDetails {
     groupId: string;
@@ -29,21 +28,29 @@ interface groupMembers {
     userEmail: string;
 }
 
-const SubNavigationbar:React.FC<NavigateState> =({navigateInfo})=>{
+const SubNavigationbar:React.FC<NavigateState & qeuryProps> =({navigateInfo,isLoading})=>{
     const [groupDetail,setGroupDetail] = useState<groupDetails>();
     const queryClient = useQueryClient();
 
+
     //그룹 디테일 불러오기
-    useEffect(() => {
+    useEffect( () => {
         setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,navigateInfo.navigateParam]));
-    }, [queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,navigateInfo.navigateParam])]);
+        console.log('업데이트')
+    }, [isLoading,navigateInfo.navigateParam]);
 
 
     return  (
         <SubNavigation_Container>
             {navigateInfo.navigate === "group" &&
-                <div></div>
+            <SubNavigateTopBar>
+
+                {groupDetail&&
+                    <div>{groupDetail.groupTitle}</div>
+                }
+            </SubNavigateTopBar>
             }
+
         </SubNavigation_Container>
     )
 }

@@ -1,6 +1,6 @@
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import {connect} from 'react-redux'
-import DefaultNavigation from "./components/Global/DefaultNavigation";
+import DefaultNavigation from "./components/Global/SideNavigation";
 import {FullScreen_div} from "./style/FormStyle";
 import NavigationComposition from './components/Global/NavigationComposition'
 import {
@@ -14,7 +14,7 @@ const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
-            {stomp.isOnline ?
+            {stomp.isOnline ==="ONLINE"?
                 <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
                     <DefaultNavigation/>
                     <NavigationComposition/>

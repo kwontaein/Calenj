@@ -85,21 +85,21 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
      * **/
 
 
-    //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
+        //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
     const handleScroll = () => {
-        if (scrollTimerRef.current) {
-            clearTimeout(scrollTimerRef.current);
-        }
-        scrollTimerRef.current = setTimeout(() => {
-            updateScroll()
-        }, 50)
-    };
+            if (scrollTimerRef.current) {
+                clearTimeout(scrollTimerRef.current);
+            }
+            scrollTimerRef.current = setTimeout(() => {
+                updateScroll()
+            }, 50)
+        };
     const addScrollEvent=()=>{
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
-            
+
             //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
             if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -136,7 +136,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
                 endPointMap.set(param, 0)
                 scrollToBottom();
-                updateEndpoint();   
+                updateEndpoint();
             }
         }
         berforeScrollTop.current=scrollRef.current.scrollTop;
@@ -369,7 +369,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
 
-    
+
     useEffect(() => {
         setPrevScrollHeight(null)
         updateAppPosition({target:target, param:param});

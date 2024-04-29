@@ -6,6 +6,7 @@ import {
     mapStateToNavigationProps,
 } from '../../store/slice/NavigateByComponent'
 import MessageContainer from "../MessageBox/MessageContainer";
+import {NavigateByEventTopBar} from "../../style/Navigation/ContentComposition";
 
 interface NavigationProps {
     target : string;
@@ -20,11 +21,12 @@ const ContentsComposition :React.FC<NavigateState>=({navigateInfo})=>{
     return(
 
         <FullScreen_div>
-
             {navigateInfo.navigate ==="group"&&
-                <MessageContainer target={navigateInfo.navigate} param ={navigateInfo.navigateParam}/>
+                <div>
+                    <NavigateByEventTopBar/>
+                    <MessageContainer target={navigateInfo.navigate} param ={navigateInfo.navigateParam}/>
+                </div>
             }
-
         </FullScreen_div>
     )
 }

@@ -3,7 +3,7 @@ import MakeGroup from './MakeGroup';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState, useMemo} from 'react';
 import {stateFilter} from '../../stateFunc/actionFun'
-import { NavigationProps } from '../../store/slice/NavigateByComponent'
+import {NavigationProps} from '../../store/slice/NavigateByComponent'
 import {
     GroupList_Container,
     GroupListSub_Container,
@@ -33,7 +33,7 @@ interface GroupListByNavigationProps {
 const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [navigate,setNavigate]=useState<NavigationProps>();
+    const [navigate, setNavigate] = useState<NavigationProps>();
 
     //그룹 목록 불러오기
     const getGroupList = async (): Promise<GroupList[] | null> => {
@@ -59,7 +59,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
     const groupListState = useQuery<GroupList[] | null, Error>({
         queryKey: [QUERY_GROUP_LIST_KEY],
         queryFn: getGroupList, //HTTP 요청함수 (Promise를 반환하는 함수)
-        enabled: stomp.isOnline,
+        enabled: stomp.isOnline === "ONLINE",
     });
 
     useEffect(() => {
@@ -75,12 +75,12 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
         alramNum: number;
     }
 
-    const connectDirection = (navigateArg:string, paramArg:string)=>{
-        setNavigate(redirectDetail(navigateArg,paramArg))
+    const connectDirection = (navigateArg: string, paramArg: string) => {
+        setNavigate(redirectDetail(navigateArg, paramArg))
     }
 
-    const clickState = (groupId:string):boolean=>{
-       return  navigate?.navigate==="group" && navigate.navigateParam===groupId
+    const clickState = (groupId: string): boolean => {
+        return navigate?.navigate === "group" && navigate.navigateParam === groupId
     }
 
     return (
@@ -100,7 +100,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
                                 <GroupListTitle>
                                     {group.groupTitle}
                                 </GroupListTitle>
-                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId)||0 !== 0}>
+                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) || 0 !== 0}>
                                     {endPointMap.get(group.groupId) !== 0 && endPointMap.get(group.groupId)}
                                 </SignOfMessageNum>
                             </Li_GroupList_Item>

@@ -115,7 +115,8 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
 export const SignOfMessageNum = styled.div<receivedMsg>`
  padding: 1px 6px;
  background-color:  ${props => (props.$existMessage  ? "#1AB5E6" : "transparent")};
-
+ width: ${props => (props.$existMessage  ? "15px" : "")};
+ height: ${props => (props.$existMessage  ? "15px" : "")};
  color: white;
  padding: ${props => (props.$existMessage  ? "3px 3px" : "")};
  border-radius: 50%;

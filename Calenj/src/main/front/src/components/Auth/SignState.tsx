@@ -30,7 +30,7 @@ const SignState: React.FC<StompData> = ({stomp}) => {
     return (
         <SIGN_STATE_FORM>
             <SIGN_STATE_TEXT>{localStorage.getItem(`userId`)}</SIGN_STATE_TEXT>
-            {stomp.isOnline ?
+            {stomp.isOnline==="ONLINE" ?
                 <SIGN_STATE_BUTTON onClick={() => logout()}>로그아웃</SIGN_STATE_BUTTON>
                 : <div>
                     <Link to="/sign" style={{textDecoration: "none"}}>
