@@ -1,0 +1,134 @@
+CDN
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+캘린더
+<i class="fi fi-sr-calendar"></i>
+캘린더2(시간)
+<i class="fi fi-sr-calendar-clock"></i>
+캘린더 주의표시
+<i class="fi fi-sr-calendar-exclamation"></i>
+캘린더 작성
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+<i class="fi fi-sr-calendar-pen"></i>
+
+눈뜸
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+<i class="fi fi-ss-eye"></i>
+눈감음
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+<i class="fi fi-ss-eye-crossed"></i>
+비밀번호
+<i class="fi fi-ss-key"></i>
+삭제
+<i class="fi fi-sr-trash"></i>
+체크
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+<i class="fi fi-br-check"></i>
+
+초대/친구추가
+<i class="fi fi-sr-user-add"></i>
+
+그룹멤버
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+<i class="fi fi-ss-users"></i>
+
+X
+<i class="fi fi-sr-cross-circle"></i>
+<i class="fi fi-br-x"></i>
+
+
+X2
+<i class="fi fi-br-cross-small"></i>
+<
+<i class="fi fi-rr-angle-small-left"></i>
+drop down
+<i class="fi fi-sr-angle-small-down"></i>
+
++ (add)
+<i class="fi fi-sr-add"></i>
++ 2
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+<i class="fi fi-rr-plus-small"></i>
+
+
+차트 분석
+<i class="fi fi-sr-chart-histogram"></i>
+통계
+<i class="fi fi-ss-bars-progress"></i>
+스토어
+<i class="fi fi-sr-shop"></i>
+시간
+<i class="fi fi-sr-clock-three"></i>
+방장
+<i class="fi fi-sr-crown"></i>
+
+핵심알람모음
+<i class="fi fi-ss-box-open-full"></i>
+
+추천
+<i class="fi fi-ss-social-network"></i>
+비추천
+<i class="fi fi-ss-hand"></i>
+디팬스
+<i class="fi fi-sr-shield-exclamation"></i>
+경고
+<i class="fi fi-sr-exclamation"></i>
+금지
+<i class="fi fi-bs-ban"></i>
+일정맞추기
+<i class="fi fi-ss-puzzle-piece"></i>
+
+친구삭제
+<i class="fi fi-sr-delete-user"></i>
+
+
+#
+<i class="fi fi-br-hastag"></i>
+reverse - drop down
+<i className="fi fi-rr-angle-small-down"></i>
+
+
+
+
+설정
+<i class="fi fi-ss-settings"></i>
+
+링크
+<i class="fi fi-br-link-alt"></i>
+
+복사
+<i class="fi fi-ss-copy"></i>
+
+편집
+<i class="fi fi-br-edit"></i>
+
+북마크
+<i class="fi fi-sr-bookmark"></i>
+
+공지
+<i class="fi fi-sr-megaphone"></i>
+
+공유
+<i class="fi fi-sr-share"></i>
+공유2
+<i class="fi fi-br-arrow-up-right-from-square"></i>
+
+나가기
+<i class="fi fi-br-exit"></i>
+
+투표
+<i class="fi fi-bs-vote-yea"></i>
+
+채팅
+<i class="fi fi-ss-comment-dots"></i>
+
+사용자 위치
+<i class="fi fi-ss-map-marker-smile"></i>
+
+정보
+<i class="fi fi-sr-comment-info"></i>
+
+새로고침
+<i class="fi fi-br-rotate-left"></i>
+
+고정핀
+<i class="fi fi-sr-thumbtack"></i>

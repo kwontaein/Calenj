@@ -3,7 +3,7 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
-import {ListView, MiniText} from '../../style/FormStyle'
+import {UserListView, MiniText} from '../../style/FormStyle'
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
 import {QUERY_FRIEND_LIST_KEY} from '../../store/ReactQuery/QueryKey'
@@ -74,14 +74,14 @@ const RequestFriend: React.FC = () => {
                     <h2>받은 친구 요청</h2>
                     <ul>
                         {friendListState.data.map((events) => (
-                            <ListView key={events.eventId}>
+                            <UserListView key={events.eventId}>
                                 {events.eventUserId} 님이 보낸 친구 요청
                                 <br/>
                                 -{events.createDate}-
                                 <br/>
                                 <button onClick={() => acceptFriend(events.ownUserId, "ACCEPT")}>친구 수락</button>
                                 <button onClick={() => acceptFriend(events.ownUserId, "REJECT")}>친구 거절</button>
-                            </ListView>
+                            </UserListView>
                         ))}
                     </ul>
                 </div>

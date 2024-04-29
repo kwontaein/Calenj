@@ -36,6 +36,7 @@ export interface StompState {
     nowLine: number,
     isOnline: string, //온라인여부
     loading: boolean, //로딩여부 (stomp 셋팅 후 true)
+    onlineUserList: string[],
 }
 
 
@@ -151,7 +152,6 @@ export const updateLoading = (payload: { loading: boolean }) => ({
 
 export interface Destination {
     map: any;
-
     [index: number]: (string | number)[];
 }
 
@@ -175,6 +175,7 @@ const initialState: StompState = {
     nowLine: -1,
     isOnline: "OFFLINE",
     loading: false,
+    onlineUserList:[],
 };
 
 //주소를 저장, app/topic을 구분해서 구독 및 메시지 전달을 가능하게 유동적으로 설정

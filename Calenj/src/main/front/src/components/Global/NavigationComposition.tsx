@@ -1,4 +1,3 @@
-import EventManagementBar from "./EventManagementBar";
 import {RowFlexBox} from "../../style/FormStyle";
 import SubNavigationbar from "./SubNavigationbar";
 import GroupDetail from "../Group/GroupDetail";
@@ -17,6 +16,7 @@ import {stateFilter} from "../../stateFunc/actionFun";
 import {useQuery} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
 import ContentsComposition from "./ContentsComposition";
+import GroupUserList from "../Group/GroupUserList";
 
 
 interface groupDetails {
@@ -55,7 +55,7 @@ const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({n
     }
 
 
-    useQuery<groupDetails | null, Error>({
+    const grooupDetailState =useQuery<groupDetails | null, Error>({
         queryKey: [QUERY_GROUP_DETAIL_KEY, navigateInfo.navigateParam],
         queryFn: getGroupDetail, //HTTP 요청함수 (Promise를 반환하는 함수)
         enabled: navigateInfo.navigate==="group"
@@ -63,13 +63,10 @@ const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({n
 
 
     return(
-        <FullScreen_div>
-                <EventManagementBar/>
-                <RowFlexBox style={{height:'calc(100% - 51px)'}}>
-                    <SubNavigationbar/>
-                    <ContentsComposition/>
-                   {/*<GroupDetail groupId={navigateInfo.navigateParam}/>*/}
-                </RowFlexBox>
+        <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
+                    <SubNavigationbar isLoading={grooupDetailState.isLoading}/>
+                    <ContentsComposition isLoading={grooupDetailState.isLoading}/>
+
         </FullScreen_div>
     )
 
