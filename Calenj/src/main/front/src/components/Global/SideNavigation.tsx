@@ -9,11 +9,8 @@ import {
     mapDispatchToNavigationProps,
     NavigationProps
 } from '../../store/slice/NavigateByComponent'
-import {useQueryClient} from "@tanstack/react-query";
 
-const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
-    const queryClient = useQueryClient();
-
+const SideNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
 
     useEffect(()=>{
     },[navigateInfo])
@@ -33,4 +30,4 @@ const DefaultNavigation :React.FC<NavigateState &DispatchNavigationProps>=({upda
         </div>
     )
 }
-export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (DefaultNavigation);
+export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (SideNavigation);

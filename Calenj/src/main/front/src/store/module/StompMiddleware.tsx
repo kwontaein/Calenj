@@ -127,15 +127,18 @@ function* startStomp(destination: Destination): any {
             receiveMessage: take(channel), //액션을 기다린 후 dispatch 가 완료되면 실행
         });
         if (timeout) isRunning = false;
-
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
+
         console.log(receiveData.payload.receiveMessage.state)
+
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
-            endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endpoint))
+            endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endPoint))
+            console.log(endPointMap.get(receiveData.payload.receiveMessage.param))
         }
     }
+
 }
 
 
