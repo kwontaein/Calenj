@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
-import org.example.calenj.websocket.dto.request.AlarmRequest;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
-import org.example.calenj.websocket.dto.response.OnlineUserResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -20,7 +18,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,7 +34,6 @@ public class WebSokcetService {
     private final GlobalService globalService;
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
-    private final OnlineUserResponse onlineUserResponse;
 
 
     public String returnNickname(Authentication authentication) {
@@ -188,7 +188,6 @@ public class WebSokcetService {
         return line -> !line.contains("EndPoint") && !line.contains(param);
     }
 
-
     public void defaultSend(Authentication authentication, ChatMessageRequest message, String target) {
 
         String username = returnNickname(authentication);
@@ -200,8 +199,8 @@ public class WebSokcetService {
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
-        getUsers("topic/" + target + message.getParam());
-
+        response.setOnlineUserList(getUsers(response.getParam()));
+        
         //알림 갯수 반환
         if (message.getState() == ChatMessageRequest.fileType.ALARM) {
 
@@ -247,7 +246,7 @@ public class WebSokcetService {
         }
     }
 
-    public void personalEvent(Authentication authentication, AlarmRequest request) {
+    public void personalEvent(Authentication authentication, ChatMessageRequest request) {
         String username = returnNickname(authentication);
         String userEmail = returnEmail(username);
     }
@@ -277,30 +276,43 @@ public class WebSokcetService {
         return filteredResponse;
     }
 
-    public void getUsers(String param) {
+    /* public void getUsers(Authentication authentication) {
+         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
+         SimpUser simpUserOnly = simpUserRegistry.getUser(authentication.getName());
+
+         Set<String> myDestination = simpUserOnly.getSessions().stream()
+                 .filter(simpSession -> !simpSession.getSubscriptions().isEmpty()) // 구독이 비어있지 않은 경우만 선택
+                 .flatMap(simpSession -> simpSession.getSubscriptions().stream()) // 각 세션의 구독을 하나의 스트림으로 평면화
+                 .map(SimpSubscription::getDestination) // 각 구독의 목적지를 선택하여 매핑
+                 .collect(Collectors.toSet()); // Set으로 수집
+
+         Set<String> filteredUserNames = simpUsers.stream()
+                 .filter(simpUser -> simpUser.getSessions().stream()
+                         .anyMatch(session -> session.getSubscriptions().stream()
+                                 .anyMatch(subscription -> {
+                                     String destination = subscription.getDestination();
+                                     return myDestination.contains(destination);
+                                 })))
+                 .map(SimpUser::getName)
+                 .collect(Collectors.toSet());
+
+         System.out.println(filteredUserNames);
+
+     }*/
+    public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
 
         Set<String> filteredUserNames = simpUsers.stream()
                 .filter(simpUser -> simpUser.getSessions().stream()
                         .anyMatch(session -> session.getSubscriptions().stream()
-                                .anyMatch(subscription -> subscription.getDestination().contains(param))))
+                                .anyMatch(subscription -> subscription.getDestination().contains(param)
+                                )))
                 .map(SimpUser::getName)
                 .collect(Collectors.toSet());
-        System.out.println(param + "을 구독한 유저 목록 : " + filteredUserNames);
 
-        if (onlineUserResponse.getUsers().isEmpty()) {
-            onlineUserResponse.setUsers(filteredUserNames);
-        } else {
-            setUsers(filteredUserNames, onlineUserResponse);
-        }
+        System.out.println("filteredUserNames : " + filteredUserNames);
+        return filteredUserNames;
     }
-
-    public void setUsers(Set<String> newUsers, OnlineUserResponse onlineUserResponse) {
-        Set<String> returnList = onlineUserResponse.getUsers();
-        returnList.addAll(newUsers);
-        onlineUserResponse.setUsers(returnList);
-    }
-
 }
 
 

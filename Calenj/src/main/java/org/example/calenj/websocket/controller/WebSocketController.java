@@ -1,7 +1,6 @@
 package org.example.calenj.websocket.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.websocket.dto.request.AlarmRequest;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.service.WebSokcetService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -29,7 +28,7 @@ public class WebSocketController {
 
     //알림을 위한 개인 구독 (온라인 전환도 할 예정)
     @MessageMapping("/personalTopic")
-    public void personalTopic(Authentication authentication, AlarmRequest request) throws Exception {
-        webSokcetService.personalEvent(authentication, request);
+    public void personalTopic(Authentication authentication, ChatMessageRequest message) throws Exception {
+        webSokcetService.personalEvent(authentication, message);
     }
 }
