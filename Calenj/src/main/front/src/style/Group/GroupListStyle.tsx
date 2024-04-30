@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import {ThemaColor3} from "../FormStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
 interface receivedMsg {
@@ -58,7 +59,7 @@ export const GroupList_HR = styled.hr`
     outline: 0;
     border: 0;
     border-radius: 50px;
-    background: #393E46;
+    background: ${ThemaColor3};
     height: .2em;
     max-width: 30px;
     margin-block: 10px;
@@ -88,7 +89,7 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
  justify-content: center;
  list-style: none;
  margin-block: 8px;
- background-color:  ${props => (props.$isClick  ? "#007bff" : "#393E46")};
+ background-color:  ${props => (props.$isClick  ? "#007bff" : ThemaColor3)};
  border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
  white-space: nowrap;
  cursor: pointer;
@@ -134,7 +135,7 @@ export const GroupListTitle = styled.div`
 export const Btn_CalenJ_Icon = styled.button`
  appearance: none;
  list-style: none;
- background-color: #393E46;
+ background-color: ${ThemaColor3};
  height: 50px;
  width: 50px;
  border:0;
@@ -160,7 +161,7 @@ export const Btn_CalenJ_Icon = styled.button`
 export const Btn_MakeGroup = styled.button`
  appearance: none;
  list-style: none;
- background-color: #393E46;
+ background-color: ${ThemaColor3};
  height: 50px;
  width: 50px;
  border:0;

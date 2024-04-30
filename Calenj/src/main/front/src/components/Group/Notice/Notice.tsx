@@ -1,19 +1,11 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import axios ,{AxiosResponse, AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
 import {ListView, MiniText} from '../../../style/FormStyle'
-import {QUERY_NOTICE_LIST_KEY} from '../../../store/ReactQuery/QueryKey'
+import {useFetchNoteList} from "../../../store/ReactQuery/queryManagement";
 
-interface NoticeList{
-    noticeId : string;
-    noticeContent : string;
-    noticeCreater : string;
-    noticeCreated : string;
-}
 
 const Notice :React.FC =()=>{
     const[makeNotice,setMakeNotice] = useState(false);
@@ -22,31 +14,12 @@ const Notice :React.FC =()=>{
     const groupInfo = {...location.state};
 
 
-    const queryClient = useQueryClient();
-    
+    const noticeListState = useFetchNoteList(groupInfo.groupId)
+
     const closeModal = () => {
         setMakeNotice(false);
     };
       //공지목록 불러오기
-      const getNoticeList = async (): Promise<NoticeList[]|null>=> {
-        try{
-            const response = await axios.post('/api/noticeList',{groupId:groupInfo.groupId});
-            // console.log(response.data);
-            return response.data
-        }catch(error){
-            const axiosError = error as AxiosError;
-            console.log(axiosError);
-            if(axiosError.response?.data){
-                stateFilter((axiosError.response.data) as string);
-            }
-            return null;
-        }
-    }
-
-    const noticeListState = useQuery<NoticeList[]|null, Error>({
-        queryKey: [QUERY_NOTICE_LIST_KEY, groupInfo.groupId],
-        queryFn: getNoticeList, //HTTP 요청함수 (Promise를 반환하는 함수)
-    });
 
     const redirectDetail = (noticeId: string) => {
         navigate("/notice/detail", {state: {noticeId: noticeId}});

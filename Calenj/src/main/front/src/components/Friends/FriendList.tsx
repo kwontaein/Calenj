@@ -4,46 +4,18 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {stateFilter} from '../../stateFunc/actionFun'
 import {UserListView, MiniText} from '../../style/FormStyle'
+import {useFetchFriendsList} from "../../store/ReactQuery/queryManagement";
 
 
-interface FriendList {
-    friendId: string;
-    nickName: string;
-    chattingRoomId: number;
-    friendAddDate: string;
-    ChattingRoomId: number;
-}
 
-export const QUERY_FRIEND_LIST_KEY: string = 'friendList'
+
+
 
 const FriendList: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
-    const getFriendList = async (): Promise<FriendList[] | null> => {
-        try {
-            const response = await axios.get('/api/getFriendList');
-            console.log('친구 목록을 불러옵니다.');
-            const data = response.data as FriendList[];
-            const dataSort = data.sort((a, b) => {
-                return (Number(b.friendAddDate) - Number(a.friendAddDate));
-            })
-            return dataSort;
-        } catch (error) {
-            const axiosError = error as AxiosError;
-            console.log(axiosError);
-            if (axiosError.response?.status) {
-                console.log(axiosError.response.status);
-                stateFilter((axiosError.response.status).toString());
-            }
-            return null;
-        }
-    }
 
-    const friendListState = useQuery<FriendList[] | null, Error>({
-        queryKey: [QUERY_FRIEND_LIST_KEY],
-        queryFn: getFriendList, //HTTP 요청함수 (Promise를 반환하는 함수)
-    });
-
+    const friendListState = useFetchFriendsList();
     const addFriend = async () => {
         axios.post('/api/requestFriend', {friendUserId: inputValue}) // 객체의 속성명을 'id'로 설정;
             .then(() => window.alert('친구 요청이 성공적으로 전송되었습니다.'))

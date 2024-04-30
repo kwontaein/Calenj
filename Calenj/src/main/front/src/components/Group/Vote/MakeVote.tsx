@@ -13,20 +13,22 @@ import 'dayjs/locale/ko'; // 한국어 locale 추가
 import { UseQueryResult } from '@tanstack/react-query';
 import ReactDatePicker from 'react-datepicker';
 
+import {VoteList} from '../../../store/ReactQuery/queryInterface'
+
 interface ModalProps {
     onClose: () => void;
     groupId: string;
     queryState: UseQueryResult;
 }
 
-interface VoteList {
+interface VoteContent {
     id: number,
     content: string,
 }
 
 const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [title, setTitle] = useState<string>('');
-    const [voteList, setVoteList] = useState<VoteList[]>([]);//항목 리스트
+    const [voteList, setVoteList] = useState<VoteContent[]>([]);//항목 리스트
     const [content, setContent] = useState<string>(''); //항목 (텍스트)
     const [content_Date, setContent_Date] = useState<Date | null>(null);  //항목 (날짜)
     const [inputForm, setInputForm] = useState<string>('TEXT'); //입력형식
@@ -66,7 +68,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
             if (inputContent === '') {
                 window.alert('항목에 존재하는 내용입니다.')
             } else {
-                const list: VoteList = {
+                const list: VoteContent = {
                     id: id,
                     content: inputContent
                 }
@@ -86,7 +88,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
 
     //List목록 삭제하기
     const deletLi = (key: number) => {
-        const newList: VoteList[] = voteList.filter((current) => {
+        const newList: VoteContent[] = voteList.filter((current) => {
             return current.id !== key
         })
         setVoteList([...newList]);

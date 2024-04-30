@@ -8,7 +8,7 @@ import {
     mapStateToStompProps
 } from '../../store/module/StompReducer';
 import {useQueryClient} from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
+import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupUserList_Container} from "../../style/Group/GroupUserListStyle";
 
 interface qeuryProps {

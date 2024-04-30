@@ -5,14 +5,14 @@ import {
     SubNavigateTopBar_leftContent,
     SubNavigateTopBar_EventSelecter_Container,
     SubNavigateTopBar_rightContent_item,
-} from '../../style/Navigation/SubNavigationContainer'
+} from '../../style/Navigation/SubNavigationStyle'
 import {connect} from 'react-redux'
 import {
     NavigateState,
     mapStateToNavigationProps,
 } from '../../store/slice/NavigateByComponent'
 import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
+import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 
 interface qeuryProps {
     isLoading :boolean

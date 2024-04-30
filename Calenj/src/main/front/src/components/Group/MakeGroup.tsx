@@ -3,7 +3,6 @@ import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
 import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
 
-import {QUERY_GROUP_LIST_KEY} from '../../store/ReactQuery/QueryKey'
 interface ModalProps {
     onClose: () => void;
     queryState: UseQueryResult;
@@ -13,7 +12,6 @@ interface ModalProps {
 //단순 그룹 생성을 위한 컴포넌트
 const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
     const [groupTitle, setGroupTitle] = useState<string>("");
-    const queryClient = useQueryClient();
 
     
     const makeGroup = () => {
@@ -41,10 +39,6 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
             window.alert("생성할 방이름을 지어주세요.")
         } else {
             useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle,queryState);
-            setTimeout(()=>{
-                queryClient.invalidateQueries({queryKey:[QUERY_GROUP_LIST_KEY]}) //업데이트 이후 connect를 위한 함수
-            },500)
-            
         }
     }
 

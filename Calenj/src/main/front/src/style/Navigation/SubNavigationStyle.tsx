@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {ThemaColor3} from "../FormStyle";
 
 export const SubNavigation_Container_width:number  = 240;
 export const SubNavigateTopBar_hegiht: number =40;
@@ -9,7 +10,7 @@ export const SubNavigation_Container = styled.div`
     border-radius: 10px 0 0 0;
     min-width: ${SubNavigation_Container_width}px;
     height: 100%;
-    background-color: #393E46;
+    background-color: ${ThemaColor3};
 `
 
 
@@ -19,7 +20,7 @@ export const SubNavigateTopBar = styled.div`
     display: flex;
     flex-direction: row;
     border-bottom: 1.2px #222831 solid;
-    background-color: #393E46;
+    background-color: ${ThemaColor3};
     border-radius: 10px 0 0 0;
     text-align: left;
 `
