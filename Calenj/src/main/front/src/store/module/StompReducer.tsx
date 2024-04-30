@@ -10,6 +10,7 @@ export const SEND_STOMP_MSG = 'SEND_STOMP_MSG';
 export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 export const UPDATE_LOADING = "UPDATE_LOADING"
 export const UPDATE_APP_POSITION = "UPDATE_APP_POSITION"
+export const UPDATE_STOMP_STATE = "UPDATE_STOMP_STATE"
 
 
 type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "";
@@ -37,6 +38,7 @@ export interface StompState {
     isOnline: string, //온라인여부
     loading: boolean, //로딩여부 (stomp 셋팅 후 true)
     onlineUserList: string[],
+    isConnect:boolean,
 }
 
 
@@ -46,6 +48,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     synchronizationStomp: (payload: { destination: Destination }) => void;
+    updateStompState : (payload:{isConnect:boolean}) => void;
     updateAppPosition: (payload: { target: string, param: string }) => void;
     requestFile: (payload: { target: string, param: string, requestFile: requestType, nowLine: number }) => void;
     sendStompMsg: (payload: { target: string, param: string, message: string }) => void;
@@ -67,6 +70,7 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     synchronizationStomp: (payload: { destination: Destination }) => dispatch(synchronizationStomp(payload)),
+    updateStompState : (payload:{isConnect:boolean}) => dispatch(updateStompState(payload)),
     updateAppPosition: (payload: { target: string, param: string }) => dispatch(updateAppPosition(payload)),
     requestFile: (payload: {
         target: string,
@@ -103,6 +107,11 @@ export const synchronizationStomp = (payload: { destination: Destination }) => (
     type: SYNCHRONIZATION_STOMP,
     payload: payload,
 });
+
+export const updateStompState = (payload: {isConnect: boolean}) => ({
+    type: UPDATE_STOMP_STATE,
+    payload: payload,
+})
 
 export const updateAppPosition = (payload: { target: string, param: string }) => ({
     type: UPDATE_APP_POSITION,
@@ -176,6 +185,7 @@ const initialState: StompState = {
     isOnline: "OFFLINE",
     loading: false,
     onlineUserList:[],
+    isConnect:false,
 };
 
 //주소를 저장, app/topic을 구분해서 구독 및 메시지 전달을 가능하게 유동적으로 설정
@@ -185,6 +195,11 @@ const StompReducer = handleActions(
         [SYNCHRONIZATION_STOMP]: (state, action) => ({
             ...state,
             destination: action.payload.destination, //[[userid],[userid],list<groupId>, list<friendId>]
+        }),
+
+        [UPDATE_STOMP_STATE]: (state, action) => ({
+            ...state,
+            isConnect: action.payload.isConnect, //[[userid],[userid],list<groupId>, list<friendId>]
         }),
 
         [UPDATE_APP_POSITION]: (state, action) => ({

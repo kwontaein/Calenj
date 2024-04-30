@@ -17,6 +17,9 @@ interface UnfocusBackgroundProps {
  * hover컬로:#007bff
  *
  */
+
+export const ThemaColor3 = "#31363F";
+export const ThemaColor2 ="#393E46"
 export const GlobalStyle = createGlobalStyle`
     body {
         background-color: #222831; /* 전체 페이지 배경색 */
@@ -25,6 +28,16 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         overflow: hidden;
         user-select: none; /* Standard */
+        ::-webkit-scrollbar-thumb{
+            background: #217af4; /* 스크롤바의 색상 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;  /* 스크롤바의 너비 */
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+        }
     }
 
 
@@ -43,7 +56,7 @@ export const GlobalStyle = createGlobalStyle`
     button {
         appearance: none;
         border: 0;
-        background-color: #393E46;
+        background-color: ${ThemaColor3};
         cursor: pointer;
         color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
     }
@@ -167,7 +180,7 @@ export const UserListView = styled.li`
     padding-bottom: 10px;
 
     &:hover {
-        background-color: #393E46;
+        background-color: ${ThemaColor3};
     }
 `
 
@@ -181,7 +194,7 @@ export const ListView = styled.li`
     padding-bottom: 10px;
 
     &:hover {
-        background-color: #393E46;
+        background-color: ${ThemaColor3};
     }
 `
 
@@ -246,12 +259,12 @@ export const DEFAULT_HR = styled.hr`
     outline: 0;
     border: 0;
     color: black;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, #393E46);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemaColor3});
     height: .1em;
 `
 
 export const SIGN_STATE_FORM = styled.div`
-    background-color: #393E46; /* 전체 페이지 배경색 */
+    background-color: ${ThemaColor3};
     color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
     height: 50px;
     display: flex;
@@ -260,7 +273,7 @@ export const SIGN_STATE_FORM = styled.div`
 
 `;
 export const SIGN_STATE_BUTTON = styled.button`
-    background-color: #31363F; /* 전체 페이지 배경색 */
+    background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
     color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;

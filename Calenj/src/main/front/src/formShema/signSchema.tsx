@@ -32,13 +32,7 @@ interface UserData {
         },timeout);
     })
 
-
-    
-    
   }
-
-
-
 
    const schema: yup.ObjectSchema<UserData> = yup.object().shape({
     nickname: yup.string()

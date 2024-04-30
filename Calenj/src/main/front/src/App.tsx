@@ -9,7 +9,6 @@ import FriendList from "./components/Friends/FriendList";
 import NaverMap from "./components/Group/Map/NaverMap"
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {QUERY_COOKIE_KEY} from './store/ReactQuery/QueryKey'
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
@@ -17,10 +16,10 @@ import {
     mapStateToStompProps
 } from './store/module/StompReducer';
 import {connect} from "react-redux";
-import {useQuery,} from '@tanstack/react-query';
-import {sagaMutation} from './store/store'
+import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
+import {useFetchCookie} from "./store/ReactQuery/queryManagement";
 
 //대표 색 : #  007bff
 
@@ -31,16 +30,24 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, updateOnline, stomp, updateLoading}) => {
+const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, updateOnline, stomp, updateLoading, updateStompState}) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const cookieState =useFetchCookie();
 
-    //api 를 통하여 쿠키를 post 하여 boolean 값을 return 받는다.
-    //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
-    const checkCookie = async (): Promise<boolean> => {
-        const response = await axios.post('/api/postCookie');
-        sagaMutation(response.data)//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
-        if (!response.data) {
-            localStorage.removeItem('userId')
+    useEffect(() => {
+        console.log(`실행 ${cookieState.data}`)
+        if(cookieState.data!==undefined){
+            checkToken(cookieState.data)
+        }
+    }, [cookieState.data]);
+
+    const checkToken=(cookie:boolean)=>{
+
+        if(stomp.isConnect && !cookie){//로그인이 아닌데 stomp가 연결되어 있으면
+            sagaRefresh()//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
+        }
+        if (!cookie) {
+            // localStorage.removeItem('userId')
             localStorage.removeItem('nowPosition');
             updateOnline({isOnline: "OFFLINE"});
             updateLoading({loading: true});
@@ -58,32 +65,27 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
                     synchronizationStomp({destination: subScribe});
+                    updateStompState({isConnect:true})
                 })
                 .catch(() => {
                     window.alert('잘못된 접근입니다. 재시작을 해주세요.')
                 })
         }
-        return response.data;
+    }
+
+    function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
+        let paramsList = [];
+        paramsList.push([userId]) //개인이벤트
+        paramsList.push(groupList) //그룹채팅
+        paramsList.push(friendList) //친구채팅
+        return paramsList;
     }
 
     useEffect(() => {
         setLoading(stomp.loading)
     }, [stomp.loading])
 
-    function subScribeFilter(friendList: string[], groupList: string[], userId: string) {
-        let paramsList = [];
-        paramsList.push(groupList) //그룹채팅
-        paramsList.push(friendList) //친구채팅
-        paramsList.push([userId]) //개인이벤트
-        return paramsList;
-    }
-
-    // //v5이후로 인자를 객체 형태로 전달해야함
-    useQuery<boolean, Error>({
-        queryKey: [QUERY_COOKIE_KEY],
-        queryFn: checkCookie, //HTTP 요청함수 (Promise 를 반환하는 함수)
-    });
-
+    
     return (
         <FullScreen_div>
             {loading &&

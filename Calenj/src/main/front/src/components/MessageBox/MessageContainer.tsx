@@ -18,14 +18,12 @@ import {
     MessageContentContainer2,
     ScrollableDiv,
     HR_ChatEndPoint,
-    SEND_INPUT,
-    SEND_BUTTON,
-    IMG_SIZE,
-    FORM_SENDMSG,
+    MessageSend_Cotainer,
+    MessageSend_Input,
 } from '../../style/ChatBoxStyle'
 import {
     FullScreen_div,
-    RowFlexBox,
+    RowFlexBox, ThemaColor2,
 
 } from '../../style/FormStyle'
 import {endPointMap,scrollPointMap} from '../../store/module/StompMiddleware';
@@ -40,7 +38,7 @@ import {
 import {InfiniteData, useInfiniteQuery, UseInfiniteQueryResult, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
 import useIntersect ,{requestCountManagement} from "../../store/module/useIntersect";
-import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/QueryKey";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 import {fdatasync} from "node:fs";
 
 
@@ -216,7 +214,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     async function fetchData({pageParam =0}) {
-
         try {
             const getFileData = () => {
                 if(messageLength.current===-1){
@@ -302,12 +299,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
-            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인"
+            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인" || messageList[messageList.length - 1]?.chatUUID === '엔드포인트'
             return containsValue ? undefined : messageLength.current;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: endPointMap.get(param),
         enabled: param === stomp.param,
         staleTime: Infinity,
+        refetchInterval:false,
         retry:3,
     });
 
@@ -319,6 +317,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
         enabled: param === stomp.param && !isFetching,
+        refetchInterval:false,
         staleTime: Infinity,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
@@ -477,17 +476,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     return (
-        <FullScreen_div>
+        <FullScreen_div style={{backgroundColor:ThemaColor2}}>
             {MessageBox}
             <div>
-                <FORM_SENDMSG onSubmit={sendMsg}>
-                    <SEND_INPUT type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setContent(e.target.value)
-                    }} ref={chatRef}></SEND_INPUT>
-                    <SEND_BUTTON>
-                        <IMG_SIZE src={"/image/send.png"} alt={"send"}/>
-                    </SEND_BUTTON>
-                </FORM_SENDMSG>
+                <MessageSend_Cotainer onSubmit={sendMsg}>
+                    <MessageSend_Input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setContent(e.target.value)
+                        }} ref={chatRef}>
+                    </MessageSend_Input>
+                </MessageSend_Cotainer>
             </div>
         </FullScreen_div>
     )

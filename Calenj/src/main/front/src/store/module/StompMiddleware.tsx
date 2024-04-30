@@ -1,14 +1,15 @@
 import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {call, put, race, delay, take, fork} from 'redux-saga/effects';
+import {call, put, race, delay, take, fork,takeEvery} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
 import {
     receivedStompMsg,
     SEND_STOMP_MSG,
     REQUEST_FILE,
     SYNCHRONIZATION_STOMP,
+    UPDATE_STOMP_STATE,
     Destination,
-    updateLoading
+    updateLoading,
 } from "./StompReducer"
 
 
@@ -22,9 +23,11 @@ interface StompData {
 }
 
 
+
+
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const subscribeDirection = ['groupMsg', 'friendMsg','personalTopic']
+export const subscribeDirection = ['personalTopic','groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
 
@@ -85,6 +88,15 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
 }
 
+function* closeWebSocketSaga(channel:any) {
+    while(true){
+        const {payload} = yield take(UPDATE_STOMP_STATE)// 웹소켓 끊는 dispatch 발생 시 가져옴
+        if(!payload.isConnect){
+            channel.close();
+        }
+    }
+}
+
 
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
@@ -103,10 +115,11 @@ function* startStomp(destination: Destination): any {
     yield fork(sendStomp, stompClient)
     yield fork(requestChatFile, stompClient)
     yield fork(sendPublish, destination, stompClient)
+    yield fork(closeWebSocketSaga,channel)
 
     let isRunning = true;
 
-    //put == dispatch 랑 동일
+    //put : dispatch의 기능을 수행함
     while (isRunning) {
         //race : 경주랑 비슷하게 여러개의 사가 효과가 동시에 실행하고 먼저 완료되는 효과만 처리함
         const {receiveMessage, timeout} = yield race({
@@ -115,7 +128,6 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
-
         console.log(receiveData.payload.receiveMessage.state)
 
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
@@ -174,12 +186,11 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string)[], index: number) => {
-                if (index===2) localStorage.setItem('userId', sub[index])
+                if (index===0) localStorage.setItem('userId', sub[index])
                 sub.map((param: (string)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    console.log("구독", `/topic/${subscribeDirection[index]}/${param}`)
                     if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg")
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));

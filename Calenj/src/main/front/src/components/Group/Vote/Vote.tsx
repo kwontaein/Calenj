@@ -8,18 +8,9 @@ import {ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
-import {QUERY_VOTE_LIST_KEY} from "../../../store/ReactQuery/QueryKey";
+import {VoteList} from '../../../store/ReactQuery/queryInterface'
+import {useFetchVoteList} from "../../../store/ReactQuery/queryManagement";
 
-
-interface VoteList {
-    voteId: string;
-    myId: string;
-    countVoter: string[];
-    voteCreater: string;
-    voteTitle: string;
-    voteCreated: string;
-    voteEndDate: string;
-}
 
 interface GroupProps {
     member: number;
@@ -38,27 +29,9 @@ const Vote: React.FC<GroupProps> = ({member}) => {
         setMakeVote(false);
     };
 
-    //투표리스트 불러오기
-    const getVoteList = async (): Promise<VoteList[] | null> => {
-        try {
-            const response = await axios.post('/api/voteList', {groupId: groupInfo.groupId});
 
-            return response.data
-        } catch (error) {
-            const axiosError = error as AxiosError;
-            console.log(axiosError);
-            if (axiosError.response?.data) {
-                stateFilter((axiosError.response.data) as string);
-            }
-            return null;
-        }
-    }
 
-    //현재 상태 저장
-    const voteListState = useQuery<VoteList[] | null, Error>({
-        queryKey: [QUERY_VOTE_LIST_KEY, groupInfo.groupId],
-        queryFn: getVoteList, //HTTP 요청함수 (Promise를 반환하는 함수)
-    });
+    const voteListState = useFetchVoteList(groupInfo.groupId)
 
 
     //데이터가 바뀌면 다시 세팅

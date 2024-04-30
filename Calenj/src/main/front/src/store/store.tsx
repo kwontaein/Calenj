@@ -1,12 +1,13 @@
-import {configureStore, createSelector} from "@reduxjs/toolkit";
-import {combineReducers} from "redux";
+import {configureStore,createSelector} from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
 import thunkMiddleware from 'redux-thunk'//비동기 논리를 모두 사용하는 데 가장 일반적으로 사용되는 미들웨어
 import createSagaMiddleware from 'redux-saga';
-import {all} from "@redux-saga/core/effects"; // import all method
+import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
-import StompReducer from './module/StompReducer';
+import StompReducer, {updateStompState} from './module/StompReducer';
 import NavigateReducer from './slice/NavigateByComponent'
+import stompReducer from "./module/StompReducer";
 
 
 // 액션 타입
@@ -14,7 +15,7 @@ export const RESTART_SAGA = 'RESTART_SAGA';
 
 // 액션 생성자 (t)
 export const restartSaga = () => ({
-    type: RESTART_SAGA,
+  type: RESTART_SAGA,
 });
 
 // 루트 사가 생성
@@ -24,35 +25,29 @@ function* rootSaga() {
 }
 
 //여려 reducer를 묶는용 (dispatch함수 X)
-const rootReducer = combineReducers({
-    stomp: StompReducer,
-    emailValidation: emailValidationReducer,
-    navigateInfo: NavigateReducer
-});
+const rootReducer = combineReducers({stomp: StompReducer, emailValidation: emailValidationReducer, navigateInfo:NavigateReducer});
 
 
 // 사가 미들웨어 생성
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });
 
 //Client 실행 시 자동으로 바로 시작
-export const sagaTask = sagaMiddleware.run(rootSaga);
+export const sagaTask =sagaMiddleware.run(rootSaga);
 
-export function sagaMutation(login: boolean) {
-    if (!login) return;
+export function sagaRefresh(){
+  //stomp연결해제
+  store.dispatch(updateStompState({isConnect:false}))
 
-    if (!sagaTask.isRunning()) {
-        sagaMiddleware.run(rootSaga)
-    } else {
-        sagaTask.cancel();
-        sagaMiddleware.run(rootSaga)
-    }
-    console.log("Saga재시작")
-
+  setTimeout(()=>{
+    localStorage.removeItem('userId')
+    sagaTask.cancel()
+    sagaTask;//취소 후 재연결
+  },50)
 }
 
 export default store;
