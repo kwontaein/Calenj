@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {ThemaColor3} from "./FormStyle";
 
 
 interface CheckbeforSender{
@@ -13,12 +14,13 @@ export const ScrollMaxHeight=450;
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
-    max-height: ${ScrollMinHeight}px; /* 스크롤 가능한 div의 최대 높이 설정 */
-    min-height: ${ScrollMaxHeight}px;
+    max-width: 98%;
+    max-height: 87vh; /* 스크롤 가능한 div의 최대 높이 설정 */
     min-width: ${ScrollMinWidth}px;
-    max-width: 100%;
+    min-height: 87vh;
     padding-left: 5px;
 `;
+
 
 /** 메시지 관련 styled */
 export const MessageBoxContainer = styled.div<CheckbeforSender>`
@@ -98,39 +100,19 @@ export const MessageContainer2 = styled.div`
 `
 
 
-export const SEND_INPUT = styled.input`
-    background-color: #393E46;
+export const MessageSend_Input = styled.input`
+    background-color: ${ThemaColor3};
     color: #EEEEEE;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid #797979;
-    width: 90%;
+    width: 100%;
     height: 30px;
-    margin: 0 5px 0 5px;
-`
-export const IMG_SIZE = styled.img`
-
-    width: 32px;
-    height: 32px;
-    filter: invert(87%) sepia(53%) saturate(635%) hue-rotate(320deg) brightness(101%) contrast(101%);
+    margin: 10px 5px 0 5px;
 `
 
 
-export const SEND_BUTTON = styled.button`
-    background-color: #222831;
-    color: #EEEEEE;
-    border-radius: 5px;
-    border: 0;
-    width: 34px;
-    height: 34px;
-    display: inline-block;
-    padding: 1px;
 
-    &:hover {
-        background-color: #393E46;
-    }
-`
-
-export const FORM_SENDMSG = styled.form`
+export const MessageSend_Cotainer = styled.form`
     height: 34px;
     display: flex;
 `

@@ -5,8 +5,9 @@ import createSagaMiddleware from 'redux-saga';
 import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
-import StompReducer from './module/StompReducer';
+import StompReducer, {updateStompState} from './module/StompReducer';
 import NavigateReducer from './slice/NavigateByComponent'
+import stompReducer from "./module/StompReducer";
 
 
 // 액션 타입
@@ -38,17 +39,15 @@ const store = configureStore({
 //Client 실행 시 자동으로 바로 시작
 export const sagaTask =sagaMiddleware.run(rootSaga);
 
-export function sagaMutation(login:boolean){
-  if(!login) return;
+export function sagaRefresh(){
+  //stomp연결해제
+  store.dispatch(updateStompState({isConnect:false}))
 
-  if(!sagaTask.isRunning()){
-    sagaMiddleware.run(rootSaga)
-  }else{
-    sagaTask.cancel();
-    sagaMiddleware.run(rootSaga)
-  }
-  console.log("Saga재시작")
-
+  setTimeout(()=>{
+    localStorage.removeItem('userId')
+    sagaTask.cancel()
+    sagaTask;//취소 후 재연결
+  },50)
 }
 
 export default store;

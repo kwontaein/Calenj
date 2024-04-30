@@ -14,12 +14,13 @@ const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+            <SignState/>
             {stomp.isOnline ==="ONLINE"?
                 <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
                     <DefaultNavigation/>
                     <NavigationComposition/>
                 </FullScreen_div> :
-                <SignState/>}
+                <></>}
 
 
         </FullScreen_div>

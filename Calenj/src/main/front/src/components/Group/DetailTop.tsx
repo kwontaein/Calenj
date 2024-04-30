@@ -1,6 +1,4 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import axios ,{AxiosError}from 'axios';
-import {useLocation} from 'react-router-dom';
 import {stateFilter,createTimePassed} from '../../stateFunc/actionFun'
 import {RowFlexBox, MiniText } from '../../style/FormStyle'
 import '../../style/Detail.scss'

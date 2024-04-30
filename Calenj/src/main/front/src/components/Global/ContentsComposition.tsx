@@ -6,7 +6,7 @@ import {
     mapStateToNavigationProps,
 } from '../../store/slice/NavigateByComponent'
 import MessageContainer from "../MessageBox/MessageContainer";
-import {ContentsByEventTopBar, ContentsScreen_div} from "../../style/Navigation/ContentComposition";
+import {ContentsByEventTopBar, ContentsScreen_div} from "../../style/Navigation/ContentCompositionStyle";
 import GroupUserList from "../Group/GroupUserList"
 
 
@@ -22,7 +22,9 @@ const ContentsComposition :React.FC<NavigateState&qeuryProps>=({navigateInfo, is
     return(
 
         <FullScreen_div>
-            <ContentsByEventTopBar/>
+            <ContentsByEventTopBar>
+
+            </ContentsByEventTopBar>
             {navigateInfo.navigate ==="group"&&
                 <ContentsScreen_div>
                     <MessageContainer target={navigateInfo.navigate} param ={navigateInfo.navigateParam}/>

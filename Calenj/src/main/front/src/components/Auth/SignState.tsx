@@ -5,33 +5,27 @@ import {useQuery, useMutation, useQueryClient, UseQueryResult} from '@tanstack/r
 import {connect} from "react-redux";
 
 export const QUERY_COOKIE_KEY: string = 'cookie';
-import {StompData, mapStateToStompProps} from '../../store/module/StompReducer';
+import {
+    StompData,
+    mapStateToStompProps,
+    DispatchStompProps,
+    mapDispatchToStompProps
+} from '../../store/module/StompReducer';
 import { SIGN_STATE_BUTTON, SIGN_STATE_FORM, SIGN_STATE_TEXT} from "../../style/FormStyle";
+import {useFetchCookie, useMutationCookie} from "../../store/ReactQuery/queryManagement";
 
 
-const SignState: React.FC<StompData> = ({stomp}) => {
 
-    const queryClient = useQueryClient();
+const SignState: React.FC<StompData> = ({stomp,}) => {
 
-    const logout = async (): Promise<boolean> => {
-        try {
-            const response = await axios.post('/api/logout');
-            console.log(response.data);
-            document.location.replace('/')
-            queryClient.clear();
-            return response.data;
-        } catch (error) {
-            document.location.replace('/')
-            return false;
-        }
-    };
-
+    const queryClient = useQueryClient()
+    const logout = useMutationCookie(queryClient)
 
     return (
         <SIGN_STATE_FORM>
             <SIGN_STATE_TEXT>{localStorage.getItem(`userId`)}</SIGN_STATE_TEXT>
             {stomp.isOnline==="ONLINE" ?
-                <SIGN_STATE_BUTTON onClick={() => logout()}>로그아웃</SIGN_STATE_BUTTON>
+                <SIGN_STATE_BUTTON onClick={() => logout.mutate()}>로그아웃</SIGN_STATE_BUTTON>
                 : <div>
                     <Link to="/sign" style={{textDecoration: "none"}}>
                         <SIGN_STATE_BUTTON>로그인</SIGN_STATE_BUTTON>

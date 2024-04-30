@@ -7,7 +7,7 @@ import Vote from "./Vote/Vote";
 import Invite from "./Invite/Invite"
 import {stateFilter} from '../../stateFunc/actionFun';
 import GroupMsgBox from '../MessageBox/MessageContainer';
-import { QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/QueryKey";
+import { QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import group from "./index";
 import iterateFieldsByAction from "react-hook-form/dist/logic/iterateFieldsByAction";
 
