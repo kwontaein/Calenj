@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import {SubNavigateTopBar_hegiht, SubNavigateTopBar_padding} from "./SubNavigationStyle";
+import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "./SubNavigationStyle";
 import {ThemaColor2} from "../FormStyle";
 
 export const ContentsByEventTopBar = styled.div`
     width:auto;
     height: ${SubNavigateTopBar_hegiht}px;
-    padding: ${SubNavigateTopBar_padding}px;
+    padding: ${SubNavigate_padding}px;
     background-color : ${ThemaColor2};
     border-bottom: 1.2px #222831 solid;
     display: flex;

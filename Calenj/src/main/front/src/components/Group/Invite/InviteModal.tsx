@@ -1,11 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import axios from 'axios';
-import {ListView} from '../../../style/FormStyle'
-import {Stomp, IMessage, CompatClient} from '@stomp/stompjs';
-import {RootState} from '../../../store/store'
-import {connect} from "react-redux";
-
-// import{ DispatchProps,updateTopic,updateApp,sendStompMsg,receivedStompMsg,StompState,mapDispatchToProps}  from '../../../store/module/StompReducer';
+import {ListView, Modal_Background} from '../../../style/FormStyle'
+import {GroupInviteModal_Container} from "../../../style/Group/GroupInviteStyle";
+import {QueryClient, QueryState, useQueryClient, UseQueryResult} from "@tanstack/react-query";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../store/ReactQuery/queryManagement";
+import {GroupDetail} from "../../../store/ReactQuery/queryInterface";
 
 interface Friends {
     // 친구 아이디
@@ -21,10 +19,15 @@ interface ModalProps {
 }
 
 
-const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink}) => {
+const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink,groupId}) => {
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const modalBackground = useRef<HTMLDivElement>(null);
+    const [groupDetail,setGroupDetail] =useState<GroupDetail|undefined>()
+    const queryClient = useQueryClient();
 
+    useEffect(() => {
+           setGroupDetail(queryClient?.getQueryData([QUERY_GROUP_DETAIL_KEY,groupId]))
+    }, [groupId,inviteLink])
 
     useEffect(() => {
         // updateTopic({topicLogic:'',})
@@ -39,12 +42,13 @@ const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink}) => {
     return (
         <div>
 
-            <div ref={modalBackground} className={'modal_container'} onClick={e => {
+            <Modal_Background ref={modalBackground} onClick={e => {
                 if (e.target === modalBackground.current) {
                     onClose();
                 }
             }}>
-                <div className={'modalContent'}>
+                <GroupInviteModal_Container>
+                    <div>{groupDetail?.groupTitle} 그룹으로 초대하기</div>
                     <div className={'FriendList'}>
                         {friends && friends.length > 0 ?
                             <ul>
@@ -67,8 +71,8 @@ const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink}) => {
                         <button>복사하기</button>
                     </div>}
                     <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>
-                </div>
-            </div>
+                </GroupInviteModal_Container>
+            </Modal_Background>
 
         </div>
     )

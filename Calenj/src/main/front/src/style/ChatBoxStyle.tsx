@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {ThemaColor3} from "./FormStyle";
+import {TextColor, ThemaColor3} from "./FormStyle";
 
 
 interface CheckbeforSender{
@@ -102,7 +102,7 @@ export const MessageContainer2 = styled.div`
 
 export const MessageSend_Input = styled.input`
     background-color: ${ThemaColor3};
-    color: #EEEEEE;
+    color: ${TextColor};
     border-radius: 4px;
     border: 1px solid #797979;
     width: 100%;
