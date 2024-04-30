@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import {ThemaColor3} from "../FormStyle";
+import {TextColor, ThemaColor3} from "../FormStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
 interface receivedMsg {
@@ -67,7 +67,7 @@ export const GroupList_HR = styled.hr`
 
 export const NavigateState = styled.div<navigatePram>`
  
- background-color : ${props=> props.$isClick ?`#EEEEEE`: "transParent"};
+ background-color : ${props=> props.$isClick ? TextColor: "transParent"};
  width:5px;
  height: 5px;
  border-radius: 50px;

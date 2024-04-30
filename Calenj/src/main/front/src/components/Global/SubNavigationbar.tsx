@@ -5,6 +5,10 @@ import {
     SubNavigateTopBar_leftContent,
     SubNavigateTopBar_EventSelecter_Container,
     SubNavigateTopBar_rightContent_item,
+    SubNavigateContents_Container,
+    SubNavigateItem_Icon,
+    SubNavigateItem_Content,
+    SubNavigateItem_Container, Hr_SubNavigation,
 } from '../../style/Navigation/SubNavigationStyle'
 import {connect} from 'react-redux'
 import {
@@ -13,6 +17,7 @@ import {
 } from '../../store/slice/NavigateByComponent'
 import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
+import GrouypByNavigationSelectBox from "../Group/GroupByNavigationSelectBox";
 
 interface qeuryProps {
     isLoading :boolean
@@ -65,10 +70,38 @@ const SubNavigationbar:React.FC<NavigateState & qeuryProps> =({navigateInfo,isLo
                                onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
                             </i>
                     }
+                    {showEventSelecter &&<GrouypByNavigationSelectBox/>}
                 </SubNavigateTopBar_EventSelecter_Container>
             </SubNavigateTopBar>
             }
 
+            <SubNavigateContents_Container>
+                <SubNavigateItem_Container>
+                    <SubNavigateItem_Icon>
+                        <i className="fi fi-ss-calendar" style={{marginTop:'4px'}}></i>
+                    </SubNavigateItem_Icon>
+                    <SubNavigateItem_Content>
+                        그룹일정
+                    </SubNavigateItem_Content>
+                </SubNavigateItem_Container>
+                <Hr_SubNavigation/>
+                <SubNavigateItem_Container>
+                    <SubNavigateItem_Icon>
+                        <i className="fi fi-ss-megaphone" style={{marginTop:'4px'}}></i>
+                    </SubNavigateItem_Icon>
+                    <SubNavigateItem_Content>
+                        공지
+                    </SubNavigateItem_Content>
+                </SubNavigateItem_Container>
+                <SubNavigateItem_Container>
+                    <SubNavigateItem_Icon>
+                        <i className="fi fi-ss-vote-yea" style={{marginTop:'4px'}}></i>
+                    </SubNavigateItem_Icon>
+                    <SubNavigateItem_Content>
+                        투표
+                    </SubNavigateItem_Content>
+                </SubNavigateItem_Container>
+            </SubNavigateContents_Container>
 
         </SubNavigation_Container>
     )
