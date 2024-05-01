@@ -10,20 +10,21 @@ import {
     mapStateToStompProps
 } from './store/module/StompReducer';
 import SignState from "./components/Auth/SignState";
-const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
+
+const Home: React.FC<StompData & DispatchStompProps> = ({stomp}) => {
 
     return (
-        <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
-            <SignState/>
-            {stomp.isOnline ==="ONLINE"?
-                <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+        <FullScreen_div style={{display: "flex", flexDirection: "row"}}>
+
+            {stomp.isOnline === "ONLINE" ?
+                <FullScreen_div style={{display: "flex", flexDirection: "row"}}>
                     <DefaultNavigation/>
                     <NavigationComposition/>
                 </FullScreen_div> :
-                <></>}
+                <SignState/>}
 
 
         </FullScreen_div>
     )
 }
-export default connect(mapStateToStompProps,mapDispatchToStompProps) (Home)
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(Home)

@@ -30,7 +30,9 @@ public class ChatMessageResponse {
         ALARM("내 알림반환"),//PUBLISH
         READ("파일읽기"),//방 들어가면 읽기
         SEND("메시지 전송"),//메세지 전송
-        ENDPOINT("엔드포인트 찍기");//방 나갈때
+        RELOAD("추가적인 파일 내용 로드"),
+        ENDPOINT("엔드포인트 찍기"),//방 나갈때
+        ONLINE("온라인 유저 목록 반환");//방 나갈때
 
         private final String role;
 

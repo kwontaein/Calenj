@@ -1,3 +1,4 @@
+/*
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
@@ -73,4 +74,4 @@ const MyRequest: React.FC = () => {
         </div>
     )
 }
-export default MyRequest;
+export default MyRequest;*/

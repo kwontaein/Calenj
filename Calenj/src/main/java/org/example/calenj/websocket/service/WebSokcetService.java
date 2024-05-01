@@ -7,6 +7,7 @@ import org.example.calenj.user.repository.UserRepository;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpSubscription;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,6 @@ public class WebSokcetService {
     private final GlobalService globalService;
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
-
 
     public String returnNickname(Authentication authentication) {
         UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
@@ -199,56 +199,55 @@ public class WebSokcetService {
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
-        response.setOnlineUserList(getUsers(response.getParam()));
-        
-        //알림 갯수 반환
-        if (message.getState() == ChatMessageRequest.fileType.ALARM) {
+        //response.setOnlineUserList(getAllUsers(authentication));
+        response.setOnlineUserList(getUsers(message.getParam()));
+        sendSwitch(message, response, target);
 
-            try {
+    }
 
-                // 파일로부터 채팅 내용을 읽어와서 보내기
+    public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
+        switch (message.getState()) {
+            case ALARM: {
                 int setPoint = countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
-
-            } catch (Throwable e) {
-
-                // 에러가 발생할 경우.
-                e.printStackTrace();
-
             }
-            // State가 1이라면 일반 메시지
-        } else if (message.getState() == ChatMessageRequest.fileType.READ) {
-
-            List<String> file = readGroupChattingFile(message);
-            response.setMessage(file);
-            template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
-
-        } else if (message.getState() == ChatMessageRequest.fileType.RELOAD) {
-
-            List<String> file = readGroupChattingFileSlide(message);
-            response.setMessage(file);
-            template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
-
-        } else if (message.getState() == ChatMessageRequest.fileType.SEND) {
-
-            saveChattingToFile(message);
-            response.setMessage(Collections.singletonList(message.getMessage()));
-            response.setChatUUID(message.getChatUUID());
-            System.out.println(response);
-            template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
-
-            //2라면 나갈 때 엔드포인트 설정
-        } else if (message.getState() == ChatMessageRequest.fileType.ENDPOINT) {
-
-            //파일에 엔드포인트 저장
-            saveChattingToFile(message);
+            case READ: {
+                List<String> file = readGroupChattingFile(message);
+                response.setMessage(file);
+                template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+            }
+            case RELOAD: {
+                List<String> file = readGroupChattingFileSlide(message);
+                response.setMessage(file);
+                template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+            }
+            case SEND: {
+                saveChattingToFile(message);
+                response.setMessage(Collections.singletonList(message.getMessage()));
+                response.setChatUUID(message.getChatUUID());
+                template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
+            }
+            case ENDPOINT: {
+                saveChattingToFile(message);
+            }
         }
     }
 
     public void personalEvent(Authentication authentication, ChatMessageRequest request) {
         String username = returnNickname(authentication);
         String userEmail = returnEmail(username);
+
+        ChatMessageResponse response = filterNullFields(request);
+//        response.setOnlineUserList(getAllUsers(authentication));
+        response.setOnlineUserList(getUsers(request.getParam()));
+
+        if (request.getParam() == userEmail && request.getMessage() == "OFFLINE") {
+            Set<String> destinations = getDestination(userEmail);
+            for (String destination : destinations) {
+                template.convertAndSend(destination, response);
+            }
+        }
     }
 
     // null이 아닌 필드만 포함시키는 메소드
@@ -276,29 +275,44 @@ public class WebSokcetService {
         return filteredResponse;
     }
 
-    /* public void getUsers(Authentication authentication) {
-         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
-         SimpUser simpUserOnly = simpUserRegistry.getUser(authentication.getName());
+    public Set<String> getAllUsers(Authentication authentication) {
+        Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
+        SimpUser simpUserOnly = simpUserRegistry.getUser(authentication.getName());
 
-         Set<String> myDestination = simpUserOnly.getSessions().stream()
-                 .filter(simpSession -> !simpSession.getSubscriptions().isEmpty()) // 구독이 비어있지 않은 경우만 선택
-                 .flatMap(simpSession -> simpSession.getSubscriptions().stream()) // 각 세션의 구독을 하나의 스트림으로 평면화
-                 .map(SimpSubscription::getDestination) // 각 구독의 목적지를 선택하여 매핑
-                 .collect(Collectors.toSet()); // Set으로 수집
+        Set<String> myDestination = simpUserOnly.getSessions().stream()
+                .filter(simpSession -> !simpSession.getSubscriptions().isEmpty()) // 구독이 비어있지 않은 경우만 선택
+                .flatMap(simpSession -> simpSession.getSubscriptions().stream()) // 각 세션의 구독을 하나의 스트림으로 평면화
+                .map(SimpSubscription::getDestination) // 각 구독의 목적지를 선택하여 매핑
+                .collect(Collectors.toSet()); // Set으로 수집
 
-         Set<String> filteredUserNames = simpUsers.stream()
-                 .filter(simpUser -> simpUser.getSessions().stream()
-                         .anyMatch(session -> session.getSubscriptions().stream()
-                                 .anyMatch(subscription -> {
-                                     String destination = subscription.getDestination();
-                                     return myDestination.contains(destination);
-                                 })))
-                 .map(SimpUser::getName)
-                 .collect(Collectors.toSet());
+        Set<String> filteredUserNames = simpUsers.stream()
+                .filter(simpUser -> simpUser.getSessions().stream()
+                        .anyMatch(session -> session.getSubscriptions().stream()
+                                .anyMatch(subscription -> {
+                                    String destination = subscription.getDestination();
+                                    return myDestination.contains(destination);
+                                })))
+                .map(SimpUser::getName)
+                .collect(Collectors.toSet());
 
-         System.out.println(filteredUserNames);
+        System.out.println(filteredUserNames);
+        return filteredUserNames;
+    }
 
-     }*/
+
+    public Set<String> getDestination(String userEmail) {
+        SimpUser simpUser = simpUserRegistry.getUser(userEmail);
+        Set<String> destinations = simpUser.getSessions().stream()
+                .flatMap(simpSession ->
+                        simpSession.getSubscriptions().stream()
+                                .map(simpSubscription -> simpSubscription.getDestination())
+                )
+                .collect(Collectors.toSet());
+        System.out.println("destinations : \n" + destinations);
+        return destinations;
+    }
+
+    //해당 param 구독자들 (온라인 여부)
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
 
@@ -313,6 +327,7 @@ public class WebSokcetService {
         System.out.println("filteredUserNames : " + filteredUserNames);
         return filteredUserNames;
     }
+
 }
 
 

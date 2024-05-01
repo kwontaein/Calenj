@@ -20,7 +20,4 @@ public interface InviteCodeRepository extends JpaRepository<InviteCodeEntity, St
     @Query("SELECT COUNT(m) FROM InviteCode ic JOIN ic.group.members m WHERE ic.inviteCode = :inviteCode")
     Optional<Integer> memberCount(@Param("inviteCode") String inviteCode);
 
-    //현재 온라인인 유저 정보
-    @Query("SELECT count(ic.user.isOnline) from InviteCode ic where ic.inviteCode =:inviteCode AND ic.user.isOnline = 'ONLINE'")
-    Optional<Integer> onlineUserCount(@Param("inviteCode") String inviteCode);
 }

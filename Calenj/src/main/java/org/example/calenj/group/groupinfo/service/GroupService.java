@@ -1,6 +1,10 @@
 package org.example.calenj.group.groupinfo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupinfo.domain.GroupEntity;
+import org.example.calenj.group.groupinfo.domain.GroupUserEntity;
+import org.example.calenj.group.groupinfo.domain.InviteCodeEntity;
 import org.example.calenj.group.groupinfo.dto.request.InviteCodeRequest;
 import org.example.calenj.group.groupinfo.dto.response.GroupDetailResponse;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
@@ -9,12 +13,11 @@ import org.example.calenj.group.groupinfo.dto.response.InviteCodeResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.group.groupinfo.repository.InviteCodeRepository;
-import org.example.calenj.user.repository.UserRepository;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.group.groupinfo.domain.GroupEntity;
-import org.example.calenj.group.groupinfo.domain.GroupUserEntity;
-import org.example.calenj.group.groupinfo.domain.InviteCodeEntity;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.repository.UserRepository;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,10 +26,8 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final InviteCodeRepository inviteCodeRepository;
+    private final SimpUserRegistry simpUserRegistry;
 
     //그룹 만들기
     public void makeGroup(String groupTitle) {
@@ -157,8 +159,7 @@ public class GroupService {
 
         InviteCodeResponse inviteCodeResponse = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
 
-        inviteCodeResponse.setOnlineCount(inviteCodeRepository.onlineUserCount(inviteCode).orElse(0));
-        inviteCodeResponse.setOnlineCount(inviteCodeRepository.memberCount(inviteCode).orElse(0));
+        inviteCodeResponse.setOnlineCount(getUsers(inviteCodeResponse.getGroupId().toString()));
 
         String enableUse = globalService.compareDate(inviteCodeResponse.getEndDateTime());
 
@@ -172,4 +173,24 @@ public class GroupService {
         return inviteCodeResponse;
     }
 
+    //해당 param 구독자들 (온라인 여부)
+    public int getUsers(String param) {
+        Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
+
+        Set<String> filteredUserNames = simpUsers.stream()
+                .filter(simpUser -> simpUser.getSessions().stream()
+                        .anyMatch(session -> session.getSubscriptions().stream()
+                                .anyMatch(subscription -> subscription.getDestination().contains(param)
+                                )))
+                .map(SimpUser::getName)
+                .collect(Collectors.toSet());
+
+        System.out.println("filteredUserNames : " + filteredUserNames);
+        return filteredUserNames.size();
+    }
+
+    @Scheduled(fixedDelay = 1000 * 60 * 30) // 30분마다 실행
+    private void scheduledInviteCode() {
+        // inviteCodeRepository.delete();
+    }
 }
