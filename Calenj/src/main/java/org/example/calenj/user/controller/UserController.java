@@ -4,19 +4,22 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.user.dto.request.UserRequest;
-import org.example.calenj.user.dto.response.UserSubscribeResponse;
-import org.example.calenj.global.auth.dto.ValidateDTO;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.user.service.UserService;
 import org.example.calenj.global.auth.EmailVerificationService;
 import org.example.calenj.global.auth.PhoneVerificationService;
+import org.example.calenj.global.auth.dto.ValidateDTO;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -69,6 +72,7 @@ public class UserController {
         userService.selectUserInfo();
         return "";
     }
+
 
     //메일 인증 부분------------------------------------------------------------------------------
 

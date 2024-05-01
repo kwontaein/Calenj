@@ -4,17 +4,17 @@ package org.example.calenj.user.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.user.dto.request.UserRequest;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.friend.dto.response.FriendResponse;
-import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
-import org.example.calenj.friend.repository.FriendRepository;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
-import org.example.calenj.user.repository.UserRepository;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,6 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -160,5 +164,6 @@ public class UserService {
         cookie.setPath("/");
         response.addCookie(cookie);
     }
+
 
 }
