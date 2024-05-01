@@ -19,7 +19,9 @@ interface UnfocusBackgroundProps {
  */
 
 export const ThemaColor3 = "#31363F";
-export const ThemaColor2 ="#393E46"
+export const ThemaColor2 ="#393E46";
+export const BackGroundColor = "#222831";
+export const TextColor = "#EEEEEE"
 export const GlobalStyle = createGlobalStyle`
     body {
         background-color: #222831; /* 전체 페이지 배경색 */
@@ -58,11 +60,11 @@ export const GlobalStyle = createGlobalStyle`
         border: 0;
         background-color: ${ThemaColor3};
         cursor: pointer;
-        color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+        color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     }
 
     div {
-        color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+        color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
         font-size: 15px;
     }
 `;
@@ -198,60 +200,18 @@ export const ListView = styled.li`
     }
 `
 
-
-/** 메시지 관련 styled */
-export const MessageBoxContainer = styled.div`
-    padding: 10px;
-`
-export const ProfileContainer = styled.div`
-    width: 35px;
-    height: 35px;
-    padding: 5px;
-    border-radius: 50px;
-    background-color: #007bff;
-    overflow: hidden;
-    text-overflow: ellipsis;
+export const Modal_Background =styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
     display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    font-size: 20px;
-    color: white;
-    font-weight: 550;
-`
-export const MessageContainer = styled.div`
-    margin-left: 10px;
-`
-export const NickNameContainer = styled.div`
-    font-weight: 550;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3)
 `
 
-export const DateContainer = styled.div`
-    margin-left: 10px;
-    color: #FFD369;
-    margin-top: 5px;
-    font-size: 12px;
-    margin-top: 2px;
-`
-export const DateContainer2 = styled.div`
-    color: transparent;
-    margin-top: 5px;
-    font-size: 12px;
-    margin-top: 2px;
-    letter-spacing: -1px;
-    width: 55px;
-`
-
-export const MessageContainer2 = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin-top: -18px;
-
-    &:hover {
-        ${DateContainer2} {
-            color: gray;
-        }
-    }
-`
 
 
 export const DEFAULT_HR = styled.hr`
@@ -265,7 +225,7 @@ export const DEFAULT_HR = styled.hr`
 
 export const SIGN_STATE_FORM = styled.div`
     background-color: ${ThemaColor3};
-    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 50px;
     display: flex;
     align-items: center;
@@ -274,13 +234,13 @@ export const SIGN_STATE_FORM = styled.div`
 `;
 export const SIGN_STATE_BUTTON = styled.button`
     background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
-    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;
     border: 0;
 `;
 export const SIGN_STATE_TEXT = styled.span`
-    color: #EEEEEE; /* 전체 페이지 텍스트 색상 */
+    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;
     border: 0;

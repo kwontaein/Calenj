@@ -4,7 +4,7 @@ import axios, {AxiosResponse, AxiosError} from 'axios';
 import Notice from './Notice/Notice'
 import {DEFAULT_HR, GROUP_USER_LIST, ListView, RowFlexBox} from '../../style/FormStyle'
 import Vote from "./Vote/Vote";
-import Invite from "./Invite/Invite"
+import RequestInviteGroup from "./Invite/RequestInviteGroup"
 import {stateFilter} from '../../stateFunc/actionFun';
 import GroupMsgBox from '../MessageBox/MessageContainer';
 import { QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
@@ -55,7 +55,7 @@ const GroupDetail: React.FC<NavigationProps> = ({groupId}) => {
                         <div>방아이디: {groupDetail.groupId.toString().slice(0, 9).padEnd(20, '*')}</div>
                         <RowFlexBox style={{justifyContent: 'space-between'}}>
                             <div>방이름: {groupDetail.groupTitle}</div>
-                            <div><Invite groupId={groupId}/></div>
+                            <div><RequestInviteGroup groupId={groupId}/></div>
                         </RowFlexBox>
                     </div>
                     <DEFAULT_HR/>
