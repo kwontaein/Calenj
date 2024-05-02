@@ -13,7 +13,8 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping("/api/imageUpload")
-    public void profileUpdate(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
+    public void profileUpdate(@RequestParam("file") MultipartFile file, @RequestParam("Id") String id) {
+        System.out.println(file.getName());
         imageService.fileValid(id, file);
     }
 
@@ -24,5 +25,4 @@ public class ImageController {
             imageService.fileValid(id, file);
         }
     }
-
 }

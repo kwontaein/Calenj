@@ -59,6 +59,7 @@ public class WebSokcetService {
     }
 
     public void saveChattingToFile(ChatMessageRequest message) {
+        System.out.println("실행??" + message.getMessage());
         // 파일을 저장한다.
         // 메시지 내용
         List<String> lines = getFile(message);
@@ -69,13 +70,12 @@ public class WebSokcetService {
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
-                        message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
+                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-//        message.setMessage(messageContent);
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
-                String Title = "캘린룸의 시작 지점이에요! $어서오세요! \n";
+                String Title = "시작라인 $어서오세요! \n";
                 stream.write(Title.getBytes(StandardCharsets.UTF_8));
             }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
@@ -223,14 +223,14 @@ public class WebSokcetService {
                 response.setMessage(file);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
             }
+            case ENDPOINT: {
+                saveChattingToFile(message);
+            }
             case SEND: {
                 saveChattingToFile(message);
                 response.setMessage(Collections.singletonList(message.getMessage()));
                 response.setChatUUID(message.getChatUUID());
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
-            }
-            case ENDPOINT: {
-                saveChattingToFile(message);
             }
         }
     }

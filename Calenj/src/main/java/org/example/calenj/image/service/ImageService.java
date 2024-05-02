@@ -41,8 +41,7 @@ public class ImageService {
     /**
      * 업로드된 이미지를 서버에 저장합니다.
      *
-     * @param imageRequest 전달된 DTO
-     * @param file         파일
+     * @param file 파일
      */
     public void fileValid(String id, MultipartFile file) {
         try {
@@ -61,8 +60,6 @@ public class ImageService {
 
     /**
      * 업로드된 이미지를 서버에 저장합니다.
-     *
-     * @param imageRequest 업로드될 이미지 파일 DTO
      */
     public void uploadImage(String id, MultipartFile file) {
         // 이미지 파일의 확장자 추출
@@ -75,15 +72,20 @@ public class ImageService {
             final File newfile = new File(imageDir + imageName);
 
             // 이미 파일이 존재하는 경우 해당 파일을 삭제합니다.
+
             if (newfile.exists()) {
                 Files.delete(newfile.toPath());
+            }
+
+            if (!newfile.exists()) {
+                newfile.mkdirs();
             }
 
             // 업로드된 이미지 파일을 생성한 파일 객체로 복사
             file.transferTo(newfile);
         } catch (Exception e) {
             // 이미지 저장 실패 시 예외 처리
-            System.out.println("실패");
+            e.printStackTrace();
         }
     }
 

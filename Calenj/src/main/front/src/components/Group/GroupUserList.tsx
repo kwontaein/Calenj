@@ -11,6 +11,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupUserList_Container} from "../../style/Group/GroupUserListStyle";
 
+
 interface qeuryProps {
     isLoading: boolean
 }
@@ -36,6 +37,7 @@ const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({s
     const [groupDetail, setGroupDetail] = useState<groupDetails>();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const queryClient = useQueryClient();
+    const calenj_logo = '/image/Logo.png';
 
     useEffect(() => {
         if (stomp.receiveMessage.state == "ONLINE") {
@@ -49,21 +51,37 @@ const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({s
     }, [isLoading, stomp.param]);
 
 
-    const handleChange = (date: Date) => {
-        setSelectedDate(date);
-    };
+    const onErrorImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.src = calenj_logo
+    }
+
     return (
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
                     <UserListView key={member.userEmail}>
+                        <img src={`/image/savedImage/${member.userEmail}.jpeg`}
+                             onError={onErrorImg}
+                             style={{
+                                 //border: "white 2px solid",
+                                 borderRadius: "50%",
+                                 width: "25px",
+                                 height: "25px",
+                                 marginRight: "10px",
+                             }}/>
+                        <span style={{
+                            color: stomp.receiveMessage.onlineUserList.includes(member.userEmail) ?
+                                "green" : "red",
+                            position: "absolute",
+                            margin: "15px 0 0 15px"
+                        }}> ● </span>
                         {localStorage.getItem(`userId`) === member.userEmail ?
-                            <span>(나) {member.nickName} </span> :
-                            <span>{member.nickName} </span>}
-                        {stomp.receiveMessage.onlineUserList.includes(member.userEmail) ?
-                            <span style={{color: "green"}}> ● </span> :
-                            <span style={{color: "red"}}> ● </span>
-                        }
+                            <span>
+                               {member.nickName} (나)
+                            </span> :
+                            <span>
+                                {member.nickName}
+                            </span>}
                     </UserListView>)))
             }
         </GroupUserList_Container>

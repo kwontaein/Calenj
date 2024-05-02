@@ -19,14 +19,13 @@ const ImageUploadComponent: React.FC = () => {
 
     const handleUpload = async () => {
         if (selectedFile) {
-            const imageRequest: ImageRequest = {
-                userId: localStorage.getItem('userId') || '',
-                multipartFile: selectedFile,
-            };
-
-            console.log(imageRequest)
+            const data = new FormData();
+            const userId: string | null = localStorage.getItem('userId');
+            userId ? data.append('Id', userId) : data.append('Id', "userId");
+            data.append('file', selectedFile);
+            console.log(data)
             try {
-                const response = await axios.post('/api/imageUpload', imageRequest);
+                const response = await axios.post('/api/imageUpload', data);
                 if (response.status === 200) {
                     console.log('Image uploaded successfully!');
                     // Handle success
