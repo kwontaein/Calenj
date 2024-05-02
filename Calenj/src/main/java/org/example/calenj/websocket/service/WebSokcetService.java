@@ -206,6 +206,7 @@ public class WebSokcetService {
     }
 
     public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
+
         switch (message.getState()) {
             case ALARM: {
                 int setPoint = countLinesUntilEndPoint(message);
@@ -299,7 +300,9 @@ public class WebSokcetService {
         return filteredUserNames;
     }
 
-
+    /**
+     * 내가 구독한 토픽
+     **/
     public Set<String> getDestination(String userEmail) {
         SimpUser simpUser = simpUserRegistry.getUser(userEmail);
         Set<String> destinations = simpUser.getSessions().stream()
@@ -312,7 +315,9 @@ public class WebSokcetService {
         return destinations;
     }
 
-    //해당 param 구독자들 (온라인 여부)
+    /**
+     * 해당 param 구독자들 (온라인 여부)
+     **/
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
 

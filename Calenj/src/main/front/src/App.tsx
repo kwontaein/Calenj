@@ -21,6 +21,7 @@ import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
 import {useFetchCookie} from "./store/ReactQuery/queryManagement";
 import CalendarComponent from "./components/Global/Calendar";
+import ImageUploadComponent from "./components/User/ImageUploadComponent";
 
 //대표 색 : #  007bff
 
@@ -110,6 +111,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                         <Route path={"/c"} element={<CalendarComponent/>}/>
                         <Route path={"/Map"} element={<NaverMap/>}/>
+                        <Route path={"/image"} element={<ImageUploadComponent/>}/>
                     </Routes>
                 </BrowserRouter>
             }
