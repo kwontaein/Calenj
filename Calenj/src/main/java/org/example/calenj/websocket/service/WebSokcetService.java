@@ -206,31 +206,35 @@ public class WebSokcetService {
     }
 
     public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
-
         switch (message.getState()) {
             case ALARM: {
                 int setPoint = countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case READ: {
                 List<String> file = readGroupChattingFile(message);
                 response.setMessage(file);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case RELOAD: {
                 List<String> file = readGroupChattingFileSlide(message);
                 response.setMessage(file);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
-            }
-            case ENDPOINT: {
-                saveChattingToFile(message);
+                return;
             }
             case SEND: {
                 saveChattingToFile(message);
                 response.setMessage(Collections.singletonList(message.getMessage()));
                 response.setChatUUID(message.getChatUUID());
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
+                return;
+            }
+            case ENDPOINT: {
+                saveChattingToFile(message);
+                return;
             }
         }
     }
