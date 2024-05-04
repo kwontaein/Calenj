@@ -38,32 +38,23 @@ public class FriendService {
     public String requestFriend(String friendUserId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
-
-        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         if (friendUserId.equals(userDetails.getUsername())) {
             System.out.println("나에게 친구 추가는 불가능합니다.");
             return "나에게 친구 추가는 불가능합니다.";
         }
 
-        //로그인된 유저 정보
         // 로그인된 유저 정보 조회
         Optional<UserEntity> ownUserOptional = userRepository.findByUserEmail(userDetails.getUsername());
-
-        // 친구 추가할 유저 정보 조회
-        Optional<UserEntity> friendUserOptional = userRepository.findByUserEmail(friendUserId);
-
-        // 로그인된 유저가 존재하지 않는 경우
         if (ownUserOptional.isEmpty()) {
             return "내 정보 인증에 문제가 생겼습니다.";
         }
-        // 친구 추가할 유저가 존재하지 않는 경우
+        UserEntity ownUser = ownUserOptional.get();
+
+        // 친구 추가할 유저 정보 조회
+        Optional<UserEntity> friendUserOptional = userRepository.findByUserEmail(friendUserId);
         if (friendUserOptional.isEmpty()) {
             return "존재하지 않는 유저입니다.";
         }
-
-        // 유저 정보 할당
-        UserEntity ownUser = ownUserOptional.get();
         UserEntity friendUser = friendUserOptional.get();
 
         //상대방 요청 정보가 있다면

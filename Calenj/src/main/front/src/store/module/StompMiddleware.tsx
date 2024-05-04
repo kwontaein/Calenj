@@ -1,6 +1,6 @@
-import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
+import {Client, CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {call, put, race, delay, take, fork,takeEvery} from 'redux-saga/effects';
+import {call, put, race, delay, take, fork, takeEvery} from 'redux-saga/effects';
 import {eventChannel, buffers} from 'redux-saga';
 import {
     receivedStompMsg,
@@ -23,11 +23,10 @@ interface StompData {
 }
 
 
-
-
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const subscribeDirection = ['personalTopic','groupMsg', 'friendMsg']
+export const toggleCurrentMap =new Map();
+export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
 
@@ -49,7 +48,6 @@ function* sendStomp(stompClient: CompatClient) {
 
 }
 
-
 //endPoint Update 를 위한 url 위치에 기반한 위치 업데이트
 function* requestChatFile(stompClient: CompatClient) {
     while (true) {
@@ -68,10 +66,8 @@ function* requestChatFile(stompClient: CompatClient) {
 
 
 function* sendPublish(destination: Destination, stompClient: CompatClient) {
-
     destination.map((sub: (string | number)[], index: number) => {
         sub.map((param: (string | number)) => {
-
             const data: StompData = {
                 param: `${param}`, //groupMsg,friendMsg
                 state: "ALARM", //0:endpoint 로드
@@ -88,10 +84,10 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
 
 }
 
-function* closeWebSocketSaga(channel:any) {
-    while(true){
+function* closeWebSocketSaga(channel: any) {
+    while (true) {
         const {payload} = yield take(UPDATE_STOMP_STATE)// 웹소켓 끊는 dispatch 발생 시 가져옴
-        if(!payload.isConnect){
+        if (!payload.isConnect) {
             channel.close();
         }
     }
@@ -115,7 +111,7 @@ function* startStomp(destination: Destination): any {
     yield fork(sendStomp, stompClient)
     yield fork(requestChatFile, stompClient)
     yield fork(sendPublish, destination, stompClient)
-    yield fork(closeWebSocketSaga,channel)
+    yield fork(closeWebSocketSaga, channel)
 
     let isRunning = true;
 
@@ -149,6 +145,11 @@ function createStompConnection() {
 
         const sock = new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
+        // const client = new Client();
+        // // client.webSocketFactory()
+        // client.webSocketFactory(()=>{
+        //     return new SockJs(stompUrl)
+        // })
 
         // WebSocket 에러 처리
         stompClient.onWebSocketError = (error: Error) => {
@@ -181,20 +182,22 @@ function createStompConnection() {
 
 //stomp 를 유동적으로 쓰기위한 함수, 이벤트 채널을 발생 =>saga
 function createEventChannel(stompClient: CompatClient, destination: Destination) {
+
     //외부 이벤트 소스(예: 웹 소켓)를 Redux Saga 의 이벤트를 발생시키는 채널로 변환
     return eventChannel(emit => {
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string)[], index: number) => {
-                if (index===0) localStorage.setItem('userId', sub[index])
+                if (index === 0) localStorage.setItem('userId', sub[index])
                 sub.map((param: (string)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg")
+                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg"){
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })
+                    }
                 })
             })
         };
@@ -203,15 +206,18 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         return function unsubscribe() {
             const userId = localStorage.getItem("userId");
             if (userId != null) {
-                const data = {
-                    userId: userId,
-                    onlineState: "OFFLINE", //0:endpoint 로드
+                const data: StompData = {
+                    param: `${userId}`, //groupMsg,friendMsg
+                    state: "SEND", //0:endpoint 로드
+                    message: "OFFLINE"
                 }
                 const url = `/app/personalTopic`
                 stompClient.publish({
                     destination: `${url}`,
                     body: JSON.stringify(data),
                 })
+                //서버의 웹소켓 끊기
+                stompClient.send("/app/closeConnection")
             }
             //stompClient.disconnect();//연결 끊기(완전히
             stompClient.deactivate().then(r => console.log("임시 비활성화")); //연결 끊기(임시 비활성화

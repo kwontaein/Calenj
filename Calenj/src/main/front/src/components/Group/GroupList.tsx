@@ -1,6 +1,6 @@
 import MakeGroup from './MakeGroup';
 import {useEffect, useState, useMemo} from 'react';
-import {NavigationProps} from '../../store/slice/NavigateByComponent'
+import {NavigationProps} from '../../store/slice/NavigatgionSlice'
 import {
     GroupList_Container,
     GroupListSub_Container,
@@ -16,6 +16,7 @@ import {connect} from 'react-redux'
 import {mapStateToStompProps, StompData} from '../../store/module/StompReducer'
 import {useFetchGroupList} from '../../store/ReactQuery/queryManagement'
 import {GroupList_item} from "../../store/ReactQuery/queryInterface";
+import {FullScreen_div} from "../../style/FormStyle";
 
 
 interface GroupListByNavigationProps {
@@ -54,12 +55,12 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
     }
 
     return (
-        <div>
+        <FullScreen_div>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
-                    <Btn_CalenJ_Icon></Btn_CalenJ_Icon>
+                    <Btn_CalenJ_Icon/>
                     <GroupList_HR/>
                     <GroupListSub_Container>
                         {groupListState.data.map((group:GroupList_item) => (
@@ -79,7 +80,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
                     <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
                 </GroupList_Container>
             )}
-        </div>
+        </FullScreen_div>
     )
 }
 export default connect(mapStateToStompProps, null)(GroupList);

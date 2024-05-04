@@ -8,6 +8,9 @@ export const SubNavigationItem_hegiht: number =30;
 export const SubNavigationItem_margin: number =5;
 export const SubNavigationItem_marginInline: number =7;
 
+interface SubNavigationClickProps{
+        $isClick:boolean;
+}
 
 export const SubNavigation_Container = styled.div`
     border-radius: 10px 0 0 0;
@@ -77,7 +80,7 @@ export const SubNavigateItem_Icon =styled.div`
     color: #797979;
 `
 
-export const SubNavigateItem_Container = styled.div`
+export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
     width: calc(100% - ${SubNavigationItem_marginInline*2 + SubNavigationItem_margin*2}px);
     height: ${SubNavigationItem_hegiht}px;
     text-align: left;
@@ -88,6 +91,13 @@ export const SubNavigateItem_Container = styled.div`
     margin-inline:${SubNavigationItem_marginInline}px;
     padding: ${SubNavigationItem_margin}px;
     border: 5px;
+        background-color:  ${props => props.$isClick? BackGroundColor : ''};
+       ${SubNavigateItem_Icon}{
+               color :  ${props => props.$isClick? TextColor : '#797979'};
+       }
+        ${SubNavigateItem_Content}{
+                color :  ${props => props.$isClick? TextColor : '#797979'};
+        }
         transition: background-color 0.3s ease;
         transition: color 0.3s ease;
     &:hover{
@@ -112,3 +122,12 @@ export const Hr_SubNavigation =styled.hr`
 `
 
 
+export const ListToggleDiv = styled.div`
+        margin-left: 5px;
+        color: gray;
+        margin-top: 20px;
+        font-size: 12px;
+        &:hover{
+            color: ${TextColor};
+        }
+`

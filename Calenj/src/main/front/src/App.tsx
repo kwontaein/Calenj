@@ -20,6 +20,7 @@ import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
 import {useFetchCookie} from "./store/ReactQuery/queryManagement";
+import CalendarComponent from "./components/Calendar/Calendar";
 
 //대표 색 : #  007bff
 
@@ -30,20 +31,25 @@ interface SubScribe {
 }
 
 
-const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, updateOnline, stomp, updateLoading, updateStompState}) => {
+const App: React.FC<DispatchStompProps & StompData> = ({
+                                                           synchronizationStomp,
+                                                           updateOnline,
+                                                           stomp,
+                                                           updateLoading,
+                                                           updateStompState
+                                                       }) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const cookieState =useFetchCookie();
+    const cookieState = useFetchCookie();
 
     useEffect(() => {
-        console.log(`실행 ${cookieState.data}`)
-        if(cookieState.data!==undefined){
+        if (cookieState.data !== undefined) {
             checkToken(cookieState.data)
         }
     }, [cookieState.data]);
 
-    const checkToken=(cookie:boolean)=>{
+    const checkToken = (cookie: boolean) => {
 
-        if(stomp.isConnect && !cookie){//로그인이 아닌데 stomp가 연결되어 있으면
+        if (stomp.isConnect && !cookie) {//로그인이 아닌데 stomp가 연결되어 있으면
             sagaRefresh()//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         }
         if (!cookie) {
@@ -65,7 +71,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
                     })
                     let subScribe = subScribeFilter(friendArr, groupArr, arr.userId)
                     synchronizationStomp({destination: subScribe});
-                    updateStompState({isConnect:true})
+                    updateStompState({isConnect: true})
                 })
                 .catch(() => {
                     window.alert('잘못된 접근입니다. 재시작을 해주세요.')
@@ -85,7 +91,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
         setLoading(stomp.loading)
     }, [stomp.loading])
 
-    
+
     return (
         <FullScreen_div>
             {loading &&
@@ -101,6 +107,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({synchronizationStomp, up
                         </Route>
                         <Route path={"/friend"} element={<FriendList/>}/>
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
+                        <Route path={"/c"} element={<CalendarComponent/>}/>
                         <Route path={"/Map"} element={<NaverMap/>}/>
                     </Routes>
                 </BrowserRouter>

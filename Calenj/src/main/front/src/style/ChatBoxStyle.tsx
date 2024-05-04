@@ -1,24 +1,27 @@
 import styled from 'styled-components'
-import {TextColor, ThemaColor3} from "./FormStyle";
+import {TextColor, ThemaColor2, ThemaColor3} from "./FormStyle";
 
 
 interface CheckbeforSender{
     $sameUser:boolean,
 }
 
-export const ScrollMinWidth =400;
-export const ScrollMaxWidht = 500;
-export const ScrollMinHeight=450;
-export const ScrollMaxHeight=450;
+export const ScrollMin_width =300;
+export const MessageSend_Cotainer_height = 50;
+
+export const MessageComponent_Container = styled.div`
+    width: 100%;
+    height: 100%;
+    backgroundColor:${ThemaColor2};
+`
 
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
-    overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
-    max-width: 98%;
-    max-height: 87vh; /* 스크롤 가능한 div의 최대 높이 설정 */
-    min-width: ${ScrollMinWidth}px;
-    min-height: 87vh;
-    padding-left: 5px;
+    overflow-y: auto; /* 수직 스크롤을 활성화. */
+    max-width: calc(100% - 10px); //padding만큼 뺌
+    min-width: ${ScrollMin_width}px;
+    height: calc(100% - ${MessageSend_Cotainer_height}px);
+    margin-inline: 5px;
 `;
 
 
@@ -58,7 +61,7 @@ export const DateContainer = styled.div`
     margin-top: 2px;
 `
 export const MessageContentContainer = styled.div`
-    max-width:${ScrollMinWidth-74}px;
+    max-width:${ScrollMin_width-74}px;
 `
 
 /**메세지를 담는 컨테이너 1 */
@@ -85,7 +88,7 @@ export const DateContainer2 = styled.div`
 `
 export const MessageContentContainer2 = styled.div`
     margin-left:6px;
-    max-width:${ScrollMinWidth-74}px;
+    max-width:${ScrollMin_width-74}px;
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
@@ -105,15 +108,14 @@ export const MessageSend_Input = styled.input`
     color: ${TextColor};
     border-radius: 4px;
     border: 1px solid #797979;
-    width: 100%;
-    height: 30px;
-    margin: 10px 5px 0 5px;
+    width: calc(100% - 5px);
+    height: 35px;
+    margin-inline: 5px;
 `
 
 
-
 export const MessageSend_Cotainer = styled.form`
-    height: 34px;
+    height: 50px; //메시지 박스크기 83%
     display: flex;
 `
 //채팅 endPoint선

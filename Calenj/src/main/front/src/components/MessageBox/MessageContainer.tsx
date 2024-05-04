@@ -19,7 +19,7 @@ import {
     ScrollableDiv,
     HR_ChatEndPoint,
     MessageSend_Cotainer,
-    MessageSend_Input,
+    MessageSend_Input, MessageComponent_Container,
 } from '../../style/ChatBoxStyle'
 import {
     FullScreen_div,
@@ -66,6 +66,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const messageLength = useRef<number>(0);
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
+    const saveScrollTop =useRef<number>(0);//마운트된 이후 다른 컴포넌으에 영향을 받아도 저장된 스크롤의 위치로 세팅
 
     const queryClient = useQueryClient();
     /**작동순서 첫랜더링 :
@@ -102,8 +103,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
             if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-                scrollPointMap.set(param, scrollRef.current.scrollTop)
-
+                scrollPointMap.set(param, scrollRef.current.scrollHeight)
             } else if(endPointMap.get(param)>0) {
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
                 const scrollDiv = scrollRef.current;
@@ -113,13 +113,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     //param이 변경되어도 이전 scrollTop을 가지고 있어 그만큼 다시 더해줘야함
                     //만약 이전 스크롤 탑이 300인데 안 더해주면 300만큼 위로 올라감(-300돼서)
                     scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
-                    scrollPointMap.set(param, scrollRef.current.scrollTop)
+                    scrollPointMap.set(param, targetElementRect.bottom-300)
                 }
                 //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
             }else {
                 scrollRef.current.scrollTop =  scrollPointMap.get(param)
-                scrollPointMap.set(param, scrollRef.current.scrollTop)
-
             }
 
         }
@@ -247,7 +245,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     messageLength.current=-1
                     refetch().then(() => {
                         //newMessage 비우기
-                        messageLength.current=-1;
                         if(!receiveNewMessage.data) return
 
                         queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
@@ -378,7 +375,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             messageLength.current=-1
             refetch().then(() => {
                 //newMessage 비우기
-                messageLength.current=-1;
                 if(receiveNewMessage.data) {
                     queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                         pages: data?.pages.slice(0, 1),
@@ -435,7 +431,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         beforeScrollHeight.current = scrollRef.current?.scrollHeight; //랜더링마다 높이 재저장
         if (!isLoading) {
             return (
-                <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
+                <ScrollableDiv ref={scrollRef} >
                     <div className="scrollTop" ref={topRef}></div>
 
                     {connectList.map((message: Message | null, index: number) => (
@@ -476,17 +472,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     return (
-        <FullScreen_div style={{backgroundColor:ThemaColor2}}>
+        <MessageComponent_Container>
             {MessageBox}
-            <div>
                 <MessageSend_Cotainer onSubmit={sendMsg}>
                     <MessageSend_Input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
                             setContent(e.target.value)
                         }} ref={chatRef}>
                     </MessageSend_Input>
                 </MessageSend_Cotainer>
-            </div>
-        </FullScreen_div>
+        </MessageComponent_Container>
     )
 }
 export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);

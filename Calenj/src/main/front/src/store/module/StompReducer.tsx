@@ -12,9 +12,9 @@ export const UPDATE_LOADING = "UPDATE_LOADING"
 export const UPDATE_APP_POSITION = "UPDATE_APP_POSITION"
 export const UPDATE_STOMP_STATE = "UPDATE_STOMP_STATE"
 
-
-type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "";
-type requestType = "ENDPOINT" | "READ" | "RELOAD" | "";
+//todo 추가 하나
+type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "ONLINE" | "";
+type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "";
 
 export interface Message {
     param: string,
@@ -24,6 +24,7 @@ export interface Message {
     sendDate: string,
     chatUUID: string,
     state: stateType,
+    onlineUserList: string[],
 }
 
 //초기상태 정의
@@ -37,8 +38,7 @@ export interface StompState {
     nowLine: number,
     isOnline: string, //온라인여부
     loading: boolean, //로딩여부 (stomp 셋팅 후 true)
-    onlineUserList: string[],
-    isConnect:boolean,
+    isConnect: boolean,
 }
 
 
@@ -48,7 +48,7 @@ export interface StompData {
 
 export interface DispatchStompProps {
     synchronizationStomp: (payload: { destination: Destination }) => void;
-    updateStompState : (payload:{isConnect:boolean}) => void;
+    updateStompState: (payload: { isConnect: boolean }) => void;
     updateAppPosition: (payload: { target: string, param: string }) => void;
     requestFile: (payload: { target: string, param: string, requestFile: requestType, nowLine: number }) => void;
     sendStompMsg: (payload: { target: string, param: string, message: string }) => void;
@@ -70,7 +70,7 @@ export interface DispatchStompProps {
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
     synchronizationStomp: (payload: { destination: Destination }) => dispatch(synchronizationStomp(payload)),
-    updateStompState : (payload:{isConnect:boolean}) => dispatch(updateStompState(payload)),
+    updateStompState: (payload: { isConnect: boolean }) => dispatch(updateStompState(payload)),
     updateAppPosition: (payload: { target: string, param: string }) => dispatch(updateAppPosition(payload)),
     requestFile: (payload: {
         target: string,
@@ -108,7 +108,7 @@ export const synchronizationStomp = (payload: { destination: Destination }) => (
     payload: payload,
 });
 
-export const updateStompState = (payload: {isConnect: boolean}) => ({
+export const updateStompState = (payload: { isConnect: boolean }) => ({
     type: UPDATE_STOMP_STATE,
     payload: payload,
 })
@@ -161,6 +161,7 @@ export const updateLoading = (payload: { loading: boolean }) => ({
 
 export interface Destination {
     map: any;
+
     [index: number]: (string | number)[];
 }
 
@@ -179,13 +180,13 @@ const initialState: StompState = {
         sendDate: '',
         state: '',
         chatUUID: '',
+        onlineUserList: [],
     }, // 초기 message 상태
     requestFile: '',
     nowLine: -1,
     isOnline: "OFFLINE",
     loading: false,
-    onlineUserList:[],
-    isConnect:false,
+    isConnect: false,
 };
 
 //주소를 저장, app/topic을 구분해서 구독 및 메시지 전달을 가능하게 유동적으로 설정

@@ -35,7 +35,7 @@ export const useFetchGroupDetail = (target:string, groupId:string) =>
         enabled: target==="group",
     });
 
-export const useFetchNoteList = (groupId:string) =>
+export const useFetchNoticeList = (groupId:string) =>
      useQuery<NoticeList[]|null, Error>({
         queryKey: [QUERY_NOTICE_LIST_KEY, groupId],
         queryFn: () => getNoticeList(groupId), //HTTP 요청함수 (Promise를 반환하는 함수)

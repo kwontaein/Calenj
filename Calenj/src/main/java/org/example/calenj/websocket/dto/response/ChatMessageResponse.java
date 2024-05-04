@@ -8,6 +8,7 @@ import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -21,6 +22,7 @@ public class ChatMessageResponse {
     private int endPoint;
     private String sendDate;
     private UUID chatUUID;
+    private Set<String> onlineUserList;
 
     @Getter
     @RequiredArgsConstructor
@@ -28,7 +30,9 @@ public class ChatMessageResponse {
         ALARM("내 알림반환"),//PUBLISH
         READ("파일읽기"),//방 들어가면 읽기
         SEND("메시지 전송"),//메세지 전송
-        ENDPOINT("엔드포인트 찍기");//방 나갈때
+        RELOAD("추가적인 파일 내용 로드"),
+        ENDPOINT("엔드포인트 찍기"),//방 나갈때
+        ONLINE("온라인 유저 목록 반환");//방 나갈때
 
         private final String role;
 

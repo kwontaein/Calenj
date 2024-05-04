@@ -42,6 +42,7 @@ X2
 <i class="fi fi-rr-angle-small-left"></i>
 drop down
 <i class="fi fi-sr-angle-small-down"></i>
+<i class="fi fi-sr-angle-right"></i>
 
 + (add)
 <i class="fi fi-sr-add"></i>

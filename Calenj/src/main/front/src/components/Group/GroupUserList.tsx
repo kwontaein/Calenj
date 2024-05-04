@@ -12,8 +12,9 @@ import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupUserList_Container} from "../../style/Group/GroupUserListStyle";
 
 interface qeuryProps {
-    isLoading :boolean
+    isLoading: boolean
 }
+
 interface groupDetails {
     groupId: string;
     groupTitle: string;
@@ -32,28 +33,38 @@ interface groupMembers {
 
 
 const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({stomp, isLoading}) => {
-    const [groupDetail,setGroupDetail] = useState<groupDetails>();
+    const [groupDetail, setGroupDetail] = useState<groupDetails>();
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const queryClient = useQueryClient();
 
+    useEffect(() => {
+        if (stomp.receiveMessage.state == "ONLINE") {
+            console.log(`온라인 유저 리스트 : ${stomp.receiveMessage.onlineUserList}`)
+        }
+    }, [stomp.receiveMessage])
 
     //그룹 디테일 불러오기
-    useEffect( () => {
-        setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,stomp.param]));
-    }, [isLoading,stomp.param]);
+    useEffect(() => {
+        setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY, stomp.param]));
+    }, [isLoading, stomp.param]);
 
+
+    const handleChange = (date: Date) => {
+        setSelectedDate(date);
+    };
     return (
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
-                <UserListView key={member.userEmail}>
-                    {localStorage.getItem(`userId`) === member.userEmail ?
-                        <span>(나) {member.nickName} </span> :
-                        <span>{member.nickName} </span>}
-                    {member.onlineStatus === 'ONLINE' ?
-                        <span style={{color: "green"}}> ● </span> :
-                        <span style={{color: "red"}}> ● </span>
-                    }
-                </UserListView>)))
+                    <UserListView key={member.userEmail}>
+                        {localStorage.getItem(`userId`) === member.userEmail ?
+                            <span>(나) {member.nickName} </span> :
+                            <span>{member.nickName} </span>}
+                        {stomp.receiveMessage.onlineUserList.includes(member.userEmail) ?
+                            <span style={{color: "green"}}> ● </span> :
+                            <span style={{color: "red"}}> ● </span>
+                        }
+                    </UserListView>)))
             }
         </GroupUserList_Container>
 

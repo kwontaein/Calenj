@@ -67,9 +67,6 @@ public class UserController {
     @PostMapping("/api/updateUser")
     public String updateUser() { //유저 업데이트
         userService.selectUserInfo();
-        //유저 정보 불러와서 보여주고
-        //정보를 바꾸려면 비밀번호 검증 후
-        //프론트에서 바뀐 값 전달하기
         return "";
     }
 

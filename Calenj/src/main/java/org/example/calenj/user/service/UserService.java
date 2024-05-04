@@ -103,9 +103,6 @@ public class UserService {
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
             System.out.println("1");
 
-            //온라인 전환
-            //OnOff(userEntity.getUserEmail(), "ONLINE");
-
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
@@ -138,7 +135,6 @@ public class UserService {
 
     @Transactional
     public void logout(UserDetails userDetails, HttpServletResponse response) {
-        offlineChange(userDetails.getUsername());
         //DB에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
@@ -165,8 +161,4 @@ public class UserService {
         response.addCookie(cookie);
     }
 
-    public void offlineChange(String userId) {
-        System.out.println("오프라인 전환");
-        userRepository.updateIsOnline(userId, UserEntity.OnlineStatus.OFFLINE.toString());
-    }
 }

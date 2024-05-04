@@ -20,9 +20,9 @@ public class InviteCodeResponse {
     private int maxUseAble;
     // --------임의 추가 변수
     private String groupTitle;
-    private int onlineCount;
     private int memberCount;
     private String ableCode;
+    private int onlineCount;
 
     public InviteCodeResponse(UUID groupId, String groupTitle, String nickname, String endDateTime, int useAbleCount, int maxUseAble) {
         this.groupId = groupId;

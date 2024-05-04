@@ -41,10 +41,6 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RoleType userRole;
 
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private OnlineStatus isOnline = OnlineStatus.OFFLINE;
-
     @Builder.Default // 기본값 지정
     private boolean naver_login = false;
     @Builder.Default
@@ -74,30 +70,6 @@ public class UserEntity implements UserDetails {
                     .filter(roleType -> roleType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(USER);
-        }
-
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public enum OnlineStatus { //enum을 활용한 권한종류 설정
-        ONLINE("온라인"),
-        OFFLINE("오프라인"),
-        SLEEP("자리비움"),
-        TOUCH("방해금지"),
-        CUSTOMOFFLINE("사용자 지정 오프라인"),
-        CUSTOMSLEEP("사용자 지정 자리비움");
-
-        private final String online;
-
-        //user_role 유효성 검사
-        @JsonCreator
-        public static OnlineStatus userRoleParsing(String inputValue) {
-
-            return Stream.of(OnlineStatus.values())
-                    .filter(OnlineStatus -> OnlineStatus.toString().equals(inputValue))
-                    .findFirst()
-                    .orElse(ONLINE);
         }
 
     }

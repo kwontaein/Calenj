@@ -1,5 +1,4 @@
 import GroupList from "./GroupList"
-import GroupDetail from "./GroupDetail";
 
 
 const Group: React.FC = () => {
