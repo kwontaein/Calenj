@@ -211,22 +211,26 @@ public class WebSokcetService {
                 int setPoint = countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case READ: {
                 List<String> file = readGroupChattingFile(message);
                 response.setMessage(file);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case RELOAD: {
                 List<String> file = readGroupChattingFileSlide(message);
                 response.setMessage(file);
                 template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case SEND: {
                 saveChattingToFile(message);
                 response.setMessage(Collections.singletonList(message.getMessage()));
                 response.setChatUUID(message.getChatUUID());
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
+                return;
             }
             case ENDPOINT: {
                 saveChattingToFile(message);

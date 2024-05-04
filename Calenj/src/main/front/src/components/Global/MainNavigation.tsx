@@ -8,9 +8,10 @@ import {
     mapStateToNavigationProps,
     mapDispatchToNavigationProps,
     NavigationProps
-} from '../../store/slice/NavigateByComponent'
+} from '../../store/slice/NavigatgionSlice'
+import {FullScreen_div} from "../../style/FormStyle";
 
-const SideNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
+const MainNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateNavigation,navigateInfo})=>{
 
     useEffect(()=>{
     },[navigateInfo])
@@ -30,4 +31,4 @@ const SideNavigation :React.FC<NavigateState &DispatchNavigationProps>=({updateN
         </div>
     )
 }
-export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (SideNavigation);
+export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps) (MainNavigation);

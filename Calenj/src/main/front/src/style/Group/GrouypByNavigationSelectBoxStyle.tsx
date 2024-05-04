@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {TextColor} from "../FormStyle";
 
 export const SelectItem_Container = styled.div`
-    width: 204px;
+    width: 196px;
     background-color: black;
     position: absolute;
     top: 71px;
