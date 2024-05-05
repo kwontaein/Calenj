@@ -1,10 +1,8 @@
-import {useEffect, useLayoutEffect, useState} from "react";
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import axios, {AxiosResponse, AxiosError} from 'axios';
+import {useEffect, useState} from "react";
 import {useLocation} from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
-import {ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
+import {FullScreen_div, ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
@@ -13,16 +11,17 @@ import {useFetchVoteList} from "../../../store/ReactQuery/queryManagement";
 
 
 interface GroupProps {
+    groupId: string;
     member: number;
 }
 
-const Vote: React.FC<GroupProps> = ({member}) => {
+const Vote: React.FC<GroupProps> = ({member, groupId}) => {
     const [makeVote, setMakeVote] = useState(false);
     const [voteList, setVoteList] = useState<VoteList[]>([]);
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
-    const location = useLocation();
-    const navigate = useNavigate();
-    const groupInfo = {...location.state};
+    // const location = useLocation();
+    // const navigate = useNavigate();
+    // const groupInfo = {...location.state};
 
 
     const closeModal = () => {
@@ -31,7 +30,7 @@ const Vote: React.FC<GroupProps> = ({member}) => {
 
 
 
-    const voteListState = useFetchVoteList(groupInfo.groupId)
+    const voteListState = useFetchVoteList(groupId)
 
 
     //데이터가 바뀌면 다시 세팅
@@ -44,9 +43,6 @@ const Vote: React.FC<GroupProps> = ({member}) => {
     }, [voteListState.data])
 
 
-    const redirectDetail = (voteId: string, end: boolean) => {
-        navigate("/vote/detail", {state: {voteId: voteId, member: member, end: end}});
-    }
 
 
     function deadlineFilter(list: VoteList[], end: boolean): VoteList[] {
@@ -72,7 +68,7 @@ const Vote: React.FC<GroupProps> = ({member}) => {
         <div>
             <h1>투표</h1>
             <button onClick={() => setMakeVote(true)} style={{marginBottom: '10px'}}>투표생성하기</button>
-            {makeVote && <MakeVote onClose={closeModal} groupId={groupInfo.groupId} queryState={voteListState}/>}
+            {makeVote && <MakeVote onClose={closeModal} groupId={groupId} queryState={voteListState}/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&
                 <div>
@@ -83,7 +79,7 @@ const Vote: React.FC<GroupProps> = ({member}) => {
                     <ul>
                         {voteList.map((vote) => (
                             <ListView key={vote.voteId}
-                                      onClick={() => redirectDetail(vote.voteId as string, false)}
+                                      onClick={() =>{} }
                             >
                                 <RowFlexBox>
                                     <div style={{
@@ -121,7 +117,7 @@ const Vote: React.FC<GroupProps> = ({member}) => {
                     <ul>
                         {endVoteList.map((vote) => (
                             <ListView key={vote.voteId}
-                                      onClick={() => redirectDetail(vote.voteId as string, true)}
+                                      onClick={() => {}}
                             >
 
                                 <RowFlexBox>

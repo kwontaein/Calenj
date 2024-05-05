@@ -1,12 +1,12 @@
-import {SelectItem_Container} from "../../style/Group/GrouypByNavigationSelectBoxStyle";
-import RequestInviteGroup from "./Invite/RequestInviteGroup";
+import {SelectItem_Container} from "../../../style/Group/GrouypByNavigationSelectBoxStyle";
+import RequestInviteGroup from "../Invite/RequestInviteGroup";
 import {connect} from 'react-redux'
 import {
     NavigateState,
     DispatchNavigationProps,
     mapStateToNavigationProps,
     mapDispatchToNavigationProps,
-} from '../../store/slice/NavigateByComponent'
+} from '../../../store/slice/NavigatgionSlice'
 const GrouypByNavigationSelectBox:React.FC<NavigateState> = ({navigateInfo}) =>{
 
     return(

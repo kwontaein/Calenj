@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import {TextColor, ThemaColor3} from "../FormStyle";
+import {PointColor, TextColor, ThemaColor3} from "../FormStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
 interface receivedMsg {
@@ -8,6 +8,7 @@ interface receivedMsg {
 interface navigatePram {
   $isClick : boolean
 }
+
 
 
 export const GroupList_Container_width :number =72
@@ -33,6 +34,7 @@ const shakeAnimation = keyframes`
  * 그룹 리스트 컨테이너
  */
  export const GroupList_Container = styled.div`
+ overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
  height:100%;
  text-align: center;
  width: ${GroupList_Container_width}px;
@@ -47,8 +49,7 @@ export const GroupListSub_Container = styled.div`
  display: flex;
  flex-direction: column;
  align-items: center;
- overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
- max-height: 100vh; /* 스크롤 가능한 div의 최대 높이 설정 */
+ height: auto; /* 스크롤 가능한 div의 최대 높이 설정 */
 `
 
 /**
@@ -66,7 +67,6 @@ export const GroupList_HR = styled.hr`
 `
 
 export const NavigateState = styled.div<navigatePram>`
- 
  background-color : ${props=> props.$isClick ? TextColor: "transParent"};
  width:5px;
  height: 5px;
@@ -89,7 +89,7 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
  justify-content: center;
  list-style: none;
  margin-block: 8px;
- background-color:  ${props => (props.$isClick  ? "#007bff" : ThemaColor3)};
+ background-color:  ${props => (props.$isClick  ? PointColor : ThemaColor3)};
  border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
  white-space: nowrap;
  cursor: pointer;
@@ -97,9 +97,8 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
  transition: background-color 0.3s ease;
  transition: border-radius 0.3s ease;
  &:hover {
-
       ${NavigateState} {
-       transition: border-radius 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* 변경된 부분 */
+       transition: border-wsz2  w2radius 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* 변경된 부분 */
        border-radius: 15px;
        height: 18px;
        background-color: white;
@@ -129,6 +128,7 @@ export const SignOfMessageNum = styled.div<receivedMsg>`
 
 export const GroupListTitle = styled.div`
  overflow: hidden;
+ font-size: 14px;
 `
 
 /**캘린제이 아이콘 */

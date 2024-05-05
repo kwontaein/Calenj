@@ -25,6 +25,7 @@
     "axios": "^1.6.3",
     "base-64": "^1.0.0",
     "dayjs": "^1.11.10",
+    "fullcalendar": "^6.1.11",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.2",
     "react": "^18.3.1",

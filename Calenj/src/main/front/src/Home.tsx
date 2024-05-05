@@ -1,6 +1,6 @@
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import {connect} from 'react-redux'
-import DefaultNavigation from "./components/Global/SideNavigation";
+import MainNavigation from "./components/Global/MainNavigation";
 import {FullScreen_div} from "./style/FormStyle";
 import NavigationComposition from './components/Global/NavigationComposition'
 import {
@@ -10,21 +10,17 @@ import {
     mapStateToStompProps
 } from './store/module/StompReducer';
 import SignState from "./components/Auth/SignState";
-
-const Home: React.FC<StompData & DispatchStompProps> = ({stomp}) => {
+const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
-        <FullScreen_div style={{display: "flex", flexDirection: "row"}}>
-
-            {stomp.isOnline === "ONLINE" ?
-                <FullScreen_div style={{display: "flex", flexDirection: "row"}}>
-                    <DefaultNavigation/>
+        <FullScreen_div>
+            {stomp.isOnline ==="ONLINE"?
+                <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+                    <MainNavigation/>
                     <NavigationComposition/>
                 </FullScreen_div> :
                 <SignState/>}
-
-
         </FullScreen_div>
     )
 }
-export default connect(mapStateToStompProps, mapDispatchToStompProps)(Home)
+export default connect(mapStateToStompProps,mapDispatchToStompProps) (Home)

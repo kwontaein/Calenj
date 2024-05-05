@@ -20,8 +20,8 @@ import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
 import {useFetchCookie} from "./store/ReactQuery/queryManagement";
-import CalendarComponent from "./components/Global/Calendar";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
+import CalendarComponent from "./components/Calendar/Calendar";
 
 //대표 색 : #  007bff
 

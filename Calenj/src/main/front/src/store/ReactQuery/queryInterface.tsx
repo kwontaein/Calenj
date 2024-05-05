@@ -12,7 +12,7 @@ interface groupMembers {
 }
 
 export interface GroupDetail {
-    groupId: number;
+    groupId: string;
     groupTitle: string;
     groupCreated: string;
     groupCreater: string;

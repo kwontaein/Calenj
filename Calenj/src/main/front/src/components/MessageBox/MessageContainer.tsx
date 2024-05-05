@@ -19,14 +19,14 @@ import {
     ScrollableDiv,
     HR_ChatEndPoint,
     MessageSend_Cotainer,
-    MessageSend_Input,
+    MessageSend_Input, MessageComponent_Container,
 } from '../../style/ChatBoxStyle'
 import {
     FullScreen_div,
     RowFlexBox, ThemaColor2,
 
 } from '../../style/FormStyle'
-import {endPointMap, scrollPointMap} from '../../store/module/StompMiddleware';
+import {endPointMap,scrollPointMap} from '../../store/module/StompMiddleware';
 import {
     changeDateForm,
     AHMFormatV2,
@@ -37,8 +37,8 @@ import {
 } from '../../stateFunc/actionFun'
 import {InfiniteData, useInfiniteQuery, UseInfiniteQueryResult, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect, {requestCountManagement} from "../../store/module/useIntersect";
-import {QUERY_NEW_CAHT_KEY, QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
+import useIntersect ,{requestCountManagement} from "../../store/module/useIntersect";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 import {fdatasync} from "node:fs";
 
 
@@ -60,13 +60,14 @@ interface Message {
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
 const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPosition, sendStompMsg, requestFile}) => {
     const [content, setContent] = useState<string>('');
-    const [prevScrollHeight, setPrevScrollHeight] = useState<number | null>();
+    const [prevScrollHeight , setPrevScrollHeight] = useState<number|null>();
     const chatRef = useRef<HTMLInputElement>(null);// 채팅 input Ref
     const scrollTimerRef = useRef<NodeJS.Timeout | undefined>(); //채팅스크롤 디바운싱 Ref
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
     const messageLength = useRef<number>(0);
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
+    const saveScrollTop =useRef<number>(0);//마운트된 이후 다른 컴포넌으에 영향을 받아도 저장된 스크롤의 위치로 세팅
 
     const queryClient = useQueryClient();
     /**작동순서 첫랜더링 :
@@ -94,18 +95,18 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 updateScroll()
             }, 50)
         };
-    const addScrollEvent = () => {
+    const addScrollEvent=()=>{
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (scrollRef.current) {
             scrollRef.current.addEventListener('scroll', handleScroll);
 
             //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
-            if (endPointMap.get(param) === 0 && newMessageList.length === 0 && (!scrollPointMap.get(param))) {
+            if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 scrollPointMap.set(param, scrollRef.current.scrollTop)
 
-            } else if (endPointMap.get(param) > 0) {
+            } else if(endPointMap.get(param)>0) {
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
@@ -113,14 +114,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     const targetElementRect = targetElement.getBoundingClientRect();
                     //param이 변경되어도 이전 scrollTop을 가지고 있어 그만큼 다시 더해줘야함
                     //만약 이전 스크롤 탑이 300인데 안 더해주면 300만큼 위로 올라감(-300돼서)
-                    scrollRef.current.scrollTop += targetElementRect.bottom - 300;
+                    scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
                     scrollPointMap.set(param, scrollRef.current.scrollTop)
                 }
                 //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
-            } else {
-                scrollRef.current.scrollTop = scrollPointMap.get(param)
-                scrollPointMap.set(param, scrollRef.current.scrollTop)
-
+            }else {
+                scrollRef.current.scrollTop =  scrollPointMap.get(param)
             }
 
         }
@@ -139,13 +138,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 updateEndpoint();
             }
         }
-        berforeScrollTop.current = scrollRef.current.scrollTop;
+        berforeScrollTop.current=scrollRef.current.scrollTop;
     }
     const updateEndpoint = () => {
         const debouncedRequest = debounce(() => {
-            requestFile({
-                target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0
-            });
+            requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
             console.log('앤드포인트 갱신');
         }, 1000);
         debouncedRequest();
@@ -218,12 +215,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     }
 
 
-    async function fetchData({pageParam = 0}) {
+    async function fetchData({pageParam =0}) {
         try {
             const getFileData = () => {
-                if (messageLength.current === -1) {
+                if(messageLength.current===-1){
                     requestChatFileRead(pageParam)
-                } else {
+                }else{
                     requestChatFileReload(pageParam)
                 }
 
@@ -243,27 +240,26 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 });
             }
             const message = await getFileData();
-            if (message.length === 0 && !isFetching) {
-                const debounceCount = debounce(() => {
-                    const requestCount = requestCountManagement()
-                    if (requestCount < 10) return
+            if(message.length ===0 &&!isFetching){
+                const debounceCount = debounce(()=>{
+                    const  requestCount = requestCountManagement()
+                    if(requestCount < 10) return
 
                     requestCountManagement(true);//count 초기화
-                    messageLength.current = -1
+                    messageLength.current=-1
                     refetch().then(() => {
                         //newMessage 비우기
-                        messageLength.current = -1;
-                        if (!receiveNewMessage.data) return
+                        if(!receiveNewMessage.data) return
 
                         queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                             pages: data?.pages.slice(0, 1),
                             pageParams: data?.pageParams.slice(0, 1)
                         }));
 
-                    });
-                }, 500)
+                        });
+                },500)
                 debounceCount()
-            } else {
+            }else{
                 requestCountManagement(true);//count 초기화
             }
             const messageResult = receiveChatFile(message)
@@ -312,8 +308,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         initialPageParam: endPointMap.get(param),
         enabled: param === stomp.param,
         staleTime: Infinity,
-        refetchInterval: false,
-        retry: 3,
+        refetchInterval:false,
+        retry:3,
     });
 
     const receiveNewMessage = useInfiniteQuery({
@@ -324,7 +320,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: null,
         enabled: param === stomp.param && !isFetching,
-        refetchInterval: false,
+        refetchInterval:false,
         staleTime: Infinity,
     });
     //getNextPageParam : 다음 페이지가 있는지 체크, 현재 data를 인자로 받아 체크할 수 있으며 체크 값에 따라 hasNextPage가 정해짐
@@ -380,13 +376,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     useEffect(() => {
         setPrevScrollHeight(null)
-        updateAppPosition({target: target, param: param});
+        updateAppPosition({target:target, param:param});
         if (endPointMap.get(param) > 0) {
-            messageLength.current = -1
+            messageLength.current=-1
             refetch().then(() => {
                 //newMessage 비우기
-                messageLength.current = -1;
-                if (receiveNewMessage.data) {
+                if(receiveNewMessage.data) {
                     queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                         pages: data?.pages.slice(0, 1),
                         pageParams: data?.pageParams.slice(0, 1)
@@ -394,12 +389,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 }
             });
         }
-        return () => {
+        return ()=>{
 
-            if (!scrollRef.current || !beforeScrollHeight.current) return
+            if(!scrollRef.current ||!beforeScrollHeight.current) return
             //스크롤이 존재하는지 체크
-            if (scrollRef.current.clientHeight < beforeScrollHeight.current) {
-                scrollPointMap.set(param, berforeScrollTop.current);
+            if(scrollRef.current.clientHeight < beforeScrollHeight.current){
+                scrollPointMap.set(param,berforeScrollTop.current);
             }
         }
     }, [param])
@@ -411,12 +406,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             if (scrollRef.current && prevScrollHeight) {
                 //저장한 이전높이인 prev만큼 빼줌
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
-            } else if (scrollRef.current && prevScrollHeight === null && endPointMap.get(param) > 0) {
+            }else if(scrollRef.current && prevScrollHeight===null && endPointMap.get(param)>0 ){
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
                     const targetElementRect = targetElement.getBoundingClientRect();
-                    scrollRef.current.scrollTop += targetElementRect.bottom - 300;
+                    scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
                     scrollPointMap.set(param, scrollRef.current.scrollTop)
                 }
             }
@@ -432,16 +427,16 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 scrollRef.current.removeEventListener('scroll', handleScroll);
             }
         }
-    }, [isLoading, param])
+    }, [isLoading,param])
 
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...newMessageList].reverse(), ...messageList].reverse() //얕은 복사를 활용한 복사 //최신 -> 오래된 방향을 reverse해서 스크롤에 띄움
-        messageLength.current = connectList.length - 1 //메시지 길이 세팅
+        messageLength.current = connectList.length-1 //메시지 길이 세팅
         beforeScrollHeight.current = scrollRef.current?.scrollHeight; //랜더링마다 높이 재저장
         if (!isLoading) {
             return (
-                <ScrollableDiv id="ScrollContainerDiv" ref={scrollRef}>
+                <ScrollableDiv ref={scrollRef} >
                     <div className="scrollTop" ref={topRef}></div>
 
                     {connectList.map((message: Message | null, index: number) => (
@@ -482,17 +477,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     return (
-        <FullScreen_div style={{backgroundColor: ThemaColor2}}>
+        <MessageComponent_Container>
             {MessageBox}
-            <div>
                 <MessageSend_Cotainer onSubmit={sendMsg}>
                     <MessageSend_Input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setContent(e.target.value)
-                    }} ref={chatRef}>
+                            setContent(e.target.value)
+                        }} ref={chatRef}>
                     </MessageSend_Input>
                 </MessageSend_Cotainer>
-            </div>
-        </FullScreen_div>
+        </MessageComponent_Container>
     )
 }
 export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);
