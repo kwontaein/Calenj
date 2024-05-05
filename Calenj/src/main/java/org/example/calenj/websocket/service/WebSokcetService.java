@@ -234,7 +234,6 @@ public class WebSokcetService {
             }
             case ENDPOINT: {
                 saveChattingToFile(message);
-                return;
             }
         }
     }

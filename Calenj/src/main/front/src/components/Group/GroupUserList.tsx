@@ -9,7 +9,7 @@ import {
 } from '../../store/module/StompReducer';
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
-import {GroupUserList_Container} from "../../style/Group/GroupUserListStyle";
+import {GroupUserList_Container, UserProfile} from "../../style/Group/GroupUserListStyle";
 
 
 interface qeuryProps {
@@ -60,28 +60,12 @@ const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({s
             {groupDetail &&
                 (groupDetail.members.map((member) => (
                     <UserListView key={member.userEmail}>
-                        <img src={`/image/savedImage/${member.userEmail}.jpeg`}
-                             onError={onErrorImg}
-                             style={{
-                                 //border: "white 2px solid",
-                                 borderRadius: "50%",
-                                 width: "25px",
-                                 height: "25px",
-                                 marginRight: "10px",
-                             }}/>
-                        <span style={{
-                            color: stomp.receiveMessage.onlineUserList.includes(member.userEmail) ?
-                                "green" : "red",
-                            position: "absolute",
-                            margin: "15px 0 0 15px"
-                        }}> ● </span>
-                        {localStorage.getItem(`userId`) === member.userEmail ?
-                            <span>
-                               {member.nickName} (나)
-                            </span> :
-                            <span>
-                                {member.nickName}
-                            </span>}
+                        <UserProfile src={`/image/savedImage/${member.userEmail}.jpeg`}
+                                     onError={onErrorImg}
+                                     isOnline={stomp.receiveMessage.onlineUserList.includes(member.userEmail)}/>
+                        <span>
+                            {member.nickName} {localStorage.getItem(`userId`) === member.userEmail && '(나)'}
+                        </span>
                     </UserListView>)))
             }
         </GroupUserList_Container>
