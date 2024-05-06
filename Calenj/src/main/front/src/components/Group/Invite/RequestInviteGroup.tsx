@@ -66,18 +66,15 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
 
     return (
         <div>
-            <div className={'btn_wrapper'}>
-                <Btn_ItemSelector onClick={invite}>
-                    <SelectorText_Continer >
-                        초대하기
-                    </SelectorText_Continer>
-                    <SelectorIcon_Container>
-                        <i className="fi fi-sr-user-add"></i>
-                    </SelectorIcon_Container>
-                </Btn_ItemSelector>
-                {modalOpen && <InviteModal onClose={closeModal} groupId={groupId} inviteLink={inviteLink}/>}
-            </div>
-
+            <Btn_ItemSelector onClick={invite}>
+                <SelectorText_Continer >
+                    초대하기
+                </SelectorText_Continer>
+                <SelectorIcon_Container>
+                    <i className="fi fi-sr-user-add"></i>
+                </SelectorIcon_Container>
+            </Btn_ItemSelector>
+            {modalOpen && <InviteModal onClose={closeModal} groupId={groupId} inviteLink={inviteLink}/>}
         </div>
     )
 }

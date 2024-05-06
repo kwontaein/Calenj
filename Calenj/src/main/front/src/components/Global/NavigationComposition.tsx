@@ -13,22 +13,22 @@ import {useFetchGroupDetail} from '../../store/ReactQuery/queryManagement'
 import {debounce, throttle} from "../../stateFunc/actionFun";
 
 
-const NavigationComposition :React.FC<NavigateState&DispatchNavigationProps>=({navigateInfo})=>{
+const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo})=>{
 
     //reactQuery로 그룹 디테일정보 fetching
-    const grooupDetailState =useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
+    const groupDetailState =useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
 
     return(
-        <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
-                    <SubNavigationbar
-                        isLoading={grooupDetailState.isLoading}/>
-                    <ContentsComposition
-                        isLoading={grooupDetailState.isLoading}
-                        target={navigateInfo.navigate}
-                        param={navigateInfo.navigateParam}
-                    />
-        </FullScreen_div>
+            <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
+                        <SubNavigationbar
+                            isLoading={groupDetailState.isLoading}/>
+                        <ContentsComposition
+                            isLoading={groupDetailState.isLoading}
+                            target={navigateInfo.navigate}
+                            param={navigateInfo.navigateParam}
+                        />
+            </FullScreen_div>
     )
 
 }
-export default connect(mapStateToNavigationProps,mapDispatchToNavigationProps)(NavigationComposition);
+export default connect(mapStateToNavigationProps, mapDispatchToNavigationProps)(NavigationComposition);

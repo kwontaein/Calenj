@@ -32,10 +32,10 @@ const SubNavigationbar:React.FC<NavigateState & qeuryProps> =({navigateInfo,isLo
 
     return  (
         <SubNavigation_Container>
-            {(navigateInfo.navigate === "group" &&groupDetail )&&
+            {(navigateInfo.navigate === "group" &&groupDetail && !isLoading )&&
                 <GroupSubNavigateTopItems groupTitle={groupDetail.groupTitle}/>
             }
-            {(navigateInfo.navigate === "group" && groupDetail )&&
+            {(navigateInfo.navigate === "group" && groupDetail && !isLoading)&&
                 <GroupSubNavigateItems groupId={groupDetail.groupId}/>
             }
         </SubNavigation_Container>

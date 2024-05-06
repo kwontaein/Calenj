@@ -5,6 +5,7 @@ import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun
 import MakeNotice from "./MakeNotice";
 import {FullScreen_div, ListView, MiniText} from '../../../style/FormStyle'
 import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
+import {CreateNotice_Btn} from "../../../style/Group/GroupNoticeStyle";
 
 interface SubScreenProps{
     groupId:string,
@@ -12,11 +13,6 @@ interface SubScreenProps{
 
 const Notice :React.FC<SubScreenProps> =({groupId})=>{
     const[makeNotice,setMakeNotice] = useState(false);
-    // const location = useLocation();
-    // const navigate = useNavigate();
-    // const groupInfo = {...location.state};
-
-
 
 
     const noticeListState = useFetchNoticeList(groupId)
@@ -32,13 +28,11 @@ const Notice :React.FC<SubScreenProps> =({groupId})=>{
 
 
     return(
-        <div>
-            <h1>공지</h1>
-            <button onClick={()=>setMakeNotice(true)}>공지생성하기</button>
+        <FullScreen_div>
+            <CreateNotice_Btn onClick={()=>setMakeNotice(true)}>공지생성하기</CreateNotice_Btn>
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
             {noticeListState.data && 
-            <div>
-                <ul>
+                <div>
                     {noticeListState.data.map((notice) => (
                         <ListView key={notice.noticeId}
                         onClick={() => {}}>
@@ -47,9 +41,9 @@ const Notice :React.FC<SubScreenProps> =({groupId})=>{
                             <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
                         </ListView>
                     ))}
-                </ul>
-            </div>}
-        </div>
+                </div>
+            }
+        </FullScreen_div>
     )
 }
 export default Notice;
