@@ -67,7 +67,7 @@ const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink,groupId}) => {
                             </div>
                         }
                     </div>
-                    {inviteLink && <div className={'issueLink'}><b>{inviteLink}</b>
+                    {inviteLink && <div style={{userSelect: 'text'}}><b>{inviteLink}</b>
                         <button>복사하기</button>
                     </div>}
                     <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>

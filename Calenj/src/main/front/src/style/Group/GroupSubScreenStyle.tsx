@@ -6,7 +6,6 @@ export const GroupSubScreen_Container = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
     width: calc(100% - 10px);
     height: calc(100% - 10px);
-    min-width: ${ScrollMin_width}px;
-    padding: 5px;    
+    padding: 5px;
     background-color: ${ThemaColor3};
 `

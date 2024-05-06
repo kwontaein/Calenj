@@ -25,7 +25,6 @@ export const TextColor = "#EEEEEE";
 
 export const PointColor = "#007bff";
 
-
 export const GlobalStyle = createGlobalStyle`
     body {
         background-color: #222831; /* 전체 페이지 배경색 */
@@ -201,7 +200,7 @@ export const ListView = styled.li`
     padding-bottom: 10px;
 
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemaColor2};
     }
 `
 

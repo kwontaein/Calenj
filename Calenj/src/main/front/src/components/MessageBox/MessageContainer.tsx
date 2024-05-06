@@ -37,7 +37,7 @@ import {
 } from '../../stateFunc/actionFun'
 import {InfiniteData, useInfiniteQuery, UseInfiniteQueryResult, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect ,{requestCountManagement} from "../../store/module/useIntersect";
+import useIntersect ,{requestCountManagement} from "../../stateFunc/useIntersect";
 import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 import {fdatasync} from "node:fs";
 
@@ -66,8 +66,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const messageLength = useRef<number>(0);
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
-    const saveScrollTop =useRef<number>(0);//마운트된 이후 다른 컴포넌으에 영향을 받아도 저장된 스크롤의 위치로 세팅
-
     const queryClient = useQueryClient();
     /**작동순서 첫랜더링 :
      * 1. 컴파일 순에따라 data 가 enable옵션에따라 변경되니 [data]로 의존성을 지닌 messageList업데이트 , reciveNewMessage도 초기 세팅
@@ -104,7 +102,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             if (endPointMap.get(param) === 0 && newMessageList.length===0 && (!scrollPointMap.get(param))) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 scrollPointMap.set(param, scrollRef.current.scrollHeight)
+
             } else if(endPointMap.get(param)>0) {
+                //들어갔는데 스크롤이 없고 메시지가 있으면 바로 읽은 거로 처리
+
                 ///endPoint를 찾아서 해당 위치로 스크롤 셋팅
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
@@ -115,7 +116,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     scrollRef.current.scrollTop += targetElementRect.bottom-300 ;
                     scrollPointMap.set(param, targetElementRect.bottom-300)
                 }
-                //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
+            //메시지가 쌓인 상태로 들어오면 newList를 비우기 다시 1개는 채워야함
             }else {
                 scrollRef.current.scrollTop =  scrollPointMap.get(param)
             }
@@ -126,18 +127,25 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
+
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-        //현재위치랑 스크롤의 맨아래 위치에 있으면 (ScrollMinHeight = 현재 스크롤 div의 최소크기)
-        if (scrollHeight > clientHeight && scrollTop + clientHeight > clientHeight) {
-            if (scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
-                endPointMap.set(param, 0)
-                scrollToBottom();
-                updateEndpoint();
-            }
+        //스크롤이 존재히면서 해당 스크롤이 맨아래로 내려가 있으면
+        if (scrollHeight > clientHeight && scrollTop + clientHeight > clientHeight && scrollTop + clientHeight === scrollHeight && endPointMap.get(param) !== 0) {
+            endPointMap.set(param, 0)
+            scrollToBottom();
+            updateEndpoint();
+        }
+        //스크롤이 없는데 메시지가 있으면
+        if(scrollHeight === clientHeight && endPointMap.get(param)!==0 ){
+            endPointMap.set(param, 0)
+            updateEndpoint();
         }
         berforeScrollTop.current=scrollRef.current.scrollTop;
+        beforeScrollHeight.current=scrollRef.current.scrollHeight;
     }
+
+
     const updateEndpoint = () => {
         const debouncedRequest = debounce(() => {
             requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
@@ -384,12 +392,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             });
         }
         return ()=>{
-
-            if(!scrollRef.current ||!beforeScrollHeight.current) return
+            //스크롤 이동이 없으면 beforeScrollHeight은 저장안됨
+            if(!beforeScrollHeight.current) return
             //스크롤이 존재하는지 체크
-            if(scrollRef.current.clientHeight < beforeScrollHeight.current){
-                scrollPointMap.set(param,berforeScrollTop.current);
-            }
+            scrollPointMap.set(param,berforeScrollTop.current);
+
         }
     }, [param])
 
@@ -397,11 +404,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     useEffect(() => {
         if (stomp.receiveMessage.state === "RELOAD") {
-
+            //처음 들어오자마자 reload하는 걸 방지 prevScrollHeight이 있어야 작동 =>topRef(observer로만 세팅가능)
             if (scrollRef.current && prevScrollHeight) {
                 //저장한 이전높이인 prev만큼 빼줌
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
             }else if(scrollRef.current && prevScrollHeight===null && endPointMap.get(param)>0 ){
+                //알람이 있으면서 처음 들어올 때 위치 세팅(infiniteQuery는 기존 캐싱(read + reload)만큼 다시 읽어오기 때문에 전부 읽어온 후 엔드포인트를 찾아 세팅하는 것임)
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
