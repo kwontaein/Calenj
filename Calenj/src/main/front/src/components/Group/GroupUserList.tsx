@@ -10,6 +10,7 @@ import {
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupUserList_Container, UserProfile} from "../../style/Group/GroupUserListStyle";
+import UserModal from "./UserModal";
 
 
 interface qeuryProps {
@@ -35,9 +36,9 @@ interface groupMembers {
 
 const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({stomp, isLoading}) => {
     const [groupDetail, setGroupDetail] = useState<groupDetails>();
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const queryClient = useQueryClient();
     const calenj_logo = '/image/Logo.png';
+    const [selectedUser, setSelectedUser] = useState<groupMembers | null>(null); // 모달 창을 표시할 유저 정보 상태
 
     useEffect(() => {
         if (stomp.receiveMessage.state == "ONLINE") {
@@ -55,19 +56,30 @@ const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({s
         e.currentTarget.src = calenj_logo
     }
 
+    // 모달 창 표시 이벤트 핸들러
+    const handleUserClick = (user: groupMembers) => {
+        setSelectedUser(user);
+    };
+    // 모달 창 닫기 이벤트 핸들러
+    const handleModalClose = () => {
+        setSelectedUser(null);
+    };
+
     return (
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
-                    <UserListView key={member.userEmail}>
+                    <UserListView key={member.userEmail} onClick={() => handleUserClick(member)}>
                         <UserProfile src={`/image/savedImage/${member.userEmail}.jpeg`}
                                      onError={onErrorImg}
-                                     isOnline={stomp.receiveMessage.onlineUserList.includes(member.userEmail)}/>
+                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userEmail)}/>
                         <span>
                             {member.nickName} {localStorage.getItem(`userId`) === member.userEmail && '(나)'}
                         </span>
                     </UserListView>)))
             }
+            {/* 모달 창 */}
+            {selectedUser && <UserModal user={selectedUser} onClose={handleModalClose}/>}
         </GroupUserList_Container>
 
     );

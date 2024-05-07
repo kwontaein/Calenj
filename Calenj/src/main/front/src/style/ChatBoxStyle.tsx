@@ -33,7 +33,7 @@ export const MessageBoxContainer = styled.div<CheckbeforSender>`
     padding-bottom: 0px;
     user-select: text;
 `
-export const ProfileContainer = styled.div<{ userEmail?: string }>`
+export const ProfileContainer = styled.div<{ $userEmail?: string | undefined }>`
     width: 40px;
     height: 40px;
     padding: 3px;
@@ -47,7 +47,7 @@ export const ProfileContainer = styled.div<{ userEmail?: string }>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${({userEmail}) => userEmail ? `url("/image/savedImage/${userEmail.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${({$userEmail}) => $userEmail ? `url("/image/savedImage/${$userEmail.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 
