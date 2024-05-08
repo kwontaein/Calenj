@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from '../store'
 import {Dispatch} from 'redux';
+import {ScrollMin_width} from "../../style/ChatBoxStyle";
 
 export interface SubNavigationProps {
     param:string,
@@ -47,8 +48,8 @@ const initialState: SubNavigationProps ={
     param:'',
     clickState:'',
     mode:'',
-    screenHeightSize:250,
-    screenWidthSize:400,
+    screenHeightSize:200,
+    screenWidthSize:ScrollMin_width,
 
 }
 

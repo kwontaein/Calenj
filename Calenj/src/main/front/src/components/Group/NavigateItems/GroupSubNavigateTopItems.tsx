@@ -17,7 +17,7 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
     }, [groupTitle]);
 
     return(
-        <SubNavigateTopBar>
+        <SubNavigateTopBar onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
             <SubNavigateTopBar_leftContent>
                 {groupTitle}
             </SubNavigateTopBar_leftContent>
@@ -27,8 +27,7 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
                         onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
                         ×
                     </SubNavigateTopBar_rightContent_item> :
-                    <i style={{fontSize:'21px', marginTop:'5px', cursor:'pointer'}} className="fi fi-rr-angle-small-down"
-                       onClick={()=>{setShowEventSelecter(!showEventSelecter)}}>
+                    <i style={{fontSize:'21px', marginTop:'5px', cursor:'pointer'}} className="fi fi-rr-angle-small-down">
                     </i>
                 }
                 {showEventSelecter &&<GrouypByNavigationSelectBox/>}

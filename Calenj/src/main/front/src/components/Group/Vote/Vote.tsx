@@ -73,7 +73,7 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
             {voteListState.data &&
                 <div>
                     {voteList.length > 0 &&
-                        <MiniText style={{border: '0.5px solid #ccc', padding: '5px', marginBottom: '-17px'}}>진행중인
+                        <MiniText style={{borderBlock: '0.5px solid #ccc', padding: '5px', marginBottom: '-17px'}}>진행중인
                             투표</MiniText>
                     }
                     <ul>
@@ -108,7 +108,7 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
                     </ul>
                     {endVoteList.length !== 0 &&
                         <MiniText style={{
-                            border: '0.5px solid #ccc',
+                            borderBlock: '0.5px solid #ccc',
                             padding: '5px',
                             marginTop: '-17px',
                             marginBottom: '-17px'
