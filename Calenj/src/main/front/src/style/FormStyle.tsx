@@ -19,6 +19,7 @@ interface UnfocusBackgroundProps {
  */
 
 export const ThemaColor3 = "#31363F";
+export const ThemaColor3_hover =  "#4d555e";
 export const ThemaColor2 ="#393E46";
 export const BackGroundColor = "#222831";
 export const TextColor = "#EEEEEE";

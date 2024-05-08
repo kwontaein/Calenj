@@ -4,7 +4,7 @@ import {ThemaColor3} from "../FormStyle";
 
 export const GroupSubScreen_Container = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
-    width: calc(100% - 10px);
+    width: calc(100% - 10px); //padding *2 만큼제외 빼기
     height: calc(100% - 10px);
     padding: 5px;
     background-color: ${ThemaColor3};

@@ -5,7 +5,7 @@ interface CheckbeforSender{
     $sameUser:boolean,
 }
 
-export const ScrollMin_width =390;
+export const ScrollMin_width =350;
 export const ScrollMarginInline =10;
 export const MessageSend_Cotainer_height = 50;
 

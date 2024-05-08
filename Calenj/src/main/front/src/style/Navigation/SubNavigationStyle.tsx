@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3} from "../FormStyle";
+import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3, ThemaColor3_hover} from "../FormStyle";
 
 export const SubNavigation_Container_width:number  = 232;
 export const SubNavigateTopBar_hegiht: number =32;
 export const SubNavigate_padding: number =14;
+export const subNavigateBorder =1.2;
 export const SubNavigationItem_hegiht: number =30;
 export const SubNavigationItem_margin: number =5;
 export const SubNavigationItem_marginInline: number =7;
@@ -25,10 +26,14 @@ export const SubNavigateTopBar = styled.div`
     padding: ${SubNavigate_padding}px;
     display: flex;
     flex-direction: row;
-    border-bottom: 1.2px #222831 solid;
+    border-bottom: ${subNavigateBorder}px #222831 solid;
     background-color: ${ThemaColor3};
     border-radius: 10px 0 0 0;
     text-align: left;
+
+    &:hover {
+        background-color: ${ThemaColor3_hover};
+    }
 `
 export const SubNavigateTopBar_leftContent =styled.div`
     height: 100%;
