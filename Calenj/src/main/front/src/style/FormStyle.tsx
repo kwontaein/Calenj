@@ -19,12 +19,11 @@ interface UnfocusBackgroundProps {
  */
 
 export const ThemaColor3 = "#31363F";
-export const ThemaColor2 = "#393E46";
+export const ThemaColor2 ="#393E46";
 export const BackGroundColor = "#222831";
 export const TextColor = "#EEEEEE";
 
 export const PointColor = "#007bff";
-
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -34,18 +33,16 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         overflow: hidden;
         user-select: none; /* Standard */
-
-        ::-webkit-scrollbar-thumb {
+        
+        ::-webkit-scrollbar-thumb{
             background: #217af4; /* 스크롤바의 색상 */
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar {
-            width: 4px; /* 스크롤바의 너비 */
+            width: 4px;  /* 스크롤바의 너비 */
         }
-
         ::-webkit-scrollbar-track {
-            background: rgba(33, 122, 244, .1); /*스크롤바 뒷 배경 색상*/
+            background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
         }
     }
 
@@ -204,11 +201,11 @@ export const ListView = styled.li`
     padding-bottom: 10px;
 
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemaColor2};
     }
 `
 
-export const Modal_Background = styled.div`
+export const Modal_Background =styled.div`
     width: 100%;
     height: 100%;
     position: fixed;
@@ -219,6 +216,7 @@ export const Modal_Background = styled.div`
     align-items: center;
     background-color: rgba(0, 0, 0, 0.3)
 `
+
 
 
 export const DEFAULT_HR = styled.hr`

@@ -11,17 +11,29 @@ import {
     SubNavigateState,
     DispatchSubNavigationProps,
     mapDispatchToSubNavigationProps,
-    mapStateToSubNavigationProps
+    mapStateToSubNavigationProps, updateSubParam
 } from "../../../store/slice/SubNavigationSlice";
+import subNavigationbar from "../../Global/SubNavigationbar";
 
 interface subNaviationProps{
     groupId:string,
 }
 
 type SubNavProps = SubNavigateState & DispatchSubNavigationProps &subNaviationProps;
-const GroupSubNavigateItems:React.FC<SubNavProps> = ({groupId,updateSubClickState}) =>{
+const GroupSubNavigateItems:React.FC<SubNavProps> = ({groupId,updateSubClickState, updateSubParam,subNavigateInfo}) =>{
     const [toggleState,setToggleState] = useState<boolean>()
     const [clickState, setClickState] = useState<string>("");
+
+    useEffect(() => { //초기 값 세팅 - 토글 정보를 가져옴(투표/공지)
+        if(!toggleCurrentMap.get(groupId)){
+            toggleCurrentMap.set(groupId,{toggleState: true, clickState: ""})
+        }
+        setToggleState(toggleCurrentMap.get(groupId).toggleState);
+        setClickState(toggleCurrentMap.get(groupId).clickState);
+        updateSubClickState({clickState:toggleCurrentMap.get(groupId).clickState});
+        updateSubParam({param:groupId})
+    }, [groupId]);
+
     const toggleMutationHandler : ()=>void = () =>{
         if(groupId){
             const subNavgationState =toggleCurrentMap.get(groupId);
@@ -46,17 +58,14 @@ const GroupSubNavigateItems:React.FC<SubNavProps> = ({groupId,updateSubClickStat
         }
     }
 
-    useEffect(() => { //초기 값 세팅 - 토글 정보를 가져옴(투표/공지)
-        if(!toggleCurrentMap.get(groupId)){
-            toggleCurrentMap.set(groupId,{toggleState: true, clickState: "", screenHeight:0})
-        }
-        setToggleState(toggleCurrentMap.get(groupId).toggleState);
-        setClickState(toggleCurrentMap.get(groupId).clickState);
-    }, [groupId]);
+
 
     //클릭한 상태 변경 시 dispatch
     useEffect(() => {
-        updateSubClickState({clickState:clickState})
+        //mount이후 clickState가 변하면 갱신
+        if(clickState!==subNavigateInfo.clickState){
+            updateSubClickState({clickState:toggleCurrentMap.get(groupId).clickState})
+        }
     }, [clickState]);
 
 

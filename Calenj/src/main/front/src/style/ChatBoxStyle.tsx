@@ -1,28 +1,27 @@
 import styled from 'styled-components'
 import {TextColor, ThemaColor2, ThemaColor3} from "./FormStyle";
-import {string} from "yup";
 
-
-interface CheckbeforSender {
-    $sameUser: boolean,
+interface CheckbeforSender{
+    $sameUser:boolean,
 }
 
-export const ScrollMin_width = 300;
+export const ScrollMin_width =350;
+export const ScrollMarginInline =10;
 export const MessageSend_Cotainer_height = 50;
 
 export const MessageComponent_Container = styled.div`
     width: 100%;
     height: 100%;
-    backgroundColor: ${ThemaColor2};
+    backgroundColor:${ThemaColor2};
 `
 
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
-    max-width: calc(100% - 10px); //padding만큼 뺌
+    max-width: calc(100% - ${ScrollMarginInline}); //padding만큼 뺌
     min-width: ${ScrollMin_width}px;
     height: calc(100% - ${MessageSend_Cotainer_height}px);
-    margin-inline: 5px;
+    margin-inline: ${ScrollMarginInline/2}px;
 `;
 
 
@@ -30,14 +29,15 @@ export const ScrollableDiv = styled.div`
 export const MessageBoxContainer = styled.div<CheckbeforSender>`
     padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
     padding-inline: 12px;
-    padding-bottom: 0px;
+    padding-bottom:0px;
     user-select: text;
 `
-export const ProfileContainer = styled.div<{ $userEmail?: string | undefined }>`
+export const ProfileContainer = styled.div`
     width: 40px;
     height: 40px;
     padding: 3px;
     border-radius: 50px;
+    background-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
@@ -62,24 +62,21 @@ export const DateContainer = styled.div`
     margin-top: 2px;
 `
 export const MessageContentContainer = styled.div`
-    max-width: ${ScrollMin_width - 74}px;
+    max-width:${ScrollMin_width-74}px;
 `
 
 /**메세지를 담는 컨테이너 1 */
 export const MessageContainer = styled.div`
     margin-left: 10px;
-
-    ${NickNameContainer} {
-        padding: 2px;
+    ${NickNameContainer}{
+        padding:2px;
     }
-
-    ${DateContainer} {
-        padding: 2px;
-        margin-left: 4px;
+    ${DateContainer}{
+        padding:2px;
+        margin-left:4px;
     }
-
-    ${MessageContentContainer} {
-        padding: 2px;
+    ${MessageContentContainer}{
+        padding:2px;
     }
 
 `
@@ -91,15 +88,14 @@ export const DateContainer2 = styled.div`
     width: 50px;
 `
 export const MessageContentContainer2 = styled.div`
-    margin-left: 6px;
-    max-width: ${ScrollMin_width - 74}px;
+    margin-left:6px;
+    max-width:${ScrollMin_width-74}px;
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
-    padding: 2px;
-
+    padding:2px;
     &:hover {
         ${DateContainer2} {
             color: gray;
@@ -120,7 +116,7 @@ export const MessageSend_Input = styled.input`
 
 
 export const MessageSend_Cotainer = styled.form`
-    height: 50px; //메시지 박스크기 83%
+    height: ${MessageSend_Cotainer_height}px; //메시지 박스크기 50px
     display: flex;
 `
 //채팅 endPoint선
