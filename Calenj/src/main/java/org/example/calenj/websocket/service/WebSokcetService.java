@@ -119,7 +119,7 @@ public class WebSokcetService {
 
         Collections.reverse(lines); // 파일 내용을 역순으로 정렬
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -138,7 +138,7 @@ public class WebSokcetService {
                 .limit(20)
                 .map(stringTransformer)
                 .toList();
-
+        System.out.println(previousLines2);
         previousLines.addAll(previousLines2);
 
         if (previousLines.isEmpty()) {
@@ -195,7 +195,7 @@ public class WebSokcetService {
         // 파일 내용을 역순으로 정렬
 
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -227,7 +227,7 @@ public class WebSokcetService {
      * @param param 멈출 내용
      **/
     public static Predicate<String> createFilterCondition(String param) {
-        return line -> !line.contains("EndPoint") && !line.contains(param);
+        return line -> !line.contains("EndPoint" + " [" + param + "]");
     }
 
     /**

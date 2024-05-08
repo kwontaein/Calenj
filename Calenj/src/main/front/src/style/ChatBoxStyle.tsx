@@ -37,7 +37,6 @@ export const ProfileContainer = styled.div<{ $userEmail: string | undefined }>`
     height: 40px;
     padding: 3px;
     border-radius: 50px;
-    background-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
