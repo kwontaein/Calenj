@@ -15,6 +15,7 @@ import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.dto.request.UserRequest;
 import org.example.calenj.user.dto.response.UserProfileResponse;
+import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -63,13 +64,16 @@ public class UserService {
     /**
      * 유저정보 확인
      **/
-    public void selectUserInfo() {
+    public UserResponse selectUserInfo() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-
-        //select 테스트
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
-        String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
-        System.out.println(userResult);
+        if (user.isEmpty()) {
+            return null;
+        }
+
+        UserResponse userResponse = new UserResponse(user.get().getNickname(), user.get().getUserEmail(), user.get().getUserPhone(), user.get().getUserJoinDate());
+        return userResponse;
+
     }
 
     /**

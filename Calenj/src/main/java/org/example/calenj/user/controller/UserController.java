@@ -10,6 +10,7 @@ import org.example.calenj.global.auth.dto.ValidateDTO;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.dto.request.UserRequest;
 import org.example.calenj.user.dto.response.UserProfileResponse;
+import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -66,9 +67,16 @@ public class UserController {
         return userService.subscribeCheck();
     }
 
-    @PostMapping("/api/updateUser")
-    public void updateUser() { //유저 프로필 업데이트
-        userService.selectUserInfo();
+    @GetMapping("/api/getUserInfo")
+    public UserResponse updateUser() { //유저 프로필 업데이트
+        return userService.selectUserInfo();
+    }
+
+    @PutMapping("/api/updateUser")
+    public ResponseEntity<String> updateUser(@RequestBody UserRequest userRequest) {
+        System.out.println(userRequest);
+        // 사용자 정보 업데이트 로직 수행
+        return ResponseEntity.ok("사용자 정보가 업데이트되었습니다.");
     }
 
     @PostMapping("/api/getProfile")

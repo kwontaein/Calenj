@@ -23,6 +23,7 @@ import {useFetchCookie} from "./store/ReactQuery/queryManagement";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
+import Option from "./components/User/Option";
 
 //대표 색 : #  007bff
 
@@ -114,6 +115,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/Map"} element={<NaverMap/>}/>
                         <Route path={"/image"} element={<ImageUploadComponent/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
+                        <Route path={"/option"} element={<Option/>}/>
                     </Routes>
                 </BrowserRouter>
             }
