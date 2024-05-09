@@ -12,7 +12,7 @@ import {
     ContentsScreen_div,
     CustomScreen_MessageBox_Contaienr, CustomScreen_MiddleLine_div, CustomScreen_SubContent_Contaienr,
     EventTopBar_Container,
-    EventTopBarContent,
+    EventTopBarContent, EventTopBarSubContent,
     TransContentsScreen_div,
 } from "../../style/Navigation/ContentCompositionStyle";
 import GroupUserList from "../Group/GroupUserList"
@@ -102,7 +102,7 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
         if(mode ==="row"){
             //content size에서 채팅부분을 제외한 크기
             const maxScroll = contentSize.width -(ScrollMin_width+ScrollMarginInline);
-            const newWidth =(contentSize.width + defaultContentSize) - e.clientX ;
+            const newWidth =(contentSize.width + defaultContentSize) - e.clientX;
             // contentSize.width + defaultContentSize = 전체 화면의 크기 (ContentComposition + Main,subNavigation)
 
             if(showUserList) {
@@ -117,9 +117,9 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
             }
 
         }else if(mode ==="column"){
-            const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder);
+            const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder-3);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=216 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height){
+            if(newHeight >=200 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height){
                 updateSubScreenHeightSize({screenHeightSize:newHeight})
             }
         }
@@ -150,9 +150,19 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
         <FullScreen_div ref={contentRef}>
 
             <EventTopBar_Container>
-                <EventTopBarContent onClick={()=>setShowUserList(!showUserList)}>
+                {subNavigateInfo.clickState==="공지"&&
+                    <EventTopBarSubContent>
+                        <i className="fi fi-ss-megaphone"></i>
+                    </EventTopBarSubContent>}
+                {subNavigateInfo.clickState==="투표"&&
+                    <EventTopBarSubContent>
+                        <i className="fi fi-ss-vote-yea"></i>
+                    </EventTopBarSubContent>}
+                <EventTopBarContent $isClick={showUserList}
+                                    onClick={()=>setShowUserList(!showUserList)}>
                     <i className="fi fi-ss-users"></i>
                 </EventTopBarContent>
+
             </EventTopBar_Container>
 
 

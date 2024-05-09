@@ -1,14 +1,22 @@
 .DatePicker{
     width: 200px;
     height : 20px;
-    margin: 5px;
+    margin-block: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    color: black;
 }
 .VoteConter_DatePicker{
-    width: 150px;
-    height : 20px;
-    margin: 5px;
+    width: 200%;
+    height: 30px;
+    margin-block: 5px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
+    padding-left: 10px;
+    font-size: 14px;
+    &:focus{
+        outline: none;
+        border: 2px solid;
+        border-color: #007bff;
+    }
 }

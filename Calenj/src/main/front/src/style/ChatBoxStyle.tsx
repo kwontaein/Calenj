@@ -1,8 +1,12 @@
 import styled from 'styled-components'
-import {TextColor, ThemaColor2, ThemaColor3} from "./FormStyle";
+import {TextColor, TextColor2, ThemaColor2, ThemaColor3} from "./FormStyle";
 
 interface CheckbeforSender {
     $sameUser: boolean,
+}
+
+interface UserProfile{
+    $userEmail: string | undefined
 }
 
 export const ScrollMin_width = 350;
@@ -32,7 +36,7 @@ export const MessageBoxContainer = styled.div<CheckbeforSender>`
     padding-bottom: 0px;
     user-select: text;
 `
-export const ProfileContainer = styled.div<{ $userEmail: string | undefined }>`
+export const ProfileContainer = styled.div<UserProfile>`
     width: 40px;
     height: 40px;
     padding: 3px;
@@ -47,7 +51,7 @@ export const ProfileContainer = styled.div<{ $userEmail: string | undefined }>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${({$userEmail}) => $userEmail ? `url("/image/savedImage/${$userEmail.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userEmail? `url("/image/savedImage/${props.$userEmail.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 
@@ -112,7 +116,7 @@ export const MessageSend_Input = styled.input`
     background-color: ${ThemaColor3};
     color: ${TextColor};
     border-radius: 4px;
-    border: 1px solid #797979;
+    border: 1px solid ${TextColor2};
     width: calc(100% - 5px);
     height: 35px;
     margin-inline: 5px;

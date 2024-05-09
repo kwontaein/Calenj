@@ -129,7 +129,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
-
+        console.log('업데이트 스크롤')
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         //스크롤이 존재히면서 해당 스크롤이 맨아래로 내려가 있으면
@@ -151,7 +151,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const updateEndpoint = () => {
         const debouncedRequest = debounce(() => {
             requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
-            console.log('앤드포인트 갱신');
+            console.log('엔드포인트 갱신');
         }, 1000);
         debouncedRequest();
     }
@@ -206,15 +206,15 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const receiveChatFile = (messages: string[]) => {
 
         const messageEntries = Array.from(messages, (message: string) => {
-            const messageData = message.split("$", 6);
-            if (!messageData[1]) return null;
+            const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);
+            // console.log(chatUUID,sendDate,userEmail,nickName)
             const loadMsg: Message = {
-                chatUUID: messageData[0],
-                sendDate: messageData[1].slice(1, 17),
-                userEmail: messageData[2],
-                nickName: messageData[3],
-                messageType: messageData[4],
-                message: messageData[5],
+                chatUUID: chatUUID,
+                sendDate: sendDate.slice(1, 17),
+                userEmail: userEmail,
+                nickName: nickName,
+                messageType: messageType,
+                message: messageContent,
             };
             return loadMsg;
         }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
@@ -310,7 +310,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
         getNextPageParam: (messageList) => {
-            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인" || messageList[messageList.length - 1]?.chatUUID === '엔드포인트'
+            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인" || messageList[messageList.length - 1]?.chatUUID === '엔드포인트' || undefined
             return containsValue ? undefined : messageLength.current;
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: endPointMap.get(param),

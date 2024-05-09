@@ -19,7 +19,7 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
 
 
     return(
-        <GroupSubScreen_Container>
+        <GroupSubScreen_Container $mode={subNavigateInfo.mode} >
             {(subNavigateInfo.clickState==="투표" && memberLength)&& <Vote member={memberLength} groupId={groupId}/>}
             {subNavigateInfo.clickState==="공지" && <Notice groupId={groupId}/>}
         </GroupSubScreen_Container>

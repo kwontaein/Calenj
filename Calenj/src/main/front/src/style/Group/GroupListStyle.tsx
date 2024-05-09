@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import {PointColor, TextColor, ThemaColor3} from "../FormStyle";
+import {SubNavigation_Container_width} from "../Navigation/SubNavigationStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
 interface receivedMsg {
@@ -9,9 +10,14 @@ interface navigatePram {
   $isClick : boolean
 }
 
+interface MouseEnterProps{
+    $isEnter: boolean;
+}
 
 
-export const GroupList_Container_width :number =72
+export const GroupList_Container_width :number =72;
+export const GroupListContent_Container_marginInline = 22;
+export const GroupListContent_Container_width : number =SubNavigation_Container_width+GroupList_Container_width;
 
 /** 흔드는 애니메이션 */
 const shakeAnimation = keyframes`
@@ -33,48 +39,56 @@ const shakeAnimation = keyframes`
 /**
  * 그룹 리스트 컨테이너
  */
- export const GroupList_Container = styled.div`
- overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
+export const GroupList_Container = styled.div`
+ width: 100%;
  height:100%;
- text-align: center;
+ display: flex;
+ flex-direction: row;
+`
+export const GroupListUserView_width = styled.div`
  width: ${GroupList_Container_width}px;
- align-items: center;
+ height: 100%;
 `
 
 /**
- * 그룹 리스트 컨테이너 안에 있는 서브 컨테이너
+ * 그룹 리스트의 내용을 담는 컨테이너
  */
-export const GroupListSub_Container = styled.div`
+export const GroupListContent_Container = styled.div<MouseEnterProps>`
  width:auto;
  display: flex;
  flex-direction: column;
- align-items: center;
- height: auto; /* 스크롤 가능한 div의 최대 높이 설정 */
+ height: 100%; /* 스크롤 가능한 div의 최대 높이 설정 */
+ width: ${GroupListContent_Container_width-GroupListContent_Container_marginInline}px;
+ text-align: center;
+ padding-inline: ${GroupListContent_Container_marginInline/2}px;
+ overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
+ position: absolute;
+ z-index: ${props => props.$isEnter ? 1 : 0};
 `
 
 /**
  * 그룹 리스트 구분 선
  */
-export const GroupList_HR = styled.hr`
+export const GroupList_HR = styled.div`
     position: relative;
     outline: 0;
     border: 0;
     border-radius: 50px;
     background: ${ThemaColor3};
     height: .2em;
-    max-width: 30px;
+    width:30px;
     margin-block: 10px;
+    margin-inline :10px;
 `
 
 export const NavigateState = styled.div<navigatePram>`
  background-color : ${props=> props.$isClick ? TextColor: "transParent"};
- width:5px;
- height: 5px;
+ width: ${props=> props.$isClick ? 5.5: 5}px;
+ height: ${props=> props.$isClick ? 40 : 5}px;
  border-radius: 50px;
  display: flex;
  position:absolute;
  left:-26%;
- 
 `
 
 /**
@@ -93,17 +107,18 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
  border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
  white-space: nowrap;
  cursor: pointer;
- 
+    
  transition: background-color 0.3s ease;
  transition: border-radius 0.3s ease;
  &:hover {
       ${NavigateState} {
        transition: border-wsz2  w2radius 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* 변경된 부분 */
-       border-radius: 15px;
-       height: 18px;
+       transition: height 0.3s ease;
+       border-radius: 20px;
+       height: ${props=>props.$isClick ? 40 : 18}px;
        background-color: white;
       }
-  background-color: #007bff;
+  background-color: ${PointColor};
   border-radius: 19px;
  }
  font-weight: bold;
@@ -127,8 +142,42 @@ export const SignOfMessageNum = styled.div<receivedMsg>`
 `
 
 export const GroupListTitle = styled.div`
+ width: 100%;
  overflow: hidden;
- font-size: 14px;
+ font-size: 13px;
+`
+
+/**
+ @param GroupTitleView_Container
+ MouseHover 시 뜨는 그룹제목 Contaienr
+ */
+export const GroupTitleView_Container = styled.div`
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    left: 4.5em;
+    z-index: 0; /* 상위 컴포넌트 위에 표시될 수 있도록 설정 */
+`
+export const GroupTitleViewTail = styled.div`
+    background-color: black;
+    width: 10px;
+    height: 10px;
+    transform:rotate(45deg);
+    
+`
+export const GroupTitleViewContent = styled.div`
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    padding: 5px;
+    border-radius: 3px;
+    position: absolute;
+    left: 5px;
+    font-size: 14px;
 `
 
 /**캘린제이 아이콘 */
@@ -150,7 +199,7 @@ export const Btn_CalenJ_Icon = styled.button`
  transition: background-color 0.3s ease;
  transition: border-radius 0.3s ease;
  &:hover {
-  background-color: #007bff;
+  background-color: ${PointColor};
   border-radius: 10px;
   animation: ${shakeAnimation} 0.3s ease-out 1s forwards;
  }

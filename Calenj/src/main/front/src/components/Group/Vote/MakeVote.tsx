@@ -1,19 +1,38 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
-import {RowFlexBox, Mini_Input, FormLable, Li, OveflowBlock} from '../../../style/FormStyle';
+import {
+    RowFlexBox,
+    Modal_Background,CheckCondition_Button,
+} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
-import {useLocation} from 'react-router-dom';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm, saveDBFormat} from '../../../stateFunc/actionFun'
 import '../../../style/Datepicker.scss'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import { UseQueryResult } from '@tanstack/react-query';
-import ReactDatePicker from 'react-datepicker';
-
-import {VoteList} from '../../../store/ReactQuery/queryInterface'
+import {
+    AddVoteList_Btn,
+    GroupVoteModal_Container,
+    GroupVoteModal_Title,
+    GroupVoteModal_TopContent_Container,
+    MiniVote_Input,
+    VoteList_Container,
+    VoteTypeRadio_Label,
+    VoteTypeRadio_Lable_Container,
+    VoteListItem_Container,
+    VoteType_Radio,
+    VoteListItem_Content,
+    VoteListContent_Drop_Btn,
+    ButtomContent_Containr,
+    GroupVoteModal_close_Btn,
+    GroupVoteModal_Button_Container,
+    VoteListEmptyText,
+    VoteSetting_Container,
+    VoteCheckOption_Container, VoteCheckOption_Label,
+} from "../../../style/Group/GroupVoteStyle";
 
 interface ModalProps {
     onClose: () => void;
@@ -34,11 +53,12 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     const [inputForm, setInputForm] = useState<string>('TEXT'); //입력형식
     const [multipleOption, setMultipleOption] = useState<boolean>(false);//중복투표여부
     const [anonymousOption, setanonymousOption] = useState<boolean>(false); //익명여부
-    const datepickerRef =useRef<ReactDatePickerProps>()
+    // const datepickerRef =useRef<ReactDatePickerProps>()
     const inputRef = useRef<HTMLInputElement>(null);
     const contentRef = useRef<HTMLInputElement>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(new Date().setDate(new Date().getDate() + 1)));
-    
+    const modalBackground = useRef<HTMLDivElement>(null);
+
 
     //List추가
     const addList = () => {
@@ -115,8 +135,8 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
         }
     }
     //모달창 닫기
-    const cancle = () => {
-        if (voteList.length === 0) {
+    const closeModal = () => {
+        if (voteList.length === 0 && title==="") {
             onClose();
             return
         }
@@ -179,19 +199,28 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
     }, [selectedDate])
 
     return (
-        <div>
+            <Modal_Background ref={modalBackground} onClick={e => {
+                if (e.target === modalBackground.current && title === "" && voteList.length === 0) {
+                    onClose();
+                }
+            }}>
+                <GroupVoteModal_Container>
+                    <GroupVoteModal_TopContent_Container>
+                        <GroupVoteModal_Title>투표 만들기</GroupVoteModal_Title>
+                        <GroupVoteModal_close_Btn onClick={closeModal}>
+                            x
+                        </GroupVoteModal_close_Btn>
+                    </GroupVoteModal_TopContent_Container>
+                    <MiniVote_Input onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                                ref={inputRef}
+                                placeholder='투표 제목'/>
 
-            <div className='makeVote_container'>
-                <RowFlexBox>
-                    <Mini_Input onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)} ref={inputRef}
-                                style={{marginTop: '1px', width: '210px', fontWeight: '550'}} placeholder='투표 제목'/>
-                </RowFlexBox>
-                <RowFlexBox style={{alignItems: "center"}}>
+                    <RowFlexBox style={{alignItems: "center"}}>
                     {inputForm === 'TEXT' ?
-                        <Mini_Input ref={contentRef}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setContent(e.target.value)}
-                                    style={{width: '150px', fontSize: '12px'}} placeholder='항목 입력' maxLength={20}>
-                        </Mini_Input>
+                        <MiniVote_Input ref={contentRef}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setContent(e.target.value)}
+                                        placeholder='항목 입력' maxLength={20}>
+                        </MiniVote_Input>
                         :
                         <DatePicker
                             dateFormat=' yyyy년 MM월 dd일 (EEE)' // 날짜 형태
@@ -203,63 +232,77 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                             locale={ko}
                         />
                     }
-
-
-                    <button onClick={() => addList()} style={{height: '25px'}}>추가</button>
+                    <AddVoteList_Btn onClick={() => addList()} >추가</AddVoteList_Btn>
                 </RowFlexBox>
-                <label style={{fontSize: '13px'}}>
-                    <input type='radio' name='inputForm' value='TEXT'
-                        onClick={(e) => inputFormHandler(e)}
-                        defaultChecked/>텍스트
-                </label>
-                <label style={{fontSize: '13px'}}>
-                    <input type='radio' name='inputForm' value='DATE'
-                    onClick={(e) => inputFormHandler(e)}/>날짜
-                </label>
-                {voteList &&
-                    <div style={{listStyle: 'none', marginTop: '20px'}}>
-                        {voteList.map((list) => (
-                            <Li key={list.id} style={{width: '203px', paddingTop: '2px'}}>
-                                <RowFlexBox>
-                                    <OveflowBlock
-                                        style={{maxWidth: '150px', fontSize: '14px'}}>{list.content}</OveflowBlock>
-                                    <button style={{marginLeft: 'auto'}} onClick={() => deletLi(list.id)}>제거</button>
-                                </RowFlexBox>
-                            </Li>
-                        ))}
-                    </div>
+                <VoteTypeRadio_Lable_Container>
+                    <VoteTypeRadio_Label style={{fontSize: '13px'}}>
+                        <VoteType_Radio type='radio' name='inputForm' value='TEXT'
+                            onClick={(e) => inputFormHandler(e)}
+                            defaultChecked/>텍스트
+                    </VoteTypeRadio_Label>
+                    <VoteTypeRadio_Label style={{fontSize: '13px'}}>
+                        <VoteType_Radio type='radio' name='inputForm' value='DATE'
+                        onClick={(e) => inputFormHandler(e)}/>날짜
+                    </VoteTypeRadio_Label>
+                </VoteTypeRadio_Lable_Container>
+                <VoteList_Container>
+                {voteList.length!==0 ?
+                    (voteList.map((list) => (
+                        <VoteListItem_Container key={list.id}>
+                            <VoteListItem_Content>
+                                {list.content}
+                            </VoteListItem_Content>
+                            <VoteListContent_Drop_Btn
+                                onClick={() => deletLi(list.id)}>
+                                <i className="fi fi-br-trash" style={{marginTop:'5px'}}></i>
+                            </VoteListContent_Drop_Btn>
+                        </VoteListItem_Container>
+                    )))
+                :
+                    <VoteListEmptyText>
+                        항목을 추가해주세요
+                    </VoteListEmptyText>
                 }
+                </VoteList_Container>
+                <ButtomContent_Containr>
+                    <div>투표 마감</div>
+                    <VoteSetting_Container>
+                        <DatePicker
+                            dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
+                            shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
+                            minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
+                            maxDate={new Date(new Date().setDate(new Date().getDate() + 6))}//최대 날짜를 현재기준 일주일까지
+                            showTimeSelect //시간선택
+                            timeFormat="HH:mm" //시간 포맷
+                            timeIntervals={15} //시간 단위
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            className='DatePicker'
+                            placeholderText='날짜 선택'
+                            locale={ko}
+                        />
+                        <VoteCheckOption_Container>
+                            <VoteCheckOption_Label><input type='checkBox' name='choice'
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setMultipleOption(e.target.checked)
+                                }}/>복수선택
+                            </VoteCheckOption_Label>
+                            <VoteCheckOption_Label><input type='checkBox' name='anonymous'
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setanonymousOption(e.target.checked)
+                                }}/>익명투표
+                            </VoteCheckOption_Label>
+                        </VoteCheckOption_Container>
+                    </VoteSetting_Container>
+                    <GroupVoteModal_Button_Container>
+                        <CheckCondition_Button $isAble={voteList.length>1 && title!==""} onClick={createVote}>
+                            생성
+                        </CheckCondition_Button>
+                    </GroupVoteModal_Button_Container>
+                </ButtomContent_Containr>
+            </GroupVoteModal_Container>
 
-                <div style={{fontSize: '14px', marginLeft: '5px', marginTop: '30px'}}>투표 마감</div>
-                <DatePicker
-                    dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
-                    shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                    minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
-                    maxDate={new Date(new Date().setDate(new Date().getDate() + 6))}//최대 날짜를 현재기준 일주일까지
-                    showTimeSelect //시간선택
-                    timeFormat="HH:mm" //시간 포맷
-                    timeIntervals={15} //시간 단위
-                    selected={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
-                    className='DatePicker'
-                    placeholderText='날짜 선택'
- 
-                    locale={ko}
-                />
-                <label style={{fontSize: '13px', marginLeft: '3px'}}><input type='checkBox' name='choice'
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setMultipleOption(e.target.checked)
-                    }}/>복수선택</label>
-                <label style={{fontSize: '13px'}}><input type='checkBox' name='anonymous'
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setanonymousOption(e.target.checked)
-                    }}/>익명투표</label>
-                <div style={{width: '210px', marginTop: '20px', textAlign: 'right'}}>
-                    <button style={{marginRight: '5px'}} onClick={createVote}>생성</button>
-                    <button onClick={cancle}>취소</button>
-                </div>
-            </div>
-        </div>
+        </Modal_Background>
     )
 }
 export default MakeVote;

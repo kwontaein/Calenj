@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3} from "../FormStyle";
+import {BackGroundColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../FormStyle";
 
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_hegiht: number = 32;
@@ -13,27 +13,33 @@ interface SubNavigationClickProps {
     $isClick: boolean;
 }
 
+
 export const SubNavigation_Container = styled.div`
     border-radius: 10px 0 0 0;
     min-width: ${SubNavigation_Container_width}px;
     height: 100%;
     background-color: ${ThemaColor3};
+    z-index: 0;
 `
 
-
-export const SubNavigateTopBar = styled.div`
+export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
     height: ${SubNavigateTopBar_hegiht}px;
     padding: ${SubNavigate_padding}px;
-    display: flex;
-    flex-direction: row;
     border-bottom: ${subNavigateBorder}px #222831 solid;
-    background-color: ${ThemaColor3};
+    background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemaColor3 };
     border-radius: 10px 0 0 0;
-    text-align: left;
-
+   
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
+`
+
+export const SubNavigateTopBar_Content_Container = styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+
 `
 export const SubNavigateTopBar_leftContent = styled.div`
     height: 100%;
@@ -71,7 +77,7 @@ export const SubNavigateItem_Content = styled.div`
     font-size: 16px;
     align-content: center;
     margin-left: 10px;
-    color: #797979;
+    color: ${TextColor2};
 `
 
 export const SubNavigateItem_Icon = styled.div`
@@ -81,7 +87,7 @@ export const SubNavigateItem_Icon = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 15px;
-    color: #797979;
+    color: ${TextColor2};
 `
 
 export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
@@ -98,11 +104,11 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
     background-color: ${props => props.$isClick ? BackGroundColor : ''};
 
     ${SubNavigateItem_Icon} {
-        color: ${props => props.$isClick ? TextColor : '#797979'};
+        color: ${props => props.$isClick ? TextColor : TextColor2};
     }
 
     ${SubNavigateItem_Content} {
-        color: ${props => props.$isClick ? TextColor : '#797979'};
+        color: ${props => props.$isClick ? TextColor : TextColor2};
     }
 
     transition: background-color 0.3s ease;
@@ -125,7 +131,7 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
 export const Hr_SubNavigation = styled.hr`
     margin: 10px;
     height: 2px;
-    background: ${ThemaColor2};
+    background-color: ${ThemaColor2};
     border: 0px;
     border-radius: 10px;
 `

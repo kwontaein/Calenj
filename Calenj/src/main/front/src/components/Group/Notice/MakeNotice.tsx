@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
-import {RowFlexBox,Mini_Textarea} from '../../../style/FormStyle';
+import { CheckCondition_Button} from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
 import {useConfirm,stateFilter,saveDBFormat} from '../../../stateFunc/actionFun'
@@ -7,10 +7,11 @@ import axios ,{AxiosError}from 'axios';
 import { Modal_Background} from '../../../style/FormStyle'
 import { UseQueryResult } from '@tanstack/react-query';
 import {
-    GroupNoticeModal_Btn,
-    GroupNoticeModal_Button_Container,
+    GroupNoticeModal_Button_Container, GroupNoticeModal_close_Btn,
     GroupNoticeModal_Container,
-    GroupNoticeModal_Textarea, GroupNoticeModal_Title
+    GroupNoticeModal_Textarea,
+    GroupNoticeModal_Title,
+    GroupNoticeModal_TopContent_Container
 } from "../../../style/Group/GroupNoticeStyle";
 
 
@@ -29,11 +30,12 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
     useEffect(()=>{
         inputRef.current?.focus();
     },[])
+
     const closeModal =()=>{
         if (content==='') {
             onClose();
         }else{
-            useConfirm('작성한 내용은 삭제됩니다. 정말로 취소하시겠습니까?', onClose,()=>{})
+            useConfirm('작성한 내용은 저장되지 않습니다. 정말로 취소하시겠습니까?', onClose,()=>{})
         }
     }
 
@@ -55,7 +57,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
 
     const createNotice =()=>{
         if(content!==''){
-            useConfirm(`공지를 생성하시겠습니까?`,postNotice,()=>{}, queryState)
+            useConfirm(`공지를 등록하시겠습니까??`,postNotice,()=>{}, queryState)
         }else{
             window.alert('내용을 입력해주세요.')
         }  
@@ -65,16 +67,23 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
 
     return(
             <Modal_Background ref={modalBackground} onClick={e => {
-                if (e.target === modalBackground.current) {
-                    closeModal();
+                if (e.target === modalBackground.current && content==='') {
+                    onClose();
                 }
             }}>
                 <GroupNoticeModal_Container>
-                    <GroupNoticeModal_Button_Container>
-                        <GroupNoticeModal_Title>공지</GroupNoticeModal_Title>
-                        <GroupNoticeModal_Btn onClick={createNotice}>완료</GroupNoticeModal_Btn>
-                    </GroupNoticeModal_Button_Container>
+                    <GroupNoticeModal_TopContent_Container>
+                        <GroupNoticeModal_Title>공지 작성하기</GroupNoticeModal_Title>
+                        <GroupNoticeModal_close_Btn onClick={closeModal}>
+                            x
+                        </GroupNoticeModal_close_Btn>
+                    </GroupNoticeModal_TopContent_Container>
                     <GroupNoticeModal_Textarea onChange={(e:ChangeEvent<HTMLTextAreaElement>)=>setContent(e.target.value)} placeholder='내용을 입력해주세요'/>
+                    <GroupNoticeModal_Button_Container>
+                        <CheckCondition_Button $isAble={content!==""} onClick={createNotice}>
+                            등록
+                        </CheckCondition_Button>
+                    </GroupNoticeModal_Button_Container>
                 </GroupNoticeModal_Container>
             </Modal_Background>
 

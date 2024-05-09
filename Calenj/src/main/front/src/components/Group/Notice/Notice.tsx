@@ -1,11 +1,12 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {useLocation} from 'react-router-dom';
-import {useNavigate} from "react-router-dom";
 import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
-import {FullScreen_div, ListView, MiniText} from '../../../style/FormStyle'
+import { ListView, MiniText} from '../../../style/FormStyle'
 import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
-import {CreateNotice_Btn} from "../../../style/Group/GroupNoticeStyle";
+import {
+    GroupNoticeList_Container,
+} from "../../../style/Group/GroupNoticeStyle";
+import {GroupSubScreenTopIcon_Container, GroupSubScreenTop_Container, GroupSubScreenList_HR} from "../../../style/Group/GroupSubScreenStyle";
 
 interface SubScreenProps{
     groupId:string,
@@ -20,30 +21,32 @@ const Notice :React.FC<SubScreenProps> =({groupId})=>{
     const closeModal = () => {
         setMakeNotice(false);
     };
-      //공지목록 불러오기
 
-    // const redirectDetail = (noticeId: string) => {
-    //     navigate("/notice/detail", {state: {noticeId: noticeId}});
-    // }
 
 
     return(
-        <FullScreen_div>
-            <CreateNotice_Btn onClick={()=>setMakeNotice(true)}>공지생성하기</CreateNotice_Btn>
+        <GroupNoticeList_Container>
+            <GroupSubScreenTop_Container>
+                공지
+                <GroupSubScreenTopIcon_Container onClick={()=>setMakeNotice(true)}>
+                    <i className="fi fi-rs-file-edit"  style={{marginTop:"5px"}}></i>
+                </GroupSubScreenTopIcon_Container>
+            </GroupSubScreenTop_Container>
+            <GroupSubScreenList_HR/>
+
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
-            {noticeListState.data && 
-                <div>
-                    {noticeListState.data.map((notice) => (
+            {noticeListState.data &&
+                (noticeListState.data.map((notice) => (
                         <ListView key={notice.noticeId}
-                        onClick={() => {}}>
+                                  onClick={() => {}}>
                             {notice.noticeContent}
                             <br></br>
                             <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
                         </ListView>
-                    ))}
-                </div>
+                    ))
+                )
             }
-        </FullScreen_div>
+        </GroupNoticeList_Container>
     )
 }
 export default Notice;

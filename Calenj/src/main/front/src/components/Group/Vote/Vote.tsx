@@ -1,6 +1,4 @@
 import {useEffect, useState} from "react";
-import {useLocation} from 'react-router-dom';
-import {useNavigate} from "react-router-dom";
 import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
 import {FullScreen_div, ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
@@ -8,6 +6,11 @@ import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
 import {VoteList} from '../../../store/ReactQuery/queryInterface'
 import {useFetchVoteList} from "../../../store/ReactQuery/queryManagement";
+import {
+    GroupSubScreenList_HR,
+    GroupSubScreenTop_Container,
+    GroupSubScreenTopIcon_Container
+} from "../../../style/Group/GroupSubScreenStyle";
 
 
 interface GroupProps {
@@ -66,8 +69,13 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
     }
     return (
         <div>
-            <h1>투표</h1>
-            <button onClick={() => setMakeVote(true)} style={{marginBottom: '10px'}}>투표생성하기</button>
+            <GroupSubScreenTop_Container>
+                투표
+                <GroupSubScreenTopIcon_Container onClick={() => setMakeVote(true)}>
+                    <i className="fi fi-rs-file-edit"  style={{marginTop:"5px"}}></i>
+                </GroupSubScreenTopIcon_Container>
+            </GroupSubScreenTop_Container>
+            <GroupSubScreenList_HR/>
             {makeVote && <MakeVote onClose={closeModal} groupId={groupId} queryState={voteListState}/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&
@@ -117,9 +125,7 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
                     <ul>
                         {endVoteList.map((vote) => (
                             <ListView key={vote.voteId}
-                                      onClick={() => {}}
-                            >
-
+                                      onClick={() => {}}>
                                 <RowFlexBox>
                                     <div style={{
                                         marginLeft: '-20px',
