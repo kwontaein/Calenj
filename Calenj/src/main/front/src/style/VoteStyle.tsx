@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {TextColor2, TextColor3, ThemaColor2} from "./FormStyle";
 
 interface VoteProps {
     $isCreater: boolean;
@@ -8,6 +9,31 @@ interface VoteProps {
 interface VoteAble {
     $end: boolean
 }
+
+interface subScreenWidthProps{
+    $subScreenWidth: number;
+}
+
+export const GroupVoteList_Container = styled.div`
+    width: 100%;
+    height: calc(100% - 5px);
+`
+
+export const GroupVoteListView_Li = styled.li`
+    width: calc(100% - 20px);
+    list-style: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-inline: 10px;
+    padding-block: 5px;
+
+    &:hover {
+        background-color: ${ThemaColor2};
+    }
+`
+
+
 
 /**
  * 투표 상태에 따른 체인지 버튼
@@ -46,3 +72,25 @@ export const TransVoteContainer = styled.div<VoteAble>`
         }
     `}
 `;
+
+export const GroupVoteListDivistion = styled.div`
+    color: ${TextColor3};
+    font-size: 12px;
+    align-items: center;
+    padding-block: 5px;
+    padding-inline: 2px;
+    border-block: 1px solid ${TextColor2};
+`
+export const GroupVoteListContainer = styled.div`
+    height: calc(100% - 40px);
+    width: 100%;
+`
+export const GroupVoterListTitle = styled.div<subScreenWidthProps>`
+    width: 100%;
+    max-width: ${props=>props.$subScreenWidth-30}px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`
+
+

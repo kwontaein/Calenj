@@ -5,6 +5,9 @@ import {createGlobalStyle} from 'styled-components'
 interface UnfocusBackgroundProps {
     focus: string;
 }
+interface ClickAbleProps{
+    $isAble :boolean;
+}
 
 
 /**
@@ -22,8 +25,10 @@ export const ThemaColor3 = "#31363F";
 export const ThemaColor2 ="#393E46";
 export const BackGroundColor = "#222831";
 export const TextColor = "#EEEEEE";
-
+export const TextColor2 ="#797979";
+export const TextColor3 ="#cdcdcd";
 export const PointColor = "#007bff";
+export const PointColor2 ="#FFD369"
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -82,6 +87,7 @@ export const MiniText = styled.div`
     color: gray;
     margin-top: 5px;
     font-size: 12px;
+    align-items: center;
 `
 //div 가로로 나열
 export const RowFlexBox = styled.div`
@@ -163,12 +169,6 @@ export const FormLable = styled.label`
 `;
 
 
-export const OveflowBlock = styled.div`
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-left: 5px
-`
 export const GROUP_USER_LIST = styled.ul`
     width: 110px;
     padding: 0;
@@ -253,6 +253,18 @@ export const SIGN_STATE_TEXT = styled.span`
     align-items: center;
 `;
 
-export const DIV_FULL_HEIGHT = styled.div`
+export const CheckCondition_Button = styled.div<ClickAbleProps>`
+    width: 70px;
     height: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${ThemaColor3};
+    ${props => props.$isAble &&
+            `background-color : ${PointColor};
+             &:hover{background-color : ${PointColor}77;
+             }
+    `}
 `
+

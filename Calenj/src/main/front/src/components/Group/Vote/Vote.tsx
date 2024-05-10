@@ -1,21 +1,34 @@
 import {useEffect, useState} from "react";
-import {useLocation} from 'react-router-dom';
-import {useNavigate} from "react-router-dom";
 import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
-import {FullScreen_div, ListView, MiniText, RowFlexBox} from '../../../style/FormStyle'
+import {FullScreen_div, ListView, MiniText, RowFlexBox, TextColor2, TextColor3} from '../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
 import {VoteList} from '../../../store/ReactQuery/queryInterface'
 import {useFetchVoteList} from "../../../store/ReactQuery/queryManagement";
+import {
+    GroupSubScreenList_HR,
+    GroupSubScreenTop_Container,
+    GroupSubScreenTopIcon_Container
+} from "../../../style/Group/GroupSubScreenStyle";
+import {
+    GroupVoteList_Container,
+    GroupVoteListContainer,
+    GroupVoteListDivistion,
+    GroupVoteListView_Li, GroupVoterListTitle
+} from "../../../style/VoteStyle";
+
+import {connect} from 'react-redux'
 
 
-interface GroupProps {
-    groupId: string;
-    member: number;
+interface SubScreenProps {
+    groupId: string,
+    member: number,
+    subWidth:number,
 }
 
-const Vote: React.FC<GroupProps> = ({member, groupId}) => {
+
+const Vote: React.FC<SubScreenProps> = ({member, groupId,subWidth}) => {
     const [makeVote, setMakeVote] = useState(false);
     const [voteList, setVoteList] = useState<VoteList[]>([]);
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
@@ -65,34 +78,24 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
         return isVoter;
     }
     return (
-        <div>
-            <h1>투표</h1>
-            <button onClick={() => setMakeVote(true)} style={{marginBottom: '10px'}}>투표생성하기</button>
+        <GroupVoteList_Container>
             {makeVote && <MakeVote onClose={closeModal} groupId={groupId} queryState={voteListState}/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&
-                <div>
+                <GroupVoteListContainer>
                     {voteList.length > 0 &&
-                        <MiniText style={{borderBlock: '0.5px solid #ccc', padding: '5px', marginBottom: '-17px'}}>진행중인
-                            투표</MiniText>
-                    }
-                    <ul>
-                        {voteList.map((vote) => (
-                            <ListView key={vote.voteId}
-                                      onClick={() =>{} }
-                            >
-                                <RowFlexBox>
-                                    <div style={{
-                                        marginLeft: '-20px',
-                                        marginRight: '20px',
-                                        paddingTop: '2px',
-                                        fontWeight: 550,
-                                        letterSpacing: '-2px'
-                                    }}>Q .
-                                    </div>
-                                    <div>
-                                        {vote.voteTitle}
-                                        <RowFlexBox>
+                        <div>
+                            <GroupVoteListDivistion>
+                                진행중인 투표
+                            </GroupVoteListDivistion>
+                            {voteList.map((vote) => (
+                                <GroupVoteListView_Li key={vote.voteId}
+                                          onClick={() =>{}}>
+                                    <div style={{width:"100%"}}>
+                                        <GroupVoterListTitle $subScreenWidth={subWidth}>
+                                            {vote.voteTitle}
+                                        </GroupVoterListTitle>
+                                        <RowFlexBox style={{width:"100%"}}>
                                             <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
                                             <MiniText style={{
                                                 marginLeft: '3px',
@@ -101,51 +104,36 @@ const Vote: React.FC<GroupProps> = ({member, groupId}) => {
                                         </RowFlexBox>
                                         <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
                                     </div>
-                                </RowFlexBox>
-
-                            </ListView>
-                        ))}
-                    </ul>
+                                </GroupVoteListView_Li>
+                            ))}
+                        </div>
+                    }
                     {endVoteList.length !== 0 &&
-                        <MiniText style={{
-                            borderBlock: '0.5px solid #ccc',
-                            padding: '5px',
-                            marginTop: '-17px',
-                            marginBottom: '-17px'
-                        }}>종료된 투표</MiniText>}
-
-                    <ul>
-                        {endVoteList.map((vote) => (
-                            <ListView key={vote.voteId}
-                                      onClick={() => {}}
-                            >
-
-                                <RowFlexBox>
-                                    <div style={{
-                                        marginLeft: '-20px',
-                                        marginRight: '20px',
-                                        paddingTop: '2px',
-                                        fontWeight: 550,
-                                        letterSpacing: '-2px'
-                                    }}>Q .
-                                    </div>
-                                    <div>
-                                        {vote.voteTitle}
-                                        <RowFlexBox>
-                                            <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
-                                            <MiniText
-                                                style={{marginLeft: '3px'}}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
-                                        </RowFlexBox>
-                                        <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
-                                    </div>
-                                </RowFlexBox>
-
-                            </ListView>
+                        <div>
+                            <GroupVoteListDivistion>
+                                종료된 투표
+                            </GroupVoteListDivistion>
+                            {endVoteList.map((vote) => (
+                                <GroupVoteListView_Li key={vote.voteId}
+                                          onClick={() => {}}>
+                                    <RowFlexBox>
+                                        <div>
+                                            {vote.voteTitle}
+                                            <RowFlexBox>
+                                                <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
+                                                <MiniText
+                                                    style={{marginLeft: '3px'}}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
+                                            </RowFlexBox>
+                                            <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
+                                        </div>
+                                    </RowFlexBox>
+                            </GroupVoteListView_Li>
                         ))}
-                    </ul>
-
-                </div>}
-        </div>
+                    </div>
+                    }
+                </GroupVoteListContainer>
+            }
+        </GroupVoteList_Container>
     )
 }
-export default Vote
+export default Vote;

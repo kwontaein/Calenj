@@ -34,25 +34,18 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
             during: 7
         }).then(response => {
             setInviteLink(response.data)
-            setModalOpen(true);
-            axios.get('/api/getFriendList', {})
+            setModalOpen(true)
+            axios.get('/api/getFriendList')
                 .then(response => {
-                    setFriends(response.data)
-                    console.log("friends", friends)
-                    console.log(response.data)
-                    setModalOpen(true)
+                    setFriends(response.data);
                 }).catch(error => console.log(error));
         }).catch(error => console.log(error));
-
     }
 
     const closeModal = () => {
         setModalOpen(false);
     };
 
-    useEffect(() => {
-
-    })
 
     function sendToFriend(friendId: string, inviteLink: string) {
         //친구에게 알림 보내기
@@ -67,7 +60,7 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
     return (
         <div>
             <Btn_ItemSelector onClick={invite}>
-                <SelectorText_Continer>
+                <SelectorText_Continer >
                     초대하기
                 </SelectorText_Continer>
                 <SelectorIcon_Container>

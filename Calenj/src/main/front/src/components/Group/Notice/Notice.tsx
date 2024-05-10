@@ -1,17 +1,20 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {useLocation} from 'react-router-dom';
-import {useNavigate} from "react-router-dom";
-import {stateFilter,AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
+import {AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
-import {FullScreen_div, ListView, MiniText} from '../../../style/FormStyle'
+import {FullScreen_div, MiniText} from '../../../style/FormStyle'
 import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
-import {CreateNotice_Btn} from "../../../style/Group/GroupNoticeStyle";
+import {
+    GroupNoticeListTitle, GroupNoticeListView_Li,
+} from "../../../style/Group/GroupNoticeStyle";
+import {GroupSubScreenTopIcon_Container, GroupSubScreenTop_Container, GroupSubScreenList_HR} from "../../../style/Group/GroupSubScreenStyle";
 
 interface SubScreenProps{
     groupId:string,
+    subWidth:number
 }
 
-const Notice :React.FC<SubScreenProps> =({groupId})=>{
+
+const Notice :React.FC<SubScreenProps> =({groupId,subWidth})=>{
     const[makeNotice,setMakeNotice] = useState(false);
 
 
@@ -20,28 +23,23 @@ const Notice :React.FC<SubScreenProps> =({groupId})=>{
     const closeModal = () => {
         setMakeNotice(false);
     };
-      //공지목록 불러오기
 
-    // const redirectDetail = (noticeId: string) => {
-    //     navigate("/notice/detail", {state: {noticeId: noticeId}});
-    // }
 
 
     return(
         <FullScreen_div>
-            <CreateNotice_Btn onClick={()=>setMakeNotice(true)}>공지생성하기</CreateNotice_Btn>
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
-            {noticeListState.data && 
-                <div>
-                    {noticeListState.data.map((notice) => (
-                        <ListView key={notice.noticeId}
-                        onClick={() => {}}>
-                            {notice.noticeContent}
-                            <br></br>
+            {noticeListState.data &&
+                (noticeListState.data.map((notice) => (
+                        <GroupNoticeListView_Li key={notice.noticeId}
+                                  onClick={() => {}}>
+                            <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                {notice.noticeTitle}
+                            </GroupNoticeListTitle>
                             <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
-                        </ListView>
-                    ))}
-                </div>
+                        </GroupNoticeListView_Li>
+                    ))
+                )
             }
         </FullScreen_div>
     )

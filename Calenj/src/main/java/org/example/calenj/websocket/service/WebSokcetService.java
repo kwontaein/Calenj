@@ -90,8 +90,7 @@ public class WebSokcetService {
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
-                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n"
-                :
+                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
@@ -139,7 +138,7 @@ public class WebSokcetService {
                 .limit(20)
                 .map(stringTransformer)
                 .toList();
-        System.out.println(previousLines2);
+
         previousLines.addAll(previousLines2);
 
         if (previousLines.isEmpty()) {
@@ -196,7 +195,7 @@ public class WebSokcetService {
         // 파일 내용을 역순으로 정렬
 
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
+                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") &&!line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());

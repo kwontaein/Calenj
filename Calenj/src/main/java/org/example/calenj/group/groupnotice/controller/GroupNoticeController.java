@@ -19,7 +19,7 @@ public class GroupNoticeController {
     //공지 생성
     @PostMapping("api/makeNotice")
     public void makeNotice(@RequestBody GroupNoticeRequest groupNoticeRequest) {
-        groupService.makeNotice(groupNoticeRequest.getNoticeContent(), groupNoticeRequest.getNoticeCreated(), groupNoticeRequest.getGroupId());
+        groupService.makeNotice(groupNoticeRequest.getNoticeTitle(), groupNoticeRequest.getNoticeContent(), groupNoticeRequest.getNoticeCreated(), groupNoticeRequest.getGroupId());
     }
 
     //공지 리스트

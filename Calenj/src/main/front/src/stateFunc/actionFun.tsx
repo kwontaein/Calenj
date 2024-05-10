@@ -44,7 +44,9 @@ export function useConfirm(massage = " ", onConfirm: () => void, onCancel: () =>
             onConfirm();
             setTimeout(() => {
                 if (refetchQuery) {
-                    refetchQuery.refetch();
+                    setTimeout(()=>{
+                        refetchQuery.refetch();
+                    },1000)
                 }
             }, 500)
             result = true;

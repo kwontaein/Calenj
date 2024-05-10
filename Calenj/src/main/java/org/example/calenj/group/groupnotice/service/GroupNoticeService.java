@@ -26,7 +26,7 @@ public class GroupNoticeService {
     private final Group_NoticeRepository groupNoticeRepository;
 
     //그룹 공지 생성
-    public void makeNotice(String NoticeContent, String NoticeCreated, UUID groupId) {
+    public void makeNotice(String noticeTitle, String noticeContent, String noticeCreated, UUID groupId) {
 
 
         String userEmail = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
@@ -34,8 +34,9 @@ public class GroupNoticeService {
 
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
-                .noticeContent(NoticeContent)
-                .noticeCreated(NoticeCreated)
+                .noticeTitle(noticeTitle)
+                .noticeContent(noticeContent)
+                .noticeCreated(noticeCreated)
                 .noticeCreater(userEmail)
                 .group(groupEntity)
                 .build();
