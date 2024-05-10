@@ -25,7 +25,6 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
     const [inviteLink, setInviteLink] = useState<string>("");
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [friends, setFriends] = useState<Friends[] | null>(null);
-    const modalBackground = useRef<HTMLDivElement>(null);
 
     //usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
     function invite() {
@@ -34,25 +33,18 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
             during: 7
         }).then(response => {
             setInviteLink(response.data)
-            setModalOpen(true);
-            axios.post('/api/getFriendList', {})
+            setModalOpen(true)
+            axios.get('/api/getFriendList')
                 .then(response => {
-                    setFriends(response.data)
-                    console.log("friends", friends)
-                    console.log(response.data)
-                    setModalOpen(true)
+                    setFriends(response.data);
                 }).catch(error => console.log(error));
         }).catch(error => console.log(error));
-
     }
 
     const closeModal = () => {
         setModalOpen(false);
     };
 
-    useEffect(() => {
-
-    })
 
     function sendToFriend(friendId: string, inviteLink: string) {
         //친구에게 알림 보내기

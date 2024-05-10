@@ -36,16 +36,31 @@ public class WebSokcetService {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
 
+    /**
+     * 닉네임 반환
+     *
+     * @param authentication 인증 정보 받기
+     **/
     public String returnNickname(Authentication authentication) {
         UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
         return userEntity.getNickname();
     }
 
+    /**
+     * 이메일 반환
+     *
+     * @param nickName 닉네임 받기
+     **/
     public String returnEmail(String nickName) {
         UserEntity userEntity = userRepository.findByNickname(nickName).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
         return userEntity.getUserEmail();
     }
 
+    /**
+     * 파일 받아오기
+     *
+     * @param message 전달받은 내용
+     **/
     public List<String> getFile(ChatMessageRequest message) {
         String uuid = message.getParam();
         String filePath = "C:\\chat\\chat" + uuid;
@@ -58,7 +73,13 @@ public class WebSokcetService {
         }
     }
 
+    /**
+     * 채팅내용 파일에 저장
+     *
+     * @param message 전달받은 내용
+     **/
     public void saveChattingToFile(ChatMessageRequest message) {
+        System.out.println("실행??" + message.getMessage());
         // 파일을 저장한다.
         // 메시지 내용
         List<String> lines = getFile(message);
@@ -69,13 +90,12 @@ public class WebSokcetService {
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
-                        message.getNickName() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
+                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-//        message.setMessage(messageContent);
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
-                String Title = "캘린룸의 시작 지점이에요! $어서오세요! \n";
+                String Title = "시작라인 $어서오세요! \n";
                 stream.write(Title.getBytes(StandardCharsets.UTF_8));
             }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
@@ -85,6 +105,11 @@ public class WebSokcetService {
         }
     }
 
+    /**
+     * 처음 파일 내용 읽어오기
+     *
+     * @param message 전달받은 내용
+     **/
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
         List<String> lines = getFile(message);
 
@@ -94,7 +119,7 @@ public class WebSokcetService {
 
         Collections.reverse(lines); // 파일 내용을 역순으로 정렬
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -113,7 +138,7 @@ public class WebSokcetService {
                 .limit(20)
                 .map(stringTransformer)
                 .toList();
-
+        System.out.println(previousLines2);
         previousLines.addAll(previousLines2);
 
         if (previousLines.isEmpty()) {
@@ -122,6 +147,11 @@ public class WebSokcetService {
         return previousLines;
     }
 
+    /**
+     * 위의 파일 내용 읽어오기
+     *
+     * @param message 전달받은 내용
+     **/
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
 
         List<String> lines = getFile(message);
@@ -148,7 +178,11 @@ public class WebSokcetService {
         return previousLines;
     }
 
-
+    /**
+     * 엔드포인트까지의 라인 갯수 세기
+     *
+     * @param message 전달받은 내용
+     **/
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
 
         List<String> lines = getFile(message);
@@ -161,7 +195,7 @@ public class WebSokcetService {
         // 파일 내용을 역순으로 정렬
 
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]"))
+                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") &&!line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -176,6 +210,9 @@ public class WebSokcetService {
 
     }
 
+    /**
+     * 내용 변경하는 람다
+     **/
     public static Function<String, String> stringTransformer = str -> {
 
         // str = str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", "");
@@ -184,10 +221,22 @@ public class WebSokcetService {
         return str;
     };
 
+    /**
+     * 개인 토픽 관련 메세지 (알림 등)
+     *
+     * @param param 멈출 내용
+     **/
     public static Predicate<String> createFilterCondition(String param) {
-        return line -> !line.contains("EndPoint") && !line.contains(param);
+        return line -> !line.contains("EndPoint" + " [" + param + "]");
     }
 
+    /**
+     * 개인 토픽 관련 메세지 (알림 등)
+     *
+     * @param target         보낼 위치
+     * @param message        전달받은 정보들
+     * @param authentication 웹소켓 인증 정보
+     **/
     public void defaultSend(Authentication authentication, ChatMessageRequest message, String target) {
 
         String username = returnNickname(authentication);
@@ -205,6 +254,13 @@ public class WebSokcetService {
 
     }
 
+    /**
+     * 개인 토픽 관련 메세지 (알림 등)
+     *
+     * @param target   보낼 위치
+     * @param message  전달받은 정보들
+     * @param response 전달할 정보들
+     **/
     public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
         switch (message.getState()) {
             case ALARM: {
@@ -238,6 +294,12 @@ public class WebSokcetService {
         }
     }
 
+    /**
+     * 개인 토픽 관련 메세지 (알림 등)
+     *
+     * @param authentication 웹소켓 인증 정보
+     * @param request        전달받은 정보들
+     **/
     public void personalEvent(Authentication authentication, ChatMessageRequest request) {
         String username = returnNickname(authentication);
         String userEmail = returnEmail(username);
@@ -253,6 +315,12 @@ public class WebSokcetService {
             }
         }
     }
+
+    /**
+     * response 설정
+     *
+     * @param request 전달받은 정보들
+     **/
 
     // null이 아닌 필드만 포함시키는 메소드
     private ChatMessageResponse filterNullFields(ChatMessageRequest request) {
@@ -279,6 +347,11 @@ public class WebSokcetService {
         return filteredResponse;
     }
 
+    /**
+     * 토픽을 구독한 모든 유저 목록
+     *
+     * @param authentication 웹소켓 인증 정보
+     **/
     public Set<String> getAllUsers(Authentication authentication) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
         SimpUser simpUserOnly = simpUserRegistry.getUser(authentication.getName());
@@ -303,7 +376,11 @@ public class WebSokcetService {
         return filteredUserNames;
     }
 
-
+    /**
+     * 내가 구독한 토픽
+     *
+     * @param userEmail 내 이메일
+     **/
     public Set<String> getDestination(String userEmail) {
         SimpUser simpUser = simpUserRegistry.getUser(userEmail);
         Set<String> destinations = simpUser.getSessions().stream()
@@ -316,7 +393,11 @@ public class WebSokcetService {
         return destinations;
     }
 
-    //해당 param 구독자들 (온라인 여부)
+    /**
+     * 해당 param 구독자들 (온라인 여부)
+     *
+     * @param param 전달받은 param
+     **/
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
 

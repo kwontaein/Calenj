@@ -53,6 +53,10 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<GroupUserEntity> memberships;
 
+    @Column(name = "user_introduce")
+    @Builder.Default
+    private String userIntroduce = "";
+
     @Getter
     @RequiredArgsConstructor
     public enum RoleType { //enum을 활용한 권한종류 설정

@@ -3,13 +3,17 @@ import {useEffect, useState, useMemo} from 'react';
 import {NavigationProps} from '../../store/slice/NavigatgionSlice'
 import {
     GroupList_Container,
-    GroupListSub_Container,
     Btn_CalenJ_Icon,
     Li_GroupList_Item,
     GroupListTitle,
     GroupList_HR,
     Btn_MakeGroup,
-    SignOfMessageNum, NavigateState,
+    SignOfMessageNum,
+    NavigateState,
+    GroupTitleView_Container,
+    GroupTitleViewTail,
+    GroupTitleViewContent,
+    GroupListContent_Container, GroupListUserView_width,
 } from '../../style/Group/GroupListStyle';
 import {endPointMap} from '../../store/module/StompMiddleware'
 import {connect} from 'react-redux'
@@ -24,27 +28,26 @@ interface GroupListByNavigationProps {
 }
 
 
+
 const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, redirectDetail}) => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const [navigate, setNavigate] = useState<NavigationProps>();
-
+    const [titleView,setTitleView] = useState<string|null>(null);
     //그룹 목록 불러오기
 
 
     const groupListState =  useFetchGroupList(stomp.isOnline)
 
     useEffect(() => {
-        if (groupListState.data) setNavigate(redirectDetail("group", groupListState.data[0].groupId))
+        if (groupListState.data && groupListState.data[0]){
+            setNavigate(redirectDetail("group", groupListState.data[0].groupId))
+        }
     }, [groupListState.isLoading]);
 
     const closeModal = () => {
         setShowMakeGroup(false);
     };
 
-    interface ALARM {
-        param: string;
-        alramNum: number;
-    }
 
     const connectDirection = (navigateArg: string, paramArg: string) => {
         setNavigate(redirectDetail(navigateArg, paramArg))
@@ -54,18 +57,22 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
         return navigate?.navigate === "group" && navigate.navigateParam === groupId
     }
 
+
     return (
         <FullScreen_div>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
-                    <Btn_CalenJ_Icon/>
-                    <GroupList_HR/>
-                    <GroupListSub_Container>
+                    <GroupListUserView_width/>
+                    <GroupListContent_Container $isEnter={titleView!==null}>
+                        <Btn_CalenJ_Icon/>
+                        <GroupList_HR/>
                         {groupListState.data.map((group:GroupList_item) => (
 
-                            <Li_GroupList_Item $isClick={clickState(group.groupId)} key={group.groupId}
+                            <Li_GroupList_Item onMouseEnter={()=>{setTitleView(group.groupId)}}
+                                               onMouseLeave={()=>setTitleView(null)}
+                                               $isClick={clickState(group.groupId)} key={group.groupId}
                                                onClick={() => connectDirection("group", group.groupId)}>
                                 <NavigateState $isClick={clickState(group.groupId)}/>
                                 <GroupListTitle>
@@ -74,10 +81,18 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
                                 <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) || 0 !== 0}>
                                     {endPointMap.get(group.groupId) !== 0 && endPointMap.get(group.groupId)}
                                 </SignOfMessageNum>
+                                {group.groupId === titleView &&
+                                    <GroupTitleView_Container>
+                                        <GroupTitleViewTail/>
+                                        <GroupTitleViewContent>
+                                            {group.groupTitle}
+                                        </GroupTitleViewContent>
+                                    </GroupTitleView_Container>
+                                }
                             </Li_GroupList_Item>
                         ))}
-                    </GroupListSub_Container>
-                    <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
+                        <Btn_MakeGroup onClick={() => setShowMakeGroup(true)}>+</Btn_MakeGroup>
+                    </GroupListContent_Container>
                 </GroupList_Container>
             )}
         </FullScreen_div>

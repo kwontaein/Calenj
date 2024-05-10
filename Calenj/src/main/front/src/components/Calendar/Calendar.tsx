@@ -16,7 +16,7 @@ function Calendar() {
         []
     );
     const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
-        let title = prompt("한국어로,,, 해줘")?.trim();
+        let title = prompt("이벤트 추가")?.trim();
         let calendarApi = selectInfo.view.calendar;
         calendarApi.unselect();
         if (title) {

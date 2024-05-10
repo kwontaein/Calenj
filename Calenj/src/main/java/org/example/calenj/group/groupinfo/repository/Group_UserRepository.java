@@ -17,5 +17,9 @@ public interface Group_UserRepository extends JpaRepository<GroupUserEntity, Gro
     @Query("SELECT new org.example.calenj.group.groupinfo.dto.response.GroupUserResponse(gu.user.userEmail,gu.user.nickname, gu.role, gu.group_user_location) FROM Group_User gu WHERE gu.group.groupId = :groupId")
     List<GroupUserResponse> findGroupUsers(@Param("groupId") UUID groupId);
 
-    // 그룹에 인원 참가
+
+    //같이 속한 그룹 표시
+    @Query("SELECT gu.group.groupTitle FROM Group_User gu WHERE gu.user.userEmail = :userEmail or gu.user.userEmail = :myEmail ")
+    List<String> findGroupIds(@Param("userEmail") String userEmail, @Param("myEmail") String myEmail);
+
 }

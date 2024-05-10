@@ -36,4 +36,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query(value = "UPDATE User u SET isOnline =:isOnline WHERE user_email = :email", nativeQuery = true)
     void updateIsOnline(@Param("email") String email, @Param("isOnline") String isOnline);
 
+
 }

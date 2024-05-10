@@ -20,7 +20,9 @@ import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
 import {useFetchCookie} from "./store/ReactQuery/queryManagement";
+import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
+import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
 
 //대표 색 : #  007bff
 
@@ -42,6 +44,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({
     const cookieState = useFetchCookie();
 
     useEffect(() => {
+        console.log(`실행 ${cookieState.data}`)
         if (cookieState.data !== undefined) {
             checkToken(cookieState.data)
         }
@@ -109,6 +112,8 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                         <Route path={"/c"} element={<CalendarComponent/>}/>
                         <Route path={"/Map"} element={<NaverMap/>}/>
+                        <Route path={"/image"} element={<ImageUploadComponent/>}/>
+                        <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                     </Routes>
                 </BrowserRouter>
             }

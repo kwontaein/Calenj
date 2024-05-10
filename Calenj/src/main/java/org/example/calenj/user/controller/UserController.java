@@ -4,19 +4,21 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.user.dto.request.UserRequest;
-import org.example.calenj.user.dto.response.UserSubscribeResponse;
-import org.example.calenj.global.auth.dto.ValidateDTO;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.user.service.UserService;
 import org.example.calenj.global.auth.EmailVerificationService;
 import org.example.calenj.global.auth.PhoneVerificationService;
+import org.example.calenj.global.auth.dto.ValidateDTO;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserProfileResponse;
+import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,16 +67,19 @@ public class UserController {
     }
 
     @PostMapping("/api/updateUser")
-    public String updateUser() { //유저 업데이트
+    public void updateUser() { //유저 프로필 업데이트
         userService.selectUserInfo();
-        return "";
+    }
+
+    @PostMapping("/api/getProfile")
+    public UserProfileResponse getProfile(@RequestBody UserRequest userRequest) { //유저 프로필 표시
+        return userService.getUserProfile(userRequest.getUserEmail());
     }
 
     //메일 인증 부분------------------------------------------------------------------------------
 
     @PostMapping("/api/sendMessage")
     public Map<String, Object> sendMessage(@RequestBody String phone) {
-
         return phoneVerificationService.sendMessage(phone);
     }
 
@@ -98,9 +103,7 @@ public class UserController {
 
     @PostMapping("/api/emailCodeValidation")
     public Integer emailCodeValidation(@RequestParam(value = "validationCode") String validationCode, HttpServletRequest request, HttpServletResponse response) {
-
         emailVerificationService.checkValidationCode(validationCode, request, response);
-
         return validateDTO.getEmailValidState().getCode();
     }
 

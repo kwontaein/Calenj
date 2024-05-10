@@ -33,7 +33,7 @@ public class WebSocketController {
     @MessageMapping("/personalTopic")
     public void personalTopic(Authentication authentication, ChatMessageRequest message) throws Exception {
         webSokcetService.personalEvent(authentication, message);
-        webSokcetService.getDestination(message.getUserEmail());
+        //webSokcetService.getDestination(message.getUserEmail());
     }
 
     //세션 끊기

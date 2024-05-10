@@ -24,8 +24,5 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     // 첫 번째 쿼리: GroupEntity 조회
     @Query("SELECT new org.example.calenj.group.groupinfo.dto.response.GroupResponse(g.groupId, g.groupTitle, g.groupCreated ,g.groupCreater) FROM Group_table g WHERE g.groupId = :groupId")
     Optional<GroupResponse> findGroupById(@Param("groupId") UUID groupId);
-
-    /*@Query("select g.groupid,g.grouptitle from Group_table g JOIN Group_User gu ON g.groupid = gu.group.groupid where gu.user.userEmail = :userEmail")
-    Optional<List<GroupEntity>> findByUserEntity_UserEmail2(@Param("userEmail") String userEmail); // No argument for named parameter ':groupcreater'
-    */
+    
 }

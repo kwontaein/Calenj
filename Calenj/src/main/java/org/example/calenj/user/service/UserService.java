@@ -4,17 +4,19 @@ package org.example.calenj.user.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.user.dto.request.UserRequest;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.friend.dto.response.FriendResponse;
-import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
-import org.example.calenj.friend.repository.FriendRepository;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
-import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserProfileResponse;
+import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,13 +37,10 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-    /*private final ValidateDTO validateDTO;*/
-
     private final GlobalService globalService;
     private final GroupRepository groupRepository;
+    private final Group_UserRepository group_userRepository;
     private final FriendRepository friendRepository;
 
 
@@ -49,6 +48,11 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * 회원가입
+     *
+     * @param userRequest 저장할 유저 정보
+     **/
     public String saveUser(UserRequest userRequest) {
         //패스워드 암호화
         userRequest.setUserPassword(passwordEncoder.encode(userRequest.getUserPassword()));
@@ -56,6 +60,9 @@ public class UserService {
         return userRequest.toEntity().getUserEmail();
     }
 
+    /**
+     * 유저정보 확인
+     **/
     public void selectUserInfo() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
@@ -65,6 +72,12 @@ public class UserService {
         System.out.println(userResult);
     }
 
+    /**
+     * 로그인
+     *
+     * @param accountid 저장할 유저 아이디
+     * @param password  저장할 유저 비밀번호
+     **/
     @Transactional
     public ResponseEntity<String> login(String accountid, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
@@ -112,7 +125,11 @@ public class UserService {
 
     }
 
-    //request로 받은 쿠키를 체크하는 메소드
+    /**
+     * 쿠키 체크
+     *
+     * @param requestCookie 검사할 쿠키 목록
+     **/
     public boolean checkUserToken(Cookie[] requestCookie) {
         boolean checkCookie = false;
 
@@ -133,6 +150,12 @@ public class UserService {
         return checkCookie;
     }
 
+    /**
+     * 로그아웃
+     *
+     * @param userDetails 시큐리티 유저 정보
+     * @param response    쿠키를 삭제하기 위한 response
+     **/
     @Transactional
     public void logout(UserDetails userDetails, HttpServletResponse response) {
         //DB에서 리프레시 토큰 값 삭제
@@ -142,7 +165,9 @@ public class UserService {
         removeCookie(response, "refreshToken");
     }
 
-
+    /**
+     * 유저 구독 정보 확인 (웹소켓)
+     **/
     public UserSubscribeResponse subscribeCheck() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
@@ -153,7 +178,12 @@ public class UserService {
         return new UserSubscribeResponse(friendResponse, groupResponse, userEmail);
     }
 
-
+    /**
+     * 쿠키 제거
+     *
+     * @param response 쿠키를 삭제하기 위한 response
+     * @param name     쿠키 이름
+     **/
     public void removeCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0);
@@ -161,4 +191,23 @@ public class UserService {
         response.addCookie(cookie);
     }
 
+    /**
+     * 유저 프로필 받아오는 메소드
+     *
+     * @param userEmail 유저 이메일
+     **/
+    public UserProfileResponse getUserProfile(String userEmail) {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        String myEmail = userDetails.getUsername();
+        System.out.println("userEmail : " + userEmail);
+
+        UserEntity user = userRepository.findByUserEmail(userEmail).orElseThrow(RuntimeException::new);
+        UserProfileResponse userProfileResponse = new UserProfileResponse();
+
+        userProfileResponse.setIntroduce(user.getUserIntroduce());
+        userProfileResponse.setJoinDate(user.getUserJoinDate());
+        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myEmail));
+        userProfileResponse.setChatUUID(friendRepository.findFriendId(userEmail).orElse(null));
+        return userProfileResponse;
+    }
 }

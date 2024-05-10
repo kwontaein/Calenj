@@ -45,7 +45,10 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
 
     return (
         <div>
-            <input type='text' placeholder='캘린룸 이름' onChange={(e) => setGroupTitle(e.target.value)}></input>
+            <input type='text'
+                   placeholder='캘린룸 이름'
+                   maxLength={12}
+                   onChange={(e) => setGroupTitle(e.target.value)}></input>
             <button onClick={createGroup}>생성</button>
             <button onClick={onClose}>닫기</button>
         </div>

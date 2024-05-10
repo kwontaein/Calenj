@@ -48,7 +48,7 @@ const initialState: SubNavigationProps ={
     param:'',
     clickState:'',
     mode:'',
-    screenHeightSize:200,
+    screenHeightSize:180,
     screenWidthSize:ScrollMin_width,
 
 }

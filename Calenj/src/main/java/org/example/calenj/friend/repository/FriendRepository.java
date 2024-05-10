@@ -27,4 +27,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE Friends SET status =:statusType WHERE own_user_id = :requestUserId", nativeQuery = true)
     void updateStatus(@Param("requestUserId") String requestUserId, @Param("statusType") FriendEntity.statusType statusType);
+
+    @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userEmail =:userId")
+    Optional<String> findFriendId(@Param("userId") String userId);
+
 }
