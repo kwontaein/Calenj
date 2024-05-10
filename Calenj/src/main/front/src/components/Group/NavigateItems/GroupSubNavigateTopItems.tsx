@@ -4,7 +4,7 @@ import {
     SubNavigateTopBar_EventSelecter_Container,
     SubNavigateTopBar_leftContent, SubNavigateTopBar_rightContent_item
 } from "../../../style/Navigation/SubNavigationStyle";
-import GrouypByNavigationSelectBox from "./GroupByNavigationSelectBox";
+import SubNavigationSelectBox from "./SubNavigationSelectBox";
 import {useEffect, useRef, useState} from "react";
 import {FullScreen_div} from "../../../style/FormStyle";
 
@@ -55,7 +55,7 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
             </SubNavigateTopBar_Content_Container>
             {showEventSelecter &&
                 <div ref={selectBox}>
-                    <GrouypByNavigationSelectBox/>
+                    <SubNavigationSelectBox/>
                 </div>}
         </SubNavigateTopBar_Container>
 

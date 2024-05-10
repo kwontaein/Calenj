@@ -16,11 +16,13 @@ public class GroupNoticeResponse {
     private UUID groupId;
     private UUID noticeId;
     private String noticeCreated;
+    private String noticeTitle;
     private String noticeContent;
     private String noticeCreater;
     private List<String> noticeWatcher;
 
-    public GroupNoticeResponse(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated) {
+    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated) {
+        this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;
@@ -28,7 +30,8 @@ public class GroupNoticeResponse {
     }
 
 
-    public GroupNoticeResponse(UUID noticeId, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
+    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
+        this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeCreater = noticeCreater;
         this.noticeCreated = noticeCreated;

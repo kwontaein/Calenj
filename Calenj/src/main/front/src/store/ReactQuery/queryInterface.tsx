@@ -31,6 +31,7 @@ export interface VoteList {
 
 export interface NoticeList{
     noticeId : string;
+    noticeTitle : string;
     noticeContent : string;
     noticeCreater : string;
     noticeCreated : string;

@@ -48,11 +48,17 @@ export const GroupVoteModal_TopContent_Container = styled.div`
 export const GroupVoteModal_Title = styled.div`
     font-size: 20px;
 `
+
+export const ListInput_Container = styled.div`
+    display: flex;
+    flex-direction: row;
+`
 export const AddVoteList_Btn = styled.button`
     display: flex;
     position: absolute;
+    margin-top: 5px;
     margin-left: 341px;
-    height: ${MiniVote_Input_height+10}px;
+    height: ${MiniVote_Input_height+6}px;
     width: 60px;
     align-items: center;
     border-radius: 0 5px 5px 0;
@@ -93,7 +99,7 @@ export const VoteType_Radio = styled.input`
 export const VoteList_Container = styled.div`
     margin-top:5px;
     height: 170px;
-    overflow-y: auto; /* 수직 스크롤을 활성화. */    
+    overflow-y: auto; /* 수직 스크롤을 활성화. */
 `
 
 export const VoteListEmptyText = styled.div`
@@ -115,7 +121,7 @@ export const VoteListItem_Container = styled.div`
     border: 1px solid ${TextColor2};
     border-right: 0px;
     align-items: center;
-    
+
 `
 export const VoteListItem_Content = styled.div`
     height: 100%;
@@ -144,7 +150,7 @@ export const VoteListContent_Drop_Btn = styled.button`
 `
 
 export const ButtomContent_Containr = styled.div`
-    margin-top: 10px;   
+    margin-top: 10px;
 `
 
 
@@ -164,13 +170,14 @@ export const VoteSetting_Container = styled.div`
     flex-direction: row;
 `
 export const VoteCheckOption_Container = styled.div`
-    margin-left: 5px;
+    width: 195px;
     height: 100%;
+    margin-left: 5px;
     align-content: center;
 `
 
 export const VoteCheckOption_Label = styled.label`
-    margin-left: 5px;
+    margin-inline: 5px;
     height: 100%;
     align-items: center;
 `

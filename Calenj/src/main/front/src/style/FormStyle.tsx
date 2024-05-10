@@ -28,6 +28,7 @@ export const TextColor = "#EEEEEE";
 export const TextColor2 ="#797979";
 export const TextColor3 ="#cdcdcd";
 export const PointColor = "#007bff";
+export const PointColor2 ="#FFD369"
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -86,6 +87,7 @@ export const MiniText = styled.div`
     color: gray;
     margin-top: 5px;
     font-size: 12px;
+    align-items: center;
 `
 //div 가로로 나열
 export const RowFlexBox = styled.div`
@@ -253,7 +255,7 @@ export const SIGN_STATE_TEXT = styled.span`
 
 export const CheckCondition_Button = styled.div<ClickAbleProps>`
     width: 70px;
-    height: 40px;
+    height: 100%;
     border-radius: 5px;
     display: flex;
     justify-content: center;
@@ -265,3 +267,4 @@ export const CheckCondition_Button = styled.div<ClickAbleProps>`
              }
     `}
 `
+

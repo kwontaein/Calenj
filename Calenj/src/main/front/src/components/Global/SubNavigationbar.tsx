@@ -9,7 +9,7 @@ import {
 } from '../../store/slice/NavigatgionSlice'
 import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
-import GrouypByNavigationSelectBox from "../Group/NavigateItems/GroupByNavigationSelectBox";
+import GrouypByNavigationSelectBox from "../Group/NavigateItems/SubNavigationSelectBox";
 import GroupSubNavigateItems from "../Group/NavigateItems/GroupSubNavigateItems";
 import GroupSubNavigateTopItems from "../Group/NavigateItems/GroupSubNavigateTopItems";
 import {GroupDetail} from "../../store/ReactQuery/queryInterface";

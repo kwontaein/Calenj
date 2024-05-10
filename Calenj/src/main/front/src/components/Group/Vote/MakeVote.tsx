@@ -1,6 +1,5 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
-    RowFlexBox,
     Modal_Background,CheckCondition_Button,
 } from '../../../style/FormStyle';
 import '../../../style/ModalStyle.scss';
@@ -31,6 +30,7 @@ import {
     GroupVoteModal_Button_Container,
     VoteListEmptyText,
     VoteSetting_Container,
+    ListInput_Container,
     VoteCheckOption_Container, VoteCheckOption_Label,
 } from "../../../style/Group/GroupVoteStyle";
 
@@ -213,13 +213,14 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     </GroupVoteModal_TopContent_Container>
                     <MiniVote_Input onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                                 ref={inputRef}
+                                maxLength={30}
                                 placeholder='투표 제목'/>
 
-                    <RowFlexBox style={{alignItems: "center"}}>
+                <ListInput_Container>
                     {inputForm === 'TEXT' ?
                         <MiniVote_Input ref={contentRef}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => setContent(e.target.value)}
-                                        placeholder='항목 입력' maxLength={20}>
+                                        placeholder='항목 입력' maxLength={40}>
                         </MiniVote_Input>
                         :
                         <DatePicker
@@ -233,7 +234,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                         />
                     }
                     <AddVoteList_Btn onClick={() => addList()} >추가</AddVoteList_Btn>
-                </RowFlexBox>
+                </ListInput_Container>
                 <VoteTypeRadio_Lable_Container>
                     <VoteTypeRadio_Label style={{fontSize: '13px'}}>
                         <VoteType_Radio type='radio' name='inputForm' value='TEXT'
@@ -265,7 +266,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                 }
                 </VoteList_Container>
                 <ButtomContent_Containr>
-                    <div>투표 마감</div>
+                    <div style={{height: "4.3%"}}>투표 마감</div>
                     <VoteSetting_Container>
                         <DatePicker
                             dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태

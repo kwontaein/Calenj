@@ -9,7 +9,7 @@ import {
 
 
 
-const GrouypByNavigationSelectBox:React.FC<NavigateState> = ({navigateInfo}) =>{
+const SubNavigationSelectBox:React.FC<NavigateState> = ({navigateInfo}) =>{
 
     return(
         <SelectItem_Container>
@@ -17,4 +17,4 @@ const GrouypByNavigationSelectBox:React.FC<NavigateState> = ({navigateInfo}) =>{
         </SelectItem_Container>
     )
 }
-export default connect(mapStateToNavigationProps,null) (GrouypByNavigationSelectBox);
+export default connect(mapStateToNavigationProps,null) (SubNavigationSelectBox);

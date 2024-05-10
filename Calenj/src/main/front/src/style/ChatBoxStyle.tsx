@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {TextColor, TextColor2, ThemaColor2, ThemaColor3} from "./FormStyle";
+import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "./FormStyle";
 
 interface CheckbeforSender {
     $sameUser: boolean,
@@ -16,7 +16,7 @@ export const MessageSend_Cotainer_height = 50;
 export const MessageComponent_Container = styled.div`
     width: 100%;
     height: 100%;
-    backgroundColor: ${ThemaColor2};
+    // background-color: ${ThemaColor2};
 `
 
 /** 채팅창 Container-스크롤 박스 */
@@ -61,7 +61,7 @@ export const NickNameContainer = styled.div`
 `
 
 export const DateContainer = styled.div`
-    color: #FFD369;
+    color: ${PointColor2};
     font-size: 12px;
     margin-top: 2px;
 `
@@ -113,7 +113,7 @@ export const MessageContainer2 = styled.div`
 
 
 export const MessageSend_Input = styled.input`
-    background-color: ${ThemaColor3};
+    background-color: ${ThemaColor3}60;
     color: ${TextColor};
     border-radius: 4px;
     border: 1px solid ${TextColor2};

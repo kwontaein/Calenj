@@ -12,5 +12,6 @@ import java.util.UUID;
 public class GroupNoticeRequest {
     private UUID groupId;
     private String noticeCreated;
+    private String noticeTitle;
     private String noticeContent;
 }

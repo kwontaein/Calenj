@@ -1,5 +1,5 @@
 import {FullScreen_div} from '../../style/FormStyle'
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef,useMemo} from "react";
 import {connect} from 'react-redux'
 import {
     SubNavigateState,
@@ -19,7 +19,7 @@ import GroupUserList from "../Group/GroupUserList"
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupDetail} from '../../store/ReactQuery/queryInterface'
-import GroupSubScreen from "../Group/GroupSubScreen";
+import GroupSubScreen from "../Group/NavigateItems/GroupSubScreen";
 import {GroupList_Container_width} from '../../style/Group/GroupListStyle';
 import {
     SubNavigate_padding, subNavigateBorder,
@@ -119,7 +119,7 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
         }else if(mode ==="column"){
             const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder-3);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=200 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height){
+            if(newHeight >=180 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height-3){
                 updateSubScreenHeightSize({screenHeightSize:newHeight})
             }
         }
@@ -141,6 +141,7 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
             document.removeEventListener('mouseup', handleMouseUp);
         };
     }, [isResizing]);
+
 
 
     //TODO: subScreen + MessageBox가 특정크기 이상일 때 groupUserList가 못나오니 그 상황에는 selectBox형태로 띄우기
