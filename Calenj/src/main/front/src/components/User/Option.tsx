@@ -38,7 +38,7 @@ const Option = () => {
 
     const handleUpdateUserInfo = () => {
         window.alert("정보 업데이트")
-        axios.put(`/api/updateUser`, editedInfo)
+        axios.put(`/api/updateUserNickName`, editedInfo)
             .then(() => {
                 window.alert('사용자 정보가 성공적으로 업데이트되었습니다.');
                 fetchUserInfo(); // 업데이트된 정보를 다시 가져옴
@@ -51,14 +51,22 @@ const Option = () => {
     return (
         <div>
             <div>
+                {/*닉네임은 그냥 변경 가능.*/}
                 <label>Nickname:</label>
                 <input type="text" name="nickname" value={editedInfo?.nickname || ''} onChange={handleInputChange}/>
             </div>
             <div>
+                {/*이메일은 수정하려면 이메일 인증이 필요함.
+                   이메일 인증 부분을 다시 사용하면 좋을 듯?
+                   인증 번호가 맞으면 새로운 이메일 인증을 해야 함.
+                */}
                 <label>Email:</label>
                 <input type="email" name="userEmail" value={editedInfo?.userEmail || ''} onChange={handleInputChange}/>
             </div>
             <div>
+                {/* 전화번호는 수정하려면 문자 인증이 필요함.
+                    구현 안해서 스킵 -> 그냥 넣는걸로
+                */}
                 <label>Phone:</label>
                 <input type="text" name="userPhone" value={editedInfo?.userPhone || ''} onChange={handleInputChange}/>
             </div>

@@ -73,9 +73,9 @@ public class UserController {
     }
 
     @PutMapping("/api/updateUser")
-    public ResponseEntity<String> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<String> updateUserNickName(@RequestBody UserRequest userRequest) {
         System.out.println(userRequest);
-        // 사용자 정보 업데이트 로직 수행
+        userService.updateUserNickName(userRequest);
         return ResponseEntity.ok("사용자 정보가 업데이트되었습니다.");
     }
 

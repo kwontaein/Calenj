@@ -156,7 +156,6 @@ public class JwtTokenProvider {
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);
 
-
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);

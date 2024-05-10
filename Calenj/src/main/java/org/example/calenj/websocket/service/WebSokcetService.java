@@ -90,7 +90,8 @@ public class WebSokcetService {
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
-                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
+                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n"
+                :
                 message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {

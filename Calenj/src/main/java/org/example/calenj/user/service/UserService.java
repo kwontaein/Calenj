@@ -97,6 +97,7 @@ public class UserService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
 
             try {
+                System.out.println(accountid);
                 // 사용자 정보 반환
                 userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
@@ -213,5 +214,11 @@ public class UserService {
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myEmail));
         userProfileResponse.setChatUUID(friendRepository.findFriendId(userEmail).orElse(null));
         return userProfileResponse;
+    }
+
+    public void updateUserNickName(UserRequest userRequest) {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        String myEmail = userDetails.getUsername();
+        userRepository.updateUserNickName(userRequest.getNickname(), myEmail);
     }
 }

@@ -35,7 +35,7 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
         }).then(response => {
             setInviteLink(response.data)
             setModalOpen(true);
-            axios.post('/api/getFriendList', {})
+            axios.get('/api/getFriendList', {})
                 .then(response => {
                     setFriends(response.data)
                     console.log("friends", friends)
@@ -67,7 +67,7 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
     return (
         <div>
             <Btn_ItemSelector onClick={invite}>
-                <SelectorText_Continer >
+                <SelectorText_Continer>
                     초대하기
                 </SelectorText_Continer>
                 <SelectorIcon_Container>
