@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, String> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByUserEmail(@Param("user_email") String username);
 
-    Optional<UserEntity> findByNickname(@Param("nickName") String nickName);
+    Optional<UserEntity> findByUserId(@Param("user_id") UUID userId);
 
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
 
@@ -27,8 +28,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     //refreshToken 삭제 쿼리
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_email = :email", nativeQuery = true)
-    void updateUserRefreshTokenToNull(@Param("email") String email);
+    @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_id = :userId", nativeQuery = true)
+    void updateUserRefreshTokenToNull(@Param("userId") String userId);
 
 
     @Modifying(clearAutomatically = true)

@@ -112,7 +112,7 @@ public class UserEntity implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return userEmail;
+        return String.valueOf(userId);
     }
 
     /**

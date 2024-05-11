@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendRequest {
 
-    private String userId;
+    private UUID userId;
     private int isAccept;
-    private String friendUserId;
+    private UUID friendUserId;
 }

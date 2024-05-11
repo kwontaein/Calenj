@@ -11,24 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> {
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse" +
-            "(f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userEmail =:userId and f.status =ACCEPT")
-    Optional<List<FriendResponse>> findFriendListById(@Param("userId") String userId);
+            "(f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
+    Optional<List<FriendResponse>> findFriendListById(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userEmail =:userId and f.status =WAITING")
-    Optional<FriendResponse> findFriendById(@Param("userId") String userId);
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
+    Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
 
     @Query("delete from Friends f where f.ownUserId =:userId")
-    void deleteByOwnUserId(@Param("userId") String userId);
+    void deleteByOwnUserId(@Param("userId") UUID userId);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query(value = "UPDATE Friends SET status =:statusType WHERE own_user_id = :requestUserId", nativeQuery = true)
-    void updateStatus(@Param("requestUserId") String requestUserId, @Param("statusType") FriendEntity.statusType statusType);
+    void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("statusType") FriendEntity.statusType statusType);
 
-    @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userEmail =:userId")
-    Optional<String> findFriendId(@Param("userId") String userId);
+    @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId")
+    Optional<String> findFriendChattRoomId(@Param("userId") UUID userId);
 
 }

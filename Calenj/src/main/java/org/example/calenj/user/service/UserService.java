@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -116,10 +117,10 @@ public class UserService {
 
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             tokenInfo = jwtTokenProvider.generateToken(authentication);
-
+            System.out.println("authentication : " + authentication);
             // 4. refreshToken 정보 저장
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-            System.out.println("1");
+
 
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
@@ -176,11 +177,13 @@ public class UserService {
     public UserSubscribeResponse subscribeCheck() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
-        String userEmail = userDetails.getUsername();
-        List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
-        List<FriendResponse> friendResponse = friendRepository.findFriendListById(userEmail).orElse(null);
+        String userId = userDetails.getUsername();
+        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userId)).orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+
+        List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserId(UUID.fromString(userId)).orElse(null);
+        List<FriendResponse> friendResponse = friendRepository.findFriendListById(UUID.fromString(userId)).orElse(null);
         System.out.println(friendResponse);
-        return new UserSubscribeResponse(friendResponse, groupResponse, userEmail);
+        return new UserSubscribeResponse(friendResponse, groupResponse, String.valueOf(userEntity.getUserId()));
     }
 
     /**
@@ -203,7 +206,7 @@ public class UserService {
      **/
     public UserProfileResponse getUserProfile(String userEmail) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        String myEmail = userDetails.getUsername();
+        String myUserId = userDetails.getUsername();
         System.out.println("userEmail : " + userEmail);
 
         UserEntity user = userRepository.findByUserEmail(userEmail).orElseThrow(RuntimeException::new);
@@ -211,14 +214,19 @@ public class UserService {
 
         userProfileResponse.setIntroduce(user.getUserIntroduce());
         userProfileResponse.setJoinDate(user.getUserJoinDate());
-        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myEmail));
-        userProfileResponse.setChatUUID(friendRepository.findFriendId(userEmail).orElse(null));
+        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myUserId));
+        userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(user.getUserId()).orElse(null));
         return userProfileResponse;
     }
 
+    /**
+     * 유저 정보 업데이트
+     *
+     * @param userRequest 업데이트할 유저 정보
+     **/
     public void updateUserNickName(UserRequest userRequest) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        String myEmail = userDetails.getUsername();
-        userRepository.updateUserNickName(userRequest.getNickname(), myEmail);
+        String myUserId = userDetails.getUsername();
+        userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
     }
 }

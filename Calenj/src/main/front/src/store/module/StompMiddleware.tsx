@@ -11,6 +11,7 @@ import {
     Destination,
     updateLoading,
 } from "./StompReducer"
+import {co} from "@fullcalendar/core/internal-common";
 
 
 type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT";
@@ -25,7 +26,7 @@ interface StompData {
 
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const toggleCurrentMap =new Map();
+export const toggleCurrentMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
@@ -126,7 +127,7 @@ function* startStomp(destination: Destination): any {
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
         console.log(receiveData.payload.receiveMessage.state)
 
-        if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userEmail)) {
+        if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userId)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) || (receiveData.payload.receiveMessage.endPoint))
@@ -145,11 +146,6 @@ function createStompConnection() {
 
         const sock = new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
-        // const client = new Client();
-        // // client.webSocketFactory()
-        // client.webSocketFactory(()=>{
-        //     return new SockJs(stompUrl)
-        // })
 
         // WebSocket 에러 처리
         stompClient.onWebSocketError = (error: Error) => {
@@ -174,8 +170,6 @@ function createStompConnection() {
 
         stompClient.onConnect = connectionCallback;
         stompClient.activate();
-
-
     });
 
 }
@@ -193,7 +187,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg"){
+                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg") {
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })
