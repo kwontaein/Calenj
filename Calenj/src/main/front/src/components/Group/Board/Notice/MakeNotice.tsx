@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
-import { CheckCondition_Button} from '../../../style/FormStyle';
-import '../../../style/ModalStyle.scss';
+import { CheckCondition_Button} from '../../../../style/FormStyle';
+import '../../../../style/ModalStyle.scss';
 import {useLocation} from 'react-router-dom';
-import {useConfirm,stateFilter,saveDBFormat} from '../../../stateFunc/actionFun'
+import {useConfirm,stateFilter,saveDBFormat} from '../../../../stateFunc/actionFun'
 import axios ,{AxiosError}from 'axios';
-import { Modal_Background} from '../../../style/FormStyle'
+import { Modal_Background} from '../../../../style/FormStyle'
 import { UseQueryResult } from '@tanstack/react-query';
 import {
     GroupNoticeModal_Button_Container, GroupNoticeModal_close_Btn,
@@ -12,7 +12,7 @@ import {
     GroupNoticeModal_Textarea,
     GroupNoticeModal_Title,
     GroupNoticeModal_TopContent_Container, GroupNoticeTitle_Input
-} from "../../../style/Group/GroupNoticeStyle";
+} from "../../../../style/Group/GroupNoticeStyle";
 
 
 interface ModalProps {

@@ -10,8 +10,8 @@ import {
     GroupSubScreenTop_Container,
     GroupSubScreenTopIcon_Container
 } from "../../../style/Group/GroupSubScreenStyle";
-import Vote from "../Vote/Vote";
-import Notice from "../Notice/Notice";
+import Vote from "../Board/Vote/Vote";
+import Notice from "../Board/Notice/Notice";
 import useComponentSize from "../../../stateFunc/useComponentSize";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
@@ -36,7 +36,7 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        if(subNavigateInfo.stateOption !==""|| !showSelectBox){
+        if(subNavigateInfo.stateOption ==="add"|| !showSelectBox){
             document.removeEventListener('mousedown', handleClickOutside);
         }
         return () => {

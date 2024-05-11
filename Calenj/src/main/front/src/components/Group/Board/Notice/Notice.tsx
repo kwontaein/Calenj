@@ -1,18 +1,18 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
+import {AHMFormat,changeDateForm} from '../../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
-import {FullScreen_div, MiniText} from '../../../style/FormStyle'
-import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
+import {FullScreen_div, MiniText} from '../../../../style/FormStyle'
+import {useFetchNoticeList} from "../../../../store/ReactQuery/queryManagement";
 import {
     GroupNoticeList_Container,
     GroupNoticeListTitle, GroupNoticeListView_Li,
-} from "../../../style/Group/GroupNoticeStyle";
+} from "../../../../style/Group/GroupNoticeStyle";
 import {
     SubNavigateState,
     DispatchSubNavigationProps,
     mapDispatchToSubNavigationProps,
     mapStateToSubNavigationProps
-} from "../../../store/slice/SubNavigationSlice";
+} from "../../../../store/slice/SubNavigationSlice";
 import {connect} from "react-redux";
 
 interface SubScreenProps{

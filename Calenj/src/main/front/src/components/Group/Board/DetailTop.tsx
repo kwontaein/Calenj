@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {stateFilter,createTimePassed} from '../../stateFunc/actionFun'
-import {RowFlexBox, MiniText } from '../../style/FormStyle'
-import '../../style/Detail.scss'
+import {stateFilter,createTimePassed} from '../../../stateFunc/actionFun'
+import {RowFlexBox, MiniText } from '../../../style/FormStyle'
+import '../../../style/Detail.scss'
 
 
 interface Details{

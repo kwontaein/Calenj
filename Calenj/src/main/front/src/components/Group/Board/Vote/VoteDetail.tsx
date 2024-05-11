@@ -1,11 +1,11 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
-import {saveDBFormat, stateFilter,TimeOperation, useConfirm,changeDateForm} from '../../../stateFunc/actionFun'
+import {saveDBFormat, stateFilter,TimeOperation, useConfirm,changeDateForm} from '../../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
-import { MiniText, RowFlexBox } from '../../../style/FormStyle';
-import { TrasformButton,TransVoteContainer} from '../../../style/VoteStyle'
-import '../../../style/Detail.scss'
+import { MiniText, RowFlexBox } from '../../../../style/FormStyle';
+import { TrasformButton,TransVoteContainer} from '../../../../style/VoteStyle'
+import '../../../../style/Detail.scss'
 import { useId } from 'react';
 
 
@@ -26,8 +26,8 @@ interface VoteDetails{
     voter:string[];
     countVoter:string[];
     voteChoiceResponse:voteChoiceResponse[];
-    
 }
+
 interface VoteDetailProps{
     //전체 디테일정보
     detail:VoteDetails;

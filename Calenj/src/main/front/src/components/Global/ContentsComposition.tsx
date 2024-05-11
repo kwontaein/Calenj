@@ -15,7 +15,7 @@ import {
     EventTopBarContent, EventTopBarSubContent, MiddleLine_Size,
     TransContentsScreen_div,
 } from "../../style/Navigation/ContentCompositionStyle";
-import GroupUserList from "../Group/GroupUserList"
+import GroupUserList from "../Group/Board/GroupUserList"
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupDetail} from '../../store/ReactQuery/queryInterface'

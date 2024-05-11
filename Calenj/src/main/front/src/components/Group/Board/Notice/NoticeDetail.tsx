@@ -1,8 +1,7 @@
 import React, {useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
 import {useLocation} from 'react-router-dom';
-import {useId} from 'react';
-import {stateFilter, createTimePassed} from '../../../stateFunc/actionFun'
+import {stateFilter, createTimePassed} from '../../../../stateFunc/actionFun'
 import DetailTop from '../DetailTop'
 
 
