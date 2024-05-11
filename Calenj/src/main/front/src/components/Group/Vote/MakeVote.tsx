@@ -184,7 +184,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
             window.alert('항목을 2개이상 추가해주세요.')
         }else if(selectedDate ===null){
             window.alert('날짜를 입력해주세요.')
-        }else {
+        }else{
             window.alert('제목 및 항목을 입력해주세요.')
         }
     }

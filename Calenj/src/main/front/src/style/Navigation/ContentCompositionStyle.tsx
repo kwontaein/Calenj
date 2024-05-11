@@ -1,8 +1,15 @@
 import styled from 'styled-components';
 import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "./SubNavigationStyle";
-import {BackGroundColor, PointColor, TextColor, TextColor3, ThemaColor2, ThemaColor3} from "../FormStyle";
+import {
+    BackGroundColor,
+    PointColor, SubScreenColor,
+    TextColor,
+    TextColor2,
+    ThemaColor2,
+} from "../FormStyle";
 import {GroupUserList_Container_width} from '../Group/GroupUserListStyle'
 
+export const MiddleLine_Size = 3;
 interface ScreenModeProps{
     $screenRowFlex :boolean,
     $showUserList?:boolean,
@@ -33,7 +40,7 @@ export const EventTopBarContent = styled.div<GroupUserListProps>`
     justify-content: center;
     align-items: center;
     font-size: 18px;
-    color: ${props => props.$isClick ? TextColor : TextColor3};
+    color: ${props => props.$isClick ? TextColor : TextColor2};
     &:hover{
         color: ${TextColor};   
     }
@@ -44,7 +51,7 @@ export const EventTopBarSubContent = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 18px;
-    color: ${TextColor3};
+    color: ${TextColor2};
     &:hover{
         color: ${TextColor};   
     }
@@ -79,9 +86,9 @@ export const CustomScreen_SubContent_Contaienr = styled.div.attrs<CustomScreenPr
 
 
 export const CustomScreen_MiddleLine_div = styled.div<CustomScreenProps>`
-    width:  ${props => props.$mode ==="row" ? "3px" : "100%"};
-    height:  ${props => props.$mode ==="column" ? "3px" : "100%"};
-    background-color: ${ThemaColor3};
+    width:  ${props => props.$mode ==="row" ? `${MiddleLine_Size}px` : "100%"};
+    height:  ${props => props.$mode ==="column" ? `${MiddleLine_Size}px` : "100%"};
+    background-color: ${SubScreenColor};
     transition : background-color 0.3s ease;
     cursor: ${props => props.$mode ==="row" ? "col-resize" : "row-resize"};
     &:hover{

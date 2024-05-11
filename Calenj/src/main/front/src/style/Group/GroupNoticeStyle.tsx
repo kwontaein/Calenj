@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import {PointColor, TextColor2, ThemaColor2, BackGroundColor, TextColor, TextColor3} from "../FormStyle";
-import {bool} from "yup";
-import {ScrollMin_width} from "../ChatBoxStyle";
+import {PointColor, ThemaColor2, ThemaColor3} from "../FormStyle";
+
 
 const GroupNoticeModal_TopContent_Container_height =40
 const GroupNoticeModal_Button_Container_height = 40;
@@ -35,12 +34,12 @@ export const GroupNoticeModal_Textarea = styled.textarea`
     GroupNoticeModal_Button_Container_height+        
     GroupNoticeModal_TopContent_Container_marginBottom+
     GroupNoticeModal_Button_Container_marginTop+
-    GroupNoticeTitle_Input_height+ 30
+    GroupNoticeTitle_Input_height+ 34
     }px);
     margin-top:10px;
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid #000000;
+    border: 2px solid #000000;
     font-size: 15px;
     resize: none;
     font-weight: 550;
@@ -51,12 +50,13 @@ export const GroupNoticeModal_Textarea = styled.textarea`
     }
 `
 
+
 export const GroupNoticeTitle_Input = styled.input`
     width: calc(100% - 10px);
     height: ${GroupNoticeTitle_Input_height}px;
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid #000000;
+    border: 2px solid #000000;
     font-size: 15px;
     &:focus{
         outline: none;
@@ -92,19 +92,27 @@ export const GroupNoticeModal_close_Btn = styled.button`
         background-color: rgb(0,0,0,0.4);
     }
 `
+
+
+export const GroupNoticeList_Container = styled.div`
+    width: 100%;
+    height: calc(100% - 5px);
+`
 export const GroupNoticeListView_Li = styled.li`
     width: calc(100% - 20px);
     list-style: none;
     padding-inline: 10px;
     padding-block: 15px;
+    margin-block: 2px;
+
     &:hover {
-        background-color: ${ThemaColor2};
+        background-color: ${ThemaColor3};
     }
 `
 
 export const GroupNoticeListTitle = styled.div<subScreenWidthProps>`
     width:100%;
-    max-width: ${props=>props.$subScreenWidth-30}px;
+    max-width: ${props=>props.$subScreenWidth-40}px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

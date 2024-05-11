@@ -11,28 +11,27 @@ interface ClickAbleProps{
 
 
 /**
- * 전역적으로 설정할 스타일
- * 글자색:#EEEEEE
- * 배경 :31363F
- * 메인컬러 :
- * 서브컬러:#393E46
- * 기존 백그라운드 : #222831
- * hover컬로:#007bff
- *
+ * SubNavColor
+ * @param ThemaColor3
  */
+export const ThemaColor3 = "#2B2E33";//SubNav 222831
+/**EventNavColor
+ *  @param ThemaColor2
+ */
+export const ThemaColor2 ="#373B42"; //채팅 및 EventNav 31363F
 
-export const ThemaColor3 = "#31363F";
-export const ThemaColor2 ="#393E46";
-export const BackGroundColor = "#222831";
+export const SubScreenColor = "rgb(51,55,62)" //subScreen
+
+export const BackGroundColor = "#212227";
+
 export const TextColor = "#EEEEEE";
-export const TextColor2 ="#797979";
-export const TextColor3 ="#cdcdcd";
-export const PointColor = "#007bff";
+export const TextColor2 ="#c2c2c2";
+export const PointColor = "#0070E8";
 export const PointColor2 ="#FFD369"
 
 export const GlobalStyle = createGlobalStyle`
     body {
-        background-color: #222831; /* 전체 페이지 배경색 */
+        background-color: ${BackGroundColor}; /* 전체 페이지 배경색 */
         margin: 0;
         padding: 0;
         height: 100vh;
@@ -40,14 +39,16 @@ export const GlobalStyle = createGlobalStyle`
         user-select: none; /* Standard */
         
         ::-webkit-scrollbar-thumb{
-            background: #217af4; /* 스크롤바의 색상 */
+            background: ${PointColor}; /* 스크롤바의 색상 */
             border-radius: 10px;
         }
         ::-webkit-scrollbar {
             width: 4px;  /* 스크롤바의 너비 */
         }
         ::-webkit-scrollbar-track {
-            background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+            background: ${ThemaColor3};
+            margin-block: 5px;
+            border-radius: 10px;
         }
     }
 

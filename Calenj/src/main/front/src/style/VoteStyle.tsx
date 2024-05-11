@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {TextColor2, TextColor3, ThemaColor2} from "./FormStyle";
+import {TextColor2, ThemaColor3} from "./FormStyle";
 
 interface VoteProps {
     $isCreater: boolean;
@@ -27,9 +27,10 @@ export const GroupVoteListView_Li = styled.li`
     text-overflow: ellipsis;
     padding-inline: 10px;
     padding-block: 5px;
+    margin-block: 2px;
 
     &:hover {
-        background-color: ${ThemaColor2};
+        background-color: ${ThemaColor3};
     }
 `
 
@@ -74,12 +75,12 @@ export const TransVoteContainer = styled.div<VoteAble>`
 `;
 
 export const GroupVoteListDivistion = styled.div`
-    color: ${TextColor3};
     font-size: 12px;
     align-items: center;
     padding-block: 5px;
     padding-inline: 2px;
-    border-block: 1px solid ${TextColor2};
+    color: ${TextColor2};
+    background-color: ${ThemaColor3}A5;
 `
 export const GroupVoteListContainer = styled.div`
     height: calc(100% - 40px);
@@ -87,7 +88,7 @@ export const GroupVoteListContainer = styled.div`
 `
 export const GroupVoterListTitle = styled.div<subScreenWidthProps>`
     width: 100%;
-    max-width: ${props=>props.$subScreenWidth-30}px;
+    max-width: ${props=>props.$subScreenWidth-40}px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

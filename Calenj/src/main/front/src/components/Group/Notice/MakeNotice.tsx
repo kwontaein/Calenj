@@ -59,7 +59,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
     const createNotice =()=>{
         if(content!=='' && title!==''){
             useConfirm(`공지를 등록하시겠습니까??`,postNotice,()=>{}, queryState)
-        }if(content===''){
+        }else if(content===''){
             window.alert('내용을 입력해주세요.')
         }else{
             window.alert('제목을 입력해주세요.')
@@ -70,7 +70,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
 
     return(
             <Modal_Background ref={modalBackground} onClick={e => {
-                if (e.target === modalBackground.current && content==='') {
+                if (e.target === modalBackground.current && content==='' && title==='') {
                     onClose();
                 }
             }}>

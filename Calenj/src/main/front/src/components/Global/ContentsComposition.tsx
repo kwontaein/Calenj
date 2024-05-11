@@ -12,7 +12,7 @@ import {
     ContentsScreen_div,
     CustomScreen_MessageBox_Contaienr, CustomScreen_MiddleLine_div, CustomScreen_SubContent_Contaienr,
     EventTopBar_Container,
-    EventTopBarContent, EventTopBarSubContent,
+    EventTopBarContent, EventTopBarSubContent, MiddleLine_Size,
     TransContentsScreen_div,
 } from "../../style/Navigation/ContentCompositionStyle";
 import GroupUserList from "../Group/GroupUserList"
@@ -117,9 +117,9 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
             }
 
         }else if(mode ==="column"){
-            const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder-3);
+            const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=180 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height-3){
+            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height-3){
                 updateSubScreenHeightSize({screenHeightSize:newHeight})
             }
         }
@@ -144,8 +144,6 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
 
 
 
-    //TODO: subScreen + MessageBox가 특정크기 이상일 때 groupUserList가 못나오니 그 상황에는 selectBox형태로 띄우기
-
     return(
 
         <FullScreen_div ref={contentRef}>
@@ -158,6 +156,10 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
                 {subNavigateInfo.clickState==="투표"&&
                     <EventTopBarSubContent>
                         <i className="fi fi-ss-vote-yea"></i>
+                    </EventTopBarSubContent>}
+                {subNavigateInfo.clickState==="그룹일정"&&
+                    <EventTopBarSubContent>
+                        <i className="fi fi-ss-calendar"></i>
                     </EventTopBarSubContent>}
                 <EventTopBarContent $isClick={showUserList}
                                     onClick={()=>setShowUserList(!showUserList)}>

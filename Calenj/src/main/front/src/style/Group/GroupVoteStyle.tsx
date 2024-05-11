@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {TextColor3, TextColor, TextColor2, ThemaColor2, PointColor} from "../FormStyle";
+import { TextColor, TextColor2, ThemaColor2, PointColor} from "../FormStyle";
 
 
 const GroupVoteModal_TopContent_Container_height =40
@@ -88,7 +88,7 @@ export const VoteType_Radio = styled.input`
     margin-top: 5px;
     /* 체크됐을 때의 색상 */
     &:checked {
-        background-color: #007bff; /* 체크됐을 때의 배경색 */
+        background-color: ${PointColor}; /* 체크됐을 때의 배경색 */
         border-color: ${TextColor}; /* 체크됐을 때의 테두리 색 */
     }
     &:focus {
@@ -105,7 +105,7 @@ export const VoteList_Container = styled.div`
 export const VoteListEmptyText = styled.div`
     width: 100%;
     height: 100%;
-    color: ${TextColor3};
+    color: ${TextColor2};
     display: flex;
     align-items: center;
     justify-content: center;
