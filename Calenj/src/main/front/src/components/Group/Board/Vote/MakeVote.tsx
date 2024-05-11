@@ -1,11 +1,11 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
     Modal_Background,CheckCondition_Button,
-} from '../../../style/FormStyle';
-import '../../../style/ModalStyle.scss';
+} from '../../../../style/FormStyle';
+import '../../../../style/ModalStyle.scss';
 import axios, {AxiosError} from 'axios';
-import {stateFilter, useConfirm, saveDBFormat} from '../../../stateFunc/actionFun'
-import '../../../style/Datepicker.scss'
+import {stateFilter, useConfirm, saveDBFormat} from '../../../../stateFunc/actionFun'
+import '../../../../style/Datepicker.scss'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
@@ -32,7 +32,7 @@ import {
     VoteSetting_Container,
     ListInput_Container,
     VoteCheckOption_Container, VoteCheckOption_Label,
-} from "../../../style/Group/GroupVoteStyle";
+} from "../../../../style/Group/GroupVoteStyle";
 
 interface ModalProps {
     onClose: () => void;
@@ -184,7 +184,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
             window.alert('항목을 2개이상 추가해주세요.')
         }else if(selectedDate ===null){
             window.alert('날짜를 입력해주세요.')
-        }else {
+        }else{
             window.alert('제목 및 항목을 입력해주세요.')
         }
     }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StompData} from "../../store/module/StompReducer";
+import {StompData} from "../../../store/module/StompReducer";
 import axios from "axios";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;

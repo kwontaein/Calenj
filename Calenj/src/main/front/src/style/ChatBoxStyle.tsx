@@ -16,7 +16,7 @@ export const MessageSend_Cotainer_height = 50;
 export const MessageComponent_Container = styled.div`
     width: 100%;
     height: 100%;
-    // background-color: ${ThemaColor2};
+    background-color: ${ThemaColor2};
 `
 
 /** 채팅창 Container-스크롤 박스 */

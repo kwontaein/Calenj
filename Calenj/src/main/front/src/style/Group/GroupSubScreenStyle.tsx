@@ -1,16 +1,18 @@
 import styled from 'styled-components';
-import {ScrollMin_width} from '../ChatBoxStyle'
-import {ThemaColor3} from "../FormStyle";
-import {TextColor3, TextColor, TextColor2} from "../FormStyle";
+import { SubScreenColor, TextColor, TextColor2, ThemaColor3} from "../FormStyle";
+import {MiddleLine_Size} from "../Navigation/ContentCompositionStyle";
 
 interface ScreenModeProps{
     $mode:string;
 }
+
+interface OptionClick{
+    $isClick:boolean;
+}
 export const GroupSubScreen_Container = styled.div<ScreenModeProps>`
-    overflow-y: auto; /* 수직 스크롤을 활성화. */
-    width: ${props=>props.$mode ==="row"? "calc(100% - 3px)" : "100%"}; //middleLine을 제외한 크기
-    height: ${props=>props.$mode ==="column"? "calc(100% - 3px)" : "100%"};
-    background-color: ${ThemaColor3};
+    width: ${props=>props.$mode ==="row"? `calc(100% - ${MiddleLine_Size}px)` : "100%"}; //middleLine을 제외한 크기
+    height: ${props=>props.$mode ==="column"? `calc(100% - ${MiddleLine_Size}px)` : "100%"};
+    background-color: ${SubScreenColor};
 `
 
 export const GroupSubScreenTop_Container = styled.div`
@@ -21,24 +23,20 @@ export const GroupSubScreenTop_Container = styled.div`
     padding-inline: 10px;
     justify-content: space-between;
 `
-export const GroupSubScreenTopIcon_Container = styled.div`
+export const GroupSubScreenTopIcon_Container = styled.div<OptionClick>`
     display: flex;
     align-items: center;
-    color:${TextColor3};
+    color:${props => props.$isClick ? TextColor:TextColor2};
     margin-right: 10px;
     &:hover{
         color: ${TextColor};
     }
 `
-export const GroupSubScreenList_HR = styled.hr`
-    height: 1px;
-    background-color: ${TextColor2};
-    margin:0;
-    border: 0;
-`
 export const GroupSubScreenContent_Container =styled.div`
-    width: 100%;
-    height: calc(100% - 45px);
+    width: calc(100% - 10px);
+    height: calc(100% - 40px);
+    margin-inline: 5px;
     padding-bottom: 5px;
+    overflow-y: auto; /* 수직 스크롤을 활성화. */
 `
 

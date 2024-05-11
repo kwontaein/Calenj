@@ -2,8 +2,8 @@ import Home from './Home';
 import SignUp from './components/Auth/Sign_up';
 import Sign from './components/Auth/Sign';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import NoticeDetail from './components/Group/Notice/NoticeDetail';
-import VoteDetail from './components/Group/Vote/VoteDetail';
+import NoticeDetail from './components/Group/Board/Notice/NoticeDetail';
+import VoteDetail from './components/Group/Board/Vote/VoteDetail';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import NaverMap from "./components/Group/Map/NaverMap"

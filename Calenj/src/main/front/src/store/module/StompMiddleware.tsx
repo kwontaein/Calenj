@@ -26,7 +26,8 @@ interface StompData {
 
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const toggleCurrentMap = new Map();
+export const toggleCurrentMap =new Map();
+export const stateOptionMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
@@ -187,7 +188,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg") {
+                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg"){
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })

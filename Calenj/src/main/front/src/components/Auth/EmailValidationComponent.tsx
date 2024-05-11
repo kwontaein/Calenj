@@ -113,9 +113,6 @@ const EmailValidationComponent: React.FC<Props> = ({email, emailToken, updateTok
     });
 
 
-
-
-
     //Redux는 클라이언트 측의 상태 관리 라이브러리이므로 백에서 토큰관리로 철저히 관리해야됨.
     //보안적인 토큰 사용: Redux 애플리케이션에서 중요한 상태를 변경할 때 사용자 인증을 확인
 

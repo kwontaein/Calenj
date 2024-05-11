@@ -1,22 +1,24 @@
 import {useEffect, useState} from "react";
-import {stateFilter, changeDateForm, AHMFormat} from '../../../stateFunc/actionFun';
-import {FullScreen_div, ListView, MiniText, RowFlexBox, TextColor2, TextColor3} from '../../../style/FormStyle'
+import {stateFilter, changeDateForm, AHMFormat} from '../../../../stateFunc/actionFun';
+import {FullScreen_div, ListView, MiniText, RowFlexBox} from '../../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
-import {VoteList} from '../../../store/ReactQuery/queryInterface'
-import {useFetchVoteList} from "../../../store/ReactQuery/queryManagement";
-import {
-    GroupSubScreenList_HR,
-    GroupSubScreenTop_Container,
-    GroupSubScreenTopIcon_Container
-} from "../../../style/Group/GroupSubScreenStyle";
+import {VoteList} from '../../../../store/ReactQuery/queryInterface'
+import {useFetchVoteList} from "../../../../store/ReactQuery/queryManagement";
+
 import {
     GroupVoteList_Container,
     GroupVoteListContainer,
     GroupVoteListDivistion,
     GroupVoteListView_Li, GroupVoterListTitle
-} from "../../../style/VoteStyle";
+} from "../../../../style/VoteStyle";
+import {
+    SubNavigateState,
+    DispatchSubNavigationProps,
+    mapDispatchToSubNavigationProps,
+    mapStateToSubNavigationProps
+} from "../../../../store/slice/SubNavigationSlice";
 
 import {connect} from 'react-redux'
 
@@ -27,24 +29,28 @@ interface SubScreenProps {
     subWidth:number,
 }
 
+type VoteProps = SubScreenProps & SubNavigateState & DispatchSubNavigationProps
 
-const Vote: React.FC<SubScreenProps> = ({member, groupId,subWidth}) => {
+const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,subNavigateInfo,updateSubScreenStateOption}) => {
     const [makeVote, setMakeVote] = useState(false);
     const [voteList, setVoteList] = useState<VoteList[]>([]);
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
-    // const location = useLocation();
-    // const navigate = useNavigate();
-    // const groupInfo = {...location.state};
-
-
-    const closeModal = () => {
-        setMakeVote(false);
-    };
-
 
 
     const voteListState = useFetchVoteList(groupId)
 
+
+    useEffect(() => {
+        if(subNavigateInfo.stateOption ==="add"){
+            setMakeVote(true);
+        }
+    }, [subNavigateInfo.stateOption]);
+
+
+    const closeModal = () => {
+        setMakeVote(false);
+        updateSubScreenStateOption({stateOption:''});
+    };
 
     //데이터가 바뀌면 다시 세팅
     useEffect(() => {
@@ -99,7 +105,7 @@ const Vote: React.FC<SubScreenProps> = ({member, groupId,subWidth}) => {
                                             <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
                                             <MiniText style={{
                                                 marginLeft: '3px',
-                                                color: checkMyVoter(vote.countVoter) ? '#007bff' : ''
+                                                color: checkMyVoter(vote.countVoter) ? '#0070E8' : ''
                                             }}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
                                         </RowFlexBox>
                                         <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
@@ -136,4 +142,4 @@ const Vote: React.FC<SubScreenProps> = ({member, groupId,subWidth}) => {
         </GroupVoteList_Container>
     )
 }
-export default Vote;
+export default connect(mapStateToSubNavigationProps,mapDispatchToSubNavigationProps) (Vote);
