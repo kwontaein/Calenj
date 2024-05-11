@@ -7,16 +7,14 @@ import {
 import {
     GroupSubScreen_Container,
     GroupSubScreenContent_Container,
-    GroupSubScreenList_HR,
     GroupSubScreenTop_Container,
     GroupSubScreenTopIcon_Container
 } from "../../../style/Group/GroupSubScreenStyle";
-import Vote from "../Vote/Vote";
-import Notice from "../Notice/Notice";
+import Vote from "../Board/Vote/Vote";
+import Notice from "../Board/Notice/Notice";
 import useComponentSize from "../../../stateFunc/useComponentSize";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
-
 interface ContentsCompositionProps{
     groupId:string;
     memberLength?:number;
@@ -29,40 +27,46 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false);
     const selectBox = useRef<HTMLDivElement>(null);
 
+
+
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (selectBox.current && !selectBox.current.contains(e.target as Node)) {
-                setShowSelectBox(false);
+                    setShowSelectBox(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
+        if(subNavigateInfo.stateOption ==="add"|| !showSelectBox){
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [selectBox]);
+    }, [showSelectBox,subNavigateInfo.stateOption]);
+
 
     return(
         <GroupSubScreen_Container $mode={subNavigateInfo.mode} ref={subScreenRef}>
             <GroupSubScreenTop_Container>
                 {subNavigateInfo.clickState}
                 <GroupSubScreenTopIcon_Container ref={selectBox}
-                                                 onClick={()=>{setShowSelectBox((prev)=>!prev)}}>
-                    <i className="fi fi-rs-menu-dots"  style={{marginTop:"3px"}}></i>
+                                                 $isClick={showSelectBox}>
                     {showSelectBox && <SubScreenSelectBox/>}
+                    <i className="fi fi-rs-menu-dots"  style={{marginTop:"3px"}}
+                       onClick={()=>{setShowSelectBox((prev)=>!prev)}}></i>
                 </GroupSubScreenTopIcon_Container>
+
             </GroupSubScreenTop_Container>
-            <GroupSubScreenList_HR/>
             <GroupSubScreenContent_Container>
 
-                {(subNavigateInfo.clickState==="투표" && memberLength)&&
+                {(subNavigateInfo.clickState === "투표" && memberLength) &&
                     <Vote member={memberLength} groupId={groupId}
-                          subWidth={subNavigateInfo.mode==="row"? subNavigateInfo.screenWidthSize: subScreenSize.width}/>}
-                {subNavigateInfo.clickState==="공지" &&
+                          subWidth={subNavigateInfo.mode === "row" ? subNavigateInfo.screenWidthSize : subScreenSize.width}/>}
+                {subNavigateInfo.clickState === "공지" &&
                     <Notice groupId={groupId}
-                            subWidth={subNavigateInfo.mode==="row"? subNavigateInfo.screenWidthSize: subScreenSize.width}/>}
+                            subWidth={subNavigateInfo.mode === "row" ? subNavigateInfo.screenWidthSize : subScreenSize.width}/>}
             </GroupSubScreenContent_Container>
         </GroupSubScreen_Container>
     )
 }
-export default connect(mapStateToSubNavigationProps,null) (GroupSubScreen);
+export default connect(mapStateToSubNavigationProps, null)(GroupSubScreen);

@@ -1,33 +1,47 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {AHMFormat,changeDateForm} from '../../../stateFunc/actionFun';
+import {AHMFormat,changeDateForm} from '../../../../stateFunc/actionFun';
 import MakeNotice from "./MakeNotice";
-import {FullScreen_div, MiniText} from '../../../style/FormStyle'
-import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
+import {FullScreen_div, MiniText} from '../../../../style/FormStyle'
+import {useFetchNoticeList} from "../../../../store/ReactQuery/queryManagement";
 import {
+    GroupNoticeList_Container,
     GroupNoticeListTitle, GroupNoticeListView_Li,
-} from "../../../style/Group/GroupNoticeStyle";
-import {GroupSubScreenTopIcon_Container, GroupSubScreenTop_Container, GroupSubScreenList_HR} from "../../../style/Group/GroupSubScreenStyle";
+} from "../../../../style/Group/GroupNoticeStyle";
+import {
+    SubNavigateState,
+    DispatchSubNavigationProps,
+    mapDispatchToSubNavigationProps,
+    mapStateToSubNavigationProps
+} from "../../../../store/slice/SubNavigationSlice";
+import {connect} from "react-redux";
 
 interface SubScreenProps{
     groupId:string,
     subWidth:number
 }
 
+type NoticeProps = SubScreenProps & SubNavigateState & DispatchSubNavigationProps
 
-const Notice :React.FC<SubScreenProps> =({groupId,subWidth})=>{
+
+const Notice :React.FC<NoticeProps> =({groupId,subWidth,subNavigateInfo,updateSubScreenStateOption})=>{
     const[makeNotice,setMakeNotice] = useState(false);
 
+    useEffect(() => {
+        if(subNavigateInfo.stateOption ==="add"){
+            setMakeNotice(true);
+        }
+    }, [subNavigateInfo.stateOption]);
 
     const noticeListState = useFetchNoticeList(groupId)
 
     const closeModal = () => {
         setMakeNotice(false);
+        updateSubScreenStateOption({stateOption:''});
     };
 
 
-
     return(
-        <FullScreen_div>
+        <GroupNoticeList_Container>
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
             {noticeListState.data &&
                 (noticeListState.data.map((notice) => (
@@ -41,7 +55,7 @@ const Notice :React.FC<SubScreenProps> =({groupId,subWidth})=>{
                     ))
                 )
             }
-        </FullScreen_div>
+        </GroupNoticeList_Container>
     )
 }
-export default Notice;
+export default connect(mapStateToSubNavigationProps,mapDispatchToSubNavigationProps) (Notice);

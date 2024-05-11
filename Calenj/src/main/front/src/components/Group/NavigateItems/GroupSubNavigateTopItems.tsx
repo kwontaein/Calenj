@@ -35,7 +35,7 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
 
 
     return(
-        <SubNavigateTopBar_Container $isClick={showEventSelecter} >
+        <SubNavigateTopBar_Container ref={selectBox} $isClick={showEventSelecter} >
 
             <SubNavigateTopBar_Content_Container>
                 <FullScreen_div onClick={()=>{setShowEventSelecter((prev)=>!prev)}} style={{display:"flex"}}>
@@ -53,10 +53,7 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
                     </SubNavigateTopBar_EventSelecter_Container>
                 </FullScreen_div>
             </SubNavigateTopBar_Content_Container>
-            {showEventSelecter &&
-                <div ref={selectBox}>
-                    <SubNavigationSelectBox/>
-                </div>}
+            {showEventSelecter && <SubNavigationSelectBox/>}
         </SubNavigateTopBar_Container>
 
     )

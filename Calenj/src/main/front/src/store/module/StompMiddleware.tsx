@@ -26,6 +26,7 @@ interface StompData {
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
 export const toggleCurrentMap =new Map();
+export const stateOptionMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {

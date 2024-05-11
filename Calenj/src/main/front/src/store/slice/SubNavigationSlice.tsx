@@ -9,6 +9,7 @@ export interface SubNavigationProps {
     mode:string,
     screenHeightSize:number,
     screenWidthSize:number,
+    stateOption: string,
 }
 
 
@@ -24,6 +25,7 @@ export interface DispatchSubNavigationProps {
     updateSubScreenMode:(payload: { mode:string}) => void;
     updateSubScreenHeightSize:(payload: { screenHeightSize:number}) => void;
     updateSubScreenWidthtSize:(payload: { screenWidthSize:number}) => void;
+    updateSubScreenStateOption:(payload: { stateOption:string}) => void;
 }
 
 export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSubNavigationProps => ({
@@ -32,6 +34,8 @@ export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSub
     updateSubScreenMode : (payload: { mode:string}) => dispatch(updateSubScreenMode(payload)),
     updateSubScreenHeightSize : (payload: { screenHeightSize:number}) => dispatch(updateSubScreenHeightSize(payload)),
     updateSubScreenWidthtSize : (payload: { screenWidthSize:number}) => dispatch(updateSubScreenWidthtSize(payload)),
+    updateSubScreenStateOption : (payload: { stateOption:string}) => dispatch(updateSubScreenStateOption(payload)),
+
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -40,17 +44,14 @@ export const mapStateToSubNavigationProps = (state: RootState): SubNavigateState
 });
 
 
-
-
-
 // 초기상태
 const initialState: SubNavigationProps ={
     param:'',
     clickState:'',
     mode:'',
-    screenHeightSize:180,
+    screenHeightSize:185,
     screenWidthSize:ScrollMin_width,
-
+    stateOption:'',
 }
 
 
@@ -73,12 +74,16 @@ const subNavigation = createSlice({
         updateSubScreenWidthtSize: (state, action :PayloadAction<{ screenWidthSize:number }>)=>{
             state.screenWidthSize = action.payload.screenWidthSize
         },
+        updateSubScreenStateOption: (state, action :PayloadAction<{ stateOption:string }>)=>{
+            state.stateOption = action.payload.stateOption
+        },
+
 
     },
 })
 
 
-export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthtSize,updateSubParam} = subNavigation.actions;
+export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthtSize,updateSubParam, updateSubScreenStateOption} = subNavigation.actions;
 
 
 export default subNavigation.reducer;

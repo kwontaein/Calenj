@@ -1,16 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {UserListView} from '../../style/FormStyle'
+import {UserListView} from '../../../style/FormStyle'
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
     StompData,
     mapStateToStompProps
-} from '../../store/module/StompReducer';
+} from '../../../store/module/StompReducer';
 import {useQueryClient} from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
-import {GroupUserList_Container, UserProfile} from "../../style/Group/GroupUserListStyle";
-import UserModal from "./UserModal";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../store/ReactQuery/queryManagement";
+import {GroupUserList_Container, UserProfile} from "../../../style/Group/GroupUserListStyle";
+import UserModal from "../GroupUser/UserModal";
 
 
 interface qeuryProps {
