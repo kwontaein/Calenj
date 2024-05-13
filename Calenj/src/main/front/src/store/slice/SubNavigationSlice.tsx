@@ -3,14 +3,18 @@ import {RootState} from '../store'
 import {Dispatch} from 'redux';
 import {ScrollMin_width} from "../../style/ChatBoxStyle";
 
+
+
+
 export interface SubNavigationProps {
     param:string,
     clickState:string,
     mode:string,
     screenHeightSize:number,
     screenWidthSize:number,
-    stateOption: string,
+
 }
+
 
 
 export interface SubNavigateState{
@@ -25,7 +29,6 @@ export interface DispatchSubNavigationProps {
     updateSubScreenMode:(payload: { mode:string}) => void;
     updateSubScreenHeightSize:(payload: { screenHeightSize:number}) => void;
     updateSubScreenWidthtSize:(payload: { screenWidthSize:number}) => void;
-    updateSubScreenStateOption:(payload: { stateOption:string}) => void;
 }
 
 export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSubNavigationProps => ({
@@ -34,7 +37,6 @@ export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSub
     updateSubScreenMode : (payload: { mode:string}) => dispatch(updateSubScreenMode(payload)),
     updateSubScreenHeightSize : (payload: { screenHeightSize:number}) => dispatch(updateSubScreenHeightSize(payload)),
     updateSubScreenWidthtSize : (payload: { screenWidthSize:number}) => dispatch(updateSubScreenWidthtSize(payload)),
-    updateSubScreenStateOption : (payload: { stateOption:string}) => dispatch(updateSubScreenStateOption(payload)),
 
 });
 
@@ -51,7 +53,6 @@ const initialState: SubNavigationProps ={
     mode:'',
     screenHeightSize:185,
     screenWidthSize:ScrollMin_width,
-    stateOption:'',
 }
 
 
@@ -74,16 +75,12 @@ const subNavigation = createSlice({
         updateSubScreenWidthtSize: (state, action :PayloadAction<{ screenWidthSize:number }>)=>{
             state.screenWidthSize = action.payload.screenWidthSize
         },
-        updateSubScreenStateOption: (state, action :PayloadAction<{ stateOption:string }>)=>{
-            state.stateOption = action.payload.stateOption
-        },
-
 
     },
 })
 
 
-export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthtSize,updateSubParam, updateSubScreenStateOption} = subNavigation.actions;
+export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthtSize,updateSubParam} = subNavigation.actions;
 
 
 export default subNavigation.reducer;

@@ -15,18 +15,48 @@ import Notice from "../Board/Notice/Notice";
 import useComponentSize from "../../../stateFunc/useComponentSize";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
+import {BoardSearchMap} from '../../../store/module/StompMiddleware';
+
+
+
 interface ContentsCompositionProps{
-    groupId:string;
-    memberLength?:number;
+    showUserList:boolean,
+    groupId:string,
+    subScreenWidth?:number;
+    memberLength?:number,
 }
 
 
 
-const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = ({subNavigateInfo,memberLength,groupId}) =>{
-    const [subScreenRef, subScreenSize] = useComponentSize(); //컴포넌트의 크기를 가져옴
+
+const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = ({subNavigateInfo,memberLength,groupId,subScreenWidth, showUserList}) =>{
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false);
+    const [search,setSearch] = useState<boolean>(false); //옵션 선택현황
     const selectBox = useRef<HTMLDivElement>(null);
 
+
+    //subScreen이 변할 때마다 기존 세팅을 체크하여 그대로 세팅
+    useEffect(() => {
+        if(subNavigateInfo.clickState!=="공지" && subNavigateInfo.clickState!=="투표") return
+
+        const searchRegister = BoardSearchMap.get(subNavigateInfo.param+subNavigateInfo.clickState)
+        if(searchRegister){
+            setShowSelectBox(true)
+        }else{
+            setShowSelectBox(false);
+        }
+    }, [groupId,subNavigateInfo.clickState]);
+
+    //검색 중일 때는 유지되도록 설정
+    const isSearching = (word:string)=>{
+        if(word!==''){
+            if(search) return;
+            setSearch(true);
+        }else{
+            if(!search) return;
+            setSearch(false)
+        }
+    }
 
 
     useEffect(() => {
@@ -36,24 +66,29 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        if(subNavigateInfo.stateOption ==="add"|| !showSelectBox){
+        if(!showSelectBox || search){
             document.removeEventListener('mousedown', handleClickOutside);
         }
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [showSelectBox,subNavigateInfo.stateOption]);
+    }, [showSelectBox,search]);
 
 
     return(
-        <GroupSubScreen_Container $mode={subNavigateInfo.mode} ref={subScreenRef}>
+            <GroupSubScreen_Container $mode={subNavigateInfo.mode}>
             <GroupSubScreenTop_Container>
                 {subNavigateInfo.clickState}
                 <GroupSubScreenTopIcon_Container ref={selectBox}
                                                  $isClick={showSelectBox}>
-                    {showSelectBox && <SubScreenSelectBox/>}
+                    {showSelectBox && <SubScreenSelectBox subScreenState={subNavigateInfo.clickState}
+                                                          showUserList={showUserList}
+                                                          groupId={subNavigateInfo.param}
+                                                          isSearching={isSearching}/>}
                     <i className="fi fi-rs-menu-dots"  style={{marginTop:"3px"}}
-                       onClick={()=>{setShowSelectBox((prev)=>!prev)}}></i>
+                       onClick={()=>{
+                           setShowSelectBox((prev)=>!prev)
+                       }}></i>
                 </GroupSubScreenTopIcon_Container>
 
             </GroupSubScreenTop_Container>
@@ -61,10 +96,10 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
 
                 {(subNavigateInfo.clickState === "투표" && memberLength) &&
                     <Vote member={memberLength} groupId={groupId}
-                          subWidth={subNavigateInfo.mode === "row" ? subNavigateInfo.screenWidthSize : subScreenSize.width}/>}
+                          subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
                 {subNavigateInfo.clickState === "공지" &&
                     <Notice groupId={groupId}
-                            subWidth={subNavigateInfo.mode === "row" ? subNavigateInfo.screenWidthSize : subScreenSize.width}/>}
+                            subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
             </GroupSubScreenContent_Container>
         </GroupSubScreen_Container>
     )

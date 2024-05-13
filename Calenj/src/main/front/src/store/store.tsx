@@ -6,8 +6,9 @@ import { all } from "@redux-saga/core/effects"; // import all method
 import {initializeStompChannel} from './module/StompMiddleware'
 import emailValidationReducer from './slice/EmailValidationSlice';
 import StompReducer, {updateStompState} from './module/StompReducer';
-import NavigateReducer from './slice/NavigatgionSlice'
-import subNavigateReducer from './slice/SubNavigationSlice'
+import navigateReducer from './slice/NavigatgionSlice';
+import subNavigateReducer from './slice/SubNavigationSlice';
+import boardOptionReducer from './slice/BoardOptionSlice';
 
 
 // 액션 타입
@@ -28,8 +29,10 @@ function* rootSaga() {
 const rootReducer = combineReducers({
   stomp: StompReducer,
   emailValidation: emailValidationReducer,
-  navigateInfo:NavigateReducer,
-  subNavigateInfo:subNavigateReducer});
+  navigateInfo:navigateReducer,
+  subNavigateInfo:subNavigateReducer,
+  boardOption:boardOptionReducer
+});
 
 
 // 사가 미들웨어 생성

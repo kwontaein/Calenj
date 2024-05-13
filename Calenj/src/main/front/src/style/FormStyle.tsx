@@ -11,7 +11,7 @@ interface ClickAbleProps{
 
 
 /**
- * SubNavColor
+ * SubNavColor, button색
  * @param ThemaColor3
  */
 export const ThemaColor3 = "#2B2E33";//SubNav 222831
@@ -94,6 +94,7 @@ export const MiniText = styled.div`
 export const RowFlexBox = styled.div`
     display: flex;
     flexdirection: row;
+    align-items: center;
 `
 
 
