@@ -283,12 +283,14 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                             locale={ko}
                         />
                         <VoteCheckOption_Container>
-                            <VoteCheckOption_Label><input type='checkBox' name='choice'
+                            <VoteCheckOption_Label>
+                                <input type='checkBox' name='choice'
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setMultipleOption(e.target.checked)
                                 }}/>복수선택
                             </VoteCheckOption_Label>
-                            <VoteCheckOption_Label><input type='checkBox' name='anonymous'
+                            <VoteCheckOption_Label>
+                                <input type='checkBox' name='anonymous'
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setanonymousOption(e.target.checked)
                                 }}/>익명투표

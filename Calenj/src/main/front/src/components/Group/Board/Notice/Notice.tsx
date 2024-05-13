@@ -8,11 +8,11 @@ import {
     GroupNoticeListTitle, GroupNoticeListView_Li,
 } from "../../../../style/Group/GroupNoticeStyle";
 import {
-    SubNavigateState,
-    DispatchSubNavigationProps,
-    mapDispatchToSubNavigationProps,
-    mapStateToSubNavigationProps
-} from "../../../../store/slice/SubNavigationSlice";
+    BoardOptionState,
+    DispatchBoardOptionProps,
+    mapDispatchToBoardOptionProps,
+    mapStateToBoardOptionProps
+} from "../../../../store/slice/BoardOptionSlice";
 import {connect} from "react-redux";
 
 interface SubScreenProps{
@@ -20,23 +20,27 @@ interface SubScreenProps{
     subWidth:number
 }
 
-type NoticeProps = SubScreenProps & SubNavigateState & DispatchSubNavigationProps
+type NoticeProps = SubScreenProps & BoardOptionState & DispatchBoardOptionProps
 
 
-const Notice :React.FC<NoticeProps> =({groupId,subWidth,subNavigateInfo,updateSubScreenStateOption})=>{
+const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickState})=>{
     const[makeNotice,setMakeNotice] = useState(false);
 
     useEffect(() => {
-        if(subNavigateInfo.stateOption ==="add"){
+        if(boardOption.clickState ==="add"){
             setMakeNotice(true);
         }
-    }, [subNavigateInfo.stateOption]);
+    }, [boardOption.clickState]);
 
     const noticeListState = useFetchNoticeList(groupId)
 
+    useEffect(() => {
+        noticeListState.refetch();
+    }, []);
+
     const closeModal = () => {
         setMakeNotice(false);
-        updateSubScreenStateOption({stateOption:''});
+        updateClickState({clickState:''});
     };
 
 
@@ -45,6 +49,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,subNavigateInfo,updateSu
             <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
             {noticeListState.data &&
                 (noticeListState.data.map((notice) => (
+                    (boardOption.search_keyWord==='' ?
                         <GroupNoticeListView_Li key={notice.noticeId}
                                   onClick={() => {}}>
                             <GroupNoticeListTitle $subScreenWidth={subWidth}>
@@ -52,10 +57,18 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,subNavigateInfo,updateSu
                             </GroupNoticeListTitle>
                             <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
                         </GroupNoticeListView_Li>
-                    ))
-                )
+                    :   (notice.noticeTitle.includes(boardOption.search_keyWord)) &&
+                        <GroupNoticeListView_Li key={notice.noticeId}
+                                                onClick={() => {}}>
+                            <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                {notice.noticeTitle}
+                            </GroupNoticeListTitle>
+                            <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
+                        </GroupNoticeListView_Li>
+                    )
+                )))
             }
         </GroupNoticeList_Container>
     )
 }
-export default connect(mapStateToSubNavigationProps,mapDispatchToSubNavigationProps) (Notice);
+export default connect(mapStateToBoardOptionProps,mapDispatchToBoardOptionProps) (Notice);

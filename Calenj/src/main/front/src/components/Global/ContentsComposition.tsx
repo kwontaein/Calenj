@@ -15,7 +15,7 @@ import {
     EventTopBarContent, EventTopBarSubContent, MiddleLine_Size,
     TransContentsScreen_div,
 } from "../../style/Navigation/ContentCompositionStyle";
-import GroupUserList from "../Group/Board/GroupUserList"
+import GroupUserList from "../Group/GroupUser/GroupUserList"
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../store/ReactQuery/queryManagement";
 import {GroupDetail} from '../../store/ReactQuery/queryInterface'
@@ -187,14 +187,19 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
                                                                                    subNavigateInfo.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
                                                                                    subNavigateInfo.screenWidthSize/contentSize.width * 100}>
                                                 <CustomScreen_MiddleLine_div $mode={subNavigateInfo.mode} onMouseDown={handleMouseDown}/>
-                                                <GroupSubScreen groupId={param} memberLength={groupDetail.members.length}/>
+                                                <GroupSubScreen groupId={param}
+                                                                memberLength={groupDetail.members.length}
+                                                                showUserList={showUserList}/>
                                             </CustomScreen_SubContent_Contaienr>
                                         </TransContentsScreen_div>
                                         :
                                         <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showUserList={showUserList}>
                                             <CustomScreen_SubContent_Contaienr $mode={subNavigateInfo.mode}
                                                                                $height={subNavigateInfo.screenHeightSize}>
-                                                <GroupSubScreen groupId={param} memberLength={groupDetail.members.length}/>
+                                                <GroupSubScreen groupId={param}
+                                                                memberLength={groupDetail.members.length}
+                                                                showUserList={showUserList}
+                                                                subScreenWidth ={contentSize.width}/>
                                                 <CustomScreen_MiddleLine_div $mode={subNavigateInfo.mode} onMouseDown={handleMouseDown}/>
                                             </CustomScreen_SubContent_Contaienr>
                                             <CustomScreen_MessageBox_Contaienr

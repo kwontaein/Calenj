@@ -10,7 +10,7 @@ import {
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../../store/ReactQuery/queryManagement";
 import {GroupUserList_Container, UserProfile} from "../../../style/Group/GroupUserListStyle";
-import UserModal from "../GroupUser/UserModal";
+import UserModal from "./UserModal";
 
 
 interface qeuryProps {
