@@ -202,7 +202,7 @@ export const FilterToggleItem = styled.div<FilterClickProps>`
     border-radius: 50%;
     background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
     ${props => props.$toggleState!==undefined && css
-    `animation : ${moveToggle(props.$toggleState)} 0.3s ease-out forwards;`
+    `animation : ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
     }
 `
 

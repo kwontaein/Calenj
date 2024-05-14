@@ -103,8 +103,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/signup"} element={<SignUp/>}/>
                         <Route path={"/sign"} element={<Sign/>}/>
-                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
                         <Route path={"/inviteGroup/"}>
                             <Route path={":inviteCode"} element={<InviteGroup/>}/>
                         </Route>

@@ -1,9 +1,12 @@
 //SubNavigation의 내용을 보여주는 컴포넌트
 import {connect} from 'react-redux'
 import {
-    SubNavigateState,
-    mapStateToSubNavigationProps
-} from "../../../store/slice/SubNavigationSlice";
+    BoardOptionState,
+    DispatchBoardOptionProps,
+    mapDispatchToBoardOptionProps,
+    mapStateToBoardOptionProps,
+} from "../../../store/slice/BoardOptionSlice";
+import {SubNavigationProps} from "../../../store/slice/SubNavigationSlice"
 import {
     GroupSubScreen_Container,
     GroupSubScreenContent_Container,
@@ -12,24 +15,23 @@ import {
 } from "../../../style/Group/GroupSubScreenStyle";
 import Vote from "../Board/Vote/Vote";
 import Notice from "../Board/Notice/Notice";
-import useComponentSize from "../../../stateFunc/useComponentSize";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
-import {BoardSearchMap} from '../../../store/module/StompMiddleware';
+import {BoardSearchMap,BoardParamMap} from '../../../store/module/StompMiddleware';
 
 
 
 interface ContentsCompositionProps{
     showUserList:boolean,
-    groupId:string,
     subScreenWidth?:number;
-    memberLength?:number,
+    subNavigateInfo: SubNavigationProps,
 }
 
 
+type GroupSubScreenProps = BoardOptionState & DispatchBoardOptionProps & ContentsCompositionProps;
 
 
-const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = ({subNavigateInfo,memberLength,groupId,subScreenWidth, showUserList}) =>{
+const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOption,subScreenWidth, showUserList,updateBoardParam}) =>{
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false);
     const [search,setSearch] = useState<boolean>(false); //옵션 선택현황
     const selectBox = useRef<HTMLDivElement>(null);
@@ -45,7 +47,7 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
         }else{
             setShowSelectBox(false);
         }
-    }, [groupId,subNavigateInfo.clickState]);
+    }, [subNavigateInfo.param,subNavigateInfo.clickState]);
 
     //검색 중일 때는 유지되도록 설정
     const isSearching = (word:string)=>{
@@ -74,34 +76,48 @@ const GroupSubScreen : React.FC<SubNavigateState & ContentsCompositionProps> = (
         };
     }, [showSelectBox,search]);
 
+    const ExitBoardDetail =() =>{
+        if(subNavigateInfo.clickState==="공지") {
+            updateBoardParam({noticeParam:''});
+            BoardParamMap.delete(`${subNavigateInfo.param}Notice`)
+        }else if(subNavigateInfo.clickState==="투표") {
+            updateBoardParam({voteParam:''});
+            BoardParamMap.delete(`${subNavigateInfo.param}Vote`)
+        }
 
+
+    }
+// subNavigateInfo.clickState==="투표" ? boardOption.voteParam===""
     return(
             <GroupSubScreen_Container $mode={subNavigateInfo.mode}>
             <GroupSubScreenTop_Container>
                 {subNavigateInfo.clickState}
                 <GroupSubScreenTopIcon_Container ref={selectBox}
                                                  $isClick={showSelectBox}>
-                    {showSelectBox && <SubScreenSelectBox subScreenState={subNavigateInfo.clickState}
-                                                          showUserList={showUserList}
-                                                          groupId={subNavigateInfo.param}
-                                                          isSearching={isSearching}/>}
-                    <i className="fi fi-rs-menu-dots"  style={{marginTop:"3px"}}
-                       onClick={()=>{
-                           setShowSelectBox((prev)=>!prev)
-                       }}></i>
+                    {(subNavigateInfo.clickState==="공지" ? boardOption.noticeParam==="" : true) ?
+                    <div>
+                        {showSelectBox && <SubScreenSelectBox subScreenState={subNavigateInfo.clickState}
+                                                              showUserList={showUserList}
+                                                              groupId={subNavigateInfo.param}
+                                                              isSearching={isSearching}/>}
+                        <i className="fi fi-rs-menu-dots"  style={{marginTop:"3px"}}
+                           onClick={() => {setShowSelectBox((prev) => !prev)}}></i>
+                    </div>
+                    : <i className="fi fi-br-exit" style={{marginTop: "3px"}} onClick={ExitBoardDetail}></i>
+                    }
                 </GroupSubScreenTopIcon_Container>
 
             </GroupSubScreenTop_Container>
-            <GroupSubScreenContent_Container>
+                <GroupSubScreenContent_Container>
 
-                {(subNavigateInfo.clickState === "투표" && memberLength) &&
-                    <Vote member={memberLength} groupId={groupId}
+                {subNavigateInfo.clickState === "투표" &&
+                    <Vote groupId={subNavigateInfo.param}
                           subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
                 {subNavigateInfo.clickState === "공지" &&
-                    <Notice groupId={groupId}
+                    <Notice groupId={subNavigateInfo.param}
                             subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
             </GroupSubScreenContent_Container>
         </GroupSubScreen_Container>
     )
 }
-export default connect(mapStateToSubNavigationProps, null)(GroupSubScreen);
+export default connect(mapStateToBoardOptionProps, mapDispatchToBoardOptionProps)(GroupSubScreen);

@@ -11,6 +11,8 @@ export interface BoardOptionProps{
         filterB:Boardfilter,
     },
     clickState:string,
+    noticeParam:string,
+    voteParam:string,
 }
 
 interface Boardfilter {
@@ -25,12 +27,15 @@ export interface DispatchBoardOptionProps {
     updateBoardSearch : (payload:{search_keyWord:string}) => void,
     updateBoardFilter : (payload:{filterA:Boardfilter, filterB:Boardfilter}) => void,
     updateClickState : (payload:{clickState:string}) => void,
+    updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) =>void,
 }
 
 export const mapDispatchToBoardOptionProps = (dispatch: Dispatch): DispatchBoardOptionProps => ({
     updateBoardSearch : (payload:{search_keyWord:string}) => dispatch(updateBoardSearch(payload)),
     updateBoardFilter : (payload:{filterA:Boardfilter, filterB:Boardfilter}) => dispatch(updateBoardFilter(payload)),
     updateClickState : (payload:{clickState:string})  => dispatch(updateClickState(payload)),
+    updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) => dispatch(updateBoardParam(payload)),
+
 });
 
 export const mapStateToBoardOptionProps = (state: RootState): BoardOptionState => ({
@@ -53,6 +58,8 @@ const initialState: BoardOptionProps ={
         }
     },
     clickState:'',
+    noticeParam:'',
+    voteParam:'',
 }
 
 
@@ -69,11 +76,19 @@ const boardOption = createSlice({
         },
         updateClickState: (state, action :PayloadAction<{ clickState :string}>)=>{
             state.clickState = action.payload.clickState;
+        },
+        updateBoardParam: (state, action :PayloadAction<{ noticeParam? :string, voteParam?:string}>)=>{
+            if(action.payload.noticeParam!==undefined){
+                state.noticeParam = action.payload.noticeParam;
+            }
+            if(action.payload.voteParam!==undefined){
+                state.voteParam = action.payload.voteParam;
+            }
 
         },
     },
 })
 
-export const {updateBoardSearch,  updateBoardFilter, updateClickState} = boardOption.actions;
+export const {updateBoardSearch,  updateBoardFilter, updateClickState, updateBoardParam} = boardOption.actions;
 
 export default boardOption.reducer;

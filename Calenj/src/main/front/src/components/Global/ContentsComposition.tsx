@@ -187,8 +187,7 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
                                                                                    subNavigateInfo.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
                                                                                    subNavigateInfo.screenWidthSize/contentSize.width * 100}>
                                                 <CustomScreen_MiddleLine_div $mode={subNavigateInfo.mode} onMouseDown={handleMouseDown}/>
-                                                <GroupSubScreen groupId={param}
-                                                                memberLength={groupDetail.members.length}
+                                                <GroupSubScreen subNavigateInfo={subNavigateInfo}
                                                                 showUserList={showUserList}/>
                                             </CustomScreen_SubContent_Contaienr>
                                         </TransContentsScreen_div>
@@ -196,14 +195,12 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
                                         <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showUserList={showUserList}>
                                             <CustomScreen_SubContent_Contaienr $mode={subNavigateInfo.mode}
                                                                                $height={subNavigateInfo.screenHeightSize}>
-                                                <GroupSubScreen groupId={param}
-                                                                memberLength={groupDetail.members.length}
+                                                <GroupSubScreen subNavigateInfo={subNavigateInfo}
                                                                 showUserList={showUserList}
                                                                 subScreenWidth ={contentSize.width}/>
                                                 <CustomScreen_MiddleLine_div $mode={subNavigateInfo.mode} onMouseDown={handleMouseDown}/>
                                             </CustomScreen_SubContent_Contaienr>
-                                            <CustomScreen_MessageBox_Contaienr
-                                                                               $mode={subNavigateInfo.mode}
+                                            <CustomScreen_MessageBox_Contaienr $mode={subNavigateInfo.mode}
                                                                                $height={subNavigateInfo.screenHeightSize}>
                                                 <MessageContainer target={target} param ={param}/>
                                             </CustomScreen_MessageBox_Contaienr>

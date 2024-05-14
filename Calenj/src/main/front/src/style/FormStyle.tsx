@@ -85,7 +85,7 @@ export const FullScreen_div = styled.div`
     height: 100%;
 `
 export const MiniText = styled.div`
-    color: gray;
+    color: ${TextColor2}77;
     margin-top: 5px;
     font-size: 12px;
     align-items: center;
@@ -125,13 +125,6 @@ export const Input = styled.input`
     width: 450px;
 `;
 
-export const Mini_Input = styled.input`
-    witdh: 100px;
-    height: 20px;
-    margin: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-`;
 
 export const Mini_Textarea = styled.textarea`
     width: 200px;
