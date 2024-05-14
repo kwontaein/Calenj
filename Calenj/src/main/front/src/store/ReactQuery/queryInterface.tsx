@@ -3,12 +3,14 @@ export interface GroupList_item {
     groupTitle: string;
     groupCreated: string;
 }
+
 interface groupMembers {
-    groupRoleType: String;
-    group_user_location: String;
-    nickName: String;
+    groupRoleType: string;
+    group_user_location: string;
+    nickName: string;
     onlineStatus: string;
     userEmail: string;
+    userId: string;
 }
 
 export interface GroupDetail {
@@ -29,12 +31,12 @@ export interface VoteList {
     voteEndDate: string;
 }
 
-export interface NoticeList{
-    noticeId : string;
-    noticeTitle : string;
-    noticeContent : string;
-    noticeCreater : string;
-    noticeCreated : string;
+export interface NoticeList {
+    noticeId: string;
+    noticeTitle: string;
+    noticeContent: string;
+    noticeCreater: string;
+    noticeCreated: string;
 }
 
 export interface FriendList {

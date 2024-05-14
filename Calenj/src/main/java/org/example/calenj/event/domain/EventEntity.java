@@ -27,7 +27,7 @@ public class EventEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "varchar(255)")
+    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     // 이벤트 발생자
     private UserEntity ownUserId;
 

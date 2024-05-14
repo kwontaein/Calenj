@@ -33,6 +33,10 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false, unique = true, name = "user_email")
     private String userEmail;
 
+    @Builder.Default
+    @Column(nullable = false, unique = true, name = "user_name")
+    private String userName = "user" + ((int) Math.random() * 999999998 + 1);
+    
     private String nickname;
 
     @Column(name = "user_password")

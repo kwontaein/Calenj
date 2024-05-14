@@ -33,7 +33,7 @@ public class FriendController {
     public String requestFriend(@RequestBody FriendRequest request) {
         //친구 요청 보내기
         //만약 상대가 보낸 요청이 있다면, 내 테이블에 추가 후 상태 변경하기
-        return friendService.requestFriend(request.getFriendUserId());
+        return friendService.requestFriend(request.getFriendUserName());
     }
 
     /**
@@ -43,20 +43,20 @@ public class FriendController {
     public String responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
-        return friendService.responseFriend(request.getFriendUserId(), request.getIsAccept());
+        return friendService.responseFriend(request.getFriendUserName(), request.getIsAccept());
     }
 
     /**
      * 내 이벤트 목록
      * 내 이벤트 목록...? 이거 왜 만들었노
      */
-    @PostMapping("/api/myEvents")
+   /* @PostMapping("/api/myEvents")
     public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
 
-        List<EventResponse> events = friendService.myEvents(request.getUserId());
+        List<EventResponse> events = friendService.myEvents(request.getUserName());
         System.out.println(events.toString());
-        return friendService.myEvents(request.getUserId());
-    }
+        return friendService.myEvents(request.getUserName());
+    }*/
 
     /**
      * 내가 요청한 목록

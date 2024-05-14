@@ -480,8 +480,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer
-                                                $userEmail={message.userId}></ProfileContainer>
+                                            <ProfileContainer $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
                                                     <NickNameContainer>{message.userId}</NickNameContainer>
