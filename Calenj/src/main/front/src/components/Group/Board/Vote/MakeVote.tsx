@@ -5,8 +5,6 @@ import {
 import '../../../../style/ModalStyle.scss';
 import axios, {AxiosError} from 'axios';
 import {stateFilter, useConfirm, saveDBFormat} from '../../../../stateFunc/actionFun'
-import '../../../../style/Datepicker.scss'
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';

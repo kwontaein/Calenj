@@ -125,13 +125,6 @@ export const Input = styled.input`
     width: 450px;
 `;
 
-export const Mini_Input = styled.input`
-    witdh: 100px;
-    height: 20px;
-    margin: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-`;
 
 export const Mini_Textarea = styled.textarea`
     width: 200px;
