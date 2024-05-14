@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, ThemaColor2, ThemaColor3} from "../FormStyle";
+import {PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../FormStyle";
 
 
 const GroupNoticeModal_TopContent_Container_height =40
@@ -17,6 +17,7 @@ interface subScreenWidthProps{
 
 
 
+/** MakeNotice **/
 //공지 생성하기
 export const GroupNoticeModal_Container = styled.div`
     background-color: ${ThemaColor2};
@@ -39,10 +40,12 @@ export const GroupNoticeModal_Textarea = styled.textarea`
     margin-top:10px;
     padding: 5px;
     border-radius: 5px;
-    border: 2px solid #000000;
+    border: 2px solid ${ThemaColor2};
     font-size: 15px;
     resize: none;
     font-weight: 550;
+    background-color: ${ThemaColor3};
+    color: ${TextColor};
     &:focus{
         outline: none;
         border: 2px solid;
@@ -56,8 +59,10 @@ export const GroupNoticeTitle_Input = styled.input`
     height: ${GroupNoticeTitle_Input_height}px;
     padding: 5px;
     border-radius: 5px;
-    border: 2px solid #000000;
+    border: 2px solid ${ThemaColor2};
     font-size: 15px;
+    background-color:${ThemaColor3};
+    color: ${TextColor};
     &:focus{
         outline: none;
         border: 2px solid;
@@ -88,11 +93,22 @@ export const GroupNoticeModal_Button_Container = styled.div`
     justify-content: right;
 `
 export const GroupNoticeModal_close_Btn = styled.button`
+    width: 70px;
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${ThemaColor3};
+    margin-right: 5px;
+    font-size: 14px;
     &:hover{
         background-color: rgb(0,0,0,0.4);
     }
 `
 
+
+/** NoticeList **/
 
 export const GroupNoticeList_Container = styled.div`
     width: 100%;
@@ -118,3 +134,43 @@ export const GroupNoticeListTitle = styled.div<subScreenWidthProps>`
     text-overflow: ellipsis;
 `
 
+
+
+/** NoticeDetail **/
+
+export const NoticeDetailContainer = styled.div`
+    width: 100%;
+    height: calc(100% - 5px);
+`
+
+export const NoticeDetailContent_Container = styled.div`
+    width: calc(100% - 20px);
+    padding-inline: 10px;
+    user-select: text;
+    margin-top: 10px;
+`
+
+export const BoardDetailTop_Container = styled.div`
+    width: calc(100% - 20px);
+    height: 50px;
+    padding: 10px;
+    padding-block: 15px;
+    background-color: ${ThemaColor3};
+    color: ${TextColor};
+    display: flex;
+    flex-direction: row;
+`
+interface DetailTopProps{
+    $state:string,
+}
+export const BoardDetailTop_title = styled.div<DetailTopProps>`
+    font-size: ${props=> props.$state ==="notice"? "14px": "18px"};
+    width: 100%;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+`

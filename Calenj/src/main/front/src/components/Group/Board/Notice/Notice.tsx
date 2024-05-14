@@ -14,6 +14,8 @@ import {
     mapStateToBoardOptionProps
 } from "../../../../store/slice/BoardOptionSlice";
 import {connect} from "react-redux";
+import {BoardParamMap} from "../../../../store/module/StompMiddleware";
+import NoticeDetail from "./NoticeDetail";
 
 interface SubScreenProps{
     groupId:string,
@@ -23,7 +25,7 @@ interface SubScreenProps{
 type NoticeProps = SubScreenProps & BoardOptionState & DispatchBoardOptionProps
 
 
-const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickState})=>{
+const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickState, updateBoardParam})=>{
     const[makeNotice,setMakeNotice] = useState(false);
 
     useEffect(() => {
@@ -35,6 +37,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
     const noticeListState = useFetchNoticeList(groupId)
 
     useEffect(() => {
+        checkNoticeParam()
         noticeListState.refetch();
     }, []);
 
@@ -43,30 +46,51 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
         updateClickState({clickState:''});
     };
 
+    const checkNoticeParam = ()=>{
+
+        const noticeParam = BoardParamMap.get(`${groupId}Notice`);
+        if(noticeParam){
+            updateBoardParam({noticeParam:noticeParam});
+        }else{
+            updateBoardParam({noticeParam:""});
+        }
+    }
+
+
+    const redirectDetail = (param:string) =>{
+        BoardParamMap.set(`${groupId}Notice`, param);
+        updateBoardParam({noticeParam:param});
+    }
 
     return(
         <GroupNoticeList_Container>
-            <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
-            {noticeListState.data &&
-                (noticeListState.data.map((notice) => (
-                    (boardOption.search_keyWord==='' ?
-                        <GroupNoticeListView_Li key={notice.noticeId}
-                                  onClick={() => {}}>
-                            <GroupNoticeListTitle $subScreenWidth={subWidth}>
-                                {notice.noticeTitle}
-                            </GroupNoticeListTitle>
-                            <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
-                        </GroupNoticeListView_Li>
-                    :   (notice.noticeTitle.includes(boardOption.search_keyWord)) &&
-                        <GroupNoticeListView_Li key={notice.noticeId}
-                                                onClick={() => {}}>
-                            <GroupNoticeListTitle $subScreenWidth={subWidth}>
-                                {notice.noticeTitle}
-                            </GroupNoticeListTitle>
-                            <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
-                        </GroupNoticeListView_Li>
-                    )
-                )))
+            {boardOption.noticeParam==='' ?
+            <div>
+                <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
+                {noticeListState.data &&
+                    (noticeListState.data.map((notice) => (
+                        (boardOption.search_keyWord==='' ?
+                            <GroupNoticeListView_Li key={notice.noticeId}
+                                      onClick={() => {redirectDetail(notice.noticeId)}}>
+                                <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                    {notice.noticeTitle}
+                                </GroupNoticeListTitle>
+                                <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
+                            </GroupNoticeListView_Li>
+                        :   (notice.noticeTitle.includes(boardOption.search_keyWord)) &&
+                            <GroupNoticeListView_Li key={notice.noticeId}
+                                                    onClick={() => {redirectDetail(notice.noticeId)}}>
+                                <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                    {notice.noticeTitle}
+                                </GroupNoticeListTitle>
+                                <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
+                            </GroupNoticeListView_Li>
+                        )
+                    )))
+                }
+            </div>
+            :
+                <NoticeDetail noticeId={boardOption.noticeParam}/>
             }
         </GroupNoticeList_Container>
     )

@@ -28,6 +28,7 @@ export const scrollPointMap = new Map();
 export const toggleCurrentMap =new Map();
 export const BoardFilterMap = new Map();
 export const BoardSearchMap = new Map();
+export const BoardParamMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {

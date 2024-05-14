@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {stateFilter, changeDateForm, AHMFormat} from '../../../../stateFunc/actionFun';
-import {FullScreen_div, ListView, MiniText, RowFlexBox} from '../../../../style/FormStyle'
+import {changeDateForm, AHMFormat} from '../../../../stateFunc/actionFun';
+import {MiniText, RowFlexBox} from '../../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
@@ -12,29 +12,31 @@ import {
     GroupVoteListContainer,
     GroupVoteListDivistion,
     GroupVoteListView_Li, GroupVoterListTitle
-} from "../../../../style/VoteStyle";
+} from "../../../../style/Group/GroupVoteStyle";
 import {
     BoardOptionState,
     DispatchBoardOptionProps,
     mapDispatchToBoardOptionProps,
     mapStateToBoardOptionProps
 } from "../../../../store/slice/BoardOptionSlice";
-
 import {connect} from 'react-redux'
+import {BoardParamMap} from "../../../../store/module/StompMiddleware";
+import VoteDetail from "./VoteDetail";
 
 
 interface SubScreenProps {
     groupId: string,
-    member: number,
     subWidth:number,
 }
 
 type VoteProps = SubScreenProps & BoardOptionState & DispatchBoardOptionProps
 
-const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateClickState}) => {
+const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickState,updateBoardParam}) => {
     const [makeVote, setMakeVote] = useState(false);
     const [voteList, setVoteList] = useState<VoteList[]>([]);
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
+    const [memberLength, setMemberLength] = useState<number>();
+
 
 
     const voteListState = useFetchVoteList(groupId)
@@ -48,11 +50,6 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
             setMakeVote(true);
         }
     }, [boardOption.clickState]);
-
-    //필터 적용 시
-    useEffect(() => {
-        console.log()
-    }, [boardOption.filter_setting]);
 
     const closeModal = () => {
         setMakeVote(false);
@@ -68,7 +65,12 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
         }
     }, [voteListState.data])
 
-
+    //투표참여 이후에 바로 갱신
+    useEffect(() => {
+        if(boardOption.voteParam===""){
+            voteListState.refetch()
+        }
+    }, [boardOption.voteParam]);
 
 
     function deadlineFilter(list: VoteList[], end: boolean): VoteList[] {
@@ -89,8 +91,14 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
         const userId = localStorage.getItem('userId')||''
         return countVoter.includes(userId);
     }
+
+    const redirectDetail = (param:string) =>{
+        updateBoardParam({voteParam:param});
+    }
+
     return (
         <GroupVoteList_Container>
+            {boardOption.voteParam!=='' &&  <VoteDetail voteId={boardOption.voteParam}/>}
             {makeVote && <MakeVote onClose={closeModal} groupId={groupId} queryState={voteListState}/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&
@@ -104,7 +112,7 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
                                 ( !(boardOption.filter_setting.filterB.isCheck && (boardOption.filter_setting.filterB.toggleState === checkMyVoter(vote.countVoter)))&&
                                     (boardOption.search_keyWord==='' ?
                                     <GroupVoteListView_Li key={vote.voteId}
-                                          onClick={() =>{}}>
+                                          onClick={() =>{redirectDetail(vote.voteId)}}>
                                     <div style={{width:"100%"}}>
                                         <GroupVoterListTitle $subScreenWidth={subWidth}>
                                             {vote.voteTitle}
@@ -121,7 +129,7 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
                                 </GroupVoteListView_Li>
                                    : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
                                     <GroupVoteListView_Li key={vote.voteId}
-                                                          onClick={() =>{}}>
+                                                          onClick={() =>{redirectDetail(vote.voteId)}}>
                                         <div style={{width:"100%"}}>
                                             <GroupVoterListTitle $subScreenWidth={subWidth}>
                                                 {vote.voteTitle}
@@ -149,7 +157,7 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
                                 ( !(boardOption.filter_setting.filterB.isCheck && (boardOption.filter_setting.filterB.toggleState === checkMyVoter(vote.countVoter)))&&
                                     (boardOption.search_keyWord==='' ?
                                     <GroupVoteListView_Li key={vote.voteId}
-                                              onClick={() => {}}>
+                                              onClick={() =>{redirectDetail(vote.voteId)}}>
                                         <RowFlexBox>
                                             <div>
                                                 {vote.voteTitle}
@@ -164,7 +172,7 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
                                 </GroupVoteListView_Li>
                                 : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
                                 <GroupVoteListView_Li key={vote.voteId}
-                                           onClick={() => {}}>
+                                           onClick={() =>{redirectDetail(vote.voteId)}}>
                                         <RowFlexBox>
                                             <div>
                                                 {vote.voteTitle}
@@ -183,7 +191,8 @@ const Vote: React.FC<VoteProps> = ({member, groupId,subWidth,boardOption,updateC
                         </div>
                         }
                     </GroupVoteListContainer>
-                }
+            }
+
             </GroupVoteList_Container>
         )
 }

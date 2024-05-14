@@ -1,37 +1,39 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {stateFilter,createTimePassed} from '../../../stateFunc/actionFun'
-import {RowFlexBox, MiniText } from '../../../style/FormStyle'
-import '../../../style/Detail.scss'
-
+import {createTimePassed} from '../../../stateFunc/actionFun'
+import {MiniText, FullScreen_div} from '../../../style/FormStyle'
+import {
+    BoardDetailTop_Container, BoardDetailTop_title
+} from "../../../style/Group/GroupNoticeStyle";
+import {
+    DispatchBoardOptionProps,
+    mapDispatchToBoardOptionProps,
+} from "../../../store/slice/BoardOptionSlice";
+import {connect} from 'react-redux'
 
 interface Details{
-    Creater : string;
-    Created:string;
-    Watcher:string[]
+    state:string,
+    title: string;
+    created:string;
+    watcher:string[]
 }
 
 
-const DetailTop:React.FC<Details>=({Created,Creater,Watcher})=>{
+const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam})=>{
 
 
     return(
-        <div>
-            <div id ='ViewDetails_Text'>상세보기</div>
-            <div>
-                <RowFlexBox style={{marginLeft:'3vw'}}>
-                    <div>😒</div>{/*프로필 들어갈 예정*/}
-                    <div style={{marginLeft:'10px'}}>
-                        <div>
-                            {Creater}
-                        </div>
-                        <MiniText>
-                            {createTimePassed(Created)} · {Watcher.length}명 읽음
-                        </MiniText>
+        <BoardDetailTop_Container>
+            <FullScreen_div>
+                <BoardDetailTop_title $state={state}>
+                    {title}
+                    {state==="vote" &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
+                                         onClick={()=>{updateBoardParam({voteParam:''})}}></i>}
+                </BoardDetailTop_title>
+                <MiniText>
+                    {createTimePassed(created)} · {watcher.length}명 읽음
+                </MiniText>
 
-                    </div>
-                </RowFlexBox>
-            </div>
-        </div>
+            </FullScreen_div>
+        </BoardDetailTop_Container>
     )
 }
-export default DetailTop
+export default connect(null, mapDispatchToBoardOptionProps) (DetailTop)

@@ -85,7 +85,7 @@ export const FullScreen_div = styled.div`
     height: 100%;
 `
 export const MiniText = styled.div`
-    color: gray;
+    color: ${TextColor2}77;
     margin-top: 5px;
     font-size: 12px;
     align-items: center;
