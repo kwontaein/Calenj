@@ -328,7 +328,7 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
                 </RowFlexBox>
                 {(votecomplete||voteEnd) &&
                     <CurrentVotePersentLine_BG>
-                        <CurrentVotePersentLine $persent={ Item.voter.length / detail.countVoter.length}/>
+                        <CurrentVotePersentLine $persent={ (Item.voter.length / detail.countVoter.length)||0 }/>
                     </CurrentVotePersentLine_BG>}
                 </div>
 

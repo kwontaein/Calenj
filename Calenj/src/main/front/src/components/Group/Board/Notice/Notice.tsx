@@ -16,6 +16,7 @@ import {
 import {connect} from "react-redux";
 import {BoardParamMap} from "../../../../store/module/StompMiddleware";
 import NoticeDetail from "./NoticeDetail";
+import {NoticeList} from "../../../../store/ReactQuery/queryInterface";
 
 interface SubScreenProps{
     groupId:string,
@@ -56,6 +57,11 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
         }
     }
 
+    const sortNotice = (noticeListState:NoticeList[]) : NoticeList[] =>{
+        return noticeListState.sort((a:NoticeList,b:NoticeList)=>{
+            return (+changeDateForm(b.noticeCreated))- (+changeDateForm(a.noticeCreated))
+        })
+    }
 
     const redirectDetail = (param:string) =>{
         BoardParamMap.set(`${groupId}Notice`, param);
@@ -68,7 +74,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
             <div>
                 <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
                 {noticeListState.data &&
-                    (noticeListState.data.map((notice) => (
+                    (sortNotice(noticeListState.data).map((notice) => (
                         (boardOption.search_keyWord==='' ?
                             <GroupNoticeListView_Li key={notice.noticeId}
                                       onClick={() => {redirectDetail(notice.noticeId)}}>
