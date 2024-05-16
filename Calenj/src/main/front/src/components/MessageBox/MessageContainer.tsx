@@ -26,16 +26,18 @@ import {
 } from '../../style/FormStyle'
 import {endPointMap,scrollPointMap} from '../../store/module/StompMiddleware';
 import {
+    throttleByAnimationFrame,
+    debounce
+} from '../../shared/lib/actionFun'
+import {
     changeDateForm,
     AHMFormatV2,
-    shortAHMFormat,
-    throttleByAnimationFrame,
-    throttle,
-    debounce
-} from '../../stateFunc/actionFun'
+    shortAHMFormat
+}from '../../shared/lib'
 import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect ,{requestCountManagement} from "../../stateFunc/useIntersect";
+import  {useIntersect} from "../../shared/model";
+import {fileLoadManagement} from "../../features/messsage"
 import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 
 
@@ -258,10 +260,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             const message = await getFileData();
             if (message.length === 0 && !isFetching) {
                 const debounceCount = debounce(() => {
-                    const requestCount = requestCountManagement()
+                    const requestCount = fileLoadManagement()
                     if (requestCount < 10) return
 
-                    requestCountManagement(true);//count 초기화
+                    fileLoadManagement(true);//count 초기화
                     messageLength.current = -1
                     refetch().then(() => {
                         //newMessage 비우기
@@ -276,7 +278,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 }, 500)
                 debounceCount()
             } else {
-                requestCountManagement(true);//count 초기화
+                fileLoadManagement(true);//count 초기화
             }
             const messageResult = receiveChatFile(message)
             messageLength.current += messageResult.length;

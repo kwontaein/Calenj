@@ -1,7 +1,6 @@
 import React, {useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
-import {useLocation} from 'react-router-dom';
-import {stateFilter, createTimePassed} from '../../../../stateFunc/actionFun'
+import {jwtFilter} from '../../../../entities/authentication/jwt'
 import DetailTop from '../DetailTop'
 import {NoticeDetailContainer, NoticeDetailContent_Container} from "../../../../style/Group/GroupNoticeStyle";
 import {FullScreen_div} from "../../../../style/FormStyle";
@@ -18,9 +17,10 @@ interface NoticeDetails {
 
 interface NoticeListProps{
     noticeId:string,
+    subWidth:number,
 }
 
-const NoticeDetail:React.FC<NoticeListProps>=({noticeId})=>{
+const NoticeDetail:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
     const [detail, setDetail] = useState<NoticeDetails | null>(null);
 
 
@@ -40,7 +40,7 @@ const NoticeDetail:React.FC<NoticeListProps>=({noticeId})=>{
                 const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
             });
     }
@@ -54,7 +54,7 @@ const NoticeDetail:React.FC<NoticeListProps>=({noticeId})=>{
         <NoticeDetailContainer>
             {detail &&
                 <FullScreen_div>
-                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher}/>
+                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher} subWidth={subWidth}/>
 
                      <NoticeDetailContent_Container>
                          {detail.noticeContent}

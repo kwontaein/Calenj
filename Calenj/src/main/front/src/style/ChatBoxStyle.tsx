@@ -23,7 +23,6 @@ export const MessageComponent_Container = styled.div`
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
     max-width: calc(100% - ${ScrollMarginInline}); //padding만큼 뺌
-    min-width: ${ScrollMin_width}px;
     height: calc(100% - ${MessageSend_Cotainer_height}px);
     margin-inline: ${ScrollMarginInline / 2}px;
 `;
@@ -39,6 +38,7 @@ export const MessageBoxContainer = styled.div<CheckbeforSender>`
 export const ProfileContainer = styled.div<UserProfile>`
     width: 40px;
     height: 40px;
+    min-width: 40px;
     padding: 3px;
     border-radius: 50px;
     background-color: #007bff;

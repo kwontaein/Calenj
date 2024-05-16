@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {AHMFormat,changeDateForm} from '../../../../stateFunc/actionFun';
+import {AHMFormat,changeDateForm} from '../../../../shared/lib';
 import MakeNotice from "./MakeNotice";
 import {FullScreen_div, MiniText} from '../../../../style/FormStyle'
 import {useFetchNoticeList} from "../../../../store/ReactQuery/queryManagement";
@@ -16,6 +16,7 @@ import {
 import {connect} from "react-redux";
 import {BoardParamMap} from "../../../../store/module/StompMiddleware";
 import NoticeDetail from "./NoticeDetail";
+import {NoticeList} from "../../../../store/ReactQuery/queryInterface";
 
 interface SubScreenProps{
     groupId:string,
@@ -56,6 +57,11 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
         }
     }
 
+    const sortNotice = (noticeListState:NoticeList[]) : NoticeList[] =>{
+        return noticeListState.sort((a:NoticeList,b:NoticeList)=>{
+            return (+changeDateForm(b.noticeCreated))- (+changeDateForm(a.noticeCreated))
+        })
+    }
 
     const redirectDetail = (param:string) =>{
         BoardParamMap.set(`${groupId}Notice`, param);
@@ -68,7 +74,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
             <div>
                 <div>{makeNotice && <MakeNotice onClose={closeModal} groupId={groupId} queryState={noticeListState}/>}</div>
                 {noticeListState.data &&
-                    (noticeListState.data.map((notice) => (
+                    (sortNotice(noticeListState.data).map((notice) => (
                         (boardOption.search_keyWord==='' ?
                             <GroupNoticeListView_Li key={notice.noticeId}
                                       onClick={() => {redirectDetail(notice.noticeId)}}>
@@ -90,7 +96,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
                 }
             </div>
             :
-                <NoticeDetail noticeId={boardOption.noticeParam}/>
+                <NoticeDetail noticeId={boardOption.noticeParam}  subWidth={subWidth}/>
             }
         </GroupNoticeList_Container>
     )

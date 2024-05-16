@@ -4,7 +4,9 @@ import {
 } from '../../../../style/FormStyle';
 import '../../../../style/ModalStyle.scss';
 import axios, {AxiosError} from 'axios';
-import {stateFilter, useConfirm, saveDBFormat} from '../../../../stateFunc/actionFun'
+import {jwtFilter} from '../../../../entities/authentication/jwt'
+import {useConfirm} from "../../../../shared/model";
+import {saveDBFormat} from "../../../../shared/lib";
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
@@ -171,7 +173,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     const axiosError = error as AxiosError;
                     console.log(axiosError);
                     if (axiosError.response?.data) {
-                        stateFilter((axiosError.response.data) as string);
+                        jwtFilter((axiosError.response.data) as string);
                     }
                 })
         

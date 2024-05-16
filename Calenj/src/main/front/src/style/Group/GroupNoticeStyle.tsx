@@ -118,7 +118,7 @@ export const GroupNoticeListView_Li = styled.li`
     width: calc(100% - 20px);
     list-style: none;
     padding-inline: 10px;
-    padding-block: 15px;
+    padding-block: 10px;
     margin-block: 2px;
 
     &:hover {
@@ -152,8 +152,8 @@ export const NoticeDetailContent_Container = styled.div`
 
 export const BoardDetailTop_Container = styled.div`
     width: calc(100% - 20px);
-    height: 50px;
-    padding: 10px;
+    height: 38px;
+    padding-inline: 10px;
     padding-block: 15px;
     background-color: ${ThemaColor3};
     color: ${TextColor};

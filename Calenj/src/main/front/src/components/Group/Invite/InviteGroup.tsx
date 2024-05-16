@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import { stateFilter} from "../../../stateFunc/actionFun";
+import { jwtFilter} from "../../../entities/authentication/jwt";
 import axios, {AxiosError} from "axios";
 
 
@@ -33,7 +33,7 @@ const inviteGroup: React.FC = () => {
                 const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if (axiosError.response?.data) {
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
             })
     }, [])
@@ -52,7 +52,7 @@ const inviteGroup: React.FC = () => {
                 const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if (axiosError.response?.data) {
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
             })
     }

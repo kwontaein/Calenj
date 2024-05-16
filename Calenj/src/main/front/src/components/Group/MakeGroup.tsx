@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios, {AxiosError} from 'axios';
-import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
+import {jwtFilter} from '../../entities/authentication/jwt'
+import { useConfirm } from '../../shared/model'
 import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
 
 interface ModalProps {
@@ -26,7 +27,7 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
                 console.log(axiosError);
                 if (axiosError.response?.status) {
                     console.log(axiosError.response.status);
-                    stateFilter((axiosError.response.status).toString());
+                    jwtFilter((axiosError.response.status).toString());
                 }
             });
     };

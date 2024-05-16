@@ -288,6 +288,15 @@ export const GroupVoteListView_Li = styled.li`
     }
 `
 
+interface GroupVoteListProps{
+    $join?:boolean;
+}
+export const GroupVoteJoin_div = styled.div<GroupVoteListProps>`
+    color: ${props=> props.$join ?  PointColor: `${TextColor2}77`};
+    margin-top: 5px;
+    font-size: 12px;
+    align-items: center;
+`
 
 
 

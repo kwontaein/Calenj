@@ -305,7 +305,6 @@ public class WebSokcetService {
         String userEmail = returnEmail(username);
 
         ChatMessageResponse response = filterNullFields(request);
-//        response.setOnlineUserList(getAllUsers(authentication));
         response.setOnlineUserList(getUsers(request.getParam()));
 
         if (request.getParam() == userEmail && request.getMessage() == "OFFLINE") {

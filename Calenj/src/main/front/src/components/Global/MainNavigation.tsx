@@ -1,4 +1,3 @@
-import SignState from "../Auth/SignState";
 import GroupList from "../Group/GroupList";
 import {useEffect, useState} from 'react';
 import {connect} from 'react-redux';

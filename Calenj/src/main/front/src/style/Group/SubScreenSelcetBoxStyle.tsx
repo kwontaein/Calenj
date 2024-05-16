@@ -107,7 +107,7 @@ export const SubScreenSelecter_Container =styled.div<OptionProps & SubScreenProp
     height: auto;
     display: flex;
     top: 90px;
-    right: ${props=> props.$showUserList ? "215px" :"15px"};
+    right: ${props=> props.$showUserList ? "215px" :"15px"}; //GroupUserList의 크기만큼 더함
     flex-direction: column;
     background-color: ${BackGroundColor};
     position: absolute;

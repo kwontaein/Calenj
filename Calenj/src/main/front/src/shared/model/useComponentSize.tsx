@@ -5,7 +5,7 @@ interface ComponentSize {
     height: number;
 };
 
-function useComponentSize(): [React.RefObject<HTMLDivElement>, ComponentSize] {
+export const useComponentSize = (): [React.RefObject<HTMLDivElement>, ComponentSize] => {
     const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
     const componentRef = useRef<HTMLDivElement>(null);
 
@@ -25,4 +25,3 @@ function useComponentSize(): [React.RefObject<HTMLDivElement>, ComponentSize] {
     return [componentRef, size];
 }
 
-export default useComponentSize;
