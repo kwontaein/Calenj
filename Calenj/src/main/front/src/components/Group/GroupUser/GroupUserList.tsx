@@ -14,7 +14,6 @@ import UserModal from "./UserModal";
 
 
 interface qeuryProps {
-    isLoading: boolean
 }
 
 interface groupDetails {
@@ -34,7 +33,7 @@ interface groupMembers {
 }
 
 
-const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({stomp, isLoading}) => {
+const GroupUserList: React.FC<StompData & DispatchStompProps> = ({stomp}) => {
     const [groupDetail, setGroupDetail] = useState<groupDetails>();
     const queryClient = useQueryClient();
     const calenj_logo = '/image/Logo.png';
@@ -49,7 +48,7 @@ const GroupUserList: React.FC<StompData & DispatchStompProps & qeuryProps> = ({s
     //그룹 디테일 불러오기
     useEffect(() => {
         setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY, stomp.param]));
-    }, [isLoading, stomp.param]);
+    }, [stomp.param]);
 
 
     const onErrorImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {

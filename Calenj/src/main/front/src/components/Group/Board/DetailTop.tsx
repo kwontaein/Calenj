@@ -1,30 +1,35 @@
-import {createTimePassed} from '../../../stateFunc/actionFun'
+import {createTimePassed} from '../../../shared/lib'
 import {MiniText, FullScreen_div} from '../../../style/FormStyle'
 import {
-    BoardDetailTop_Container, BoardDetailTop_title
+    BoardDetailTop_Container, BoardDetailTop_title, GroupNoticeListTitle
 } from "../../../style/Group/GroupNoticeStyle";
 import {
     DispatchBoardOptionProps,
     mapDispatchToBoardOptionProps,
 } from "../../../store/slice/BoardOptionSlice";
 import {connect} from 'react-redux'
+import {useEffect} from "react";
 
 interface Details{
     state:string,
     title: string;
     created:string;
-    watcher:string[]
+    watcher:string[],
+    subWidth?:number,
 }
 
 
-const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam})=>{
+const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam,subWidth})=>{
 
 
     return(
         <BoardDetailTop_Container>
             <FullScreen_div>
                 <BoardDetailTop_title $state={state}>
-                    {title}
+                    {(state==="notice"&& subWidth) && <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                        {title}
+                    </GroupNoticeListTitle>}
+                    {(state==="vote") && title}
                     {state==="vote" &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
                                          onClick={()=>{updateBoardParam({voteParam:''})}}></i>}
                 </BoardDetailTop_title>

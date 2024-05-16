@@ -1,10 +1,8 @@
 //api 를 통하여 쿠키를 post 하여 boolean 값을 return 받는다.
 //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
 import axios, {AxiosError} from "axios";
-import {stateFilter} from "../../stateFunc/actionFun";
+import {jwtFilter} from "../../entities/authentication/jwt";
 import {GroupList_item, GroupDetail , VoteList, NoticeList, FriendList, FriendEvent} from "./queryInterface";
-import {useMutation} from "@tanstack/react-query";
-import {QUERY_COOKIE_KEY} from "../../components/Auth/SignState";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
@@ -38,7 +36,7 @@ export const getGroupList = async (): Promise<GroupList_item[] | null> => {
         console.log(axiosError);
         if (axiosError.response?.status) {
             console.log(axiosError.response.status);
-            stateFilter((axiosError.response.status).toString());
+            jwtFilter((axiosError.response.status).toString());
         }
         return null;
     }
@@ -55,7 +53,7 @@ export const getGroupDetail = async (groupId:string): Promise<GroupDetail | null
         console.log(axiosError);
         if (axiosError.response?.status) {
             console.log(axiosError.response.status);
-            stateFilter((axiosError.response.status).toString());
+            jwtFilter((axiosError.response.status).toString());
         }
         return null;
     }
@@ -71,7 +69,7 @@ export const getNoticeList = async (groupId:string): Promise<NoticeList[]|null>=
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if(axiosError.response?.data){
-            stateFilter((axiosError.response.data) as string);
+            jwtFilter((axiosError.response.data) as string);
         }
         return null;
     }
@@ -88,7 +86,7 @@ export const getVoteList = async (groupId:string): Promise<VoteList[] | null> =>
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.data) {
-            stateFilter((axiosError.response.data) as string);
+            jwtFilter((axiosError.response.data) as string);
         }
         return null;
     }
@@ -110,7 +108,7 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
         console.log(axiosError);
         if (axiosError.response?.status) {
             console.log(axiosError.response.status);
-            stateFilter((axiosError.response.status).toString());
+            jwtFilter((axiosError.response.status).toString());
         }
         return null;
     }
@@ -132,7 +130,7 @@ export const getEvents = async (): Promise<FriendEvent[] | null> => {
         console.log(axiosError);
         if (axiosError.response?.status) {
             console.log(axiosError.response.status);
-            stateFilter((axiosError.response.status).toString());
+            jwtFilter((axiosError.response.status).toString());
         }
         return null;
     }

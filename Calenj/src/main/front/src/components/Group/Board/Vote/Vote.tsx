@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {changeDateForm, AHMFormat} from '../../../../stateFunc/actionFun';
+import {changeDateForm, AHMFormat} from '../../../../shared/lib';
 import {MiniText, RowFlexBox} from '../../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
@@ -8,6 +8,7 @@ import {VoteList} from '../../../../store/ReactQuery/queryInterface'
 import {useFetchVoteList} from "../../../../store/ReactQuery/queryManagement";
 
 import {
+    GroupVoteJoin_div,
     GroupVoteList_Container,
     GroupVoteListContainer,
     GroupVoteListDivistion,
@@ -118,11 +119,13 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                             {vote.voteTitle}
                                         </GroupVoterListTitle>
                                         <RowFlexBox style={{width:"100%"}}>
-                                            <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
-                                            <MiniText style={{
-                                                marginLeft: '3px',
-                                                color: checkMyVoter(vote.countVoter) ? '#0070E8' : ''
-                                            }}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
+                                            <GroupVoteJoin_div>
+                                                {`${vote.countVoter.length}명 참여 `}
+                                            </GroupVoteJoin_div>
+                                            <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
+                                            <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
+                                                {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
+                                            </GroupVoteJoin_div>
                                         </RowFlexBox>
                                         <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
                                     </div>
@@ -135,11 +138,13 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                                 {vote.voteTitle}
                                             </GroupVoterListTitle>
                                             <RowFlexBox style={{width:"100%"}}>
-                                                <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
-                                                <MiniText style={{
-                                                    marginLeft: '3px',
-                                                    color: checkMyVoter(vote.countVoter) ? '#0070E8' : ''
-                                                }}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
+                                                <GroupVoteJoin_div>
+                                                    {`${vote.countVoter.length}명 참여 `}
+                                                </GroupVoteJoin_div>
+                                                <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
+                                                <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
+                                                    {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
+                                                </GroupVoteJoin_div>
                                             </RowFlexBox>
                                             <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
                                         </div>
@@ -162,9 +167,13 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                             <div>
                                                 {vote.voteTitle}
                                                 <RowFlexBox>
-                                                    <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
-                                                    <MiniText
-                                                        style={{marginLeft: '3px'}}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
+                                                    <GroupVoteJoin_div>
+                                                        {`${vote.countVoter.length}명 참여 `}
+                                                    </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
+                                                        {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
+                                                    </GroupVoteJoin_div>
                                                 </RowFlexBox>
                                                 <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
                                             </div>
@@ -177,9 +186,13 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                             <div>
                                                 {vote.voteTitle}
                                                 <RowFlexBox>
-                                                    <MiniText>{`${vote.countVoter.length}명 참여 `}</MiniText>
-                                                    <MiniText
-                                                        style={{marginLeft: '3px'}}>{`· ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}</MiniText>
+                                                    <GroupVoteJoin_div>
+                                                        {`${vote.countVoter.length}명 참여 `}
+                                                    </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
+                                                        {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
+                                                    </GroupVoteJoin_div>
                                                 </RowFlexBox>
                                                 <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
                                             </div>

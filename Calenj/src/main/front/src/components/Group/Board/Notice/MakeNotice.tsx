@@ -1,8 +1,9 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
 import { CheckCondition_Button} from '../../../../style/FormStyle';
 import '../../../../style/ModalStyle.scss';
-import {useLocation} from 'react-router-dom';
-import {useConfirm,stateFilter,saveDBFormat} from '../../../../stateFunc/actionFun'
+import {jwtFilter} from '../../../../entities/authentication/jwt'
+import { useConfirm } from '../../../../shared/model'
+import {saveDBFormat} from '../../../../shared/lib'
 import axios ,{AxiosError}from 'axios';
 import { Modal_Background } from '../../../../style/FormStyle'
 import { UseQueryResult } from '@tanstack/react-query';
@@ -51,7 +52,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
             const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
         })
     }

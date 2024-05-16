@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from '../../store/store'
 import {Dispatch} from 'redux';
 
-export interface EmailToken {
+export interface EmailTokenState {
   tokenId: string;
   validateTime: number;
   codeValid: boolean;
@@ -10,8 +10,8 @@ export interface EmailToken {
 
 
 // store에서 가져올 state의 타입(EmailToken)
-interface EmailToeknProps {
-  emailToken: EmailToken;
+export interface EmailToeknProps {
+  emailToken: EmailTokenState;
 }
 
 //사전에 interface를 지정하여 emailToken을 정의한다.
@@ -39,7 +39,7 @@ export const mapDispatchToEmailProps = (dispatch: Dispatch): DispatchEmailProps 
 
 
 //EmailTokenState 초기상태
-const initialState: EmailToken ={
+const initialState: EmailTokenState ={
   tokenId :'',
   validateTime:0,
   codeValid:false,

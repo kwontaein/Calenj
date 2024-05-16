@@ -5,7 +5,7 @@ type IntersectHandler = (
     observer: IntersectionObserver // 상태를 관측하는 observer, 대상요소를 지정하고 교차상태를 감지
 ) => void
 
-const useIntersect = (onIntersect: IntersectHandler, //배열과 관측대상을 담음
+export const useIntersect = (onIntersect: IntersectHandler, //배열과 관측대상을 담음
                       options?: IntersectionObserverInit) => {
     const isIntersecting = useRef<boolean>(false); // 관찰 중인지 여부를 추적하는 상태 추가
     const ref = useRef<HTMLDivElement>(null)
@@ -40,17 +40,5 @@ const useIntersect = (onIntersect: IntersectHandler, //배열과 관측대상을
     return ref
 }
 
-const requestCount = ()=>{
-    let requestCount=0;
-    return (complete?:boolean)=> {
-        if(complete){
-            requestCount=0;//완료되면 초기화
-        }else if(requestCount>10){
-            console.log('버그가 발생하여 refetch를 시작합니다')
-        }
-        return requestCount++;
-    }
-}
-export const requestCountManagement = requestCount()
 
-export default useIntersect;
+

@@ -223,7 +223,7 @@ export const DEFAULT_HR = styled.hr`
     height: .1em;
 `
 
-export const SIGN_STATE_FORM = styled.div`
+export const SignState_Container = styled.div`
     background-color: ${ThemaColor3};
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 50px;
@@ -232,7 +232,7 @@ export const SIGN_STATE_FORM = styled.div`
     justify-content: space-between;
 
 `;
-export const SIGN_STATE_BUTTON = styled.button`
+export const SignState_Button = styled.button`
     background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;

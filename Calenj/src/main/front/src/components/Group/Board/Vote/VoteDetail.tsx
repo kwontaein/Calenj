@@ -1,6 +1,8 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
-import {saveDBFormat, stateFilter,TimeOperation, useConfirm,changeDateForm} from '../../../../stateFunc/actionFun'
+import {saveDBFormat,TimeOperation,changeDateForm} from '../../../../shared/lib';
+import {jwtFilter} from "../../../../entities/authentication/jwt";
+import { useConfirm} from '../../../../shared/model'
 import DetailTop from '../DetailTop'
 import {MiniText, RowFlexBox, TextColor, ThemaColor2} from '../../../../style/FormStyle';
 import {
@@ -92,7 +94,6 @@ const VoteDetail:React.FC<VoteListProps>=({voteId})=>{
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 const voteDetail = response.data
-                console.log(voteDetail)
                 setDetail(voteDetail);
                 BeforCheckVoter(voteDetail.voteChoiceResponse)                
                 TimeOperation(voteDetail.voteEndDate)
@@ -103,7 +104,7 @@ const VoteDetail:React.FC<VoteListProps>=({voteId})=>{
                 const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
             });
     }
@@ -270,7 +271,6 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
             voteId: voteId,
              myVote: myVote,
         }).then(()=>{
-            console.log('투표완료')
             refetchVoteDetail()//refetch
             if(myVote.includes(true)){//한개 이상을 찍어야 내 투표가 완료된 것
                 setVoteComplete(true)
@@ -280,7 +280,7 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
             const axiosError = error as AxiosError;
             console.log(axiosError);
             if(axiosError.response?.data){
-                stateFilter((axiosError.response.data) as string);
+                jwtFilter((axiosError.response.data) as string);
             }
         });
     }
@@ -296,7 +296,7 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
             const axiosError = error as AxiosError;
             console.log(axiosError);
             if(axiosError.response?.data){
-                stateFilter((axiosError.response.data) as string);
+                jwtFilter((axiosError.response.data) as string);
             }
         })
     } 

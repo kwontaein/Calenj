@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import {AHMFormat,changeDateForm} from '../../../../stateFunc/actionFun';
+import {AHMFormat,changeDateForm} from '../../../../shared/lib';
 import MakeNotice from "./MakeNotice";
 import {FullScreen_div, MiniText} from '../../../../style/FormStyle'
 import {useFetchNoticeList} from "../../../../store/ReactQuery/queryManagement";
@@ -96,7 +96,7 @@ const Notice :React.FC<NoticeProps> =({groupId,subWidth,boardOption,updateClickS
                 }
             </div>
             :
-                <NoticeDetail noticeId={boardOption.noticeParam}/>
+                <NoticeDetail noticeId={boardOption.noticeParam}  subWidth={subWidth}/>
             }
         </GroupNoticeList_Container>
     )
