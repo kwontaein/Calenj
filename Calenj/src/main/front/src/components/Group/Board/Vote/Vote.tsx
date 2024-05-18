@@ -4,8 +4,7 @@ import {MiniText, RowFlexBox} from '../../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import MakeVote from "./MakeVote";
-import {VoteList} from '../../../../store/ReactQuery/queryInterface'
-import {useFetchVoteList} from "../../../../store/ReactQuery/queryManagement";
+import {useFetchVoteList, VoteList} from "../../../../entities/ReactQuery";
 
 import {
     GroupVoteJoin_div,
@@ -21,7 +20,6 @@ import {
     mapStateToBoardOptionProps
 } from "../../../../store/slice/BoardOptionSlice";
 import {connect} from 'react-redux'
-import {BoardParamMap} from "../../../../store/module/StompMiddleware";
 import VoteDetail from "./VoteDetail";
 
 
@@ -36,9 +34,6 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
     const [makeVote, setMakeVote] = useState(false);
     const [voteList, setVoteList] = useState<VoteList[]>([]);
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
-    const [memberLength, setMemberLength] = useState<number>();
-
-
 
     const voteListState = useFetchVoteList(groupId)
 

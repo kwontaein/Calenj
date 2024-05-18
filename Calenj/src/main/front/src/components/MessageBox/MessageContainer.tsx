@@ -38,7 +38,7 @@ import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-qu
 import store from '../../store/store';
 import  {useIntersect} from "../../shared/model";
 import {fileLoadManagement} from "../../features/messsage"
-import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../entities/ReactQuery/model/queryModel";
 
 
 
@@ -210,7 +210,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         const messageEntries = Array.from(messages, (message: string) => {
             const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);
 
-            console.log(chatUUID,sendDate)
             const loadMsg: Message = {
                 chatUUID: chatUUID,
                 sendDate: sendDate.slice(1, 17),

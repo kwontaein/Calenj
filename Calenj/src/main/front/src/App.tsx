@@ -16,7 +16,7 @@ import {connect} from "react-redux";
 import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
-import {useFetchCookie} from "./store/ReactQuery/queryManagement";
+import {useFetchCookie} from "./entities/ReactQuery/model/queryModel";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";

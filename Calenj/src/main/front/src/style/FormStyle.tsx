@@ -223,29 +223,13 @@ export const DEFAULT_HR = styled.hr`
     height: .1em;
 `
 
-export const SignState_Container = styled.div`
-    background-color: ${ThemaColor3};
-    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-`;
 export const SignState_Button = styled.button`
     background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;
     border: 0;
-`;
-export const SIGN_STATE_TEXT = styled.span`
-    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
-    height: 30px;
-    border-radius: 20px;
-    border: 0;
-    display: flex;
-    align-items: center;
 `;
 
 export const CheckCondition_Button = styled.div<ClickAbleProps>`

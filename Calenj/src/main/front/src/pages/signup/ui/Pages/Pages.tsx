@@ -3,14 +3,23 @@ import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hoo
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from 'react';
 import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBackgound} from '../../../../style/FormStyle';
-import {EmailValidationModal} from '../../../../features/authentication/emailValidation'
+import {EmailValidationModal} from '../../../../widgets/emailValidModal'
 import {schema} from '../../../../entities/authentication/emailValidation';
 import {connect} from "react-redux";
 import {EmailToeknProps , DispatchEmailProps , mapDispatchToEmailProps,mapStateToEmailProps} from '../../../../store/slice/EmailValidationSlice';
 import '../../../../style/Sign.scss'
 import {saveDBFormat} from "../../../../shared/lib";
-import {reqestEmailCodeApi, getExpirationTimeApi, useEmailValideAbleCheck} from "../../../../features/authentication/emailValidation";
-import {User} from "../../../../features/authentication/sign";
+import {useInputManagement, User} from "../../../../features/authentication/sign";
+import {
+    useEmailValideAbleCheck
+} from '../../../../features/authentication/emailValidation/requestEmailCode'
+import {
+    RequstEmailCode_Button
+} from "../../../../features/authentication/emailValidation/requestEmailCode/ui/RequstButtonSytled";
+import {
+    reqestEmailCodeApi
+} from "../../../../features/authentication/emailValidation/requestEmailCode/api/reqestEmailCodeApi";
+import {getExpirationTimeApi} from "../../../../features/authentication/emailValidation/codeValidTime";
 
 
 
@@ -18,15 +27,13 @@ import {User} from "../../../../features/authentication/sign";
 
 
 export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emailToken, updateToken, updateCodeValid}) => {
-    const {showAlert,eamilInputLimit, validation ,closeModal,updateValidAble, updateEmailValidateState} = useEmailValideAbleCheck(emailToken);
-    //인증번호 발급여부 (한 번 발급하면 재발급 UI로 변경)
+    const [showAlert, validation, updateValidState, closeModal] = useEmailValideAbleCheck();
+    const [isAble,updateInputAble] = useInputManagement(emailToken)
+        //인증번호 발급여부 (한 번 발급하면 재발급 UI로 변경)
 
     useEffect(() => {
         updateCodeValid(false);
     }, [])
-
-
-
 
 
     const {register, handleSubmit, formState: {errors}, reset, watch, trigger} = useForm<User>({
@@ -62,18 +69,15 @@ export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emai
     const requestEmailValidation = async () =>{
         const isValid = await trigger("userEmail");
         const email = watch("userEmail");
-        //인증요청 API
-        reqestEmailCodeApi(email,isValid).then((res)=>{
-            console.log("res :",res)
-            if(res===200){
-                updateEmailValidateState();
-                getExpirationTimeApi().then((res)=>{
-                    if(typeof res === "number"){
-                        updateToken({tokenId: "tokenUUID", validateTime: res})
-                    }
-                })
-            }
 
+        reqestEmailCodeApi(email,isValid).then((res)=>{
+            if(res!==200) return;
+            updateValidState();
+            getExpirationTimeApi().then((res)=>{
+                if(typeof res === "number"){
+                    updateToken({tokenId: "tokenUUID", validateTime: res})
+                }
+            })
         })
     }
 
@@ -88,16 +92,16 @@ export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emai
                         <Input {...register("nickname", {required: true})} placeholder="닉네임"/>
                         <ErrorMessage>{errors.nickname?.message}</ErrorMessage>
                         <FormLable>아이디(이메일)</FormLable>
-                        <Input type="email" onClick={updateValidAble} {...register("userEmail", {required: true})}
+                        <Input type="email" onClick={updateInputAble} {...register("userEmail", {required: true})}
                                placeholder="이메일"
-                               readOnly={(emailToken.codeValid || eamilInputLimit)}></Input>
+                               readOnly={(emailToken.codeValid || isAble)}></Input>
                         <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
 
 
                         {!emailToken.codeValid &&
-                            <div id='btn_eamilValidation'
-                                 onClick={requestEmailValidation}>{!validation ? "인증번호 발급" : "인증번호 재발급"}
-                            </div>
+                            <RequstEmailCode_Button onClick={requestEmailValidation}>
+                                {!validation ? "인증번호 발급" : "인증번호 재발급"}
+                            </RequstEmailCode_Button>
                         }
                         <FormLable>패스워드</FormLable>
                         <Input type="password" {...register("userPassword", {required: true})}

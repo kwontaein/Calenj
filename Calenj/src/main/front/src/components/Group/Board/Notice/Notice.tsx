@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import {AHMFormat,changeDateForm} from '../../../../shared/lib';
 import MakeNotice from "./MakeNotice";
 import {FullScreen_div, MiniText} from '../../../../style/FormStyle'
-import {useFetchNoticeList} from "../../../../store/ReactQuery/queryManagement";
+import {useFetchNoticeList} from "../../../../entities/ReactQuery/model/queryModel";
 import {
     GroupNoticeList_Container,
     GroupNoticeListTitle, GroupNoticeListView_Li,
@@ -16,7 +16,7 @@ import {
 import {connect} from "react-redux";
 import {BoardParamMap} from "../../../../store/module/StompMiddleware";
 import NoticeDetail from "./NoticeDetail";
-import {NoticeList} from "../../../../store/ReactQuery/queryInterface";
+import {NoticeList} from "../../../../entities/ReactQuery";
 
 interface SubScreenProps{
     groupId:string,

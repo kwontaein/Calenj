@@ -13,7 +13,7 @@ import {
     mapDispatchToSubNavigationProps,
     mapStateToSubNavigationProps, updateSubParam
 } from "../../../store/slice/SubNavigationSlice";
-import subNavigationbar from "../../Global/SubNavigationbar";
+import subNavigationbar from "../../../pages/main/body/ui/SubNavigationbar";
 
 interface subNaviationProps{
     groupId:string,

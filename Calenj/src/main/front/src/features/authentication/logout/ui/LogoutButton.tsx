@@ -1,6 +1,6 @@
 import {SignState_Button} from "../../../../style/FormStyle";
 import {useQueryClient} from "@tanstack/react-query";
-import {useMutationCookie} from "../../../../store/ReactQuery/queryManagement";
+import {useMutationCookie} from "../../../../entities/ReactQuery/model/queryModel";
 
 export const LogoutButton : React.FC = ()=>{
     const queryClient = useQueryClient()

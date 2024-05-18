@@ -95,3 +95,5 @@ export const CustomScreen_MiddleLine_div = styled.div<CustomScreenProps>`
         background-color: ${PointColor};
     }
 `
+
+

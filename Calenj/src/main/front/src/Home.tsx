@@ -1,24 +1,20 @@
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import {connect} from 'react-redux'
-import MainNavigation from "./components/Global/MainNavigation";
 import {FullScreen_div} from "./style/FormStyle";
-import NavigationComposition from './components/Global/NavigationComposition'
+import NavigationComposition from './pages/main/head/ui/NavigationComposition'
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
     StompData,
     mapStateToStompProps
 } from './store/module/StompReducer';
-import {SignStateWidget} from './widgets/SignState';
+import {SignStateWidget} from './widgets/signState';
 const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div>
             {stomp.isOnline ==="ONLINE"?
-                <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
-                    <MainNavigation/>
-                    <NavigationComposition/>
-                </FullScreen_div> :
+                <NavigationComposition/>:
                 <SignStateWidget/>}
         </FullScreen_div>
     )
