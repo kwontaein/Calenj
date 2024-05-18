@@ -1,0 +1,1 @@
+export {CreateNoticeModal} from "./ui/NoticeModal"
