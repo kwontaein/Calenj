@@ -55,7 +55,6 @@ export function saveDBFormat(date: Date): string {
 export function changeDateForm(date: string): Date {
     let list = date.split(' ');
     let YYMMDD: number[] = list[0].split('.').map((yymmdd) => Number(yymmdd));
-
     let hhmm: number[] = list[1].split(':').map((hm) => Number(hm));
     const newDate = new Date(YYMMDD[0], YYMMDD[1] - 1, YYMMDD[2], hhmm[0], hhmm[1]);
     return newDate;

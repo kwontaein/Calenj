@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState, useRef, useCallback, useMemo, useId} from "react";
+import {ChangeEvent, useEffect, useState, useRef, useMemo, useId} from "react";
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
@@ -209,6 +209,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
         const messageEntries = Array.from(messages, (message: string) => {
             const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);
+
+            console.log(chatUUID,sendDate)
             const loadMsg: Message = {
                 chatUUID: chatUUID,
                 sendDate: sendDate.slice(1, 17),
@@ -217,6 +219,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 messageType: messageType,
                 message: messageContent,
             };
+
             return loadMsg;
         }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
 
