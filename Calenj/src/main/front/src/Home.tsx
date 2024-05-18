@@ -9,7 +9,7 @@ import {
     StompData,
     mapStateToStompProps
 } from './store/module/StompReducer';
-import SignState from "./components/Auth/SignState";
+import {SignStateWidget} from './widgets/SignState';
 const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
@@ -19,7 +19,7 @@ const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
                     <MainNavigation/>
                     <NavigationComposition/>
                 </FullScreen_div> :
-                <SignState/>}
+                <SignStateWidget/>}
         </FullScreen_div>
     )
 }

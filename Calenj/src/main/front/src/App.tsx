@@ -1,9 +1,6 @@
 import Home from './Home';
-import SignUp from './components/Auth/Sign_up';
-import Sign from './components/Auth/Sign';
+import {SignUpFormPage} from "./pages/signup/ui";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import NoticeDetail from './components/Group/Board/Notice/NoticeDetail';
-import VoteDetail from './components/Group/Board/Vote/VoteDetail';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import NaverMap from "./components/Group/Map/NaverMap"
@@ -23,7 +20,7 @@ import {useFetchCookie} from "./store/ReactQuery/queryManagement";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
-import Option from "./components/User/Option";
+import {LoginFormPages} from "./pages/login/ui";
 
 //대표 색 : #  007bff
 
@@ -102,10 +99,8 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                 <BrowserRouter>
                     <Routes>
                         <Route path={"/"} element={<Home/>}/>
-                        <Route path={"/signup"} element={<SignUp/>}/>
-                        <Route path={"/sign"} element={<Sign/>}/>
-                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
+                        <Route path={"/signup"} element={<SignUpFormPage/>}/>
+                        <Route path={"/sign"} element={<LoginFormPages/>}/>
                         <Route path={"/inviteGroup/"}>
                             <Route path={":inviteCode"} element={<InviteGroup/>}/>
                         </Route>
@@ -115,7 +110,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/Map"} element={<NaverMap/>}/>
                         <Route path={"/image"} element={<ImageUploadComponent/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
-                        <Route path={"/option"} element={<Option/>}/>
                     </Routes>
                 </BrowserRouter>
             }

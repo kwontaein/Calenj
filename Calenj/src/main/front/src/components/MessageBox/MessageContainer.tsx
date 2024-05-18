@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState, useRef, useCallback, useMemo, useId} from "react";
+import {ChangeEvent, useEffect, useState, useRef, useMemo, useId} from "react";
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
@@ -26,16 +26,18 @@ import {
 } from '../../style/FormStyle'
 import {endPointMap, scrollPointMap} from '../../store/module/StompMiddleware';
 import {
+    throttleByAnimationFrame,
+    debounce
+} from '../../shared/lib/actionFun'
+import {
     changeDateForm,
     AHMFormatV2,
-    shortAHMFormat,
-    throttleByAnimationFrame,
-    throttle,
-    debounce
-} from '../../stateFunc/actionFun'
+    shortAHMFormat
+} from '../../shared/lib'
 import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import useIntersect, {requestCountManagement} from "../../stateFunc/useIntersect";
+import {useIntersect} from "../../shared/model";
+import {fileLoadManagement} from "../../features/messsage"
 import {QUERY_NEW_CAHT_KEY, QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 
 
@@ -47,7 +49,8 @@ interface groupDetailProps {
 interface Message {
     chatUUID: string,
     sendDate: string,
-    userId: string,
+    userEmail: string,
+    nickName: string,
     messageType: string,
     message: string,
 }
@@ -82,6 +85,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
         //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
+
     const handleScroll = () => {
             if (scrollTimerRef.current) {
                 clearTimeout(scrollTimerRef.current);
@@ -90,6 +94,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 updateScroll()
             }, 50)
         };
+
     const addScrollEvent = () => {
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
@@ -146,7 +151,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         beforeScrollHeight.current = scrollRef.current.scrollHeight;
     }
 
-
+    //endPoint 업데이트
     const updateEndpoint = () => {
         const debouncedRequest = debounce(() => {
             requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
@@ -156,7 +161,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     }
 
 
-    //메시지 전송 함수
+    //메시지 전송
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (content === '') return;
@@ -169,6 +174,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         scrollToBottom()
     }
 
+    //스크롤 최하단으로 이동
     const scrollToBottom = () => {
         setTimeout(() => {
             if (scrollRef.current) {
@@ -179,6 +185,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     };
 
     //--------------------------------------------------------------------------------------------------------------- 파일 요청 READ/RELOAD 함수
+
+    //파일 읽어오기
     const requestChatFileRead = (readPoint: number) => {
         if (!data?.pages || endPointMap.get(param) > 0) {
             requestFile({
@@ -189,6 +197,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             });
         }
     }
+
+    //파일 추가로 불러오기
     const requestChatFileReload = (pageLength: number) => {
         if (data?.pages) {
             requestFile({
@@ -200,18 +210,23 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }
     //--------------------------------------------------------------------------------------------------------------- 비동기식 함수 > WebSocket stomp를 받아 infiniteFetch
-    //axios를 대신해서 웹소켓으로 받은 파일을 가공해줌
+
+    //받은 파일을 가공
     const receiveChatFile = (messages: string[]) => {
 
         const messageEntries = Array.from(messages, (message: string) => {
-            const [chatUUID, sendDate, userId, messageType, messageContent] = message.split("$", 6);
+            const [chatUUID, sendDate, userEmail, nickName, messageType, messageContent] = message.split("$", 6);
+
+            console.log(chatUUID, sendDate)
             const loadMsg: Message = {
                 chatUUID: chatUUID,
                 sendDate: sendDate.slice(1, 17),
-                userId: userId,
+                userEmail: userEmail,
+                nickName: nickName,
                 messageType: messageType,
                 message: messageContent,
             };
+
             return loadMsg;
         }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
 
@@ -228,6 +243,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     }
 
 
+    //파일 가져올 때 쓰는 비동기함수
     async function fetchData({pageParam = 0}) {
         try {
             const getFileData = () => {
@@ -252,13 +268,14 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                     return [];
                 });
             }
+
             const message = await getFileData();
             if (message.length === 0 && !isFetching) {
                 const debounceCount = debounce(() => {
-                    const requestCount = requestCountManagement()
+                    const requestCount = fileLoadManagement()
                     if (requestCount < 10) return
 
-                    requestCountManagement(true);//count 초기화
+                    fileLoadManagement(true);//count 초기화
                     messageLength.current = -1
                     refetch().then(() => {
                         //newMessage 비우기
@@ -273,7 +290,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 }, 500)
                 debounceCount()
             } else {
-                requestCountManagement(true);//count 초기화
+                fileLoadManagement(true);//count 초기화
             }
             const messageResult = receiveChatFile(message)
             messageLength.current += messageResult.length;
@@ -286,23 +303,26 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 //--------------------------------------------------------------------------------------------------------------- 새로 받은 메시지 관련
 
+    //전달받은 메세지 가공 함수
     const fetchNewChat = () => {
         //초기 세팅
         if (!receiveNewMessage.data) {
             const loadMsg: Message = {
                 chatUUID: "시작라인",
                 sendDate: "",
-                userId: "",
+                userEmail: "",
+                nickName: "",
                 messageType: "",
                 message: "",
             };
             return loadMsg
         }
-        const {chatUUID, sendDate, userId, messageType, message} = stomp.receiveMessage
+        const {chatUUID, sendDate, userEmail, nickName, messageType, message} = stomp.receiveMessage
         const loadMsg: Message = {
             chatUUID: chatUUID,
             sendDate: sendDate,
-            userId: userId,
+            userEmail: userEmail,
+            nickName: nickName,
             messageType: messageType,
             message: message.toString(),
         };
@@ -338,6 +358,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //---------------------------------------------------------------------------------------------------------------옵저버를 활용한 스크롤 관리 > 관측 시 stomp RELOAD 요청
 
+    //스크롤 위치 기억하기 위한 함수
     const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
@@ -354,6 +375,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     });
 
+    //파일로 읽어온 메세지 목록 정의
     const messageList = useMemo(() => {
 
         if (data) {
@@ -374,7 +396,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }, [stomp.receiveMessage.chatUUID])
 
-
+    //새로 받은 메세지 목록 정의
     const newMessageList = useMemo(() => {
         if (receiveNewMessage.data) {
             //중복제거
@@ -393,7 +415,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
 
-
+    //스크롤 여부에 따른 메세지 기능 관리
     useEffect(() => {
         setPrevScrollHeight(null)
         updateAppPosition({target: target, param: param});
@@ -418,7 +440,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }, [param])
 
-
+    //페이지 접속 시 스크롤 위치 지정을 위한 함수
     useEffect(() => {
         if (stomp.receiveMessage.state === "RELOAD") {
             //처음 들어오자마자 reload하는 걸 방지 prevScrollHeight이 있어야 작동 =>topRef(observer로만 세팅가능)
@@ -449,11 +471,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }, [isLoading, param])
 
-
+    //날짜 관련 함수
     const dateOprration = (beforeSendDate: string, AfterSendDate: string) => {
         return ((+changeDateForm(AfterSendDate)) - (+changeDateForm(beforeSendDate)) < 300000)
     }
 
+    //메세지 부분 ui
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(), ...newMessageList]
         messageLength.current = connectList.length - 1 //메시지 길이 세팅
@@ -467,12 +490,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                         ((message !== null && message.chatUUID !== "시작라인") &&
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
-                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
+                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userEmail === message.userEmail) &&
                                                      dateOprration(connectList[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <hr data-content={"NEW"}></hr> :
-                                    ((index && connectList[index - 1]?.userId === message.userId) &&
+                                    ((index && connectList[index - 1]?.userEmail === message.userEmail) &&
                                     dateOprration(connectList[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
@@ -480,10 +503,11 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer $userId={message.userId}></ProfileContainer>
+                                            <ProfileContainer
+                                                $userEmail={message.userEmail}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{message.userId}</NickNameContainer>
+                                                    <NickNameContainer>{message.nickName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>
@@ -500,7 +524,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         return null;
     }, [messageList, newMessageList]);
 
-
+    //반환
     return (
         <MessageComponent_Container>
             {MessageBox}

@@ -1,37 +1,44 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {stateFilter,createTimePassed} from '../../../stateFunc/actionFun'
-import {RowFlexBox, MiniText } from '../../../style/FormStyle'
-import '../../../style/Detail.scss'
-
+import {createTimePassed} from '../../../shared/lib'
+import {MiniText, FullScreen_div} from '../../../style/FormStyle'
+import {
+    BoardDetailTop_Container, BoardDetailTop_title, GroupNoticeListTitle
+} from "../../../style/Group/GroupNoticeStyle";
+import {
+    DispatchBoardOptionProps,
+    mapDispatchToBoardOptionProps,
+} from "../../../store/slice/BoardOptionSlice";
+import {connect} from 'react-redux'
+import {useEffect} from "react";
 
 interface Details{
-    Creater : string;
-    Created:string;
-    Watcher:string[]
+    state:string,
+    title: string;
+    created:string;
+    watcher:string[],
+    subWidth?:number,
 }
 
 
-const DetailTop:React.FC<Details>=({Created,Creater,Watcher})=>{
+const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam,subWidth})=>{
 
 
     return(
-        <div>
-            <div id ='ViewDetails_Text'>상세보기</div>
-            <div>
-                <RowFlexBox style={{marginLeft:'3vw'}}>
-                    <div>😒</div>{/*프로필 들어갈 예정*/}
-                    <div style={{marginLeft:'10px'}}>
-                        <div>
-                            {Creater}
-                        </div>
-                        <MiniText>
-                            {createTimePassed(Created)} · {Watcher.length}명 읽음
-                        </MiniText>
+        <BoardDetailTop_Container>
+            <FullScreen_div>
+                <BoardDetailTop_title $state={state}>
+                    {(state==="notice"&& subWidth) && <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                        {title}
+                    </GroupNoticeListTitle>}
+                    {(state==="vote") && title}
+                    {state==="vote" &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
+                                         onClick={()=>{updateBoardParam({voteParam:''})}}></i>}
+                </BoardDetailTop_title>
+                <MiniText>
+                    {createTimePassed(created)} · {watcher.length}명 읽음
+                </MiniText>
 
-                    </div>
-                </RowFlexBox>
-            </div>
-        </div>
+            </FullScreen_div>
+        </BoardDetailTop_Container>
     )
 }
-export default DetailTop
+export default connect(null, mapDispatchToBoardOptionProps) (DetailTop)

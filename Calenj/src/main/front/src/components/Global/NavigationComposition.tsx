@@ -10,7 +10,7 @@ import {
 } from '../../store/slice/NavigatgionSlice'
 import ContentsComposition from "./ContentsComposition";
 import {useFetchGroupDetail} from '../../store/ReactQuery/queryManagement'
-import {debounce, throttle} from "../../stateFunc/actionFun";
+import {debounce, throttle} from "../../shared/lib/actionFun";
 
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo})=>{

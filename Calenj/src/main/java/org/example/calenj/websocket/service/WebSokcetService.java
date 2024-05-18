@@ -293,7 +293,6 @@ public class WebSokcetService {
         String userId = String.valueOf(userEntity.getUserId());
 
         ChatMessageResponse response = filterNullFields(request);
-//        response.setOnlineUserList(getAllUsers(authentication));
         response.setOnlineUserList(getUsers(request.getParam()));
 
         if (request.getParam() == userId && request.getMessage() == "OFFLINE") {

@@ -1,8 +1,9 @@
 import React, {useLayoutEffect, useState} from 'react';
 import axios ,{AxiosError}from 'axios';
-import {useLocation} from 'react-router-dom';
-import {stateFilter, createTimePassed} from '../../../../stateFunc/actionFun'
+import {jwtFilter} from '../../../../entities/authentication/jwt'
 import DetailTop from '../DetailTop'
+import {NoticeDetailContainer, NoticeDetailContent_Container} from "../../../../style/Group/GroupNoticeStyle";
+import {FullScreen_div} from "../../../../style/FormStyle";
 
 
 interface NoticeDetails {
@@ -11,22 +12,22 @@ interface NoticeDetails {
     noticeCreated: string;
     noticeCreater: string;   
     noticeWatcher:string[];
+    noticeTitle:string;
 }
 
+interface NoticeListProps{
+    noticeId:string,
+    subWidth:number,
+}
 
-
-
-const NoticeDetail:React.FC=()=>{
-    
+const NoticeDetail:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
     const [detail, setDetail] = useState<NoticeDetails | null>(null);
-    const location = useLocation();
-    const noticeInfo = {...location.state};
 
 
     function getNoticeDetail (){
          axios.post('/api/noticeDetail', null, {
             params: {
-                noticeId: noticeInfo.noticeId
+                noticeId: noticeId
             },
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -34,13 +35,12 @@ const NoticeDetail:React.FC=()=>{
         }) // 객체의 속성명을 'id'로 설정
             .then(response => {
                 setDetail(response.data);
-                console.log(response.data);
             })
             .catch(error => {
                 const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
             });
     }
@@ -51,18 +51,17 @@ const NoticeDetail:React.FC=()=>{
 
 
     return(
-        <div>
+        <NoticeDetailContainer>
             {detail &&
-            <div>
-                 <DetailTop Created={detail.noticeCreated}Creater={detail.noticeCreater} Watcher={detail.noticeWatcher}/>
-            
-                <div style={{width:'88vw', marginLeft:'1vw',padding:'4vw'}}>
-                    {detail?.noticeContent}
-                </div>
-            </div>
+                <FullScreen_div>
+                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher} subWidth={subWidth}/>
+
+                     <NoticeDetailContent_Container>
+                         {detail.noticeContent}
+                     </NoticeDetailContent_Container>
+                </FullScreen_div>
             }
-            
-        </div>
+        </NoticeDetailContainer>
     )
 }
 export default NoticeDetail

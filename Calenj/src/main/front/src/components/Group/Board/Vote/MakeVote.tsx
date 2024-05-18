@@ -1,12 +1,12 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
-    Modal_Background,CheckCondition_Button,
+    Modal_Background, CheckCondition_Button, TextColor, ThemaColor2, ThemaColor3,
 } from '../../../../style/FormStyle';
 import '../../../../style/ModalStyle.scss';
 import axios, {AxiosError} from 'axios';
-import {stateFilter, useConfirm, saveDBFormat} from '../../../../stateFunc/actionFun'
-import '../../../../style/Datepicker.scss'
-import DatePicker from 'react-datepicker';
+import {jwtFilter} from '../../../../entities/authentication/jwt'
+import {useConfirm} from "../../../../shared/model";
+import {saveDBFormat} from "../../../../shared/lib";
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
 import dayjs from 'dayjs';
@@ -31,8 +31,13 @@ import {
     VoteListEmptyText,
     VoteSetting_Container,
     ListInput_Container,
-    VoteCheckOption_Container, VoteCheckOption_Label,
+    VoteCheckOption_Container,
+    VoteCheckOption_Label,
+    DatePicker_Styled,
+    VoteCounter_DatePicker, VoteCheckStyle_CheckBox
 } from "../../../../style/Group/GroupVoteStyle";
+
+
 
 interface ModalProps {
     onClose: () => void;
@@ -168,7 +173,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                     const axiosError = error as AxiosError;
                     console.log(axiosError);
                     if (axiosError.response?.data) {
-                        stateFilter((axiosError.response.data) as string);
+                        jwtFilter((axiosError.response.data) as string);
                     }
                 })
         
@@ -207,9 +212,6 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                 <GroupVoteModal_Container>
                     <GroupVoteModal_TopContent_Container>
                         <GroupVoteModal_Title>투표 만들기</GroupVoteModal_Title>
-                        <GroupVoteModal_close_Btn onClick={closeModal}>
-                            x
-                        </GroupVoteModal_close_Btn>
                     </GroupVoteModal_TopContent_Container>
                     <MiniVote_Input onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                                 ref={inputRef}
@@ -223,12 +225,12 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                                         placeholder='항목 입력' maxLength={40}>
                         </MiniVote_Input>
                         :
-                        <DatePicker
+
+                        <VoteCounter_DatePicker
                             dateFormat=' yyyy년 MM월 dd일 (EEE)' // 날짜 형태
                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
                             selected={content_Date}
-                            onChange={(date) => setContent_Date(date)}
-                            className='VoteConter_DatePicker'
+                            onChange={(date:Date) => setContent_Date(date)}
                             placeholderText='날짜 선택'
                             locale={ko}
                         />
@@ -268,7 +270,7 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                 <ButtomContent_Containr>
                     <div style={{height: "4.3%"}}>투표 마감</div>
                     <VoteSetting_Container>
-                        <DatePicker
+                        <DatePicker_Styled
                             dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
                             minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
@@ -277,18 +279,20 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                             timeFormat="HH:mm" //시간 포맷
                             timeIntervals={15} //시간 단위
                             selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)}
+                            onChange={(date:Date) => setSelectedDate(date)}
                             className='DatePicker'
                             placeholderText='날짜 선택'
                             locale={ko}
                         />
                         <VoteCheckOption_Container>
-                            <VoteCheckOption_Label><input type='checkBox' name='choice'
+                            <VoteCheckOption_Label>
+                                <VoteCheckStyle_CheckBox type='checkBox' name='choice'
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setMultipleOption(e.target.checked)
                                 }}/>복수선택
                             </VoteCheckOption_Label>
-                            <VoteCheckOption_Label><input type='checkBox' name='anonymous'
+                            <VoteCheckOption_Label>
+                                <VoteCheckStyle_CheckBox type='checkBox' name='anonymous'
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setanonymousOption(e.target.checked)
                                 }}/>익명투표
@@ -296,6 +300,9 @@ const MakeVote: React.FC<ModalProps> = ({onClose, groupId, queryState}) => {
                         </VoteCheckOption_Container>
                     </VoteSetting_Container>
                     <GroupVoteModal_Button_Container>
+                        <GroupVoteModal_close_Btn onClick={closeModal}>
+                            취소
+                        </GroupVoteModal_close_Btn>
                         <CheckCondition_Button $isAble={voteList.length>1 && title!==""} onClick={createVote}>
                             생성
                         </CheckCondition_Button>

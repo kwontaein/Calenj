@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
 import { CheckCondition_Button} from '../../../../style/FormStyle';
 import '../../../../style/ModalStyle.scss';
-import {useLocation} from 'react-router-dom';
-import {useConfirm,stateFilter,saveDBFormat} from '../../../../stateFunc/actionFun'
+import {jwtFilter} from '../../../../entities/authentication/jwt'
+import { useConfirm } from '../../../../shared/model'
+import {saveDBFormat} from '../../../../shared/lib'
 import axios ,{AxiosError}from 'axios';
-import { Modal_Background} from '../../../../style/FormStyle'
+import { Modal_Background } from '../../../../style/FormStyle'
 import { UseQueryResult } from '@tanstack/react-query';
 import {
     GroupNoticeModal_Button_Container, GroupNoticeModal_close_Btn,
@@ -51,7 +52,7 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
             const axiosError = error as AxiosError;
                 console.log(axiosError);
                 if(axiosError.response?.data){
-                    stateFilter((axiosError.response.data) as string);
+                    jwtFilter((axiosError.response.data) as string);
                 }
         })
     }
@@ -77,16 +78,17 @@ const NoticeModal :React.FC<ModalProps> = ({onClose, groupId,queryState})=>{
                 <GroupNoticeModal_Container>
                     <GroupNoticeModal_TopContent_Container>
                         <GroupNoticeModal_Title>공지 작성하기</GroupNoticeModal_Title>
-                        <GroupNoticeModal_close_Btn onClick={closeModal}>
-                            x
-                        </GroupNoticeModal_close_Btn>
                     </GroupNoticeModal_TopContent_Container>
                     <GroupNoticeTitle_Input maxLength={30} onChange={(e:ChangeEvent<HTMLInputElement>)=>setTitle(e.target.value)} placeholder='제목을 입력해주세요'/>
                     <GroupNoticeModal_Textarea onChange={(e:ChangeEvent<HTMLTextAreaElement>)=>setContent(e.target.value)} placeholder='내용을 입력해주세요'/>
                     <GroupNoticeModal_Button_Container>
-                        <CheckCondition_Button $isAble={content!==""} onClick={createNotice}>
+                        <GroupNoticeModal_close_Btn onClick={closeModal}>
+                            취소
+                        </GroupNoticeModal_close_Btn>
+                        <CheckCondition_Button $isAble={content!=="" && title !== ""} onClick={createNotice}>
                             등록
                         </CheckCondition_Button>
+
                     </GroupNoticeModal_Button_Container>
                 </GroupNoticeModal_Container>
             </Modal_Background>

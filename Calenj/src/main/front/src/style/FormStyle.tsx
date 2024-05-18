@@ -11,7 +11,7 @@ interface ClickAbleProps{
 
 
 /**
- * SubNavColor
+ * SubNavColor, button색
  * @param ThemaColor3
  */
 export const ThemaColor3 = "#2B2E33";//SubNav 222831
@@ -85,7 +85,7 @@ export const FullScreen_div = styled.div`
     height: 100%;
 `
 export const MiniText = styled.div`
-    color: gray;
+    color: ${TextColor2}77;
     margin-top: 5px;
     font-size: 12px;
     align-items: center;
@@ -94,6 +94,7 @@ export const MiniText = styled.div`
 export const RowFlexBox = styled.div`
     display: flex;
     flexdirection: row;
+    align-items: center;
 `
 
 
@@ -124,13 +125,6 @@ export const Input = styled.input`
     width: 450px;
 `;
 
-export const Mini_Input = styled.input`
-    witdh: 100px;
-    height: 20px;
-    margin: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-`;
 
 export const Mini_Textarea = styled.textarea`
     width: 200px;
@@ -229,7 +223,7 @@ export const DEFAULT_HR = styled.hr`
     height: .1em;
 `
 
-export const SIGN_STATE_FORM = styled.div`
+export const SignState_Container = styled.div`
     background-color: ${ThemaColor3};
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 50px;
@@ -238,7 +232,7 @@ export const SIGN_STATE_FORM = styled.div`
     justify-content: space-between;
 
 `;
-export const SIGN_STATE_BUTTON = styled.button`
+export const SignState_Button = styled.button`
     background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
