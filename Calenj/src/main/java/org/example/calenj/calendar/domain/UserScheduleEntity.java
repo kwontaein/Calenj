@@ -34,7 +34,7 @@ public class UserScheduleEntity {
     private Timestamp ScheduleStartDateTime;
 
     //종료일
-    @Column(name = "schedule_start_datetime")
+    @Column(name = "schedule_end_datetime")
     private Timestamp ScheduleEndDateTime;
 
     //반복여부

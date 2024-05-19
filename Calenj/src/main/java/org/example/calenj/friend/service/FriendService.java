@@ -36,7 +36,7 @@ public class FriendService {
     }
 
     public UserEntity friendUserName(String userName) {
-        UserEntity userEntity = userRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException());
+        UserEntity userEntity = userRepository.findByUserUsedName(userName).orElseThrow(() -> new RuntimeException());
         return userEntity;
     }
 

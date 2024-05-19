@@ -10,7 +10,7 @@ import {
     GroupNoticeModal_Textarea
 } from '../styles/NoticeModalStyle';
 import {useConfirm} from '../../../shared/model'
-import {CreateBtn} from '../../../features/notice/ui/NoticeButtons';
+import {CreateBtn} from '../../../features/notice/createNotice/ui/NoticeButtons';
 
 interface ModalProps {
     onClose: () => void;
@@ -55,9 +55,8 @@ const NoticeModal: React.FC<ModalProps> = ({onClose}) => {
                     <GroupNoticeModal_close_Btn onClick={closeModal}>
                         취소
                     </GroupNoticeModal_close_Btn>
-                    <CreateBtn title={title} content={content}/>
+                    <CreateBtn onClose={onClose} title={title} content={content}/>
                 </GroupNoticeModal_Button_Container>
-
             </GroupNoticeModal_Container>
         </Modal_Background>
     );

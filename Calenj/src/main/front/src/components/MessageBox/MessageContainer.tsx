@@ -1,3 +1,4 @@
+/*
 import {ChangeEvent, useEffect, useState, useRef, useMemo, useId} from "react";
 import {connect} from "react-redux";
 import {
@@ -41,21 +42,6 @@ import {fileLoadManagement} from "../../features/messsage"
 import {QUERY_NEW_CAHT_KEY, QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
 
 
-interface groupDetailProps {
-    target: string;
-    param: string;
-}
-
-interface Message {
-    chatUUID: string,
-    sendDate: string,
-    userEmail: string,
-    nickName: string,
-    messageType: string,
-    message: string,
-}
-
-
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
 const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPosition, sendStompMsg, requestFile}) => {
     const [content, setContent] = useState<string>('');
@@ -68,7 +54,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
     const queryClient = useQueryClient();
-    /**작동순서 첫랜더링 :
+    /!**작동순서 첫랜더링 :
      * 1. 컴파일 순에따라 data 가 enable옵션에따라 변경되니 [data]로 의존성을 지닌 messageList업데이트 , reciveNewMessage도 초기 세팅
      * 2. useEffect[param] 실행(Props param변경)
      * 3. endPointMap에따라 requestFileRead()호출 이 때 messageLength=0(캐싱 전일 경우)로 stomp dispatch실행
@@ -81,7 +67,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
      * 10. receiveNewMessage 로딩 시작 => fetchNewChat실행 (파일로드 이후 새로받은 메시지를 처리하는 infiniteQuery)
      * 11. 9번의 messageList갱신에 따라 RELOAD인지 체크 (4번과 같음)
      * 12. 스크롤 재세팅 (isLoading완료)
-     * **/
+     * **!/
 
 
         //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
@@ -215,14 +201,13 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const receiveChatFile = (messages: string[]) => {
 
         const messageEntries = Array.from(messages, (message: string) => {
-            const [chatUUID, sendDate, userEmail, nickName, messageType, messageContent] = message.split("$", 6);
+            const [chatUUID, sendDate, userId, messageType, messageContent] = message.split("$", 6);
 
             console.log(chatUUID, sendDate)
             const loadMsg: Message = {
                 chatUUID: chatUUID,
                 sendDate: sendDate.slice(1, 17),
-                userEmail: userEmail,
-                nickName: nickName,
+                userId: userId,
                 messageType: messageType,
                 message: messageContent,
             };
@@ -310,19 +295,17 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             const loadMsg: Message = {
                 chatUUID: "시작라인",
                 sendDate: "",
-                userEmail: "",
-                nickName: "",
+                userId: "",
                 messageType: "",
                 message: "",
             };
             return loadMsg
         }
-        const {chatUUID, sendDate, userEmail, nickName, messageType, message} = stomp.receiveMessage
+        const {chatUUID, sendDate, userId, messageType, message} = stomp.receiveMessage
         const loadMsg: Message = {
             chatUUID: chatUUID,
             sendDate: sendDate,
-            userEmail: userEmail,
-            nickName: nickName,
+            userId: userId,
             messageType: messageType,
             message: message.toString(),
         };
@@ -490,12 +473,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                         ((message !== null && message.chatUUID !== "시작라인") &&
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
-                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userEmail === message.userEmail) &&
+                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
                                                      dateOprration(connectList[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <hr data-content={"NEW"}></hr> :
-                                    ((index && connectList[index - 1]?.userEmail === message.userEmail) &&
+                                    ((index && connectList[index - 1]?.userId === message.userId) &&
                                     dateOprration(connectList[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
@@ -504,10 +487,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
                                             <ProfileContainer
-                                                $userEmail={message.userEmail}></ProfileContainer>
+                                                $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                    <NickNameContainer>{message.userId}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>
@@ -537,4 +520,4 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         </MessageComponent_Container>
     )
 }
-export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);*/

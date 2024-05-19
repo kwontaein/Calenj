@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findByUserId(@Param("user_id") UUID userId);
 
-    Optional<UserEntity> findByUsername(@Param("user_name") String userName);
+    Optional<UserEntity> findByUserUsedName(@Param("user_used_name") String userName);
 
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
 
