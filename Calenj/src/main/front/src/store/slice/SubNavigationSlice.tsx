@@ -12,7 +12,6 @@ export interface SubNavigationProps {
     mode:string,
     screenHeightSize:number,
     screenWidthSize:number,
-
 }
 
 

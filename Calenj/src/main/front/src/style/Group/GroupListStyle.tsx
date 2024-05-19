@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import {PointColor, TextColor, ThemaColor3} from "../FormStyle";
-import {SubNavigation_Container_width} from "../Navigation/SubNavigationStyle";
+import {SubNavigation_Container_width} from "../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
 interface receivedMsg {

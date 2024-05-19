@@ -5,7 +5,7 @@ import {
     SubNavigate_padding,
     subNavigateBorder,
     SubNavigateTopBar_hegiht, SubNavigation_Container_width
-} from "../../../../style/Navigation/SubNavigationStyle";
+} from "../../../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
 import {MiddleLine_Size} from "../../../../style/Navigation/ContentCompositionStyle";
 import {GroupList_Container_width} from "../../../../style/Group/GroupListStyle";
 import {contentSize} from './types'
@@ -30,7 +30,6 @@ export const mouseMoveHandler = (showUserList:boolean,currentMode:string, conten
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-
         if (!isResizing) return;
         if(currentMode ==="row"){
             //content size에서 채팅부분을 제외한 크기

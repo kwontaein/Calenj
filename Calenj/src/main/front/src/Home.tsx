@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {FullScreen_div} from "./style/FormStyle";
-import NavigationComposition from './pages/main/head/ui/NavigationComposition'
+import {NavigationParent} from './pages/main/navigationParent'
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
@@ -14,7 +14,7 @@ const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
     return (
         <FullScreen_div>
             {stomp.isOnline ==="ONLINE"?
-                <NavigationComposition/>:
+                <NavigationParent/>:
                 <SignStateWidget/>}
         </FullScreen_div>
     )

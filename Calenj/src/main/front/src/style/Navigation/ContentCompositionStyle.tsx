@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "./SubNavigationStyle";
+import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
 import {
     BackGroundColor,
     PointColor, SubScreenColor,

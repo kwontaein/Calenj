@@ -2,34 +2,31 @@ import axios, {AxiosResponse} from 'axios';
 import {useForm, SubmitHandler, SubmitErrorHandler, FieldErrors} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from 'react';
-import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBackgound} from '../../../../style/FormStyle';
-import {EmailValidationModal} from '../../../../widgets/emailValidModal'
-import {schema} from '../../../../entities/authentication/emailValidation';
-import {connect} from "react-redux";
-import {EmailToeknProps , DispatchEmailProps , mapDispatchToEmailProps,mapStateToEmailProps} from '../../../../store/slice/EmailValidationSlice';
-import '../../../../style/Sign.scss'
-import {saveDBFormat} from "../../../../shared/lib";
-import {useInputManagement, User} from "../../../../features/authentication/sign";
+import {SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBackgound} from '../../../style/FormStyle';
+import {EmailValidationModal} from '../../../widgets/emailValidModal'
+import {schema} from '../../../entities/authentication/emailValidation';
+import {connect, useDispatch} from "react-redux";
+import {EmailToeknProps , DispatchEmailProps , mapDispatchToEmailProps,mapStateToEmailProps} from '../../../store/slice/EmailValidationSlice';
+import '../../../style/Sign.scss'
+import {saveDBFormat} from "../../../shared/lib";
+import {saveUserApi, useInputManagement, User} from "../../../features/authentication/sign";
 import {
+    requestEmailCode,
     useEmailValideAbleCheck
-} from '../../../../features/authentication/emailValidation/requestEmailCode'
+} from '../../../features/authentication/emailValidation/requestEmailCode'
 import {
     RequstEmailCode_Button
-} from "../../../../features/authentication/emailValidation/requestEmailCode/ui/RequstButtonSytled";
-import {
-    reqestEmailCodeApi
-} from "../../../../features/authentication/emailValidation/requestEmailCode/api/reqestEmailCodeApi";
-import {getExpirationTimeApi} from "../../../../features/authentication/emailValidation/codeValidTime";
+} from "../../../features/authentication/emailValidation/requestEmailCode/ui/RequstButtonSytled";
 
 
 
 
 
-
-export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emailToken, updateToken, updateCodeValid}) => {
+const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emailToken, updateToken, updateCodeValid}) => {
     const [showAlert, validation, updateValidState, closeModal] = useEmailValideAbleCheck();
     const [isAble,updateInputAble] = useInputManagement(emailToken)
         //인증번호 발급여부 (한 번 발급하면 재발급 UI로 변경)
+    const dispath = useDispatch()
 
     useEffect(() => {
         updateCodeValid(false);
@@ -54,9 +51,7 @@ export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emai
             updateCodeValid(false)
         }, 1000);
 
-        return axios.post('api/saveUser', data)
-            .then((response: AxiosResponse<Object>) => response.data)
-            .catch((error) => Promise.reject(error));
+        return saveUserApi(data);
     };
 
     //실패 시
@@ -67,18 +62,10 @@ export const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emai
         }
     }
     const requestEmailValidation = async () =>{
+        //특정 필드나 전체 폼에 대해 유효성 검사한다.
         const isValid = await trigger("userEmail");
         const email = watch("userEmail");
-
-        reqestEmailCodeApi(email,isValid).then((res)=>{
-            if(res!==200) return;
-            updateValidState();
-            getExpirationTimeApi().then((res)=>{
-                if(typeof res === "number"){
-                    updateToken({tokenId: "tokenUUID", validateTime: res})
-                }
-            })
-        })
+        requestEmailCode(email,isValid,updateValidState,dispath)
     }
 
     return (

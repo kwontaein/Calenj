@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {BackGroundColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../FormStyle";
+import {BackGroundColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
 
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_hegiht: number = 32;

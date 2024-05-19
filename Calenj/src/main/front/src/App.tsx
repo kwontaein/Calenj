@@ -1,5 +1,5 @@
 import Home from './Home';
-import {SignUpFormPage} from "./pages/signup/ui";
+import {SignUpFormPage} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";

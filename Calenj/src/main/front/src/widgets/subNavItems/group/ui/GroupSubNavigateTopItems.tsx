@@ -3,15 +3,15 @@ import {
     SubNavigateTopBar_Content_Container,
     SubNavigateTopBar_EventSelecter_Container,
     SubNavigateTopBar_leftContent, SubNavigateTopBar_rightContent_item
-} from "../../../style/Navigation/SubNavigationStyle";
-import SubNavigationSelectBox from "./SubNavigationSelectBox";
+} from "./GroupSubNavigationStyle";
+import SubNavigationSelectBox from "../../../../components/Group/NavigateItems/SubNavigationSelectBox";
 import {useEffect, useRef, useState} from "react";
-import {FullScreen_div} from "../../../style/FormStyle";
+import {FullScreen_div} from "../../../../style/FormStyle";
 
 interface subNaviationTopProps{
     groupTitle:string,
 }
-const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>{
+export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>{
     const [showEventSelecter,setShowEventSelecter] = useState<boolean>(false);
     const selectBox = useRef<HTMLDivElement>(null);
 
@@ -58,4 +58,3 @@ const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>
 
     )
 }
-export default  GroupSubNavigateTopItems;

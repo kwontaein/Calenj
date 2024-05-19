@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {
     SubNavigation_Container,
-} from '../../../../style/Navigation/SubNavigationStyle'
+} from '../../../../widgets/subNavItems/group/ui/GroupSubNavigationStyle'
 import {connect} from 'react-redux'
 import {
     NavigateState,
@@ -9,9 +9,7 @@ import {
 } from '../../../../store/slice/NavigatgionSlice'
 import {useIsFetching, useQueryClient, useQuery } from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/ReactQuery/model/queryModel";
-import GrouypByNavigationSelectBox from "../../../../components/Group/NavigateItems/SubNavigationSelectBox";
-import GroupSubNavigateItems from "../../../../components/Group/NavigateItems/GroupSubNavigateItems";
-import GroupSubNavigateTopItems from "../../../../components/Group/NavigateItems/GroupSubNavigateTopItems";
+import {GroupSubNavigateTopItems,GroupSubNavigateItems} from "../../../../widgets/subNavItems/group";
 import {GroupDetail} from "../../../../entities/ReactQuery";
 
 interface qeuryProps {
@@ -42,4 +40,4 @@ const SubNavigationbar:React.FC<NavigateState & qeuryProps> =({navigateInfo,isLo
         </SubNavigation_Container>
     )
 }
-export default connect(mapStateToNavigationProps,null) (SubNavigationbar);
+export const Node_SubNavigation = connect(mapStateToNavigationProps,null) (SubNavigationbar);

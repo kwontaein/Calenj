@@ -1,4 +1,4 @@
-import SubNavigationbar from "../../body/ui/SubNavigationbar";
+import {Node_SubNavigation,Node_ContentComposition} from "../../navigationNode";
 import {FullScreen_div} from '../../../../style/FormStyle'
 import React, {useEffect, useRef, useState} from "react";
 import {connect} from 'react-redux'
@@ -8,9 +8,7 @@ import {
     mapStateToNavigationProps,
     mapDispatchToNavigationProps, NavigationProps,
 } from '../../../../store/slice/NavigatgionSlice'
-import {ContentsWidgets} from "../../body/ui/ContentsComposition";
 import {useFetchGroupDetail} from '../../../../entities/ReactQuery/model/queryModel'
-import {debounce, throttle} from "../../../../shared/lib/actionFun";
 import GroupList from "../../../../components/Group/GroupList";
 
 
@@ -35,8 +33,8 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
     return(
             <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
                 <GroupList redirectDetail={redirectDetail}/>
-                <SubNavigationbar isLoading={groupDetailState.isLoading}/>
-                <ContentsWidgets
+                <Node_SubNavigation isLoading={groupDetailState.isLoading}/>
+                <Node_ContentComposition
                     isLoading={groupDetailState.isLoading}
                     target={navigateInfo.navigate}
                     param={navigateInfo.navigateParam}
@@ -45,4 +43,4 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
     )
 
 }
-export default connect(mapStateToNavigationProps, mapDispatchToNavigationProps)(NavigationComposition);
+export const NavigationParent= connect(mapStateToNavigationProps, mapDispatchToNavigationProps)(NavigationComposition);

@@ -1,1 +1,0 @@
-export {SignUpFormPage} from "./Pages/Pages"

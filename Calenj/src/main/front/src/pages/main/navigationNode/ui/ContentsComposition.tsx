@@ -58,4 +58,4 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
         </FullScreen_div>
     )
 }
-export const ContentsWidgets = connect(mapStateToSubNavigationProps,mapDispatchToSubNavigationProps) (ContentsComposition);
+export const Node_ContentComposition = connect(mapStateToSubNavigationProps,mapDispatchToSubNavigationProps) (ContentsComposition);

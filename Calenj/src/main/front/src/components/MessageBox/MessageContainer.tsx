@@ -130,7 +130,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }
 
-
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
         if (!scrollRef.current) return
@@ -275,8 +274,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                             pages: data?.pages.slice(0, 1),
                             pageParams: data?.pageParams.slice(0, 1)
                         }));
-
                     });
+
                 }, 500)
                 debounceCount()
             } else {
@@ -410,12 +409,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             messageLength.current = -1
             refetch().then(() => {
                 //newMessage 비우기
-                if(receiveNewMessage.data) {
-                    queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                        pages: data?.pages.slice(0, 1),
-                        pageParams: data?.pageParams.slice(0, 1)
-                    }));
-                }
+                if(!receiveNewMessage.data) return
+
+                queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                    pages: data?.pages.slice(0, 1),
+                    pageParams: data?.pageParams.slice(0, 1)
+                }));
             });
         }
         return ()=>{
@@ -460,6 +459,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     }, [isLoading,param])
 
 
+    //날짜연산
     const dateOprration = (beforeSendDate : string, AfterSendDate : string) => {
         return ((+changeDateForm(AfterSendDate)) - (+changeDateForm(beforeSendDate)) < 300000)
     }
