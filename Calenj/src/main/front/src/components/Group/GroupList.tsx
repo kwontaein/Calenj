@@ -18,9 +18,7 @@ import {
 import {endPointMap} from '../../store/module/StompMiddleware'
 import {connect} from 'react-redux'
 import {mapStateToStompProps, StompData} from '../../store/module/StompReducer'
-import {useFetchGroupList} from '../../store/ReactQuery/queryManagement'
-import {GroupList_item} from "../../store/ReactQuery/queryInterface";
-import {FullScreen_div} from "../../style/FormStyle";
+import {useFetchGroupList, GroupList_item} from "../../entities/ReactQuery";
 
 
 interface GroupListByNavigationProps {
@@ -59,7 +57,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
 
 
     return (
-        <FullScreen_div>
+        <div>
             {showMakeGroup && <MakeGroup onClose={closeModal} queryState={groupListState}></MakeGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
@@ -95,7 +93,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
                     </GroupListContent_Container>
                 </GroupList_Container>
             )}
-        </FullScreen_div>
+        </div>
     )
 }
 export default connect(mapStateToStompProps, null)(GroupList);

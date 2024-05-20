@@ -1,0 +1,1 @@
+export {SignUpFormPage} from "./ui/SignUpFormPage"

@@ -1,7 +1,7 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
 import {UserListView, MiniText} from '../../style/FormStyle'
-import {useFetchFriendsList} from "../../store/ReactQuery/queryManagement";
+import {useFetchFriendsList} from "../../entities/ReactQuery/model/queryModel";
 
 
 

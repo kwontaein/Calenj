@@ -28,7 +28,7 @@ import {endPointMap, scrollPointMap} from '../../store/module/StompMiddleware';
 import {
     throttleByAnimationFrame,
     debounce
-} from '../../shared/lib/actionFun'
+} from '../../shared/lib'
 import {
     changeDateForm,
     AHMFormatV2,
@@ -38,7 +38,8 @@ import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-qu
 import store from '../../store/store';
 import {useIntersect} from "../../shared/model";
 import {fileLoadManagement} from "../../features/messsage"
-import {QUERY_NEW_CAHT_KEY, QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
+import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../entities/ReactQuery/model/queryModel";
+
 
 
 interface groupDetailProps {
@@ -131,7 +132,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }
 
-
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
         if (!scrollRef.current) return
@@ -216,8 +216,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
         const messageEntries = Array.from(messages, (message: string) => {
             const [chatUUID, sendDate, userEmail, nickName, messageType, messageContent] = message.split("$", 6);
-
-            console.log(chatUUID, sendDate)
             const loadMsg: Message = {
                 chatUUID: chatUUID,
                 sendDate: sendDate.slice(1, 17),
@@ -241,6 +239,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             return messageEntries
         }
     }
+
 
 
     //파일 가져올 때 쓰는 비동기함수
@@ -270,28 +269,28 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             }
 
             const message = await getFileData();
-            if (message.length === 0 && !isFetching) {
-                const debounceCount = debounce(() => {
-                    const requestCount = fileLoadManagement()
-                    if (requestCount < 10) return
-
-                    fileLoadManagement(true);//count 초기화
-                    messageLength.current = -1
-                    refetch().then(() => {
-                        //newMessage 비우기
-                        if (!receiveNewMessage.data) return
-
-                        queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                            pages: data?.pages.slice(0, 1),
-                            pageParams: data?.pageParams.slice(0, 1)
-                        }));
-
-                    });
-                }, 500)
-                debounceCount()
-            } else {
-                fileLoadManagement(true);//count 초기화
-            }
+            // if (message.length === 0 && !isFetching) {
+            //     const debounceCount = debounce(() => {
+            //         const requestCount = fileLoadManagement()
+            //         if (requestCount < 10) return
+            //
+            //         fileLoadManagement(true);//count 초기화
+            //         messageLength.current = -1
+            //         refetch().then(() => {
+            //             //newMessage 비우기
+            //             if (!receiveNewMessage.data) return
+            //
+            //             queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+            //                 pages: data?.pages.slice(0, 1),
+            //                 pageParams: data?.pageParams.slice(0, 1)
+            //             }));
+            //         });
+            //
+            //     }, 500)
+            //     debounceCount()
+            // } else {
+            //     fileLoadManagement(true);//count 초기화
+            // }
             const messageResult = receiveChatFile(message)
             messageLength.current += messageResult.length;
             return messageResult; // 처리된 결과 출력
@@ -470,6 +469,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             }
         }
     }, [isLoading, param])
+
 
     //날짜 관련 함수
     const dateOprration = (beforeSendDate: string, AfterSendDate: string) => {

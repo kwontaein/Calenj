@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ListView, Modal_Background} from '../../../style/FormStyle'
 import {GroupInviteModal_Container} from "../../../style/Group/GroupInviteStyle";
-import {QueryClient, QueryState, useQueryClient, UseQueryResult} from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../../store/ReactQuery/queryManagement";
-import {GroupDetail} from "../../../store/ReactQuery/queryInterface";
+import {useQueryClient, } from "@tanstack/react-query";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../entities/ReactQuery/model/queryModel";
+import {GroupDetail} from "../../../entities/ReactQuery";
 
 interface Friends {
     // 친구 아이디

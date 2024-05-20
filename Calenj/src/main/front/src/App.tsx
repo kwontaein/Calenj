@@ -1,5 +1,5 @@
 import Home from './Home';
-import {SignUpFormPage} from "./pages/signup/ui";
+import {SignUpFormPage} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
@@ -16,7 +16,7 @@ import {connect} from "react-redux";
 import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
-import {useFetchCookie} from "./store/ReactQuery/queryManagement";
+import {useFetchCookie} from "./entities/ReactQuery/model/queryModel";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";

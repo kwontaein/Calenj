@@ -14,23 +14,11 @@
    margin-left: 10px;
    border-radius: 3px;
    cursor: pointer;
-}   
+}
   
 
-/*인증번호 발급버튼*/
-#btn_eamilValidation{
-   @extend .btn;
-   width:180px;
-   margin-bottom: 20px;
-}
 
-/*이메일코드 확인버튼*/
-#btn_emailCodeValidation{
-   @extend .btn;
-   position:absolute;;  
-   margin-left: 420px;
-   margin-top: -35px;
-}
+
 
 #btn_cancleValid{
    @extend .btn;

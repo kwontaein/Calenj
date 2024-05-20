@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "./SubNavigationStyle";
+import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
 import {
     BackGroundColor,
     PointColor, SubScreenColor,
@@ -95,3 +95,5 @@ export const CustomScreen_MiddleLine_div = styled.div<CustomScreenProps>`
         background-color: ${PointColor};
     }
 `
+
+
