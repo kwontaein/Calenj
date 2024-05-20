@@ -7,7 +7,7 @@ import {
 import {GroupUserList_Container_width} from "../../../../style/Group/GroupUserListStyle";
 import GroupSubScreen from "../../../../components/Group/NavigateItems/GroupSubScreen";
 import GroupUserList from "../../../../components/Group/GroupUser/GroupUserList";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {connect, useDispatch} from 'react-redux'
 import {
     SubNavigateState,
@@ -27,8 +27,8 @@ interface ContentCompotisionProps{
 }
 
 const GroupContentCompositionItem : React.FC<SubNavigateState & DispatchSubNavigationProps & ContentCompotisionProps> = ({subNavigateInfo,updateSubScreenWidthtSize, updateSubScreenHeightSize, updateSubScreenMode ,param, contentSize, showUserList}) =>{
-    const dispatch = useDispatch();
-    const screenRowFlex = useScreenMode(contentSize,subNavigateInfo,showUserList,dispatch);
+    const screenRowFlex = useScreenMode(contentSize,subNavigateInfo,showUserList);
+
 
     return(
             <FullScreen_div style={{display:"flex", flexDirection:"row"}}>

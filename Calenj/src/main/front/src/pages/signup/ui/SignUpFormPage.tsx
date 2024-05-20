@@ -65,7 +65,7 @@ const SignUpForm: React.FC<EmailToeknProps & DispatchEmailProps> = ({emailToken,
         //특정 필드나 전체 폼에 대해 유효성 검사한다.
         const isValid = await trigger("userEmail");
         const email = watch("userEmail");
-        requestEmailCode(email,isValid,updateValidState,dispath)
+        requestEmailCode(email,isValid,updateValidState)
     }
 
     return (

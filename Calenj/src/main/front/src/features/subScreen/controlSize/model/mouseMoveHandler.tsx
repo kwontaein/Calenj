@@ -12,9 +12,10 @@ import {contentSize} from './types'
 import {updateSubScreenHeightSize, updateSubScreenWidthtSize} from "../../../../store/slice/SubNavigationSlice";
 import {useDispatch} from "react-redux";
 
-export const mouseMoveHandler = (showUserList:boolean,currentMode:string, contentSize:contentSize, dispatch: ReturnType<typeof useDispatch>)
+export const mouseMoveHandler = (showUserList:boolean,currentMode:string, contentSize:contentSize,)
     : [handleMouseDown:(e: React.MouseEvent)=>void] => {
 
+    const dispatch = useDispatch();
     const [isResizing, setIsResizing] = useState<boolean>(false); //마우스 Down 시 true로 바껴 이벤트 활성화
     const defaultContentSize = GroupList_Container_width + SubNavigation_Container_width;
 

@@ -6,8 +6,7 @@ import {mouseMoveHandler} from "../model/mouseMoveHandler";
 import {MidLineProps} from '../model/types'
 
 const ControlMidLine :React.FC<MidLineProps> =({subNavigateInfo,showUserList, contentSize}) =>{
-    const dispatch = useDispatch();
-    const [handleMouseDown] = mouseMoveHandler(showUserList, subNavigateInfo.mode,contentSize, dispatch);
+    const [handleMouseDown] = mouseMoveHandler(showUserList, subNavigateInfo.mode,contentSize);
 
 
     return(
