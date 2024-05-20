@@ -15,18 +15,8 @@ import {
     mapStateToSubNavigationProps,
     mapDispatchToSubNavigationProps,
 } from "../../../../store/slice/SubNavigationSlice";
-import {
-    MessageSend_Cotainer_height,
-    ScrollMarginInline,
-    ScrollMin_width
-} from "../../../../style/ChatBoxStyle";
-import {
-    SubNavigate_padding,
-    subNavigateBorder,
-    SubNavigateTopBar_hegiht, SubNavigation_Container_width
-} from "../../../subNavItems/group/ui/GroupSubNavigationStyle";
-import {GroupList_Container_width} from "../../../../style/Group/GroupListStyle";
-import MessageContainer from "../../../../components/MessageBox/MessageContainer";
+
+import MessageContainer from "../../../../components/MessageBox/MessageContainer2";
 import {ControlLine} from "../../../../features/subScreen/controlSize";
 import {useScreenMode} from "../model/useScreenMode";
 

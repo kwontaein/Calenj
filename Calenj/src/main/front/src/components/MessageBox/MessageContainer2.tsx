@@ -1,45 +1,33 @@
-import {ChangeEvent, useEffect, useState, useRef, useMemo, useId} from "react";
+import {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
-    StompData,
-    mapStateToStompProps
+    mapStateToStompProps,
+    StompData
 } from '../../store/module/StompReducer'
 import {
-    MessageBoxContainer,
-    MessageContainer,
-    MessageContainer2,
-    ProfileContainer,
     DateContainer,
     DateContainer2,
-    NickNameContainer,
+    MessageBoxContainer,
+    MessageComponent_Container,
+    MessageContainer,
+    MessageContainer2,
     MessageContentContainer,
     MessageContentContainer2,
-    ScrollableDiv,
-    HR_ChatEndPoint,
     MessageSend_Cotainer,
-    MessageSend_Input, MessageComponent_Container,
+    MessageSend_Input,
+    NickNameContainer,
+    ProfileContainer,
+    ScrollableDiv,
 } from '../../style/ChatBoxStyle'
-import {
-    RowFlexBox
-} from '../../style/FormStyle'
-import {endPointMap,scrollPointMap} from '../../store/module/StompMiddleware';
-import {
-    throttleByAnimationFrame,
-    debounce
-} from '../../shared/lib'
-import {
-    changeDateForm,
-    AHMFormatV2,
-    shortAHMFormat
-}from '../../shared/lib'
+import {RowFlexBox} from '../../style/FormStyle'
+import {endPointMap, scrollPointMap} from '../../store/module/StompMiddleware';
+import {AHMFormatV2, changeDateForm, debounce, shortAHMFormat, throttleByAnimationFrame} from '../../shared/lib'
 import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import store from '../../store/store';
-import  {useIntersect} from "../../shared/model";
-import {fileLoadManagement} from "../../features/messsage"
-import {QUERY_NEW_CAHT_KEY,QUERY_CHATTING_KEY} from "../../entities/ReactQuery/model/queryModel";
-
+import {useIntersect} from "../../shared/model";
+import {QUERY_CHATTING_KEY, QUERY_NEW_CAHT_KEY} from "../../entities/ReactQuery/model/queryModel";
 
 
 interface groupDetailProps {
@@ -60,11 +48,10 @@ interface Message {
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
 const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPosition, sendStompMsg, requestFile}) => {
     const [content, setContent] = useState<string>('');
-    const [prevScrollHeight , setPrevScrollHeight] = useState<number|null>();
     const chatRef = useRef<HTMLInputElement>(null);// 채팅 input Ref
-    const scrollTimerRef = useRef<NodeJS.Timeout | undefined>(); //채팅스크롤 디바운싱 Ref
+
+    const [prevScrollHeight , setPrevScrollHeight] = useState<number|null>(null);
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
-    const messageLength = useRef<number>(0);
     const berforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
@@ -86,14 +73,18 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
         //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
-    const handleScroll = () => {
-            if (scrollTimerRef.current) {
-                clearTimeout(scrollTimerRef.current);
-            }
-            scrollTimerRef.current = setTimeout(() => {
+
+    const updateScroll_debouncing = useMemo(() => {
+            return debounce(() => {
                 updateScroll()
-            }, 50)
-        };
+            }, 50);
+    }, [param]);
+
+
+    const handleScroll = () => {
+        updateScroll_debouncing();
+    };
+
     const addScrollEvent=()=>{
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
@@ -149,13 +140,16 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         beforeScrollHeight.current=scrollRef.current.scrollHeight;
     }
 
-
-    const updateEndpoint = () => {
-        const debouncedRequest = debounce(() => {
-            requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0});
+    //컴포넌트 랜더링과 상관없이 인스턴스를 유지하게 memo
+    const debouncedRequestFile = useMemo(() => {
+        return debounce(() => {
+            requestFile({ target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0 });
             console.log('엔드포인트 갱신');
         }, 1000);
-        debouncedRequest();
+    }, [param]);
+
+    const updateEndpoint = () => {
+        debouncedRequestFile();
     }
 
 
@@ -183,24 +177,21 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //--------------------------------------------------------------------------------------------------------------- 파일 요청 READ/RELOAD 함수
     const requestChatFileRead = (readPoint:number) => {
-        if (!data?.pages || endPointMap.get(param) > 0) {
-            requestFile({
-                target: 'groupMsg',
-                param: param,
-                requestFile: "READ",
-                nowLine: readPoint,
-            });
-        }
+        requestFile({
+            target: 'groupMsg',
+            param: param,
+            requestFile: "READ",
+            nowLine: readPoint,
+        });
     }
     const requestChatFileReload = (pageLength:number) => {
-        if (data?.pages) {
-            requestFile({
-                target: 'groupMsg',
-                param: param,
-                requestFile: "RELOAD",
-                nowLine: pageLength,
-            });
-        }
+        requestFile({
+            target: 'groupMsg',
+            param: param,
+            requestFile: "RELOAD",
+            nowLine: pageLength,
+        });
+
     }
     //--------------------------------------------------------------------------------------------------------------- 비동기식 함수 > WebSocket stomp를 받아 infiniteFetch
     //axios를 대신해서 웹소켓으로 받은 파일을 가공해줌
@@ -233,57 +224,34 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }
 
+    const getFileData = (pageParam:number) => {
+        if (pageParam===0) {
+            requestChatFileRead(pageParam)
+        } else {
+            requestChatFileReload(pageParam)
+        }
+
+        //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
+        return new Promise((res, rej) => {
+            const unsubscribe = store.subscribe(() => {
+                const {receiveMessage} = store.getState().stomp;
+                //아래 조건이 충족되어야만 값을 저장할 수 있음
+                if ((receiveMessage.state==="READ" && pageParam ===0) || (receiveMessage.state==="RELOAD" && pageParam>0)) {
+                    res(receiveMessage.message); // 값 반환
+                    unsubscribe(); // 구독 취소
+                }
+            });
+        }).then((res) => {
+            return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
+        }).catch(() => {
+            return [];
+        });
+    }
 
     async function fetchData({pageParam = 0}){
         try {
-            const getFileData = () => {
-                if (messageLength.current === -1) {
-                    requestChatFileRead(pageParam)
-                } else {
-                    requestChatFileReload(pageParam)
-                }
-
-                //Promise로 비동기식 처리, stomp가 바뀌면 res에 담아서 반환 > await으로 값이 나올때까지
-                return new Promise((res, rej) => {
-                    const unsubscribe = store.subscribe(() => {
-                        const {receiveMessage} = store.getState().stomp;
-                        if (receiveMessage) {
-                            res(receiveMessage.message); // 값 반환
-                            unsubscribe(); // 구독 취소
-                        }
-                    });
-                }).then((res) => {
-                    return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
-                }).catch(() => {
-                    return [];
-                });
-            }
-            const message = await getFileData();
-            // if (message.length === 0 && !isFetching) {
-            //     const debounceCount = debounce(() => {
-            //         const requestCount = fileLoadManagement()
-            //         if (requestCount < 10) return
-            //
-            //         fileLoadManagement(true);//count 초기화
-            //         messageLength.current = -1
-            //         refetch().then(() => {
-            //             //newMessage 비우기
-            //             if (!receiveNewMessage.data) return
-            //
-            //             queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-            //                 pages: data?.pages.slice(0, 1),
-            //                 pageParams: data?.pageParams.slice(0, 1)
-            //             }));
-            //         });
-            //
-            //     }, 500)
-            //     debounceCount()
-            // } else {
-            //     fileLoadManagement(true);//count 초기화
-            // }
-            const messageResult = receiveChatFile(message)
-            messageLength.current += messageResult.length;
-            return messageResult; // 처리된 결과 출력
+            const message = await getFileData(pageParam);
+            return receiveChatFile(message); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
@@ -320,9 +288,18 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const {data, hasNextPage, isFetching, isLoading, fetchNextPage, refetch} = useInfiniteQuery({
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
-        getNextPageParam: (messageList) => {
-            const containsValue = messageList[messageList.length - 1]?.chatUUID === "시작라인" || messageList[messageList.length - 1]?.chatUUID === '엔드포인트' || undefined
-            return containsValue ? undefined : messageLength.current;
+        //data.pages[data.pages.length-1][data.pages[data.pages.length-1].length-1]
+        getNextPageParam: (lastPage, allPages) => {
+            //마지막 채팅문자열을 가져와 시작라인인지 체크
+            if(lastPage[lastPage.length-1]){
+                const containValue = lastPage[lastPage.length-1].chatUUID ==="시작라인";
+                if(containValue){
+                    return undefined;
+                }
+            }
+            //받아온 갯수 리턴
+            return allPages.reduce((prev, current) => prev.concat(current)).length;
+
         }, //data의 값을 받아 처리할 수 있음
         initialPageParam: endPointMap.get(param),
         enabled: param === stomp.param,
@@ -346,24 +323,23 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //---------------------------------------------------------------------------------------------------------------옵저버를 활용한 스크롤 관리 > 관측 시 stomp RELOAD 요청
 
+    const refetchFile = useMemo(() => {
+            return throttleByAnimationFrame(() => {
+                if (!scrollRef.current) return
+                const {scrollHeight} = scrollRef.current;
+                setPrevScrollHeight(scrollHeight)
+                fetchNextPage()
+            })
+    },[param])
+
     const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
-            if (scrollRef.current) {
-                const {scrollHeight} = scrollRef.current;
-                //스크롤 업데이트 전 스크롤 전체 높이를 저장
-                setPrevScrollHeight(scrollHeight)
-                const refetchFile = throttleByAnimationFrame(() => {
-                    fetchNextPage()
-                    ;
-                });
-                refetchFile();
-            }
+            refetchFile();
         }
     });
 
     const messageList = useMemo(() => {
-
         if (data) {
             return [...data.pages.reduce((prev, current) => prev.concat(current))]
         }
@@ -383,18 +359,24 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     }, [stomp.receiveMessage.chatUUID])
 
 
+
+    //중복제거 함수
+    const removeDuplicate = (messageList:Message[]):Message[] =>{
+        const removeDuplicatesList = [...new Set(messageList.map((message)=> JSON.stringify(message)))]
+            .map((message) => JSON.parse(message)) as Message[];
+        if(messageList.length !== removeDuplicatesList.length){
+            queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                pages: data?.pages.slice(0, removeDuplicatesList.length),
+                pageParams: data?.pageParams.slice(0, removeDuplicatesList.length)
+            }));
+        }
+        return removeDuplicatesList;
+    }
+
     const newMessageList = useMemo(() => {
         if (receiveNewMessage.data) {
             //중복제거
-            const removeDuplicatesMessage = [...new Set(receiveNewMessage.data.pages.map((message)=> JSON.stringify(message)))]
-                .map((message) => JSON.parse(message)) as Message[];
-            if(receiveNewMessage.data.pages.length !== removeDuplicatesMessage.length){
-                queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                    pages: data?.pages.slice(0, removeDuplicatesMessage.length),
-                    pageParams: data?.pageParams.slice(0, removeDuplicatesMessage.length)
-                }));
-            }
-            return removeDuplicatesMessage;
+            return removeDuplicate(receiveNewMessage.data.pages)
         }
         return [];
     }, [receiveNewMessage.data])
@@ -402,11 +384,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
 
 
+
+
     useEffect(() => {
-        setPrevScrollHeight(null)
         updateAppPosition({target: target, param: param});
         if (endPointMap.get(param) > 0) {
-            messageLength.current = -1
+
             refetch().then(() => {
                 //newMessage 비우기
                 if(!receiveNewMessage.data) return
@@ -459,13 +442,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
 
     //날짜연산
-    const dateOprration = (beforeSendDate : string, AfterSendDate : string) => {
+    const dateOperation = (beforeSendDate : string, AfterSendDate : string) => {
         return ((+changeDateForm(AfterSendDate)) - (+changeDateForm(beforeSendDate)) < 300000)
     }
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList]
-        messageLength.current = connectList.length-1 //메시지 길이 세팅
 
         if (!isLoading) {
             return (
@@ -477,12 +459,12 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
                                                  $sameUser={(index !== 0 && connectList[index - 1]?.userEmail === message.userEmail) &&
-                                                     dateOprration(connectList[index-1].sendDate, message.sendDate)}>
+                                                     dateOperation(connectList[index-1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <hr data-content={"NEW"}></hr> :
                                     ((index && connectList[index - 1]?.userEmail === message.userEmail) &&
-                                    dateOprration(connectList[index-1].sendDate, message.sendDate) ? (
+                                    dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>{message.message}</MessageContentContainer2>

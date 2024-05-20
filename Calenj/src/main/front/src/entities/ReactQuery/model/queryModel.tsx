@@ -2,6 +2,8 @@
 import {QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {checkCookie,logout, getGroupList, getGroupDetail, getVoteList, getNoticeList, getFriendList, getEvents} from '../api/queryApi'
 import {GroupList_item, GroupDetail, VoteList, NoticeList, FriendList, FriendEvent} from "../api/types";
+import {endPointMap} from "../../../store/module/StompMiddleware";
+import {StompState} from "../../../store/module/StompReducer";
 
 
 export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";
