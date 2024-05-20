@@ -3,9 +3,10 @@ import {toggleCurrentMap} from "../../../../store/module/StompMiddleware";
 import {SubNavigationProps, updateSubClickState, updateSubParam} from "../../../../store/slice/SubNavigationSlice";
 import {useDispatch} from "react-redux";
 
-export const useSubNavState = (groupId:string, dispatch: ReturnType<typeof useDispatch>)
+export const useSubNavState = (groupId:string)
     :[toggleState:boolean,toggleHandler:()=>void, clickStateHandler:(target:string)=>void] =>{
     const [toggleState,setToggleState] = useState<boolean>(false)
+    const dispatch = useDispatch();
 
     useEffect(() => { //초기 값 세팅 - 토글 정보를 가져옴(투표/공지)
         if(!toggleCurrentMap.get(groupId)){

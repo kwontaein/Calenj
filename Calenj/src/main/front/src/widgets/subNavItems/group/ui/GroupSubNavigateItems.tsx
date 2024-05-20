@@ -12,8 +12,7 @@ import {useSubNavState} from '../model/useClickState'
 
 
 const groupSubNavigateItems:React.FC<SubNavProps> = ({groupId,subNavigateInfo}) =>{
-    const dispatch = useDispatch()
-    const [toggleState,toggleHandler,subItemsHandler] = useSubNavState(groupId,dispatch)
+    const [toggleState,toggleHandler,subItemsHandler] = useSubNavState(groupId)
 
     return(
         <SubNavigateContents_Container>

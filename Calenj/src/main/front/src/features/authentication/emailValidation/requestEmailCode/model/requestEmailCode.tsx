@@ -3,7 +3,9 @@ import {getExpirationTimeApi} from "../../codeValidTime";
 import {useDispatch} from "react-redux";
 import {updateToken} from "../../../../../store/slice/EmailValidationSlice";
 
-export const requestEmailCode = (email:string,isValid:boolean,updateValidState:()=>void, dispatch: ReturnType<typeof useDispatch>) =>{
+export const requestEmailCode = (email:string,isValid:boolean,updateValidState:()=>void) =>{
+    const dispatch = useDispatch();
+
 
     reqestEmailCodeApi(email,isValid).then((res)=>{
         if(res!==200) return;
