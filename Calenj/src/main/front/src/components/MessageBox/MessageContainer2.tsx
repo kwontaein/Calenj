@@ -31,8 +31,9 @@ import {useMessageScroll} from "./useMessageScroll";
 import {useChatFetching} from "./useChatFetching";
 
 interface groupDetailProps {
-    target: string;
-    param: string;
+    target: string,
+    param: string,
+    subScreenSize?:number,
 }
 
 interface Message {
@@ -50,7 +51,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const [content, setContent] = useState<string>('');
     const chatRef = useRef<HTMLInputElement>(null);// 채팅 input Ref
     const [newMsgLength,setNewMsgLength] = useState(0);
-    const {scrollRef,setPrevScrollHeight,updateReloadScroll}=useMessageScroll(param)
+    const {scrollRef,updateReloadScroll}=useMessageScroll(param)
     const [fetchData,receiveNewChat]=useChatFetching(param)
 
     const queryClient = useQueryClient();
@@ -96,8 +97,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const loadFile = useMemo(() => {
             return throttleByAnimationFrame(() => {
                 if (!scrollRef.current) return
-                const {scrollHeight} = scrollRef.current;
-                setPrevScrollHeight(scrollHeight)
                 fetchNextPage()
             })
     },[param])
@@ -182,9 +181,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         }
     }, [param])
 
-    useEffect(() => {
-        console.log(isLoading)
-    }, [isLoading]);
+
 
     //메시지 전송 함수
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
