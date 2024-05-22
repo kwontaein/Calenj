@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {PointColor, SubScreenColor} from "../../../../style/FormStyle";
-import {MiddleLine_Size} from "../../../../style/Navigation/ContentCompositionStyle";
+import {MiddleLine_Size} from "../../../../widgets/contentItems/group/ui/ContentCompositionStyle";
 interface CustomScreenProps{
     $mode:string,
     $width?:number,

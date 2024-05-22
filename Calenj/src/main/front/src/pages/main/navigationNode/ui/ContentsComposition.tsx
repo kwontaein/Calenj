@@ -12,7 +12,7 @@ import {
     EventTopBar_Container,
     EventTopBarContent, EventTopBarSubContent
 
-} from "../../../../style/Navigation/ContentCompositionStyle";
+} from "../../../../widgets/contentItems/group/ui/ContentCompositionStyle";
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/ReactQuery/model/queryModel";
 import {GroupDetail} from '../../../../entities/ReactQuery'
@@ -46,13 +46,13 @@ const ContentsComposition :React.FC<SubNavigateState & DispatchSubNavigationProp
 
         <FullScreen_div ref={contentRef}>
             <EventTopBar_Container>
-                {(target ==="group"&& groupDetail && !isLoading && param===subNavigateInfo.param) &&
+                {(target ==="group"&& groupDetail && !isLoading) &&
                 <GroupContentCompositionTopItem showUserListMutate={showUserListMutate} showUserList={showUserList}/>}
             </EventTopBar_Container>
 
 
             <ContentsScreen_div>
-                {(target ==="group" && groupDetail && !isLoading && param===subNavigateInfo.param) &&
+                {(target ==="group" && groupDetail && !isLoading) &&
                 <GroupContentCompositionItem param={param} contentSize={contentSize} showUserList={showUserList}/>}
             </ContentsScreen_div>
         </FullScreen_div>

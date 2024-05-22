@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { SubScreenColor, TextColor, TextColor2, ThemaColor3} from "../FormStyle";
-import {MiddleLine_Size} from "../Navigation/ContentCompositionStyle";
+import {MiddleLine_Size} from "../../widgets/contentItems/group/ui/ContentCompositionStyle";
 
 interface ScreenModeProps{
     $mode:string;

@@ -3,7 +3,7 @@ import {
     mapStateToSubNavigationProps,
 } from "../../../../store/slice/SubNavigationSlice";
 import {connect} from 'react-redux'
-import {EventTopBarContent, EventTopBarSubContent, EventTopBar_Container} from "../../../../style/Navigation/ContentCompositionStyle";
+import {EventTopBarContent, EventTopBarSubContent} from "./ContentCompositionStyle";
 import React from "react";
 import {FullScreen_div} from "../../../../style/FormStyle";
 

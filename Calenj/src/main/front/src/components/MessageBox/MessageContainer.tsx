@@ -381,7 +381,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             return [...data.pages.reduce((prev, current) => prev.concat(current))]
         }
         return [];
-    }, [data])
+    }, [data,param])
     //--------------------------------------------------------------------------------------------------------------- 새로 받은 메시지를 관리 SEDN 발생 시 infiniteQuery fetch
     //메시지를 받기위한 useEffect  => SEND감지 후 fetch()
     useEffect(() => {
@@ -410,7 +410,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
             return removeDuplicatesMessage;
         }
         return [];
-    }, [receiveNewMessage.data])
+    }, [receiveNewMessage.data,param])
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
 

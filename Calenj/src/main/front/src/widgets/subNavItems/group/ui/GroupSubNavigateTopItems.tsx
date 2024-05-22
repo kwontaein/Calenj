@@ -12,13 +12,13 @@ interface subNaviationTopProps{
     groupTitle:string,
 }
 export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>{
-    const [showEventSelecter,setShowEventSelecter] = useState<boolean>(false);
+    const [showEventSelector, setShowEventSelector] = useState<boolean>(false);
     const selectBox = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (selectBox.current && !selectBox.current.contains(e.target as Node)) {
-                setShowEventSelecter(false);
+                setShowEventSelector(false);
             }
         };
 
@@ -30,20 +30,20 @@ export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTi
 
 
     useEffect(() => {
-        setShowEventSelecter(false)
+        setShowEventSelector(false)
     }, [groupTitle]);
 
 
     return(
-        <SubNavigateTopBar_Container ref={selectBox} $isClick={showEventSelecter} >
+        <SubNavigateTopBar_Container ref={selectBox} $isClick={showEventSelector} >
 
             <SubNavigateTopBar_Content_Container>
-                <FullScreen_div onClick={()=>{setShowEventSelecter((prev)=>!prev)}} style={{display:"flex"}}>
+                <FullScreen_div onClick={()=>{setShowEventSelector((prev)=>!prev)}} style={{display:"flex"}}>
                     <SubNavigateTopBar_leftContent>
                         {groupTitle}
                     </SubNavigateTopBar_leftContent>
                     <SubNavigateTopBar_EventSelecter_Container>
-                        {showEventSelecter ?
+                        {showEventSelector ?
                             <SubNavigateTopBar_rightContent_item>
                                 ×
                             </SubNavigateTopBar_rightContent_item> :
@@ -53,7 +53,7 @@ export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTi
                     </SubNavigateTopBar_EventSelecter_Container>
                 </FullScreen_div>
             </SubNavigateTopBar_Content_Container>
-            {showEventSelecter && <SubNavigationSelectBox/>}
+            {showEventSelector && <SubNavigationSelectBox/>}
         </SubNavigateTopBar_Container>
 
     )
