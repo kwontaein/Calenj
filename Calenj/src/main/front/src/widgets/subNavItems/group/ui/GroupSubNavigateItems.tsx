@@ -1,7 +1,7 @@
 import {
     Hr_SubNavigation, ListToggleDiv, SubNavigateContents_Container,
 } from "./GroupSubNavigationStyle";
-import {connect, useDispatch} from "react-redux";
+import {connect} from "react-redux";
 import {
     mapDispatchToSubNavigationProps,
     mapStateToSubNavigationProps,

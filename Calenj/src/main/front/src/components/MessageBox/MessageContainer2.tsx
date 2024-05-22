@@ -22,16 +22,13 @@ import {
     ScrollableDiv,
 } from '../../style/ChatBoxStyle'
 import {RowFlexBox} from '../../style/FormStyle'
-import {endPointMap, scrollPointMap} from '../../store/module/StompMiddleware';
-import {AHMFormatV2, changeDateForm, debounce, shortAHMFormat, throttleByAnimationFrame} from '../../shared/lib'
+import {endPointMap} from '../../store/module/StompMiddleware';
+import {AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from '../../shared/lib'
 import {InfiniteData, useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
-import store from '../../store/store';
 import {useIntersect} from "../../shared/model";
 import {QUERY_CHATTING_KEY, QUERY_NEW_CAHT_KEY} from "../../entities/ReactQuery/model/queryModel";
 import {useMessageScroll} from "./useMessageScroll";
-import {useRequestChatFile} from "./useRequestChatFile";
-import {loadFileFilter} from "./loadFileFilter";
-
+import {useChatFetching} from "./useChatFetching";
 
 interface groupDetailProps {
     target: string;
@@ -52,53 +49,13 @@ type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
 const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPosition, sendStompMsg}) => {
     const [content, setContent] = useState<string>('');
     const chatRef = useRef<HTMLInputElement>(null);// 채팅 input Ref
-    const requestChatFile=useRequestChatFile(param)
     const [newMsgLength,setNewMsgLength] = useState(0);
+    const {scrollRef,setPrevScrollHeight,updateReloadScroll}=useMessageScroll(param)
+    const [fetchData,receiveNewChat]=useChatFetching(param)
+
     const queryClient = useQueryClient();
-    const {scrollRef,setPrevScrollHeight,updateReloadScroll}=useMessageScroll(param,newMsgLength)
 
 
-
-
-
-//--------------------------------------------------------------------------------------------------------------- 새로 받은 메시지 관련
-
-    const fetchNewChat = ({pageParam=0}) => {
-        //초기 세팅
-        if (!pageParam) {
-            const loadMsg: Message = {
-                chatUUID: "시작라인",
-                sendDate: "",
-                userEmail: "",
-                nickName: "",
-                messageType: "",
-                message: "",
-            };
-            return loadMsg
-        }
-        const {chatUUID, sendDate, userEmail, nickName, messageType, message} = stomp.receiveMessage
-        const loadMsg: Message = {
-            chatUUID: chatUUID,
-            sendDate: sendDate,
-            userEmail: userEmail,
-            nickName: nickName,
-            messageType: messageType,
-            message: message.toString(),
-        };
-        return loadMsg;
-    }
-
-    async function fetchData({pageParam = 0}){
-        try {
-            const message = await requestChatFile(pageParam);
-            return loadFileFilter(message); // 처리된 결과 출력
-        } catch (error) {
-            console.error(error); // 오류 처리
-            return [];
-        }
-    }
-
-//---------------------------------------------------------------------------------------------------------------
     const {data, hasNextPage, isFetching, isLoading, fetchNextPage, refetch} = useInfiniteQuery({
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: fetchData,
@@ -111,10 +68,10 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
                 }
             }
             //받아온 갯수 리턴
-            return allPages.reduce((prev, current) => prev.concat(current)).length;
+            return allPages.reduce((prev, current) => prev.concat(current)).length + newMsgLength;
 
         }, //data의 값을 받아 처리할 수 있음
-        initialPageParam: endPointMap.get(param),
+        initialPageParam:0,
         enabled: param === stomp.param,
         staleTime: Infinity,
         refetchInterval:false,
@@ -123,8 +80,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     const receiveNewMessage = useInfiniteQuery({
         queryKey: [QUERY_NEW_CAHT_KEY, param],
-        queryFn: fetchNewChat,
-        //arg1:
+        queryFn: receiveNewChat,
         getNextPageParam: (_lastPage, _allPages, _lastPageParam, allPageParams) => {
             return allPageParams.length;
         }, //data의 값을 받아 처리할 수 있음
@@ -137,7 +93,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     //---------------------------------------------------------------------------------------------------------------옵저버를 활용한 스크롤 관리 > 관측 시 stomp RELOAD 요청
 
-    const refetchFile = useMemo(() => {
+    const loadFile = useMemo(() => {
             return throttleByAnimationFrame(() => {
                 if (!scrollRef.current) return
                 const {scrollHeight} = scrollRef.current;
@@ -149,7 +105,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const topRef = useIntersect((entry, observer) => {
         if (hasNextPage && !isFetching) {
             observer.unobserve(entry.target);
-            refetchFile();
+            loadFile();
         }
     });
 
@@ -214,18 +170,21 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     useEffect(() => {
         updateAppPosition({target: target, param: param});
         if (endPointMap.get(param) > 0) {
-
             refetch().then(() => {
                 //newMessage 비우기
-                if(!receiveNewMessage.data) return
+                if (!receiveNewMessage.data) return
                 queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                     pages: data?.pages.slice(0, 1),
                     pageParams: data?.pageParams.slice(0, 1)
                 }));
+
             });
         }
     }, [param])
 
+    useEffect(() => {
+        console.log(isLoading)
+    }, [isLoading]);
 
     //메시지 전송 함수
     const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
@@ -246,7 +205,6 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList]
-
         if (!isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef} >

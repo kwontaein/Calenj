@@ -3,7 +3,7 @@ import {CheckCondition_Button} from '../../../style/FormStyle';
 import {createNotice} from '../model/createNotice';
 import {mapStateToNavigationProps, NavigateState} from "../../../store/slice/NavigatgionSlice";
 import {connect} from "react-redux";
-import {useFetchNoticeList} from "../../../store/ReactQuery/queryManagement";
+import {useFetchNoticeList} from "../../../entities/ReactQuery";
 
 interface NoticeButtonsProps {
     title: string;

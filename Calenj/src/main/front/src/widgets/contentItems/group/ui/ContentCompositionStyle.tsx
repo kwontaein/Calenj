@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
+import {SubNavigateTopBar_hegiht, SubNavigate_padding} from "../../../subNavItems/group/ui/GroupSubNavigationStyle";
 import {
     BackGroundColor,
     PointColor, SubScreenColor,
     TextColor,
     TextColor2,
     ThemaColor2,
-} from "../FormStyle";
-import {GroupUserList_Container_width} from '../Group/GroupUserListStyle'
+} from "../../../../style/FormStyle";
+import {GroupUserList_Container_width} from '../../../../style/Group/GroupUserListStyle'
 
 export const MiddleLine_Size = 3;
 interface ScreenModeProps{

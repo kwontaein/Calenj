@@ -8,7 +8,9 @@ interface Message {
     message: string,
 }
 
+//lib
 export const loadFileFilter = (messages: string[]) => {
+
 
     const messageEntries = Array.from(messages, (message: string) => {
         const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);

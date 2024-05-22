@@ -6,7 +6,7 @@ import {
     subNavigateBorder,
     SubNavigateTopBar_hegiht, SubNavigation_Container_width
 } from "../../../../widgets/subNavItems/group/ui/GroupSubNavigationStyle";
-import {MiddleLine_Size} from "../../../../style/Navigation/ContentCompositionStyle";
+import {MiddleLine_Size} from "../../../../widgets/contentItems/group/ui/ContentCompositionStyle";
 import {GroupList_Container_width} from "../../../../style/Group/GroupListStyle";
 import {contentSize} from './types'
 import {updateSubScreenHeightSize, updateSubScreenWidthtSize} from "../../../../store/slice/SubNavigationSlice";

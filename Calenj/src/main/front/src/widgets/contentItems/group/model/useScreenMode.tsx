@@ -6,8 +6,8 @@ import {SubNavigationProps} from "../../../../store/slice/SubNavigationSlice";
 import {contentSize} from "../../../../features/subScreen/controlSize/model/types";
 import {useDispatch} from "react-redux";
 
-export const useScreenMode = (contentSize:contentSize, subNavigateInfo : SubNavigationProps, showUserList:boolean):boolean =>{
-    const [screenRowFlex,setScreenRowFlex] = useState<boolean>(true); //true: flex == row
+export const useScreenMode = (param:string, contentSize:contentSize, subNavigateInfo : SubNavigationProps, showUserList:boolean):boolean =>{
+    const [screenRowFlex,setScreenRowFlex] = useState<boolean>(subNavigateInfo.mode==="row"); //true: flex == row
     const dispatch = useDispatch();
 
     //전체 스크린의 넓이에 따른 subScreenMode 전환
@@ -34,7 +34,8 @@ export const useScreenMode = (contentSize:contentSize, subNavigateInfo : SubNavi
             if(!screenRowFlex) return
             setScreenRowFlex(false);
         }
-    }, [contentSize.width,showUserList,subNavigateInfo.clickState]);
+    }, [param,contentSize.width,showUserList,subNavigateInfo.clickState]);
+
 
     useEffect(()=>{
         if(screenRowFlex){
