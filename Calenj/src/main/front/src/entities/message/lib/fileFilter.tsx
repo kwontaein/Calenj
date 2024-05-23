@@ -1,17 +1,6 @@
+import {Message} from "../../ReactQuery/api/types";
 
-interface Message {
-    chatUUID: string,
-    sendDate: string,
-    userEmail: string,
-    nickName: string,
-    messageType: string,
-    message: string,
-}
-
-//lib
-export const loadFileFilter = (messages: string[]) => {
-
-
+export const fileFilter = (messages: string[]) => {
     const messageEntries = Array.from(messages, (message: string) => {
         const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);
 

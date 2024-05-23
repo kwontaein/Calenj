@@ -1,14 +1,11 @@
 import {useEffect, useMemo, useRef, useState} from "react";
-import {debounce, throttleByAnimationFrame} from "../../shared/lib";
-import {endPointMap, scrollPointMap} from "../../store/module/StompMiddleware";
-import stompReducer, {requestFile} from "../../store/module/StompReducer";
+import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
+import {endPointMap, scrollPointMap} from "../../../../store/module/StompMiddleware";
+import stompReducer, {requestFile} from "../../../../store/module/StompReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from '../../store/store'
-import {useRequestChatFile} from "./useRequestChatFile";
-interface MessageScroll{
-    scrollRef:React.MutableRefObject<HTMLDivElement|null>,
-    updateReloadScroll:()=>void,
-}
+import {RootState} from '../../../../store/store'
+import {MessageScroll} from "./types";
+
 
 export const useMessageScroll = (param:string) : MessageScroll =>{
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
@@ -109,7 +106,6 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
     const updateScroll = () => {
         if (!scrollRef.current) return
 
-        console.log('업데이트 스크롤~')
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         const {userEmail} = stomp.receiveMessage
 
@@ -125,7 +121,7 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
         if(scrollHeight === clientHeight){
             updateEndpoint();
         }else if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight){
-            // scrollToBottom();
+            scrollToBottom();
         }
     }
 
@@ -143,5 +139,5 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
     }
 
-    return {scrollRef:scrollRef, updateReloadScroll:updateReloadScroll}
+    return {scrollRef, updateReloadScroll}
 }

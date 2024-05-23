@@ -1,4 +1,4 @@
-import {useConfirm} from "../../../shared/model";
+import {useConfirm} from "../../../../../shared/model";
 export const closeEmailValidModal = (onClose:()=>void):()=>void =>{
     return () => {
         const cancle = () => console.log("취소");

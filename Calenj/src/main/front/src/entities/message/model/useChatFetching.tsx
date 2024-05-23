@@ -1,34 +1,25 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../store/store";
-import {loadFileFilter} from "./loadFileFilter";
-import {useRequestChatFile} from "./useRequestChatFile";
+import {RootState} from "../../../store/store";
+import {useRequestChatFile} from "../api/useRequestChatFile";
 
+import {Message} from "../../ReactQuery/api/types";
+import {fileFilter} from "../lib/fileFilter";
 
-interface Message {
-    chatUUID: string,
-    sendDate: string,
-    userEmail: string,
-    nickName: string,
-    messageType: string,
-    message: string,
-}
 
 export const useChatFetching = (param:string):
     [({pageParam}: {pageParam?: number | undefined}) => Promise<Message[]>, ({pageParam}: {pageParam?: number | undefined}) => Message] => {
-
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const requestChatFile = useRequestChatFile(param)
 
     const fetchData = async ({pageParam = 0}) => {
         try {
             const message = await requestChatFile(pageParam);
-            return loadFileFilter(message); // 처리된 결과 출력
+            return fileFilter(message); // 처리된 결과 출력
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
         }
     }
-
 
     const receiveNewChat = ({pageParam = 0}) => {
         //초기 세팅
@@ -43,5 +34,6 @@ export const useChatFetching = (param:string):
         };
         return loadMsg;
     }
+
     return [fetchData,receiveNewChat]
 }

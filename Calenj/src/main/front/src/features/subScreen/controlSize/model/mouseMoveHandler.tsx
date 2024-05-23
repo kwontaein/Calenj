@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {MessageSend_Cotainer_height, ScrollMarginInline, ScrollMin_width} from "../../../../style/ChatBoxStyle";
+import {MessageSend_Cotainer_height, ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 import {GroupUserList_Container_width} from "../../../../style/Group/GroupUserListStyle";
 import {
     SubNavigate_padding,
