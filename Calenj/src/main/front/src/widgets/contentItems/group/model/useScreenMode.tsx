@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {GroupUserList_Container_width} from "../../../../style/Group/GroupUserListStyle";
-import {ScrollMarginInline, ScrollMin_width} from "../../../../style/ChatBoxStyle";
+import {ScrollMarginInline, ScrollMin_width} from "../../../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 import {updateSubScreenMode, updateSubScreenWidthtSize} from "../../../../store/slice/SubNavigationSlice";
 import {SubNavigationProps} from "../../../../store/slice/SubNavigationSlice";
 import {contentSize} from "../../../../features/subScreen/controlSize/model/types";

@@ -54,3 +54,19 @@ export interface FriendEvent {
     eventUserId: string
     ownUserId: string
 }
+
+export interface Message {
+    chatUUID: string,
+    sendDate: string,
+    userEmail: string,
+    nickName: string,
+    messageType: string,
+    message: string,
+}
+
+interface FetchDataParams {
+    pageParam?: number;
+}
+
+export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
+export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message

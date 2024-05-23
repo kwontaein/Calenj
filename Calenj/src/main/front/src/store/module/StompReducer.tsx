@@ -138,7 +138,7 @@ export const requestFile = (payload: { target: string, param: string, requestFil
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, param: string, message: string }) => ({
+export const sendStompMsg = (payload: { target: string, param: string, message: string , messageType:string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -237,6 +237,7 @@ const StompReducer = handleActions(
             target: action.payload.target,
             param: action.payload.param,
             message: action.payload.message,
+            messageType:action.payload.messageType,
         }),
 
         [RECEIVED_STOMP_MSG]: (state, action) => ({

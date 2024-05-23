@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "./FormStyle";
+import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
 
 interface CheckbeforSender {
     $sameUser: boolean,
@@ -13,11 +13,7 @@ export const ScrollMin_width = 350;
 export const ScrollMarginInline = 10;
 export const MessageSend_Cotainer_height = 50;
 
-export const MessageComponent_Container = styled.div`
-    width: 100%;
-    height: 100%;
-    background-color: ${ThemaColor2};
-`
+
 
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
@@ -112,21 +108,7 @@ export const MessageContainer2 = styled.div`
 `
 
 
-export const MessageSend_Input = styled.input`
-    background-color: ${ThemaColor3}60;
-    color: ${TextColor};
-    border-radius: 4px;
-    border: 1px solid ${TextColor2};
-    width: calc(100% - 5px);
-    height: 35px;
-    margin-inline: 5px;
-`
 
-
-export const MessageSend_Cotainer = styled.form`
-    height: ${MessageSend_Cotainer_height}px; //메시지 박스크기 50px
-    display: flex;
-`
 //채팅 endPoint선
 export const HR_ChatEndPoint = styled.hr`
     line-height: 1em;

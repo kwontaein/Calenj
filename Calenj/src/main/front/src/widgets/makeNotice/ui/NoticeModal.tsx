@@ -8,9 +8,9 @@ import {
     GroupNoticeModal_close_Btn,
     GroupNoticeTitle_Input,
     GroupNoticeModal_Textarea
-} from '../styles/NoticeModalStyle';
+} from './NoticeModalStyle';
 import {useConfirm} from '../../../shared/model'
-import {CreateBtn} from '../../../features/notice/ui/NoticeButtons';
+import {CreateBtn} from '../../../features/notice';
 
 interface ModalProps {
     onClose: () => void;

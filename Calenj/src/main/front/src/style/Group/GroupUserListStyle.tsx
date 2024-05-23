@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {ScrollMin_width} from "../ChatBoxStyle";
+import {ScrollMin_width} from "../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 import {ThemaColor3} from "../FormStyle";
 
 export const GroupUserList_Container_width = 200;

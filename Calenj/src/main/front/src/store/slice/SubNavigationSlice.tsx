@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from '../store'
 import {Dispatch} from 'redux';
-import {ScrollMin_width} from "../../style/ChatBoxStyle";
+import {ScrollMin_width} from "../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 
 
 

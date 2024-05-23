@@ -6,9 +6,8 @@ import {
     mapDispatchToSubNavigationProps,
     mapStateToSubNavigationProps,
 } from "../../../../store/slice/SubNavigationSlice";
-import {SubNavProps} from "../model/types";
 import {SubNavationButton} from '../../../../features/navgiation/subNavgation'
-import {useSubNavState} from '../model/useClickState'
+import {useSubNavState,SubNavProps} from '../../../../features/navgiation/subNavgation';
 
 
 const groupSubNavigateItems:React.FC<SubNavProps> = ({groupId,subNavigateInfo}) =>{

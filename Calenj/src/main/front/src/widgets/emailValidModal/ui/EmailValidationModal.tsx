@@ -2,7 +2,7 @@ import {Input, FormLable} from '../../../style/FormStyle';
 import {ChangeEvent, useState} from 'react';
 import '../../../style/Sign.scss'
 import {ComponentProps} from "../../../features/authentication/emailValidation/codeValidTime/model/types";
-import {closeEmailValidModal} from "../model/closeEmailValidModal";
+import {closeEmailValidModal} from "../../../features/authentication/emailValidation/requestEmailCode";
 import {CodeValidTimer} from "../../../features/authentication/emailValidation/codeValidTime";
 import {CheckEamilAuthCode} from "../../../features/authentication/emailValidation/checkAuthCode";
 //상위 컴포넌트의 props
