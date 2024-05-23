@@ -70,6 +70,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         //로딩된 이후엔 스크롤을 안 내려야함
         if (!scrollRef.current) return
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
+
         //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
         if(scrollPointMap.get(param) ===undefined){
             if (endPointMap.get(param) === 0){

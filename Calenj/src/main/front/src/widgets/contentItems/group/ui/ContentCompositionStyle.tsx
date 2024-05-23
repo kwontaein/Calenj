@@ -16,9 +16,18 @@ interface ScreenModeProps{
 }
 interface CustomScreenProps{
     $mode:string,
+    $clickState:boolean,
     $width?:number,
     $height?:number,
 }
+interface  CustomSubScreenProps{
+    $mode:string,
+    $screenRowFlex:boolean,
+    $absoluteWidth:number,
+    $width?:number,
+    $height?:number,
+}
+
 interface GroupUserListProps{
     $isClick:boolean,
 }
@@ -70,30 +79,23 @@ export const TransContentsScreen_div = styled.div<ScreenModeProps>`
     flex-direction: ${props => props.$screenRowFlex? "row" :"column"};
 `
 
-export const CustomScreen_MessageBox_Contaienr = styled.div.attrs<CustomScreenProps>(props => ({
-    style:{ width : props.$mode ==="column" && props.$width ? "100%" : `${100-(props.$width||0)}%`,
-            height: props.$mode ==="row" ? "100%" : `calc(100% - ${props.$height}px)`}
-}))``
+export const CustomScreen_MessageBox_Container = styled.div.attrs<CustomScreenProps>(props => ({
+    style:{ width : props.$clickState ?'100%' : props.$mode ==="column" ? "100%" : `${100-(props.$width||0)}%`,
+            height: props.$clickState ?'100%' : props.$mode ==="row" ? "100%" : `calc(100% - ${props.$height}px)`}
+}))`
+    position: relative;
+    margin-top: ${props=>!props.$clickState && props.$mode==="column" ? `${props.$height}px`:0};
+`
 
-export const CustomScreen_SubContent_Contaienr = styled.div.attrs<CustomScreenProps>(props => ({
-    style:{ width :props.$mode ==="column" ? "100%" :`${props.$width}%`,
-        height : props.$mode ==="row" ? "100%" : `${props.$height}px`}
+export const CustomScreen_SubContent_Container = styled.div.attrs<CustomSubScreenProps>(props => ({
+    style:{ width : props.$mode ==="row" ? `${props.$width}%`: `${props.$absoluteWidth}px`,
+        height :  props.$mode ==="row" ? "100%" : `${props.$height}px`}
 }))`
     display: flex;
-    flex-direction: ${[props => props.$mode]};
+    flex-direction: ${props => props.$mode};
+    position: ${props => props.$mode ==="row" ? "relative" : "absolute"};
 `
 
 
-
-export const CustomScreen_MiddleLine_div = styled.div<CustomScreenProps>`
-    width:  ${props => props.$mode ==="row" ? `${MiddleLine_Size}px` : "100%"};
-    height:  ${props => props.$mode ==="column" ? `${MiddleLine_Size}px` : "100%"};
-    background-color: ${SubScreenColor};
-    transition : background-color 0.3s ease;
-    cursor: ${props => props.$mode ==="row" ? "col-resize" : "row-resize"};
-    &:hover{
-        background-color: ${PointColor};
-    }
-`
 
 

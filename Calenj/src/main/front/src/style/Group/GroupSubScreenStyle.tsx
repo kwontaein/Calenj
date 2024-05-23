@@ -13,6 +13,8 @@ export const GroupSubScreen_Container = styled.div<ScreenModeProps>`
     width: ${props=>props.$mode ==="row"? `calc(100% - ${MiddleLine_Size}px)` : "100%"}; //middleLine을 제외한 크기
     height: ${props=>props.$mode ==="column"? `calc(100% - ${MiddleLine_Size}px)` : "100%"};
     background-color: ${SubScreenColor};
+    position: relative;
+
 `
 
 export const GroupSubScreenTop_Container = styled.div`

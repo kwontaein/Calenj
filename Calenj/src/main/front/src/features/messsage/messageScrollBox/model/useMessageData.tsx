@@ -50,10 +50,8 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
 
 
     useEffect(() => {
-        dispatch(updateAppPosition({target: target, param: param}));
-        if(stomp.param===param) return
+        if(stomp.param!==param) return
         if (endPointMap.get(param) > 0) {
-            console.log('삭제')
             scrollPointMap.delete(param)
             chatFile.refetch().then(() => {
                 //newMessage 비우기

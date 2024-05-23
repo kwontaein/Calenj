@@ -1,5 +1,5 @@
 //SubNavigation의 내용을 보여주는 컴포넌트
-import {connect} from 'react-redux'
+import {connect, useSelector} from 'react-redux'
 import {
     BoardOptionState,
     DispatchBoardOptionProps,
@@ -18,12 +18,13 @@ import Notice from "../Board/Notice/Notice";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
 import {BoardSearchMap,BoardParamMap} from '../../../store/module/StompMiddleware';
+import {RootState} from "../../../store/store";
 
 
 
 interface ContentsCompositionProps{
     showUserList:boolean,
-    subScreenWidth?:number;
+    subScreenWidth:number;
     subNavigateInfo: SubNavigationProps,
 }
 
@@ -35,7 +36,6 @@ const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOp
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false);
     const [search,setSearch] = useState<boolean>(false); //옵션 선택현황
     const selectBox = useRef<HTMLDivElement>(null);
-
 
     //subScreen이 변할 때마다 기존 세팅을 체크하여 그대로 세팅
     useEffect(() => {
@@ -112,10 +112,10 @@ const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOp
 
                 {subNavigateInfo.clickState === "투표" &&
                     <Vote groupId={subNavigateInfo.param}
-                          subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
+                          subWidth={subScreenWidth}/>}
                 {subNavigateInfo.clickState === "공지" &&
                     <Notice groupId={subNavigateInfo.param}
-                            subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
+                            subWidth={subScreenWidth}/>}
             </GroupSubScreenContent_Container>
         </GroupSubScreen_Container>
     )
