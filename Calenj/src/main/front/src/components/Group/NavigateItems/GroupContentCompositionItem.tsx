@@ -26,7 +26,7 @@ import {
     SubNavigateTopBar_hegiht, SubNavigation_Container_width
 } from "../../../style/Navigation/SubNavigationStyle";
 import {GroupList_Container_width} from "../../../style/Group/GroupListStyle";
-import GroupMsgBox from "../../MessageBox/components/GroupMsgBox";
+import GroupMsgBox from "../../MessageBox/MessageContainer";
 
 interface ContentCompotisionProps {
     param: string,

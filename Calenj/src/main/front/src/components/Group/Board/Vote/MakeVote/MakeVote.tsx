@@ -1,4 +1,4 @@
-import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {Modal_Background} from '../../../../../style/FormStyle';
 import '../../../../../style/ModalStyle.scss';
 import 'react-datepicker/dist/react-datepicker.css'
@@ -8,12 +8,7 @@ import {
     GroupVoteModal_Title,
     GroupVoteModal_TopContent_Container,
     MiniVote_Input,
-    VoteList_Container,
-    VoteListItem_Container,
-    VoteListItem_Content,
-    VoteListContent_Drop_Btn,
     ButtomContent_Containr,
-    VoteListEmptyText,
 } from "../../../../../style/Group/GroupVoteStyle";
 import {ModalProps, VoteContent} from "../../../../../features/vote/makeVote";
 import ListInput from "./ListInput";

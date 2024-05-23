@@ -112,6 +112,7 @@ public class EmailVerificationService {
             long validityInMilliseconds = (1000 * 60 * 5) + 4000; //5분 + 서버 통신시간 4초
             long expirationTime = System.currentTimeMillis() + validityInMilliseconds;
 
+            //이메일토큰과 유효시간 인증여부 저장
             validateDTO.setEmailToken(token);
             validateDTO.setExpirationTime(expirationTime);
             validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL); //코드 발급 이후엔 인증대기 상태

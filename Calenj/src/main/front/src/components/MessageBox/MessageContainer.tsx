@@ -1,5 +1,4 @@
-/*
-import {ChangeEvent, useEffect, useState, useRef, useMemo, useId} from "react";
+import {ChangeEvent, useEffect, useState, useRef, useMemo} from "react";
 import {connect} from "react-redux";
 import {
     DispatchStompProps,
@@ -18,7 +17,6 @@ import {
     MessageContentContainer,
     MessageContentContainer2,
     ScrollableDiv,
-    HR_ChatEndPoint,
     MessageSend_Cotainer,
     MessageSend_Input, MessageComponent_Container,
 } from '../../style/ChatBoxStyle'
@@ -40,6 +38,7 @@ import store from '../../store/store';
 import {useIntersect} from "../../shared/model";
 import {fileLoadManagement} from "../../features/messsage"
 import {QUERY_NEW_CAHT_KEY, QUERY_CHATTING_KEY} from "../../store/ReactQuery/queryManagement";
+import {groupDetailProps, Message} from "./types";
 
 
 type groupMsgProps = groupDetailProps & DispatchStompProps & StompData
@@ -54,7 +53,8 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
     const beforeScrollHeight = useRef<number>(); //이전 스크롤의 높이를 기억
 
     const queryClient = useQueryClient();
-    /!**작동순서 첫랜더링 :
+
+    /**작동순서 첫랜더링 :
      * 1. 컴파일 순에따라 data 가 enable옵션에따라 변경되니 [data]로 의존성을 지닌 messageList업데이트 , reciveNewMessage도 초기 세팅
      * 2. useEffect[param] 실행(Props param변경)
      * 3. endPointMap에따라 requestFileRead()호출 이 때 messageLength=0(캐싱 전일 경우)로 stomp dispatch실행
@@ -67,7 +67,7 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
      * 10. receiveNewMessage 로딩 시작 => fetchNewChat실행 (파일로드 이후 새로받은 메시지를 처리하는 infiniteQuery)
      * 11. 9번의 messageList갱신에 따라 RELOAD인지 체크 (4번과 같음)
      * 12. 스크롤 재세팅 (isLoading완료)
-     * **!/
+     * **/
 
 
         //---------------------------------------------------------------------------------------------------------------스크롤(endPoint 업데이트 관련) 및 메시지 SEND
@@ -520,4 +520,4 @@ const GroupMsgBox: React.FC<groupMsgProps> = ({target, param, stomp, updateAppPo
         </MessageComponent_Container>
     )
 }
-export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);*/
+export default connect(mapStateToStompProps, mapDispatchToStompProps)(GroupMsgBox);
