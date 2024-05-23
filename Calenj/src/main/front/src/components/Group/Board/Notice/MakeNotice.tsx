@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef ,useState} from 'react';
 import { CheckCondition_Button} from '../../../../style/FormStyle';
-import '../../../../style/ModalStyle.scss';
 import {jwtFilter} from '../../../../entities/authentication/jwt'
 import { useConfirm } from '../../../../shared/model'
 import {saveDBFormat} from '../../../../shared/lib'

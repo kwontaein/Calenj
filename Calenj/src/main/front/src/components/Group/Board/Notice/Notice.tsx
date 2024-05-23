@@ -17,7 +17,7 @@ import {BoardParamMap} from "../../../../store/module/StompMiddleware";
 import NoticeDetail from "./NoticeDetail";
 
 import {NoticeList} from "../../../../entities/ReactQuery";
-import {CreateNoticeModal} from "../../../../widgets/makeNotice";
+import {CreateNoticeModal} from "../../../../widgets/notice";
 
 
 interface SubScreenProps {
