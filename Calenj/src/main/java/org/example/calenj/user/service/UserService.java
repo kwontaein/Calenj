@@ -8,6 +8,7 @@ import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
+import org.example.calenj.global.config.RedisConfig;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
@@ -18,6 +19,7 @@ import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,9 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +44,8 @@ public class UserService {
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final FriendRepository friendRepository;
-
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RedisConfig redisConfig;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -229,4 +228,25 @@ public class UserService {
         String myUserId = userDetails.getUsername();
         userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
     }
+
+
+    /**
+     * 유저 토큰 저장
+     */
+    public void saveUserToken(String userId, String token) {
+        HashOperations<String, Object, Object> hashOps = redisConfig.redisTemplate().opsForHash();
+        Map<String, Object> userTokenMap = new HashMap<>();
+        userTokenMap.put("token", token);
+        hashOps.putAll("user:" + userId, userTokenMap);
+    }
+
+    /**
+     * 유저 토큰 조회
+     */
+    public String getUserToken(String userId) {
+        HashOperations<String, Object, Object> hashOps = redisConfig.redisTemplate().opsForHash();
+        Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
+        return (String) userTokenMap.get("token");
+    }
+
 }
