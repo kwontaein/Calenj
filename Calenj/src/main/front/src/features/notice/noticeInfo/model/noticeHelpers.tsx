@@ -1,5 +1,5 @@
 import {BoardParamMap} from "../../../../store/module/StompMiddleware";
-import {NoticeList} from "../../../../store/ReactQuery/queryInterface";
+import {NoticeList} from "../../../../entities/ReactQuery/index";
 import {changeDateForm} from '../../../../shared/lib';
 
 export const checkNoticeParam = (groupId: string, updateBoardParam: any) => {

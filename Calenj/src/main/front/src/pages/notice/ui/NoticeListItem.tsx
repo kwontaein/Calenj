@@ -4,7 +4,7 @@ import {
     GroupNoticeListView_Li
 } from "../../../style/Group/GroupNoticeStyle";
 import {AHMFormat, changeDateForm} from '../../../shared/lib';
-import {NoticeList} from "../../../store/ReactQuery/queryInterface";
+import {NoticeList} from "../../../entities/ReactQuery/index";
 import {MiniText} from '../../../style/FormStyle'
 
 interface NoticeListItemProps {

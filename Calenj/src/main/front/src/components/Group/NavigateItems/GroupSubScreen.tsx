@@ -1,5 +1,5 @@
 //SubNavigation의 내용을 보여주는 컴포넌트
-import {connect,useSelector} from 'react-redux'
+import {connect, useSelector} from 'react-redux'
 import {
     BoardOptionState,
     DispatchBoardOptionProps,
@@ -13,7 +13,7 @@ import {
     GroupSubScreenTop_Container,
     GroupSubScreenTopIcon_Container
 } from "../../../style/Group/GroupSubScreenStyle";
-import Vote from "../Board/Vote/VoteInfo/Vote";
+import Vote from "../Board/Vote/Vote";
 import {useEffect, useRef, useState} from "react";
 import SubScreenSelectBox from "./SubScreenSelectBox";
 import {BoardSearchMap, BoardParamMap} from '../../../store/module/StompMiddleware';
@@ -21,10 +21,9 @@ import {NoticeInfo} from "../../../pages/notice";
 import {RootState} from "../../../store/store";
 
 
-
-interface ContentsCompositionProps{
-    showUserList:boolean,
-    subScreenWidth?:number;
+interface ContentsCompositionProps {
+    showUserList: boolean,
+    subScreenWidth?: number;
     subNavigateInfo: SubNavigationProps,
 }
 
@@ -32,31 +31,37 @@ interface ContentsCompositionProps{
 type GroupSubScreenProps = BoardOptionState & DispatchBoardOptionProps & ContentsCompositionProps;
 
 
-const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOption,subScreenWidth, showUserList,updateBoardParam}) =>{
+const GroupSubScreen: React.FC<GroupSubScreenProps> = ({
+                                                           subNavigateInfo,
+                                                           boardOption,
+                                                           subScreenWidth,
+                                                           showUserList,
+                                                           updateBoardParam
+                                                       }) => {
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false);
-    const [search,setSearch] = useState<boolean>(false); //옵션 선택현황
+    const [search, setSearch] = useState<boolean>(false); //옵션 선택현황
     const selectBox = useRef<HTMLDivElement>(null);
 
 
     //subScreen이 변할 때마다 기존 세팅을 체크하여 그대로 세팅
     useEffect(() => {
-        if(subNavigateInfo.clickState!=="공지" && subNavigateInfo.clickState!=="투표") return
+        if (subNavigateInfo.clickState !== "공지" && subNavigateInfo.clickState !== "투표") return
 
-        const searchRegister = BoardSearchMap.get(subNavigateInfo.param+subNavigateInfo.clickState)
-        if(searchRegister){
+        const searchRegister = BoardSearchMap.get(subNavigateInfo.param + subNavigateInfo.clickState)
+        if (searchRegister) {
             setShowSelectBox(true)
-        }else{
+        } else {
             setShowSelectBox(false);
         }
-    }, [subNavigateInfo.param,subNavigateInfo.clickState]);
+    }, [subNavigateInfo.param, subNavigateInfo.clickState]);
 
     //검색 중일 때는 유지되도록 설정
-    const isSearching = (word:string)=>{
-        if(word!==''){
-            if(search) return;
+    const isSearching = (word: string) => {
+        if (word !== '') {
+            if (search) return;
             setSearch(true);
-        }else{
-            if(!search) return;
+        } else {
+            if (!search) return;
             setSearch(false)
         }
     }
@@ -65,32 +70,32 @@ const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOp
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (selectBox.current && !selectBox.current.contains(e.target as Node)) {
-                    setShowSelectBox(false);
+                setShowSelectBox(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        if(!showSelectBox || search){
+        if (!showSelectBox || search) {
             document.removeEventListener('mousedown', handleClickOutside);
         }
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [showSelectBox,search]);
+    }, [showSelectBox, search]);
 
-    const ExitBoardDetail =() =>{
-        if(subNavigateInfo.clickState==="공지") {
-            updateBoardParam({noticeParam:''});
+    const ExitBoardDetail = () => {
+        if (subNavigateInfo.clickState === "공지") {
+            updateBoardParam({noticeParam: ''});
             BoardParamMap.delete(`${subNavigateInfo.param}Notice`)
-        }else if(subNavigateInfo.clickState==="투표") {
-            updateBoardParam({voteParam:''});
+        } else if (subNavigateInfo.clickState === "투표") {
+            updateBoardParam({voteParam: ''});
             BoardParamMap.delete(`${subNavigateInfo.param}Vote`)
         }
 
 
     }
 // subNavigateInfo.clickState==="투표" ? boardOption.voteParam===""
-    return(
-            <GroupSubScreen_Container $mode={subNavigateInfo.mode}>
+    return (
+        <GroupSubScreen_Container $mode={subNavigateInfo.mode}>
             <GroupSubScreenTop_Container>
                 {subNavigateInfo.clickState}
                 <GroupSubScreenTopIcon_Container ref={selectBox}
@@ -111,11 +116,11 @@ const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOp
                 </GroupSubScreenTopIcon_Container>
 
             </GroupSubScreenTop_Container>
-                <GroupSubScreenContent_Container>
+            <GroupSubScreenContent_Container>
 
                 {subNavigateInfo.clickState === "투표" &&
                     <Vote groupId={subNavigateInfo.param}
-                          subWidth={subScreenWidth||subNavigateInfo.screenWidthSize}/>}
+                          subWidth={subScreenWidth || subNavigateInfo.screenWidthSize}/>}
                 {subNavigateInfo.clickState === "공지" &&
                     <NoticeInfo groupId={subNavigateInfo.param}
                                 subWidth={subScreenWidth || subNavigateInfo.screenWidthSize}/>}
