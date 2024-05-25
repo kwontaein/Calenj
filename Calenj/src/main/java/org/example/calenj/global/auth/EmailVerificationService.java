@@ -1,7 +1,6 @@
 package org.example.calenj.global.auth;
 
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.auth.dto.request.ValidateRequest;
 import org.example.calenj.global.auth.dto.response.ValidateResponse;
 import org.example.calenj.global.service.RedisService;
@@ -18,17 +17,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.example.calenj.global.auth.dto.response.ValidateResponse.sendState.*;
 
-@RequiredArgsConstructor
 @Service
 public class EmailVerificationService {
 
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RedisService redisService;
-
-    @Value("${spring.mail.username}")
     private final String setFrom;
 
+    private EmailVerificationService(UserRepository userRepository, JavaMailSender mailSender, RedisService redisService, @Value("${spring.mail.username}") String setFrom) {
+        this.redisService = redisService;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.setFrom = setFrom;
+    }
 
     private static final int MAX_RESEND_COUNT = 5;
     private static final int RESEND_COOL_DOWN_MINUTES = 30;
@@ -57,7 +59,7 @@ public class EmailVerificationService {
         String content = "방문해주셔서 감사합니다.<br><br>" +
                 "인증 번호는 " + authNumber + "입니다.<br>" +
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
-        
+
         redisService.saveVerificationCode(email, authNumber);
         //전송 상태 반환
         return mailSend(email, title, content, validateResponse);
@@ -93,7 +95,7 @@ public class EmailVerificationService {
         // Map 에서 code 값을 추출
         String verificationCode = (String) verificationData.get("code");
         if (verificationCode != null) {
-            return validateRequest.getCode() == verificationCode;
+            return validateRequest.getCode().equals(verificationCode);
         } else {
             return false;
         }
@@ -132,12 +134,7 @@ public class EmailVerificationService {
      */
     public boolean emailDuplicated(String email) {
         UserEntity user = userRepository.findByUserEmail(email).orElse(null);
-        //DB에 해당 이메일이 존재하지 않을경우
-        if (user == null) {
-            return true;
-        } else { //이메일 중복 시
-            return false;
-        }
+        return user == null;
     }
 
 

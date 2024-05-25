@@ -98,19 +98,7 @@ public class JwtTokenProvider {
     public JwtToken refreshAccessToken(String refreshToken) {
         String newAccessToken;
         String newRefreshToken;
-
-        long oneDay = 24 * Hours;
-        // 리프레시 토큰에서 클레임 추출
-        Claims claims = parseClaims(refreshToken);
-
-        // 리프레시 토큰 만료 기간 추출
-        Date expirationDate = claims.getExpiration();
-
-        Date now = new Date();
-
-        // 만료 시간과 현재 시간을 비교하여 남은 만료 기간 계산
-        long remainingTime = expirationDate.getTime() - now.getTime();
-
+        
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
         UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));

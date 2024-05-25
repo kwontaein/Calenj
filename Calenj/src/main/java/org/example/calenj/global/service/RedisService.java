@@ -66,5 +66,24 @@ public class RedisService {
         return duration != null ? duration.getSeconds() : -2;  // Duration이 null인 경우는 키가 존재하지 않을 때
     }
 
+    /**
+     * 유저 토큰 저장
+     */
+    public void saveUserToken(String userId, String token) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        Map<String, Object> userTokenMap = new HashMap<>();
+        userTokenMap.put("token", token);
+        hashOps.putAll("user:" + userId, userTokenMap);
+    }
+
+    /**
+     * 유저 토큰 조회
+     */
+    public String getUserToken(String userId) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
+        return (String) userTokenMap.get("token");
+    }
+
 
 }

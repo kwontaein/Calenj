@@ -67,23 +67,17 @@ public class UserService {
     public UserResponse selectUserInfo() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
-        if (user.isEmpty()) {
-            return null;
-        }
-
-        UserResponse userResponse = new UserResponse(user.get().getNickname(), user.get().getUserEmail(), user.get().getUserPhone(), user.get().getUserJoinDate());
-        return userResponse;
-
+        return user.map(userEntity -> new UserResponse(userEntity.getNickname(), userEntity.getUserEmail(), userEntity.getUserPhone(), userEntity.getUserJoinDate())).orElse(null);
     }
 
     /**
      * 로그인
      *
-     * @param accountid 저장할 유저 아이디
+     * @param accountId 저장할 유저 아이디
      * @param password  저장할 유저 비밀번호
      **/
     @Transactional
-    public ResponseEntity<String> login(String accountid, String password) {
+    public ResponseEntity<String> login(String accountId, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
@@ -94,12 +88,12 @@ public class UserService {
         try {
             // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
             // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountId, password);
 
             try {
-                System.out.println(accountid);
+                System.out.println(accountId);
                 // 사용자 정보 반환
-                userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+                userEntity = userRepository.findByUserEmail(accountId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
@@ -108,9 +102,9 @@ public class UserService {
             // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            // Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
-            // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환됩니다.
-            // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
+            // Spring Security 는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
+            // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null 이 반환됩니다.
+            // 패스워드를 검증하기 위한 작업은 UserDetailsService 의 loadUserByUsername 메서드에서 이루어집니다.
 
             //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
 
@@ -163,7 +157,7 @@ public class UserService {
      **/
     @Transactional
     public void logout(UserDetails userDetails, HttpServletResponse response) {
-        //DB에서 리프레시 토큰 값 삭제
+        //DB 에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
         removeCookie(response, "accessToken");
@@ -229,24 +223,5 @@ public class UserService {
         userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
     }
 
-
-    /**
-     * 유저 토큰 저장
-     */
-    public void saveUserToken(String userId, String token) {
-        HashOperations<String, Object, Object> hashOps = redisConfig.redisTemplate().opsForHash();
-        Map<String, Object> userTokenMap = new HashMap<>();
-        userTokenMap.put("token", token);
-        hashOps.putAll("user:" + userId, userTokenMap);
-    }
-
-    /**
-     * 유저 토큰 조회
-     */
-    public String getUserToken(String userId) {
-        HashOperations<String, Object, Object> hashOps = redisConfig.redisTemplate().opsForHash();
-        Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
-        return (String) userTokenMap.get("token");
-    }
 
 }
