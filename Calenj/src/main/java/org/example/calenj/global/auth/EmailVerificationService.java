@@ -27,7 +27,7 @@ public class EmailVerificationService {
     private final RedisService redisService;
 
     @Value("${spring.mail.username}")
-    private final String setFrom;
+    private String setFrom;
 
 
     private static final int MAX_RESEND_COUNT = 5;
