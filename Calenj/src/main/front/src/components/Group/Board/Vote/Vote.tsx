@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {changeDateForm, AHMFormat} from '../../../../shared/lib';
+import {AHMFormat, changeDateForm} from '../../../../shared/lib';
 import {MiniText, RowFlexBox} from '../../../../style/FormStyle'
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale 추가
@@ -11,7 +11,8 @@ import {
     GroupVoteList_Container,
     GroupVoteListContainer,
     GroupVoteListDivistion,
-    GroupVoteListView_Li, GroupVoterListTitle
+    GroupVoteListView_Li,
+    GroupVoterListTitle
 } from "../../../../style/Group/GroupVoteStyle";
 import {
     BoardOptionState,
@@ -71,16 +72,14 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
 
     function deadlineFilter(list: VoteList[], end: boolean): VoteList[] {
         let nowDate = new Date();
-        const newList = list.filter((li) => {
+        return list.filter((li) => {
             let endDate = changeDateForm(li.voteEndDate)//Date형식으로
             if (end) { //end :ture => 마감된 거 찾기
                 return endDate < nowDate;
             } else {
                 return endDate > nowDate;
             }
-        })
-
-        return newList;
+        });
     }
 
     const checkMyVoter = (countVoter: string[]): boolean => {
@@ -109,7 +108,6 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                     (boardOption.search_keyWord==='' ?
                                     <GroupVoteListView_Li key={vote.voteId}
                                           onClick={() =>{redirectDetail(vote.voteId)}}>
-                                    <div style={{width:"100%"}}>
                                         <GroupVoterListTitle $subScreenWidth={subWidth}>
                                             {vote.voteTitle}
                                         </GroupVoterListTitle>
@@ -123,12 +121,10 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                             </GroupVoteJoin_div>
                                         </RowFlexBox>
                                         <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
-                                    </div>
-                                </GroupVoteListView_Li>
+                                    </GroupVoteListView_Li>
                                    : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
                                     <GroupVoteListView_Li key={vote.voteId}
                                                           onClick={() =>{redirectDetail(vote.voteId)}}>
-                                        <div style={{width:"100%"}}>
                                             <GroupVoterListTitle $subScreenWidth={subWidth}>
                                                 {vote.voteTitle}
                                             </GroupVoterListTitle>
@@ -142,7 +138,6 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                                 </GroupVoteJoin_div>
                                             </RowFlexBox>
                                             <MiniText>{dayjs(changeDateForm(vote.voteEndDate)).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')} 마감</MiniText>
-                                        </div>
                                     </GroupVoteListView_Li>)
                                 )
                             ))}
@@ -159,7 +154,6 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                     <GroupVoteListView_Li key={vote.voteId}
                                               onClick={() =>{redirectDetail(vote.voteId)}}>
                                         <RowFlexBox>
-                                            <div>
                                                 {vote.voteTitle}
                                                 <RowFlexBox>
                                                     <GroupVoteJoin_div>
@@ -171,34 +165,30 @@ const Vote: React.FC<VoteProps> = ({ groupId,subWidth,boardOption,updateClickSta
                                                     </GroupVoteJoin_div>
                                                 </RowFlexBox>
                                                 <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
-                                            </div>
-                                        </RowFlexBox>
-                                </GroupVoteListView_Li>
-                                : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
-                                <GroupVoteListView_Li key={vote.voteId}
-                                           onClick={() =>{redirectDetail(vote.voteId)}}>
-                                        <RowFlexBox>
-                                            <div>
-                                                {vote.voteTitle}
-                                                <RowFlexBox>
-                                                    <GroupVoteJoin_div>
-                                                        {`${vote.countVoter.length}명 참여 `}
-                                                    </GroupVoteJoin_div>
-                                                    <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
-                                                    <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
-                                                        {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
-                                                    </GroupVoteJoin_div>
-                                                </RowFlexBox>
-                                                <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
-                                            </div>
                                         </RowFlexBox>
                                     </GroupVoteListView_Li>
-                                    )
-                                )
+                                    : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
+                                    <GroupVoteListView_Li key={vote.voteId}
+                                           onClick={() =>{redirectDetail(vote.voteId)}}>
+                                        <RowFlexBox>
+                                                {vote.voteTitle}
+                                                <RowFlexBox>
+                                                    <GroupVoteJoin_div>
+                                                        {`${vote.countVoter.length}명 참여 `}
+                                                    </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div style={{marginInline:'5px'}}> · </GroupVoteJoin_div>
+                                                    <GroupVoteJoin_div $join={checkMyVoter(vote.countVoter)}>
+                                                        {` ${checkMyVoter(vote.countVoter) ? '참여완료' : '미참여'}`}
+                                                    </GroupVoteJoin_div>
+                                                </RowFlexBox>
+                                                <MiniText>{AHMFormat(changeDateForm(vote.voteEndDate))} 마감</MiniText>
+                                        </RowFlexBox>
+                                    </GroupVoteListView_Li>
+                                    ))
                             ))}
-                        </div>
-                        }
-                    </GroupVoteListContainer>
+                    </div>
+                    }
+                </GroupVoteListContainer>
             }
 
             </GroupVoteList_Container>

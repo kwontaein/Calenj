@@ -110,7 +110,7 @@ export const SubScreenSelecter_Container =styled.div<OptionProps & SubScreenProp
     right: ${props=> props.$showUserList ? "215px" :"15px"}; //GroupUserList의 크기만큼 더함
     flex-direction: column;
     background-color: ${BackGroundColor};
-    position: absolute;
+    position: fixed;
     padding-block: 8px;
     padding-left: 8px;
     border-radius: 30px;
@@ -137,7 +137,7 @@ export const OptionStateText_Container = styled.div`
 
 
 
-export const SubScreenSerachItem_Input = styled.input`
+export const SubScreenSearchItem_Input = styled.input`
     display: flex;
     position: absolute;
     top: 15px;

@@ -39,7 +39,7 @@ const GroupContentCompositionItem : React.FC<SubNavigateState & DispatchSubNavig
 
     return(
         param ===subNavigateInfo.param &&
-            <FullScreen_div style={{display:"flex", flexDirection:"row"}}>
+            <FullScreen_div style={{display:"flex"}}>
                     <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showUserList={showUserList}>
                         <CustomScreen_MessageBox_Container $clickState={subNavigateInfo.clickState===""}
                                                            $mode={subNavigateInfo.mode}
@@ -53,7 +53,6 @@ const GroupContentCompositionItem : React.FC<SubNavigateState & DispatchSubNavig
                         {subNavigateInfo.clickState !=="" &&
                         <CustomScreen_SubContent_Container $screenRowFlex={screenRowFlex}
                                                            $mode={subNavigateInfo.mode}
-                                                           $absoluteWidth={showUserList ?contentSize.width-GroupUserList_Container_width :contentSize.width}
                                                            $height={subNavigateInfo.screenHeightSize}
                                                            $width={showUserList ?
                                                                subNavigateInfo.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:

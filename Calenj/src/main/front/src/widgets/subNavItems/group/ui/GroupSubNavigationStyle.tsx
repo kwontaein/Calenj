@@ -19,7 +19,7 @@ export const SubNavigation_Container = styled.div`
     min-width: ${SubNavigation_Container_width}px;
     height: 100%;
     background-color: ${ThemaColor3};
-    z-index: 0;
+
 `
 
 export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
@@ -112,8 +112,7 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
         color: ${props => props.$isClick ? TextColor : TextColor2};
     }
 
-    transition: background-color 0.3s ease;
-    transition: color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 
     &:hover {
         background-color: ${BackGroundColor};
@@ -133,7 +132,7 @@ export const Hr_SubNavigation = styled.hr`
     margin: 10px;
     height: 2px;
     background-color: ${ThemaColor2};
-    border: 0px;
+    border: 0;
     border-radius: 10px;
 `
 

@@ -14,7 +14,7 @@ import {
 } from "../../../../store/slice/BoardOptionSlice";
 import {connect} from "react-redux";
 import {BoardParamMap} from "../../../../store/module/StompMiddleware";
-import NoticeDetail from "./NoticeDetail";
+import NoticeDetailView from "./NoticeDetail";
 
 import {NoticeList} from "../../../../entities/ReactQuery";
 import {CreateNoticeModal} from "../../../../widgets/notice";
@@ -102,7 +102,7 @@ const Notice: React.FC<NoticeProps> = ({groupId, subWidth, boardOption, updateCl
                     }
                 </div>
                 :
-                <NoticeDetail noticeId={boardOption.noticeParam} subWidth={subWidth}/>
+                <NoticeDetailView noticeId={boardOption.noticeParam} subWidth={subWidth}/>
             }
         </GroupNoticeList_Container>
     )

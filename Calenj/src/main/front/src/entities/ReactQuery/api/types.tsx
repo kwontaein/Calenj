@@ -15,7 +15,7 @@ export interface GroupDetail {
     groupId: string;
     groupTitle: string;
     groupCreated: string;
-    groupCreater: string;
+    groupCreator: string;
     members: groupMembers[];
 }
 
@@ -23,7 +23,7 @@ export interface VoteList {
     voteId: string;
     myId: string;
     countVoter: string[];
-    voteCreater: string;
+    voteCreator: string;
     voteTitle: string;
     voteCreated: string;
     voteEndDate: string;
@@ -33,9 +33,19 @@ export interface NoticeList{
     noticeId : string;
     noticeTitle : string;
     noticeContent : string;
-    noticeCreater : string;
+    noticeCreator : string;
     noticeCreated : string;
 }
+
+export interface NoticeDetail {
+    groupId: string;
+    noticeContent : string;
+    noticeCreated: string;
+    noticeCreator: string;
+    noticeWatcher:string[];
+    noticeTitle:string;
+}
+
 
 export interface FriendList {
     friendId: string;

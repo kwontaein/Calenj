@@ -25,7 +25,6 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
     const [fetchData,receiveNewChat]=useChatFetching(param)
     const stomp = useSelector((state:RootState)=>state.stomp);
     const queryClient = useQueryClient();
-    const dispatch = useDispatch()
 
     const chatFile = useChatFileInfinite(param,newMsgLength,stomp,fetchData)
     const newChat = useReceiveChatInfinite(param,stomp,receiveNewChat)

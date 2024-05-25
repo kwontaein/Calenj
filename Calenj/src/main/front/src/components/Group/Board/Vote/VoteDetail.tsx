@@ -32,7 +32,7 @@ interface voteChoiceResponse{
 }
 
 interface VoteDetails{
-    voteCreater : string;
+    voteCreator : string;
     voteTitle : string;
     voteCreated:string;
     voteEndDate:string;
@@ -140,9 +140,9 @@ const VoteDetail:React.FC<VoteListProps>=({voteId})=>{
         setDbMyVoter(userVoter.includes(true)) //내가 투표한게 있는지 있으면 true
       
     }
-    const checkCreater=()=>{
+    const checkCreator=()=>{
         const userEmail=localStorage.getItem('userId')
-        return detail?.voteCreater===userEmail
+        return detail?.voteCreator===userEmail
     }
 
 
@@ -214,7 +214,7 @@ const VoteDetail:React.FC<VoteListProps>=({voteId})=>{
                                 }
                                 {result.voter.map((voterUser, index) => (
                                     <RowFlexBox key={index}>
-                                        {checkCreater()&&
+                                        {checkCreator()&&
                                             <MyVoteIcon>
                                                 나
                                             </MyVoteIcon>
@@ -246,9 +246,9 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
         setVoteComplete(participation);
     },[])
 
-    const checkCreater=()=>{
+    const checkCreator=()=>{
         const userEmail=localStorage.getItem('userId')
-        return detail.voteCreater===userEmail
+        return detail.voteCreator===userEmail
     }
     //이전에 투표한 상태라면 재투표가능 styled를 변경하기 위해 쓰는 함수
     const checkVoteBefore =()=>{
@@ -335,14 +335,13 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
             ))}
         </VoteContentList_Container>
         
-        <div style={{width:'100%'}}>
         {!voteEnd &&
             <RowFlexBox>
-            <TrasformButton $isCreater={checkCreater()&&(detail.countVoter.length>0)} $ableClick={checkVoteBefore()} onClick={postVote}>
+            <TrasformButton $isCreator={checkCreator()&&(detail.countVoter.length>0)} $ableClick={checkVoteBefore()} onClick={postVote}>
                 {participation&&votecomplete ? '다시 투표하기':'투표 하기'}
             </TrasformButton>
-            {checkCreater() &&detail.countVoter.length>0 &&  
-            <TrasformButton $isCreater={checkCreater()}
+            {checkCreator() &&detail.countVoter.length>0 &&
+            <TrasformButton $isCreator={checkCreator()}
                             $ableClick={(detail.countVoter.length>0)}
                             style={{marginLeft:'1vw'}}
                             onClick={earlyVoteEnd}>
@@ -350,8 +349,7 @@ const VoteContent:React.FC<VoteDetailProps> =({voteId, detail,voteChoiceResponse
             </TrasformButton>}
             </RowFlexBox>
         }   
-        </div>
-      
+
         {(detail.countVoter.length>0||voteEnd) && 
         <RowFlexBox style={{width:'100%',marginTop:'3vw', fontSize:'14px', display:"flex", alignItems:"center"}}>
             <div style={{fontSize: "12px"}}>{detail.countVoter.length}명 참여</div>

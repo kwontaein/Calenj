@@ -14,7 +14,7 @@ public class GroupResponse {
     private UUID groupId;
     private String groupTitle;
     private String groupCreated;
-    private String groupCreater;
+    private String groupCreator;
 
     //jpa의 jpql은 DTO를 통해 조회할 경우 생성자를 생성해줘야 함
     public GroupResponse(UUID groupId, String groupTitle) {

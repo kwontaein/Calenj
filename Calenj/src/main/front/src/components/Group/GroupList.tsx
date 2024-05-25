@@ -13,7 +13,7 @@ import {
     GroupTitleView_Container,
     GroupTitleViewTail,
     GroupTitleViewContent,
-    GroupListContent_Container, GroupListUserView_width,
+    GroupListContent_Container,
 } from '../../style/Group/GroupListStyle';
 import {endPointMap} from '../../store/module/StompMiddleware'
 import {connect} from 'react-redux'
@@ -62,8 +62,7 @@ const GroupList: React.FC<StompData & GroupListByNavigationProps> = ({stomp, red
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
-                    <GroupListUserView_width/>
-                    <GroupListContent_Container $isEnter={titleView!==null}>
+                    <GroupListContent_Container>
                         <Btn_CalenJ_Icon/>
                         <GroupList_HR/>
                         {groupListState.data.map((group:GroupList_item) => (

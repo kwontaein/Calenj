@@ -1,3 +1,3 @@
 export {useEmailValideAbleCheck} from './model/useEmailValideAbleCheck'
-export {requestEmailCode} from './model/requestEmailCode'
+export {useRequestEmailCode} from './model/useRequestEmailCode'
 export {closeEmailValidModal} from './model/closeEmailValidModal'

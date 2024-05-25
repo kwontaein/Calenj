@@ -108,8 +108,7 @@ const GroupSubScreen : React.FC<GroupSubScreenProps> = ({subNavigateInfo,boardOp
                 </GroupSubScreenTopIcon_Container>
 
             </GroupSubScreenTop_Container>
-                <GroupSubScreenContent_Container>
-
+            <GroupSubScreenContent_Container>
                 {subNavigateInfo.clickState === "투표" &&
                     <Vote groupId={subNavigateInfo.param}
                           subWidth={subScreenWidth}/>}

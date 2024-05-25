@@ -23,7 +23,6 @@ interface CustomScreenProps{
 interface  CustomSubScreenProps{
     $mode:string,
     $screenRowFlex:boolean,
-    $absoluteWidth:number,
     $width?:number,
     $height?:number,
 }
@@ -72,6 +71,7 @@ export const ContentsScreen_div = styled.div`
     display: flex;
     flex-direction: row;
 `
+
 export const TransContentsScreen_div = styled.div<ScreenModeProps>`
     width:${props=>props.$showUserList? `calc(100% - ${GroupUserList_Container_width}px)`: `100%`};
     height: 100%;
@@ -83,17 +83,17 @@ export const CustomScreen_MessageBox_Container = styled.div.attrs<CustomScreenPr
     style:{ width : props.$clickState ?'100%' : props.$mode ==="column" ? "100%" : `${100-(props.$width||0)}%`,
             height: props.$clickState ?'100%' : props.$mode ==="row" ? "100%" : `calc(100% - ${props.$height}px)`}
 }))`
-    position: relative;
-    margin-top: ${props=>!props.$clickState && props.$mode==="column" ? `${props.$height}px`:0};
+    order: ${props=>props.$mode==="row" ? 0 : 1};
 `
 
 export const CustomScreen_SubContent_Container = styled.div.attrs<CustomSubScreenProps>(props => ({
-    style:{ width : props.$mode ==="row" ? `${props.$width}%`: `${props.$absoluteWidth}px`,
+    style:{ width : props.$mode ==="column" ? "100%" :`${props.$width}%`,
         height :  props.$mode ==="row" ? "100%" : `${props.$height}px`}
 }))`
+    
     display: flex;
     flex-direction: ${props => props.$mode};
-    position: ${props => props.$mode ==="row" ? "relative" : "absolute"};
+    order: ${props=>props.$mode==="row" ? 1 : 0};
 `
 
 

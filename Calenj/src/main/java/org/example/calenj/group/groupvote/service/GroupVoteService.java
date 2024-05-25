@@ -32,7 +32,7 @@ public class GroupVoteService {
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
-                .voteCreater(userDetails.getUsername())
+                .voteCreator(userDetails.getUsername())
                 .voteTitle(request.getVoteTitle())
                 .voteCreated(request.getVoteCreated())
                 .voteEndDate(request.getVoteEndDate())
