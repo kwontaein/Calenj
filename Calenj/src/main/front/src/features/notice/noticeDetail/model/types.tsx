@@ -2,7 +2,7 @@ export interface NoticeDetails {
     groupId: string;
     noticeContent: string;
     noticeCreated: string;
-    noticeCreater: string;
+    noticeCreator: string;
     noticeWatcher: string[];
     noticeTitle: string;
 }

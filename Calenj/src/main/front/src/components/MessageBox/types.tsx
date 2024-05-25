@@ -19,7 +19,7 @@ export interface voteChoiceResponse {
 
 export interface VoteDetails {
     voteChoiceResponse: voteChoiceResponse[];
-    voteCreater: string;
+    voteCreator: string;
     voteTitle: string;
     voteCreated: string;
     voteWatcher: number;
