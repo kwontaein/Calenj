@@ -18,29 +18,29 @@ public class GroupNoticeResponse {
     private String noticeCreated;
     private String noticeTitle;
     private String noticeContent;
-    private String noticeCreater;
+    private String noticeCreator;
     private List<String> noticeWatcher;
 
-    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated) {
+    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreator, String noticeCreated) {
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
-        this.noticeCreater = noticeCreater;
+        this.noticeCreator = noticeCreator;
         this.noticeCreated = noticeCreated;
         this.noticeId = noticeId;
     }
 
 
-    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreater, String noticeCreated, List<String> noticeWatcher) {
+    public GroupNoticeResponse(UUID noticeId, String noticeTitle, String noticeContent, String noticeCreator, String noticeCreated, List<String> noticeWatcher) {
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
-        this.noticeCreater = noticeCreater;
+        this.noticeCreator = noticeCreator;
         this.noticeCreated = noticeCreated;
         this.noticeWatcher = noticeWatcher;
         this.noticeId = noticeId;
     }
 
 
-    //noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreater, gn.noticeCreated
+    //noticeTitle, gn.noticeContent, gn.noticeWatcher, gn.noticeCreator, gn.noticeCreated
 
 
 }

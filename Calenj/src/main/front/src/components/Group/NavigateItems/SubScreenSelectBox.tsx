@@ -10,7 +10,7 @@ import {
     SubScreenIcon_Container,
     SubScreenOption_Cotainer,
     SubScreenSelecter_Container,
-    SubScreenSerachItem_Input
+    SubScreenSearchItem_Input
 } from "../../../style/Group/SubScreenSelcetBoxStyle";
 import React, {useEffect, useState,useRef} from "react";
 import {BoardFilterMap, BoardSearchMap} from '../../../store/module/StompMiddleware';
@@ -112,7 +112,7 @@ const SubScreenSelectBox:React.FC<SelectBoxProps> =({groupId,subScreenState, sho
                     <SubScreenOption_Cotainer $option={boardOption.clickState}>
 
                         {boardOption.clickState ==="filter" && <OptionStateText_Container>필터 설정</OptionStateText_Container>}
-                        {boardOption.clickState ==="search" && <SubScreenSerachItem_Input ref={searchRef}
+                        {boardOption.clickState ==="search" && <SubScreenSearchItem_Input ref={searchRef}
                                                                                           onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setSearchWord(e.target.value)}}/>}
 
                         {(subScreenState!=="공지") && (boardOption.clickState ==="" ||boardOption.clickState !=="search")  &&

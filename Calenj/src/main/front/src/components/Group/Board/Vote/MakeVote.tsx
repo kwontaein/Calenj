@@ -2,7 +2,6 @@ import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 
 import {
     Modal_Background, CheckCondition_Button, TextColor, ThemaColor2, ThemaColor3,
 } from '../../../../style/FormStyle';
-import '../../../../style/ModalStyle.scss';
 import axios, {AxiosError} from 'axios';
 import {jwtFilter} from '../../../../entities/authentication/jwt'
 import {useConfirm} from "../../../../shared/model";

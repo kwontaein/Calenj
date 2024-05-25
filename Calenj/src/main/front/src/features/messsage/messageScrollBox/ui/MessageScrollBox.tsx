@@ -19,8 +19,8 @@ import {Message} from "../../../../entities/ReactQuery"
 export const MessageScrollBox:React.FC =()=>{
     const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
     const {param} = useSelector((state:RootState)=>state.subNavigateInfo)
-    const {scrollRef,updateReloadScroll}=useMessageScroll(param)
-    const {messageList,newMessageList,chatFile} = useMessageData(param,navigate,updateReloadScroll)
+    const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
+    const scrollRef =useMessageScroll(param,messageList)
 
     const loadFile = useMemo(() => {
         return throttleByAnimationFrame(() => {

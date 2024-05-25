@@ -4,24 +4,17 @@ import {jwtFilter} from '../../../../entities/authentication/jwt'
 import DetailTop from '../DetailTop'
 import {NoticeDetailContainer, NoticeDetailContent_Container} from "../../../../style/Group/GroupNoticeStyle";
 import {FullScreen_div} from "../../../../style/FormStyle";
+import {NoticeDetail} from '../../../../entities/ReactQuery'
 
 
-interface NoticeDetails {
-    groupId: string;
-    noticeContent : string;  
-    noticeCreated: string;
-    noticeCreater: string;   
-    noticeWatcher:string[];
-    noticeTitle:string;
-}
 
 interface NoticeListProps{
     noticeId:string,
     subWidth:number,
 }
 
-const NoticeDetail:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
-    const [detail, setDetail] = useState<NoticeDetails | null>(null);
+const NoticeDetailView:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
+    const [detail, setDetail] = useState<NoticeDetail | null>(null);
 
 
     function getNoticeDetail (){
@@ -64,4 +57,4 @@ const NoticeDetail:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
         </NoticeDetailContainer>
     )
 }
-export default NoticeDetail
+export default NoticeDetailView

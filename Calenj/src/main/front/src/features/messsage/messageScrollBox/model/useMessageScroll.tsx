@@ -1,13 +1,13 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
 import {endPointMap, scrollPointMap} from "../../../../store/module/StompMiddleware";
-import stompReducer, {requestFile} from "../../../../store/module/StompReducer";
+import {requestFile} from "../../../../store/module/StompReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from '../../../../store/store'
-import {MessageScroll} from "./types";
+import {Message} from "../../../../entities/ReactQuery";
 
 
-export const useMessageScroll = (param:string) : MessageScroll =>{
+export const useMessageScroll = (param:string, messageList:Message[],) : React.MutableRefObject<HTMLDivElement|null> =>{
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
     const [prevScrollHeight , setPrevScrollHeight] = useState<number|null>(null);//RELOAD 시 이전 높이를 저장하는데 사용
     const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
@@ -21,10 +21,9 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
         return () => {
             if(beforeScrollTop.current===undefined) return
             //스크롤이 존재했는지 체크
-
             scrollPointMap.set(param,beforeScrollTop.current);
         }
-    }, [param])
+    }, [param,messageList])
 
     useEffect(() => {
       const {state} = stomp.receiveMessage
@@ -32,7 +31,7 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
             addScrollEvent()
         }
     }, [stomp.receiveMessage]);
-    
+
 
     const updateScroll_throttling = useMemo(() => {
         if(socketEvent) setSocketEvent(false)
@@ -71,20 +70,20 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
         //로딩된 이후엔 스크롤을 안 내려야함
         if (!scrollRef.current) return
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
-        
+
         //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
         if(scrollPointMap.get(param) ===undefined){
             if (endPointMap.get(param) === 0){
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 scrollPointMap.set(param, scrollRef.current.scrollHeight)
             }else{
-                ///subScreen이 켜질 때도 재랜더링 취급이기 때문에 세팅해줘야함
                 const scrollDiv = scrollRef.current;
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
                     const {bottom} = targetElement.getBoundingClientRect();
-                    scrollRef.current.scrollTop += bottom - 300;
-                    scrollPointMap.set(param, scrollRef.current.scrollTop+ bottom - 300)
+                    scrollRef.current.scrollTop = bottom - 300 ;
+                    scrollPointMap.set(param, bottom - 300)
+
                 }
             }
         }
@@ -114,7 +113,6 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
         if(userEmail === localStorage.getItem('userId') && socketEvent){
             scrollToBottom();
         }
-
         if(endPointMap.get(param) ===0) return;
 
         //스크롤이 존재하지 않으면
@@ -132,12 +130,17 @@ export const useMessageScroll = (param:string) : MessageScroll =>{
     }, [stomp.nowLine]);
 
 
-    //원하는 타이밍에 정확히 세팅하려면 메시지가 세팅이 완료된 후 함수를 호출해야함
-    const updateReloadScroll = () =>{
-        if(!scrollRef.current || !prevScrollHeight) return
-        //저장한 이전높이인 prev만큼 빼줌
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
-    }
 
-    return {scrollRef, updateReloadScroll}
+    useEffect(()=>{
+        const {state} =stomp.receiveMessage
+        if(state!=="RELOAD") return
+        // //저장한 이전높이인 prev만큼 빼줌
+        if(!scrollRef.current || !prevScrollHeight) return;
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
+            setPrevScrollHeight(null)
+    },[messageList])
+    //원하는 타이밍에 정확히 세팅하려면 메시지가 세팅이 완료된 후 함수를 호출해야함
+
+
+    return scrollRef
 }

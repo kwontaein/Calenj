@@ -10,9 +10,6 @@ interface navigatePram {
   $isClick : boolean
 }
 
-interface MouseEnterProps{
-    $isEnter: boolean;
-}
 
 
 export const GroupList_Container_width :number =72;
@@ -40,37 +37,29 @@ const shakeAnimation = keyframes`
  * 그룹 리스트 컨테이너
  */
 export const GroupList_Container = styled.div`
- width: 100%;
- height:100%;
- display: flex;
- flex-direction: row;
-`
-export const GroupListUserView_width = styled.div`
- width: ${GroupList_Container_width}px;
- height: 100%;
+    width: auto;
+    height:100%;
+    display: flex;
+    flex-direction: row;
 `
 
 /**
  * 그룹 리스트의 내용을 담는 컨테이너
  */
-export const GroupListContent_Container = styled.div<MouseEnterProps>`
- width:auto;
- display: flex;
- flex-direction: column;
- height: 100%; /* 스크롤 가능한 div의 최대 높이 설정 */
- width: ${GroupListContent_Container_width-GroupListContent_Container_marginInline}px;
- text-align: center;
- padding-inline: ${GroupListContent_Container_marginInline/2}px;
- overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
- position: absolute;
- z-index: ${props => props.$isEnter ? 1 : 0};
+export const GroupListContent_Container = styled.div`
+     width:auto;
+     display: flex;
+     flex-direction: column;
+     height: 100%; /* 스크롤 가능한 div의 최대 높이 설정 */
+     text-align: center;
+     padding-inline: ${GroupListContent_Container_marginInline/2}px;
+     overflow-y: auto; /* 수직 스크롤을 활성화합니다. */
 `
 
 /**
  * 그룹 리스트 구분 선
  */
 export const GroupList_HR = styled.div`
-    position: relative;
     outline: 0;
     border: 0;
     border-radius: 50px;
@@ -82,69 +71,66 @@ export const GroupList_HR = styled.div`
 `
 
 export const NavigateState = styled.div<navigatePram>`
- background-color : ${props=> props.$isClick ? TextColor: "transParent"};
- width: ${props=> props.$isClick ? 5.5: 5}px;
- height: ${props=> props.$isClick ? 40 : 5}px;
- border-radius: 50px;
- display: flex;
- position:absolute;
- left:-26%;
+     background-color : ${props=> props.$isClick ? TextColor: "transParent"};
+     width: ${props=> props.$isClick ? 5.5: 5}px;
+     height: ${props=> props.$isClick ? 40 : 5}px;
+     border-radius: 50px;
+     display: flex;
+     position:absolute;
+     left:-2px;
 `
 
 /**
  * 그룹 리스트의 아이콘
  */
 export const Li_GroupList_Item = styled.li<navigatePram>`
- height: 50px;
- width: 50px;
- position: relative;
- display: flex;
- align-items: center;
- justify-content: center;
- list-style: none;
- margin-block: 8px;
- background-color:  ${props => (props.$isClick  ? PointColor : ThemaColor3)};
- border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
- white-space: nowrap;
- cursor: pointer;
-    
- transition: background-color 0.3s ease;
- transition: border-radius 0.3s ease;
- &:hover {
-      ${NavigateState} {
-       transition: border-wsz2  w2radius 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* 변경된 부분 */
-       transition: height 0.3s ease;
-       border-radius: 20px;
-       height: ${props=>props.$isClick ? 40 : 18}px;
-       background-color: white;
-      }
-  background-color: ${PointColor};
-  border-radius: 19px;
- }
- font-weight: bold;
+     height: 50px;
+     width: 50px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     list-style: none;
+     margin-block: 8px;
+     background-color:  ${props => (props.$isClick  ? PointColor : ThemaColor3)};
+     border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
+     white-space: nowrap;
+     cursor: pointer;
+        
+     transition: background-color 0.3s ease,border-radius 0.3s ease;
+     &:hover {
+          ${NavigateState} {
+           transition: border-wsz2  w2radius 0.3s ease, height 0.3s ease, background-color 0.3s ease, height 0.3s ease; /* 변경된 부분 */
+           border-radius: 20px;
+           height: ${props=>props.$isClick ? 40 : 18}px;
+           background-color: white;
+          }
+      background-color: ${PointColor};
+      border-radius: 19px;
+     }
+     font-weight: bold;
 `
 
 
 
 /**그룹리스트별 알림 갯수 */
 export const SignOfMessageNum = styled.div<receivedMsg>`
- padding: 1px 6px;
- background-color:  ${props => (props.$existMessage  ? "#1AB5E6" : "transparent")};
- width: ${props => (props.$existMessage  ? "15px" : "")};
- height: ${props => (props.$existMessage  ? "15px" : "")};
- color: white;
- padding: ${props => (props.$existMessage  ? "3px 3px" : "")};
- border-radius: 50%;
- font-size: 12px;
- position: absolute;
- margin-top: 2.4em;
- left: 2.7em;
+     padding: 1px 6px;
+     background-color:  ${props => (props.$existMessage  ? "#1AB5E6" : "transparent")};
+     width: ${props => (props.$existMessage  ? "15px" : "")};
+     height: ${props => (props.$existMessage  ? "15px" : "")};
+     color: white;
+     padding: ${props => (props.$existMessage  ? "3px 3px" : "")};
+     border-radius: 50%;
+     font-size: 12px;
+     position: absolute;
+     margin-top: 2.4em;
+     left: 2.7em;
 `
 
 export const GroupListTitle = styled.div`
- width: 100%;
- overflow: hidden;
- font-size: 13px;
+     width: 100%;
+     overflow: hidden;
+     font-size: 13px;
 `
 
 /**
@@ -156,9 +142,8 @@ export const GroupTitleView_Container = styled.div`
     justify-content: center;
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: fixed;
     left: 4.5em;
-    z-index: 0; /* 상위 컴포넌트 위에 표시될 수 있도록 설정 */
 `
 export const GroupTitleViewTail = styled.div`
     background-color: black;
@@ -182,48 +167,46 @@ export const GroupTitleViewContent = styled.div`
 
 /**캘린제이 아이콘 */
 export const Btn_CalenJ_Icon = styled.button`
- appearance: none;
- list-style: none;
- background-color: ${ThemaColor3};
- height: 50px;
- width: 50px;
- border:0;
- border-radius: 50px;
- overflow: hidden;
- margin-block: 8px;
- background-image: url("/image/calenj_logo.png");
- background-size: 35px;
- background-position:center;
- background-repeat: no-repeat;
- 
- transition: background-color 0.3s ease;
- transition: border-radius 0.3s ease;
- &:hover {
-  background-color: ${PointColor};
-  border-radius: 10px;
-  animation: ${shakeAnimation} 0.3s ease-out 1s forwards;
- }
+     appearance: none;
+     list-style: none;
+     background-color: ${ThemaColor3};
+     height: 50px;
+     width: 50px;
+     border:0;
+     border-radius: 50px;
+     overflow: hidden;
+     margin-block: 8px;
+     background-image: url("/image/calenj_logo.png");
+     background-size: 35px;
+     background-position:center;
+     background-repeat: no-repeat;
+     
+     transition: background-color 0.3s ease,border-radius 0.3s ease;
+     &:hover {
+      background-color: ${PointColor};
+      border-radius: 10px;
+      animation: ${shakeAnimation} 0.3s ease-out 1s forwards;
+     }
 `
 
 
 /**그룹 생성 버튼*/
 export const Btn_MakeGroup = styled.button`
- appearance: none;
- list-style: none;
- background-color: ${ThemaColor3};
- height: 50px;
- width: 50px;
- border:0;
- border-radius: 50px;
- overflow: hidden;
- margin-block: 8px;
- font-size:20px;
- transition: background-color 0.3s ease;
- transition: border-radius 0.3s ease;
- &:hover {
-  background-color: rgb(51,153,51);
-  border-radius: 10px;
- }
+     appearance: none;
+     list-style: none;
+     background-color: ${ThemaColor3};
+     height: 50px;
+     width: 50px;
+     border:0;
+     border-radius: 50px;
+     overflow: hidden;
+     margin-block: 8px;
+     font-size:20px;
+     transition: background-color 0.3s ease,border-radius 0.3s ease;
+     &:hover {
+      background-color: rgb(51,153,51);
+      border-radius: 10px;
+     }
 `
 
 

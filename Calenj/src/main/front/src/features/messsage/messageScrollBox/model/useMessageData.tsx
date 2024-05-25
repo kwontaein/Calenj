@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/store";
 import {InfiniteData, UseInfiniteQueryResult, useQueryClient} from "@tanstack/react-query";
 import {Message} from '../../../../entities/ReactQuery'
-import {endPointMap} from "../../../../store/module/StompMiddleware";
+import {endPointMap, scrollPointMap} from "../../../../store/module/StompMiddleware";
 import {updateAppPosition} from "../../../../store/module/StompReducer";
 
 interface useMessageData{
@@ -20,12 +20,11 @@ interface useMessageData{
 
 
 
-export const useMessageData = (param:string,target:string, updateReloadScroll:()=>void) :useMessageData=>{
+export const useMessageData = (param:string,target:string) :useMessageData=>{
     const [newMsgLength,setNewMsgLength] = useState(0);
     const [fetchData,receiveNewChat]=useChatFetching(param)
-    const {stomp} = useSelector((state:RootState)=>state);
+    const stomp = useSelector((state:RootState)=>state.stomp);
     const queryClient = useQueryClient();
-    const dispatch = useDispatch()
 
     const chatFile = useChatFileInfinite(param,newMsgLength,stomp,fetchData)
     const newChat = useReceiveChatInfinite(param,stomp,receiveNewChat)
@@ -50,8 +49,9 @@ export const useMessageData = (param:string,target:string, updateReloadScroll:()
 
 
     useEffect(() => {
-        dispatch(updateAppPosition({target: target, param: param}));
+        if(stomp.param!==param) return
         if (endPointMap.get(param) > 0) {
+            scrollPointMap.delete(param)
             chatFile.refetch().then(() => {
                 //newMessage 비우기
                 if (!newChat.data) return
@@ -94,12 +94,6 @@ export const useMessageData = (param:string,target:string, updateReloadScroll:()
         return [];
     }, [chatFile.data])
 
-    useEffect(() => {
-        if (stomp.receiveMessage.state === "RELOAD") {
-            //메시지 파일을 받은 이후에 스크롤을 업데이트 할수있도록 옵저버를 통한 비동기처리
-            updateReloadScroll();
-        }
-    }, [messageList])
 
 
     return {messageList,newMessageList,chatFile}

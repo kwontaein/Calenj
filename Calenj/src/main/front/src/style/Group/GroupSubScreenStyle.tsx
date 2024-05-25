@@ -22,6 +22,7 @@ export const GroupSubScreenTop_Container = styled.div`
     align-items: center;
     padding-inline: 10px;
     justify-content: space-between;
+    overflow: hidden;
 `
 export const GroupSubScreenTopIcon_Container = styled.div<OptionClick>`
     display: flex;

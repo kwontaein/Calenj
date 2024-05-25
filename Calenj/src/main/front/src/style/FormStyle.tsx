@@ -103,7 +103,7 @@ export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
     z-index: ${props => (props.focus === "true" ? -1 : 1)}
 `;
 
-export const UnfocusBackgound = styled.div<UnfocusBackgroundProps>`
+export const UnfocusBackground = styled.div<UnfocusBackgroundProps>`
     width: 100%;
     height: 100%;
     position: absolute;
@@ -209,7 +209,8 @@ export const Modal_Background =styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.3)
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 0;
 `
 
 

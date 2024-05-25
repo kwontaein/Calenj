@@ -40,8 +40,6 @@ const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink,groupId}) => {
     }
 
     return (
-        <div>
-
             <Modal_Background ref={modalBackground} onClick={e => {
                 if (e.target === modalBackground.current) {
                     onClose();
@@ -73,8 +71,6 @@ const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink,groupId}) => {
                     <button className={'btn_inviteClose'} onClick={onClose}>닫기</button>
                 </GroupInviteModal_Container>
             </Modal_Background>
-
-        </div>
     )
 }
 export default InviteModal;

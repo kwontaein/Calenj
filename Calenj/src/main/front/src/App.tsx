@@ -1,5 +1,5 @@
 import Home from './Home';
-import {SignUpFormPage} from "./pages/signup";
+import {SignUpForm} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
@@ -99,7 +99,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                 <BrowserRouter>
                     <Routes>
                         <Route path={"/"} element={<Home/>}/>
-                        <Route path={"/signup"} element={<SignUpFormPage/>}/>
+                        <Route path={"/signup"} element={<SignUpForm/>}/>
                         <Route path={"/sign"} element={<LoginFormPages/>}/>
                         <Route path={"/inviteGroup/"}>
                             <Route path={":inviteCode"} element={<InviteGroup/>}/>

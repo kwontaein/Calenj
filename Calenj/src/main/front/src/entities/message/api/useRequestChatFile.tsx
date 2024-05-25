@@ -6,7 +6,7 @@ import store from "../../../store/store";
 export const useRequestChatFile = (param:string):(pageParam: number) => Promise<string[] | never[]> => {
     const dispatch = useDispatch()
 
-    //page에 따라 요청을 함
+    //페이지에 따라 요청을 함
     const requestChatFile = (page:number) => {
         if(page===0){
             dispatch(

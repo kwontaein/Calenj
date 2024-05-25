@@ -4,7 +4,7 @@ import {BackGroundColor, PointColor, TextColor, ThemaColor2} from "../FormStyle"
 export const SelectItem_Container = styled.div`
     width: 196px;
     background-color: black;
-    position: absolute;
+    position: fixed;
     top: 71px;
     left: 82px; //SideNavigation width 72px + subNavigation padding: 10px
     padding: 8px;

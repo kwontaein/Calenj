@@ -20,7 +20,7 @@ interface groupDetails {
     groupId: string;
     groupTitle: string;
     groupCreated: string;
-    groupCreater: string;
+    groupCreator: string;
     members: groupMembers[];
 }
 

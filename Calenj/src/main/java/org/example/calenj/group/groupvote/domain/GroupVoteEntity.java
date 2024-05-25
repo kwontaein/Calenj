@@ -34,8 +34,8 @@ public class GroupVoteEntity {
     private GroupEntity group;
 
 
-    @Column(name = "vote_creater")
-    private String voteCreater;
+    @Column(name = "vote_creator")
+    private String voteCreator;
 
     @Column(name = "vote_title")
     private String voteTitle;

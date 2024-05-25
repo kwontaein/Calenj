@@ -256,7 +256,7 @@ export const VoteCounter_DatePicker = styled(DatePicker)`
 
 /** VoteList **/
 interface VoteProps {
-    $isCreater: boolean;
+    $isCreator: boolean;
     $ableClick: boolean;
 }
 
@@ -325,7 +325,7 @@ export const GroupVoterListTitle = styled.div<subScreenWidthProps>`
 
 export const TrasformButton = styled.button<VoteProps>`
     
-    width: ${props => props.$isCreater ? '50%' : '100%'};
+    width: ${props => props.$isCreator ? '50%' : '100%'};
     height: 50px;
     display: flex;
     align-items: center;

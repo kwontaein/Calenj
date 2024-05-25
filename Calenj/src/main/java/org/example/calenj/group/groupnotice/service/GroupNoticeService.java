@@ -37,7 +37,7 @@ public class GroupNoticeService {
                 .noticeTitle(noticeTitle)
                 .noticeContent(noticeContent)
                 .noticeCreated(noticeCreated)
-                .noticeCreater(userEmail)
+                .noticeCreator(userEmail)
                 .group(groupEntity)
                 .build();
 

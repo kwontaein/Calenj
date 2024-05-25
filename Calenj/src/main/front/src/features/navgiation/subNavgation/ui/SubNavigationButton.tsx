@@ -11,7 +11,7 @@ import {
 import {SubItemProps} from "../model/types";
 
 
-const subNavationButton:React.FC<SubNavigateState & SubItemProps> = ({ subItem,clickState,subItemsHandler}) =>{
+const subNavigation:React.FC<SubNavigateState & SubItemProps> = ({ subItem,clickState,subItemsHandler}) =>{
 
     return(
         <SubNavigateItem_Container
@@ -30,4 +30,4 @@ const subNavationButton:React.FC<SubNavigateState & SubItemProps> = ({ subItem,c
     )
 }
 
-export const SubNavationButton = connect(mapStateToSubNavigationProps,null) (subNavationButton)
+export const SubNavigationButton = connect(mapStateToSubNavigationProps,null) (subNavigation)

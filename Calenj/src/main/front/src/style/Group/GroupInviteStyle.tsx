@@ -7,4 +7,5 @@ export const GroupInviteModal_Container =styled.div`
     min-height: 200px;
     max-height: 500px;
     padding: 15px;    
+    position: relative;
 `
