@@ -37,24 +37,15 @@ public class WebSokcetService {
     private final SimpUserRegistry simpUserRegistry;
 
     /**
-     * 닉네임 반환
+     * 유저정보 반환
      *
      * @param authentication 인증 정보 받기
      **/
-    public String returnNickname(Authentication authentication) {
-        UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
-        return userEntity.getNickname();
+    public UserEntity returnUserEntity(Authentication authentication) {
+        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(authentication.getName())).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다"));
+        return userEntity;
     }
 
-    /**
-     * 이메일 반환
-     *
-     * @param nickName 닉네임 받기
-     **/
-    public String returnEmail(String nickName) {
-        UserEntity userEntity = userRepository.findByNickname(nickName).orElseThrow(() -> new RuntimeException("존재하지 않는 정보"));
-        return userEntity.getUserEmail();
-    }
 
     /**
      * 파일 받아오기
@@ -89,9 +80,9 @@ public class WebSokcetService {
         }
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                "[" + messageUUid + "] $" + "[" + message.getSendDate() + "] $" + message.getUserEmail() + " $ " +
-                        message.getNickName() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
-                message.getUserEmail() + "EndPoint" + " [" + messageUUid + "]" + "\n";
+                "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " +
+                        message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
+                message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
@@ -119,7 +110,7 @@ public class WebSokcetService {
 
         Collections.reverse(lines); // 파일 내용을 역순으로 정렬
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
+                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -138,7 +129,7 @@ public class WebSokcetService {
                 .limit(20)
                 .map(stringTransformer)
                 .toList();
-        System.out.println(previousLines2);
+
         previousLines.addAll(previousLines2);
 
         if (previousLines.isEmpty()) {
@@ -195,7 +186,7 @@ public class WebSokcetService {
         // 파일 내용을 역순으로 정렬
 
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserEmail() + "EndPoint" + " [" + message.getParam() + "]") &&!line.contains("시작라인$어서오세요$$$$"))
+                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -239,18 +230,15 @@ public class WebSokcetService {
      **/
     public void defaultSend(Authentication authentication, ChatMessageRequest message, String target) {
 
-        String username = returnNickname(authentication);
-        String userEmail = returnEmail(username);
+        UserEntity userEntity = returnUserEntity(authentication);
         String nowTime = globalService.nowTime();
 
-        message.setNickName(username);
-        message.setUserEmail(userEmail);
+        message.setUserId(userEntity.getUserId());
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
-        //response.setOnlineUserList(getAllUsers(authentication));
         response.setOnlineUserList(getUsers(message.getParam()));
-        sendSwitch(message, response, target);
+        sendSwitch(authentication, message, response, target);
 
     }
 
@@ -261,24 +249,24 @@ public class WebSokcetService {
      * @param message  전달받은 정보들
      * @param response 전달할 정보들
      **/
-    public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
+    public void sendSwitch(Authentication authentication, ChatMessageRequest message, ChatMessageResponse response, String target) {
         switch (message.getState()) {
             case ALARM: {
                 int setPoint = countLinesUntilEndPoint(message);
                 response.setEndPoint(setPoint);
-                template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case READ: {
                 List<String> file = readGroupChattingFile(message);
                 response.setMessage(file);
-                template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case RELOAD: {
                 List<String> file = readGroupChattingFileSlide(message);
                 response.setMessage(file);
-                template.convertAndSendToUser(response.getUserEmail(), "/topic/" + target + "/" + response.getParam(), response);
+                template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case SEND: {
@@ -301,14 +289,14 @@ public class WebSokcetService {
      * @param request        전달받은 정보들
      **/
     public void personalEvent(Authentication authentication, ChatMessageRequest request) {
-        String username = returnNickname(authentication);
-        String userEmail = returnEmail(username);
+        UserEntity userEntity = returnUserEntity(authentication);
+        String userId = String.valueOf(userEntity.getUserId());
 
         ChatMessageResponse response = filterNullFields(request);
         response.setOnlineUserList(getUsers(request.getParam()));
 
-        if (request.getParam() == userEmail && request.getMessage() == "OFFLINE") {
-            Set<String> destinations = getDestination(userEmail);
+        if (request.getParam() == userId && request.getMessage() == "OFFLINE") {
+            Set<String> destinations = getDestination(userId);
             for (String destination : destinations) {
                 template.convertAndSend(destination, response);
             }
@@ -330,11 +318,8 @@ public class WebSokcetService {
         if (request.getMessage() != null) {
             filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
         }
-        if (request.getNickName() != null) {
-            filteredResponse.setNickName(request.getNickName());
-        }
-        if (request.getUserEmail() != null) {
-            filteredResponse.setUserEmail(request.getUserEmail());
+        if (request.getUserId() != null) {
+            filteredResponse.setUserId(request.getUserId());
         }
         if (request.getSendDate() != null) {
             filteredResponse.setSendDate(request.getSendDate());

@@ -25,6 +25,7 @@ const RequestInviteGroup: React.FC<ParentProps> = ({groupId}) => {
     const [inviteLink, setInviteLink] = useState<string>("");
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [friends, setFriends] = useState<Friends[] | null>(null);
+    const modalBackground = useRef<HTMLDivElement>(null);
 
     //usestate -> true false / 버큰클릭시 바뀌고 -> 컴포넌트 열고 프롭스로 전달
     function invite() {

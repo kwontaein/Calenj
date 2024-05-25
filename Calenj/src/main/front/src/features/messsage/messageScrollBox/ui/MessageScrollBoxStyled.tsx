@@ -5,8 +5,8 @@ interface CheckbeforSender {
     $sameUser: boolean,
 }
 
-interface UserProfile{
-    $userEmail: string | undefined
+interface UserProfile {
+    $userId: string | undefined
 }
 
 export const ScrollMin_width = 350;
@@ -37,7 +37,6 @@ export const ProfileContainer = styled.div<UserProfile>`
     min-width: 40px;
     padding: 3px;
     border-radius: 50px;
-    background-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
@@ -47,7 +46,7 @@ export const ProfileContainer = styled.div<UserProfile>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userEmail? `url("/image/savedImage/${props.$userEmail.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 

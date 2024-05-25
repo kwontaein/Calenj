@@ -14,10 +14,9 @@ import java.util.stream.Stream;
 
 @Data
 public class ChatMessageResponse {
-    private String userEmail;
+    private UUID userId;
     private ChatMessageRequest.fileType state;
     private String param;
-    private String nickName;
     private List<String> message;
     private int endPoint;
     private String sendDate;
