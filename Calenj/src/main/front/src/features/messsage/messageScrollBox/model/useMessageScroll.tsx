@@ -119,7 +119,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         if(scrollHeight === clientHeight){
             updateEndpoint();
         }else if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight){
-            // scrollToBottom();
+            scrollToBottom();
         }
     }
 
@@ -132,15 +132,12 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
 
 
     useEffect(()=>{
-        // if(prevChatUUID === messageList[0].chatUUID) return;
         const {state} =stomp.receiveMessage
         if(state!=="RELOAD") return
         // //저장한 이전높이인 prev만큼 빼줌
         if(!scrollRef.current || !prevScrollHeight) return;
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
             setPrevScrollHeight(null)
-        //세팅으로 읽어오는 거면 RELOAD 발생마다 endPoint를 찾아서 세팅해야함
-
     },[messageList])
     //원하는 타이밍에 정확히 세팅하려면 메시지가 세팅이 완료된 후 함수를 호출해야함
 
