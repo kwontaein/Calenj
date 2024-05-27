@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendRequest {
-    private String userName;
+
+    private String userId;
     private int isAccept;
-    private String friendUserName;
+    private String friendUserId;
 }

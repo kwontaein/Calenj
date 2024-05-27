@@ -30,7 +30,6 @@ interface groupMembers {
     nickName: String;
     onlineStatus: string;
     userEmail: string;
-    userId: string;
 }
 
 
@@ -69,12 +68,12 @@ const GroupUserList: React.FC<StompData & DispatchStompProps> = ({stomp}) => {
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
-                    <UserListView key={member.userId} onClick={() => handleUserClick(member)}>
-                        <UserProfile src={`/image/savedImage/${member.userId}.jpeg`}
+                    <UserListView key={member.userEmail} onClick={() => handleUserClick(member)}>
+                        <UserProfile src={`/image/savedImage/${member.userEmail}.jpeg`}
                                      onError={onErrorImg}
-                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userId)}/>
+                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userEmail)}/>
                         <span>
-                            {member.nickName} {localStorage.getItem(`userId`) === member.userId && '(나)'}
+                            {member.nickName} {localStorage.getItem(`userId`) === member.userEmail && '(나)'}
                         </span>
                     </UserListView>)))
             }

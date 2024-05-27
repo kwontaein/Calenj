@@ -27,13 +27,13 @@ public class FriendEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
+    @JoinColumn(name = "own_user_id", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
     // 소유자 아이디
     private UserEntity ownUserId;
 
     // 친구 아이디
-    @Column(name = "friend_user_id", columnDefinition = "BINARY(16)")
-    private UUID friendUserId;
+    @Column(name = "friend_user_id")
+    private String friendUserId;
 
     // 친구 닉네임
     @Column(name = "nick_name")

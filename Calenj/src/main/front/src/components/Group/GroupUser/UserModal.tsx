@@ -44,7 +44,7 @@ const UserModal: React.FC<UserModalProps> = ({user, onClose}) => {
             <p>닉네임 : {user.nickName}</p>
             {localStorage.getItem("userId") === user.userEmail ? " " : <p>공통 : {profile?.sameGroup}</p>}
             <p>소개 : {profile?.introduce}</p>
-            <p>역할 : {user.groupRoleType}</p>
+            <p>역할 : {user.userEmail}</p>
             <p>가입일 : {profile?.joinDate}</p>
             <button onClick={onClose}>Close</button>
         </div>

@@ -3,7 +3,6 @@ export interface GroupList_item {
     groupTitle: string;
     groupCreated: string;
 }
-
 interface groupMembers {
     groupRoleType: String;
     group_user_location: String;
@@ -30,21 +29,21 @@ export interface VoteList {
     voteEndDate: string;
 }
 
-export interface NoticeList {
-    noticeId: string;
-    noticeTitle: string;
-    noticeContent: string;
-    noticeCreator: string;
-    noticeCreated: string;
+export interface NoticeList{
+    noticeId : string;
+    noticeTitle : string;
+    noticeContent : string;
+    noticeCreator : string;
+    noticeCreated : string;
 }
 
 export interface NoticeDetail {
     groupId: string;
-    noticeContent: string;
+    noticeContent : string;
     noticeCreated: string;
     noticeCreator: string;
-    noticeWatcher: string[];
-    noticeTitle: string;
+    noticeWatcher:string[];
+    noticeTitle:string;
 }
 
 
@@ -69,7 +68,8 @@ export interface FriendEvent {
 export interface Message {
     chatUUID: string,
     sendDate: string,
-    userId: string,
+    userEmail: string,
+    nickName: string,
     messageType: string,
     message: string,
 }
@@ -78,5 +78,5 @@ interface FetchDataParams {
     pageParam?: number;
 }
 
-export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
-export type ReceiveData = ({pageParam}: { pageParam?: number | undefined }) => Message
+export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
+export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message

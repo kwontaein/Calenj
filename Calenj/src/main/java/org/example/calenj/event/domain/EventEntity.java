@@ -27,13 +27,13 @@ public class EventEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
+    @JoinColumn(name = "own_user_id", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
     // 이벤트 발생자
     private UserEntity ownUserId;
 
     // 이벤트 요청받은 사람
     @Column(name = "event_user_id")
-    private UUID eventUserId;
+    private String eventUserId;
 
     // 이벤트 목적
     @Column(name = "event_purpose")
