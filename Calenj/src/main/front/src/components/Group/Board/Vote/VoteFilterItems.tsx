@@ -2,7 +2,7 @@ import {
     FilterContent_Container,
     FilterItem_Container, FilterToggle_Container, FilterToggleItem, SubScreenFilter_Btn,
     SubScreenFilter_Container, SubScreenFilterButton_Container
-} from "../../../../style/Group/SubScreenSelcetBoxStyle";
+} from "./VoteFilterStytled";
 import React, {useEffect, useState} from "react";
 import {BoardFilterMap} from "../../../../store/module/StompMiddleware";
 import {
@@ -11,19 +11,20 @@ import {
     mapDispatchToBoardOptionProps,
     mapStateToBoardOptionProps
 } from "../../../../store/slice/BoardOptionSlice";
-import {connect} from "react-redux";
-
-interface SubScreenSelectBoxProps{
-    groupId:string,
-}
+import {connect, useSelector} from "react-redux";
+import {RootState} from "../../../../store/store";
 
 
-const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps & SubScreenSelectBoxProps> = ({updateBoardFilter, groupId}) =>{
+
+
+const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps> = ({updateBoardFilter}) =>{
     const [filterCheckA,setFilterCheckA] = useState<boolean>(false);
     const [filterCheckB,setFilterCheckB] = useState<boolean>(false);
     const [toggleA,setToggleA] = useState<boolean>(false);
     const [toggleB,setToggleB] = useState<boolean>(false);
     const [loading,setLoading] = useState<boolean>(true);
+
+    const { param } = useSelector((state:RootState) => state.subNavigateInfo)
 
 
     //필터 여부에 따른 토글 초기화 (로딩이 완료 된 이후 작동)
@@ -39,7 +40,7 @@ const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps & Su
 
 
     useEffect(() => {
-        const filterRegister =BoardFilterMap.get(groupId+"vote")
+        const filterRegister =BoardFilterMap.get(param+"vote")
 
         if(filterRegister){//Filter Setting의 기록이 있으면 세팅
             updateBoardFilter(filterRegister)
@@ -60,19 +61,19 @@ const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps & Su
         setFilterCheckA(false)
         setFilterCheckB(false)
         updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}})
-        if(BoardFilterMap.get(groupId+"vote")){
-            BoardFilterMap.delete(groupId+"vote");
+        if(BoardFilterMap.get(param+"vote")){
+            BoardFilterMap.delete(param+"vote");
         }
     }
 
     const updateFilter =()=>{
         //기존 세팅이랑 같으면 return
         if(!filterCheckA && !filterCheckB) {
-            BoardFilterMap.delete(groupId+"vote");
+            BoardFilterMap.delete(param+"vote");
             updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}})
             return
         }
-        BoardFilterMap.set(groupId+"vote",
+        BoardFilterMap.set(param+"vote",
             {filterA:{isCheck:filterCheckA,toggleState:toggleA},
                 filterB:{isCheck:filterCheckB,toggleState:toggleB}})
         updateBoardFilter({filterA:{isCheck:filterCheckA,toggleState:toggleA}, filterB:{isCheck:filterCheckB,toggleState:toggleB}})

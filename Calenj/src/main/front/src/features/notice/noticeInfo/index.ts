@@ -1,1 +1,0 @@
-export {checkNoticeParam, sortNotice, redirectDetail} from "./model/noticeHelpers"

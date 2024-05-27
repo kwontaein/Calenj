@@ -1,2 +1,2 @@
-export { Node_ContentComposition }from './ui/ContentsComposition'
-export { Node_SubNavigation }from './ui/SubNavigationbar'
+export { SubNavigation }from './ui/SubNavigation'
+export {ContentsComposition} from './ui/ContentsComposition'

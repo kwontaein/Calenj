@@ -1,7 +1,6 @@
 const FixedUserBar :React.FC = () =>{
     return (
         <div>
-
         </div>
     )
 }
