@@ -10,11 +10,11 @@ import {useComponentSize} from '../../../../shared/model'
 import {RootState} from "../../../../store/store";
 import {GroupContentItem,GroupContentTopItem} from "../../../../features/group/contentItems";
 
-interface QeuryProps {
+interface QueryProps {
     isLoading :boolean
 }
 
-export const ContentsComposition :React.FC<QeuryProps>=({isLoading})=>{
+export const ContentsComposition :React.FC<QueryProps>=({isLoading})=>{
     const [showUserList,setShowUserList] = useState<boolean>(false);
     const [groupDetail,setGroupDetail] = useState<GroupDetail>();
     const [contentRef, contentSize] = useComponentSize(); //컴포넌트의 크기를 가져옴

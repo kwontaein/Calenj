@@ -1,5 +1,5 @@
 import styled, { keyframes, css  } from 'styled-components';
-import {BackGroundColor, PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
+import {PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
 
 
 interface FilterClickProps{
@@ -35,7 +35,7 @@ const changeAnimationAfter = (option:string) => keyframes`
 export const SubScreenFilter_Container = styled.div`
     width: calc(100% - 8px);//오른쪽 padding이 없으니 빼줘야함
     color: transparent;
-    font-size: 0px;
+    font-size: 0;
     margin-top: 5px;
     display: flex;
     flex-direction: column;
