@@ -2,21 +2,12 @@ import axios from 'axios';
 import {jwtFilter} from '../../../../entities/authentication/jwt';
 import {saveDBFormat} from "../../../../shared/lib";
 
-<<<<<<<< HEAD:Calenj/src/main/front/src/features/group/notice/api/createNoticeApi.ts
 export const postNotice = async ({title, content, groupId, onClose, queryState}: {
     title: string;
     content: string;
     groupId: string;
-    onClose : ()=>void;
-    queryState: any;
-========
-export const postNotice = async ({title, content, groupId, queryState, onClose}: {
-    title: string;
-    content: string;
-    groupId: string;
-    queryState: any;
     onClose: () => void;
->>>>>>>> origin/SeungJae:Calenj/src/main/front/src/features/notice/createNotice/api/noticeApi.ts
+    queryState: any;
 }) => {
     const createDate = saveDBFormat(new Date());
     try {
