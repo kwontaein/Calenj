@@ -28,22 +28,13 @@ public class GroupEntity {
     private String groupTitle;
     @Column(name = "group_created")
     private String groupCreated;
-    @Column(name = "group_creater")
-    private String groupCreater; //SecurityContext 에서 값 빼오기
+    @Column(name = "group_creator")
+    private String groupCreator; //SecurityContext 에서 값 빼오기
 
 
     @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
     private List<GroupUserEntity> members;//Group_UserEntity 에서 목록으로 가져오기
-
-/*    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
-    private List<GroupNoticeEntity> Notice;//Group_UserEntity 에서 목록으로 가져오기
-
-    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
-    private List<GroupCommentEntity> Comments;//Group_UserEntity 에서 목록으로 가져오기
-
-    @OneToMany(mappedBy = "group") //사용하는 쪽이 one 대응이 many
-    private List<GroupVoteEntity> Votes;//Group_UserEntity 에서 목록으로 가져오기*/
-
+    
 }
 
 

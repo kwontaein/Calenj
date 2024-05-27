@@ -1,7 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from '../store'
 import {Dispatch} from 'redux';
-import {ScrollMin_width} from "../../style/ChatBoxStyle";
+import {ScrollMin_width} from "../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
+
+
+
 
 export interface SubNavigationProps {
     param:string,
@@ -10,6 +13,7 @@ export interface SubNavigationProps {
     screenHeightSize:number,
     screenWidthSize:number,
 }
+
 
 
 export interface SubNavigateState{
@@ -32,6 +36,7 @@ export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSub
     updateSubScreenMode : (payload: { mode:string}) => dispatch(updateSubScreenMode(payload)),
     updateSubScreenHeightSize : (payload: { screenHeightSize:number}) => dispatch(updateSubScreenHeightSize(payload)),
     updateSubScreenWidthtSize : (payload: { screenWidthSize:number}) => dispatch(updateSubScreenWidthtSize(payload)),
+
 });
 
 //(Component Props로 전달하기 위한 interface)
@@ -40,17 +45,13 @@ export const mapStateToSubNavigationProps = (state: RootState): SubNavigateState
 });
 
 
-
-
-
 // 초기상태
 const initialState: SubNavigationProps ={
     param:'',
     clickState:'',
     mode:'',
-    screenHeightSize:200,
+    screenHeightSize:185,
     screenWidthSize:ScrollMin_width,
-
 }
 
 

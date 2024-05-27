@@ -26,17 +26,18 @@ public class GroupNoticeService {
     private final Group_NoticeRepository groupNoticeRepository;
 
     //그룹 공지 생성
-    public void makeNotice(String NoticeContent, String NoticeCreated, UUID groupId) {
+    public void makeNotice(String noticeTitle, String noticeContent, String noticeCreated, UUID groupId) {
 
 
-        String userEmail = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
+        String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
 
         GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
-                .noticeContent(NoticeContent)
-                .noticeCreated(NoticeCreated)
-                .noticeCreater(userEmail)
+                .noticeTitle(noticeTitle)
+                .noticeContent(noticeContent)
+                .noticeCreated(noticeCreated)
+                .noticeCreator(userId)
                 .group(groupEntity)
                 .build();
 
@@ -59,13 +60,13 @@ public class GroupNoticeService {
     //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
 
-        String userEmail = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
+        String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
         Optional<GroupNoticeResponse> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
 
         if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
             List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
 
-            Viewerlist.add(userEmail);
+            Viewerlist.add(userId);
             Viewerlist = Viewerlist.stream().distinct().collect(Collectors.toList());
 
             //Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거

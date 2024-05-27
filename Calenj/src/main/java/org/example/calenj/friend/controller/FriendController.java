@@ -18,40 +18,57 @@ public class FriendController {
 
     private final FriendService friendService;
 
+    /**
+     * 친구 목록 가져오기.
+     */
     @GetMapping("/api/getFriendList")
     public List<FriendResponse> friendList() {
         return friendService.friendList();
     }
 
+    /**
+     * 친구 요청하기
+     */
     @PostMapping("/api/requestFriend")
     public String requestFriend(@RequestBody FriendRequest request) {
         //친구 요청 보내기
         //만약 상대가 보낸 요청이 있다면, 내 테이블에 추가 후 상태 변경하기
-        return friendService.requestFriend(request.getFriendUserId());
+        return friendService.requestFriend(request.getFriendUserName());
     }
 
+    /**
+     * 친구 요청에 응답하기
+     */
     @PostMapping("/api/myResponse")
     public String responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
-        return friendService.responseFriend(request.getFriendUserId(), request.getIsAccept());
+        return friendService.responseFriend(request.getFriendUserName(), request.getIsAccept());
     }
 
-    @PostMapping("/api/myEvents")
+    /**
+     * 내 이벤트 목록
+     * 내 이벤트 목록...? 이거 왜 만들었노
+     */
+   /* @PostMapping("/api/myEvents")
     public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
-        //내 이벤트 목록...? 이거 왜 만들었노
-        List<EventResponse> events = friendService.myEvents(request.getUserId());
-        System.out.println(events.toString());
-        return friendService.myEvents(request.getUserId());
-    }
 
-    //내가 보낸 요청
+        List<EventResponse> events = friendService.myEvents(request.getUserName());
+        System.out.println(events.toString());
+        return friendService.myEvents(request.getUserName());
+    }*/
+
+    /**
+     * 내가 요청한 목록
+     */
     @GetMapping("/api/myRequestList")
     public List<EventResponse> RequestFriendList() {
         return friendService.RequestFriendList();
     }
 
-    //내가 받은 요청
+    /**
+     * 요청 받은 목록
+     */
     @GetMapping("/api/requestedList")
     public List<EventResponse> ResponseFriendList() {
         System.out.println(friendService.ResponseFriendList());

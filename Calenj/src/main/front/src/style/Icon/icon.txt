@@ -65,6 +65,11 @@ drop down
 핵심알람모음
 <i class="fi fi-ss-box-open-full"></i>
 
+필터
+<i class="fi fi-rs-filter"></i>
+
+작성
+<i class="fi fi-sr-edit"></i>
 추천
 <i class="fi fi-ss-social-network"></i>
 비추천

@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios, {AxiosError} from 'axios';
-import {stateFilter, useConfirm} from '../../stateFunc/actionFun'
+import {jwtFilter} from '../../entities/authentication/jwt'
+import { useConfirm } from '../../shared/model'
 import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
+import {Modal_Background} from "../../style/FormStyle";
 
 interface ModalProps {
     onClose: () => void;
@@ -12,6 +14,7 @@ interface ModalProps {
 //단순 그룹 생성을 위한 컴포넌트
 const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
     const [groupTitle, setGroupTitle] = useState<string>("");
+    const modalBackground = useRef<HTMLDivElement>(null);
 
     
     const makeGroup = () => {
@@ -26,7 +29,7 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
                 console.log(axiosError);
                 if (axiosError.response?.status) {
                     console.log(axiosError.response.status);
-                    stateFilter((axiosError.response.status).toString());
+                    jwtFilter((axiosError.response.status).toString());
                 }
             });
     };
@@ -44,11 +47,18 @@ const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
 
 
     return (
-        <div>
-            <input type='text' placeholder='캘린룸 이름' onChange={(e) => setGroupTitle(e.target.value)}></input>
+        <Modal_Background ref={modalBackground} onClick={e => {
+            if (e.target === modalBackground.current && groupTitle === "") {
+                onClose();
+            }
+        }}>
+            <input type='text'
+                   placeholder='캘린룸 이름'
+                   maxLength={12}
+                   onChange={(e) => setGroupTitle(e.target.value)}></input>
             <button onClick={createGroup}>생성</button>
             <button onClick={onClose}>닫기</button>
-        </div>
+        </Modal_Background>
     );
 }
 

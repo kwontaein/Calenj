@@ -1,6 +1,6 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {UserListView, MiniText} from '../../style/FormStyle'
-import {useFetchRequsetFriendList} from "../../store/ReactQuery/queryManagement";
+import {useFetchRequsetFriendList} from "../../entities/ReactQuery/model/queryModel";
 
 
 interface FriendList {

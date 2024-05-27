@@ -20,5 +20,11 @@ public class UserResponse {
     private String userPhone;
     private String userJoinDate;
     private String userRole;
-    
+
+    public UserResponse(String nickname, String userEmail, String userPhone, String userJoinDate) {
+        this.nickname = nickname;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userJoinDate = userJoinDate;
+    }
 }

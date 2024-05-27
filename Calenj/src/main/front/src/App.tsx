@@ -1,9 +1,6 @@
 import Home from './Home';
-import SignUp from './components/Auth/Sign_up';
-import Sign from './components/Auth/Sign';
+import {SignUpForm} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import NoticeDetail from './components/Group/Notice/NoticeDetail';
-import VoteDetail from './components/Group/Vote/VoteDetail';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
 import NaverMap from "./components/Group/Map/NaverMap"
@@ -19,10 +16,11 @@ import {connect} from "react-redux";
 import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
-import {useFetchCookie} from "./store/ReactQuery/queryManagement";
+import {useFetchCookie} from "./entities/ReactQuery/model/queryModel";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
+import {LoginFormPages} from "./pages/login/ui";
 
 //대표 색 : #  007bff
 
@@ -101,10 +99,8 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                 <BrowserRouter>
                     <Routes>
                         <Route path={"/"} element={<Home/>}/>
-                        <Route path={"/signup"} element={<SignUp/>}/>
-                        <Route path={"/sign"} element={<Sign/>}/>
-                        <Route path={"/notice/detail"} element={<NoticeDetail/>}/>
-                        <Route path={"/vote/detail"} element={<VoteDetail/>}/>
+                        <Route path={"/signup"} element={<SignUpForm/>}/>
+                        <Route path={"/sign"} element={<LoginFormPages/>}/>
                         <Route path={"/inviteGroup/"}>
                             <Route path={":inviteCode"} element={<InviteGroup/>}/>
                         </Route>

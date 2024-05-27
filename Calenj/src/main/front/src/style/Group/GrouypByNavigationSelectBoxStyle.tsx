@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import {TextColor} from "../FormStyle";
+import {BackGroundColor, PointColor, TextColor, ThemaColor2} from "../FormStyle";
 
 export const SelectItem_Container = styled.div`
     width: 196px;
     background-color: black;
-    position: absolute;
+    position: fixed;
     top: 71px;
     left: 82px; //SideNavigation width 72px + subNavigation padding: 10px
     padding: 8px;
@@ -15,7 +15,7 @@ export const SelectorText_Continer = styled.div`
     width: 85%;
     align-content: center;
     margin-left: 5px;
-        color:#007bff;
+    color:${PointColor};
 `
 
 
@@ -24,7 +24,7 @@ export const SelectorIcon_Container = styled.div`
     width: 15%;
     align-content: center;
     text-align: center;
-        color:#007bff;
+        color:${PointColor};
         margin-top: 2px;
 `
 
@@ -41,7 +41,7 @@ export const Btn_ItemSelector = styled.div`
     transition: background-color 0.3s ease;
     transition: color 0.3s ease;
     &:hover{
-        background-color: #007bff;
+        background-color: ${PointColor};
         font-weight: 0;
             ${SelectorIcon_Container}{
                     color:${TextColor};

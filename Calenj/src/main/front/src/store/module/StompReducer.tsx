@@ -19,8 +19,7 @@ type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "";
 export interface Message {
     param: string,
     message: string | string[],
-    nickName: string,
-    userEmail: string,
+    userId: string,
     sendDate: string,
     chatUUID: string,
     state: stateType,
@@ -66,8 +65,7 @@ export interface DispatchStompProps {
         receiveMessage: {
             param: string,
             message: string,
-            nickName: string,
-            userEmail: string,
+            userId: string,
             sendDate: string,
             state: stateType,
             chatUUID: string,
@@ -96,8 +94,7 @@ export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps 
         receiveMessage: {
             param: string,
             message: string,
-            nickName: string,
-            userEmail: string,
+            userId: string,
             sendDate: string,
             state: stateType,
             chatUUID: string,
@@ -138,7 +135,7 @@ export const requestFile = (payload: { target: string, param: string, requestFil
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, param: string, message: string }) => ({
+export const sendStompMsg = (payload: { target: string, param: string, message: string , messageType:string}) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -150,8 +147,7 @@ export const receivedStompMsg = (payload: {
     receiveMessage: {
         param: string,
         message: string,
-        nickName: string,
-        userEmail: string,
+        userId: string,
         sendDate: string,
         state: stateType,
         chatUUID: string
@@ -188,8 +184,7 @@ const initialState: StompState = {
     receiveMessage: {
         param: '',
         message: '',
-        nickName: '',
-        userEmail: '',
+        userId: '',
         sendDate: '',
         state: '',
         chatUUID: '',
@@ -237,6 +232,7 @@ const StompReducer = handleActions(
             target: action.payload.target,
             param: action.payload.param,
             message: action.payload.message,
+            messageType:action.payload.messageType,
         }),
 
         [RECEIVED_STOMP_MSG]: (state, action) => ({
