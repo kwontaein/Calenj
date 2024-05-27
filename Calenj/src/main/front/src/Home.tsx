@@ -1,15 +1,22 @@
-import React from 'react'
-import SignState from "./components/Auth/SignState"
+import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
+import {connect} from 'react-redux'
+import {FullScreen_div} from "./style/FormStyle";
+import {NavigationParent} from './pages/main/navigationParent'
+import {
+    DispatchStompProps,
+    mapDispatchToStompProps,
+    StompData,
+    mapStateToStompProps
+} from './store/module/StompReducer';
+import {SignStateWidget} from './widgets/signState';
+const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
-
-const Home:React.FC=()=>{
-    
-    return(
-        <div style={{display:"flex", flexDirection:"row"}}>
-            <h1>여기는 초기 페이지임</h1>
-            <SignState/>
-
-        </div>
+    return (
+        <FullScreen_div>
+            {stomp.isOnline ==="ONLINE"?
+                <NavigationParent/>:
+                <SignStateWidget/>}
+        </FullScreen_div>
     )
 }
-export default Home;
+export default connect(mapStateToStompProps,mapDispatchToStompProps) (Home)

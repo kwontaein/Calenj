@@ -1,61 +1,64 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React, {useEffect, useRef, useState} from 'react';
+import axios, {AxiosError} from 'axios';
+import {jwtFilter} from '../../entities/authentication/jwt'
+import { useConfirm } from '../../shared/model'
+import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
+import {Modal_Background} from "../../style/FormStyle";
 
-interface Group {
-    groupid: string;
-    grouptitle: string;
-
-
-}interface ModalProps {
+interface ModalProps {
     onClose: () => void;
-  }
+    queryState: UseQueryResult;
+}
 
 
 //단순 그룹 생성을 위한 컴포넌트
-const MakeGroup: React.FC<ModalProps> = ({onClose}) => {
-    const [groupName,setGroupName] = useState<string>();
+const MakeGroup: React.FC<ModalProps> = ({onClose,queryState}) => {
+    const [groupTitle, setGroupTitle] = useState<string>("");
+    const modalBackground = useRef<HTMLDivElement>(null);
 
-    const MakeGroup = () => {
+    
+    const makeGroup = () => {
 
-        axios.post('/api/makeGroup',groupName)
-            .then(() => window.alert(`${groupName}이름으로 방이 생성되었습니다.`))
-            .catch(error => console.log(error));
+        axios.post('/api/makeGroup', {groupTitle: groupTitle})
+            .then(() => {
+                onClose()
+                window.alert(`${groupTitle}이름으로 방이 생성되었습니다.`)
+            })
+            .catch(error => {
+                const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if (axiosError.response?.status) {
+                    console.log(axiosError.response.status);
+                    jwtFilter((axiosError.response.status).toString());
+                }
+            });
     };
 
 
+    const createGroup = () => {
+        const cancle = () => console.log("생성 취소");
 
-    const useConfirm = (massage =" ",onConfirm:()=>void, onCancel:()=>void)=>{
-        if(typeof onConfirm !== "function" ){
-          return;
+        if (groupTitle === "") {
+            window.alert("생성할 방이름을 지어주세요.")
+        } else {
+            useConfirm(`${groupTitle} 이름으로 방을 생성하시겠습니까?`, makeGroup, cancle,queryState);
         }
-        if(typeof onCancel !== "function" ){
-            return;
-        }
-
-        const confrimAction = () => { //취할 행동
-          if(window.confirm(massage)){ //확신 시
-            MakeGroup();
-          }else{
-            onCancel(); //취소 누르면 실행
-          }
-        };
-        return confrimAction;
-      };
-
-      const hold =() =>  console.log("생성 취소");
-  
-      const createGroup = useConfirm(`${setGroupName} 이름으로 방을 생성하시겠습니까?`, MakeGroup, hold);
-
-
-
-   
+    }
 
 
     return (
-        <div>
-            <input type='text' placeholder='캘린룸 이름' onChange={(e)=>setGroupName(e.target.value)}></input>
-            <button onClick={createGroup}></button><button onClick={onClose}>닫기</button>
-        </div>
+        <Modal_Background ref={modalBackground} onClick={e => {
+            if (e.target === modalBackground.current && groupTitle === "") {
+                onClose();
+            }
+        }}>
+            <input type='text'
+                   placeholder='캘린룸 이름'
+                   maxLength={12}
+                   onChange={(e) => setGroupTitle(e.target.value)}></input>
+            <button onClick={createGroup}>생성</button>
+            <button onClick={onClose}>닫기</button>
+        </Modal_Background>
     );
 }
 
