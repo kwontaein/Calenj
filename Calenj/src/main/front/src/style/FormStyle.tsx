@@ -93,7 +93,7 @@ export const MiniText = styled.div`
 //div 가로로 나열
 export const RowFlexBox = styled.div`
     display: flex;
-    flexdirection: row;
+    flex-direction: row;
     align-items: center;
 `
 
@@ -210,7 +210,6 @@ export const Modal_Background =styled.div`
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.3);
-    z-index: 0;
 `
 
 
@@ -233,6 +232,7 @@ export const SignState_Button = styled.button`
     border: 0;
 `;
 
+
 export const CheckCondition_Button = styled.div<ClickAbleProps>`
     width: 70px;
     height: 100%;
@@ -242,9 +242,8 @@ export const CheckCondition_Button = styled.div<ClickAbleProps>`
     align-items: center;
     background-color: ${ThemaColor3};
     ${props => props.$isAble &&
-            `background-color : ${PointColor};
+    `background-color : ${PointColor};
              &:hover{background-color : ${PointColor}77;
              }
     `}
 `
-

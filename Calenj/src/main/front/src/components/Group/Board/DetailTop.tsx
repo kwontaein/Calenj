@@ -1,8 +1,8 @@
-import {createTimePassed} from '../../../shared/lib'
-import {MiniText, FullScreen_div} from '../../../style/FormStyle'
-import {
-    BoardDetailTop_Container, BoardDetailTop_title, GroupNoticeListTitle
-} from "../../../style/Group/GroupNoticeStyle";
+import {createTimePassed} from '../../../shared/lib';
+import {MiniText, FullScreen_div} from '../../../style/FormStyle';
+
+import {BoardDetailTop_Container,BoardDetailTop_title}from './BoardTopStyled'
+import {GroupNoticeListTitle} from '../../../features/group/notice'
 import {
     DispatchBoardOptionProps,
     mapDispatchToBoardOptionProps,
@@ -20,7 +20,6 @@ interface Details{
 
 
 const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam,subWidth})=>{
-
 
     return(
         <BoardDetailTop_Container>

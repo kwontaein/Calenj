@@ -282,7 +282,6 @@ export const GroupVoteListView_Li = styled.li`
     padding-inline: 10px;
     padding-block: 5px;
     margin-block: 2px;
-
     &:hover {
         background-color: ${ThemaColor3};
     }

@@ -1,22 +1,19 @@
-import axios, { AxiosResponse } from 'axios';
 import { useForm, SubmitHandler, SubmitErrorHandler, FieldErrors } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from 'react';
 import { SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBackground } from '../../../style/FormStyle';
-import { EmailValidationModal } from '../../../widgets/emailValidModal'
+import {
+    EmailValidationModal,
+    useRequestEmailCode,
+    useEmailValideAbleCheck,
+    RequstEmailCode_Button
+} from '../../../features/authentication/emailValidation'
 import { schema } from '../../../entities/authentication/emailValidation';
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../../../store/store'; // RootState 타입 가져오기
+import { RootState } from '../../../store/store';
 import '../../../style/Sign.scss'
 import { saveDBFormat } from "../../../shared/lib";
 import { saveUserApi, useInputManagement, User } from "../../../features/authentication/sign";
-import {
-    useRequestEmailCode,
-    useEmailValideAbleCheck
-} from '../../../features/authentication/emailValidation/requestEmailCode'
-import {
-    RequstEmailCode_Button
-} from "../../../features/authentication/emailValidation/requestEmailCode/ui/RequstButtonSytled";
 import { updateToken, updateCodeValid } from '../../../store/slice/EmailValidationSlice'; // Actions 가져오기
 
 export const SignUpForm: React.FC = () => {

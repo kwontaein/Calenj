@@ -1,6 +1,6 @@
 import {SelectItem_Container} from "../../../style/Group/GrouypByNavigationSelectBoxStyle";
 import RequestInviteGroup from "../Invite/RequestInviteGroup";
-import {connect} from 'react-redux'
+import {connect, useSelector} from 'react-redux'
 import {
     NavigateState,
     mapStateToNavigationProps,
