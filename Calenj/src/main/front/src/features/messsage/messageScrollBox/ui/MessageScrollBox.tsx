@@ -15,6 +15,7 @@ import {
 } from "./MessageScrollBoxStyled";
 import {RowFlexBox} from "../../../../style/FormStyle";
 import {Message} from "../../../../entities/ReactQuery"
+import {dateOperation} from "../lib/dateOperation";
 
 export const MessageScrollBox:React.FC =()=>{
     const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
@@ -39,9 +40,6 @@ export const MessageScrollBox:React.FC =()=>{
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList]
-        const dateOperation = (beforeSendDate : string, AfterSendDate : string) => {
-            return ((+changeDateForm(AfterSendDate)) - (+changeDateForm(beforeSendDate)) < 300000)
-        }
 
         if (!chatFile.isLoading) {
             return (
