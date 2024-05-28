@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {BackGroundColor, PointColor, TextColor, ThemaColor2} from "../FormStyle";
+import { PointColor, TextColor} from "../FormStyle";
 
 export const SelectItem_Container = styled.div`
     width: 196px;
@@ -38,8 +38,7 @@ export const Btn_ItemSelector = styled.div`
     display: flex;
     flex-direction: row;
     border-radius: 2px;
-    transition: background-color 0.3s ease;
-    transition: color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     &:hover{
         background-color: ${PointColor};
         font-weight: 0;

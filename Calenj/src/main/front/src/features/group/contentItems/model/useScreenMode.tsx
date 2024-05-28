@@ -19,7 +19,7 @@ export const useScreenMode = (param:string, contentSize:contentSize, showUserLis
 
         if(showUserList) contentWidth -=GroupUserList_Container_width;
 
-        //contnetSize가 최소 크기가 됐는데 subScreen이 최소크기 이상이라면 subScreen을 감소
+        //contentSize가 최소 크기가 됐는데 subScreen이 최소크기 이상이라면 subScreen을 감소
         if(contentWidth <= (ScrollMin_width + ScrollMarginInline) && screenWidthSize > ScrollMin_width){
             //contentWidth이 ScrollMin_width + ScrollMarginInline 보다 작아진 만큼 subScreen크기 갱신나옴
             //contentWidth <= (ScrollMin_width + ScrollMarginInline) 조건이라 contentWidth-(ScrollMin_width+ScrollMarginInline) < 0

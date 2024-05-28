@@ -19,15 +19,6 @@ export interface GroupDetail {
     members: groupMembers[];
 }
 
-export interface VoteList {
-    voteId: string;
-    myId: string;
-    countVoter: string[];
-    voteCreator: string;
-    voteTitle: string;
-    voteCreated: string;
-    voteEndDate: string;
-}
 
 export interface NoticeList{
     noticeId : string;
@@ -45,6 +36,36 @@ export interface NoticeDetail {
     noticeWatcher:string[];
     noticeTitle:string;
 }
+export interface VoteList {
+    voteId: string;
+    myId: string;
+    countVoter: string[];
+    voteCreator: string;
+    voteTitle: string;
+    voteCreated: string;
+    voteEndDate: string;
+}
+
+export interface VoteChoiceResponse{
+    voteItem:string;
+    voter:string[];
+    voteIndex:number
+}
+
+export interface VoteDetail{
+    voteCreator : string;
+    voteTitle : string;
+    voteCreated:string;
+    voteEndDate:string;
+    isMultiple:boolean;
+    anonymous:boolean;
+    voteWatcher:string[]
+    voter:string[];
+    countVoter:string[];
+    voteChoiceResponse:VoteChoiceResponse[];
+}
+
+
 
 
 export interface FriendList {

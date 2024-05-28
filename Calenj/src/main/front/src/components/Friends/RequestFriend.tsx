@@ -1,6 +1,6 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {UserListView, MiniText} from '../../style/FormStyle'
-import {useFetchRequsetFriendList} from "../../entities/ReactQuery/model/queryModel";
+import {useFetchRequestFriendList} from "../../entities/ReactQuery";
 
 
 interface FriendList {
@@ -18,7 +18,7 @@ const RequestFriend: React.FC = () => {
 
 
 
-    const requestFriendState = useFetchRequsetFriendList();
+    const requestFriendState = useFetchRequestFriendList();
 
     const acceptFriend = async (friendUserId: string, isAccept: string) => {
         axios.post('/api/responseFriend', {

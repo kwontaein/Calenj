@@ -2,7 +2,7 @@ import {createTimePassed} from '../../../shared/lib';
 import {MiniText, FullScreen_div} from '../../../style/FormStyle';
 
 import {BoardDetailTop_Container,BoardDetailTop_title}from './BoardTopStyled'
-import {GroupNoticeListTitle} from '../../../features/group/notice'
+import {GroupNoticeListTitle} from '../../../features/group/board/notice'
 import {
     DispatchBoardOptionProps,
     mapDispatchToBoardOptionProps,

@@ -1,2 +1,24 @@
-export { useFetchCookie, useFetchFriendsList, useFetchGroupDetail, useFetchGroupList, useFetchNoticeList, useFetchRequsetFriendList, useFetchVoteList, useMutationCookie} from './model/queryModel'
-export {type GroupDetail, type GroupList_item, type FriendList, type NoticeList, type VoteList, type FriendEvent, type Message, type NoticeDetail} from './api/types'
+export {
+    useFetchCookie,
+    useFetchFriendsList,
+    useFetchGroupDetail,
+    useFetchGroupList,
+    useFetchNoticeList,
+    useFetchRequestFriendList,
+    useFetchVoteList,
+    useMutationCookie,
+    useFetchVoteDetail,
+
+} from './model/queryModel'
+export {
+    type GroupDetail,
+    type GroupList_item,
+    type FriendList,
+    type NoticeList,
+    type VoteList,
+    type FriendEvent,
+    type Message,
+    type NoticeDetail,
+    type VoteChoiceResponse,
+    type VoteDetail,
+} from './api/types'
