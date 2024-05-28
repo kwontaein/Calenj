@@ -44,13 +44,13 @@ const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps> = (
 
         if(filterRegister){//Filter Setting의 기록이 있으면 세팅
             updateBoardFilter(filterRegister)
-            setFilterCheckA(filterRegister.filterA.isCheck);
-            setFilterCheckB(filterRegister.filterB.isCheck);
+            setFilterCheckA(filterRegister.filterA.isChecked);
+            setFilterCheckB(filterRegister.filterB.isChecked);
             setToggleA(filterRegister.filterA.toggleState);
             setToggleB(filterRegister.filterB.toggleState);
         }else{
             //없으면 초기화
-            updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}})
+            updateBoardFilter({filterA:{isChecked:false,toggleState:false}, filterB:{isChecked:false,toggleState:false}})
         }
         setLoading(false); //로딩완료
     }, []);
@@ -60,7 +60,7 @@ const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps> = (
         if(!filterCheckA && !filterCheckB) return
         setFilterCheckA(false)
         setFilterCheckB(false)
-        updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}})
+        updateBoardFilter({filterA:{isChecked:false,toggleState:false}, filterB:{isChecked:false,toggleState:false}})
         if(BoardFilterMap.get(param+"vote")){
             BoardFilterMap.delete(param+"vote");
         }
@@ -70,13 +70,13 @@ const VoteFilterItems :React.FC<BoardOptionState & DispatchBoardOptionProps> = (
         //기존 세팅이랑 같으면 return
         if(!filterCheckA && !filterCheckB) {
             BoardFilterMap.delete(param+"vote");
-            updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}})
+            updateBoardFilter({filterA:{isChecked:false,toggleState:false}, filterB:{isChecked:false,toggleState:false}})
             return
         }
         BoardFilterMap.set(param+"vote",
-            {filterA:{isCheck:filterCheckA,toggleState:toggleA},
-                filterB:{isCheck:filterCheckB,toggleState:toggleB}})
-        updateBoardFilter({filterA:{isCheck:filterCheckA,toggleState:toggleA}, filterB:{isCheck:filterCheckB,toggleState:toggleB}})
+            {filterA:{isChecked:filterCheckA,toggleState:toggleA},
+            filterB:{isChecked:filterCheckB,toggleState:toggleB}})
+        updateBoardFilter({filterA:{isChecked:filterCheckA,toggleState:toggleA}, filterB:{isChecked:filterCheckB,toggleState:toggleB}})
     }
 
 

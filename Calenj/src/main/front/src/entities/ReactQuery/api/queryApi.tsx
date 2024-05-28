@@ -2,7 +2,8 @@
 //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
 import axios, {AxiosError} from "axios";
 import {jwtFilter} from "../../authentication/jwt";
-import {GroupList_item, GroupDetail , VoteList, NoticeList, FriendList, FriendEvent} from "./types";
+import {FriendEvent, FriendList, GroupDetail, GroupList_item, NoticeList, VoteDetail, VoteList} from "./types";
+import {timeOperation} from "../../../shared/lib";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
@@ -27,10 +28,9 @@ export const getGroupList = async (): Promise<GroupList_item[] | null> => {
     try {
         const response = await axios.get('/api/groupList');
         const data = response.data as GroupList_item[];
-        const dataSort = data.sort((a, b) => {
+        return data.sort((a, b) => {
             return (Number(b.groupCreated) - Number(a.groupCreated));
-        })
-        return dataSort;
+        });
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
@@ -92,6 +92,25 @@ export const getVoteList = async (groupId:string): Promise<VoteList[] | null> =>
     }
 }
 
+export const getVoteDetail= async (voteId:string) : Promise<VoteDetail | null> =>{
+    try {
+        const response = await axios.post('/api/voteDetail', null, {
+            params: {
+                voteId: voteId
+            }
+        }) // 객체의 속성명을 'id'로 설정
+        return response.data;
+    }catch(error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if(axiosError.response?.data){
+            jwtFilter((axiosError.response.data) as string);
+        }
+        return null;
+    }
+}
+
+
 
 //친구리스트 불러오기
 export const getFriendList = async (): Promise<FriendList[] | null> => {
@@ -99,10 +118,9 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
         const response = await axios.get('/api/getFriendList');
         console.log('친구 목록을 불러옵니다.');
         const data = response.data as FriendList[];
-        const dataSort = data.sort((a, b) => {
+        return data.sort((a, b) => {
             return (Number(b.friendAddDate) - Number(a.friendAddDate));
-        })
-        return dataSort;
+        });
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
@@ -121,10 +139,9 @@ export const getEvents = async (): Promise<FriendEvent[] | null> => {
         const response = await axios.get('/api/ResponseFriendList');
         console.log('친구 요청 받은 목록을 불러옵니다.');
         const data = response.data as FriendEvent[];
-        const dataSort = data.sort((a, b) => {
+        return data.sort((a, b) => {
             return (Number(b.createDate) - Number(a.createDate));
-        })
-        return dataSort;
+        });
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
@@ -136,7 +153,3 @@ export const getEvents = async (): Promise<FriendEvent[] | null> => {
     }
 }
 
-
-
-
-/**useChattingFile 에 사용되는 함수 */

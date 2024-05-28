@@ -59,7 +59,6 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
                                                 (showUserList ? contentSize.width-GroupUserList_Container_width: contentSize.width)}/>
                             {!screenRowFlex && <ControlMidLine showUserList={showUserList} contentSize={contentSize}/>}
                         </CustomScreen_SubContent_Container>}
-
                     </TransContentsScreen_div>
 
                     {showUserList && <GroupUserList/>}

@@ -1,6 +1,16 @@
 // //v5이후로 인자를 객체 형태로 전달해야함
 import {QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {checkCookie,logout, getGroupList, getGroupDetail, getVoteList, getNoticeList, getFriendList, getEvents} from '../api/queryApi'
+import {
+    checkCookie,
+    logout,
+    getGroupList,
+    getGroupDetail,
+    getVoteList,
+    getNoticeList,
+    getFriendList,
+    getEvents,
+    getVoteDetail
+} from '../api/queryApi'
 import {
     GroupList_item,
     GroupDetail,
@@ -9,7 +19,7 @@ import {
     FriendList,
     FriendEvent,
     Message,
-    FetchData, ReceiveData
+    FetchData, ReceiveData, VoteDetail
 } from "../api/types";
 import {endPointMap} from "../../../store/module/StompMiddleware";
 import {StompState} from "../../../store/module/StompReducer";
@@ -22,7 +32,9 @@ export const QUERY_REQUEST_FRIEND_LIST: string ="QUERY_REQUEST_FRIEND_LIST"
 export const QUERY_GROUP_DETAIL_KEY:string = 'QUERY_GROUP_DETAIL_KEY'
 export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
 export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
+export const QUERY_VOTE_DETAIL_KEY : string = 'QUERY_VOTE_DETAIL_KEY'
 export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
+
 
 
 export const useFetchCookie= () =>
@@ -60,14 +72,24 @@ export const useFetchVoteList = (groupId:string) =>
 export const useFetchFriendsList= () =>
 useQuery<FriendList[] | null, Error>({
     queryKey: [QUERY_FRIEND_LIST_KEY],
-    queryFn: getFriendList, //HTTP 요청함수 (Promise를 반환하는 함수)
+    queryFn: getFriendList,
 });
 
-export const  useFetchRequsetFriendList= () =>
+export const  useFetchRequestFriendList= () =>
     useQuery<FriendEvent[] | null, Error>({
         queryKey: [QUERY_REQUEST_FRIEND_LIST],
-        queryFn: getEvents, //HTTP 요청함수 (Promise를 반환하는 함수)
+        queryFn: getEvents,
     });
+
+
+export const useFetchVoteDetail= (voteId:string) =>
+    useQuery<VoteDetail | null, Error>({
+        queryKey: [QUERY_VOTE_DETAIL_KEY, voteId],
+        queryFn: () => getVoteDetail(voteId),
+    });
+
+
+
 
 /**수정관련 */
 
@@ -80,6 +102,7 @@ export const useMutationCookie = (queryClient :QueryClient) =>
             // await queryClient.invalidateQueries({queryKey: [QUERY_GROUP_LIST_KEY]});
             // await queryClient.invalidateQueries({queryKey: [QUERY_FRIEND_LIST_KEY]});
     },})
+
 
 
 

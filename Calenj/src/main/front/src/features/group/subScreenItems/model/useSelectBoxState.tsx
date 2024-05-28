@@ -44,7 +44,7 @@ export const useSelectBoxState =(isSearching:(word:string)=>void):SelectBoxRetur
             dispatch(updateBoardFilter(filterRegister))
         }else{
             //없으면 초기화
-            dispatch(updateBoardFilter({filterA:{isCheck:false,toggleState:false}, filterB:{isCheck:false,toggleState:false}}))
+            dispatch(updateBoardFilter({filterA:{isChecked:false,toggleState:false}, filterB:{isChecked:false,toggleState:false}}))
             setFilter(false);
         }
         setLoading(false); //로딩완료

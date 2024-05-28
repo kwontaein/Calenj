@@ -62,7 +62,7 @@ export function changeDateForm(date: string): Date {
 
 
 //남은시간 계산
-export const TimeOperation = (endDate: string): string => {
+export const timeOperation = (endDate: string): string => {
     const now = new Date();
     const end = changeDateForm(endDate);
     const remaining = Number(end) - Number(now);

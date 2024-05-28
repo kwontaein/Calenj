@@ -5,8 +5,8 @@ import {
     GroupSubScreenContent_Container,
     GroupSubScreenTop_Container,
 } from "./GroupSubScreenStyled";
-import Vote from "../../../../components/Group/Board/Vote/Vote";
-import {Notice} from "../../notice";
+import {Vote} from "../../board/vote/list";
+import {Notice} from "../../board/notice";
 import {RootState} from "../../../../store/store";
 import {SubScreenOption} from "./SubScreenOption";
 import {ContentsCompositionProps} from "../model/types";
@@ -17,7 +17,7 @@ import {ContentsCompositionProps} from "../model/types";
 
 
 export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth, showUserList}) =>{
-    const {param, clickState, mode} = useSelector((state:RootState) => state.subNavigateInfo)
+    const {clickState, mode} = useSelector((state:RootState) => state.subNavigateInfo)
 
     return(
             <GroupSubScreen_Container $mode={mode}>
@@ -27,11 +27,9 @@ export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWi
             </GroupSubScreenTop_Container>
             <GroupSubScreenContent_Container>
                 {clickState === "투표" &&
-                    <Vote groupId={param}
-                          subWidth={subScreenWidth}/>}
+                    <Vote subWidth={subScreenWidth}/>}
                 {clickState === "공지" &&
-                    <Notice groupId={param}
-                            subWidth={subScreenWidth}/>}
+                    <Notice subWidth={subScreenWidth}/>}
             </GroupSubScreenContent_Container>
         </GroupSubScreen_Container>
     )

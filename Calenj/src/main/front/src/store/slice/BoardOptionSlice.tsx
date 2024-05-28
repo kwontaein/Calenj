@@ -7,16 +7,16 @@ import {bool} from "yup";
 export interface BoardOptionProps{
     search_keyWord:string,
     filter_setting : {
-        filterA:Boardfilter,
-        filterB:Boardfilter,
+        filterA:BoardFilter,
+        filterB:BoardFilter,
     },
     clickState:string,
     noticeParam:string,
     voteParam:string,
 }
 
-interface Boardfilter {
-    isCheck:boolean,
+interface BoardFilter {
+    isChecked:boolean,
     toggleState:boolean
 }
 export interface BoardOptionState{
@@ -25,14 +25,14 @@ export interface BoardOptionState{
 
 export interface DispatchBoardOptionProps {
     updateBoardSearch : (payload:{search_keyWord:string}) => void,
-    updateBoardFilter : (payload:{filterA:Boardfilter, filterB:Boardfilter}) => void,
+    updateBoardFilter : (payload:{filterA:BoardFilter, filterB:BoardFilter}) => void,
     updateClickState : (payload:{clickState:string}) => void,
     updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) =>void,
 }
 
 export const mapDispatchToBoardOptionProps = (dispatch: Dispatch): DispatchBoardOptionProps => ({
     updateBoardSearch : (payload:{search_keyWord:string}) => dispatch(updateBoardSearch(payload)),
-    updateBoardFilter : (payload:{filterA:Boardfilter, filterB:Boardfilter}) => dispatch(updateBoardFilter(payload)),
+    updateBoardFilter : (payload:{filterA:BoardFilter, filterB:BoardFilter}) => dispatch(updateBoardFilter(payload)),
     updateClickState : (payload:{clickState:string})  => dispatch(updateClickState(payload)),
     updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) => dispatch(updateBoardParam(payload)),
 
@@ -49,11 +49,11 @@ const initialState: BoardOptionProps ={
     search_keyWord:'',
     filter_setting:{
         filterA:{
-            isCheck:false,
+            isChecked:false,
             toggleState:false,
         },
         filterB:{
-            isCheck:false,
+            isChecked:false,
             toggleState:false,
         }
     },
@@ -70,7 +70,7 @@ const boardOption = createSlice({
         updateBoardSearch: (state, action :PayloadAction<{ search_keyWord:string }>)=>{
             state.search_keyWord = action.payload.search_keyWord;
         },
-        updateBoardFilter: (state, action :PayloadAction<{ filterA:Boardfilter, filterB:Boardfilter }>)=>{
+        updateBoardFilter: (state, action :PayloadAction<{ filterA:BoardFilter, filterB:BoardFilter }>)=>{
             state.filter_setting.filterA = action.payload.filterA;
             state.filter_setting.filterB = action.payload.filterB;
         },

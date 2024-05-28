@@ -3,7 +3,6 @@ import {SignUpForm} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import InviteGroup from "./components/Group/Invite/InviteGroup";
 import FriendList from "./components/Friends/FriendList";
-import NaverMap from "./components/Group/Map/NaverMap"
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
@@ -16,7 +15,7 @@ import {connect} from "react-redux";
 import {sagaRefresh, sagaTask} from './store/store'
 import RequestFriend from "./components/Friends/RequestFriend";
 import {FullScreen_div} from "./style/FormStyle";
-import {useFetchCookie} from "./entities/ReactQuery/model/queryModel";
+import {useFetchCookie} from "./entities/ReactQuery";
 import ImageUploadComponent from "./components/User/ImageUploadComponent";
 import CalendarComponent from "./components/Calendar/Calendar";
 import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
@@ -107,7 +106,6 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/friend"} element={<FriendList/>}/>
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                         <Route path={"/c"} element={<CalendarComponent/>}/>
-                        <Route path={"/Map"} element={<NaverMap/>}/>
                         <Route path={"/image"} element={<ImageUploadComponent/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                     </Routes>
