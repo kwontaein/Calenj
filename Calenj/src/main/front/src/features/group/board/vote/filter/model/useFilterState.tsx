@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
-import {BoardFilterMap} from "../../../../../../store/module/StompMiddleware";
-import {updateBoardFilter} from "../../../../../../store/slice/BoardOptionSlice";
+import {RootState} from "../../../../../../entities/redux/store";
+import {BoardFilterMap} from "../../../../../../entities/redux/module/StompMiddleware";
+import {updateBoardFilter} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 
 
 export const useFilterState = ():[()=>void, (target:string)=>void,(target:string)=>void]=>{

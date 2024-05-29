@@ -12,9 +12,9 @@ import {INITIAL_EVENTS, createEventId} from "./event-utils";
 function Calendar() {
     const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
     const handleEvents = useCallback(
-        (events: EventApi[]) => setCurrentEvents(events),
-        []
-    );
+        (events: EventApi[]) => setCurrentEvents(events)
+        ,[]);
+
     const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
         let title = prompt("이벤트 추가")?.trim();
         let calendarApi = selectInfo.view.calendar;
@@ -36,6 +36,8 @@ function Calendar() {
             clickInfo.event.remove();
         }
     }, []);
+
+
     return (
         <div className="demo-app">
             <div className="demo-app-main">

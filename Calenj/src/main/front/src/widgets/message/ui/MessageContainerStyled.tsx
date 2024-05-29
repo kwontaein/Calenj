@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {ThemaColor2} from "../../../style/FormStyle";
+import {ThemaColor2} from "../../../shared/ui/SharedStyled";
 
 export const MessageComponent_Container = styled.div`
     width: 100%;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
-import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../style/FormStyle";
+import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 

@@ -6,7 +6,7 @@ import {
 } from "./VoteFilterStytled";
 import React from "react";
 import {connect, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
+import {RootState} from "../../../../../../entities/redux/store";
 import {VoteFilterCheckBox} from "./VoteFilterCheckBox";
 import {VoteFilterToggleBox} from "./VoteFilterToggleBox";
 import {useFilterState} from "../model/useFilterState";

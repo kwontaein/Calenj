@@ -1,7 +1,7 @@
 import {reqestEmailCodeApi} from "../api/reqestEmailCodeApi";
 import {getExpirationTimeApi} from "../api/getExpirationTimeApi";
 import {useDispatch} from "react-redux";
-import {updateToken} from "../../../../store/slice/EmailValidationSlice";
+import {updateToken} from "../../../../entities/redux/slice/EmailValidationSlice";
 
 export const useRequestEmailCode = () => {
     const dispatch = useDispatch();

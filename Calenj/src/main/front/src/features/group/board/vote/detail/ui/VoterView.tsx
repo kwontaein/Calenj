@@ -1,7 +1,7 @@
 import {MyVoteIcon, ViewVoter_Container, VoteResult_Hr} from "./VoteDetailStyled";
-import {MiniText, RowFlexBox} from "../../../../../../style/FormStyle";
+import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import React from "react";
-import {VoteChoiceResponse} from "../../../../../../entities/ReactQuery";
+import {VoteChoiceResponse} from "../../../../../../entities/reactQuery";
 
 interface VoterProps{
     isCreator :boolean,

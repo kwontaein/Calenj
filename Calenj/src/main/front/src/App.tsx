@@ -1,7 +1,7 @@
 import Home from './Home';
 import {SignUpForm} from "./pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
-import InviteGroup from "./components/Group/Invite/InviteGroup";
+import {InviteGroup} from "./features/group/invite";
 import FriendList from "./components/Friends/FriendList";
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
@@ -10,15 +10,15 @@ import {
     mapDispatchToStompProps,
     StompData,
     mapStateToStompProps
-} from './store/module/StompReducer';
+} from './entities/redux/module/StompReducer';
 import {connect} from "react-redux";
-import {sagaRefresh, sagaTask} from './store/store'
+import {sagaRefresh, sagaTask} from './entities/redux/store'
 import RequestFriend from "./components/Friends/RequestFriend";
-import {FullScreen_div} from "./style/FormStyle";
-import {useFetchCookie} from "./entities/ReactQuery";
-import ImageUploadComponent from "./components/User/ImageUploadComponent";
+import {FullScreen_div} from "./shared/ui/SharedStyled";
+import {useFetchCookie} from "./entities/reactQuery";
+import ImageUploadView from "./shared/ui/ImageUploadView";
 import CalendarComponent from "./components/Calendar/Calendar";
-import ImagesUploadComponent from "./components/User/ImagesUploadComponent";
+import ImagesUploadComponent from "./shared/ui/MultiImageUploadView";
 import {LoginFormPages} from "./pages/login/ui";
 
 //대표 색 : #  007bff
@@ -106,7 +106,7 @@ const App: React.FC<DispatchStompProps & StompData> = ({
                         <Route path={"/friend"} element={<FriendList/>}/>
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
                         <Route path={"/c"} element={<CalendarComponent/>}/>
-                        <Route path={"/image"} element={<ImageUploadComponent/>}/>
+                        <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                     </Routes>
                 </BrowserRouter>

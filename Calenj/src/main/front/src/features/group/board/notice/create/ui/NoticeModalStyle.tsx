@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../style/FormStyle";
+import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 const GroupNoticeModal_TopContent_Container_height = 40

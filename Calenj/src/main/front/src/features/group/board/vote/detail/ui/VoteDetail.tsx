@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {timeOperation} from '../../../../../../shared/lib';
 import {DetailTop} from '../../../notice/detail'
-import { RowFlexBox } from '../../../../../../style/FormStyle';
+import { RowFlexBox } from '../../../../../../shared/ui/SharedStyled';
 import {
     TransVoteContainer,
     VoteDetail_Container,
@@ -10,7 +10,7 @@ import {
     VoteConditionItem_Container,
 
 } from './VoteDetailStyled'
-import { Modal_Background } from '../../../../../../style/FormStyle'
+import { Modal_Background } from '../../../../../../shared/ui/SharedStyled'
 import {VoterView} from "./VoterView";
 import {useVoteDetailData} from "../model/useVoteDetailData";
 import {VoterViewButton} from "./VoterViewButton";

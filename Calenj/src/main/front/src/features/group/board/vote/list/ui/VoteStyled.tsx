@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TextColor2, ThemaColor3} from "../../../../../../style/FormStyle";
+import {TextColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
 
 export const GroupVoteList_Container = styled.div`
     width: 100%;

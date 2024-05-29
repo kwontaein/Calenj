@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {PointColor, TextColor2, ThemaColor3} from "../../../../../../style/FormStyle";
+import {PointColor, TextColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
 
 interface subScreenWidthProps{
     $subScreenWidth: number;

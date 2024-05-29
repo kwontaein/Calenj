@@ -1,6 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {jwtFilter} from "../../../../../../entities/authentication/jwt";
-import {NoticeDetail} from '../../../../../../entities/ReactQuery'
+import {NoticeDetail} from '../../../../../../entities/reactQuery'
 
 export const getNoticeDetailApi = async (noticeId:string) :Promise<NoticeDetail> =>{
         const response = await axios.post('/api/noticeDetail', null, {

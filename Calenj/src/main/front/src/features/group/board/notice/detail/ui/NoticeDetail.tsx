@@ -2,8 +2,8 @@ import React, {useLayoutEffect, useState} from 'react';
 
 import {DetailTop} from './DetailTop'
 import {NoticeDetailContainer, NoticeDetailContent_Container} from "./NoticeDetailStyled";
-import {FullScreen_div} from "../../../../../../style/FormStyle";
-import {NoticeDetail} from '../../../../../../entities/ReactQuery'
+import {FullScreen_div} from "../../../../../../shared/ui/SharedStyled";
+import {NoticeDetail} from '../../../../../../entities/reactQuery'
 import {getNoticeDetailApi} from "../api/getNoticeDetailApi";
 
 

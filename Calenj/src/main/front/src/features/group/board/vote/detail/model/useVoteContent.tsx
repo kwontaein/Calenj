@@ -4,7 +4,7 @@ import {AxiosError} from "axios";
 import {jwtFilter} from "../../../../../../entities/authentication/jwt";
 import {updateVoteEndDateApi} from "../api/updateVoteEndDateApi";
 import {useConfirm} from "../../../../../../shared/model";
-import {useFetchVoteDetail} from "../../../../../../entities/ReactQuery";
+import {useFetchVoteDetail} from "../../../../../../entities/reactQuery";
 
 interface ReturnVoteContent{
     voteComplete:boolean,

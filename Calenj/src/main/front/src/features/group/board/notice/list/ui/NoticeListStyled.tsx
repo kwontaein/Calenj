@@ -1,6 +1,6 @@
 /** NoticeList **/
 import styled from "styled-components";
-import {ThemaColor3} from "../../../../../../style/FormStyle";
+import {ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
 interface subScreenWidthProps{
     $subScreenWidth: number;
 }

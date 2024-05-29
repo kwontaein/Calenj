@@ -1,7 +1,7 @@
-import {BoardParamMap} from "../../../../../../store/module/StompMiddleware";
-import {updateBoardParam} from "../../../../../../store/slice/BoardOptionSlice";
+import {BoardParamMap} from "../../../../../../entities/redux/module/StompMiddleware";
+import {updateBoardParam} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
+import {RootState} from "../../../../../../entities/redux/store";
 import {string} from "yup";
 
 export const useNoticeOption = ():[()=>void,(param:string)=>void] =>{

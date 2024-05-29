@@ -1,4 +1,4 @@
-import {Message} from "../../ReactQuery/api/types";
+import {Message} from "../../reactQuery/api/types";
 
 export const fileFilter = (messages: string[]) => {
     const messageEntries = Array.from(messages, (message: string) => {

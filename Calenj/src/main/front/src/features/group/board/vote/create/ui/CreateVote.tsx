@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
-import {CheckCondition_Button, Modal_Background,} from '../../../../../../style/FormStyle';
+import {CheckCondition_Button, Modal_Background,} from '../../../../../../shared/ui/SharedStyled';
 import {useConfirm} from "../../../../../../shared/model";
 import 'react-datepicker/dist/react-datepicker.css'
 import {ko} from "date-fns/locale/ko";
@@ -29,7 +29,7 @@ import {
     VoteTypeRadio_Label,
     VoteTypeRadio_Lable_Container
 } from "./CreateVoteStyled";
-import {updateClickState} from "../../../../../../store/slice/BoardOptionSlice";
+import {updateClickState} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 import {useDispatch} from "react-redux";
 import {useVoteListState} from "../model/useVoteListState";
 import {useCreateVote} from "../model/useCreateVote";

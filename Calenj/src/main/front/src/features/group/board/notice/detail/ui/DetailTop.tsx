@@ -1,10 +1,10 @@
 import {createTimePassed} from '../../../../../../shared/lib';
-import {MiniText, FullScreen_div} from '../../../../../../style/FormStyle';
+import {MiniText, FullScreen_div} from '../../../../../../shared/ui/SharedStyled';
 import {BoardDetailTop_Container,BoardDetailTop_title}from './BoardTopStyled'
 import {GroupNoticeListTitle} from '../../list'
 import {
      updateBoardParam,
-} from "../../../../../../store/slice/BoardOptionSlice";
+} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 import {useDispatch} from 'react-redux'
 
 interface Details{

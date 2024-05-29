@@ -1,7 +1,7 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {useEffect, useState} from 'react';
-import {UserListView, MiniText} from '../../style/FormStyle'
-import {useFetchFriendsList} from "../../entities/ReactQuery/model/queryModel";
+import {UserListView, MiniText} from '../../shared/ui/SharedStyled'
+import {useFetchFriendsList} from "../../entities/reactQuery/model/queryModel";
 
 
 
@@ -21,14 +21,10 @@ const FriendList: React.FC = () => {
                 console.log(error.response.status);
             })
     }
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(event.target.value);
-    };
-
     return (
         <div>
             <div>
-                <input type="text" value={inputValue} onChange={handleInputChange}/>
+                <input type="text" value={inputValue} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>setInputValue(e.target.value)}/>
                 <button onClick={() => addFriend()}>친구 추가</button>
             </div>
             {friendListState.isLoading && <div>Loading...</div>}

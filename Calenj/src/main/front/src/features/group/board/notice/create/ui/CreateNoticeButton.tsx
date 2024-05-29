@@ -1,10 +1,10 @@
 import React from 'react';
-import {CheckCondition_Button} from '../../../../../../style/FormStyle';
+import {CheckCondition_Button} from '../../../../../../shared/ui/SharedStyled';
 import {createNotice} from '../model/createNotice';
-import {useFetchNoticeList} from "../../../../../../entities/ReactQuery";
+import {useFetchNoticeList} from "../../../../../../entities/reactQuery";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
-import {updateClickState} from "../../../../../../store/slice/BoardOptionSlice";
+import {RootState} from "../../../../../../entities/redux/store";
+import {updateClickState} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 import {NoticeButtonsProps} from "../model/types";
 
 

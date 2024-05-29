@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {EmailTokenState} from "../../../../store/slice/EmailValidationSlice";
+import {EmailTokenState} from "../../../../entities/redux/slice/EmailValidationSlice";
 
 //input을 수정할 수 있는지 없는지 관리
 export const useInputManagement = (emailToken:EmailTokenState):[isAble:boolean, updateInputAble:()=>void]=>{

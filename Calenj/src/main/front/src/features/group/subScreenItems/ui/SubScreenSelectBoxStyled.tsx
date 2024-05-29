@@ -6,7 +6,7 @@ import {
     TextColor2,
     ThemaColor2,
     ThemaColor3
-} from "../../../../style/FormStyle";
+} from "../../../../shared/ui/SharedStyled";
 
 interface OptionProps{
     $clickState?:string,

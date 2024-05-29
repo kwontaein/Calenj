@@ -1,8 +1,8 @@
 import {MutableRefObject, useEffect, useRef, useState} from "react";
-import {BoardFilterMap, BoardSearchMap} from "../../../../store/module/StompMiddleware";
-import {updateBoardFilter, updateBoardSearch, updateClickState} from "../../../../store/slice/BoardOptionSlice";
+import {BoardFilterMap, BoardSearchMap} from "../../../../entities/redux/module/StompMiddleware";
+import {updateBoardFilter, updateBoardSearch, updateClickState} from "../../../../entities/redux/slice/BoardOptionSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 
 interface SelectBoxReturn {
     searchRef: MutableRefObject<HTMLInputElement|null>

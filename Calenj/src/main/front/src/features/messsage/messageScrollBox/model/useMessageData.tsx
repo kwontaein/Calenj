@@ -3,14 +3,14 @@ import {
     QUERY_NEW_CAHT_KEY,
     useChatFileInfinite,
     useReceiveChatInfinite
-} from "../../../../entities/ReactQuery/model/queryModel";
+} from "../../../../entities/reactQuery/model/queryModel";
 import {useChatFetching} from "../../../../entities/message";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 import {InfiniteData, UseInfiniteQueryResult, useQueryClient} from "@tanstack/react-query";
-import {Message} from '../../../../entities/ReactQuery'
-import {endPointMap, scrollPointMap} from "../../../../store/module/StompMiddleware";
-import {updateAppPosition} from "../../../../store/module/StompReducer";
+import {Message} from '../../../../entities/reactQuery'
+import {endPointMap, scrollPointMap} from "../../../../entities/redux/module/StompMiddleware";
+import {updateAppPosition} from "../../../../entities/redux/module/StompReducer";
 
 interface useMessageData{
     messageList:Message[],

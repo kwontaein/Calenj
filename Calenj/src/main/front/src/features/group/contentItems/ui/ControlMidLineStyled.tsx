@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {PointColor, SubScreenColor} from "../../../../style/FormStyle";
+import {PointColor, SubScreenColor} from "../../../../shared/ui/SharedStyled";
 
 export const MiddleLine_Size = 3;
 

@@ -1,8 +1,4 @@
-import {
-    mapDispatchToBoardOptionProps,
-    mapStateToBoardOptionProps
-} from "../../../../store/slice/BoardOptionSlice";
-import {connect, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     OptionStateText_Container,
     SubScreenIcon_Container,
@@ -12,19 +8,22 @@ import {
 } from "./SubScreenSelectBoxStyled";
 import {VoteFilter} from "../../board/vote/filter";
 import {useSelectBoxState} from "../model/useSelectBoxState";
-import {RootState} from "../../../../store/store";
-import {SelectBoxProps} from "../model/types";
+import {RootState} from "../../../../entities/redux/store";
+import {GroupSubScreenProps} from "../model/types";
+import {updateClickState} from "../../../../entities/redux/slice/BoardOptionSlice";
 
 
-const SubScreenSelectBox:React.FC<SelectBoxProps> =({showUserList, isSearching, boardOption,updateClickState})=>{
+export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, isSearching})=>{
     const {searchRef, filter, setSearchWord} = useSelectBoxState(isSearching)
     const {clickState} = useSelector((state:RootState) => state.subNavigateInfo)
+    const boardOption = useSelector((state:RootState)=>state.boardOption);
+    const dispatch = useDispatch()
 
 
     return(
         <div>
             {(clickState ==="투표" || clickState ==="공지") &&
-                <SubScreenSelector_Container $clickState={clickState} $option={boardOption.clickState} $showUserList={showUserList}>
+                <SubScreenSelector_Container $clickState={clickState} $option={clickState} $showUserList={showUserList}>
                     <SubScreenOption_Cotainer $option={boardOption.clickState}>
 
                         {boardOption.clickState ==="filter" && <OptionStateText_Container>필터 설정</OptionStateText_Container>}
@@ -34,19 +33,19 @@ const SubScreenSelectBox:React.FC<SelectBoxProps> =({showUserList, isSearching, 
                         {(clickState!=="공지") && (boardOption.clickState ==="" ||boardOption.clickState !=="search")  &&
                         <SubScreenIcon_Container $option={boardOption.clickState}
                                                  $filter={filter}
-                                                 onClick={()=>{updateClickState({clickState:"filter"})}}>
+                                                 onClick={()=>{dispatch(updateClickState({clickState:"filter"}))}}>
                             <i className="fi fi-rs-filter" style={{marginTop: "3px"}}></i>
                         </SubScreenIcon_Container>
                         }
                         {boardOption.clickState !=="filter"  &&
                         <SubScreenIcon_Container $option={boardOption.clickState}
-                                                 onClick={()=>{updateClickState({clickState:"search"})}}>
+                                                 onClick={()=>{dispatch(updateClickState({clickState:"search"}))}}>
                             <i className="fi fi-br-search" style={{marginTop: "3px"}}></i>
                         </SubScreenIcon_Container>
                         }
                         {(boardOption.clickState===""|| boardOption.clickState==="add")  &&
                         <SubScreenIcon_Container $option={boardOption.clickState}
-                                                 onClick={()=>{updateClickState({clickState:"add"})}}>
+                                                 onClick={()=>{dispatch(updateClickState({clickState:"add"}))}}>
                             <i className="fi fi-sr-plus-small" style={{marginTop: "3px", fontSize:"20px"}}></i>
                         </SubScreenIcon_Container>
                         }
@@ -61,4 +60,3 @@ const SubScreenSelectBox:React.FC<SelectBoxProps> =({showUserList, isSearching, 
 
     )
 }
-export default connect(mapStateToBoardOptionProps, mapDispatchToBoardOptionProps) (SubScreenSelectBox);

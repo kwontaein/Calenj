@@ -1,7 +1,7 @@
 import React from "react";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
-import {useFetchVoteDetail} from "../../../../../../entities/ReactQuery";
+import {RootState} from "../../../../../../entities/redux/store";
+import {useFetchVoteDetail} from "../../../../../../entities/reactQuery";
 import {useVoteContent} from "../model/useVoteContent";
 import {
     CurrentVotePersentLine,
@@ -12,7 +12,7 @@ import {
     VoteDetailItem_Container,
     VoteItem_Label
 } from "./VoteDetailStyled";
-import {MiniText, RowFlexBox} from "../../../../../../style/FormStyle";
+import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import {VoteDetailProps} from "../model/types";
 
 export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend, myVote, voteEnd, pickVote,isCreator})=>{

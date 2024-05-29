@@ -4,43 +4,145 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="02.15 checkout 전 commit">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/model/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/model/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/model/useFilterState.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilter.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilterCheckBox.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilterToggleBox.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="05.29 voteFilter =&gt; FSD 정리완료">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/api/createGroupApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/model/useCreateGroup.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/api/inviteCodeApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/api/inviteGroupApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/api/joinGroupApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/model/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/model/useInviteCode.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/ui/InviteGroup.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/model/useNavigation.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationSelectBox.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationSelectBoxStyled.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/api/getUserProfileApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/model/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/api/imageUploadApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/ImageUploadView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/MultiImageUploadView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Board/BoardTopStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/BoardTopStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Board/DetailTop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/DetailTop.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Board/Vote/VoteFilterItems.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Board/Vote/VoteFilterStytled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilterStytled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/MakeGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/MakeGroup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/custom.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/api/createNoticeApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/api/createNoticeApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/api/getNoticeDetailApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/api/getNoticeDetailApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/lib/sortNotice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/lib/sortNotice.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/model/createNotice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/model/createNotice.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/model/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/model/useNoticeOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/model/useNoticeOption.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/CreateNoticeButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/CreateNoticeButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/Notice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/Notice.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/NoticeDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/NoticeDetailStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetailStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/NoticeListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/NoticeListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/NoticeModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/ui/NoticeModalStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModalStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Calendar/Calendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Calendar/Calendar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Friends/FriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Friends/FriendList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Friends/RequestFriend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Friends/RequestFriend.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/GroupList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/GroupUser/GroupUserList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/ui/GroupUserList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/GroupUser/UserModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/ui/UserModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Invite/InviteGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/model/useInviteGroup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Invite/InviteModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/ui/InviteModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/Invite/RequestInviteGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/ui/RequestInviteGroup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/MakeGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/ui/CreateGroup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/Group/NavigateItems/SubNavigationSelectBox.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/User/FixedUserBar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/User/ImageUploadComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useFileImageHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/components/User/ImagesUploadComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useMultiImageHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/ReactQuery/api/queryApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/ReactQuery/api/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/ReactQuery/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/ReactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/api/useRequestChatFile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/api/useRequestChatFile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/lib/fileFilter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/lib/fileFilter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/useChatFetching.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/useChatFetching.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/model/useRequestEmailCode.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/model/useRequestEmailCode.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/model/useValidCountDown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/model/useValidCountDown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/CheckEmailAuthButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/CheckEmailAuthButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/CodeValidTime.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/CodeValidTime.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/EmailValidationModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/EmailValidationModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/login/ui/LoginButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/login/ui/LoginButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/logout/ui/LogoutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/logout/ui/LogoutButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/sign/model/useInputManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/sign/model/useInputManagement.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/sign/ui/SignUpButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/sign/ui/SignUpButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/CreateNoticeButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/CreateNoticeButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModalStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/create/ui/NoticeModalStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/api/getNoticeDetailApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/api/getNoticeDetailApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/BoardTopStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/BoardTopStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/DetailTop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/DetailTop.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/lib/sortNotice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/lib/sortNotice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/model/useNoticeOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/model/useNoticeOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/Notice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/Notice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/NoticeListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/list/ui/NoticeListStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/model/useCreateVote.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/model/useCreateVote.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVote.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVote.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteDetailData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteDetailData.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterViewButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterViewButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/model/useFilterState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/model/useFilterState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilterStytled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/filter/ui/VoteFilterStytled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/model/deadLineFilter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/model/deadLineFilter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/model/useVoteList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/model/useVoteList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/Vote.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/Vote.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteListItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteListItems.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteListItemsStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteListItemsStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/list/ui/VoteStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenHandler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenMode.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenMode.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ContentCompositionStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ContentCompositionStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ControlMidLine.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ControlMidLine.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ControlMidLineStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/ControlMidLineStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/GroupContentItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/GroupContentItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/GroupContentTopItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/ui/GroupContentTopItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/model/useSubNavState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/model/useSubNavState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigateTopItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigateTopItems.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigationStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigationStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useBoardState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useBoardState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useSelectBoxState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useSelectBoxState.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreenStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreenStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenOption.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenSelectBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenSelectBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenSelectBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenSelectBoxStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/useMessageInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/useMessageInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/ContentsComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/ContentsComposition.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/ContentsCompositionStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/ContentsCompositionStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/SubNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationNode/ui/SubNavigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationParent/ui/NavigationComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/main/navigationParent/ui/NavigationComposition.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/signup/ui/SignUpForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/signup/ui/SignUpForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/module/StompMiddleware.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/module/StompReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/module/StompReducer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/module/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/module/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/slice/BoardOptionSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/slice/BoardOptionSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/slice/EmailValidationSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/slice/EmailValidationSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/slice/NavigatgionSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/slice/NavigatgionSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/slice/SubNavigationSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/slice/SubNavigationSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/store/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/store.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/FormStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Group/GroupDetailStyle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Group/GroupInviteStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/ui/GroupInviteStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Group/GroupListStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Group/GroupUserListStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/user/ui/GroupUserListStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Group/GrouypByNavigationSelectBoxStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/invite/ui/RequestInvieteGroupStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Icon/icon.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/Icon/icon.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/style/Sign.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/Sign.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainerStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainerStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/signState/ui/SignStateStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/signState/ui/SignStateStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/signState/ui/SignStateWidget.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/signState/ui/SignStateWidget.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/controller/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/controller/GroupController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/service/GroupService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,11 +245,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\vote\filter\model" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\vote\filter\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\create\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\list\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\user\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\user\model" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\user\api" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\user" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\reactQuery" />
     </key>
   </component>
   <component name="RunManager">
@@ -181,7 +283,7 @@
       <workItem from="1707300824558" duration="1522000" />
       <workItem from="1707306990773" duration="2744000" />
       <workItem from="1707374543753" duration="596000" />
-      <workItem from="1716955959356" duration="9431000" />
+      <workItem from="1716955959356" duration="22678000" />
     </task>
     <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
       <option name="closed" value="true" />
@@ -207,7 +309,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707307863942</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="05.29 voteFilter =&gt; FSD 정리완료">
+      <option name="closed" value="true" />
+      <created>1716968345507</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1716968345507</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +339,7 @@
     <MESSAGE value="02.06 npm 모듈 셋팅" />
     <MESSAGE value="02.15 checkout 전 commit" />
     <MESSAGE value="05.28 VoteFile =&gt; FSD 파일구조로 변경" />
-    <option name="LAST_COMMIT_MESSAGE" value="05.28 VoteFile =&gt; FSD 파일구조로 변경" />
+    <MESSAGE value="05.29 voteFilter =&gt; FSD 정리완료" />
+    <option name="LAST_COMMIT_MESSAGE" value="05.29 voteFilter =&gt; FSD 정리완료" />
   </component>
 </project>
