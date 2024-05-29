@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import {
     TextColor,
     TextColor2,
-} from "../../../../style/FormStyle";
-import {GroupUserList_Container_width} from '../../../../style/Group/GroupUserListStyle'
+} from "../../../../shared/ui/SharedStyled";
+import {GroupUserList_Container_width} from '../../user/ui/GroupUserListStyle'
 
 interface ScreenModeProps{
     $screenRowFlex :boolean,

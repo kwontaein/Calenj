@@ -4,9 +4,9 @@ import {
     SubNavigateTopBar_EventSelecter_Container,
     SubNavigateTopBar_leftContent, SubNavigateTopBar_rightContent_item
 } from "./GroupSubNavigationStyle";
-import SubNavigationSelectBox from "../../../../components/Group/NavigateItems/SubNavigationSelectBox";
+import {SubNavigationSelectBox} from "./SubNavigationSelectBox";
 import {useEffect, useRef, useState} from "react";
-import {FullScreen_div} from "../../../../style/FormStyle";
+import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 
 interface subNaviationTopProps{
     groupTitle:string,

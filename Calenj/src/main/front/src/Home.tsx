@@ -1,13 +1,13 @@
 import React, {useLayoutEffect, useState, useRef, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {FullScreen_div} from "./style/FormStyle";
+import {FullScreen_div} from "./shared/ui/SharedStyled";
 import {NavigationParent} from './pages/main/navigationParent'
 import {
     DispatchStompProps,
     mapDispatchToStompProps,
     StompData,
     mapStateToStompProps
-} from './store/module/StompReducer';
+} from './entities/redux/module/StompReducer';
 import {SignStateWidget} from './widgets/signState';
 const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 

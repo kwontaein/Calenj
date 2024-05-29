@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {MessageSend_Cotainer_height, ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
-import {GroupUserList_Container_width} from "../../../../style/Group/GroupUserListStyle";
+import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyle";
 import {
     SubNavigate_padding,
     subNavigateBorder,
     SubNavigateTopBar_hegiht, SubNavigation_Container_width
 } from "../../subNavItems/ui/GroupSubNavigationStyle";
 import {MiddleLine_Size} from "../../subScreenItems";
-import {GroupList_Container_width} from "../../../../style/Group/GroupListStyle";
+import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {updateSubScreenHeightSize, updateSubScreenWidthtSize} from "../../../../store/slice/SubNavigationSlice";
+import {updateSubScreenHeightSize, updateSubScreenWidthtSize} from "../../../../entities/redux/slice/SubNavigationSlice";
 import {useDispatch} from "react-redux";
 
 export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)

@@ -4,10 +4,10 @@ import {
 } from '../../../../features/group/subNavItems/ui/GroupSubNavigationStyle'
 import {useSelector} from 'react-redux'
 import { useQueryClient } from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/ReactQuery/model/queryModel";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery/model/queryModel";
 import {GroupSubNavigateTopItems,GroupSubNavigateItems} from "../../../../features/group/subNavItems";
-import {GroupDetail} from "../../../../entities/ReactQuery";
-import {RootState} from "../../../../store/store";
+import {GroupDetail} from "../../../../entities/reactQuery";
+import {RootState} from "../../../../entities/redux/store";
 
 interface QueryProps {
     isLoading :boolean

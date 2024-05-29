@@ -1,4 +1,4 @@
-import {VoteChoiceResponse} from "../../../../../../entities/ReactQuery";
+import {VoteChoiceResponse} from "../../../../../../entities/reactQuery";
 import React from "react";
 
 export interface VoteDetailProps{

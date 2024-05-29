@@ -1,10 +1,10 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
-import {endPointMap, scrollPointMap} from "../../../../store/module/StompMiddleware";
-import {requestFile} from "../../../../store/module/StompReducer";
+import {endPointMap, scrollPointMap} from "../../../../entities/redux/module/StompMiddleware";
+import {requestFile} from "../../../../entities/redux/module/StompReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from '../../../../store/store'
-import {Message} from "../../../../entities/ReactQuery";
+import {RootState} from '../../../../entities/redux/store'
+import {Message} from "../../../../entities/reactQuery";
 
 
 export const useMessageScroll = (param:string, messageList:Message[],) : React.MutableRefObject<HTMLDivElement|null> =>{

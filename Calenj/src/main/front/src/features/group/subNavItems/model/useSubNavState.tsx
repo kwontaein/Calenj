@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {toggleCurrentMap} from "../../../../store/module/StompMiddleware";
-import {updateSubClickState, updateSubParam} from "../../../../store/slice/SubNavigationSlice";
+import {toggleCurrentMap} from "../../../../entities/redux/module/StompMiddleware";
+import {updateSubClickState, updateSubParam} from "../../../../entities/redux/slice/SubNavigationSlice";
 import {useDispatch} from "react-redux";
 
 export const useSubNavState = (groupId:string)

@@ -1,5 +1,5 @@
-import {BoardOptionState, DispatchBoardOptionProps} from "../../../../store/slice/BoardOptionSlice";
-import {DispatchSubNavigationProps, SubNavigateState} from "../../../../store/slice/SubNavigationSlice";
+import {BoardOptionState, DispatchBoardOptionProps} from "../../../../entities/redux/slice/BoardOptionSlice";
+import {DispatchSubNavigationProps, SubNavigateState} from "../../../../entities/redux/slice/SubNavigationSlice";
 
 
 export interface ContentsCompositionProps{
@@ -11,11 +11,10 @@ export interface SubScreenProps{
     showUserList : boolean,
 }
 
-interface GroupSubScreenProps{
+export interface GroupSubScreenProps{
     showUserList:boolean,
     isSearching:(word:string)=>void,
 }
-export type SelectBoxProps = BoardOptionState & DispatchBoardOptionProps & GroupSubScreenProps;
 
 export interface contentSize{
     width:number,

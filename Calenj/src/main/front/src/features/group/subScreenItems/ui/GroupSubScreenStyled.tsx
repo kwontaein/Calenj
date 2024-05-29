@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SubScreenColor, TextColor, TextColor2} from "../../../../style/FormStyle";
+import { SubScreenColor, TextColor, TextColor2} from "../../../../shared/ui/SharedStyled";
 import {MiddleLine_Size} from "../../contentItems/ui/ControlMidLineStyled";
 
 

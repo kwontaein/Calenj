@@ -3,7 +3,7 @@ import {
     SubNavigate_padding,
     SubNavigateTopBar_hegiht
 } from "../../../../features/group/subNavItems/ui/GroupSubNavigationStyle";
-import {BackGroundColor, ThemaColor2} from "../../../../style/FormStyle";
+import {BackGroundColor, ThemaColor2} from "../../../../shared/ui/SharedStyled";
 
 export const EventTopBar_Container = styled.div`
     width: calc(100% -${SubNavigate_padding*2}px);

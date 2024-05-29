@@ -1,7 +1,7 @@
 import {VoteResultHover_div} from "./VoteDetailStyled";
-import {RowFlexBox} from "../../../../../../style/FormStyle";
+import {RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import React, {useState} from "react";
-import {VoteDetail} from "../../../../../../entities/ReactQuery";
+import {VoteDetail} from "../../../../../../entities/reactQuery";
 
 interface VoteDetailProps{
     data:VoteDetail,

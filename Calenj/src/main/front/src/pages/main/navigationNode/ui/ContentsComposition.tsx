@@ -1,13 +1,13 @@
-import {FullScreen_div} from '../../../../style/FormStyle'
+import {FullScreen_div} from '../../../../shared/ui/SharedStyled'
 import React, {useEffect, useState, useRef,useMemo} from "react";
 import {useSelector} from 'react-redux'
 import {} from '../'
 import {useQueryClient} from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/ReactQuery/model/queryModel";
-import {GroupDetail} from '../../../../entities/ReactQuery'
+import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery/model/queryModel";
+import {GroupDetail} from '../../../../entities/reactQuery'
 import {EventTopBar_Container, ContentsScreen_div} from "./ContentsCompositionStyled"
 import {useComponentSize} from '../../../../shared/model'
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 import {GroupContentItem,GroupContentTopItem} from "../../../../features/group/contentItems";
 
 interface QueryProps {

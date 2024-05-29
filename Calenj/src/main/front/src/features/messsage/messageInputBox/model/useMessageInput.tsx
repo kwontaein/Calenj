@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {sendStompMsg} from "../../../../store/module/StompReducer";
-import {RootState} from "../../../../store/store";
+import {sendStompMsg} from "../../../../entities/redux/module/StompReducer";
+import {RootState} from "../../../../entities/redux/store";
 import {MessageInput} from "./types";
 
 

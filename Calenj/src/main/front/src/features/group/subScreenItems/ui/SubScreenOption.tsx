@@ -1,8 +1,8 @@
-import SubScreenSelectBox from "./SubScreenSelectBox";
+import {SubScreenSelectBox} from "./SubScreenSelectBox";
 import {GroupSubScreenTopIcon_Container} from "./GroupSubScreenStyled";
 import {useBoardState} from "../model/useBoardState";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 import {SubScreenProps} from "../model/types";
 
 

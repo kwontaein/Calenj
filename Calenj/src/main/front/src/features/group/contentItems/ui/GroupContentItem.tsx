@@ -1,18 +1,18 @@
-import {FullScreen_div, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
+import {FullScreen_div, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 import {
     CustomScreen_MessageBox_Container,
     CustomScreen_SubContent_Container,
     TransContentsScreen_div
 } from "./ContentCompositionStyle";
-import {GroupUserList_Container_width} from "../../../../style/Group/GroupUserListStyle";
+import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyle";
 import {GroupSubScreen} from "../../subScreenItems";
-import GroupUserList from "../../../../components/Group/GroupUser/GroupUserList";
+import {GroupUserList} from "../../user";
 import { useDispatch, useSelector} from 'react-redux'
 import {MessageContainer} from "../../../../widgets/message";
 import {useScreenMode} from "../model/useScreenMode";
 import {useEffect} from "react";
-import {updateAppPosition} from "../../../../store/module/StompReducer";
-import {RootState} from "../../../../store/store";
+import {updateAppPosition} from "../../../../entities/redux/module/StompReducer";
+import {RootState} from "../../../../entities/redux/store";
 import {ControlMidLine} from "./ControlMidLine";
 
 interface ContentCompositionProps{

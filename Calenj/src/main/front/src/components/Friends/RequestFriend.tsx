@@ -1,6 +1,6 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {UserListView, MiniText} from '../../style/FormStyle'
-import {useFetchRequestFriendList} from "../../entities/ReactQuery";
+import {UserListView, MiniText} from '../../shared/ui/SharedStyled'
+import {useFetchRequestFriendList} from "../../entities/reactQuery";
 
 
 interface FriendList {
@@ -15,8 +15,6 @@ interface FriendList {
 
 const RequestFriend: React.FC = () => {
     //그룹 목록 불러오기
-
-
 
     const requestFriendState = useFetchRequestFriendList();
 

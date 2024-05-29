@@ -1,5 +1,5 @@
 import {SubNavigation,ContentsComposition} from "../../navigationNode";
-import {FullScreen_div} from '../../../../style/FormStyle'
+import {FullScreen_div} from '../../../../shared/ui/SharedStyled'
 import React, {useEffect, useRef, useState} from "react";
 import {connect} from 'react-redux'
 import {
@@ -7,9 +7,9 @@ import {
     DispatchNavigationProps,
     mapStateToNavigationProps,
     mapDispatchToNavigationProps, NavigationProps,
-} from '../../../../store/slice/NavigatgionSlice'
-import {useFetchGroupDetail} from '../../../../entities/ReactQuery'
-import GroupList from "../../../../components/Group/GroupList";
+} from '../../../../entities/redux/slice/NavigatgionSlice'
+import {useFetchGroupDetail} from '../../../../entities/reactQuery'
+import {GroupListView} from "../../../../features/group/navItems_list";
 
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo,updateNavigation})=>{
@@ -17,22 +17,9 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
     //reactQuery로 그룹 디테일정보 fetching
     const groupDetailState =useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
 
-    useEffect(()=>{
-    },[navigateInfo])
-
-    const redirectDetail = (navigate:string, groupId?: string):NavigationProps => {
-        if(navigate === "group" && groupId) {
-            updateNavigation({navigate: "group", navigateParam: ''})
-            updateNavigation({navigate: "group", navigateParam: groupId})
-            return {navigate:navigate, navigateParam:groupId};
-        }else{
-            return {navigate:navigate, navigateParam:''};
-        }
-    }
-
     return(
             <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
-                <GroupList redirectDetail={redirectDetail}/>
+                <GroupListView/>
                 <SubNavigation isLoading={groupDetailState.isLoading}/>
                 <ContentsComposition isLoading={groupDetailState.isLoading}/>
             </FullScreen_div>

@@ -1,6 +1,6 @@
-import {Input, FormLable} from '../../../../style/FormStyle';
+import {Input, FormLable} from '../../../../shared/ui/SharedStyled';
 import {ChangeEvent, useState} from 'react';
-import '../../../../style/Sign.scss'
+import './Sign.scss'
 import {ComponentProps} from "../model/types";
 import {closeEmailValidModal} from '../model/closeEmailValidModal';
 import {CodeValidTime} from "./CodeValidTime";

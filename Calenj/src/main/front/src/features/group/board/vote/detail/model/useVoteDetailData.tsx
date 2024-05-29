@@ -1,9 +1,9 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/store";
+import {RootState} from "../../../../../../entities/redux/store";
 import React, {useEffect, useState} from "react";
-import {useFetchVoteDetail, VoteChoiceResponse, VoteDetail} from "../../../../../../entities/ReactQuery";
+import {useFetchVoteDetail, VoteChoiceResponse, VoteDetail} from "../../../../../../entities/reactQuery";
 import {useQueryClient} from "@tanstack/react-query";
-import {QUERY_VOTE_DETAIL_KEY} from "../../../../../../entities/ReactQuery/model/queryModel";
+import {QUERY_VOTE_DETAIL_KEY} from "../../../../../../entities/reactQuery/model/queryModel";
 import {changeDateForm} from "../../../../../../shared/lib";
 import {checkVoteEnd} from "../lib/checkVoteEnd";
 

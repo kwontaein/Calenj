@@ -1,6 +1,6 @@
-import {requestFile} from "../../../store/module/StompReducer";
+import {requestFile} from "../../redux/module/StompReducer";
 import {useDispatch} from "react-redux";
-import store from "../../../store/store";
+import store from "../../redux/store";
 
 
 export const useRequestChatFile = (param:string):(pageParam: number) => Promise<string[] | never[]> => {

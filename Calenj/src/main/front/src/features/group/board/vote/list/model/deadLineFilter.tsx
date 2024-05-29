@@ -1,4 +1,4 @@
-import {VoteList} from "../../../../../../entities/ReactQuery";
+import {VoteList} from "../../../../../../entities/reactQuery";
 import {changeDateForm} from "../../../../../../shared/lib";
 
 export const deadlineFilter = (list: VoteList[], end: boolean): VoteList[] => {

@@ -1,4 +1,4 @@
-import {TextColor, TextColor2, ThemaColor3} from "../../../../style/FormStyle";
+import {TextColor, TextColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
 import {MessageSend_Cotainer_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
 

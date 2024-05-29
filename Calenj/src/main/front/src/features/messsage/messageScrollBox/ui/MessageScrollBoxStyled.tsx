@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
+import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 
 interface CheckbeforSender {
     $sameUser: boolean,

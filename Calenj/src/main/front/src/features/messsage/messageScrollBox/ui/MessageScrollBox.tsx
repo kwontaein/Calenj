@@ -4,7 +4,7 @@ import {useMemo} from "react";
 import {AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 import {
     DateContainer,
     DateContainer2,
@@ -13,8 +13,8 @@ import {
     MessageContentContainer2, NickNameContainer, ProfileContainer,
     ScrollableDiv
 } from "./MessageScrollBoxStyled";
-import {RowFlexBox} from "../../../../style/FormStyle";
-import {Message} from "../../../../entities/ReactQuery"
+import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
+import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 
 export const MessageScrollBox:React.FC =()=>{

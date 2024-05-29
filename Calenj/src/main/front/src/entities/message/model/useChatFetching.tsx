@@ -1,8 +1,8 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store/store";
+import {RootState} from "../../redux/store";
 import {useRequestChatFile} from "../api/useRequestChatFile";
 
-import {Message} from "../../ReactQuery/api/types";
+import {Message} from "../../reactQuery/api/types";
 import {fileFilter} from "../lib/fileFilter";
 
 

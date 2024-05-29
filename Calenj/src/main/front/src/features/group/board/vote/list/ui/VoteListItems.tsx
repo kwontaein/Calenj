@@ -1,10 +1,10 @@
 import {GroupVoteJoin_div, GroupVoteListView_Li, GroupVoterListTitle} from "./VoteListItemsStyled";
-import {VoteList} from "../../../../../../entities/ReactQuery";
-import {MiniText, RowFlexBox} from "../../../../../../style/FormStyle";
+import {VoteList} from "../../../../../../entities/reactQuery";
+import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import dayjs from "dayjs";
 import {changeDateForm} from "../../../../../../shared/lib";
 import {useDispatch} from "react-redux";
-import {updateBoardParam} from "../../../../../../store/slice/BoardOptionSlice";
+import {updateBoardParam} from "../../../../../../entities/redux/slice/BoardOptionSlice";
 
 interface VoteItemProps {
     vote: VoteList;

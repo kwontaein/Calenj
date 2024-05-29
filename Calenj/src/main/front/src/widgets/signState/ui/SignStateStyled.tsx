@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TextColor, ThemaColor3} from "../../../style/FormStyle";
+import {TextColor, ThemaColor3} from "../../../shared/ui/SharedStyled";
 
 export const SIGN_STATE_TEXT = styled.span`
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */

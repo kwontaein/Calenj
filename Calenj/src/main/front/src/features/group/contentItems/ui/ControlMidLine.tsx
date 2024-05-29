@@ -1,6 +1,6 @@
 import {CustomScreen_MiddleLine_div} from "./ControlMidLineStyled";
 import { useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import {RootState} from "../../../../entities/redux/store";
 import {ContentItemProps} from "../model/types";
 import {useScreenHandler} from "../model/useScreenHandler";
 

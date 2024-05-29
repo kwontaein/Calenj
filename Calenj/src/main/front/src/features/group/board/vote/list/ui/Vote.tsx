@@ -1,6 +1,6 @@
 import 'dayjs/locale/ko'; // 한국어 locale 추가
 import {CreateVote} from "../../create";
-import {useFetchVoteList} from "../../../../../../entities/ReactQuery";
+import {useFetchVoteList} from "../../../../../../entities/reactQuery";
 
 import {
     GroupVoteList_Container,
@@ -9,7 +9,7 @@ import {
 } from "./VoteStyled";
 import {useSelector} from 'react-redux'
 import {VoteDetail} from "../../detail";
-import {RootState} from "../../../../../../store/store";
+import {RootState} from "../../../../../../entities/redux/store";
 import VoteListItems from "./VoteListItems";
 import {useVoteList} from "../model/useVoteList";
 import {checkMyVoter} from "../model/checkMyVoter";

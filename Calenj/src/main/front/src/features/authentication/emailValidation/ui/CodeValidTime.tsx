@@ -1,4 +1,4 @@
-import {ErrorMessage} from "../../../../style/FormStyle";
+import {ErrorMessage} from "../../../../shared/ui/SharedStyled";
 import {useValidCountDown} from "../model/useValidCountDown";
 
 

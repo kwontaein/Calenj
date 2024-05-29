@@ -1,8 +1,8 @@
 import { useSelector} from 'react-redux'
 import {EventTopBarContent, EventTopBarSubContent} from "./ContentCompositionStyle";
 import React from "react";
-import {FullScreen_div} from "../../../../style/FormStyle";
-import {RootState} from "../../../../store/store";
+import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
+import {RootState} from "../../../../entities/redux/store";
 
 interface ContentCompositionProps{
     showUserListMutate : ()=>void,
