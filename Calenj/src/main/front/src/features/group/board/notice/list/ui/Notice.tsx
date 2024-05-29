@@ -1,15 +1,15 @@
 import {useEffect, useLayoutEffect, useState} from "react";
-import {AHMFormat, changeDateForm} from '../../../../../shared/lib';
-import {FullScreen_div, MiniText} from '../../../../../style/FormStyle'
-import {useFetchNoticeList} from "../../../../../entities/ReactQuery";
+import {AHMFormat, changeDateForm} from '../../../../../../shared/lib';
+import {FullScreen_div, MiniText} from '../../../../../../style/FormStyle'
+import {useFetchNoticeList} from "../../../../../../entities/ReactQuery";
 import {
     GroupNoticeList_Container,
     GroupNoticeListTitle, GroupNoticeListView_Li,
 } from "./NoticeListStyled";
 import {useSelector} from "react-redux";
-import {NoticeDetailView} from './NoticeDetail'
-import {NoticeModal} from './NoticeModal'
-import {RootState} from "../../../../../store/store";
+import {NoticeDetailView} from '../../detail'
+import {NoticeModal} from '../../create'
+import {RootState} from "../../../../../../store/store";
 import {useNoticeOption} from "../model/useNoticeOption";
 import {sortNotice} from "../lib/sortNotice";
 import {SubScreenProps} from "../model/types";

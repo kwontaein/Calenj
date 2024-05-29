@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {jwtFilter} from '../../../../../entities/authentication/jwt';
-import {saveDBFormat} from "../../../../../shared/lib";
+import {jwtFilter} from '../../../../../../entities/authentication/jwt';
+import {saveDBFormat} from "../../../../../../shared/lib";
 
 export const postNotice = async ({title, content, groupId, onClose, queryState}: {
     title: string;

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {timeOperation} from '../../../../../../shared/lib';
-import DetailTop from '../../../../../../components/Group/Board/DetailTop'
+import {DetailTop} from '../../../notice/detail'
 import { RowFlexBox } from '../../../../../../style/FormStyle';
 import {
     TransVoteContainer,

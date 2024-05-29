@@ -1,14 +1,11 @@
-import {createTimePassed} from '../../../shared/lib';
-import {MiniText, FullScreen_div} from '../../../style/FormStyle';
-
+import {createTimePassed} from '../../../../../../shared/lib';
+import {MiniText, FullScreen_div} from '../../../../../../style/FormStyle';
 import {BoardDetailTop_Container,BoardDetailTop_title}from './BoardTopStyled'
-import {GroupNoticeListTitle} from '../../../features/group/board/notice'
+import {GroupNoticeListTitle} from '../../list'
 import {
-    DispatchBoardOptionProps,
-    mapDispatchToBoardOptionProps,
-} from "../../../store/slice/BoardOptionSlice";
-import {connect} from 'react-redux'
-import {useEffect} from "react";
+     updateBoardParam,
+} from "../../../../../../store/slice/BoardOptionSlice";
+import {useDispatch} from 'react-redux'
 
 interface Details{
     state:string,
@@ -19,8 +16,8 @@ interface Details{
 }
 
 
-const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,created,watcher,updateBoardParam,subWidth})=>{
-
+export const DetailTop:React.FC<Details>=({state, title,created,watcher,subWidth})=>{
+    const dispatch = useDispatch()
     return(
         <BoardDetailTop_Container>
             <FullScreen_div>
@@ -30,7 +27,7 @@ const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,crea
                     </GroupNoticeListTitle>}
                     {(state==="vote") && title}
                     {state==="vote" &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
-                                         onClick={()=>{updateBoardParam({voteParam:''})}}></i>}
+                                         onClick={()=>{dispatch(updateBoardParam({voteParam:''}))}}></i>}
                 </BoardDetailTop_title>
                 <MiniText>
                     {createTimePassed(created)} · {watcher.length}명 읽음
@@ -40,4 +37,3 @@ const DetailTop:React.FC<Details & DispatchBoardOptionProps>=({state, title,crea
         </BoardDetailTop_Container>
     )
 }
-export default connect(null, mapDispatchToBoardOptionProps) (DetailTop)

@@ -1,4 +1,4 @@
-import {useConfirm} from "../../../../../shared/model";
+import {useConfirm} from "../../../../../../shared/model";
 import {postNotice} from "../api/createNoticeApi";
 import {UseQueryResult} from "@tanstack/react-query";
 

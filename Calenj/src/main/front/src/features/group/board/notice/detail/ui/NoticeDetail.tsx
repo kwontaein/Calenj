@@ -1,11 +1,10 @@
 import React, {useLayoutEffect, useState} from 'react';
 
-import DetailTop from '../../../../../components/Group/Board/DetailTop'
+import {DetailTop} from './DetailTop'
 import {NoticeDetailContainer, NoticeDetailContent_Container} from "./NoticeDetailStyled";
-import {FullScreen_div} from "../../../../../style/FormStyle";
-import {NoticeDetail} from '../../../../../entities/ReactQuery'
+import {FullScreen_div} from "../../../../../../style/FormStyle";
+import {NoticeDetail} from '../../../../../../entities/ReactQuery'
 import {getNoticeDetailApi} from "../api/getNoticeDetailApi";
-import {AxiosResponse} from "axios";
 
 
 

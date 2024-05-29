@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
-import {Modal_Background} from '../../../../../style/FormStyle'
+import {Modal_Background} from '../../../../../../style/FormStyle'
 import {
     GroupNoticeModal_Container,
     GroupNoticeModal_TopContent_Container,
@@ -9,12 +9,12 @@ import {
     GroupNoticeTitle_Input,
     GroupNoticeModal_Textarea
 } from './NoticeModalStyle';
-import {useConfirm} from '../../../../../shared/model'
-import {CreateNoticeButton} from '../index';
-import {updateClickState} from "../../../../../store/slice/BoardOptionSlice";
+import {useConfirm} from '../../../../../../shared/model'
+import {CreateNoticeButton} from './CreateNoticeButton';
+import {updateClickState} from "../../../../../../store/slice/BoardOptionSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {BoardParamMap} from "../../../../../store/module/StompMiddleware";
-import {RootState} from "../../../../../store/store";
+import {BoardParamMap} from "../../../../../../store/module/StompMiddleware";
+import {RootState} from "../../../../../../store/store";
 
 
 export const NoticeModal: React.FC = () => {

@@ -1,6 +1,4 @@
 import {
-    BoardOptionState,
-    DispatchBoardOptionProps,
     mapDispatchToBoardOptionProps,
     mapStateToBoardOptionProps
 } from "../../../../store/slice/BoardOptionSlice";
@@ -12,7 +10,7 @@ import {
     SubScreenSelector_Container,
     SubScreenSearchItem_Input
 } from "./SubScreenSelectBoxStyled";
-import VoteFilterItems from "../../../../components/Group/Board/Vote/VoteFilterItems";
+import {VoteFilter} from "../../board/vote/filter";
 import {useSelectBoxState} from "../model/useSelectBoxState";
 import {RootState} from "../../../../store/store";
 import {SelectBoxProps} from "../model/types";
@@ -55,7 +53,7 @@ const SubScreenSelectBox:React.FC<SelectBoxProps> =({showUserList, isSearching, 
                     </SubScreenOption_Cotainer>
 
                     {boardOption.clickState ==="filter" &&
-                        <VoteFilterItems/>
+                        <VoteFilter/>
                     }
             </SubScreenSelector_Container>
             }

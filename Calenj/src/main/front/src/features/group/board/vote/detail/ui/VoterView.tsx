@@ -1,4 +1,4 @@
-import {MyVoteIcon, ViewVoter_Container, VoteResult_Hr} from "../../../../../../style/Group/GroupVoteStyle";
+import {MyVoteIcon, ViewVoter_Container, VoteResult_Hr} from "./VoteDetailStyled";
 import {MiniText, RowFlexBox} from "../../../../../../style/FormStyle";
 import React from "react";
 import {VoteChoiceResponse} from "../../../../../../entities/ReactQuery";

@@ -6,7 +6,7 @@ import {
     GroupSubScreenTop_Container,
 } from "./GroupSubScreenStyled";
 import {Vote} from "../../board/vote/list";
-import {Notice} from "../../board/notice";
+import {Notice} from "../../board/notice/list";
 import {RootState} from "../../../../store/store";
 import {SubScreenOption} from "./SubScreenOption";
 import {ContentsCompositionProps} from "../model/types";

@@ -1,8 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import axios, {AxiosError} from 'axios';
 import {jwtFilter} from '../../entities/authentication/jwt'
 import { useConfirm } from '../../shared/model'
-import { UseQueryResult, useQueryClient } from '@tanstack/react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import {Modal_Background} from "../../style/FormStyle";
 
 interface ModalProps {

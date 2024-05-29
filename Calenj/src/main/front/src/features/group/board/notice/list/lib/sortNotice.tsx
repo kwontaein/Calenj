@@ -1,5 +1,5 @@
-import {NoticeList} from "../../../../../entities/ReactQuery";
-import {changeDateForm} from "../../../../../shared/lib";
+import {NoticeList} from "../../../../../../entities/ReactQuery";
+import {changeDateForm} from "../../../../../../shared/lib";
 
 export const sortNotice = (noticeListState: NoticeList[]): NoticeList[] => {
     return noticeListState.sort((a: NoticeList, b: NoticeList) => {

@@ -1,5 +1,0 @@
-export {CreateNoticeButton} from './ui/CreateNoticeButton'
-export {GroupNoticeListTitle} from './ui/NoticeListStyled'
-export {Notice} from './ui/Notice'
-export {NoticeModal} from './ui/NoticeModal'
-export {NoticeDetailView} from './ui/NoticeDetail'
