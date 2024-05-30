@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from "react";
-import {EmailTokenState} from "../../../../entities/redux/slice/EmailValidationSlice";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 
 export const useValidCountDown =():[minutes:number,seconds:number]=>{
     const {validateTime} = useSelector((state:RootState) => state.emailValidation)

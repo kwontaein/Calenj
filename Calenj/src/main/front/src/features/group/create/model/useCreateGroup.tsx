@@ -5,7 +5,7 @@ import {jwtFilter} from "../../../../entities/authentication/jwt";
 import {useConfirm} from "../../../../shared/model";
 import {useFetchGroupList} from "../../../../entities/reactQuery";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 
 export const useCreateGroup = (onClose:()=>void):[ groupTitle:string, React.Dispatch<React.SetStateAction<string>>, ()=>void] =>{
     const [groupTitle, setGroupTitle] = useState<string>("");

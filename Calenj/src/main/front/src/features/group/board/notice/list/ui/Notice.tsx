@@ -9,7 +9,7 @@ import {
 import {useSelector} from "react-redux";
 import {NoticeDetailView} from '../../detail'
 import {NoticeModal} from '../../create'
-import {RootState} from "../../../../../../entities/redux/store";
+import {RootState} from "../../../../../../entities/redux";
 import {useNoticeOption} from "../model/useNoticeOption";
 import {sortNotice} from "../lib/sortNotice";
 import {SubScreenProps} from "../model/types";

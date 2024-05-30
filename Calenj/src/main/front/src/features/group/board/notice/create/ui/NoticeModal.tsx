@@ -11,10 +11,8 @@ import {
 } from './NoticeModalStyle';
 import {useConfirm} from '../../../../../../shared/model'
 import {CreateNoticeButton} from './CreateNoticeButton';
-import {updateClickState} from "../../../../../../entities/redux/slice/BoardOptionSlice";
+import {RootState, updateClickState,BoardParamMap} from "../../../../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
-import {BoardParamMap} from "../../../../../../entities/redux/module/StompMiddleware";
-import {RootState} from "../../../../../../entities/redux/store";
 
 
 export const NoticeModal: React.FC = () => {

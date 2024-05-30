@@ -4,7 +4,7 @@ import {BoardDetailTop_Container,BoardDetailTop_title}from './BoardTopStyled'
 import {GroupNoticeListTitle} from '../../list'
 import {
      updateBoardParam,
-} from "../../../../../../entities/redux/slice/BoardOptionSlice";
+} from "../../../../../../entities/redux/model/slice/BoardOptionSlice";
 import {useDispatch} from 'react-redux'
 
 interface Details{

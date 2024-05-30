@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyle";
+import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
 import {ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
-import {updateSubScreenMode, updateSubScreenWidthtSize} from "../../../../entities/redux/slice/SubNavigationSlice";
+import {updateSubScreenMode, updateSubScreenWidthtSize} from "../../../../entities/redux";
 import {contentSize} from "./types";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 
 export const useScreenMode = (param:string, contentSize:contentSize, showUserList:boolean):boolean =>{
     const subNavigateInfo = useSelector((state:RootState) => state.subNavigateInfo)

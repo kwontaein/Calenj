@@ -3,7 +3,7 @@ import {
     SubNavigateItem_Content, SubNavigateItem_Icon,
 } from "./GroupSubNavigationStyle";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 import {SubNavProps} from '../model/types';
 
 

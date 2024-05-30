@@ -29,7 +29,7 @@ import {
     VoteTypeRadio_Label,
     VoteTypeRadio_Lable_Container
 } from "./CreateVoteStyled";
-import {updateClickState} from "../../../../../../entities/redux/slice/BoardOptionSlice";
+import {updateClickState} from "../../../../../../entities/redux/model/slice/BoardOptionSlice";
 import {useDispatch} from "react-redux";
 import {useVoteListState} from "../model/useVoteListState";
 import {useCreateVote} from "../model/useCreateVote";

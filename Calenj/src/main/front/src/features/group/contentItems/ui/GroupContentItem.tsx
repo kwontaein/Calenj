@@ -4,15 +4,15 @@ import {
     CustomScreen_SubContent_Container,
     TransContentsScreen_div
 } from "./ContentCompositionStyle";
-import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyle";
+import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
 import {GroupSubScreen} from "../../subScreenItems";
 import {GroupUserList} from "../../user";
 import { useDispatch, useSelector} from 'react-redux'
 import {MessageContainer} from "../../../../widgets/message";
 import {useScreenMode} from "../model/useScreenMode";
 import {useEffect} from "react";
-import {updateAppPosition} from "../../../../entities/redux/module/StompReducer";
-import {RootState} from "../../../../entities/redux/store";
+import {updateAppPosition} from "../../../../entities/redux";
+import {RootState} from "../../../../entities/redux";
 import {ControlMidLine} from "./ControlMidLine";
 
 interface ContentCompositionProps{

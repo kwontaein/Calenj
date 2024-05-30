@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
-import {endPointMap, scrollPointMap} from "../../../../entities/redux/module/StompMiddleware";
-import {requestFile} from "../../../../entities/redux/module/StompReducer";
+import {endPointMap, scrollPointMap} from "../../../../entities/redux";
+import {requestFile} from "../../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from '../../../../entities/redux/store'
+import {RootState} from '../../../../entities/redux'
 import {Message} from "../../../../entities/reactQuery";
 
 

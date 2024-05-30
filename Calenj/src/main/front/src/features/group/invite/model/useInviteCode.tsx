@@ -3,7 +3,7 @@ import {inviteCodeApi} from "../api/inviteCodeApi";
 import axios from "axios";
 import {Friends} from "./types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 
 export const useInviteCode = (setModalOpen: React.Dispatch<React.SetStateAction<boolean>>) :[inviteLink:string, invite : ()=>void] =>{
     const [inviteLink, setInviteLink] = useState<string>("");

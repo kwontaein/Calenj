@@ -2,8 +2,7 @@
 //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
 import axios, {AxiosError} from "axios";
 import {jwtFilter} from "../../authentication/jwt";
-import {FriendEvent, FriendList, GroupDetail, GroupList_item, NoticeList, VoteDetail, VoteList} from "./types";
-import {timeOperation} from "../../../shared/lib";
+import {FriendEvent, FriendList, GroupDetail, GroupList_item, NoticeList, VoteDetail, VoteList,Event} from "./types";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
@@ -133,8 +132,8 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
 }
 
 
-//친구요청 이벤트 가져오기
-export const getEvents = async (): Promise<FriendEvent[] | null> => {
+//요청받은 친구 이벤트 가져오기
+export const getFriendResponse= async (): Promise<FriendEvent[] | null> => {
     try {
         const response = await axios.get('/api/ResponseFriendList');
         console.log('친구 요청 받은 목록을 불러옵니다.');
@@ -153,3 +152,24 @@ export const getEvents = async (): Promise<FriendEvent[] | null> => {
     }
 }
 
+
+//요청한 친구 이벤트 가져오기
+export const getFriendRequest = async (): Promise<Event[] | null> => {
+    try {
+        const response = await axios.get('/api/myRequestList');
+        console.log('친구 요청한 목록을 불러옵니다.');
+        const data = response.data as Event[];
+        return data.sort((a, b) => {
+            return (Number(b.createDate) - Number(a.createDate));
+        });
+
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
