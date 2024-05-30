@@ -1,9 +1,7 @@
 import {useEffect, useState} from "react";
 import {useFetchVoteList, VoteList} from "../../../../../../entities/reactQuery";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../entities/redux/store";
-import {changeDateForm} from "../../../../../../shared/lib";
-import {updateBoardParam} from "../../../../../../entities/redux/slice/BoardOptionSlice";
+import { useSelector} from "react-redux";
+import {RootState} from "../../../../../../entities/redux";
 import {deadlineFilter} from "./deadLineFilter";
 
 export const useVoteList = ():[VoteList[],VoteList[]] =>{

@@ -3,7 +3,7 @@ import {
     TextColor,
     TextColor2,
 } from "../../../../shared/ui/SharedStyled";
-import {GroupUserList_Container_width} from '../../user/ui/GroupUserListStyle'
+import {GroupUserList_Container_width} from '../../user/ui/GroupUserListStyled'
 
 interface ScreenModeProps{
     $screenRowFlex :boolean,

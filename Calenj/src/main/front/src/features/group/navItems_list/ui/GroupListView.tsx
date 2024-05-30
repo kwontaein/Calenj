@@ -14,11 +14,10 @@ import {
     GroupTitleViewContent,
     GroupListContent_Container,
 } from './GroupListStyle';
-import {endPointMap} from '../../../../entities/redux/module/StompMiddleware'
+import {endPointMap, RootState} from '../../../../entities/redux'
 import {useSelector} from 'react-redux'
 import {useFetchGroupList, GroupList_item} from "../../../../entities/reactQuery";
 import {useNavigation} from "../model/useNavigation";
-import {RootState} from "../../../../entities/redux/store";
 
 
 

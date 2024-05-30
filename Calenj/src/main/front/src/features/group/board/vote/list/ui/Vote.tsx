@@ -9,7 +9,7 @@ import {
 } from "./VoteStyled";
 import {useSelector} from 'react-redux'
 import {VoteDetail} from "../../detail";
-import {RootState} from "../../../../../../entities/redux/store";
+import {RootState} from "../../../../../../entities/redux";
 import VoteListItems from "./VoteListItems";
 import {useVoteList} from "../model/useVoteList";
 import {checkMyVoter} from "../model/checkMyVoter";

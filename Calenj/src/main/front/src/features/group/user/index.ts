@@ -1,2 +1,2 @@
 export {GroupUserList} from './ui/GroupUserList'
-export {UserModal} from './ui/UserModal'
+export {MemberInfo} from './ui/MemberInfo'

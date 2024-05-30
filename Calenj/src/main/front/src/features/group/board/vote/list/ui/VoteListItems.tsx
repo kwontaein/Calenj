@@ -4,7 +4,7 @@ import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import dayjs from "dayjs";
 import {changeDateForm} from "../../../../../../shared/lib";
 import {useDispatch} from "react-redux";
-import {updateBoardParam} from "../../../../../../entities/redux/slice/BoardOptionSlice";
+import {updateBoardParam} from "../../../../../../entities/redux/model/slice/BoardOptionSlice";
 
 interface VoteItemProps {
     vote: VoteList;

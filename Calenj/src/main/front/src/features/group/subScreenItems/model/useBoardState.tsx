@@ -1,8 +1,8 @@
 import {MutableRefObject, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
-import {BoardParamMap, BoardSearchMap} from "../../../../entities/redux/module/StompMiddleware";
-import {updateBoardParam} from "../../../../entities/redux/slice/BoardOptionSlice";
+import {RootState} from "../../../../entities/redux";
+import {BoardParamMap, BoardSearchMap} from "../../../../entities/redux";
+import {updateBoardParam} from "../../../../entities/redux";
 
 interface BoardStateProps{
     selectBox: MutableRefObject<HTMLDivElement|null>,

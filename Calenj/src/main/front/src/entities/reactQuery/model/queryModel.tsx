@@ -8,8 +8,9 @@ import {
     getVoteList,
     getNoticeList,
     getFriendList,
-    getEvents,
-    getVoteDetail
+    getVoteDetail,
+    getFriendResponse,
+    getFriendRequest
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -19,10 +20,13 @@ import {
     FriendList,
     FriendEvent,
     Message,
-    FetchData, ReceiveData, VoteDetail
+    Event,
+    FetchData,
+    ReceiveData,
+    VoteDetail
 } from "../api/types";
-import {endPointMap} from "../../redux/module/StompMiddleware";
-import {StompState} from "../../redux/module/StompReducer";
+import {endPointMap} from "../../redux/model/module/StompMiddleware";
+import {StompState} from "../../redux/model/slice/StompReducer";
 
 export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";
 export const QUERY_NEW_CAHT_KEY: string = "QUERY_NEW_CAHT_KEY";
@@ -34,8 +38,6 @@ export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
 export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
 export const QUERY_VOTE_DETAIL_KEY : string = 'QUERY_VOTE_DETAIL_KEY'
 export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
-
-
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -75,19 +77,24 @@ useQuery<FriendList[] | null, Error>({
     queryFn: getFriendList,
 });
 
-export const  useFetchRequestFriendList= () =>
-    useQuery<FriendEvent[] | null, Error>({
-        queryKey: [QUERY_REQUEST_FRIEND_LIST],
-        queryFn: getEvents,
-    });
-
-
 export const useFetchVoteDetail= (voteId:string) =>
     useQuery<VoteDetail | null, Error>({
         queryKey: [QUERY_VOTE_DETAIL_KEY, voteId],
         queryFn: () => getVoteDetail(voteId),
     });
 
+export const  useFetchRequestFriendList= () =>
+    useQuery<FriendEvent[] | null, Error>({
+        queryKey: [QUERY_REQUEST_FRIEND_LIST],
+        queryFn: getFriendResponse,
+    });
+
+
+export const useFetchFriendEvent = () =>
+    useQuery<Event[] | null, Error>({
+        queryKey: [QUERY_FRIEND_LIST_KEY],
+        queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
+    })
 
 
 
@@ -102,6 +109,7 @@ export const useMutationCookie = (queryClient :QueryClient) =>
             // await queryClient.invalidateQueries({queryKey: [QUERY_GROUP_LIST_KEY]});
             // await queryClient.invalidateQueries({queryKey: [QUERY_FRIEND_LIST_KEY]});
     },})
+
 
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../../entities/redux/store";
+import {RootState} from "../../../../../../entities/redux";
 import {useFetchVoteDetail} from "../../../../../../entities/reactQuery";
 import {useVoteContent} from "../model/useVoteContent";
 import {

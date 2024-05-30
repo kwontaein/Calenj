@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import {
     StompData,
     mapStateToStompProps,
-} from '../../../entities/redux/module/StompReducer';
+} from '../../../entities/redux/model/slice/StompReducer';
 import {
     SIGN_STATE_TEXT,
     SignState_Container,

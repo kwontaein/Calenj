@@ -2,10 +2,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import {ListView, Modal_Background} from '../../../../shared/ui/SharedStyled'
 import {GroupInviteModal_Container} from "./GroupInviteStyle";
 import {useQueryClient, } from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery/model/queryModel";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery";
 import {GroupDetail} from "../../../../entities/reactQuery";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 
 interface Friends {
     // 친구 아이디

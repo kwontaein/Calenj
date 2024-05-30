@@ -8,9 +8,9 @@ import {
 } from "./SubScreenSelectBoxStyled";
 import {VoteFilter} from "../../board/vote/filter";
 import {useSelectBoxState} from "../model/useSelectBoxState";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 import {GroupSubScreenProps} from "../model/types";
-import {updateClickState} from "../../../../entities/redux/slice/BoardOptionSlice";
+import {updateClickState} from "../../../../entities/redux";
 
 
 export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, isSearching})=>{

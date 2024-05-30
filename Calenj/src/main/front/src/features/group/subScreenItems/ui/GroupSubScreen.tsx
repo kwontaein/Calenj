@@ -7,7 +7,7 @@ import {
 } from "./GroupSubScreenStyled";
 import {Vote} from "../../board/vote/list";
 import {Notice} from "../../board/notice/list";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 import {SubScreenOption} from "./SubScreenOption";
 import {ContentsCompositionProps} from "../model/types";
 

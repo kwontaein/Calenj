@@ -4,7 +4,7 @@ import {useMemo} from "react";
 import {AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 import {
     DateContainer,
     DateContainer2,

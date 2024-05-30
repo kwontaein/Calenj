@@ -99,5 +99,17 @@ interface FetchDataParams {
     pageParam?: number;
 }
 
+export interface Event {
+    createDate: string
+    eventId: number
+    eventName: string
+    eventPurpose: string
+    eventStatus: string
+    eventUserId: string
+    ownUserId: string
+}
+
+
+
 export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
 export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message

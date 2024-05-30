@@ -6,11 +6,10 @@ import {
 } from "../../../../entities/reactQuery/model/queryModel";
 import {useChatFetching} from "../../../../entities/message";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux/store";
+import {RootState} from "../../../../entities/redux";
 import {InfiniteData, UseInfiniteQueryResult, useQueryClient} from "@tanstack/react-query";
 import {Message} from '../../../../entities/reactQuery'
-import {endPointMap, scrollPointMap} from "../../../../entities/redux/module/StompMiddleware";
-import {updateAppPosition} from "../../../../entities/redux/module/StompReducer";
+import {endPointMap, scrollPointMap} from "../../../../entities/redux";
 
 interface useMessageData{
     messageList:Message[],

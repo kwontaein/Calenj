@@ -2,10 +2,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import {UserListView} from '../../../../shared/ui/SharedStyled'
 import {useSelector} from "react-redux";
 import {useQueryClient} from "@tanstack/react-query";
-import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery/model/queryModel";
-import {GroupUserList_Container, UserProfile} from "./GroupUserListStyle";
-import {UserModal} from "./UserModal";
-import {RootState} from "../../../../entities/redux/store";
+import {QUERY_GROUP_DETAIL_KEY} from "../../../../entities/reactQuery";
+import {GroupUserList_Container, UserProfile} from "./GroupUserListStyled";
+import {MemberInfo} from "./MemberInfo";
+import {RootState} from "../../../../entities/redux";
 import {GroupDetail, groupMembers} from "../../../../entities/reactQuery";
 
 
@@ -48,7 +48,7 @@ export const GroupUserList: React.FC = () => {
                     </UserListView>)))
             }
             {/* 모달 창 */}
-            {selectedUser && <UserModal user={selectedUser} onClose={()=>setSelectedUser(null)}/>}
+            {selectedUser && <MemberInfo user={selectedUser} onClose={()=>setSelectedUser(null)}/>}
         </GroupUserList_Container>
 
     );

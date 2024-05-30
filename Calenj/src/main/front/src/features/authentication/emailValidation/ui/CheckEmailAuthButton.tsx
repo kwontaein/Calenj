@@ -1,6 +1,6 @@
 import {
     updateCodeValid
-} from '../../../../entities/redux/slice/EmailValidationSlice';
+} from '../../../../entities/redux/model/slice/EmailValidationSlice';
 import {useCodeValid} from '../model/useCodeValide'
 import { useDispatch} from "react-redux";
 import {CheckCodeValid_Button} from "./CheckAuthButtonStyled";

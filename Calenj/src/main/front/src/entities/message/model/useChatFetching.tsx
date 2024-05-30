@@ -1,9 +1,8 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../redux/store";
 import {useRequestChatFile} from "../api/useRequestChatFile";
-
-import {Message} from "../../reactQuery/api/types";
+import {Message} from "../../reactQuery";
 import {fileFilter} from "../lib/fileFilter";
+import {RootState} from "../../redux";
 
 
 export const useChatFetching = (param:string):
