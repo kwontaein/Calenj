@@ -4,7 +4,7 @@ import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
 import {
     SubNavigate_padding,
     subNavigateBorder,
-    SubNavigateTopBar_hegiht, SubNavigation_Container_width
+    SubNavigateTopBar_height, SubNavigation_Container_width
 } from "../../subNavItems/ui/GroupSubNavigationStyle";
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
@@ -51,9 +51,9 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
                 }
             }
         }else if(currentMode ==="column"){
-            const newHeight = e.clientY- (SubNavigateTopBar_hegiht+(SubNavigate_padding*2)+subNavigateBorder-MiddleLine_Size);
+            const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_padding*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_hegiht-SubNavigateTopBar_hegiht-MessageSend_Cotainer_height-3){
+            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_height-SubNavigateTopBar_height-MessageSend_Cotainer_height-3){
                 dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
             }
         }
