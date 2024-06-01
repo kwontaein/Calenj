@@ -44,7 +44,7 @@ const navigation = createSlice({
     reducers:{
         updateNavigation: (state, action :PayloadAction<{ navigate: string; navigateParam?: string; }>)=>{
             state.navigate = action.payload.navigate;
-            if(action.payload.navigateParam){
+            if(action.payload.navigateParam!==undefined){
                 state.navigateParam = action.payload.navigateParam;
             }
         },
