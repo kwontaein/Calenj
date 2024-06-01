@@ -46,7 +46,7 @@ export const GroupListView: React.FC = () => {
             {groupListState.data && (
                 <GroupList_Container>
                     <GroupListContent_Container>
-                        <Btn_CalenJ_Icon/>
+                        <Btn_CalenJ_Icon $isClick={navigateParam===""} onClick={() => navigationDirect("main")}/>
                         <GroupList_HR/>
                         {groupListState.data.map((group:GroupList_item) => (
 

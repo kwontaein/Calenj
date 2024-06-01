@@ -57,7 +57,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
     }
 
-    il {
+    li {
         list-style: none;
     }
 

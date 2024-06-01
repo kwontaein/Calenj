@@ -11,7 +11,6 @@ import RequestFriend from "../features/evnet/friend/ui/RequestFriend";
 import {FullScreen_div} from "../shared/ui/SharedStyled";
 import {useFetchCookie} from "../entities/reactQuery";
 import ImageUploadView from "../shared/ui/ImageUploadView";
-import {Calendar} from "../features/calendar";
 import ImagesUploadComponent from "../shared/ui/MultiImageUploadView";
 import {LoginFormPages} from "../pages/login/ui";
 import {useCheckToken} from "../features/websocket";
@@ -44,7 +43,6 @@ export const App: React.FC =() => {
                         </Route>
                         <Route path={"/friend"} element={<FriendList/>}/>
                         <Route path={"/requestFriend"} element={<RequestFriend/>}/>
-                        <Route path={"/c"} element={<Calendar/>}/>
                         <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                     </Routes>

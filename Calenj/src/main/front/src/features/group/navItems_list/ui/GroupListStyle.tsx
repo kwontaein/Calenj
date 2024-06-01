@@ -166,14 +166,14 @@ export const GroupTitleViewContent = styled.div`
 `
 
 /**캘린제이 아이콘 */
-export const Btn_CalenJ_Icon = styled.button`
+export const Btn_CalenJ_Icon = styled.button<navigatePram>`
      appearance: none;
      list-style: none;
-     background-color: ${ThemaColor3};
+     background-color: ${props => props.$isClick ? PointColor :ThemaColor3 };
      height: 50px;
      width: 50px;
      border:0;
-     border-radius: 50px;
+     border-radius: ${props => props.$isClick ? "15px" : "50%" };
      overflow: hidden;
      margin-block: 8px;
      background-image: url("/image/calenj_logo.png");
@@ -184,7 +184,7 @@ export const Btn_CalenJ_Icon = styled.button`
      transition: background-color 0.3s ease,border-radius 0.3s ease;
      &:hover {
       background-color: ${PointColor};
-      border-radius: 10px;
+      border-radius: 15px;
       animation: ${shakeAnimation} 0.3s ease-out 1s forwards;
      }
 `

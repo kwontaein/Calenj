@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import {BackGroundColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 
 export const SubNavigation_Container_width: number = 232;
-export const SubNavigateTopBar_hegiht: number = 32;
+export const SubNavigateTopBar_height: number = 32;
 export const SubNavigate_padding: number = 14;
 export const subNavigateBorder = 1.2;
-export const SubNavigationItem_hegiht: number = 30;
+export const SubNavigationItem_height: number = 30;
 export const SubNavigationItem_margin: number = 5;
 export const SubNavigationItem_marginInline: number = 7;
 
@@ -23,7 +23,7 @@ export const SubNavigation_Container = styled.div`
 `
 
 export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
-    height: ${SubNavigateTopBar_hegiht}px;
+    height: ${SubNavigateTopBar_height}px;
     padding: ${SubNavigate_padding}px;
     border-bottom: ${subNavigateBorder}px #222831 solid;
     background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemaColor3 };
@@ -93,7 +93,7 @@ export const SubNavigateItem_Icon = styled.div`
 
 export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
     width: calc(100% - ${SubNavigationItem_marginInline * 2 + SubNavigationItem_margin * 2}px);
-    height: ${SubNavigationItem_hegiht}px;
+    height: ${SubNavigationItem_height}px;
     text-align: left;
     font-size: 15px;
     display: flex;
