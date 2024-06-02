@@ -44,7 +44,7 @@ public class GroupNoticeEntity {
     private String noticeTitle;
 
     @Column(name = "notice_creator")
-    private String noticeCreater;
+    private String noticeCreator;
 
     @Builder.Default
     @Column(name = "notice_watcher")
