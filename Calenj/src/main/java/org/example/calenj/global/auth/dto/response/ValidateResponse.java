@@ -16,6 +16,7 @@ public class ValidateResponse {
     private String dateTime;
     private sendState state;
     private int count;
+    private long remainTime;
 
     @Getter
     @RequiredArgsConstructor
