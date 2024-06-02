@@ -106,11 +106,11 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         if (!scrollRef.current) return
 
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-        const {userEmail} = stomp.receiveMessage
+        const {userId} = stomp.receiveMessage
 
         beforeScrollTop.current = scrollTop - (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
 
-        if(userEmail === localStorage.getItem('userId') && socketEvent){
+        if(userId === localStorage.getItem('userId') && socketEvent){
             scrollToBottom();
         }
         if(endPointMap.get(param) ===0) return;

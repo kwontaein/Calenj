@@ -38,12 +38,12 @@ export const GroupUserList: React.FC = () => {
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
-                    <UserListView key={member.userEmail} onClick={() => setSelectedUser(member)}>
-                        <UserProfile src={`/image/savedImage/${member.userEmail}.jpeg`}
+                    <UserListView key={member.userId} onClick={() => setSelectedUser(member)}>
+                        <UserProfile src={`/image/savedImage/${member.userId}.jpeg`}
                                      onError={onErrorImg}
-                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userEmail)}/>
+                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userId)}/>
                         <span>
-                            {member.nickName} {localStorage.getItem(`userId`) === member.userEmail && '(나)'}
+                            {member.nickName} {localStorage.getItem(`userId`) === member.userId && '(나)'}
                         </span>
                     </UserListView>)))
             }

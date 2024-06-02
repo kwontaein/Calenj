@@ -8,7 +8,7 @@ export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
     const [profile, setProfile] = useState<Profile | null>(null);
 
     useEffect(() => {
-        getUserProfileApi(user.userEmail)
+        getUserProfileApi(user.userId)
             .then((res) => {
                 setProfile(res.data);
             })
@@ -19,11 +19,10 @@ export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
 
     return (
         <div>
-            <p>이메일 : {user.userEmail}</p>
+            <p>이메일 : {user.userId}</p>
             <p>닉네임 : {user.nickName}</p>
-            {localStorage.getItem("userId") === user.userEmail ? " " : <p>공통 : {profile?.sameGroup}</p>}
+            {localStorage.getItem("userId") === user.userId ? " " : <p>공통 : {profile?.sameGroup}</p>}
             <p>소개 : {profile?.introduce}</p>
-            <p>역할 : {user.userEmail}</p>
             <p>가입일 : {profile?.joinDate}</p>
             <button onClick={onClose}>Close</button>
         </div>

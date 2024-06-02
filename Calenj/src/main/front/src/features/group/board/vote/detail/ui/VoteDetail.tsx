@@ -18,7 +18,7 @@ import {VoteDetailContent} from "./VoteDetailContent";
 
 export const VoteDetail:React.FC = () => {
     const {voteItems, myVote, isAttend, voteEnd, loading, pickVoteItem ,data} =useVoteDetailData();
-    let userEmail = localStorage.getItem('userId')
+    let userId = localStorage.getItem('userId')
     const [viewVoter, setViewVoter] = useState<boolean>(false); //투표인원 보기
 
     return(
@@ -38,7 +38,7 @@ export const VoteDetail:React.FC = () => {
                             </RowFlexBox>
                         </VoteConditionItem_Container>
                         {(viewVoter && voteItems) ?
-                            <VoterView voted={voteItems} isCreator={data.voteCreator === userEmail}/>
+                            <VoterView voted={voteItems} isCreator={data.voteCreator === userId}/>
                             :
                             <VoteDetailContent
                                 voteItems={voteItems}  //정렬된 값을 넘김
@@ -46,7 +46,7 @@ export const VoteDetail:React.FC = () => {
                                 voteEnd={voteEnd||false}
                                 pickVote={pickVoteItem}
                                 myVote={myVote as boolean[]}
-                                isCreator={data.voteCreator === userEmail}
+                                isCreator={data.voteCreator === userId}
                             />
                         }
                         {(data.countVoter.length>0||voteEnd) &&

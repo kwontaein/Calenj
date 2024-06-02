@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@fullcalendar/bootstrap": "^5.8.0",
     "@fullcalendar/core": "^5.8.0",
     "@fullcalendar/daygrid": "^5.8.0",
     "@fullcalendar/interaction": "^5.8.0",
@@ -26,6 +28,7 @@
     "@types/sockjs-client": "^1.5.4",
     "axios": "^1.6.3",
     "base-64": "^1.0.0",
+    "bootstrap": "^4.6.2",
     "dayjs": "^1.11.10",
     "fullcalendar": "^6.1.11",
     "http-proxy-middleware": "^2.0.6",
