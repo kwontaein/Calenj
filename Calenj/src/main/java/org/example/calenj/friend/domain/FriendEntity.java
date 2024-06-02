@@ -27,7 +27,7 @@ public class FriendEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "own_user_id", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
+    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "varchar(255)")
     // 소유자 아이디
     private UserEntity ownUserId;
 
