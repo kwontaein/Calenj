@@ -1,184 +1,154 @@
 package org.example.calenj.global.auth;
 
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.example.calenj.global.auth.dto.ValidateDTO;
-import org.example.calenj.user.repository.UserRepository;
-import org.example.calenj.user.service.UserService;
+import org.example.calenj.global.auth.dto.request.ValidateRequest;
+import org.example.calenj.global.auth.dto.response.ValidateResponse;
+import org.example.calenj.global.service.RedisService;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.example.calenj.global.auth.dto.response.ValidateResponse.sendState.*;
 
 @Service
 public class EmailVerificationService {
+
     private final UserRepository userRepository;
-
-    private final UserService userService;
-
     private final JavaMailSender mailSender;
-
+    private final RedisService redisService;
     private final String setFrom;
 
-    //email 인증 토큰을 저장하는 컬렉션
-    private final ValidateDTO validateDTO;
-
-
-    private EmailVerificationService(JavaMailSender mailSender, @Value("${spring.mail.username}") String setFrom, UserRepository userRepository, UserService userService, ValidateDTO validateDTO) {
+    private EmailVerificationService(UserRepository userRepository, JavaMailSender mailSender, RedisService redisService, @Value("${spring.mail.username}") String setFrom) {
+        this.redisService = redisService;
+        this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.setFrom = setFrom;
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.validateDTO = validateDTO;
     }
 
-    //인증번호 발급 메소드
-    public void joinEmail(String email) {
-        String authNumber = makeRandomNumber();
-        validateDTO.setEmail(email);
-        validateDTO.setCode(authNumber);
+    private static final int MAX_RESEND_COUNT = 5;
+    private static final int RESEND_COOL_DOWN_MINUTES = 30;
 
+
+    /**
+     * 이메일 인증번호 발급
+     */
+    public ValidateResponse joinEmail(String email) {
+        ValidateResponse validateResponse = new ValidateResponse();
+        //이메일 중복?
+        if (!emailDuplicated(email)) {
+            validateResponse.setState(EMAIL_DUPLICATED);
+            return validateResponse;
+        }
+
+        //재전송 횟수 초과?
+        if (!emailSendValidation(email)) {
+            validateResponse.setState(RESEND_COUNT_MAX);
+            return validateResponse;
+        }
+
+        //전송할 내용
+        String authNumber = makeRandomNumber();
         String title = "회원 가입 인증 이메일 입니다.";
         String content = "방문해주셔서 감사합니다.<br><br>" +
                 "인증 번호는 " + authNumber + "입니다.<br>" +
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
-        mailSend(email, title, content);
-
-        //인증번호 발급 이후 EnableSendEmail =SUCCESS
-        validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.SUCCESS);
+        System.out.println("authNumber : " + authNumber);
+        validateResponse.setCount(redisService.saveVerificationCode(email, authNumber));
+        //전송 상태 반환
+        return mailSend(email, title, content, validateResponse);
     }
 
-    private String makeRandomNumber() {
-        Random r = new Random();
-        return Integer.toString(r.nextInt(888888) + 111111);
-    }
 
-    public void mailSend(String toMail, String title, String content) {
+    /**
+     * 이메일 보내기
+     */
+    public ValidateResponse mailSend(String toMail, String title, String content, ValidateResponse validateResponse) {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
+            MimeMessageHelper helper = new MimeMessageHelper(message);
             helper.setFrom(setFrom);
             helper.setTo(toMail);
             helper.setSubject(title);
             helper.setText(content, true);
             mailSender.send(message);
+            validateResponse.setState(SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
+            validateResponse.setState(UNKNOWN);
         }
+        return validateResponse;
     }
 
-    //front 에서 보낸 인증코드 체크
-    public void checkValidationCode(String validationCode, HttpServletRequest request, HttpServletResponse response) {
-        String code = validateDTO.getCode();
-
-        if (validationCode.isEmpty()) {
-            //인증코드에 아무것도 입력하지 않으면
-            validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL);
-        }
-
-        //이메일 토큰검증
-        boolean enableEmailToken = emailTokenValidation(request, response);
-
-        if (!enableEmailToken) { //이메일토큰 재발급 가능 시 true 유효하면 false
-            if (validationCode.equals(code)) {
-                validateDTO.setEmailValidState(ValidateDTO.EmailValidState.SUCCESS);
-            } else {
-                validateDTO.setEmailValidState(ValidateDTO.EmailValidState.FAIL);
-            }
-            return;
-        }
-        //쿠키가 만료되면
-        validateDTO.setEmailValidState(ValidateDTO.EmailValidState.RETRY);
-    }
-
-
-    //토큰 발급 (발급 전 토큰 유효기간 체크)
-    public boolean generateEmailValidateToken(HttpServletRequest request, HttpServletResponse response) { // UUID 를 통한 시간제한 토큰 생성
-
-        boolean enableSendEmail = emailTokenValidation(request, response);
-
-        if (enableSendEmail) { //발급 가능하면 토큰발급
-
-            String token = UUID.randomUUID().toString();
-            // 5분 유효한 토큰
-            long validityInMilliseconds = (1000 * 60 * 5) + 4000; //5분 + 서버 통신시간 4초
-            long expirationTime = System.currentTimeMillis() + validityInMilliseconds;
-
-            validateDTO.setEmailToken(token);
-            validateDTO.setExpirationTime(expirationTime);
-            validateDTO.setEmailValidState(ValidateDTO.EmailValidState.INITIAL); //코드 발급 이후엔 인증대기 상태
-
-
-            Cookie cookie = new Cookie("enableSendEmail", token);  //UUID 값을 넣음
-            response.addCookie(cookie);
-
-            return true; //이메일 토큰 반환 후 ture 반환
-        }
-        //만약 이메일 인증 토큰이 유효할 시 EnableSendEmail= FAIL
-        validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.FAIL);
-        return false;
-
-    }
-
-
-    //이메일 토큰시간 검증 및 삭제
-    public boolean emailTokenValidation(HttpServletRequest request, HttpServletResponse response) {
-
-        String emailTokenUUID = validateDTO.getEmailToken();
-
-        //쿠키 값이 존재하는지 확인
-        if (request.getCookies() != null) {
-
-            Optional<Cookie> enableSendEmail = Arrays.stream(request.getCookies())
-                    .filter(cookie -> cookie.getName().equals("enableSendEmail") && cookie.getValue().equals(emailTokenUUID))
-                    .findFirst();
-
-            //UUID 를 비교함 같으면 유효한 코인
-            if (enableSendEmail.isPresent()) {
-
-                Long expirationTime = validateDTO.getExpirationTime();//UUID 로 token 의 유효기간을 가져옴
-
-                if (expirationTime != null && expirationTime > System.currentTimeMillis()) {//토큰 유효기간 체크 , 시간이 유효할 경우
-
-                    return false; // 토큰기간 유효 -> 재발급 불가능
-
-                } else {
-                    //쿠키도 삭제해줌
-                    validateDTO.clear();
-                    userService.removeCookie(response, "enableSendEmail");
-                    return true; //토큰만료 -> 재발급 가능
-                }
-            }
-        }
-        /*쿠키엔 토큰이 없으나 DTO 에는 있으면 쿠키 복구*/
-        if (emailTokenUUID != null) {
-            Cookie cookie = new Cookie("enableSendEmail", validateDTO.getEmailToken());
-            response.addCookie(cookie);
+    /**
+     * 클라이언트가 보낸 인증번호 체크
+     */
+    public boolean checkValidationCode(@NotNull ValidateRequest validateRequest) {
+        Map<Object, Object> verificationData = redisService.getVerificationData(validateRequest.getEmail());
+        // Map 에서 code 값을 추출
+        String verificationCode = (String) verificationData.get("code");
+        if (verificationCode != null) {
+            return validateRequest.getCode().equals(verificationCode);
+        } else {
             return false;
         }
-        return true;
-
     }
 
 
-    //이메일 중복체크
-    public boolean emailDuplicated(String email) {
+    /**
+     * 이메일 재발급 가능 여부 따지기
+     */
+    public boolean emailSendValidation(String email) {
 
-        UserEntity user = userRepository.findByUserEmail(email).orElse(null);
-        //DB에 해당 이메일이 존재하지 않을경우
-        if (user == null) {
+        Map<Object, Object> verificationData = redisService.getVerificationData(email);
+        Integer count = (Integer) verificationData.get("count");
+        int attemptCount = count != null ? count : 0;
+
+        if (attemptCount < MAX_RESEND_COUNT) {
+            System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 이하이므로 전송");
+
             return true;
-        } else { //이메일 중복 시
-            validateDTO.setEnableSendEmail(ValidateDTO.EnableSendEmail.DUPLICATE);
+        } else {
+            System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 초과이므로 전송 불가. " + RESEND_COOL_DOWN_MINUTES + "분 카운트 후 재시도 가능");
             return false;
         }
     }
+
+
+    /**
+     * 이메일 인증번호 생성
+     * 숫자와 문자가 섞인 6글자의 무작위 문자열을 반환
+     */
+    private String makeRandomNumber() {
+        // 숫자와 소문자를 포함하는 문자열
+        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder result = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+            // 문자열에서 무작위 인덱스의 문자를 선택
+            int index = ThreadLocalRandom.current().nextInt(characters.length());
+            result.append(characters.charAt(index));
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * 이메일 중복체크
+     *
+     * @param email 이메일
+     */
+    public boolean emailDuplicated(String email) {
+        UserEntity user = userRepository.findByUserEmail(email).orElse(null);
+        return user == null;
+    }
+
+
 }

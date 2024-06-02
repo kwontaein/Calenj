@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.calenj.user.domain.UserEntity;
 
+import java.util.UUID;
+
 //DTO를 Entity와 별개로 따로 생성하는 이유
 //1 DTO는 데이터 전송을 위한 객체로, 주로 클라이언트와 서버 간의 통신에 사용
 //2 DTO는 클라이언트가 필요로 하는 데이터만을 포함하도록 설계되어 있기 때문에, 불필요한 데이터를 전송하는 것을 방지하고 성능을 최적화할 수 있다
@@ -15,6 +17,7 @@ import org.example.calenj.user.domain.UserEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
+    private UUID userId;
     private String nickname;
     private String userPassword;
     private String userEmail;

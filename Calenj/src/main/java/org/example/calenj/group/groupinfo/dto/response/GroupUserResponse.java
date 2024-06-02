@@ -17,12 +17,14 @@ public class GroupUserResponse {
     private String userEmail;
     private GroupUserEntity.GroupRoleType groupRoleType;
     private String group_user_location;
+    private UUID userId;
 
-    public GroupUserResponse(String userEmail, String nickName, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location) {
+    public GroupUserResponse(String userEmail, String nickName, GroupUserEntity.GroupRoleType groupRoleType, String group_user_location, UUID userId) {
         this.userEmail = userEmail;
         this.nickName = nickName;
         this.groupRoleType = groupRoleType;
         this.group_user_location = group_user_location;
+        this.userId = userId;
     }
 
 

@@ -16,7 +16,7 @@ export const CheckCodeValid_Button = styled(Valid_Button)`
     margin-top: -35px;
 `
 
-export const RequstEmailCode_Button = styled(Valid_Button)`
+export const RequestEmailCode_Button = styled(Valid_Button)`
     width:180px;
     margin-bottom: 20px;
 `
