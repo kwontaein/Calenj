@@ -32,14 +32,15 @@ public class RedisService {
         // 인증번호와 카운트 업데이트
         verificationData.put("code", verificationCode);
         int newCount = 1;  // 기본 카운트 값을 1로 설정
+
         if (exists) {
             // 기존 카운트 값을 가져와서 1 증가
             Integer currentCount = (Integer) hashOps.get("verify:" + email, "count");
             newCount = (currentCount != null ? currentCount + 1 : 1);
-            verificationData.put("count", newCount);
+            verificationData.put("count", String.valueOf(newCount));
         } else {
             // 새로운 인증번호에 대한 카운트는 1로 설정
-            verificationData.put("count", newCount);
+            verificationData.put("count", String.valueOf(newCount));
         }
 
         // 데이터 저장
@@ -48,6 +49,7 @@ public class RedisService {
         // 인증번호의 만료 시간 설정
         // 카운트가 5 이상일 경우 30분. 아니면 5분.
         int expirationMinutes = newCount >= 5 ? 30 : 5;
+
         redisTemplate.expire("verify:" + email, Duration.ofMinutes(expirationMinutes));
     }
 
