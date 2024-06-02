@@ -27,13 +27,13 @@ public class EventEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "own_user_id", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
+    @JoinColumn(name = "own_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     // 이벤트 발생자
     private UserEntity ownUserId;
 
     // 이벤트 요청받은 사람
     @Column(name = "event_user_id")
-    private String eventUserId;
+    private UUID eventUserId;
 
     // 이벤트 목적
     @Column(name = "event_purpose")
@@ -61,8 +61,8 @@ public class EventEntity {
         private final String status;
 
         @JsonCreator
-        public static EventEntity.statusType statusTypeParsing(String inputValue) {
-            return Stream.of(EventEntity.statusType.values())
+        public static statusType statusTypeParsing(String inputValue) {
+            return Stream.of(statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);
@@ -79,8 +79,8 @@ public class EventEntity {
         private final String eventName;
 
         @JsonCreator
-        public static EventEntity.eventType eventTypeParsing(String inputValue) {
-            return Stream.of(EventEntity.eventType.values())
+        public static eventType eventTypeParsing(String inputValue) {
+            return Stream.of(eventType.values())
                     .filter(eventType -> eventType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);

@@ -8,6 +8,7 @@ import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
+import org.example.calenj.global.config.RedisConfig;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
@@ -15,8 +16,10 @@ import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.dto.request.UserRequest;
 import org.example.calenj.user.dto.response.UserProfileResponse;
+import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,8 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +44,8 @@ public class UserService {
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final FriendRepository friendRepository;
-
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RedisConfig redisConfig;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -63,23 +64,20 @@ public class UserService {
     /**
      * 유저정보 확인
      **/
-    public void selectUserInfo() {
+    public UserResponse selectUserInfo() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-
-        //select 테스트
         Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
-        String userResult = (user.isPresent() ? user.toString() : "정보가 없습니다");
-        System.out.println(userResult);
+        return user.map(userEntity -> new UserResponse(userEntity.getNickname(), userEntity.getUserEmail(), userEntity.getUserPhone(), userEntity.getUserJoinDate())).orElse(null);
     }
 
     /**
      * 로그인
      *
-     * @param accountid 저장할 유저 아이디
+     * @param accountId 저장할 유저 아이디
      * @param password  저장할 유저 비밀번호
      **/
     @Transactional
-    public ResponseEntity<String> login(String accountid, String password) {
+    public ResponseEntity<String> login(String accountId, String password) {
         //여기서 패스워드를 암호화 하는것도 옳지 않음.
         //로그인 프로세스 중에 패스워드를 다시 인코딩하면 안됨.
         //이미 Authentication 프로세스 내부에서 패스워드 비교를 실행하기 때문.
@@ -90,11 +88,12 @@ public class UserService {
         try {
             // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
             // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountid, password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountId, password);
 
             try {
+                System.out.println(accountId);
                 // 사용자 정보 반환
-                userEntity = userRepository.findByUserEmail(accountid).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+                userEntity = userRepository.findByUserEmail(accountId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
                 // 존재하지 않는 사용자인 경우
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("NON_EXISTENT_ERROR");
@@ -103,18 +102,18 @@ public class UserService {
             // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            // Spring Security는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
-            // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null이 반환됩니다.
-            // 패스워드를 검증하기 위한 작업은 UserDetailsService의 loadUserByUsername 메서드에서 이루어집니다.
+            // Spring Security 는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
+            // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null 이 반환됩니다.
+            // 패스워드를 검증하기 위한 작업은 UserDetailsService 의 loadUserByUsername 메서드에서 이루어집니다.
 
             //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
 
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             tokenInfo = jwtTokenProvider.generateToken(authentication);
-
+            System.out.println("authentication : " + authentication);
             // 4. refreshToken 정보 저장
             userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-            System.out.println("1");
+
 
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
@@ -158,7 +157,7 @@ public class UserService {
      **/
     @Transactional
     public void logout(UserDetails userDetails, HttpServletResponse response) {
-        //DB에서 리프레시 토큰 값 삭제
+        //DB 에서 리프레시 토큰 값 삭제
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
         removeCookie(response, "accessToken");
@@ -171,11 +170,13 @@ public class UserService {
     public UserSubscribeResponse subscribeCheck() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
 
-        String userEmail = userDetails.getUsername();
-        List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserEmail(userEmail).orElse(null);
-        List<FriendResponse> friendResponse = friendRepository.findFriendListById(userEmail).orElse(null);
+        String userId = userDetails.getUsername();
+        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userId)).orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+
+        List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserId(UUID.fromString(userId)).orElse(null);
+        List<FriendResponse> friendResponse = friendRepository.findFriendListById(UUID.fromString(userId)).orElse(null);
         System.out.println(friendResponse);
-        return new UserSubscribeResponse(friendResponse, groupResponse, userEmail);
+        return new UserSubscribeResponse(friendResponse, groupResponse, String.valueOf(userEntity.getUserId()));
     }
 
     /**
@@ -198,7 +199,7 @@ public class UserService {
      **/
     public UserProfileResponse getUserProfile(String userEmail) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        String myEmail = userDetails.getUsername();
+        String myUserId = userDetails.getUsername();
         System.out.println("userEmail : " + userEmail);
 
         UserEntity user = userRepository.findByUserEmail(userEmail).orElseThrow(RuntimeException::new);
@@ -206,8 +207,21 @@ public class UserService {
 
         userProfileResponse.setIntroduce(user.getUserIntroduce());
         userProfileResponse.setJoinDate(user.getUserJoinDate());
-        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myEmail));
-        userProfileResponse.setChatUUID(friendRepository.findFriendId(userEmail).orElse(null));
+        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myUserId));
+        userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(user.getUserId()).orElse(null));
         return userProfileResponse;
     }
+
+    /**
+     * 유저 정보 업데이트
+     *
+     * @param userRequest 업데이트할 유저 정보
+     **/
+    public void updateUserNickName(UserRequest userRequest) {
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        String myUserId = userDetails.getUsername();
+        userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
+    }
+
+
 }
