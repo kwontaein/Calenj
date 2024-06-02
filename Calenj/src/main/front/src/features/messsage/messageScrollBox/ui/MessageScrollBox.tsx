@@ -50,12 +50,12 @@ export const MessageScrollBox:React.FC =()=>{
                         ((message !== null && message.chatUUID !== "시작라인") &&
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
-                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userEmail === message.userEmail) &&
+                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
                                                      dateOperation(connectList[index-1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <hr data-content={"NEW"}></hr> :
-                                    ((index && connectList[index - 1]?.userEmail === message.userEmail) &&
+                                    ((index && connectList[index - 1]?.userId === message.userId) &&
                                     dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
@@ -64,10 +64,10 @@ export const MessageScrollBox:React.FC =()=>{
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
                                             <ProfileContainer
-                                                $userEmail={message.userEmail}></ProfileContainer>
+                                                $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{message.nickName}</NickNameContainer>
+                                                    <NickNameContainer>{message.userId}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>

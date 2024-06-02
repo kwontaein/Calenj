@@ -8,7 +8,7 @@ export interface groupMembers {
     group_user_location: String;
     nickName: String;
     onlineStatus: string;
-    userEmail: string;
+    userId: string;
 }
 
 export interface GroupDetail {
@@ -89,8 +89,7 @@ export interface FriendEvent {
 export interface Message {
     chatUUID: string,
     sendDate: string,
-    userEmail: string,
-    nickName: string,
+    userId:string,
     messageType: string,
     message: string,
 }

@@ -124,7 +124,7 @@ export const SignOfMessageNum = styled.div<receivedMsg>`
      font-size: 12px;
      position: absolute;
      margin-top: 2.4em;
-     left: 2.7em;
+     left: 3.5em;
 `
 
 export const GroupListTitle = styled.div`

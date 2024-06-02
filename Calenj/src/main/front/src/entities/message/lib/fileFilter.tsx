@@ -1,14 +1,13 @@
-import {Message} from "../../reactQuery/api/types";
+import {Message} from "../../reactQuery";
 
 export const fileFilter = (messages: string[]) => {
     const messageEntries = Array.from(messages, (message: string) => {
-        const [chatUUID,sendDate,userEmail,nickName,messageType,messageContent] = message.split("$", 6);
+        const [chatUUID,sendDate,userId,messageType,messageContent] = message.split("$", 6);
 
         const loadMsg: Message = {
             chatUUID: chatUUID,
             sendDate: sendDate.slice(1, 17),
-            userEmail: userEmail,
-            nickName: nickName,
+            userId:userId,
             messageType: messageType,
             message: messageContent,
         };
