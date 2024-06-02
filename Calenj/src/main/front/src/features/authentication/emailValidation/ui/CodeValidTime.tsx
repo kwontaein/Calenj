@@ -1,9 +1,13 @@
 import {ErrorMessage} from "../../../../shared/ui/SharedStyled";
 import {useValidCountDown} from "../model/useValidCountDown";
+import {CodeValidTimeProps} from "../model/types";
+import {useEffect} from "react";
 
 
-export const CodeValidTime: React.FC = ()=>{
-    const [minutes, seconds] = useValidCountDown()
+export const CodeValidTime: React.FC<CodeValidTimeProps> = ({onClose})=>{
+    const [minutes, seconds] = useValidCountDown(onClose)
+
+
 
     return(
         <ErrorMessage>{(minutes === 0 && seconds === 0) ?

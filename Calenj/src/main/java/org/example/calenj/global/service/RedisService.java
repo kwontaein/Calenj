@@ -35,8 +35,11 @@ public class RedisService {
 
         if (exists) {
             // 기존 카운트 값을 가져와서 1 증가
-            Integer currentCount = (Integer) hashOps.get("verify:" + email, "count");
-            newCount = (currentCount != null ? currentCount + 1 : 1);
+            String countValue = (String) hashOps.get("verify:" + email, "count");
+            assert countValue != null;
+            int currentCount = Integer.parseInt(countValue);
+
+            newCount = currentCount + 1;
             verificationData.put("count", String.valueOf(newCount));
         } else {
             // 새로운 인증번호에 대한 카운트는 1로 설정
