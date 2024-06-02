@@ -22,7 +22,7 @@ public class RedisService {
      * @param email            이메일
      * @param verificationCode 인증번호
      */
-    public void saveVerificationCode(String email, String verificationCode) {
+    public int saveVerificationCode(String email, String verificationCode) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
         Map<String, Object> verificationData = new HashMap<>();
 
@@ -51,6 +51,7 @@ public class RedisService {
         int expirationMinutes = newCount >= 5 ? 30 : 5;
 
         redisTemplate.expire("verify:" + email, Duration.ofMinutes(expirationMinutes));
+        return newCount;
     }
 
     /**
