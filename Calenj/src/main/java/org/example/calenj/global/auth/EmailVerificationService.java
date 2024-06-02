@@ -60,7 +60,6 @@ public class EmailVerificationService {
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
         System.out.println("authNumber : " + authNumber);
         validateResponse.setCount(redisService.saveVerificationCode(email, authNumber));
-        validateResponse.setRemainTime(redisService.getRemainingTTL(email));
         //전송 상태 반환
         return mailSend(email, title, content, validateResponse);
     }

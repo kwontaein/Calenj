@@ -48,7 +48,7 @@ public class RedisService {
 
         // 인증번호의 만료 시간 설정
         // 카운트가 5 이상일 경우 30분. 아니면 5분.
-        int expirationMinutes = newCount >= 5 ? 30 : 3;
+        int expirationMinutes = newCount >= 5 ? 30 : 4;
 
         redisTemplate.expire("verify:" + email, Duration.ofMinutes(expirationMinutes));
         return newCount;
@@ -66,7 +66,6 @@ public class RedisService {
 
     public long getRemainingTTL(String key) {
         Duration duration = Duration.ofDays(redisTemplate.getExpire(key));
-        System.out.println("duration : " + duration.getSeconds());
         return duration != null ? duration.getSeconds() : -2;  // Duration이 null인 경우는 키가 존재하지 않을 때
     }
 
