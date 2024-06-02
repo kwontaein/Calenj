@@ -9,3 +9,6 @@ export interface codeValidProps{
     code: string,
     onClose:()=>void,
 }
+export interface CodeValidTimeProps{
+    onClose:()=>void,
+}

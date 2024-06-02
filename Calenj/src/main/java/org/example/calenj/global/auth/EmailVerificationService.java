@@ -12,7 +12,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -53,7 +52,6 @@ public class EmailVerificationService {
             validateResponse.setState(RESEND_COUNT_MAX);
             return validateResponse;
         }
-
         //전송할 내용
         String authNumber = makeRandomNumber();
         String title = "회원 가입 인증 이메일 입니다.";
@@ -65,7 +63,6 @@ public class EmailVerificationService {
         //전송 상태 반환
         return mailSend(email, title, content, validateResponse);
     }
-
 
     /**
      * 이메일 보내기
@@ -108,8 +105,15 @@ public class EmailVerificationService {
     public boolean emailSendValidation(String email) {
 
         Map<Object, Object> verificationData = redisService.getVerificationData(email);
-        Integer count = (Integer) verificationData.get("count");
-        int attemptCount = count != null ? count : 0;
+        int attemptCount = 0;
+        // Get the count as a String
+        String countStr = (String) verificationData.get("count");
+        if (countStr != null) {
+            // Convert the String to an Integer
+            Integer count = Integer.valueOf(countStr);
+            attemptCount = count;
+        }
+
 
         if (attemptCount < MAX_RESEND_COUNT) {
             System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 이하이므로 전송");

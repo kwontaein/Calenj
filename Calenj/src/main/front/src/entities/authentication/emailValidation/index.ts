@@ -1,1 +1,1 @@
-export {schema} from './lib/signSchema'
+export {useSchema} from './model/useSchema'

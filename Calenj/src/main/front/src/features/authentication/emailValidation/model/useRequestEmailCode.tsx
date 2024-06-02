@@ -17,7 +17,7 @@ export const useRequestEmailCode = () => {
                     }else if(state ==="RESEND_COUNT_MAX"){
                         window.alert('인증횟수 초과입니다. 30분 후에 다시 시도해주세요.')
                     }else if(state ==="SUCCESS"){
-                        window.alert("인증번호를 보냈습니다.")
+                        window.alert("인증번호를 발급하였습니다.")
                         updateValidState();
                     }
             }).catch((err) => {

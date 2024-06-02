@@ -1,6 +1,7 @@
 import {checkAuthCodeApi} from "../api/checkAuthCodeApi";
 
 export const useCodeValid = (code:string,email:string, updateValidState:()=>void)=>{
+
     if(!code){
         window.alert("인증코드를 입력해주세요.")
         return

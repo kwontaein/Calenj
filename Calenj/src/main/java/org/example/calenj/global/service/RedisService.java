@@ -35,8 +35,11 @@ public class RedisService {
 
         if (exists) {
             // 기존 카운트 값을 가져와서 1 증가
-            Integer currentCount = (Integer) hashOps.get("verify:" + email, "count");
-            newCount = (currentCount != null ? currentCount + 1 : 1);
+            String countValue = (String) hashOps.get("verify:" + email, "count");
+            assert countValue != null;
+            int currentCount = Integer.parseInt(countValue);
+
+            newCount = currentCount + 1;
             verificationData.put("count", String.valueOf(newCount));
         } else {
             // 새로운 인증번호에 대한 카운트는 1로 설정
@@ -48,7 +51,7 @@ public class RedisService {
 
         // 인증번호의 만료 시간 설정
         // 카운트가 5 이상일 경우 30분. 아니면 5분.
-        int expirationMinutes = newCount >= 5 ? 30 : 5;
+        int expirationMinutes = newCount >= 5 ? 30 : 4;
 
         redisTemplate.expire("verify:" + email, Duration.ofMinutes(expirationMinutes));
         return newCount;
