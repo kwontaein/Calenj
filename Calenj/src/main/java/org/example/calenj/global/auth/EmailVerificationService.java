@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,6 +35,7 @@ public class EmailVerificationService {
 
     private static final int MAX_RESEND_COUNT = 5;
     private static final int RESEND_COOL_DOWN_MINUTES = 30;
+
 
     /**
      * 이메일 인증번호 발급

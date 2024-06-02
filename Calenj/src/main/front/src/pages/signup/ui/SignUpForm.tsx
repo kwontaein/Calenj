@@ -5,8 +5,8 @@ import { SignUpFormContainer, Input, Button, ErrorMessage, FormLable, UnfocusBac
 import {
     EmailValidationModal,
     useRequestEmailCode,
-    useEmailValideAbleCheck,
-    RequstEmailCode_Button
+    useEmailValidAbleCheck,
+    RequestEmailCode_Button
 } from '../../../features/authentication/emailValidation'
 import { schema } from '../../../entities/authentication/emailValidation';
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ export const SignUpForm: React.FC = () => {
     const dispatch = useDispatch();
     const emailToken = useSelector((state: RootState) => state.emailValidation); // emailToken 상태 선택
 
-    const [showAlert, validation, updateValidState, closeModal] = useEmailValideAbleCheck();
+    const [showAlert, validation, updateValidState, closeModal] = useEmailValidAbleCheck();
     const [isAble, updateInputAble] = useInputManagement(emailToken);
     const { requestEmailCode } = useRequestEmailCode();
 
@@ -81,9 +81,9 @@ export const SignUpForm: React.FC = () => {
                         <ErrorMessage>{errors.userEmail?.message}</ErrorMessage>
 
                         {!emailToken.codeValid &&
-                            <RequstEmailCode_Button onClick={requestEmailValidation}>
+                            <RequestEmailCode_Button onClick={requestEmailValidation}>
                                 {!validation ? "인증번호 발급" : "인증번호 재발급"}
-                            </RequstEmailCode_Button>
+                            </RequestEmailCode_Button>
                         }
                         <FormLable>패스워드</FormLable>
                         <Input type="password" {...register("userPassword", { required: true })}
