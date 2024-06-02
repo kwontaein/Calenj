@@ -35,7 +35,9 @@ public class RedisService {
 
         if (exists) {
             // 기존 카운트 값을 가져와서 1 증가
-            Integer currentCount = (Integer) hashOps.get("verify:" + email, "count");
+            String countValue = (String) hashOps.get("verify:" + email, "count");
+            Integer currentCount = Integer.parseInt(countValue);
+            
             newCount = (currentCount != null ? currentCount + 1 : 1);
             verificationData.put("count", String.valueOf(newCount));
         } else {
@@ -87,6 +89,5 @@ public class RedisService {
         Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
         return (String) userTokenMap.get("token");
     }
-
 
 }
