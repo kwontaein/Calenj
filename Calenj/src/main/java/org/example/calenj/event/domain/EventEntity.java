@@ -61,8 +61,8 @@ public class EventEntity {
         private final String status;
 
         @JsonCreator
-        public static EventEntity.statusType statusTypeParsing(String inputValue) {
-            return Stream.of(EventEntity.statusType.values())
+        public static statusType statusTypeParsing(String inputValue) {
+            return Stream.of(statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);
@@ -79,8 +79,8 @@ public class EventEntity {
         private final String eventName;
 
         @JsonCreator
-        public static EventEntity.eventType eventTypeParsing(String inputValue) {
-            return Stream.of(EventEntity.eventType.values())
+        public static eventType eventTypeParsing(String inputValue) {
+            return Stream.of(eventType.values())
                     .filter(eventType -> eventType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);

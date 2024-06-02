@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {SignState_Button} from "../../../../style/FormStyle";
+import {SignState_Button} from "../../../../shared/ui/SharedStyled";
 
 export const LoginButton :React.FC=()=>{
     return(

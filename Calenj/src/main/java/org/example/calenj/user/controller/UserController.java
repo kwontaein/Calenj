@@ -105,7 +105,7 @@ public class UserController {
      */
     @PostMapping("/api/getProfile")
     public UserProfileResponse getProfile(@RequestBody UserRequest userRequest) { //유저 프로필 표시
-        return userService.getUserProfile(userRequest.getUserEmail());
+        return userService.getUserProfile(userRequest.getUserId());
     }
 
     //메일 인증 부분------------------------------------------------------------------------------

@@ -1,0 +1,1 @@
+export {VoteDetail} from './ui/VoteDetail'

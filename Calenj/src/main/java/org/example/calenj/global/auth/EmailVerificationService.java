@@ -1,7 +1,6 @@
 package org.example.calenj.global.auth;
 
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.auth.dto.request.ValidateRequest;
 import org.example.calenj.global.auth.dto.response.ValidateResponse;
 import org.example.calenj.global.service.RedisService;
@@ -18,17 +17,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.example.calenj.global.auth.dto.response.ValidateResponse.sendState.*;
 
-@RequiredArgsConstructor
 @Service
 public class EmailVerificationService {
 
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RedisService redisService;
+    private final String setFrom;
 
-    @Value("${spring.mail.username}")
-    private String setFrom;
-
+    private EmailVerificationService(UserRepository userRepository, JavaMailSender mailSender, RedisService redisService, @Value("${spring.mail.username}") String setFrom) {
+        this.redisService = redisService;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.setFrom = setFrom;
+    }
 
     private static final int MAX_RESEND_COUNT = 5;
     private static final int RESEND_COOL_DOWN_MINUTES = 30;
@@ -38,7 +40,6 @@ public class EmailVerificationService {
      */
     public ValidateResponse joinEmail(String email) {
         ValidateResponse validateResponse = new ValidateResponse();
-
         //이메일 중복?
         if (!emailDuplicated(email)) {
             validateResponse.setState(EMAIL_DUPLICATED);
@@ -57,7 +58,7 @@ public class EmailVerificationService {
         String content = "방문해주셔서 감사합니다.<br><br>" +
                 "인증 번호는 " + authNumber + "입니다.<br>" +
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
-        
+        System.out.println("authNumber : " + authNumber);
         redisService.saveVerificationCode(email, authNumber);
         //전송 상태 반환
         return mailSend(email, title, content, validateResponse);
@@ -93,7 +94,7 @@ public class EmailVerificationService {
         // Map 에서 code 값을 추출
         String verificationCode = (String) verificationData.get("code");
         if (verificationCode != null) {
-            return validateRequest.getCode() == verificationCode;
+            return validateRequest.getCode().equals(verificationCode);
         } else {
             return false;
         }
@@ -104,12 +105,14 @@ public class EmailVerificationService {
      * 이메일 재발급 가능 여부 따지기
      */
     public boolean emailSendValidation(String email) {
+
         Map<Object, Object> verificationData = redisService.getVerificationData(email);
         Integer count = (Integer) verificationData.get("count");
         int attemptCount = count != null ? count : 0;
 
         if (attemptCount < MAX_RESEND_COUNT) {
             System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 이하이므로 전송");
+
             return true;
         } else {
             System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 초과이므로 전송 불가. " + RESEND_COOL_DOWN_MINUTES + "분 카운트 후 재시도 가능");
@@ -120,9 +123,20 @@ public class EmailVerificationService {
 
     /**
      * 이메일 인증번호 생성
+     * 숫자와 문자가 섞인 6글자의 무작위 문자열을 반환
      */
     private String makeRandomNumber() {
-        return Integer.toString(ThreadLocalRandom.current().nextInt(111111, 999999));
+        // 숫자와 소문자를 포함하는 문자열
+        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder result = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+            // 문자열에서 무작위 인덱스의 문자를 선택
+            int index = ThreadLocalRandom.current().nextInt(characters.length());
+            result.append(characters.charAt(index));
+        }
+
+        return result.toString();
     }
 
     /**
@@ -132,12 +146,7 @@ public class EmailVerificationService {
      */
     public boolean emailDuplicated(String email) {
         UserEntity user = userRepository.findByUserEmail(email).orElse(null);
-        //DB에 해당 이메일이 존재하지 않을경우
-        if (user == null) {
-            return true;
-        } else { //이메일 중복 시
-            return false;
-        }
+        return user == null;
     }
 
 

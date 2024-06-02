@@ -51,7 +51,7 @@ public class GroupService {
         GroupEntity groupEntity = GroupEntity.builder()
                 .groupTitle(groupTitle)
                 .groupCreated(String.valueOf(today))
-                .groupCreater(userDetails.getUsername())
+                .groupCreator(userDetails.getUsername())
                 .build();
 
         groupRepository.save(groupEntity);
@@ -97,7 +97,7 @@ public class GroupService {
                     groupResponse.getGroupId(),
                     groupResponse.getGroupTitle(),
                     groupResponse.getGroupCreated(),
-                    groupResponse.getGroupCreater(),
+                    groupResponse.getGroupCreator(),
                     groupUsers
             );
             return Optional.of(groupDetailResponse);

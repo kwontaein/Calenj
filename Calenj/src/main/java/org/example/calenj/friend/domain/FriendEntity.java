@@ -62,9 +62,9 @@ public class FriendEntity {
         private final String status;
 
         @JsonCreator
-        public static FriendEntity.statusType statusTypeParsing(String inputValue) {
+        public static statusType statusTypeParsing(String inputValue) {
 
-            return Stream.of(FriendEntity.statusType.values())
+            return Stream.of(statusType.values())
                     .filter(statusType -> statusType.toString().equals(inputValue))
                     .findFirst()
                     .orElse(null);

@@ -363,10 +363,10 @@ public class WebSokcetService {
     /**
      * 내가 구독한 토픽
      *
-     * @param userEmail 내 이메일
+     * @param userId 내 아이디
      **/
-    public Set<String> getDestination(String userEmail) {
-        SimpUser simpUser = simpUserRegistry.getUser(userEmail);
+    public Set<String> getDestination(String userId) {
+        SimpUser simpUser = simpUserRegistry.getUser(userId);
         Set<String> destinations = simpUser.getSessions().stream()
                 .flatMap(simpSession ->
                         simpSession.getSubscriptions().stream()
@@ -380,7 +380,7 @@ public class WebSokcetService {
     /**
      * 해당 param 구독자들 (온라인 여부)
      *
-     * @param param 전달받은 param
+     * @param param 전달받은 param(그룹 / 친구 채팅방 아이디)
      **/
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();

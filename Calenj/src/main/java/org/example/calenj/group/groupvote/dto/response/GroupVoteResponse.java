@@ -16,7 +16,7 @@ public class GroupVoteResponse {
 
     private UUID groupId;
     private UUID voteId;
-    private String voteCreater;
+    private String voteCreator;
     private String voteTitle;
     private String voteCreated;
     private String voteEndDate;
@@ -28,8 +28,8 @@ public class GroupVoteResponse {
     private List<VoteChoiceResponse> voteChoiceResponse;
     private boolean[] myVote;
 
-    public GroupVoteResponse(String voteCreater, String voteTitle, String voteCreated, String voteEndDate, Boolean isMultiple, Boolean anonymous, List<String> voteWatcher, List<String> countVoter) {
-        this.voteCreater = voteCreater;
+    public GroupVoteResponse(String voteCreator, String voteTitle, String voteCreated, String voteEndDate, Boolean isMultiple, Boolean anonymous, List<String> voteWatcher, List<String> countVoter) {
+        this.voteCreator = voteCreator;
         this.voteTitle = voteTitle;
         this.voteCreated = voteCreated;
         this.voteEndDate = voteEndDate;
@@ -40,9 +40,9 @@ public class GroupVoteResponse {
     }
 
     //list만 불러오기위한 생성자
-    public GroupVoteResponse(UUID voteId, String voteCreater, String voteTitle, String voteCreated, String voteEndDate, List<String> countVoter) {
+    public GroupVoteResponse(UUID voteId, String voteCreator, String voteTitle, String voteCreated, String voteEndDate, List<String> countVoter) {
         this.voteId = voteId;
-        this.voteCreater = voteCreater;
+        this.voteCreator = voteCreator;
         this.voteTitle = voteTitle;
         this.voteCreated = voteCreated;
         this.voteEndDate = voteEndDate;
@@ -62,7 +62,7 @@ public class GroupVoteResponse {
     }
 
 
-    //gv.group.groupId,gv.voteId, gv.voteCreater, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher
+    //gv.group.groupId,gv.voteId, gv.voteCreator, gv.voteTitle, gv.voteCreated, gv.voteEndDate,gv.isMultiple, gv.anonymous, gv.voteWatcher
 
 
 }
