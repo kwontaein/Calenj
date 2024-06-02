@@ -133,7 +133,7 @@ public class GroupVoteService {
         groupVoteRepository.updateVoteCount(voteId, json);
     }
 
-    public void voteEndDateUpdate(UUID voteId, String voteEndDate) {
+    public void updateVoteEndDate(UUID voteId, String voteEndDate) {
         groupVoteRepository.updatevoteEndDate(voteId, voteEndDate);
     }
 

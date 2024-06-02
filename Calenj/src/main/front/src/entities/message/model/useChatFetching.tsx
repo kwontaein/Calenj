@@ -1,15 +1,12 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store/store";
 import {useRequestChatFile} from "../api/useRequestChatFile";
-
-import {Message} from "../../ReactQuery/api/types";
+import {Message} from "../../reactQuery";
 import {fileFilter} from "../lib/fileFilter";
+import {RootState} from "../../redux";
 
 
-export const useChatFetching = (param: string):
-    [({pageParam}: { pageParam?: number | undefined }) => Promise<Message[]>, ({pageParam}: {
-        pageParam?: number | undefined
-    }) => Message] => {
+export const useChatFetching = (param:string):
+    [({pageParam}: {pageParam?: number | undefined}) => Promise<Message[]>, ({pageParam}: {pageParam?: number | undefined}) => Message] => {
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const requestChatFile = useRequestChatFile(param)
 
@@ -36,5 +33,5 @@ export const useChatFetching = (param: string):
         return loadMsg;
     }
 
-    return [fetchData, receiveNewChat]
+    return [fetchData,receiveNewChat]
 }

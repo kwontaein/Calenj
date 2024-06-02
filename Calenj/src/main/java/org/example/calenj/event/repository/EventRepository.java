@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     @Modifying(clearAutomatically = true)
@@ -21,21 +20,21 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
 
     //모든 이벤트 리스트
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse" +
-            "(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId")
-    Optional<List<EventResponse>> EventListById(@Param("userId") UUID userId);
+            "(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId")
+    Optional<List<EventResponse>> EventListById(@Param("userId") String userId);
 
     //요청한 친구 추가 이벤트
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId and e.eventName=RequestFriend and e.eventStatus=2")
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:userId and e.eventName=RequestFriend and e.eventStatus=2")
     Optional<List<EventResponse>> RequestEventListById(@Param("userId") String userId);
 
     //요청받은 친구 추가 이벤트
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=2")
     Optional<List<EventResponse>> ResponseEventListById(@Param("userId") String userId);
 
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
-    Optional<List<EventResponse>> isDuplicatedEvent(@Param("ownUserId") UUID ownUserId, @Param("friendId") UUID friendId);
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userEmail,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userEmail =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
+    Optional<List<EventResponse>> isDuplicatedEvent(@Param("ownUserId") String ownUserId, @Param("friendId") String friendId);
 
-    default boolean checkIfDuplicatedEvent(UUID ownUserId, UUID friendId) {
+    default boolean checkIfDuplicatedEvent(String ownUserId, String friendId) {
         Optional<List<EventResponse>> duplicatedEvents = isDuplicatedEvent(ownUserId, friendId);
         return duplicatedEvents.isPresent() && !duplicatedEvents.get().isEmpty();
     }

@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../style/FormStyle";
+import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 
 interface CheckbeforSender {
     $sameUser: boolean,
 }
 
-interface UserProfile {
+interface UserProfile{
     $userId: string | undefined
 }
 
@@ -37,6 +37,7 @@ export const ProfileContainer = styled.div<UserProfile>`
     min-width: 40px;
     padding: 3px;
     border-radius: 50px;
+    background-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
@@ -46,7 +47,7 @@ export const ProfileContainer = styled.div<UserProfile>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 

@@ -41,7 +41,7 @@ public class GroupService {
     private final SimpUserRegistry simpUserRegistry;
 
     //그룹 만들기
-    public void makeGroup(String groupTitle) {
+    public void createGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
 
@@ -56,7 +56,7 @@ public class GroupService {
 
         groupRepository.save(groupEntity);
 
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername()))
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
@@ -79,8 +79,8 @@ public class GroupService {
 
     //그룹 목록 가져오기
     public List<GroupResponse> groupList() {
-        String userId = globalService.extractFromSecurityContext().getUsername();
-        return groupRepository.findByUserEntity_UserId(UUID.fromString(userId)).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
+        String userEmail = globalService.extractFromSecurityContext().getUsername();
+        return groupRepository.findByUserEntity_UserEmail(userEmail).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
     }
 
 
@@ -112,7 +112,7 @@ public class GroupService {
         // SecurityContext 에서 유저 정보 추출하는 메소드
         UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        UserEntity userEntity = userRepository.findByUserEmail(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()
@@ -137,9 +137,9 @@ public class GroupService {
             }
         }
 
-        UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        String userName = globalService.extractFromSecurityContext().getUsername();
 
-        UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        UserEntity userEntity = userRepository.findByUserEmail(userName).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         inviteCodeRepository.save(InviteCodeEntity

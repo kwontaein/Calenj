@@ -29,7 +29,7 @@ public class GroupNoticeService {
     public void makeNotice(String noticeTitle, String noticeContent, String noticeCreated, UUID groupId) {
 
 
-        String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
+        String userEmail = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
 
@@ -37,7 +37,7 @@ public class GroupNoticeService {
                 .noticeTitle(noticeTitle)
                 .noticeContent(noticeContent)
                 .noticeCreated(noticeCreated)
-                .noticeCreater(userId)
+                .noticeCreator(userEmail)
                 .group(groupEntity)
                 .build();
 
@@ -60,13 +60,13 @@ public class GroupNoticeService {
     //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
 
-        String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
+        String userEmail = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
         Optional<GroupNoticeResponse> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
 
         if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
             List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
 
-            Viewerlist.add(userId);
+            Viewerlist.add(userEmail);
             Viewerlist = Viewerlist.stream().distinct().collect(Collectors.toList());
 
             //Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거

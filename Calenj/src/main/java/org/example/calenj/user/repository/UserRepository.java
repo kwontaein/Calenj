@@ -9,15 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByUserEmail(@Param("user_email") String username);
 
-    Optional<UserEntity> findByUserId(@Param("user_id") UUID userId);
-
-    Optional<UserEntity> findByUserUsedName(@Param("user_used_name") String userName);
+    Optional<UserEntity> findByNickname(@Param("nickName") String nickName);
 
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
 
@@ -30,11 +27,14 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     //refreshToken 삭제 쿼리
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_id = :userId", nativeQuery = true)
-    void updateUserRefreshTokenToNull(@Param("userId") String userId);
+    @Query(value = "UPDATE User SET refreshToken = NULL WHERE user_email = :email", nativeQuery = true)
+    void updateUserRefreshTokenToNull(@Param("email") String email);
+
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE User SET nickname =:nickname WHERE user_email = :email", nativeQuery = true)
-    void updateUserNickName(@Param("nickname") String nickname, @Param("email") String email);
+    @Query(value = "UPDATE User u SET isOnline =:isOnline WHERE user_email = :email", nativeQuery = true)
+    void updateIsOnline(@Param("email") String email, @Param("isOnline") String isOnline);
+
+
 }

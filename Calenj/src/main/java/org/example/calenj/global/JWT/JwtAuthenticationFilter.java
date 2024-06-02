@@ -19,7 +19,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
@@ -53,8 +52,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("TOKEN_TRUE");
 
             authentication = jwtTokenProvider.getAuthentication(token);
-            System.out.println(authentication.getName());
-            UserEntity userEntity = userRepository.findByUserId(UUID.fromString(authentication.getName())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+            UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
             String DbRefreshToken = userEntity.getRefreshToken();
 
@@ -80,7 +78,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             PrintWriter writer = httpResponse.getWriter();
 
             authentication = jwtTokenProvider.getAuthentication(token);
-            UserEntity userEntity = userRepository.findByUserId(UUID.fromString(authentication.getName())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+            UserEntity userEntity = userRepository.findByUserEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
             String DbRefreshToken = userEntity.getRefreshToken();
             System.out.println("Expired JWT Token");

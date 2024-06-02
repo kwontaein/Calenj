@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.group.groupinfo.domain.GroupUserEntity;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 @Entity(name = "User")
@@ -23,19 +21,11 @@ import java.util.stream.Stream;
 @Getter
 @ToString
 public class UserEntity implements UserDetails {
+
     //primary key
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "user_id", columnDefinition = "BINARY(16)")
-    private UUID userId;
-
     @Column(nullable = false, unique = true, name = "user_email")
     private String userEmail;
-
-    @Builder.Default
-    @Column(nullable = false, unique = true, name = "user_used_name")
-    private String userUsedName = "user" + UUID.randomUUID();
 
     private String nickname;
 
@@ -65,7 +55,7 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "user_introduce")
     @Builder.Default
-    private String userIntroduce = "안녕하세요!";
+    private String userIntroduce = "";
 
     @Getter
     @RequiredArgsConstructor
@@ -116,7 +106,7 @@ public class UserEntity implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return String.valueOf(userId);
+        return userEmail;
     }
 
     /**

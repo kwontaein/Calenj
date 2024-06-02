@@ -16,6 +16,7 @@ public class WebSocketController {
 
     private final WebSokcetService webSokcetService;
 
+
     //그룹 채팅
     @MessageMapping("/groupMsg")
     public void groupMsg(Authentication authentication, ChatMessageRequest message) throws Exception {
@@ -32,6 +33,7 @@ public class WebSocketController {
     @MessageMapping("/personalTopic")
     public void personalTopic(Authentication authentication, ChatMessageRequest message) throws Exception {
         webSokcetService.personalEvent(authentication, message);
+        //webSokcetService.getDestination(message.getUserEmail());
     }
 
     //세션 끊기

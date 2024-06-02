@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import {App} from './app';
 import reportWebVitals from './reportWebVitals';
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import {Provider} from "react-redux";
-import store from './store/store'
-import {GlobalStyle} from './style/FormStyle'
+import store from './app/hoc/store'
+import {GlobalStyle} from './shared/ui/SharedStyled'
 
 
 export const queryClient = new QueryClient({
