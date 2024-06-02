@@ -19,7 +19,6 @@ import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,7 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -195,19 +196,22 @@ public class UserService {
     /**
      * 유저 프로필 받아오는 메소드
      *
-     * @param userEmail 유저 이메일
+     * @param userId 유저 아이디
      **/
-    public UserProfileResponse getUserProfile(String userEmail) {
+    public UserProfileResponse getUserProfile(UUID userId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String myUserId = userDetails.getUsername();
-        System.out.println("userEmail : " + userEmail);
+        System.out.println("userId : " + userId);
 
-        UserEntity user = userRepository.findByUserEmail(userEmail).orElseThrow(RuntimeException::new);
+        UserEntity user = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
         UserProfileResponse userProfileResponse = new UserProfileResponse();
+
+        UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
 
         userProfileResponse.setIntroduce(user.getUserIntroduce());
         userProfileResponse.setJoinDate(user.getUserJoinDate());
-        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEmail, myUserId));
+        
+        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserEmail(), myUserId));
         userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(user.getUserId()).orElse(null));
         return userProfileResponse;
     }
