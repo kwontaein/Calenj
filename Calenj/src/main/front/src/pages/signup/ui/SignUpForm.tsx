@@ -27,7 +27,7 @@ export const SignUpForm: React.FC = () => {
     //인증번호 발급여부 (한 번 발급하면 재발급 UI로 변경)
     useEffect(() => {
         dispatch(updateCodeValid(false));
-    }, [dispatch]);
+    }, []);
 
     const { register, handleSubmit, formState: { errors }, reset, watch, trigger } = useForm<User>({
         resolver: yupResolver(schema), //유효성 검사

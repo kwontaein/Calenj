@@ -200,17 +200,7 @@ export const ListView = styled.li`
     }
 `
 
-export const Modal_Background =styled.div`
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.3);
-`
+
 
 
 
@@ -246,4 +236,39 @@ export const CheckCondition_Button = styled.div<ClickAbleProps>`
              &:hover{background-color : ${PointColor}77;
              }
     `}
+`
+
+export const Modal_Background =styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+`
+
+export const Modal_Container = styled.div`
+    background-color: ${ThemaColor2};
+    width: 500px;
+    height: 570px;
+    border-radius: 5px;
+`
+
+export const ModalTopBar_Container = styled.div`
+    background-color: ${BackGroundColor};
+    width: calc(100% - 30px);
+    height: 15px;
+    padding : 15px;
+    font-size: 16px;
+    border-radius: 5px 5px 0 0;
+`
+
+export const ModalContent_Container =styled.div`
+    width: calc(100% - 40px);
+    height: calc(100% - 85px);
+    padding: 20px;
+    
 `
