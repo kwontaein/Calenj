@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserScheduleEntityId implements Serializable {
-    private UUID scheduleId;
+public class StampID implements Serializable {
+    private UUID stampId;
     private UserEntity userId;
 }

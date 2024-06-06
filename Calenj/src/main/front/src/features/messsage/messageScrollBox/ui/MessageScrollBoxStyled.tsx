@@ -11,7 +11,7 @@ interface UserProfile{
 
 export const ScrollMin_width = 350;
 export const ScrollMarginInline = 10;
-export const MessageSend_Cotainer_height = 50;
+export const MessageSend_Container_height = 50;
 
 
 
@@ -19,7 +19,7 @@ export const MessageSend_Cotainer_height = 50;
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
     max-width: calc(100% - ${ScrollMarginInline}); //padding만큼 뺌
-    height: calc(100% - ${MessageSend_Cotainer_height}px);
+    height: calc(100% - ${MessageSend_Container_height}px);
     margin-inline: ${ScrollMarginInline / 2}px;
 `;
 

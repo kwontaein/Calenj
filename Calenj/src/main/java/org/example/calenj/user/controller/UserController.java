@@ -137,11 +137,12 @@ public class UserController {
     }
 
     /**
-     * 이건 뭐냐 ???
+     * 이메일 인증 여부
      */
     @GetMapping("/api/emailValidationState")
     public boolean checkEmailValidate() {
-        return true;
+
+        return false;
     }
 
     /**
