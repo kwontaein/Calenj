@@ -1,4 +1,3 @@
-import TimePicker from "react-time-picker";
 import {
     CustomSelect,
     EventTime_container,
