@@ -1,11 +1,12 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
-import {Modal_Background} from '../../../../../../shared/ui/SharedStyled'
 import {
-    GroupNoticeModal_Container,
-    GroupNoticeModal_TopContent_Container,
-    GroupNoticeModal_Title,
+    Modal_Background,
+    Modal_Condition_Button,
+    Modal_Container, ModalContent_Container,
+    ModalTopBar_Container
+} from '../../../../../../shared/ui/SharedStyled'
+import {
     GroupNoticeModal_Button_Container,
-    GroupNoticeModal_close_Btn,
     GroupNoticeTitle_Input,
     GroupNoticeModal_Textarea
 } from './NoticeModalStyle';
@@ -50,25 +51,27 @@ export const NoticeModal: React.FC = () => {
                 onClose()
             }
         }}>
-            <GroupNoticeModal_Container>
-                <GroupNoticeModal_TopContent_Container>
-                    <GroupNoticeModal_Title>공지 작성하기</GroupNoticeModal_Title>
-                </GroupNoticeModal_TopContent_Container>
-                <GroupNoticeTitle_Input maxLength={30}
-                                        ref={inputRef}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-                                        placeholder='제목을 입력해주세요'/>
-                <GroupNoticeModal_Textarea
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
-                    placeholder='내용을 입력해주세요'/>
-                <GroupNoticeModal_Button_Container>
-                    <GroupNoticeModal_close_Btn onClick={closeModal}>
-                        취소
-                    </GroupNoticeModal_close_Btn>
-                    <CreateNoticeButton title={title} content={content}/>
-                </GroupNoticeModal_Button_Container>
+            <Modal_Container>
+                <ModalTopBar_Container>
+                    공지 작성하기
+                </ModalTopBar_Container>
+                <ModalContent_Container>
+                    <GroupNoticeTitle_Input maxLength={30}
+                                            ref={inputRef}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                                            placeholder='제목을 입력해주세요'/>
+                    <GroupNoticeModal_Textarea
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+                        placeholder='내용을 입력해주세요'/>
 
-            </GroupNoticeModal_Container>
+                    <GroupNoticeModal_Button_Container>
+                        <Modal_Condition_Button style={{marginRight:"5px"}} onClick={closeModal}>
+                            취소
+                        </Modal_Condition_Button>
+                        <CreateNoticeButton title={title} content={content}/>
+                    </GroupNoticeModal_Button_Container>
+                </ModalContent_Container>
+            </Modal_Container>
        </Modal_Background>
     );
 };

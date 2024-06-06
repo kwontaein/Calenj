@@ -8,7 +8,7 @@ import {
     useEmailValidAbleCheck,
     RequestEmailCode_Button
 } from '../../../features/authentication/emailValidation'
-import { schema } from '../../../entities/authentication/emailValidation';
+import { useSchema } from '../../../entities/authentication/emailValidation';
 import { useDispatch, useSelector } from "react-redux";
 import '../../../features/authentication/emailValidation/ui/Sign.scss'
 import { saveDBFormat } from "../../../shared/lib";
@@ -16,6 +16,7 @@ import { saveUserApi, useInputManagement, User } from "../../../features/authent
 import { updateToken, updateCodeValid, RootState } from '../../../entities/redux'; // Actions 가져오기
 
 export const SignUpForm: React.FC = () => {
+    const schema =useSchema();
     const dispatch = useDispatch();
     const emailToken = useSelector((state: RootState) => state.emailValidation); // emailToken 상태 선택
 
@@ -26,7 +27,7 @@ export const SignUpForm: React.FC = () => {
     //인증번호 발급여부 (한 번 발급하면 재발급 UI로 변경)
     useEffect(() => {
         dispatch(updateCodeValid(false));
-    }, [dispatch]);
+    }, []);
 
     const { register, handleSubmit, formState: { errors }, reset, watch, trigger } = useForm<User>({
         resolver: yupResolver(schema), //유효성 검사
@@ -51,8 +52,7 @@ export const SignUpForm: React.FC = () => {
 
     //실패 시
     const onInvalid: SubmitErrorHandler<User> = (errors: FieldErrors): void => {
-        console.log(errors);
-        if (errors.userEmail?.message) {
+        if (errors.emailValidation?.message) {
             window.alert('이메일 인증을 해주세요.')
         }
     }

@@ -41,7 +41,7 @@ public class GroupService {
     private final SimpUserRegistry simpUserRegistry;
 
     //그룹 만들기
-    public void makeGroup(String groupTitle) {
+    public void createGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
 
