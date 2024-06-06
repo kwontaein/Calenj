@@ -50,13 +50,13 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         ...initialEventDateState,
         startDate: initialAdjustedStartDate,
         endDate: initialAdjustedEndDate,
-        formState: selectInfo.allDay ? 'B' : 'A'
+        formState: selectInfo.allDay ? 'todo' : 'promise'
     });
     const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
     const {formState,startDate,endDate, title, content} = eventState
     const {todoList, contentRef, setContent, addList, removeItem} = useTodoList();
 
-    const closeModal = ()=>{
+    const closeModal =()=>{
         if(title==="" && content===""){
             onClose()
         }else{
@@ -72,43 +72,36 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
 
 
     const postEvent = () =>{
-        const eventId =createEventId()
-        calendarApi.unselect();
-        console.log(selectInfo.startStr)
-        if(formState==="A" && title && content){
-
-
-            calendarApi.addEvent({
-                id: eventId,
-                title,
-                start: startDate,
-                end: endDate,
-                allDay: false
-            });
-            onClose()
-
-        }else if(formState ==="B" && todoList.length >0){
-
-            calendarApi.addEvent({
-                id: eventId,
-                title,
-                todoList: [...todoList],
-                start: startDate,
-                end: endDate,
-                allDay: true
-            });
-            onClose()
-
-        }else if(formState ==="C"){
-            calendarApi.addEvent({
-                id: eventId,
-                title,
-                start: startDate.setHours(repeatState.startTime.getHours(), repeatState.startTime.getMinutes()),
-                end: startDate.setHours(repeatState.endTime.getHours(), repeatState.endTime.getMinutes()),
-                allDay: false,
-            })
-            onClose()
+        if (title==="") return;
+        if(formState==="promise" && content===""){
+            return
+        }else if(formState ==="todo" && todoList.length ===0){
+            return
         }
+        calendarApi.unselect();
+
+        const event = {
+            id: Date.now().toString(),
+            title:title,
+            start: formState==="schedule" ? startDate.setHours(repeatState.startTime.getHours(), repeatState.startTime.getMinutes()) : startDate,
+            end: formState==="schedule" ? startDate.setHours(repeatState.endTime.getHours(), repeatState.endTime.getMinutes()) : endDate,
+            extendedProps :{
+                formState:formState,
+                content: formState==="promise" ? content : "",
+                todoList: formState==="todo" ? [...todoList] : [],
+                repeatState:{
+                    repeat: formState==="schedule" ? repeatState.repeat : null,
+                    repeatNum: formState==="schedule" ? repeatState.repeatNum : null,
+                    repeatOption: formState==="schedule" ? repeatState.repeatOption : null,
+                    repeatEnd : formState ==="schedule" ? repeatState.repeatEnd : null,
+                }
+            },
+            allDay: formState==="todo"
+        }
+
+        calendarApi.addEvent(event)
+        window.alert('일정이 생성되었습니다.');
+        onClose()
 
     }
 
@@ -134,14 +127,14 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                                 카테고리
                             </CategoryContent>
                             <CategoryItems_Container>
-                                <Modal_Condition_Button $isAble={formState==="A"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "A"})}>
+                                <Modal_Condition_Button $isAble={formState==="promise"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "promise"})}>
                                     약속일정
                                 </Modal_Condition_Button>
-                                <Modal_Condition_Button  $isAble={formState==="B"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "B"})}
+                                <Modal_Condition_Button  $isAble={formState==="todo"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "todo"})}
                                                       style={{marginInline:'5px'}}>
                                     할 일
                                 </Modal_Condition_Button>
-                                <Modal_Condition_Button  $isAble={formState==="C"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "C"})}>
+                                <Modal_Condition_Button  $isAble={formState==="schedule"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "schedule"})}>
                                     스케줄
                                 </Modal_Condition_Button>
                             </CategoryItems_Container>
@@ -152,37 +145,37 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                         <EventDatePickerView eventState={eventState} eventDispatch={eventDispatch}/>
                     </DateContentBottom_Container>
 
-                    {formState !=="C" &&
+                    {formState !=="schedule" &&
                         <EventContent_Container $formState={formState}>
                             <ContentIcon_Container>
-                                {formState ==="A" &&
+                                {formState ==="promise" &&
                                     <i className="fi fi-sr-menu-burger"></i>
                                 }
-                                {formState === "B" &&
+                                {formState === "todo" &&
                                     <i className="fi fi-sr-list"></i>
                                 }
                             </ContentIcon_Container>
-                            {formState ==="A" &&
+                            {formState ==="promise" &&
                             <EventContent_TextArea $isNull={content===""}
                                                    defaultValue={content}
                                                    onChange={(e:ChangeEvent<HTMLTextAreaElement>)=> {
-                                                       eventDispatch({type: 'SET_CONTENT', payload: e.target.value})
+                                                       eventDispatch({type:'SET_CONTENT', payload: e.target.value})
                                                    }}
                                                    placeholder={"내용을 입력해주세요."}>
                             </EventContent_TextArea>
                             }
-                            {eventState.formState ==="B" && <AddTodoList todoList={todoList}
+                            {eventState.formState ==="todo" && <AddTodoList todoList={todoList}
                                                                          contentRef={contentRef}
                                                                          setContent={setContent}
                                                                          addList={addList}
                                                                          removeItem={removeItem}/>}
                         </EventContent_Container>
                     }
-                    {formState==="C" && <RepeatEvent eventState={eventState}
+                    {formState==="schedule" && <RepeatEvent eventState={eventState}
                                                      eventDispatch={eventDispatch}
                                                      repeatState={repeatState}
                                                      repeatDispatch={repeatDispatch}/>}
-                    {formState ==="A" &&
+                    {formState ==="promise" &&
                         <AddFriend_Container>
                             <AddFriendIcon_Container>
                                 <i className="fi fi-sr-user-add"></i>
@@ -194,7 +187,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                     }
 
                     <ModalButton_Container>
-                        <Modal_Condition_Button $isAble={title!=="" && (formState==="A" && content !=="") || (formState==="B" && todoList.length > 0) || formState==="C"}
+                        <Modal_Condition_Button $isAble={title!=="" && (formState==="promise" && content !=="") || (formState==="todo" && todoList.length > 0) || formState==="schedule"}
                                                 style={{marginRight:'5px'}}
                                                 onClick={postEvent}>
                             생성

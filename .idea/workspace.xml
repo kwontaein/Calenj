@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.06 캘린더 등록모달 제작">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.06 캘린더 이벤트 등록">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/useCalendar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEvent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEventStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/EventDatePickerView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/EventDatePickerView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenHandler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/contentItems/model/useScreenHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +255,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="SeungJae" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

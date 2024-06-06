@@ -1,6 +1,6 @@
 import {TextColor, TextColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
-import {MessageSend_Cotainer_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
+import {MessageSend_Container_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
 
 export const MessageSend_Input = styled.input`
     background-color: ${ThemaColor3}60;
@@ -14,6 +14,6 @@ export const MessageSend_Input = styled.input`
 
 
 export const MessageSend_Cotainer = styled.form`
-    height: ${MessageSend_Cotainer_height}px; //메시지 박스크기 50px
+    height: ${MessageSend_Container_height}px; //메시지 박스크기 50px
     display: flex;
 `

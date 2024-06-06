@@ -43,13 +43,12 @@ public class CalendarService {
 
     public List<StampResponse> getStampList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        List<StampResponse> stampResponses = stampRepository.findByUserID(UUID.fromString(userDetails.getUsername())).orElse(null);
-        return stampResponses;
+        return stampRepository.findByUserID(UUID.fromString(userDetails.getUsername())).orElse(null);
     }
 
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
-        UserScheduleEntity userSchedule = userScheduleRepository.updateScheduleById(scheduleRequest.getScheduleId()).orElseThrow(() -> new RuntimeException("오류"));
+        UserScheduleEntity userSchedule = userScheduleRepository.findById(scheduleRequest.getScheduleId()).orElseThrow(() -> new RuntimeException("오류"));
         //변경 감지를 통한 자동 업데이트
         userSchedule.updateScheduleDetails(scheduleRequest);
     }
