@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import 'react-time-picker/dist/TimePicker.css';
-import 'react-clock/dist/Clock.css';
 import DatePicker from "react-datepicker";
 import {
     BackGroundColor,
@@ -11,9 +9,10 @@ import {
     ThemaColor3
 } from "../../../shared/ui/SharedStyled";
 
-interface ClickProps{
-    $isClick:boolean,
+interface ClickProps {
+    $isClick: boolean,
 }
+
 export const RePeatEvent_Container = styled.div`
     width: calc(100% - 30px);
     height: 190px;
@@ -36,21 +35,22 @@ export const EventTimeIcon_Container = styled.div`
 `
 export const EventTimePicker = styled(DatePicker)`
     width: 100px;
-    height : 25px;
+    height: 25px;
     margin-left: 8px;
     border-radius: 5px;
     border: 1px solid transparent;
     background-color: transparent;
-    color:${TextColor};
+    color: ${TextColor};
     font-size: 14px;
     display: flex;
     cursor: pointer;
-    &:hover{
+
+    &:hover {
         border: 1px solid ${TextColor};
     }
 `;
 
-export const RepeatBottom_Container= styled.div`
+export const RepeatBottom_Container = styled.div`
     margin-top: 20px;
     width: 100%;
     height: calc(100% - 50px);
@@ -74,14 +74,14 @@ export const RepeatContent_Container = styled.div`
 `
 export const RepeatCheckState_Div = styled.div<ClickProps>`
     width: 60px;
-    height :30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
     font-size: 12px;
     cursor: pointer;
-    background-color: ${props=> props.$isClick ? PointColor : ThemaColor2};
+    background-color: ${props => props.$isClick ? PointColor : ThemaColor2};
     transition: background-color 0.5 ease-in;
 `
 export const RepeatText_Container = styled.div`
@@ -101,6 +101,7 @@ export const RepeatNum_Input = styled.input`
     color: ${TextColor};
     border: 1px solid transparent;
     text-align: right;
+
     &[type="number"] {
         -moz-appearance: textfield;
     }
@@ -113,25 +114,26 @@ export const RepeatNum_Input = styled.input`
 `
 // Styled-components for the select box
 export const CustomSelect = styled.select`
-  padding: 1px;
-  font-size: 14px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
+    padding: 1px;
+    font-size: 14px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
 `;
 
 export const RepeatEndDatePicker = styled(DatePicker)`
     width: 130px;
-    height : 25px;
+    height: 25px;
     margin-inline: 8px;
     border-radius: 5px;
     border: 1px solid transparent;
     background-color: transparent;
-    color:${TextColor};
+    color: ${TextColor};
     font-size: 14px;
     display: flex;
     cursor: pointer;
-    &:hover{
+
+    &:hover {
         border: 1px solid ${TextColor};
     }
 `;
@@ -143,24 +145,27 @@ export const RepeatState_Container = styled.div<ClickProps>`
     margin-top: 10px;
     border-radius: 5px;
     padding: 5px;
-    ${RepeatText_Container}{
-        color: ${props=> props.$isClick ?  TextColor : `${TextColor}77`};
+
+    ${RepeatText_Container} {
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
-    ${RepeatNum_Input}{
-        color: ${props=> props.$isClick ?  TextColor : `${TextColor}77`};
+
+    ${RepeatNum_Input} {
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
-    ${CustomSelect}{
-        color: ${props=> props.$isClick ?  TextColor : `${TextColor}77`};
+
+    ${CustomSelect} {
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
-    ${RepeatEndDatePicker}{
-        color: ${props=> props.$isClick ?  TextColor : `${TextColor}77`};
+
+    ${RepeatEndDatePicker} {
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
 `
 
 
-
 export const SelectContainer = styled.div`
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 `;
 

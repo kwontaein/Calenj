@@ -16,14 +16,14 @@ import java.util.UUID;
 @Repository
 public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity, UUID> {
     @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
-            "(Us.scheduleId,Us.ScheduleStartDateTime,Us.ScheduleEndDateTime,Us.ScheduleRepeat,Us.ScheduleRepeatPeriod,Us.ScheduleRepeatDelay,Us.userScheduleTitle,Us.userScheduleContent)" +
+            "(Us.scheduleId,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.scheduleRepeat,Us.scheduleRepeatPeriod,Us.scheduleRepeatDelay,Us.userScheduleTitle,Us.userScheduleContent)" +
             " FROM User_Schedule Us WHERE Us.userId.userId = :userId")
     Optional<List<ScheduleResponse>> findListByUserId(@Param("userId") UUID userId);
 
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query(value = "UPDATE User_Schedule SET" +
-            " ScheduleStartDateTime = startDateTime,ScheduleEndDateTime=endDateTime,ScheduleRepeat=scheduleRepeat,ScheduleRepeatPeriod=scheduleRepeatPeriod" +
-            ",ScheduleRepeatDelay=scheduleRepeatDelay,userScheduleTitle=userScheduleTitle,userScheduleContent=userScheduleContent WHERE userId = :userId", nativeQuery = true)
+            " scheduleStartDateTime = startDateTime,scheduleEndDateTime=endDateTime,scheduleRepeat=scheduleRepeat,scheduleRepeatPeriod=scheduleRepeatPeriod" +
+            ",scheduleRepeatDelay=scheduleRepeatDelay,userScheduleTitle=userScheduleTitle,userScheduleContent=userScheduleContent WHERE userId = :userId", nativeQuery = true)
     Optional<UserScheduleEntity> updateScheduleById(@Param("userId") UUID userId);
 }
