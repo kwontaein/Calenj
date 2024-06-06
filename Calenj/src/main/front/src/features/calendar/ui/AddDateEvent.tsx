@@ -27,6 +27,7 @@ import {RepeatEvent} from "./RepeatEvent";
 import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
 import {EventDatePickerView} from "./EventDatePickerView";
 import {useTodoList} from "../model/useTodoList";
+import {createEventId} from "../utils/event-utils";
 
 interface CalendarProps{
     onClose : ()=>void,
@@ -68,6 +69,48 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
             eventDispatch({type:'SET_END_DATE', payload: new Date(+startDate + 1800000)})
         }
     }, [startDate]);
+
+
+    const postEvent = () =>{
+        const eventId =createEventId()
+        calendarApi.unselect();
+        console.log(selectInfo.startStr)
+        if(formState==="A" && title && content){
+
+
+            calendarApi.addEvent({
+                id: eventId,
+                title,
+                start: startDate,
+                end: endDate,
+                allDay: false
+            });
+            onClose()
+
+        }else if(formState ==="B" && todoList.length >0){
+
+            calendarApi.addEvent({
+                id: eventId,
+                title,
+                todoList: [...todoList],
+                start: startDate,
+                end: endDate,
+                allDay: true
+            });
+            onClose()
+
+        }else if(formState ==="C"){
+            calendarApi.addEvent({
+                id: eventId,
+                title,
+                start: startDate.setHours(repeatState.startTime.getHours(), repeatState.startTime.getMinutes()),
+                end: startDate.setHours(repeatState.endTime.getHours(), repeatState.endTime.getMinutes()),
+                allDay: false,
+            })
+            onClose()
+        }
+
+    }
 
 
     return createPortal(
@@ -151,7 +194,9 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                     }
 
                     <ModalButton_Container>
-                        <Modal_Condition_Button $isAble={title!=="" && (formState==="A" && content !=="") || (formState==="B" && todoList.length > 0) || formState==="C"}  style={{marginRight:'5px'}}>
+                        <Modal_Condition_Button $isAble={title!=="" && (formState==="A" && content !=="") || (formState==="B" && todoList.length > 0) || formState==="C"}
+                                                style={{marginRight:'5px'}}
+                                                onClick={postEvent}>
                             생성
                         </Modal_Condition_Button>
                         <Modal_Condition_Button onClick={closeModal}>
