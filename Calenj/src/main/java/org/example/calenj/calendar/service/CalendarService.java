@@ -43,8 +43,7 @@ public class CalendarService {
 
     public List<StampResponse> getStampList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        List<StampResponse> stampResponses = stampRepository.findByUserID(UUID.fromString(userDetails.getUsername())).orElse(null);
-        return stampResponses;
+        return stampRepository.findByUserID(UUID.fromString(userDetails.getUsername())).orElse(null);
     }
 
     @Transactional

@@ -86,8 +86,8 @@ export const MessageScrollBox:React.FC =()=>{
 
 
     return(
-        <>
-        {MessageBox}
-        </>
+        <div>
+            {MessageBox}
+        </div>
     )
 }

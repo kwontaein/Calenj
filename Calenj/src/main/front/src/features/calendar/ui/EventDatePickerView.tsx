@@ -29,16 +29,16 @@ export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,event
     return (
         <DatePicker_Container>
             <DatePickerIcon_Container>
-                {formState === "A" ?
+                {formState === "promise" ?
                     <i className="fi fi-tr-calendar-clock"></i> :
                     <i className="fi fi-tr-calendar-day"></i>}
             </DatePickerIcon_Container>
             <EventDatePicker
-                dateFormat={formState ==="A" ? ' yy.MM.dd (EEE)  HH:mm': ' yy년 MM월 dd일 (EEE)'} // 날짜 형태
+                dateFormat={formState ==="promise" ? ' yy.MM.dd (EEE)  HH:mm': ' yy년 MM월 dd일 (EEE)'} // 날짜 형태
                 shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                showTimeSelect={formState === "A"}
-                timeFormat={formState === "A" ? "HH:mm" : undefined}
-                timeIntervals={formState === "A" ? 30 : undefined}
+                showTimeSelect={formState === "promise"}
+                timeFormat={formState === "promise" ? "HH:mm" : undefined}
+                timeIntervals={formState === "promise" ? 30 : undefined}
                 selected={startDate}
                 onChange={(date:Date) => eventDispatch({type:'SET_START_DATE', payload: date})}
                 locale={ko}
@@ -53,15 +53,15 @@ export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,event
                             : 'custom-day gray-day'
                 }
             />
-            {formState!=="C" &&
+            {formState!=="schedule" &&
                 <>
                     <p>~</p>
                     <EventDatePicker
-                        dateFormat={formState ==="A" ? ' yy.MM.dd (EEE)  HH:mm': ' yy년 MM월 dd일 (EEE)'} // 날짜 형태
+                        dateFormat={formState ==="promise" ? ' yy.MM.dd (EEE)  HH:mm': ' yy년 MM월 dd일 (EEE)'} // 날짜 형태
                         shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                        showTimeSelect={formState === "A"}
-                        timeFormat={formState === "A" ? "HH:mm" : undefined}
-                        timeIntervals={formState === "A" ? 30 : undefined}
+                        showTimeSelect={formState === "promise"}
+                        timeFormat={formState === "promise" ? "HH:mm" : undefined}
+                        timeIntervals={formState === "promise" ? 30 : undefined}
                         selected={endDate}
                         onChange={endDateHandler}
                         minDate={startDate}
