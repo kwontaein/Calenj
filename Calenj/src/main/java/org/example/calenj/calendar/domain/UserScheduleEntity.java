@@ -29,6 +29,9 @@ public class UserScheduleEntity {
     @JoinColumn(name = "schedule_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
+    //카테고리
+    private String category;
+
     //제목
     @Column(name = "user_schedule_title")
     private String userScheduleTitle;
