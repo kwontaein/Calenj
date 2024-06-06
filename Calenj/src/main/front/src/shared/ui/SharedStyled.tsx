@@ -6,7 +6,7 @@ interface UnfocusBackgroundProps {
     focus: string;
 }
 interface ClickAbleProps{
-    $isAble :boolean;
+    $isAble? :boolean;
 }
 
 
@@ -68,14 +68,22 @@ export const GlobalStyle = createGlobalStyle`
     button {
         appearance: none;
         border: 0;
-        background-color: ${ThemaColor3};
+        background-color: ${ThemaColor2};
         cursor: pointer;
         color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
+        padding:5px;
+        border-radius: 5px;
+        &:hover{
+            background-color: ${ThemaColor2}77;
+        }
     }
 
     div {
         color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
         font-size: 15px;
+    }
+    option{
+        background-color: ${ThemaColor3};
     }
 `;
 
@@ -193,7 +201,6 @@ export const ListView = styled.li`
     text-overflow: ellipsis;
     margin-top: -1px;
     padding: 10px;
-    padding-bottom: 10px;
 
     &:hover {
         background-color: ${ThemaColor2};
@@ -223,20 +230,7 @@ export const SignState_Button = styled.button`
 `;
 
 
-export const CheckCondition_Button = styled.div<ClickAbleProps>`
-    width: 70px;
-    height: 100%;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: ${ThemaColor3};
-    ${props => props.$isAble &&
-    `background-color : ${PointColor};
-             &:hover{background-color : ${PointColor}77;
-             }
-    `}
-`
+
 
 export const Modal_Background =styled.div`
     width: 100%;
@@ -251,9 +245,9 @@ export const Modal_Background =styled.div`
 `
 
 export const Modal_Container = styled.div`
-    background-color: ${ThemaColor2};
-    width: 500px;
-    height: 570px;
+    background-color: ${ThemaColor3};
+    width: 440px; //500, 570
+    height: 500px;
     border-radius: 5px;
 `
 
@@ -271,4 +265,19 @@ export const ModalContent_Container =styled.div`
     height: calc(100% - 85px);
     padding: 20px;
     
+`
+
+export const Modal_Condition_Button = styled.button<ClickAbleProps>`
+    width: 70px;
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    ${props => props.$isAble &&
+            `background-color : ${PointColor};
+             &:hover{background-color : ${PointColor}77;
+             }
+    `}
 `

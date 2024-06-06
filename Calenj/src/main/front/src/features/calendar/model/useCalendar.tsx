@@ -14,7 +14,6 @@ export const useCalendar = ():ReturnCalendar =>{
         let title = prompt("이벤트 추가")?.trim();
 
         let calendarApi = selectInfo.view.calendar;
-        console.log(selectInfo.startStr,selectInfo.endStr)
         calendarApi.unselect();
         if (title) {
             calendarApi.addEvent({
@@ -37,5 +36,5 @@ export const useCalendar = ():ReturnCalendar =>{
     }, []);
 
 
-    return {handleEvents,handleDateSelect,handleEventClick}
+    return {handleEvents,handleEventClick}
 }

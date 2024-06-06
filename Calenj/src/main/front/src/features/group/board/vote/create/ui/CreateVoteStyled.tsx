@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import {PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {
+    BackGroundColor,
+    PointColor,
+    TextColor,
+    TextColor2,
+    ThemaColor2,
+    ThemaColor3
+} from "../../../../../../shared/ui/SharedStyled";
 import DatePicker from "react-datepicker";
 
 
@@ -10,27 +17,6 @@ const GroupVoteModal_Button_Container_marginTop =5;
 
 
 /** VoteMake **/
-export const GroupVoteModal_Container = styled.div`
-    background-color: ${ThemaColor2};
-    width: 400px;
-    height:460px;
-    padding: 15px;
-    border-radius: 5px;
-`
-export const GroupVoteModal_close_Btn = styled.button`
-    width: 70px;
-    height: 100%;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: ${ThemaColor3};
-    margin-right: 5px;
-    font-size: 14px;
-    &:hover{
-        background-color: rgb(0,0,0,0.4);
-    }
-`
 
 //1588 1688
 export const MiniVote_Input = styled.input`
@@ -38,29 +24,16 @@ export const MiniVote_Input = styled.input`
     height: ${MiniVote_Input_height}px;
     margin-block: 5px;
     border-radius: 5px;
-    border: 2px solid ${ThemaColor3};
+    border: 2px solid ${ThemaColor2};
     padding-left: 10px;
     font-size: 14px;
     color: ${TextColor};
     background-color: ${ThemaColor2};
-    &:focus{
+
+    &:focus {
         outline: none;
-        border: 2px solid;
-        border-color: ${PointColor};
+        border: 2px solid ${PointColor};
     }
-`
-
-export const GroupVoteModal_TopContent_Container = styled.div`
-    width: 100%;
-    height:${GroupVoteModal_TopContent_Container_height}px;
-    margin-bottom:${GroupVoteModal_TopContent_Container_marginBottom}px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-`
-
-export const GroupVoteModal_Title = styled.div`
-    font-size: 20px;
 `
 
 export const ListInput_Container = styled.div`
@@ -71,7 +44,7 @@ export const AddVoteList_Btn = styled.button`
     display: flex;
     position: absolute;
     margin-top: 5px;
-    margin-left: 341px;
+    margin-left: 340px;
     height: ${MiniVote_Input_height+6}px;
     width: 60px;
     align-items: center;
@@ -79,9 +52,13 @@ export const AddVoteList_Btn = styled.button`
     justify-content: center;
     font-size: 14px;
     font-weight: 550;
+    background-color: ${BackGroundColor};
+    &:hover{
+        background-color: rgb(0,0,0,0.3);
+    }
 `
 
-export const VoteTypeRadio_Lable_Container = styled.div`
+export const VoteTypeRadio_Label_Container = styled.div`
     display: flex;
     flex-direction: row;
     height: 30px;
@@ -242,7 +219,7 @@ export const VoteCounter_DatePicker = styled(DatePicker)`
     background-color: ${ThemaColor2};
     color:${TextColor};
     border-radius: 5px;
-    border: 2px solid ${ThemaColor3};
+    border: 2px solid ${ThemaColor2};
     padding-left: 10px;
     font-size: 14px;
     &:focus{

@@ -1,20 +1,32 @@
 import {
     Modal_Background,
+    Modal_Condition_Button,
     Modal_Container,
     ModalContent_Container,
     ModalTopBar_Container
 } from "../../../shared/ui/SharedStyled";
-import React, {useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
+    AddFriend_Button, AddFriend_Container, AddFriendIcon_Container,
     Category_Container,
-    CategoryContent, CategoryItem_Button, CategoryItems_Container, DateContentBottom_Container,
-    DateEventTitle_Input, DatePicker_Container, DatePickerIcon_Container,
-    DateTopContent_Container, TimeIconText
+    CategoryContent,
+    CategoryItems_Container, ContentIcon_Container,
+    DateContentBottom_Container,
+    DateEventTitle_Input,
+
+    DateTopContent_Container, EventContent_Container,
+    EventContent_TextArea,
+    ModalButton_Container,
 } from "./AddDateEventStyled";
-import {ko} from "date-fns/locale/ko";
-import {EventDatePicker} from "./AddDateEventStyled";
+import {useConfirm} from "../../../shared/model";
+import '../../../shared/ui/DatePicker.scss';
 import {DateSelectArg} from "@fullcalendar/react";
+import {AddTodoList} from "./AddTodoList";
+import {RepeatEvent} from "./RepeatEvent";
+import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
+import {EventDatePickerView} from "./EventDatePickerView";
+import {useTodoList} from "../model/useTodoList";
 
 interface CalendarProps{
     onClose : ()=>void,
@@ -22,17 +34,45 @@ interface CalendarProps{
 }
 export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
     const calendarApi = selectInfo?.view.calendar;
+    const modalBackground = useRef<HTMLDivElement>(null);
+    function adjustDate(dateStr: string, allDay: boolean): Date {
+        const date = new Date(dateStr);
+        if (allDay) {
+            date.setHours(date.getHours()-9);
+        }
+        return date;
+    }
+    const initialAdjustedStartDate = adjustDate(selectInfo.startStr, selectInfo.allDay);
+    const initialAdjustedEndDate = adjustDate(selectInfo.endStr, selectInfo.allDay);
+
+    const [eventState, eventDispatch] = useReducer(EventDateReducer, {
+        ...initialEventDateState,
+        startDate: initialAdjustedStartDate,
+        endDate: initialAdjustedEndDate,
+        formState: selectInfo.allDay ? 'B' : 'A'
+    });
+    const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
+    const {formState,startDate,endDate, title, content} = eventState
+    const {todoList, contentRef, setContent, addList, removeItem} = useTodoList();
+
+    const closeModal = ()=>{
+        if(title==="" && content===""){
+            onClose()
+        }else{
+            useConfirm("내용은 저장되지 않습니다. 정말로 취소하시겠습니까?", onClose,()=>{})
+        }
+    }
 
     useEffect(() => {
-        console.log(selectInfo)
-    }, [selectInfo]);
-    const modalBackground = useRef<HTMLDivElement>(null);
-    const [startDate, setStartDate] = useState<Date>(new Date(selectInfo.startStr));
-    const [endDate, setEndDate] = useState<Date>(new Date(new Date().setDate(new Date(selectInfo.endStr).getDate() -1)));
+        if(startDate>endDate){
+            eventDispatch({type:'SET_END_DATE', payload: new Date(+startDate + 1800000)})
+        }
+    }, [startDate]);
+
 
     return createPortal(
         <Modal_Background ref={modalBackground} onClick={(e : React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if (e.target === modalBackground.current) {
+            if (e.target === modalBackground.current && content==="" && title ==="") {
                 onClose();
             }}}>
             <Modal_Container>
@@ -40,74 +80,84 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                     일정 추가
                 </ModalTopBar_Container>
                 <ModalContent_Container>
-                    <DateTopContent_Container>
-                        <DateEventTitle_Input type={"text"} placeholder={"제목 추가"} maxLength={30}/>
 
+                    <DateTopContent_Container>
+                        <DateEventTitle_Input onChange={(e:ChangeEvent<HTMLInputElement>)=>eventDispatch({type:'SET_TITLE', payload: e.target.value})}
+                                              type={"text"}
+                                              placeholder={"제목 추가"}
+                                              maxLength={30}/>
                         <Category_Container>
                             <CategoryContent>
                                 카테고리
                             </CategoryContent>
                             <CategoryItems_Container>
-                                <CategoryItem_Button $isClick={false}>
+                                <Modal_Condition_Button $isAble={formState==="A"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "A"})}>
                                     약속일정
-                                </CategoryItem_Button>
-                                <CategoryItem_Button  $isClick={true}
+                                </Modal_Condition_Button>
+                                <Modal_Condition_Button  $isAble={formState==="B"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "B"})}
                                                       style={{marginInline:'5px'}}>
                                     할 일
-                                </CategoryItem_Button>
-                                <CategoryItem_Button  $isClick={false}>
-                                    스탬프
-                                </CategoryItem_Button>
+                                </Modal_Condition_Button>
+                                <Modal_Condition_Button  $isAble={formState==="C"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "C"})}>
+                                    스케줄
+                                </Modal_Condition_Button>
                             </CategoryItems_Container>
                         </Category_Container>
                     </DateTopContent_Container>
+
                     <DateContentBottom_Container>
-                        <DatePicker_Container>
-                            <DatePickerIcon_Container>
-                                <i className="fi fi-rr-clock-three"></i>
-                                <TimeIconText>시작</TimeIconText>
-                            </DatePickerIcon_Container>
-                            <EventDatePicker
-                                dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
-                                shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
-                                maxDate={new Date(new Date().setDate(new Date().getDate() + 6))}//최대 날짜를 현재기준 일주일까지
-                                showTimeSelect //시간선택
-                                timeFormat="HH:mm" //시간 포맷
-                                timeIntervals={15} //시간 단위
-                                selected={startDate}
-                                onChange={(date:Date) => setStartDate(date)}
-                                className='DatePicker'
-                                placeholderText='날짜 선택'
-                                locale={ko}
-                                popperPlacement="right-start"
-
-                            />
-                        </DatePicker_Container>
-                        <DatePicker_Container>
-                            <DatePickerIcon_Container>
-                                <i className="fi fi-rr-clock-five"></i>
-                                <TimeIconText>마감</TimeIconText>
-                            </DatePickerIcon_Container>
-                            <EventDatePicker
-                                dateFormat=' yy/MM/dd (EEE)  aa hh:mm 까지' // 날짜 형태
-                                shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
-                                maxDate={new Date(new Date().setDate(new Date().getDate() + 6))}//최대 날짜를 현재기준 일주일까지
-                                showTimeSelect //시간선택
-                                timeFormat="HH:mm" //시간 포맷
-                                timeIntervals={15} //시간 단위
-                                selected={endDate}
-                                onChange={(date:Date) => setEndDate(date)}
-                                className='DatePicker'
-                                placeholderText='날짜 선택'
-                                locale={ko}
-                                popperPlacement="right-start"
-                            />
-                        </DatePicker_Container>
-
-
+                        <EventDatePickerView eventState={eventState} eventDispatch={eventDispatch}/>
                     </DateContentBottom_Container>
+
+                    {formState !=="C" &&
+                        <EventContent_Container $formState={formState}>
+                            <ContentIcon_Container>
+                                {formState ==="A" &&
+                                    <i className="fi fi-sr-menu-burger"></i>
+                                }
+                                {formState === "B" &&
+                                    <i className="fi fi-sr-list"></i>
+                                }
+                            </ContentIcon_Container>
+                            {formState ==="A" &&
+                            <EventContent_TextArea $isNull={content===""}
+                                                   defaultValue={content}
+                                                   onChange={(e:ChangeEvent<HTMLTextAreaElement>)=> {
+                                                       eventDispatch({type: 'SET_CONTENT', payload: e.target.value})
+                                                   }}
+                                                   placeholder={"내용을 입력해주세요."}>
+                            </EventContent_TextArea>
+                            }
+                            {eventState.formState ==="B" && <AddTodoList todoList={todoList}
+                                                                         contentRef={contentRef}
+                                                                         setContent={setContent}
+                                                                         addList={addList}
+                                                                         removeItem={removeItem}/>}
+                        </EventContent_Container>
+                    }
+                    {formState==="C" && <RepeatEvent eventState={eventState}
+                                                     eventDispatch={eventDispatch}
+                                                     repeatState={repeatState}
+                                                     repeatDispatch={repeatDispatch}/>}
+                    {formState ==="A" &&
+                        <AddFriend_Container>
+                            <AddFriendIcon_Container>
+                                <i className="fi fi-sr-user-add"></i>
+                            </AddFriendIcon_Container>
+                            <AddFriend_Button>
+                                나의 친구
+                            </AddFriend_Button>
+                        </AddFriend_Container>
+                    }
+
+                    <ModalButton_Container>
+                        <Modal_Condition_Button $isAble={title!=="" && (formState==="A" && content !=="") || (formState==="B" && todoList.length > 0) || formState==="C"}  style={{marginRight:'5px'}}>
+                            생성
+                        </Modal_Condition_Button>
+                        <Modal_Condition_Button onClick={closeModal}>
+                            취소
+                        </Modal_Condition_Button>
+                    </ModalButton_Container>
                 </ModalContent_Container>
             </Modal_Container>
         </Modal_Background>,

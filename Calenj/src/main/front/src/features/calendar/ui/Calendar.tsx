@@ -17,7 +17,7 @@ import {FullScreen_div} from "../../../shared/ui/SharedStyled";
 
 
 export const Calendar: React.FC = () => {
-    const { handleEvents, handleDateSelect, handleEventClick } = useCalendar();
+    const { handleEvents, handleEventClick } = useCalendar();
     const [addEvent,setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg|null>(null);
     const onClose = ()=>{
@@ -30,6 +30,7 @@ export const Calendar: React.FC = () => {
                     <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
                 }
                 <StyledFullCalendar
+
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                     initialView="dayGridMonth"
                     selectable={!addEvent}
