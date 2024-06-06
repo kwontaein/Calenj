@@ -25,7 +25,7 @@ public class InviteCodeEntity {
 
     // 초대자
     @ManyToOne
-    @JoinColumn(name = "user_email", referencedColumnName = "user_email", columnDefinition = "varchar(255)")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity user;
 
 
