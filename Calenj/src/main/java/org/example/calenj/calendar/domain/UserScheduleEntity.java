@@ -25,6 +25,8 @@ public class UserScheduleEntity {
     @Column(nullable = false, unique = true, name = "schedule_id", columnDefinition = "BINARY(16)")
     private UUID scheduleId;
 
+    private String personalId;
+
     @ManyToOne
     @JoinColumn(name = "schedule_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;

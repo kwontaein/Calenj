@@ -12,6 +12,8 @@ public class ScheduleRequest {
     private String userScheduleTitle;
     //내용
     private String userScheduleContent;
+    //내용
+    private String[] todoList;
     //시작일
     private Timestamp ScheduleStartDateTime;
     //종료일
@@ -22,4 +24,6 @@ public class ScheduleRequest {
     private Timestamp ScheduleRepeatPeriod;
     //반복 주기
     private int ScheduleRepeatDelay;
+    //반복 주기
+    private String ScheduleRepeatOption;
 }
