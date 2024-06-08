@@ -35,7 +35,6 @@ export const Calendar: React.FC = () => {
                     initialView="dayGridMonth"
                     selectable={!addEvent}
                     editable={true}
-                    initialEvents={INITIAL_EVENTS}
                     locale="ko"
                     headerToolbar={{
                         left: "prevYear,prev,next,nextYear today",

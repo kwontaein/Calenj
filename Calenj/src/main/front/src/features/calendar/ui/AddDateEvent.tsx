@@ -22,12 +22,11 @@ import {
 import {useConfirm} from "../../../shared/model";
 import '../../../shared/ui/DatePicker.scss';
 import {DateSelectArg} from "@fullcalendar/react";
+import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
+import {useTodoList} from "../model/useTodoList";
+import {EventDatePickerView} from "./EventDatePickerView";
 import {AddTodoList} from "./AddTodoList";
 import {RepeatEvent} from "./RepeatEvent";
-import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
-import {EventDatePickerView} from "./EventDatePickerView";
-import {useTodoList} from "../model/useTodoList";
-import {createEventId} from "../utils/event-utils";
 
 interface CalendarProps{
     onClose : ()=>void,
@@ -80,38 +79,41 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         }
         calendarApi.unselect();
 
+
+
         const event = {
             id: Date.now().toString(),
             title:title,
             start: formState==="schedule" ? startDate.setHours(repeatState.startTime.getHours(), repeatState.startTime.getMinutes()) : startDate,
             end: formState==="schedule" ? startDate.setHours(repeatState.endTime.getHours(), repeatState.endTime.getMinutes()) : endDate,
+            allDay: formState==="todo",
             extendedProps :{
                 formState:formState,
                 content: formState==="promise" ? content : "",
                 todoList: formState==="todo" ? [...todoList] : [],
                 repeatState:{
                     repeat: formState==="schedule" ? repeatState.repeat : null,
-                    repeatNum: formState==="schedule" ? repeatState.repeatNum : null,
-                    repeatOption: formState==="schedule" ? repeatState.repeatOption : null,
-                    repeatEnd : formState ==="schedule" ? repeatState.repeatEnd : null,
+                    repeatNum: (formState==="schedule" && repeatState.repeat) ? repeatState.repeatNum : null,
+                    repeatOption: (formState==="schedule" && repeatState.repeat) ? repeatState.repeatOption : null,
+                    repeatEnd : (formState ==="schedule" && repeatState.repeat) ? repeatState.repeatEnd : null,
                 }
             },
-            allDay: formState==="todo"
         }
-
+        console.log(Object.entries(event.extendedProps.repeatState));
         calendarApi.addEvent(event)
         window.alert('일정이 생성되었습니다.');
         onClose()
 
     }
 
+    //eventSave
 
     return createPortal(
         <Modal_Background ref={modalBackground} onClick={(e : React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             if (e.target === modalBackground.current && content==="" && title ==="") {
                 onClose();
             }}}>
-            <Modal_Container>
+            <Modal_Container style={{height:'530px'}}>
                 <ModalTopBar_Container>
                     일정 추가
                 </ModalTopBar_Container>
@@ -149,10 +151,10 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                         <EventContent_Container $formState={formState}>
                             <ContentIcon_Container>
                                 {formState ==="promise" &&
-                                    <i className="fi fi-sr-menu-burger"></i>
+                                    <i className="bi bi-justify-left"></i>
                                 }
                                 {formState === "todo" &&
-                                    <i className="fi fi-sr-list"></i>
+                                    <i className="bi bi-list-check"></i>
                                 }
                             </ContentIcon_Container>
                             {formState ==="promise" &&

@@ -18,3 +18,15 @@ export interface ReturnTodo{
     removeItem : (key:number) => void,
     contentRef :React.RefObject<HTMLInputElement>
 }
+
+export interface ReturnExtendedProps{
+    formState:string,
+    content: string,
+    todoList: TodoItem[],
+    repeatState:{
+        repeat: boolean,
+        repeatNum: number,
+        repeatOption: string,
+        repeatEnd : Date,
+    }
+}

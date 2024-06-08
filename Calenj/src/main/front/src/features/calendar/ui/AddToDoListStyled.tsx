@@ -50,7 +50,7 @@ export const AddVoteList_Btn = styled.button`
 export const TodoList_Container = styled.div`
     margin-top: 5px;
     width: 100%;
-    height: 140px;
+    height: 170px;
     overflow-y: auto; /* 수직 스크롤을 활성화. */
 `
 

@@ -15,7 +15,7 @@ interface ClickProps {
 
 export const RePeatEvent_Container = styled.div`
     width: calc(100% - 30px);
-    height: 190px;
+    height: 220px;
 `
 export const EventTime_container = styled.div`
     height: 30px;
@@ -64,39 +64,66 @@ export const RepeatIcon_Container = styled.div`
     flex-direction: column;
     width: 30px;
     height: 100%;
-    font-size: 18px;
+    font-size: 22px;
     align-items: center;
 `
+
+
 export const RepeatContent_Container = styled.div`
     width: calc(100% - 40px);
     height: 100%;
     margin-left: 10px;
 `
-export const RepeatCheckState_Div = styled.div<ClickProps>`
-    width: 60px;
+export const RepeatButton_Container = styled.div`
+    width: 100%;
     height: 30px;
+    display: flex;
+    flex-direction: row;
+`
+export const RepeatCheckState_Div = styled.div<ClickProps>`
+    margin-top: 2px;
+    width: 70px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
     font-size: 12px;
+    margin-right: 5px;
     cursor: pointer;
     background-color: ${props => props.$isClick ? PointColor : ThemaColor2};
     transition: background-color 0.5 ease-in;
 `
+export const InfoIcon_Container = styled.div`
+    margin-left: -5px;
+    margin-right: 5px;
+    width: 20px;
+    height: 30px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${TextColor}77;
+`
+
 export const RepeatText_Container = styled.div`
     font-size: 14px;
     display: flex;
     flex-direction: row;
-    height: 30px;
+    height: 25px;
+    margin-top: 5px;
     align-items: center;
 `
 
-export const RepeatNum_Input = styled.input`
+interface InputWidth{
+    $numLength : number,
+}
+
+export const RepeatNum_Input = styled.input<InputWidth>`
     height: 14px;
-    width: 25px;
+    width: ${props=>props.$numLength * 8}px;
     margin-top: 1px;
-    margin-left: 5px;
+    margin-left: 4px;
     background-color: transparent;
     color: ${TextColor};
     border: 1px solid transparent;
@@ -111,15 +138,68 @@ export const RepeatNum_Input = styled.input`
         -webkit-appearance: none;
         margin: 0;
     }
+    &:hover {
+        border: 1px solid ${TextColor};
+        border-radius: 4px;
+        color : ${PointColor}
+    }
+    
 `
 // Styled-components for the select box
 export const CustomSelect = styled.select`
+    -webkit-appearance: none;
+    appearance: none;
     padding: 1px;
     font-size: 14px;
-    border: 0;
     border-radius: 4px;
     background: transparent;
+    border: 1px solid transparent;
+
+    &:hover {
+        border: 1px solid ${TextColor};
+        border-radius: 4px;
+        color : ${PointColor}
+    }
 `;
+
+export const RepeatWeek_Container = styled.div`
+    width: 40px;
+    padding: 1px;
+    font-size: 14px;
+    border-radius: 4px;
+    color: ${TextColor};
+    background: ${ThemaColor2};
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-right: 10px;
+`
+
+export const PatternContent_Container = styled.div`
+    height: 22px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid ${TextColor}77;
+    border-radius: 50px;
+    margin-left: 10px;
+`
+
+export const PatternContent = styled.div<ClickProps>`
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: 3px;
+    border-radius: 50%;
+    background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
+    color:${TextColor};
+    font-size: 12px;
+`
+
 
 export const RepeatEndDatePicker = styled(DatePicker)`
     width: 130px;
@@ -138,11 +218,16 @@ export const RepeatEndDatePicker = styled(DatePicker)`
     }
 `;
 
+export const SelectContainer = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 
 export const RepeatState_Container = styled.div<ClickProps>`
-    width: calc(100% - 10px);
-    height: calc(100% - 60px);
     margin-top: 10px;
+    width: calc(100% - 10px);
+    height: calc(100% - 20px);
     border-radius: 5px;
     padding: 5px;
 
@@ -161,11 +246,9 @@ export const RepeatState_Container = styled.div<ClickProps>`
     ${RepeatEndDatePicker} {
         color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
+    ${SelectContainer}{
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
+    }
 `
 
-
-export const SelectContainer = styled.div`
-    display: flex;
-    align-items: center;
-`;
 

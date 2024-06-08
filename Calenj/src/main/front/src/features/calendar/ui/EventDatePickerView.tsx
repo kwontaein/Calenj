@@ -29,9 +29,9 @@ export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,event
     return (
         <DatePicker_Container>
             <DatePickerIcon_Container>
-                {formState === "promise" ?
-                    <i className="fi fi-tr-calendar-clock"></i> :
-                    <i className="fi fi-tr-calendar-day"></i>}
+                {formState === "promise" && <i className="bi bi-calendar"></i> }
+                {formState === "todo" && <i className="bi bi-calendar-week"></i>}
+                {formState === "schedule" && <i className="bi bi-calendar-event"></i>}
             </DatePickerIcon_Container>
             <EventDatePicker
                 dateFormat={formState ==="promise" ? ' yy.MM.dd (EEE)  HH:mm': ' yy년 MM월 dd일 (EEE)'} // 날짜 형태
