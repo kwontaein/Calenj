@@ -87,6 +87,32 @@ export const GlobalStyle = createGlobalStyle`
     }
 `;
 
+export const CheckBox_Label = styled.label`
+    margin-inline: 5px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+`
+
+export const CheckBoxStyle = styled.input`
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid ${ThemaColor3};
+    background-color: ${ThemaColor2};
+    margin-right: 5px;
+    /* 체크됐을 때의 색상 */
+    &:checked {
+        background-color: ${PointColor}; /* 체크됐을 때의 배경색 */
+        border-color: ${TextColor}; /* 체크됐을 때의 테두리 색 */
+        border: 2px solid ${TextColor}
+    }
+    &:focus {
+        box-shadow: ${PointColor}; /* 포커스 효과 */
+    }
+`
+
 
 export const FullScreen_div = styled.div`
     width: 100%;
@@ -104,6 +130,34 @@ export const RowFlexBox = styled.div`
     flex-direction: row;
     align-items: center;
 `
+
+export const Info_Container = styled.div`
+    width: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;;
+`
+export const InfoTail = styled.div`
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    background-color: ${ThemaColor2};
+    margin-top: -6px;
+    position: relative;
+    z-index: 0;
+`
+
+export const InfoContent = styled.div`
+    width: auto;
+    padding: 5px;
+    font-size: 12px;
+    background-color: ${ThemaColor2};
+    position: relative;
+    z-index: 1;
+    border-radius: 2px;
+`
+
 
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
@@ -172,12 +226,6 @@ export const FormLable = styled.label`
 `;
 
 
-export const GROUP_USER_LIST = styled.ul`
-    width: 110px;
-    padding: 0;
-    margin: 0;
-    font-size: 13px;
-`
 
 export const UserListView = styled.li`
     list-style: none;

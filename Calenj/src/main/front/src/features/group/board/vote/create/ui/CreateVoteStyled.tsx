@@ -177,7 +177,6 @@ export const VoteCheckOption_Label = styled.label`
     height: 100%;
     display: flex;
     align-items: center;
-    
 `
 export const VoteCheckStyle_CheckBox = styled.input`
     appearance: none; /* 기본 브라우저 스타일 제거 */

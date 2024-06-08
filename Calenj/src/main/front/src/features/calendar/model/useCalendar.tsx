@@ -1,18 +1,28 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
 import {createEventId} from "../utils/event-utils";
-import {ReturnCalendar} from "./types";
+import {ReturnCalendar, ReturnExtendedProps} from "./types";
+import {Dictionary} from "@fullcalendar/core";
 
 
 export const useCalendar = ():ReturnCalendar =>{
     const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+
+
     const handleEvents = useCallback(
-        (events: EventApi[]) => setCurrentEvents(events)
+        (events: EventApi[]) => {
+
+            events.map((event)=>{
+                const repeatData:Dictionary =event.extendedProps
+                if(repeatData.repeatState.repeat){
+
+                }
+            })
+            setCurrentEvents(events)
+        }
         ,[]);
 
-    useEffect(() => {
-        console.log(currentEvents)
-    }, [currentEvents]);
+
     const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
         let title = prompt("이벤트 추가")?.trim();
 
