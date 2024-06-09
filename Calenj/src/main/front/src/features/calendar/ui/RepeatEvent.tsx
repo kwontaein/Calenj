@@ -45,6 +45,21 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
         repeatDispatch({type:'SET_REPEAT_WEEK', payload:repeatState.repeatWeek.map((item,index)=> index=== week ? !item : item)})
     }
 
+    const changeStartTime = (startTime: Date) =>{
+        if( repeatState.endTime < startTime){
+            window.alert('시작 시간이 마감시간보다 커질 수 없습니다.')
+        }else{
+            repeatDispatch({type: 'SET_START_TIME', payload: startTime})
+        }
+    }
+    const changeEndTime = (endTime: Date) =>{
+        if( repeatState.startTime > endTime){
+            window.alert('마감시간이 시작시간보다 작아질 수 없습니다.')
+        }else{
+            repeatDispatch({type: 'SET_END_TIME', payload: endTime})
+        }
+    }
+
     return (
         <RePeatEvent_Container>
             <EventTime_container>
@@ -53,7 +68,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                 </EventTimeIcon_Container>
                 <EventTimePicker
                     selected={repeatState.startTime}
-                    onChange={(date: Date) => repeatDispatch({type: 'SET_START_TIME', payload: date})}
+                    onChange={(date: Date) => changeStartTime(date)}
                     showTimeSelect
                     showTimeSelectOnly
                     timeIntervals={15}
@@ -63,7 +78,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                 />
                 <EventTimePicker
                     selected={repeatState.endTime}
-                    onChange={(date: Date) => repeatDispatch({type: 'SET_END_TIME', payload: date})}
+                    onChange={(date: Date) => changeEndTime(date)}
                     showTimeSelect
                     showTimeSelectOnly
                     timeIntervals={15}
@@ -98,15 +113,15 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                             <b style={{fontSize: '15px'}}>
                                 반복형식
                             </b>
-                            <CheckBox_Label style={{marginRight: '0'}} 
+                            <CheckBox_Label style={{marginRight: '0'}}
                                             onMouseEnter={()=>setHoverState("주기")}
                                             onMouseLeave={()=>setHoverState("")}>
-                            <CheckBoxStyle disabled={!repeatState.repeat} type={"checkbox"}
+                                <CheckBoxStyle disabled={!repeatState.repeat} type={"checkbox"}
                                                checked={repeatState.repeatMode==="cycle"}
                                                onChange={()=>repeatDispatch({type:'SET_REPEAT_MODE', payload:"cycle"})}></CheckBoxStyle>
                                 주기
                             </CheckBox_Label>
-                            {hoverState==="주기" &&   
+                            {hoverState==="주기" &&
                                 <InfoBox marginLeft={95} marginTop={-55} text={"특정 주기로 반복설정을 할 수 있습니다."}/>
                             }
 
@@ -125,32 +140,32 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
 
                         <RepeatText_Container>
                             {repeatState.repeatMode ==="cycle" &&
-                            <RepeatText_Container>
-                            <RepeatNum_Input type={"number"}
-                                             $numLength={(repeatState.repeatNum + "").split("").length}
-                                             readOnly={!repeatState.repeat}
-                                             defaultValue={repeatState.repeatNum}
-                                             onChange={(e: ChangeEvent<HTMLInputElement>) => repeatDispatch({
-                                                 type: 'SET_REPEAT_NUM',
-                                                 payload: +e.target.value
-                                             })}>
+                                <RepeatText_Container>
+                                    <RepeatNum_Input type={"number"}
+                                                     $numLength={(repeatState.repeatNum + "").split("").length}
+                                                     readOnly={!repeatState.repeat}
+                                                     defaultValue={repeatState.repeatNum}
+                                                     onChange={(e: ChangeEvent<HTMLInputElement>) => repeatDispatch({
+                                                         type: 'SET_REPEAT_NUM',
+                                                         payload: +e.target.value
+                                                     })}>
 
-                            </RepeatNum_Input>
+                                    </RepeatNum_Input>
 
-                            <SelectContainer>
-                                <CustomSelect value={repeatState.repeatOption} disabled={!repeatState.repeat}
-                                              onChange={(e: ChangeEvent<HTMLSelectElement>) => repeatDispatch({
-                                                  type: 'SET_REPEAT_OPTION',
-                                                  payload: e.target.value
-                                              })}>
-                                    <option value="일">일</option>
-                                    <option value="주">주</option>
-                                    <option value="달">달</option>
-                                    <option value="년">년</option>
-                                </CustomSelect>
-                                <p style={{margin:'0'}}>마다 반복</p>
-                            </SelectContainer>
-                            </RepeatText_Container>
+                                    <SelectContainer>
+                                        <CustomSelect value={repeatState.repeatOption} disabled={!repeatState.repeat}
+                                                      onChange={(e: ChangeEvent<HTMLSelectElement>) => repeatDispatch({
+                                                          type: 'SET_REPEAT_OPTION',
+                                                          payload: e.target.value
+                                                      })}>
+                                            <option value="일">일</option>
+                                            <option value="주">주</option>
+                                            <option value="달">달</option>
+                                            <option value="년">년</option>
+                                        </CustomSelect>
+                                        <p style={{margin:'0'}}>마다 반복</p>
+                                    </SelectContainer>
+                                </RepeatText_Container>
                             }
                             {repeatState.repeatMode ==="week" &&
                                 <PatternContent_Container>
@@ -159,27 +174,27 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                                         일
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[1]}
-                                                              onClick={()=> selectWeek(1)}>
+                                                    onClick={()=> selectWeek(1)}>
                                         월
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[2]}
-                                                              onClick={()=> selectWeek(2)}>
+                                                    onClick={()=> selectWeek(2)}>
                                         화
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[3]}
-                                                              onClick={()=> selectWeek(3)}>
+                                                    onClick={()=> selectWeek(3)}>
                                         수
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[4]}
-                                                              onClick={()=> selectWeek(4)}>
+                                                    onClick={()=> selectWeek(4)}>
                                         목
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[5]}
-                                                              onClick={()=> selectWeek(5)}>
+                                                    onClick={()=> selectWeek(5)}>
                                         금
                                     </PatternContent>
                                     <PatternContent $isClick={repeatState.repeatWeek[6]}
-                                                              onClick={()=> selectWeek(6)}>
+                                                    onClick={()=> selectWeek(6)}>
                                         토
                                     </PatternContent>
                                 </PatternContent_Container>
@@ -220,18 +235,18 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
 
                         <RepeatText_Container>
                             {repeatState.repeatDeadLine === "date" &&
-                                    <RepeatEndDatePicker
-                                        disabled={!repeatState.repeat}
-                                        dateFormat={'yy.MM.dd 까지 반복'} // 날짜 형태
-                                        shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                        selected={repeatState.repeatEnd}
-                                        onChange={(date: Date) => repeatDispatch({
-                                            type: 'SET_REPEAT_END',
-                                            payload: date
-                                        })}
-                                        minDate={eventState.startDate}
-                                        locale={ko}
-                                    />
+                                <RepeatEndDatePicker
+                                    disabled={!repeatState.repeat}
+                                    dateFormat={'yy.MM.dd 까지 반복'} // 날짜 형태
+                                    shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
+                                    selected={repeatState.repeatEnd}
+                                    onChange={(date: Date) => repeatDispatch({
+                                        type: 'SET_REPEAT_END',
+                                        payload: date
+                                    })}
+                                    minDate={eventState.startDate}
+                                    locale={ko}
+                                />
                             }
                             {repeatState.repeatDeadLine === "count" &&
                                 <>

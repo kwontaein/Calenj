@@ -71,39 +71,76 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
 
 
     const postEvent = () =>{
-        if (title==="") return;
-        if(formState==="promise" && content===""){
-            return
-        }else if(formState ==="todo" && todoList.length ===0){
+        const {repeat,repeatMode, repeatDeadLine, repeatNum, repeatCount, repeatWeek, repeatEnd,startTime,endTime} = repeatState
+
+        if (title===""){
+            window.alert('제목을 입력해주세요.')
             return
         }
-        calendarApi.unselect();
+        if(formState==="promise" && content===""){
+            window.alert('내용을 입력해주세요.')
+            return
+        }else if(formState ==="todo" && todoList.length ===0){
+            window.alert('할 일을 추가해주세요.')
+            return
+        }
 
-
+        if(repeat){
+            if(repeatMode==="" || repeatDeadLine ===""){
+                window.alert('반복 설정을 해주세요')
+                return
+            }
+            if(repeatMode==="cycle" && repeatNum < 1){
+                window.alert('반복 주기를 1이상의 값으로 설정해주세요')
+                return
+            }
+            if(repeatMode === "week" && repeatWeek.indexOf(true)<0){
+                window.alert('반복할 요일을 하나이상 선택해주세요.')
+                return;
+            }
+            if(repeatDeadLine==="count" && repeatCount<1){
+                window.alert('반복 횟수를 1이상으로 설정해주세요')
+                return
+            }
+            if(startTime>endTime){
+                window.alert('시작시간이 끝나는 시간보다 클 수 없습니다.')
+                return
+            }
+            if(repeatDeadLine==="date" && (repeatEnd<startDate)){
+                window.alert('반복마감 기간을 설정한 시작날짜 이후로 설정해주세요.')
+                return
+            }
+        }
 
         const event = {
             id: Date.now().toString(),
             title:title,
-            start: formState==="schedule" ? startDate.setHours(repeatState.startTime.getHours(), repeatState.startTime.getMinutes()) : startDate,
-            end: formState==="schedule" ? startDate.setHours(repeatState.endTime.getHours(), repeatState.endTime.getMinutes()) : endDate,
+            start: startDate,
+            end: endDate,
             allDay: formState==="todo",
+            
             extendedProps :{
                 formState:formState,
                 content: formState==="promise" ? content : "",
                 todoList: formState==="todo" ? [...todoList] : [],
                 repeatState:{
-                    repeat: formState==="schedule" ? repeatState.repeat : null,
-                    repeatNum: (formState==="schedule" && repeatState.repeat) ? repeatState.repeatNum : null,
-                    repeatOption: (formState==="schedule" && repeatState.repeat) ? repeatState.repeatOption : null,
-                    repeatEnd : (formState ==="schedule" && repeatState.repeat) ? repeatState.repeatEnd : null,
+                    repeat: repeatState.repeat,
+                    startTime:repeatState.startTime,
+                    endTime: repeatState.endTime,
+                    repeatMode: repeatState.repeatMode,
+                    repeatNum: repeatState.repeatMode ==="cycle" ? repeatState.repeatNum : null,
+                    repeatOption: repeatState.repeatMode ==="cycle" ? repeatState.repeatOption : null,
+                    repeatWeek : repeatState.repeatMode ==="week" ? repeatState.repeatWeek :null,
+                    repeatDeadLine : repeatState.repeatDeadLine, //반복 마감
+                    repeatEnd : repeatState.repeatDeadLine === "date"? repeatState.repeatEnd: null,
+                    repeatCount: repeatState.repeatDeadLine === "count" ?repeatState.repeatCount : null, //반복횟수
                 }
             },
         }
-        console.log(Object.entries(event.extendedProps.repeatState));
+        console.log(event)
         calendarApi.addEvent(event)
         window.alert('일정이 생성되었습니다.');
         onClose()
-
     }
 
     //eventSave
