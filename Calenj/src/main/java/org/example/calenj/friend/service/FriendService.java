@@ -28,7 +28,6 @@ public class FriendService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-
     public UserEntity myUserName() {
         UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException());
@@ -156,10 +155,6 @@ public class FriendService {
         }
     }
 
-    /* public List<EventResponse> myEvents(String userName) {
-        return eventRepository.EventListById(userName).orElseThrow(() -> new RuntimeException(""));
-    }*/
-
     //내가 받은 요청 목록
     public List<EventResponse> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
@@ -174,4 +169,7 @@ public class FriendService {
         return eventRepository.RequestEventListById(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("요청한 목록이 존재하지 않습니다."));
     }
 
+    /* public List<EventResponse> myEvents(String userName) {
+        return eventRepository.EventListById(userName).orElseThrow(() -> new RuntimeException(""));
+    }*/
 }

@@ -62,16 +62,18 @@ public class CalendarService {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
+        int delay = calculateDelay(scheduleRequest.getExtendedProps().getRepeatState().getRepeatNum(), scheduleRequest.getExtendedProps().getRepeatState().getRepeatOption());
+
         UserScheduleEntity userScheduleEntity = UserScheduleEntity.builder()
                 .scheduleId(scheduleRequest.getScheduleId())
                 .userId(userEntity)
-                .scheduleStartDateTime(scheduleRequest.getScheduleStartDateTime())
-                .scheduleEndDateTime(scheduleRequest.getScheduleEndDateTime())
-                .userScheduleTitle(scheduleRequest.getUserScheduleTitle())
-                .userScheduleContent(scheduleRequest.getUserScheduleContent())
-                .scheduleRepeat(scheduleRequest.isScheduleRepeat())
-                .scheduleRepeatPeriod(scheduleRequest.getScheduleRepeatPeriod())
-                .scheduleRepeatDelay(scheduleRequest.getScheduleRepeatDelay()).build();
+                .scheduleStartDateTime(scheduleRequest.getStart())
+                .scheduleEndDateTime(scheduleRequest.getEnd())
+                .userScheduleTitle(scheduleRequest.getTitle())
+                .userScheduleContent(scheduleRequest.getExtendedProps().getContent())
+                .scheduleRepeat(scheduleRequest.getExtendedProps().getRepeatState().isRepeat())
+                .scheduleRepeatPeriod(scheduleRequest.getExtendedProps().getRepeatState().getRepeatEnd())
+                .scheduleRepeatDelay(delay).build();
 
         userScheduleRepository.save(userScheduleEntity);
     }
@@ -79,5 +81,22 @@ public class CalendarService {
     public void getScheduleList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         userScheduleRepository.findListByUserId(UUID.fromString(userDetails.getUsername()));
+    }
+
+
+    public int calculateDelay(int repeatNum, String repeatOption) {
+        int calculated = 0;
+        switch (repeatOption) {
+            case "day":
+                calculated = repeatNum;
+                break;
+            case "week":
+                calculated = repeatNum * 7;
+                break;
+            case "month":
+                calculated = repeatNum * 31;
+                break;
+        }
+        return calculated;
     }
 }

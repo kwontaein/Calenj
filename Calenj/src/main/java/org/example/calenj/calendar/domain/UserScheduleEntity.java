@@ -65,12 +65,12 @@ public class UserScheduleEntity {
 
     // UserScheduleEntity 수정 메소드
     public void updateScheduleDetails(ScheduleRequest scheduleRequest) {
-        this.scheduleStartDateTime = scheduleRequest.getScheduleStartDateTime();
-        this.scheduleEndDateTime = scheduleRequest.getScheduleEndDateTime();
-        this.userScheduleTitle = scheduleRequest.getUserScheduleTitle();
-        this.userScheduleContent = scheduleRequest.getUserScheduleContent();
-        this.scheduleRepeat = scheduleRequest.isScheduleRepeat();
-        this.scheduleRepeatPeriod = scheduleRequest.getScheduleRepeatPeriod();
-        this.scheduleRepeatDelay = scheduleRequest.getScheduleRepeatDelay();
+        this.scheduleStartDateTime = scheduleRequest.getStart();
+        this.scheduleEndDateTime = scheduleRequest.getEnd();
+        this.userScheduleTitle = scheduleRequest.getTitle();
+        this.userScheduleContent = scheduleRequest.getExtendedProps().getContent();
+        this.scheduleRepeat = scheduleRequest.getExtendedProps().getRepeatState().isRepeat();
+        this.scheduleRepeatPeriod = scheduleRequest.getExtendedProps().getRepeatState().getRepeatEnd();
+        this.scheduleRepeatDelay = scheduleRequest.getExtendedProps().getRepeatState().getRepeatNum();
     }
 }

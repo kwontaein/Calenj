@@ -7,23 +7,18 @@ import java.util.UUID;
 
 @Data
 public class ScheduleRequest {
+    //스케쥴 아이디
     private UUID scheduleId;
+    //개인 스케쥴 아이디
+    private String id;
     //제목
-    private String userScheduleTitle;
-    //내용
-    private String userScheduleContent;
-    //내용
-    private String[] todoList;
+    private String title;
     //시작일
-    private Timestamp ScheduleStartDateTime;
+    private Timestamp start;
     //종료일
-    private Timestamp ScheduleEndDateTime;
-    //반복여부
-    private boolean ScheduleRepeat;
-    //반복 기간
-    private Timestamp ScheduleRepeatPeriod;
-    //반복 주기
-    private int ScheduleRepeatDelay;
-    //반복 주기
-    private String ScheduleRepeatOption;
+    private Timestamp end;
+    //하루종일
+    private boolean allDay;
+    //추가정보
+    private ExtendedProps extendedProps;
 }
