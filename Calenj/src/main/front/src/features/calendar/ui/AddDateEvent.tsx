@@ -5,7 +5,7 @@ import {
     ModalContent_Container,
     ModalTopBar_Container
 } from "../../../shared/ui/SharedStyled";
-import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useReducer, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
     AddFriend_Button, AddFriend_Container, AddFriendIcon_Container,
@@ -21,13 +21,16 @@ import {
 } from "./AddDateEventStyled";
 import {useConfirm} from "../../../shared/model";
 import '../../../shared/ui/DatePicker.scss';
-import {DateSelectArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi} from "@fullcalendar/react";
 import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
 import {useTodoList} from "../model/useTodoList";
 import {EventDatePickerView} from "./EventDatePickerView";
 import {AddTodoList} from "./AddTodoList";
 import {RepeatEvent} from "./RepeatEvent";
-
+import {ByWeekday, Options, RRule, Weekday} from "rrule";
+import {Dictionary} from "@fullcalendar/core";
+import {createEventId} from "../utils/event-utils";
+import {RepeatOption} from "../model/types";
 interface CalendarProps{
     onClose : ()=>void,
     selectInfo: DateSelectArg,
@@ -71,7 +74,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
 
 
     const postEvent = () =>{
-        const {repeat,repeatMode, repeatDeadLine, repeatNum, repeatCount, repeatWeek, repeatEnd,startTime,endTime} = repeatState
+        const {repeat,repeatMode,repeatOption, repeatDeadLine, repeatNum, repeatCount, repeatWeek, repeatEnd,startTime,endTime} = repeatState
 
         if (title===""){
             window.alert('제목을 입력해주세요.')
@@ -112,33 +115,91 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
             }
         }
 
-        const event = {
-            id: Date.now().toString(),
-            title:title,
-            start: startDate,
-            end: endDate,
-            allDay: formState==="todo",
-            
-            extendedProps :{
-                formState:formState,
-                content: formState==="promise" ? content : "",
-                todoList: formState==="todo" ? [...todoList] : [],
-                repeatState:{
-                    repeat: repeatState.repeat,
-                    startTime:repeatState.startTime,
-                    endTime: repeatState.endTime,
-                    repeatMode: repeatState.repeatMode,
-                    repeatNum: repeatState.repeatMode ==="cycle" ? repeatState.repeatNum : null,
-                    repeatOption: repeatState.repeatMode ==="cycle" ? repeatState.repeatOption : null,
-                    repeatWeek : repeatState.repeatMode ==="week" ? repeatState.repeatWeek :null,
-                    repeatDeadLine : repeatState.repeatDeadLine, //반복 마감
-                    repeatEnd : repeatState.repeatDeadLine === "date"? repeatState.repeatEnd: null,
-                    repeatCount: repeatState.repeatDeadLine === "count" ?repeatState.repeatCount : null, //반복횟수
+        if(formState ==="promise"){
+            const event = {
+                id: Date.now().toString(),
+                title:title,
+                start: startDate,
+                end: endDate,
+                allDay: true,
+                extendedProps :{
+                    formState:formState,
+                    content: content,
+                },
+            }
+
+            calendarApi.addEvent(event)
+
+        }else if(formState === "todo"){
+            const event = {
+                id: Date.now().toString(),
+                title:title,
+                start: startDate,
+                end: endDate,
+                allDay: true,
+                extendedProps :{
+                    formState:formState,
+                    todoList: formState==="todo" ? [...todoList] : [],
+                },
+            }
+
+            calendarApi.addEvent(event)
+
+        }else if(formState==="schedule"){
+
+            const weekArr = [RRule.SU,RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
+
+            const freqHash = {
+                일: RRule.DAILY,
+                주: RRule.WEEKLY,
+                달: RRule.MONTHLY,
+                년: RRule.YEARLY
+            };
+
+            const event = {
+                id: Date.now().toString(),
+                title:title,
+                start: startDate,
+                end: endDate,
+                allDay: false,
+                duration:{ milliseconds: endTime.getTime() - startTime.getTime()},
+                rrule:{},
+                extendedProps :{
+                    repeatState:repeatState
+                },
+            }
+
+            if(repeat){
+                const options: Partial<Options> = {
+                    dtstart: event.start,
+                };
+
+                if(repeatMode==="cycle"){
+                    options.freq = freqHash[repeatOption as RepeatOption];
+                    options.interval = repeatNum;
+                }else if(repeatMode==="week"){
+                    options.freq = RRule.WEEKLY;
+                    const byWeekData: string | number | Weekday | ByWeekday[] | null | undefined =[];
+                    repeatWeek.forEach((week,index)=>{
+                        if(week){
+                            byWeekData.push(weekArr[index])
+                        }
+                    })
+                    options.byweekday =byWeekData;
                 }
-            },
+                if(repeatDeadLine ==="count"){
+                    options.count = repeatCount;
+                }else if(repeatDeadLine ==="date"){
+                    options.until = repeatEnd;
+                }
+
+                options.byhour = startTime.getHours();
+                options.byminute = startTime.getMinutes();
+                event.rrule = options
+            }
+
+            calendarApi.addEvent(event)
         }
-        console.log(event)
-        calendarApi.addEvent(event)
         window.alert('일정이 생성되었습니다.');
         onClose()
     }

@@ -26,7 +26,7 @@ export const useCalendar = ():ReturnCalendar =>{
             const eventData = events.map((event):EventApi[] =>{
                 const repeatData:Dictionary =event.extendedProps
                 if(repeatData.repeatState.repeat){
-                    const {repeatMode, repeatNum, repeatOption, repeatDeadLine, repeatEnd, repeatCount, repeatWeek,startTime,endTime} = repeatData.repeatState
+                    const {repeatMode, repeatNum, repeatOption, repeatDeadLine, repeatEnd, repeatCount, repeatWeek, startTime, endTime} = repeatData.repeatState
 
                     const options: Partial<Options> = {
                         dtstart: event.start,
@@ -46,7 +46,7 @@ export const useCalendar = ():ReturnCalendar =>{
                     }else if(repeatDeadLine ==="date"){
                         options.until = repeatEnd;
                     }
-                    console.log(new RRule(options).all())
+
                     return new RRule(options).all().map(date => (
                         {
                             id : createEventId(),

@@ -22,6 +22,7 @@ import {
 } from "../../../entities/calendar";
 import {CheckBox_Label, CheckBoxStyle} from "../../../shared/ui/SharedStyled";
 import {InfoBox} from "../../../shared/ui/InfoBox";
+import {repeat} from "rrule/dist/esm/helpers";
 
 
 interface EventDateProps {
@@ -40,6 +41,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
             repeatDispatch({type:'SET_REPEAT_MODE', payload:''})
         }
     }, [repeatState.repeat]);
+
 
     const selectWeek = (week:number) =>{
         repeatDispatch({type:'SET_REPEAT_WEEK', payload:repeatState.repeatWeek.map((item,index)=> index=== week ? !item : item)})
