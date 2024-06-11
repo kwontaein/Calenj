@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import FullCalendar, {DateSelectArg, EventApi, EventInput} from "@fullcalendar/react";
-
-import { INITIAL_EVENTS, createEventId } from "../utils/event-utils";
 import { useCalendar } from "../model/useCalendar";
 import {GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -15,11 +13,10 @@ import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
 import {AddDateEvent} from "./AddDateEvent";
-import {FullScreen_div} from "../../../shared/ui/SharedStyled";
 
 
-export const Calendar: React.FC = () => {
-    const { currentEvents, handleEvents, handleEventClick } = useCalendar();
+export const CalendarView: React.FC = () => {
+    const { handleEvents, handleEventClick } = useCalendar();
     const [addEvent,setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg|null>(null);
     const onClose = ()=>{

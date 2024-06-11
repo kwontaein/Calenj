@@ -33,7 +33,7 @@ export const mapStateToNavigationProps = (state: RootState): NavigateState => ({
 
 // 초기상태
 const initialState: NavigationProps ={
-    navigate:'home',
+    navigate:'main',
     navigateParam:'',
 }
 

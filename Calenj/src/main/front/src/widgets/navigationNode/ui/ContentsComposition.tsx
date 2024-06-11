@@ -9,7 +9,7 @@ import {EventTopBar_Container, ContentsScreen_div} from "./ContentsCompositionSt
 import {useComponentSize} from '../../../shared/model'
 import {RootState} from "../../../entities/redux";
 import {GroupContentItem,GroupContentTopItem} from "../../../features/group/contentItems";
-import {Calendar} from "../../../features/calendar";
+import {CalendarView} from "../../../features/main/calendar/view";
 
 interface QueryProps {
     isLoading :boolean
@@ -42,7 +42,7 @@ export const ContentsComposition :React.FC<QueryProps>=({isLoading})=>{
             <ContentsScreen_div>
                 {(navigate ==="group" && groupDetail && !isLoading) &&
                 <GroupContentItem param={navigateParam} contentSize={contentSize} showUserList={showUserList}/>}
-                {navigate ==="main" && <Calendar/>}
+                {navigate ==="main" && <CalendarView/>}
             </ContentsScreen_div>
         </FullScreen_div>
     )

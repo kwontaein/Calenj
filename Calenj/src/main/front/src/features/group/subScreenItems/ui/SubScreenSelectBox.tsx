@@ -2,15 +2,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     OptionStateText_Container,
     SubScreenIcon_Container,
-    SubScreenOption_Cotainer,
+    SubScreenOption_Container,
     SubScreenSelector_Container,
-    SubScreenSearchItem_Input
+    SubScreenSearchItem_Input,
 } from "./SubScreenSelectBoxStyled";
 import {VoteFilter} from "../../board/vote/filter";
 import {useSelectBoxState} from "../model/useSelectBoxState";
 import {RootState} from "../../../../entities/redux";
 import {GroupSubScreenProps} from "../model/types";
 import {updateClickState} from "../../../../entities/redux";
+import {useEffect} from "react";
 
 
 export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, isSearching})=>{
@@ -21,10 +22,10 @@ export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, i
 
 
     return(
-        <div>
+        <>
             {(clickState ==="투표" || clickState ==="공지") &&
-                <SubScreenSelector_Container $clickState={clickState} $option={clickState} $showUserList={showUserList}>
-                    <SubScreenOption_Cotainer $option={boardOption.clickState}>
+                <SubScreenSelector_Container $clickState={clickState} $option={boardOption.clickState} $showUserList={showUserList}>
+                    <SubScreenOption_Container $option={boardOption.clickState}>
 
                         {boardOption.clickState ==="filter" && <OptionStateText_Container>필터 설정</OptionStateText_Container>}
                         {boardOption.clickState ==="search" && <SubScreenSearchItem_Input ref={searchRef}
@@ -49,14 +50,13 @@ export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, i
                             <i className="fi fi-sr-plus-small" style={{marginTop: "3px", fontSize:"20px"}}></i>
                         </SubScreenIcon_Container>
                         }
-                    </SubScreenOption_Cotainer>
+                    </SubScreenOption_Container>
 
                     {boardOption.clickState ==="filter" &&
                         <VoteFilter/>
                     }
             </SubScreenSelector_Container>
             }
-        </div>
-
+        </>
     )
 }

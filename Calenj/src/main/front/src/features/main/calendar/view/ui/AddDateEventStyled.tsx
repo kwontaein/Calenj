@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../shared/ui/SharedStyled";
 import DatePicker from "react-datepicker";
 
 interface ButtonProps{

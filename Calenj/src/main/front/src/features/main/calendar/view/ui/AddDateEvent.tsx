@@ -4,7 +4,7 @@ import {
     Modal_Container,
     ModalContent_Container,
     ModalTopBar_Container
-} from "../../../shared/ui/SharedStyled";
+} from "../../../../../shared/ui/SharedStyled";
 import React, {ChangeEvent, useCallback, useEffect, useReducer, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
@@ -19,18 +19,24 @@ import {
     EventContent_TextArea,
     ModalButton_Container,
 } from "./AddDateEventStyled";
-import {useConfirm} from "../../../shared/model";
-import '../../../shared/ui/DatePicker.scss';
+import {useConfirm} from "../../../../../shared/model";
+import '../../../../../shared/ui/DatePicker.scss';
 import {DateSelectArg, EventApi} from "@fullcalendar/react";
-import {EventDateReducer, initialEventDateState, initialRepeatState, RepeatReducer} from "../../../entities/calendar";
+import {
+    EventDateReducer,
+    initialEventDateState,
+    initialRepeatState,
+    RepeatReducer,
+    RepeatState
+} from "../../../../../entities/calendar";
 import {useTodoList} from "../model/useTodoList";
 import {EventDatePickerView} from "./EventDatePickerView";
-import {AddTodoList} from "./AddTodoList";
-import {RepeatEvent} from "./RepeatEvent";
-import {ByWeekday, Options, RRule, Weekday} from "rrule";
-import {Dictionary} from "@fullcalendar/core";
-import {createEventId} from "../utils/event-utils";
-import {RepeatOption} from "../model/types";
+import {AddTodoList} from './AddTodoList'
+import {RepeatEvent} from './RepeatEvent'
+import {ByWeekday, Options, RRule, Weekday} from "rrule";;
+import {DateEvent, RepeatOption} from "../model/types";
+
+
 interface CalendarProps{
     onClose : ()=>void,
     selectInfo: DateSelectArg,
@@ -115,91 +121,60 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
             }
         }
 
-        if(formState ==="promise"){
-            const event = {
-                id: Date.now().toString(),
-                title:title,
-                start: startDate,
-                end: endDate,
-                allDay: true,
-                extendedProps :{
-                    formState:formState,
-                    content: content,
-                },
-            }
 
-            calendarApi.addEvent(event)
+        const weekArr = [RRule.SU,RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
 
-        }else if(formState === "todo"){
-            const event = {
-                id: Date.now().toString(),
-                title:title,
-                start: startDate,
-                end: endDate,
-                allDay: true,
-                extendedProps :{
-                    formState:formState,
-                    todoList: formState==="todo" ? [...todoList] : [],
-                },
-            }
+        const freqHash = {
+            일: RRule.DAILY,
+            주: RRule.WEEKLY,
+            달: RRule.MONTHLY,
+            년: RRule.YEARLY
+        };
 
-            calendarApi.addEvent(event)
-
-        }else if(formState==="schedule"){
-
-            const weekArr = [RRule.SU,RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
-
-            const freqHash = {
-                일: RRule.DAILY,
-                주: RRule.WEEKLY,
-                달: RRule.MONTHLY,
-                년: RRule.YEARLY
+        const event : DateEvent = {
+            id: Date.now().toString(),
+            title:title,
+            start: startDate,
+            end: endDate,
+            allDay: formState==="todo",
+            extendedProps :{
+                formState:formState,
+                content: content,
+                todoList: [...todoList],
+                repeatState:repeatState,
+            },
+        }
+        if(repeat){
+            const options: Partial<Options> = {
+                dtstart: event.start,
             };
 
-            const event = {
-                id: Date.now().toString(),
-                title:title,
-                start: startDate,
-                end: endDate,
-                allDay: false,
-                duration:{ milliseconds: endTime.getTime() - startTime.getTime()},
-                rrule:{},
-                extendedProps :{
-                    repeatState:repeatState
-                },
+            if(repeatMode==="cycle"){
+                options.freq = freqHash[repeatOption as RepeatOption];
+                options.interval = repeatNum;
+            }else if(repeatMode==="week"){
+                options.freq = RRule.WEEKLY;
+                const byWeekData: string | number | Weekday | ByWeekday[] | null | undefined =[];
+                repeatWeek.forEach((week,index)=>{
+                    if(week){
+                        byWeekData.push(weekArr[index])
+                    }
+                })
+                options.byweekday =byWeekData;
             }
-
-            if(repeat){
-                const options: Partial<Options> = {
-                    dtstart: event.start,
-                };
-
-                if(repeatMode==="cycle"){
-                    options.freq = freqHash[repeatOption as RepeatOption];
-                    options.interval = repeatNum;
-                }else if(repeatMode==="week"){
-                    options.freq = RRule.WEEKLY;
-                    const byWeekData: string | number | Weekday | ByWeekday[] | null | undefined =[];
-                    repeatWeek.forEach((week,index)=>{
-                        if(week){
-                            byWeekData.push(weekArr[index])
-                        }
-                    })
-                    options.byweekday =byWeekData;
-                }
-                if(repeatDeadLine ==="count"){
-                    options.count = repeatCount;
-                }else if(repeatDeadLine ==="date"){
-                    options.until = repeatEnd;
-                }
-
-                options.byhour = startTime.getHours();
-                options.byminute = startTime.getMinutes();
-                event.rrule = options
+            if(repeatDeadLine ==="count"){
+                options.count = repeatCount;
+            }else if(repeatDeadLine ==="date"){
+                options.until = repeatEnd;
             }
-
-            calendarApi.addEvent(event)
+            options.byhour = startTime.getHours();
+            options.byminute = startTime.getMinutes();
+            event.duration ={ milliseconds: endTime.getTime() - startTime.getTime()};
+            event.rrule = options
+            console.log(options)
         }
+        calendarApi.addEvent(event)
+
         window.alert('일정이 생성되었습니다.');
         onClose()
     }
@@ -231,7 +206,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                                     약속일정
                                 </Modal_Condition_Button>
                                 <Modal_Condition_Button  $isAble={formState==="todo"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "todo"})}
-                                                      style={{marginInline:'5px'}}>
+                                                         style={{marginInline:'5px'}}>
                                     할 일
                                 </Modal_Condition_Button>
                                 <Modal_Condition_Button  $isAble={formState==="schedule"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "schedule"})}>
@@ -256,25 +231,25 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                                 }
                             </ContentIcon_Container>
                             {formState ==="promise" &&
-                            <EventContent_TextArea $isNull={content===""}
-                                                   defaultValue={content}
-                                                   onChange={(e:ChangeEvent<HTMLTextAreaElement>)=> {
-                                                       eventDispatch({type:'SET_CONTENT', payload: e.target.value})
-                                                   }}
-                                                   placeholder={"내용을 입력해주세요."}>
-                            </EventContent_TextArea>
+                                <EventContent_TextArea $isNull={content===""}
+                                                       defaultValue={content}
+                                                       onChange={(e:ChangeEvent<HTMLTextAreaElement>)=> {
+                                                           eventDispatch({type:'SET_CONTENT', payload: e.target.value})
+                                                       }}
+                                                       placeholder={"내용을 입력해주세요."}>
+                                </EventContent_TextArea>
                             }
                             {eventState.formState ==="todo" && <AddTodoList todoList={todoList}
-                                                                         contentRef={contentRef}
-                                                                         setContent={setContent}
-                                                                         addList={addList}
-                                                                         removeItem={removeItem}/>}
+                                                                            contentRef={contentRef}
+                                                                            setContent={setContent}
+                                                                            addList={addList}
+                                                                            removeItem={removeItem}/>}
                         </EventContent_Container>
                     }
                     {formState==="schedule" && <RepeatEvent eventState={eventState}
-                                                     eventDispatch={eventDispatch}
-                                                     repeatState={repeatState}
-                                                     repeatDispatch={repeatDispatch}/>}
+                                                            eventDispatch={eventDispatch}
+                                                            repeatState={repeatState}
+                                                            repeatDispatch={repeatDispatch}/>}
                     {formState ==="promise" &&
                         <AddFriend_Container>
                             <AddFriendIcon_Container>
@@ -287,14 +262,14 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                     }
 
                     <ModalButton_Container>
+                        <Modal_Condition_Button onClick={closeModal} style={{marginRight:'5px'}}>
+                            취소
+                        </Modal_Condition_Button>
                         <Modal_Condition_Button $isAble={title!=="" && (formState==="promise" && content !=="") || (formState==="todo" && todoList.length > 0) || formState==="schedule"}
-                                                style={{marginRight:'5px'}}
                                                 onClick={postEvent}>
                             생성
                         </Modal_Condition_Button>
-                        <Modal_Condition_Button onClick={closeModal}>
-                            취소
-                        </Modal_Condition_Button>
+
                     </ModalButton_Container>
                 </ModalContent_Container>
             </Modal_Container>

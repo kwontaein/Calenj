@@ -1,6 +1,6 @@
 import styled, {createGlobalStyle} from "styled-components";
 import FullCalendar from "@fullcalendar/react";
-import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3} from "../../../shared/ui/SharedStyled";
+import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../shared/ui/SharedStyled";
 import DatePicker from "react-datepicker";
 
 export const GridCalendar_Container = styled.div`

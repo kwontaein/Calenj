@@ -19,9 +19,9 @@ import {
     EventDateState,
     RepeatAction,
     RepeatState
-} from "../../../entities/calendar";
-import {CheckBox_Label, CheckBoxStyle} from "../../../shared/ui/SharedStyled";
-import {InfoBox} from "../../../shared/ui/InfoBox";
+} from "../../../../../entities/calendar";
+import {CheckBox_Label, CheckBoxStyle} from "../../../../../shared/ui/SharedStyled";
+import {InfoBox} from "../../../../../shared/ui/InfoBox";
 import {repeat} from "rrule/dist/esm/helpers";
 
 
