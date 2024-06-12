@@ -20,6 +20,7 @@ export const StyledFullCalendar = styled(FullCalendar)`
         color: blue;
     }
     z-index: 0;
+ 
 `;
 
 
