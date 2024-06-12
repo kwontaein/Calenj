@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, TextColor2, ThemaColor2} from "../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, TextColor2, ThemaColor2} from "../../../../../shared/ui/SharedStyled";
 
 export const AddToDoList_Container = styled.div`
     margin-left: 10px;

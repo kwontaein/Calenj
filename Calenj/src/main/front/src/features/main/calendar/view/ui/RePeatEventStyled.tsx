@@ -7,7 +7,7 @@ import {
     TextColor2,
     ThemaColor2,
     ThemaColor3
-} from "../../../shared/ui/SharedStyled";
+} from "../../../../../shared/ui/SharedStyled";
 
 interface ClickProps {
     $isClick: boolean,

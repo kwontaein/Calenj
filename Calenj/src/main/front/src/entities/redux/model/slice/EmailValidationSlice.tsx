@@ -10,7 +10,7 @@ export interface EmailTokenState {
 
 
 // store에서 가져올 state의 타입(EmailToken)
-export interface EmailToeknProps {
+export interface EmailTokenProps {
   emailToken: EmailTokenState;
 }
 
@@ -26,7 +26,7 @@ export interface DispatchEmailProps {
 }
 
 //(Component Props로 전달하기 위한 interface)
-export const mapStateToEmailProps = (state: RootState): EmailToeknProps => ({
+export const mapStateToEmailProps = (state: RootState): EmailTokenProps => ({
   emailToken: state.emailValidation, // store에서 가져올 상태를 매핑
 });
 

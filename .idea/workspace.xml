@@ -4,23 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.06 캘린더 data형식정의">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/InfoBox.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.12 dateEventTag 제작">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEdit.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEditStyled.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/ColorSelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/model/repeatDateReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/model/repeatDateReducer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/model/useCalendar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddDateEventStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddToDoListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/AddToDoListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/Calendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/Calendar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/EventDatePickerView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/EventDatePickerView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/RePeatEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/RePeatEventStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/RepeatEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/ui/RepeatEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/DateEventTagSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/DateEventTagSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTag.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTagStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTagStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarStyled.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +50,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
+        <option value="JavaScript File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -124,11 +120,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\calendar\model" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\authentication\emailValidation\model" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\redux" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\app\hoc" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\redux\model" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\shared\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view\model" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view" />
     </key>
   </component>
   <component name="RunManager">
@@ -171,6 +167,9 @@
       <workItem from="1717653640745" duration="9464000" />
       <workItem from="1717751931722" duration="272000" />
       <workItem from="1717813571550" duration="27019000" />
+      <workItem from="1717999028149" duration="12350000" />
+      <workItem from="1718079431119" duration="31686000" />
+      <workItem from="1718160743972" duration="28478000" />
     </task>
     <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
       <option name="closed" value="true" />
@@ -252,7 +251,23 @@
       <option name="project" value="LOCAL" />
       <updated>1717662332331</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="06.10 rrule라이브러리 사용">
+      <option name="closed" value="true" />
+      <created>1717952706802</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1717952706802</updated>
+    </task>
+    <task id="LOCAL-00012" summary="06.12 dateEventTag 제작">
+      <option name="closed" value="true" />
+      <created>1718123720303</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1718123720303</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,6 +308,8 @@
     <MESSAGE value="06.03 이메일 인증(완료)" />
     <MESSAGE value="06.04 이벤트 모달 ui 제작" />
     <MESSAGE value="06.06 캘린더 등록모달 제작" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.06 캘린더 등록모달 제작" />
+    <MESSAGE value="06.10 rrule라이브러리 사용" />
+    <MESSAGE value="06.12 dateEventTag 제작" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.12 dateEventTag 제작" />
   </component>
 </project>

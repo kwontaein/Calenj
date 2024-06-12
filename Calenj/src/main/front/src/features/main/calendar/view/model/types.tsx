@@ -1,10 +1,14 @@
 import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
 import React from "react";
+import {Dictionary} from "@fullcalendar/core";
+import {RepeatState} from "../../../../../entities/calendar";
+import {Options} from "rrule";
 
 export interface ReturnCalendar {
     handleEvents: (events: EventApi[]) => void,
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick:(clickInfo: EventClickArg) => void,
+    currentEvents : EventApi[],
 }
 
 export interface TodoItem {
@@ -23,10 +27,25 @@ export interface ReturnExtendedProps{
     formState:string,
     content: string,
     todoList: TodoItem[],
-    repeatState:{
-        repeat: boolean,
-        repeatNum: number,
-        repeatOption: string,
-        repeatEnd : Date,
+    repeatState:RepeatState,
+}
+
+export type RepeatOption = '일' | '주' | '달' | '년';
+
+export
+interface DateEvent{
+    id: string,
+    title:string,
+    start: Date,
+    end: Date,
+    allDay: boolean,
+    duration?: {milliseconds : number},
+    rrule? :Partial<Options>,
+    extendedProps:{
+        formState : string,
+        content : string,
+        todoList : TodoItem[],
+        repeatState?:RepeatState,
     }
 }
+

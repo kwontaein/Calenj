@@ -9,7 +9,7 @@ import StompReducer, {updateStompState} from '../../entities/redux/model/slice/S
 import navigateReducer from '../../entities/redux/model/slice/NavigatgionSlice';
 import subNavigateReducer from '../../entities/redux/model/slice/SubNavigationSlice';
 import boardOptionReducer from '../../entities/redux/model/slice/BoardOptionSlice';
-
+import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSlice';
 
 // 루트 사가 생성
 function* rootSaga() {
@@ -23,7 +23,8 @@ const rootReducer = combineReducers({
   emailValidation: emailValidationReducer,
   navigateInfo:navigateReducer,
   subNavigateInfo:subNavigateReducer,
-  boardOption:boardOptionReducer
+  boardOption:boardOptionReducer,
+  dateEventTag:dateEventTagReducer,
 });
 
 

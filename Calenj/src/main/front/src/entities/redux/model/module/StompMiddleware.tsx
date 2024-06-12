@@ -1,14 +1,14 @@
-import {Client, CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
+import {CompatClient, Frame, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {call, put, race, delay, take, fork, takeEvery} from 'redux-saga/effects';
-import {eventChannel, buffers} from 'redux-saga';
+import {call, delay, fork, put, race, take} from 'redux-saga/effects';
+import {buffers, eventChannel} from 'redux-saga';
 import {
+    Destination,
     receivedStompMsg,
-    SEND_STOMP_MSG,
     REQUEST_FILE,
+    SEND_STOMP_MSG,
     SYNCHRONIZATION_STOMP,
     UPDATE_STOMP_STATE,
-    Destination,
     updateLoading,
 } from "../slice/StompReducer"
 
@@ -171,11 +171,9 @@ function createStompConnection() {
         stompClient.heartbeatIncoming = 4000; // 서버로부터 연결 수신확인/수신이 오지 않으면 끊긴걸로 간주
         stompClient.heartbeatOutgoing = 4000; // 클라이언트가 서버로 신호를 보냄, 연결이 활성상태를 알림
 
-        const connectionCallback = () => {
+        stompClient.onConnect = () => {
             res(stompClient);
         };
-
-        stompClient.onConnect = connectionCallback;
         stompClient.activate();
 
 

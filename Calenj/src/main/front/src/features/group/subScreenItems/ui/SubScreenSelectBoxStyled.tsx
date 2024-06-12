@@ -18,25 +18,26 @@ interface SubScreenProps{
 }
 
 // props에 따라 width와 height을 변경하는 애니메이션 정의
+// 크기 변경 애니메이션
 const changeSizeAnimation = (option:string) => keyframes`
     from {
     }
-
     to {
-        width : 200px;
-        ${option === 'filter' && `border-radius: 5px`};
+        width: 200px;
+        ${option === 'filter' ? 'border-radius: 5px;' : ''}
     }
 `;
 
+// 이동 애니메이션
 const moveAnimation = (option:string) => keyframes`
     from {
         transform: translateX(0);
     }
-    to{
-         ${option ==='filter' && `transform: translateX(335%)`};
-         ${option ==='search' && `transform: translateX(520%)`};
-         background-color: transparent;
-         color:${TextColor}
+    to {
+        ${option === 'filter' ? 'transform: translateX(335%);' : ''}
+        ${option === 'search' ? 'transform: translateX(520%);' : ''}
+        background-color: transparent;
+        color: ${TextColor};
     }
 `;
 
@@ -53,7 +54,7 @@ const changeAnimationAfter = (option:string) => keyframes`
     }
 `
 
-export const SubScreenOption_Cotainer = styled.div<OptionProps>`
+export const SubScreenOption_Container = styled.div<OptionProps>`
     display: flex;
     flex-direction: row;
 `;
@@ -71,9 +72,9 @@ export const SubScreenIcon_Container=styled.div<OptionProps>`
     margin-right: 8px;
     color:${TextColor2};
     font-size: 12px;
-    
+
     ${props => props.$option ==="search" &&
-    `opacity : 0.7;
+            `opacity : 0.7;
                 &:hover{
                     opacity : 1;
                 }
@@ -81,7 +82,7 @@ export const SubScreenIcon_Container=styled.div<OptionProps>`
 
     //옵션창에서 hover 시 
     ${props=> props.$option ==='' &&
-    ` transition : background-color 0.3s ease;
+            ` transition : background-color 0.3s ease;
          transition : border 0.3s ease;
          transition : color 0.3s ease;
         
@@ -90,7 +91,7 @@ export const SubScreenIcon_Container=styled.div<OptionProps>`
             background-color: ${ThemaColor3};
             color: ${TextColor};
         }`
-}
+    }
 `
 
 
@@ -112,7 +113,7 @@ export const SubScreenSelector_Container =styled.div<OptionProps & SubScreenProp
     `}
     ${SubScreenIcon_Container}{
         ${props => (props.$option === "filter"|| props.$option==="search") && css`
-        animation: ${moveAnimation(props.$option)} 0.2s ease-in 0.2s forwards;
+            animation: ${moveAnimation(props.$option)} 0.2s ease-in 0.2s forwards;
         `}
     }
 `

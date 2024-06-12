@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import {TextColor} from "../../../shared/ui/SharedStyled";
+import {TextColor} from "../../../../../shared/ui/SharedStyled";
 
 export const DatePicker_Container = styled.div`
     width: 100%;
