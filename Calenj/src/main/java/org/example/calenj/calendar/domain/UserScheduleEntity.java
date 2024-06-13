@@ -7,6 +7,7 @@ import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "User_Schedule")
@@ -18,19 +19,6 @@ import java.util.UUID;
 @IdClass(UserScheduleEntityId.class)
 public class UserScheduleEntity {
 
-    /*
-    id: string,
-    title:string,
-    start: Date,
-    end: Date,
-    allDay: boolean,
-    extendedProps:{
-        formState : string,
-        content : string,
-        todoList : TodoItem[],
-        repeatState?:RepeatState,
-    }
-    */
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -43,9 +31,9 @@ public class UserScheduleEntity {
     @JoinColumn(name = "schedule_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "schedule_tag", referencedColumnName = "tag_id", columnDefinition = "BINARY(16)")
-    private TagEntity tagId;
+    private List<TagEntity> tagId;
 
     //제목
     @Column(name = "user_schedule_title")

@@ -1,13 +1,14 @@
 package org.example.calenj.calendar.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.example.calenj.calendar.domain.UserScheduleEntity;
 
 import java.sql.Date;
 
 @Data
+@AllArgsConstructor
 public class RepeatStateResponse {
-    private UserScheduleEntity scheduleId;
+    private String scheduleId;
 
     private Date startTime;
 
@@ -26,4 +27,6 @@ public class RepeatStateResponse {
     private int repeatCount;
 
     private String repeatWeek;
+
+
 }

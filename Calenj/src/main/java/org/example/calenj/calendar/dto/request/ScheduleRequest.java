@@ -6,6 +6,7 @@ import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.user.domain.UserEntity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,7 +16,7 @@ public class ScheduleRequest {
 
     private String id;
 
-    private UUID tagId;
+    private List<UUID> tagId;
 
     private String title;
 
@@ -27,7 +28,7 @@ public class ScheduleRequest {
 
     private ExtendedPropsRequest extendedProps;
 
-    public UserScheduleEntity toEntity(UserEntity user, TagEntity tag) {
+    public UserScheduleEntity toEntity(UserEntity user, List<TagEntity> tag) {
         return UserScheduleEntity
                 .builder()
                 .personalId(id)

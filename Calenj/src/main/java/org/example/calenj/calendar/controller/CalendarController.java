@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.StampRequest;
 import org.example.calenj.calendar.dto.request.TagRequest;
+import org.example.calenj.calendar.dto.response.ScheduleResponse;
 import org.example.calenj.calendar.dto.response.StampResponse;
 import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
@@ -32,8 +33,8 @@ public class CalendarController {
      * 개인 스케쥴 조회
      **/
     @GetMapping("api/getUserSchedule")
-    public void selectUserSchedule() {
-        calendarService.getScheduleList();
+    public List<ScheduleResponse> selectUserSchedule() {
+        return calendarService.getScheduleList();
     }
 
     /**

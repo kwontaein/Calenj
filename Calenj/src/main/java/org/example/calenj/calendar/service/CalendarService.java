@@ -14,6 +14,7 @@ import org.example.calenj.calendar.repository.StampRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.user.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,50 +62,43 @@ public class CalendarService {
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity());
     }
 
-    public List<CombinedResponse> getScheduleList() {
+    public List<ScheduleResponse> getScheduleList() {
 
         //schedule
         List<ScheduleResponse> scheduleResponses = userScheduleRepository.findListByUserId(globalService.myUserEntity().getUserId()).orElse(null);
-        //extended
-        List<ExtendedPropsResponse> extendedPropsResponses = userScheduleRepository.findExtendedByUserId(globalService.myUserEntity().getUserId()).orElse(null);
 
         List<String> ids = scheduleResponses.stream().map(ScheduleResponse::getId).collect(Collectors.toList());
         //repeatState
         List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
 
-        return combineList(scheduleResponses, extendedPropsResponses, repeatStateResponses);
+        Map<String, RepeatStateResponse> repeatStateMap = repeatStateResponses.stream()
+                .collect(Collectors.toMap(RepeatStateResponse::getScheduleId, Function.identity()));
+
+        // ScheduleResponses 각각에 대해 RepeatStateResponse 매칭 및 설정
+        scheduleResponses.forEach(schedule -> {
+            RepeatStateResponse repeatState = repeatStateMap.get(schedule.getId());
+            if (repeatState != null) {
+                ExtendedPropsResponse extendedProps = schedule.getExtendedProps();
+                extendedProps.setRepeatStateResponse(repeatState); // RepeatStateResponse 설정
+            }
+        });
+
+        return scheduleResponses;
     }
-
-    public List<CombinedResponse> combineList(List<ScheduleResponse> scheduleResponses, List<ExtendedPropsResponse> extendedPropsResponses, List<RepeatStateResponse> repeatStateResponses) {
-        // ScheduleResponse 리스트에서 Map 생성 (id 기준)
-        Map<String, ScheduleResponse> scheduleMap = scheduleResponses.stream()
-                .collect(Collectors.toMap(ScheduleResponse::getId, Function.identity()));
-
-        // ExtendedPropsResponse 리스트에서 Map 생성 (scheduleId 기준)
-        Map<UUID, ExtendedPropsResponse> extendedPropsMap = extendedPropsResponses.stream()
-                .collect(Collectors.toMap(ExtendedPropsResponse::getScheduleId, Function.identity()));
-
-        // RepeatStateResponse 리스트를 반복하여 새로운 복합 객체 생성
-        List<CombinedResponse> combinedResponses = repeatStateResponses.stream()
-                .map(repeatState -> {
-                    String scheduleId = String.valueOf(repeatState.getScheduleId().getScheduleId());  // UserScheduleEntity에서 ID를 가져옴
-                    ScheduleResponse schedule = scheduleMap.get(scheduleId);
-                    ExtendedPropsResponse extendedProps = extendedPropsMap.get(schedule.getScheduleId());
-
-                    return new CombinedResponse(schedule, extendedProps, repeatState); // 새로운 CombinedResponse 생성
-                })
-                .collect(Collectors.toList());
-        System.out.println(combinedResponses);
-        return combinedResponses;
-    }
-
 
     public void saveTagEntity(TagRequest tagRequest) {
         tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
     }
 
-    public TagEntity getTagEntity(UUID tagId) {
-        TagEntity tagEntity = tagRepository.findById(new TagId(tagId, globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("일치하는 태그가 없습니다."));
+    public List<TagEntity> getTagEntity(List<UUID> tagIds) {
+        UserEntity currentUser = globalService.myUserEntity();  // 현재 사용자 엔티티를 가져옵니다.
+
+        // 각 UUID에 대한 TagId 객체 리스트 생성
+        List<TagId> tagIdList = tagIds.stream()
+                .map(tagId -> new TagId(tagId, currentUser))
+                .collect(Collectors.toList());
+
+        List<TagEntity> tagEntity = tagRepository.findAllById(tagIdList);
         return tagEntity;
     }
 
