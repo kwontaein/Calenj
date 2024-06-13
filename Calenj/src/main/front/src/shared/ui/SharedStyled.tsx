@@ -84,6 +84,12 @@ export const GlobalStyle = createGlobalStyle`
     }
     option{
         background-color: ${ThemaColor3};
+        border-radius: 2px;
+    }
+    select{
+        border-radius: 2px;
+        color : ${TextColor};
+        
     }
 `;
 
