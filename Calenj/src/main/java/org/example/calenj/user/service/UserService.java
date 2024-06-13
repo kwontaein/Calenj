@@ -249,6 +249,4 @@ public class UserService {
         String myUserId = userDetails.getUsername();
         userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
     }
-
-
 }

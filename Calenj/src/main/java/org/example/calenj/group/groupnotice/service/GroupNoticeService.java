@@ -3,12 +3,12 @@ package org.example.calenj.group.groupnotice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.group.groupnotice.dto.response.GroupNoticeResponse;
-import org.example.calenj.group.groupinfo.repository.GroupRepository;
-import org.example.calenj.group.groupnotice.repository.Group_NoticeRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
-import org.example.calenj.group.groupnotice.domain.GroupNoticeEntity;
+import org.example.calenj.group.groupinfo.repository.GroupRepository;
+import org.example.calenj.group.groupnotice.dto.request.GroupNoticeRequest;
+import org.example.calenj.group.groupnotice.dto.response.GroupNoticeResponse;
+import org.example.calenj.group.groupnotice.repository.Group_NoticeRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -26,23 +26,13 @@ public class GroupNoticeService {
     private final Group_NoticeRepository groupNoticeRepository;
 
     //그룹 공지 생성
-    public void makeNotice(String noticeTitle, String noticeContent, String noticeCreated, UUID groupId) {
+    public void makeNotice(GroupNoticeRequest groupNoticeRequest) {
 
 
         String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
-        GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        GroupEntity groupEntity = groupRepository.findByGroupId(groupNoticeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
-
-        GroupNoticeEntity groupNoticeEntity = GroupNoticeEntity.GroupNoticeBuilder()
-                .noticeTitle(noticeTitle)
-                .noticeContent(noticeContent)
-                .noticeCreated(noticeCreated)
-                .noticeCreator(userId)
-                .group(groupEntity)
-                .build();
-
-
-        groupNoticeRepository.save(groupNoticeEntity);
+        groupNoticeRepository.save(groupNoticeRequest.toEntity(userId, groupEntity));
     }
 
     //그룹 공지 가져오기
@@ -55,8 +45,7 @@ public class GroupNoticeService {
     public GroupNoticeResponse noticeDetail(UUID noticeId) {
         return groupNoticeRepository.findByNoticeId(noticeId).orElseThrow(() -> new RuntimeException("투표가 존재하지 않습니다."));
     }
-
-
+    
     //그룹 공지 조회한 사람
     public void noticeViewCount(UUID noticeId) {
 
@@ -68,9 +57,6 @@ public class GroupNoticeService {
 
             Viewerlist.add(userId);
             Viewerlist = Viewerlist.stream().distinct().collect(Collectors.toList());
-
-            //Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
-            //List<String> ViewerDuplicateList = new ArrayList<>(Viewerlist); //다시 list형식으로 변환
 
             // JSON 문자열로 변환
             ObjectMapper objectMapper = new ObjectMapper();
@@ -85,7 +71,5 @@ public class GroupNoticeService {
             }
         }
     }
-
-    //groupVoteDTO.getVoteTitle(), groupVoteDTO.getVoteEndDate(), groupVoteDTO.getVoteItem(),groupVoteDTO.getIsMultiple(), groupVoteDTO.getAnonymous()
 
 }
