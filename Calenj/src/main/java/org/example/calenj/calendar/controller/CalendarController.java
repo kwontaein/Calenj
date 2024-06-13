@@ -3,6 +3,7 @@ package org.example.calenj.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.StampRequest;
+import org.example.calenj.calendar.dto.request.TagRequest;
 import org.example.calenj.calendar.dto.response.StampResponse;
 import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
@@ -75,6 +76,18 @@ public class CalendarController {
     public List<TagResponse> getTagList() {
         return calendarService.getTagEntityList();
     }
+
+    @PostMapping("api/createTag")
+    public TagResponse createTag(@RequestBody TagRequest tagRequest) {
+        return calendarService.saveTag(tagRequest);
+    }
+
+    @PostMapping("api/deleteTag")
+    public void deleteTag(@RequestBody TagRequest tagRequest) {
+        calendarService.deleteTag(tagRequest.getId());
+    }
+
+
     //------------------------------------------------------
 
     /**

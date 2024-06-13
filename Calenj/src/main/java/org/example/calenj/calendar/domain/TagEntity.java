@@ -6,6 +6,7 @@ import org.example.calenj.calendar.domain.Ids.TagId;
 import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity(name = "Schedule_Tag")
@@ -27,6 +28,9 @@ public class TagEntity {
     @JoinColumn(name = "tag_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
+    @Column(name = "add_time")
+    private Timestamp addTime;
+
     @Column(name = "tag")
     private String tag;
 
@@ -36,4 +40,11 @@ public class TagEntity {
     @Column(name = "default_tag")
     @Builder.Default
     private boolean defaultTag = false;
+
+    @PrePersist
+    protected void onCreate() {
+        if (addTime == null) {  // addTime이 아직 설정되지 않았다면 현재 시간을 할당
+            addTime = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }

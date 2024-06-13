@@ -1,5 +1,6 @@
 package org.example.calenj.calendar.repository;
 
+import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.response.ExtendedPropsResponse;
 import org.example.calenj.calendar.dto.response.ScheduleResponse;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity, UUID> {
+public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity, UserScheduleEntityId> {
     @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
             "(Us.scheduleId,Us.personalId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList)" +
             " FROM User_Schedule Us WHERE Us.userId.userId = :userId")

@@ -93,14 +93,21 @@ export const DateEventTag: React.FC = () => {
             return;
         }
         const tag = {
-            tagId: Date.now().toString(),
             name: newTagName,
             color: newTagColor,
             defaultTag: false
         }
-        dispatch(createDateEventTag(tag));
+
         axios.post('api/createTag', tag)
-            .then(() => window.alert('새로운 태그를 추가했습니다.'))
+            .then((res: AxiosResponse<EventTagDTO>) => {
+                window.alert('새로운 태그를 추가했습니다.')
+                dispatch(createDateEventTag({
+                    tagId: res.data.id,
+                    name: res.data.name,
+                    color: res.data.color,
+                    defaultTag: res.data.defaultTag
+                }))
+            });
         setCreateTag(false)
     }
 

@@ -1,6 +1,8 @@
 package org.example.calenj.calendar.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.calendar.domain.Ids.TagId;
+import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
@@ -44,13 +46,14 @@ public class CalendarService {
 
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
-        UserScheduleEntity userSchedule = userScheduleRepository.findById(scheduleRequest.getScheduleId()).orElseThrow(() -> new RuntimeException("오류"));
+        UserScheduleEntity userSchedule = userScheduleRepository
+                .findById(new UserScheduleEntityId(scheduleRequest.getScheduleId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
         //변경 감지를 통한 자동 업데이트
         //userSchedule.updateScheduleDetails(scheduleRequest);
     }
 
     public void deleteSchedule(UUID scheduleID) {
-        userScheduleRepository.deleteById(scheduleID);
+        userScheduleRepository.deleteById(new UserScheduleEntityId(scheduleID, globalService.myUserEntity()));
     }
 
     public void saveSchedule(ScheduleRequest scheduleRequest) {
@@ -101,7 +104,7 @@ public class CalendarService {
     }
 
     public TagEntity getTagEntity(UUID tagId) {
-        TagEntity tagEntity = tagRepository.findById(tagId).orElseThrow(() -> new RuntimeException("일치하는 태그가 없습니다."));
+        TagEntity tagEntity = tagRepository.findById(new TagId(tagId, globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("일치하는 태그가 없습니다."));
         return tagEntity;
     }
 
@@ -109,5 +112,14 @@ public class CalendarService {
         return tagRepository.findByUserId(globalService.myUserEntity().getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
     }
 
+    public TagResponse saveTag(TagRequest tagRequest) {
+        TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
+        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
+        return tagResponse;
+    }
+
+    public void deleteTag(UUID id) {
+        tagRepository.deleteById(new TagId(id, globalService.myUserEntity()));
+    }
 }
 
