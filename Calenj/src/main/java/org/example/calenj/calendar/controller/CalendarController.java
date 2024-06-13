@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.StampRequest;
 import org.example.calenj.calendar.dto.response.StampResponse;
+import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +71,10 @@ public class CalendarController {
         return calendarService.getStampList();
     }
 
+    @GetMapping("api/getEventTag")
+    public List<TagResponse> getTagList() {
+        return calendarService.getTagEntityList();
+    }
     //------------------------------------------------------
 
     /**

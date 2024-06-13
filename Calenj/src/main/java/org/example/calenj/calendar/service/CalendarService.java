@@ -1,7 +1,6 @@
 package org.example.calenj.calendar.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.calendar.domain.StampEntity;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
@@ -35,13 +34,7 @@ public class CalendarService {
 
 
     public void saveStamp(StampRequest stampRequest) {
-
-        StampEntity stampEntity = StampEntity.builder()
-                .userId(globalService.myUserEntity())
-                .content(stampRequest.getContent())
-                .title(stampRequest.getTitle()).build();
-
-        stampRepository.save(stampEntity);
+        stampRepository.save(stampRequest.toEntity(globalService.myUserEntity()));
     }
 
     public List<StampResponse> getStampList() {
@@ -61,22 +54,8 @@ public class CalendarService {
     }
 
     public void saveSchedule(ScheduleRequest scheduleRequest) {
-
-        UserScheduleEntity userScheduleEntity = UserScheduleEntity
-                .builder()
-                .personalId(scheduleRequest.getId())
-                .userId(globalService.myUserEntity())
-                .tagId(getTagEntity(scheduleRequest.getTagId()))
-                .userScheduleTitle(scheduleRequest.getTitle())
-                .scheduleStartDateTime(scheduleRequest.getStart())
-                .scheduleEndDateTime(scheduleRequest.getEnd())
-                .userScheduleAllDay(scheduleRequest.getAllDay())
-                .userScheduleFormState(scheduleRequest.getExtendedProps().getFormState())
-                .userScheduleContent(scheduleRequest.getExtendedProps().getContent())
-                .userScheduleTodoList(scheduleRequest.getExtendedProps().getTodoList().toString())
-                .build();
-
-        userScheduleRepository.save(userScheduleEntity);
+        userScheduleRepository.save(scheduleRequest.toEntity(globalService.myUserEntity(), getTagEntity(scheduleRequest.getTagId())));
+        repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity());
     }
 
     public List<CombinedResponse> getScheduleList() {
@@ -118,13 +97,7 @@ public class CalendarService {
 
 
     public void saveTagEntity(TagRequest tagRequest) {
-        TagEntity tagEntity = TagEntity
-                .builder()
-                .userId(globalService.myUserEntity())
-                .tag(tagRequest.getTag())
-                .tagColor(tagRequest.getTagColor())
-                .build();
-        tagRepository.save(tagEntity);
+        tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
     }
 
     public TagEntity getTagEntity(UUID tagId) {
@@ -132,8 +105,8 @@ public class CalendarService {
         return tagEntity;
     }
 
-    public List<TagEntity> getTagEntityList(UUID userId) {
-        return tagRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("오류 발생!"));
+    public List<TagResponse> getTagEntityList() {
+        return tagRepository.findByUserId(globalService.myUserEntity().getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
     }
 
 }

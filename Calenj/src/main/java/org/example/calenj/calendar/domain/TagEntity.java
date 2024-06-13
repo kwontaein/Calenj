@@ -32,4 +32,8 @@ public class TagEntity {
 
     @Column(name = "tag_color")
     private String tagColor;
+
+    @Column(name = "default_tag")
+    @Builder.Default
+    private boolean defaultTag = false;
 }
