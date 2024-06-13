@@ -7,10 +7,12 @@ import {RRule, Options, Weekday} from 'rrule';
 import axios from "axios";
 
 
-export const useCalendar = ():ReturnCalendar =>{
+export const useCalendar = (): ReturnCalendar => {
     const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
     type RepeatOption = '일' | '주' | '달' | '년';
-    const weekArr = [RRule.SU,RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
+
+
+    const weekArr = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
 
     const freqHash = {
         일: RRule.DAILY,
@@ -20,17 +22,18 @@ export const useCalendar = ():ReturnCalendar =>{
     };
 
     useEffect(() => {
-        // axios.get("api/getUserSchedule")
+        axios.get("api/getUserSchedule")
+            .then((res) => console.log(res))
     }, []);
 
     //이벤트 변경시 api 처리
     const handleEvents = useCallback(
         (events: EventApi[]) => {
-            events.map((event)=>{
+            events.map((event) => {
 
             })
         }
-        ,[]);
+        , []);
 
 
     const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {

@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class RepeatStateResponse {
-    private String scheduleId;
+    private UUID scheduleId;
 
     private Date startTime;
 
@@ -27,6 +28,5 @@ public class RepeatStateResponse {
     private int repeatCount;
 
     private String repeatWeek;
-
 
 }

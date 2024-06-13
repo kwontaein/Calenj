@@ -18,7 +18,7 @@ public class ScheduleRequest {
 
     private Timestamp end;
 
-    private String allDay;
+    private boolean allDay;
 
     private ExtendedPropsRequest extendedProps;
 
