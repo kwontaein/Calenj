@@ -28,11 +28,6 @@ public class FriendService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    public UserEntity myUserName() {
-        UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
-        UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException());
-        return userEntity;
-    }
 
     public UserEntity friendUserName(String userName) {
         UserEntity userEntity = userRepository.findByUserUsedName(userName).orElseThrow(() -> new RuntimeException());
@@ -47,7 +42,7 @@ public class FriendService {
     public String requestFriend(String friendUserName) {
 
         // 로그인된 유저 정보 조회
-        UserEntity ownUser = myUserName();
+        UserEntity ownUser = globalService.myUserEntity();
         if (friendUserName.equals(ownUser.getUsername())) {
             System.out.println("나에게 친구 추가는 불가능합니다.");
             return "나에게 친구 추가는 불가능합니다.";
@@ -60,7 +55,7 @@ public class FriendService {
             return repositorySetting(ownUser, friendUser, friendUser.getUserId(), friendResponseOptional);
         } catch (Exception e) {
             e.printStackTrace();
-            onlyone(ownUser, friendUser, friendUser.getUserId());
+            onlyOne(ownUser, friendUser, friendUser.getUserId());
             return "";
         }
     }
@@ -99,7 +94,7 @@ public class FriendService {
         return "상대가 보낸 요청이 이미 있기에, 친구 추가합니다.";
     }
 
-    public String onlyone(UserEntity ownUser, UserEntity friendUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
+    public String onlyOne(UserEntity ownUser, UserEntity friendUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
         if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
             // 아니라면 내 친구 테이블에 추가
             FriendEntity friendEntity = FriendEntity
@@ -132,7 +127,7 @@ public class FriendService {
     public String responseFriend(String friendUserName, int isAccept) {
 
         //로그인된 유저 정보
-        UserEntity ownUser = myUserName();
+        UserEntity ownUser = globalService.myUserEntity();
 
         //친구추가할 유저 정보
         UserEntity friendUser = friendUserName(friendUserName);

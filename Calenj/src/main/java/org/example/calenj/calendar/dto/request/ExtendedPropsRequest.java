@@ -3,12 +3,13 @@ package org.example.calenj.calendar.dto.request;
 import lombok.Data;
 
 @Data
-public class ExtendedProps {
+public class ExtendedPropsRequest {
+    private String formState;
     //내용
     private String content;
-    //내용
+    //todoList 내용
     private String[] todoList;
 
-    private RepeatState repeatState;
+    private RepeatStateRequest repeatState;
 
 }
