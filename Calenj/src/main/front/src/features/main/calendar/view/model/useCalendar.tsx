@@ -24,7 +24,8 @@ export const useCalendar = ():ReturnCalendar =>{
     //이벤트 변경시 api 처리
     const handleEvents = useCallback(
         (events: EventApi[]) => {
-
+            events.map((event)=>{
+            })
         }
         ,[]);
 
