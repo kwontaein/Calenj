@@ -8,14 +8,20 @@ import {
 import React, {ChangeEvent, useCallback, useEffect, useReducer, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
-    AddFriend_Button, AddFriend_Container, AddFriendIcon_Container,
+    AddFriend_Button,
+    AddFriend_Container,
+    AddFriendIcon_Container,
     Category_Container,
-    CategoryContent,
-    CategoryItems_Container, ContentIcon_Container,
+    ContentIcon_Container,
     DateContentBottom_Container,
+    DateEventTag_Container, DateEventTagColor,
+    DateEventTagContent,
+    DateEventTagSelector,
+    DateEventTagSelector_Container,
     DateEventTitle_Input,
 
-    DateTopContent_Container, EventContent_Container,
+    DateTopContent_Container,
+    EventContent_Container,
     EventContent_TextArea,
     ModalButton_Container,
 } from "./AddDateEventStyled";
@@ -35,6 +41,10 @@ import {AddTodoList} from './AddTodoList'
 import {RepeatEvent} from './RepeatEvent'
 import {ByWeekday, Options, RRule, Weekday} from "rrule";;
 import {DateEvent, RepeatOption} from "../model/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../entities/redux";
+import {FormatOptionLabelMeta} from "react-select";
+import {ColourOption, CustomSelector} from "../../../../../shared/ui/CustomSelector";
 
 
 interface CalendarProps{
@@ -63,6 +73,8 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
     const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
     const {formState,startDate,endDate, title, content} = eventState
     const {todoList, contentRef, setContent, addList, removeItem} = useTodoList();
+
+    const {dynamicEventTag} = useSelector((state:RootState) => state.dateEventTag)
 
     const closeModal =()=>{
         if(title==="" && content===""){
@@ -179,6 +191,24 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         onClose()
     }
 
+
+
+    const customSelectorProps = ():ColourOption[] =>{
+        const options:ColourOption[] =[]
+        Object.keys(dynamicEventTag).map((id)=>{
+            const option:ColourOption ={
+                id: id,
+                value : dynamicEventTag[id].name,
+                label :dynamicEventTag[id].name,
+                color: dynamicEventTag[id].color,
+                isDisabled: dynamicEventTag[id].name==='그룹 일정',
+
+            }
+            options.push(option)
+        })
+        return options
+    }
+
     //eventSave
 
     return createPortal(
@@ -191,28 +221,31 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                     일정 추가
                 </ModalTopBar_Container>
                 <ModalContent_Container>
-
                     <DateTopContent_Container>
                         <DateEventTitle_Input onChange={(e:ChangeEvent<HTMLInputElement>)=>eventDispatch({type:'SET_TITLE', payload: e.target.value})}
                                               type={"text"}
                                               placeholder={"제목 추가"}
                                               maxLength={30}/>
+                        <DateEventTag_Container>
+                            <DateEventTagContent>
+                                지정태그
+                            </DateEventTagContent>
+                            <DateEventTagSelector_Container>
+                                <CustomSelector options={customSelectorProps()}/>
+
+                            </DateEventTagSelector_Container>
+                        </DateEventTag_Container>
                         <Category_Container>
-                            <CategoryContent>
-                                카테고리
-                            </CategoryContent>
-                            <CategoryItems_Container>
-                                <Modal_Condition_Button $isAble={formState==="promise"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "promise"})}>
-                                    약속일정
-                                </Modal_Condition_Button>
-                                <Modal_Condition_Button  $isAble={formState==="todo"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "todo"})}
-                                                         style={{marginInline:'5px'}}>
-                                    할 일
-                                </Modal_Condition_Button>
-                                <Modal_Condition_Button  $isAble={formState==="schedule"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "schedule"})}>
-                                    스케줄
-                                </Modal_Condition_Button>
-                            </CategoryItems_Container>
+                            <Modal_Condition_Button $isAble={formState==="promise"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "promise"})}>
+                                약속일정
+                            </Modal_Condition_Button>
+                            <Modal_Condition_Button  $isAble={formState==="todo"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "todo"})}
+                                                     style={{marginInline:'5px'}}>
+                                할 일
+                            </Modal_Condition_Button>
+                            <Modal_Condition_Button  $isAble={formState==="schedule"} onClick={()=>eventDispatch({type:'SET_FORM_STATE', payload: "schedule"})}>
+                                스케줄
+                            </Modal_Condition_Button>
                         </Category_Container>
                     </DateTopContent_Container>
 

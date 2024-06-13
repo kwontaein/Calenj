@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {BackGroundColor, PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../shared/ui/SharedStyled";
-import DatePicker from "react-datepicker";
+import Select from 'react-select';
+import {Simulate} from "react-dom/test-utils";
 
 interface ButtonProps{
     $isClick : boolean,
@@ -41,24 +42,45 @@ export const DateEventTitle_Input = styled.input`
 `
 
 export const Category_Container = styled.div`
-    margin-top: 20px;
-`
-export const CategoryContent = styled.div`
-    font-size: 14px;
-`
-
-export const CategoryItems_Container = styled.div`
     margin-top: 10px;
     display: flex;
     flex-direction: row;
 `
-export const CategoryItem_Button = styled.button<ButtonProps>`
-    width: 70px;
-    height: 40px;
-    border-radius: 5px;
-    ${props=> props.$isClick && `background-color : ${PointColor}`};
+
+
+export const DateEventTag_Container = styled.div`
+    margin-top:20px;
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    font-size:14px;
+    align-items: center;
+`
+export const DateEventTagContent = styled.div`
+    font-size: 14px;
+    width: 74px;
+`
+export const DateEventTagSelector_Container = styled.div`
+    width: calc(100% - 74px);
+`
+export const DateEventTagSelector = styled(Select)`
+    -webkit-appearance: none;
+    width: 148px;
+    appearance: none;
+    padding: 1px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    color : ${TextColor};
+    background: ${ThemaColor3}
 `
 
+export const DateEventTagColor =styled.div<{$color:string}>`
+    width: 14px;
+    height: 14px;
+    border: 1px solid ${TextColor};
+    background-color: ${props=> props.$color};
+`
 
 
 

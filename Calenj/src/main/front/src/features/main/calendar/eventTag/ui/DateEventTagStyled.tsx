@@ -118,7 +118,7 @@ export const CreateTag_Container = styled.div`
     background-color: rgb(0,0,0,0.3);
 `
 export const CreateTag_Content = styled.div`
-    width: calc(100% - 10px);
+    width: calc(100% - 10px); //232-10 =222
     height: calc(100% - 10px);
     display: flex;
     align-items: center;
@@ -128,7 +128,7 @@ export const CreateTag_Content = styled.div`
 `
 export const CreateTagColor_Container = styled.div<{$color : string}>`
     display: inline-block;
-    width: 20px;
+    width: 20px; 
     height: 20px;
     background-color: ${props =>props.$color};
     border: 1px solid ${TextColor};
@@ -138,7 +138,7 @@ export const CreateTagColor_Container = styled.div<{$color : string}>`
     margin-left: 4px;
 `
 export const CreateTagInput_Container = styled.input.attrs({ type: 'text' })`
-    width: calc(100% - 90px);
+    width: calc(100% - 100px);//222-100 +30 +2  = 154
     margin-inline: 15px;
     background-color: transparent;
     color:${TextColor};
@@ -150,7 +150,7 @@ export const CreateTagInput_Container = styled.input.attrs({ type: 'text' })`
     }
 `
 export const CreateTagText_Container = styled.div`
-    width: 30px;
+    width: calc(100% - 164px);
     background-color: transparent;
     color:${PointColor};
     font-weight: 550;
