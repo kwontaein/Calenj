@@ -48,9 +48,10 @@ public class FriendController {
 
     /**
      * 내 이벤트 목록
-     * 내 이벤트 목록...? 이거 왜 만들었노
+     * 내 이벤트 목록...? 이거 왜 만들었누
+     * 알림목록인가 ???
      */
-   /* @PostMapping("/api/myEvents")
+    /*@PostMapping("/api/myEvents")
     public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
 
         List<EventResponse> events = friendService.myEvents(request.getUserName());

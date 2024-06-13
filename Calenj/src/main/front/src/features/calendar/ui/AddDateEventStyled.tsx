@@ -65,7 +65,7 @@ export const CategoryItem_Button = styled.button<ButtonProps>`
 export const EventContent_Container = styled.div<FormProps>`
     margin-top: 10px;
     width : calc(100% - 20px);
-    height: ${props=>props.$formState ==="B" ?"180px" : "130px"};
+    height: ${props=>props.$formState ==="todo" ?"180px" : "130px"};
     display: flex;
     flex-direction: row;
 `
