@@ -67,6 +67,10 @@ public class CalendarService {
         //schedule
         List<ScheduleResponse> scheduleResponses = userScheduleRepository.findListByUserId(globalService.myUserEntity().getUserId()).orElse(null);
 
+        if (scheduleResponses.isEmpty()) {
+            return scheduleResponses; // 조기 반환을 통해 불필요한 연산 방지
+        }
+        
         List<String> ids = scheduleResponses.stream().map(ScheduleResponse::getId).collect(Collectors.toList());
         //repeatState
         List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
