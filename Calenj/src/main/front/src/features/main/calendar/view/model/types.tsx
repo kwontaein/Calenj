@@ -39,9 +39,12 @@ interface DateEvent{
     start: Date,
     end: Date,
     allDay: boolean,
+    backgroundColor: string,
+    borderColor:string,
     duration?: {milliseconds : number},
     rrule? :Partial<Options>,
     extendedProps:{
+        tagKeys: string[],
         formState : string,
         content : string,
         todoList : TodoItem[],

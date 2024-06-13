@@ -42,7 +42,7 @@ export const DateEventTitle_Input = styled.input`
 `
 
 export const Category_Container = styled.div`
-    margin-top: 10px;
+    margin-top: 20px;
     display: flex;
     flex-direction: row;
 `
@@ -52,7 +52,7 @@ export const DateEventTag_Container = styled.div`
     margin-top:20px;
     display: flex;
     flex-direction: row;
-    height: 20px;
+    height: 30px;
     font-size:14px;
     align-items: center;
 `
@@ -62,6 +62,7 @@ export const DateEventTagContent = styled.div`
 `
 export const DateEventTagSelector_Container = styled.div`
     width: calc(100% - 74px);
+    height: 25px;
 `
 export const DateEventTagSelector = styled(Select)`
     -webkit-appearance: none;
@@ -87,7 +88,7 @@ export const DateEventTagColor =styled.div<{$color:string}>`
 export const EventContent_Container = styled.div<FormProps>`
     margin-top: 10px;
     width : calc(100% - 20px);
-    height: ${props=>props.$formState ==="todo" ?"210px" : "160px"};
+    height: ${props=>props.$formState ==="todo" ?"190px" : "140px"};
     display: flex;
     flex-direction: row;
 `

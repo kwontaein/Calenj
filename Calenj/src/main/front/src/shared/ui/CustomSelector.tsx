@@ -1,22 +1,27 @@
-import Select, {StylesConfig} from "react-select";
+import Select, {MultiValue, StylesConfig} from "react-select";
 import React from 'react';
 import chroma from 'chroma-js';
-import {BackGroundColor, ThemaColor2} from "./SharedStyled";
+import {BackGroundColor, TextColor, ThemaColor2, ThemaColor3} from "./SharedStyled";
 
 interface SelectorProps{
-    options: ColourOption[];
+    options: ColorOption[];
+    setValue:(values:MultiValue<ColorOption>)=>void,
 }
-export interface ColourOption {
+export interface ColorOption {
     readonly id: string,
     readonly value: string;
     readonly label: string;
     readonly color: string;
     readonly isDisabled?: boolean;
 }
-export const  CustomSelector:React.FC<SelectorProps> = ({options}) =>{
+export const  CustomSelector:React.FC<SelectorProps> = ({options,setValue}) =>{
 
-    const colourStyles: StylesConfig<ColourOption, true> = {
-        control: (styles) => ({ ...styles, backgroundColor: ThemaColor2 }),
+    const colourStyles: StylesConfig<ColorOption, true> = {
+        control: (styles) => ({ ...styles, backgroundColor: ThemaColor2, border: `1px solid ${TextColor}77`, minHeight:'25px', height:'30px'}),
+        valueContainer : (styles) =>({display: 'flex', flexDirection:'row', width:'200px', height:'25px'}),
+        input:(styles) =>({width:'0px'}),
+        dropdownIndicator:(styles) =>({fontSize:'8px'}),
+        clearIndicator:(styles)=>({fontSize:'8px'}),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
             const color = chroma(data.color);
             return {
@@ -27,7 +32,7 @@ export const  CustomSelector:React.FC<SelectorProps> = ({options}) =>{
                         ? data.color
                         : isFocused
                             ? color.alpha(0.1).css()
-                            : undefined,
+                            : TextColor,
                 color: isDisabled
                     ? '#ccc'
                     : isSelected
@@ -71,12 +76,14 @@ export const  CustomSelector:React.FC<SelectorProps> = ({options}) =>{
         }),
     };
 
+
     return(
         <Select
             closeMenuOnSelect={false}
             isMulti
             options={options}
             styles={colourStyles}
+            onChange={(newValue: MultiValue<ColorOption>)=>{setValue(newValue)}}
         />
     )
 }

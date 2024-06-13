@@ -16,7 +16,6 @@ import {
     DateContentBottom_Container,
     DateEventTag_Container, DateEventTagColor,
     DateEventTagContent,
-    DateEventTagSelector,
     DateEventTagSelector_Container,
     DateEventTitle_Input,
 
@@ -41,10 +40,10 @@ import {AddTodoList} from './AddTodoList'
 import {RepeatEvent} from './RepeatEvent'
 import {ByWeekday, Options, RRule, Weekday} from "rrule";;
 import {DateEvent, RepeatOption} from "../model/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
-import {FormatOptionLabelMeta} from "react-select";
-import {ColourOption, CustomSelector} from "../../../../../shared/ui/CustomSelector";
+import {FormatOptionLabelMeta, MultiValue} from "react-select";
+import {ColorOption, CustomSelector} from "../../../../../shared/ui/CustomSelector";
 
 
 interface CalendarProps{
@@ -71,7 +70,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         formState: selectInfo.allDay ? 'todo' : 'promise'
     });
     const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
-    const {formState,startDate,endDate, title, content} = eventState
+    const {formState,startDate,endDate, title, content, backgroundColor, tagKeys} = eventState
     const {todoList, contentRef, setContent, addList, removeItem} = useTodoList();
 
     const {dynamicEventTag} = useSelector((state:RootState) => state.dateEventTag)
@@ -90,6 +89,16 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         }
     }, [startDate]);
 
+    const setTag = (values:MultiValue<ColorOption>) =>{
+        if(values.length >0){
+            eventDispatch({type:'SET_BG_COLOR', payload: values[0].color})
+        }else{
+            eventDispatch({type:'SET_BG_COLOR', payload: ''})
+        }
+        const tagIdList = values.map((value)=>value.id)
+        eventDispatch({type:'SET_TAG_KEYS', payload: tagIdList})
+    }
+
 
     const postEvent = () =>{
         const {repeat,repeatMode,repeatOption, repeatDeadLine, repeatNum, repeatCount, repeatWeek, repeatEnd,startTime,endTime} = repeatState
@@ -104,6 +113,8 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
         }else if(formState ==="todo" && todoList.length ===0){
             window.alert('할 일을 추가해주세요.')
             return
+        }else if(backgroundColor ===""){
+            window.alert('한 개 이상의 태그를 선택해주세요.')
         }
 
         if(repeat){
@@ -148,8 +159,11 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
             title:title,
             start: startDate,
             end: endDate,
+            backgroundColor: backgroundColor,
+            borderColor : backgroundColor,
             allDay: formState==="todo",
             extendedProps :{
+                tagKeys:tagKeys,
                 formState:formState,
                 content: content,
                 todoList: [...todoList],
@@ -193,10 +207,10 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
 
 
 
-    const customSelectorProps = ():ColourOption[] =>{
-        const options:ColourOption[] =[]
+    const customSelectorProps = ():ColorOption[] =>{
+        const options:ColorOption[] =[]
         Object.keys(dynamicEventTag).map((id)=>{
-            const option:ColourOption ={
+            const option:ColorOption ={
                 id: id,
                 value : dynamicEventTag[id].name,
                 label :dynamicEventTag[id].name,
@@ -231,7 +245,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                                 지정태그
                             </DateEventTagContent>
                             <DateEventTagSelector_Container>
-                                <CustomSelector options={customSelectorProps()}/>
+                                <CustomSelector options={customSelectorProps()} setValue={setTag}/>
 
                             </DateEventTagSelector_Container>
                         </DateEventTag_Container>
@@ -298,7 +312,7 @@ export const AddDateEvent : React.FC<CalendarProps> = ({onClose,selectInfo}) =>{
                         <Modal_Condition_Button onClick={closeModal} style={{marginRight:'5px'}}>
                             취소
                         </Modal_Condition_Button>
-                        <Modal_Condition_Button $isAble={title!=="" && (formState==="promise" && content !=="") || (formState==="todo" && todoList.length > 0) || formState==="schedule"}
+                        <Modal_Condition_Button $isAble={title!=="" && ((formState==="promise" && content !=="") || (formState==="todo" && todoList.length > 0) || formState==="schedule")}
                                                 onClick={postEvent}>
                             생성
                         </Modal_Condition_Button>

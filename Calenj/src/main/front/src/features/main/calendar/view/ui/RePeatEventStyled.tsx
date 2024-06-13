@@ -15,7 +15,7 @@ interface ClickProps {
 
 export const RePeatEvent_Container = styled.div`
     width: calc(100% - 30px);
-    height: 220px;
+    height: 200px;
 `
 export const EventTime_container = styled.div`
     height: 30px;
@@ -51,7 +51,7 @@ export const EventTimePicker = styled(DatePicker)`
 `;
 
 export const RepeatBottom_Container = styled.div`
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
     height: calc(100% - 50px);
     display: flex;
@@ -110,8 +110,8 @@ export const RepeatText_Container = styled.div`
     font-size: 14px;
     display: flex;
     flex-direction: row;
-    height: 25px;
     margin-top: 5px;
+    height: 20px;
     align-items: center;
 `
 
