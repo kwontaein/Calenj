@@ -9,6 +9,8 @@ export interface EventDateState {
     formState: string;
     startMonth: number;
     endMonth: number;
+    backgroundColor:string,
+    tagKeys : string[],
 }
 
 // Define actions
@@ -19,7 +21,10 @@ export type EventDateAction =
     | { type: 'SET_CONTENT'; payload: string }
     | { type: 'SET_FORM_STATE'; payload: string }
     | { type: 'SET_START_MONTH'; payload: number }
-    | { type: 'SET_END_MONTH'; payload: number };
+    | { type: 'SET_END_MONTH'; payload: number }
+    | { type: 'SET_BG_COLOR'; payload:string}
+    | { type: 'SET_TAG_KEYS'; payload: string[]}
+    ;
 
 // Initial state
 export const initialEventDateState: EventDateState = {
@@ -29,7 +34,9 @@ export const initialEventDateState: EventDateState = {
     content: '',
     formState: 'A',
     startMonth: new Date().getMonth(),
-    endMonth: new Date().getMonth()
+    endMonth: new Date().getMonth(),
+    backgroundColor:'',
+    tagKeys: [],
 };
 
 // Reducer function
@@ -49,6 +56,10 @@ export const EventDateReducer = (state: EventDateState, action: EventDateAction)
             return { ...state, startMonth: action.payload };
         case 'SET_END_MONTH':
             return { ...state, endMonth: action.payload };
+        case 'SET_BG_COLOR':
+            return { ...state, backgroundColor: action.payload };
+        case 'SET_TAG_KEYS':
+            return { ...state, tagKeys : action.payload };
         default:
             return state;
     }

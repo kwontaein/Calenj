@@ -205,7 +205,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                             }
                         </RepeatText_Container>
 
-                        <RepeatText_Container style={{marginTop: "10px"}}>
+                        <RepeatText_Container style={{marginTop: "15px"}}>
                             <InfoIcon_Container>
                                 <i className="bi bi-check2-circle"></i>
                             </InfoIcon_Container>
