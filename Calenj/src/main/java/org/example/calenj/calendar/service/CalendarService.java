@@ -14,7 +14,6 @@ import org.example.calenj.calendar.repository.StampRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.user.domain.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class CalendarService {
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
         UserScheduleEntity userSchedule = userScheduleRepository
-                .findById(new UserScheduleEntityId(scheduleRequest.getScheduleId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
+                .findById(new UserScheduleEntityId(scheduleRequest.getId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
         //변경 감지를 통한 자동 업데이트
         //userSchedule.updateScheduleDetails(scheduleRequest);
     }
@@ -58,8 +57,8 @@ public class CalendarService {
     }
 
     public void saveSchedule(ScheduleRequest scheduleRequest) {
-        userScheduleRepository.save(scheduleRequest.toEntity(globalService.myUserEntity(), getTagEntity(scheduleRequest.getTagId())));
-        repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity());
+        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+        repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 
     public List<ScheduleResponse> getScheduleList() {
@@ -70,7 +69,7 @@ public class CalendarService {
         if (scheduleResponses.isEmpty()) {
             return scheduleResponses; // 조기 반환을 통해 불필요한 연산 방지
         }
-        
+
         List<String> ids = scheduleResponses.stream().map(ScheduleResponse::getId).collect(Collectors.toList());
         //repeatState
         List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
@@ -86,24 +85,8 @@ public class CalendarService {
                 extendedProps.setRepeatStateResponse(repeatState); // RepeatStateResponse 설정
             }
         });
-
+        System.out.println("scheduleResponses : \n" + scheduleResponses);
         return scheduleResponses;
-    }
-
-    public void saveTagEntity(TagRequest tagRequest) {
-        tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
-    }
-
-    public List<TagEntity> getTagEntity(List<UUID> tagIds) {
-        UserEntity currentUser = globalService.myUserEntity();  // 현재 사용자 엔티티를 가져옵니다.
-
-        // 각 UUID에 대한 TagId 객체 리스트 생성
-        List<TagId> tagIdList = tagIds.stream()
-                .map(tagId -> new TagId(tagId, currentUser))
-                .collect(Collectors.toList());
-
-        List<TagEntity> tagEntity = tagRepository.findAllById(tagIdList);
-        return tagEntity;
     }
 
     public List<TagResponse> getTagEntityList() {

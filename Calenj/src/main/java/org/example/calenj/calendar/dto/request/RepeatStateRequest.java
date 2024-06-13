@@ -5,6 +5,7 @@ import org.example.calenj.calendar.domain.RepeatStateEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 public class RepeatStateRequest {
@@ -26,12 +27,12 @@ public class RepeatStateRequest {
 
     private int repeatCount;
 
-    private String repeatWeek;
+    private List<String> repeatWeek;
 
-    public RepeatStateEntity toEntity() {
+    public RepeatStateEntity toEntity(UserScheduleEntity userScheduleEntity) {
         return RepeatStateEntity
                 .builder()
-                .scheduleId(scheduleId)
+                .scheduleId(userScheduleEntity)
                 .startTime(startTime)
                 .endTime(endTime)
                 .repeat(repeat)
@@ -40,7 +41,7 @@ public class RepeatStateRequest {
                 .repeatDeadline(repeatDeadline)
                 .repeatEnd(repeatEnd)
                 .repeatCount(repeatCount)
-                .repeatWeek(repeatWeek)
+                .repeatWeek(repeatWeek.toString())
                 .build();
     }
 }

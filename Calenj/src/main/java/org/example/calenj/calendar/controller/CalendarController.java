@@ -50,7 +50,7 @@ public class CalendarController {
      **/
     @PostMapping("api/deleteUserSchedule")
     public void deleteUserSchedule(@RequestBody ScheduleRequest scheduleRequest) {
-        calendarService.deleteSchedule(scheduleRequest.getScheduleId());
+        calendarService.deleteSchedule(scheduleRequest.getId());
     }
 
     /**

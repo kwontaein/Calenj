@@ -115,7 +115,7 @@ public class GlobalService {
 
     public UserEntity myUserEntity() {
         UUID myUserID = UUID.fromString(extractFromSecurityContext().getUsername());
-        UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException());
+        UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
         return userEntity;
     }
 

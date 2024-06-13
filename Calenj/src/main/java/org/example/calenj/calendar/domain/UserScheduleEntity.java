@@ -7,7 +7,6 @@ import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "User_Schedule")
@@ -25,15 +24,12 @@ public class UserScheduleEntity {
     @Column(nullable = false, unique = true, name = "schedule_id", columnDefinition = "BINARY(16)")
     private UUID scheduleId;
 
-    private String personalId;
-
     @ManyToOne
     @JoinColumn(name = "schedule_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
-    @OneToMany
-    @JoinColumn(name = "schedule_tag", referencedColumnName = "tag_id", columnDefinition = "BINARY(16)")
-    private List<TagEntity> tagId;
+    @Column(name = "tag_ids")
+    private String tagIds;
 
     //제목
     @Column(name = "user_schedule_title")

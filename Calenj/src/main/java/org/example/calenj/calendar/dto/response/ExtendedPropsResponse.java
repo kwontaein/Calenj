@@ -13,9 +13,13 @@ public class ExtendedPropsResponse {
     //내용
     private String todoList;
 
+    //태그 정보
+    private String tag;
+
     private RepeatStateResponse repeatStateResponse;
 
-    public ExtendedPropsResponse(UUID scheduleId, String formState, String content, String todoList) {
+    public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
+        this.tag = tag;
         this.scheduleId = scheduleId;
         this.content = content;
         this.todoList = todoList;
