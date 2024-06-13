@@ -70,16 +70,16 @@ public class CalendarService {
             return scheduleResponses; // 조기 반환을 통해 불필요한 연산 방지
         }
 
-        List<String> ids = scheduleResponses.stream().map(ScheduleResponse::getId).collect(Collectors.toList());
+        List<UUID> ids = scheduleResponses.stream().map(ScheduleResponse::getScheduleId).collect(Collectors.toList());
         //repeatState
         List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
 
-        Map<String, RepeatStateResponse> repeatStateMap = repeatStateResponses.stream()
+        Map<UUID, RepeatStateResponse> repeatStateMap = repeatStateResponses.stream()
                 .collect(Collectors.toMap(RepeatStateResponse::getScheduleId, Function.identity()));
 
         // ScheduleResponses 각각에 대해 RepeatStateResponse 매칭 및 설정
         scheduleResponses.forEach(schedule -> {
-            RepeatStateResponse repeatState = repeatStateMap.get(schedule.getId());
+            RepeatStateResponse repeatState = repeatStateMap.get(schedule.getScheduleId());
             if (repeatState != null) {
                 ExtendedPropsResponse extendedProps = schedule.getExtendedProps();
                 extendedProps.setRepeatStateResponse(repeatState); // RepeatStateResponse 설정

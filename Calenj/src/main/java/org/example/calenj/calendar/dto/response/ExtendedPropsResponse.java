@@ -14,12 +14,12 @@ public class ExtendedPropsResponse {
     private String todoList;
 
     //태그 정보
-    private String tag;
+    private String tagKeys;
 
     private RepeatStateResponse repeatStateResponse;
 
     public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
-        this.tag = tag;
+        this.tagKeys = tag;
         this.scheduleId = scheduleId;
         this.content = content;
         this.todoList = todoList;

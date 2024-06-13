@@ -9,8 +9,6 @@ import java.util.UUID;
 public class ScheduleResponse {
     //스케쥴 아이디
     private UUID scheduleId;
-    //개인 스케쥴 아이디
-    private String id;
     //제목
     private String title;
     //시작일
@@ -24,9 +22,8 @@ public class ScheduleResponse {
     //추가정보
     private ExtendedPropsResponse extendedProps;
 
-    public ScheduleResponse(UUID scheduleId, String personalId, String title, Timestamp start, Timestamp end, boolean allDay, String tag) {
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag) {
         this.scheduleId = scheduleId;
-        this.id = id;
         this.title = title;
         this.start = start;
         this.end = end;
@@ -34,16 +31,13 @@ public class ScheduleResponse {
         this.tag = tag;
     }
 
-    public ScheduleResponse(UUID scheduleId, String id, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList) {
+    //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList) {
         this.scheduleId = scheduleId;
-        this.id = id;
         this.title = title;
         this.start = start;
         this.end = end;
         this.allDay = allDay;
-        this.extendedProps.setTag(tag);
-        this.extendedProps.setFormState(formState);
-        this.extendedProps.setContent(content);
-        this.extendedProps.setTodoList(todoList);
+        this.extendedProps = new ExtendedPropsResponse(tag, scheduleId, formState, content, todoList);  // 객체 초기화
     }
 }

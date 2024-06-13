@@ -176,8 +176,8 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
             달: RRule.MONTHLY,
             년: RRule.YEARLY
         };
-        const [R,G,B]:number[] = chroma(backgroundColor).rgb();
-        const Brightness = (0.299*R)+(0.587*G)+(0.114*B);
+        const [R, G, B]: number[] = chroma(backgroundColor).rgb();
+        const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
 
         const todo = todoList.map((item: TodoItem) => item.content);
         const UUid = uuidv4();
@@ -186,7 +186,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
             title: title,
             start: startDate,
             end: endDate,
-            textColor: Brightness > 128 ? '#000000': '#ffffff',
+            textColor: Brightness > 128 ? '#ff0000' : '#7a3636',
             backgroundColor: backgroundColor,
             borderColor: backgroundColor,
             allDay: formState === "todo",

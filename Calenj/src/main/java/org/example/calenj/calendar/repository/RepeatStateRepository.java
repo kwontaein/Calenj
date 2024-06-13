@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface RepeatStateRepository extends JpaRepository<RepeatStateEntity, UserScheduleEntity> {
@@ -17,5 +17,5 @@ public interface RepeatStateRepository extends JpaRepository<RepeatStateEntity, 
     @Query("SELECT new org.example.calenj.calendar.dto.response.RepeatStateResponse" +
             "(Rs.scheduleId.scheduleId,Rs.startTime,Rs.endTime,Rs.repeat,Rs.repeatOption,Rs.repeatMode,Rs.repeatDeadline,Rs.repeatEnd,Rs.repeatCount,Rs.repeatWeek)" +
             " FROM Schedule_Repeat_State Rs WHERE Rs.scheduleId.scheduleId in :Ids")
-    List<RepeatStateResponse> findAllByIds(@Param("Ids") Collection<String> Ids);
+    List<RepeatStateResponse> findAllByIds(@Param("Ids") List<UUID> Ids);
 }

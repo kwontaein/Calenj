@@ -45,7 +45,7 @@ public class UserScheduleEntity {
 
     //종일이벤트
     @Column(name = "user_schedule_all_day")
-    private String userScheduleAllDay;
+    private boolean userScheduleAllDay;
 
     //종일이벤트
     @Column(name = "user_schedule_form_state")
