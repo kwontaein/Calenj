@@ -38,7 +38,8 @@ export interface DateEvent {
     title: string,
     start: Date,
     end: Date,
-    allDay: boolean,
+    allDay: boolean
+    textColor:string,
     backgroundColor: string,
     borderColor: string,
     duration?: { milliseconds: number },

@@ -25,6 +25,7 @@ export const useCalendar = ():ReturnCalendar =>{
     const handleEvents = useCallback(
         (events: EventApi[]) => {
             events.map((event)=>{
+
             })
         }
         ,[]);
