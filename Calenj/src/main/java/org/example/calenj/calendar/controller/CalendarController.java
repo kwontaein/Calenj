@@ -3,7 +3,10 @@ package org.example.calenj.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.StampRequest;
+import org.example.calenj.calendar.dto.request.TagRequest;
+import org.example.calenj.calendar.dto.response.ScheduleResponse;
 import org.example.calenj.calendar.dto.response.StampResponse;
+import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +32,9 @@ public class CalendarController {
     /**
      * 개인 스케쥴 조회
      **/
-    @GetMapping("api/getUserSchedule")
-    public void selectUserSchedule() {
-        calendarService.getScheduleList();
+    @GetMapping("api/getUserDateEvent")
+    public List<ScheduleResponse> selectUserSchedule() {
+        return calendarService.getScheduleList();
     }
 
     /**
@@ -47,7 +50,7 @@ public class CalendarController {
      **/
     @PostMapping("api/deleteUserSchedule")
     public void deleteUserSchedule(@RequestBody ScheduleRequest scheduleRequest) {
-        calendarService.deleteSchedule(scheduleRequest.getScheduleId());
+        calendarService.deleteSchedule(scheduleRequest.getId());
     }
 
     /**
@@ -69,6 +72,22 @@ public class CalendarController {
         //유저 이름으로 저장된 스탬프 조회
         return calendarService.getStampList();
     }
+
+    @GetMapping("api/getEventTag")
+    public List<TagResponse> getTagList() {
+        return calendarService.getTagEntityList();
+    }
+
+    @PostMapping("api/createTag")
+    public TagResponse createTag(@RequestBody TagRequest tagRequest) {
+        return calendarService.saveTag(tagRequest);
+    }
+
+    @PostMapping("api/deleteTag")
+    public void deleteTag(@RequestBody TagRequest tagRequest) {
+        calendarService.deleteTag(tagRequest.getId());
+    }
+
 
     //------------------------------------------------------
 

@@ -1,29 +1,41 @@
 package org.example.calenj.calendar.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ScheduleResponse {
+    //스케쥴 아이디
     private UUID scheduleId;
     //제목
-    private String userScheduleTitle;
-    //내용
-    private String userScheduleContent;
+    private String title;
     //시작일
-    private Timestamp ScheduleStartDateTime;
+    private Timestamp start;
     //종료일
-    private Timestamp ScheduleEndDateTime;
-    //반복여부
-    private boolean ScheduleRepeat;
-    //반복 기간
-    private boolean ScheduleRepeatPeriod;
-    //반복 주기
-    private int ScheduleRepeatDelay;
+    private Timestamp end;
+    //하루종일
+    private boolean allDay;
+
+    //추가정보
+    private ExtendedPropsResponse extendedProps;
+
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay) {
+        this.scheduleId = scheduleId;
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.allDay = allDay;
+    }
+
+    //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList) {
+        this.scheduleId = scheduleId;
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.allDay = allDay;
+        this.extendedProps = new ExtendedPropsResponse(tag, scheduleId, formState, content, todoList);  // 객체 초기화
+    }
 }

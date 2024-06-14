@@ -4,11 +4,12 @@ package org.example.calenj.user.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.calendar.domain.TagEntity;
+import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
-import org.example.calenj.global.config.RedisConfig;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
@@ -46,7 +47,7 @@ public class UserService {
     private final Group_UserRepository group_userRepository;
     private final FriendRepository friendRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final RedisConfig redisConfig;
+    private final TagRepository tagRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -58,7 +59,29 @@ public class UserService {
     public String saveUser(UserRequest userRequest) {
         //패스워드 암호화
         userRequest.setUserPassword(passwordEncoder.encode(userRequest.getUserPassword()));
-        userRepository.save(userRequest.toEntity());
+        UserEntity user = userRequest.toEntity();
+        user = userRepository.save(user);
+
+
+        TagEntity tagEntity = TagEntity
+                .builder()
+                .userId(user)
+                .tag("그룹 일정")
+                .tagColor("#0070E8")
+                .defaultTag(true)
+                .build();
+
+        TagEntity tagEntity2 = TagEntity
+                .builder()
+                .userId(user)
+                .tag("약속 일정")
+                .tagColor("#FFD369")
+                .defaultTag(true)
+                .build();
+
+        tagRepository.save(tagEntity);
+        tagRepository.save(tagEntity2);
+
         return userRequest.toEntity().getUserEmail();
     }
 
@@ -210,7 +233,7 @@ public class UserService {
 
         userProfileResponse.setIntroduce(user.getUserIntroduce());
         userProfileResponse.setJoinDate(user.getUserJoinDate());
-        
+
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserEmail(), myUserId));
         userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(user.getUserId()).orElse(null));
         return userProfileResponse;
@@ -226,6 +249,4 @@ public class UserService {
         String myUserId = userDetails.getUsername();
         userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
     }
-
-
 }

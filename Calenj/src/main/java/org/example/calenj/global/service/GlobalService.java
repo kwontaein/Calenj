@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +18,13 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class GlobalService {
+
+    private final UserRepository userRepository;
 
     //SecurityContext 에서 유저 정보 추출하는 메소드
     public UserDetails extractFromSecurityContext() { //id , password , 권한
@@ -105,4 +112,11 @@ public class GlobalService {
         cookie.setMaxAge(24 * 60 * 60 * 1000); //쿠키 만료시간 설정
         response.addCookie(cookie);
     }
+
+    public UserEntity myUserEntity() {
+        UUID myUserID = UUID.fromString(extractFromSecurityContext().getUsername());
+        UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
+        return userEntity;
+    }
+
 }

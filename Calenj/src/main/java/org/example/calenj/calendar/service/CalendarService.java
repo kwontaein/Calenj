@@ -1,44 +1,42 @@
 package org.example.calenj.calendar.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.calendar.domain.StampEntity;
+import org.example.calenj.calendar.domain.Ids.TagId;
+import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
+import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.StampRequest;
-import org.example.calenj.calendar.dto.response.StampResponse;
+import org.example.calenj.calendar.dto.request.TagRequest;
+import org.example.calenj.calendar.dto.response.*;
+import org.example.calenj.calendar.repository.RepeatStateRepository;
 import org.example.calenj.calendar.repository.StampRepository;
+import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.user.domain.UserEntity;
-import org.example.calenj.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CalendarService {
+    private final GlobalService globalService;
 
     private final StampRepository stampRepository;
     private final UserScheduleRepository userScheduleRepository;
-    private final UserRepository userRepository;
-    private final GlobalService globalService;
+    private final TagRepository tagRepository;
+    private final RepeatStateRepository repeatStateRepository;
 
 
     public void saveStamp(StampRequest stampRequest) {
-
-        UserEntity userEntity = userRepository.findByUserId(stampRequest.getUserId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
-        StampEntity stampEntity = StampEntity.builder()
-                .userId(userEntity)
-                .content(stampRequest.getContent())
-                .title(stampRequest.getTitle()).build();
-
-        stampRepository.save(stampEntity);
+        stampRepository.save(stampRequest.toEntity(globalService.myUserEntity()));
     }
 
     public List<StampResponse> getStampList() {
@@ -48,36 +46,61 @@ public class CalendarService {
 
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
-        UserScheduleEntity userSchedule = userScheduleRepository.findById(scheduleRequest.getScheduleId()).orElseThrow(() -> new RuntimeException("오류"));
+        UserScheduleEntity userSchedule = userScheduleRepository
+                .findById(new UserScheduleEntityId(scheduleRequest.getId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
         //변경 감지를 통한 자동 업데이트
-        userSchedule.updateScheduleDetails(scheduleRequest);
+        //userSchedule.updateScheduleDetails(scheduleRequest);
     }
 
-
     public void deleteSchedule(UUID scheduleID) {
-        userScheduleRepository.deleteById(scheduleID);
+        userScheduleRepository.deleteById(new UserScheduleEntityId(scheduleID, globalService.myUserEntity()));
     }
 
     public void saveSchedule(ScheduleRequest scheduleRequest) {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
-        UserScheduleEntity userScheduleEntity = UserScheduleEntity.builder()
-                .scheduleId(scheduleRequest.getScheduleId())
-                .userId(userEntity)
-                .scheduleStartDateTime(scheduleRequest.getScheduleStartDateTime())
-                .scheduleEndDateTime(scheduleRequest.getScheduleEndDateTime())
-                .userScheduleTitle(scheduleRequest.getUserScheduleTitle())
-                .userScheduleContent(scheduleRequest.getUserScheduleContent())
-                .scheduleRepeat(scheduleRequest.isScheduleRepeat())
-                .scheduleRepeatPeriod(scheduleRequest.getScheduleRepeatPeriod())
-                .scheduleRepeatDelay(scheduleRequest.getScheduleRepeatDelay()).build();
-
-        userScheduleRepository.save(userScheduleEntity);
+        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+        repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 
-    public void getScheduleList() {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        userScheduleRepository.findListByUserId(UUID.fromString(userDetails.getUsername()));
+    public List<ScheduleResponse> getScheduleList() {
+
+        //schedule
+        List<ScheduleResponse> scheduleResponses = userScheduleRepository.findListByUserId(globalService.myUserEntity().getUserId()).orElse(null);
+
+        if (scheduleResponses.isEmpty()) {
+            return scheduleResponses; // 조기 반환을 통해 불필요한 연산 방지
+        }
+
+        List<UUID> ids = scheduleResponses.stream().map(ScheduleResponse::getScheduleId).collect(Collectors.toList());
+        //repeatState
+        List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
+
+        Map<UUID, RepeatStateResponse> repeatStateMap = repeatStateResponses.stream()
+                .collect(Collectors.toMap(RepeatStateResponse::getScheduleId, Function.identity()));
+
+        // ScheduleResponses 각각에 대해 RepeatStateResponse 매칭 및 설정
+        scheduleResponses.forEach(schedule -> {
+            RepeatStateResponse repeatState = repeatStateMap.get(schedule.getScheduleId());
+            if (repeatState != null) {
+                ExtendedPropsResponse extendedProps = schedule.getExtendedProps();
+                extendedProps.setRepeatStateResponse(repeatState); // RepeatStateResponse 설정
+            }
+        });
+        System.out.println("scheduleResponses : \n" + scheduleResponses);
+        return scheduleResponses;
+    }
+
+    public List<TagResponse> getTagEntityList() {
+        return tagRepository.findByUserId(globalService.myUserEntity().getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
+    }
+
+    public TagResponse saveTag(TagRequest tagRequest) {
+        TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
+        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
+        return tagResponse;
+    }
+
+    public void deleteTag(UUID id) {
+        tagRepository.deleteById(new TagId(id, globalService.myUserEntity()));
     }
 }
+

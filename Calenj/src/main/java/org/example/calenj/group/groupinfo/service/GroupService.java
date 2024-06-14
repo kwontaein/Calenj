@@ -91,8 +91,6 @@ public class GroupService {
             GroupResponse groupResponse = groupOptional.get();
             List<GroupUserResponse> groupUsers = group_userRepository.findGroupUsers(groupResponse.getGroupId());
 
-            // GroupDetailDTO 생성 -> 이유는 모르겠지만 두 엔티티를 따로 불러와서 DTO로 만들어줘야 함.
-            // 아니면 생성자가 없다는 오류가 생긴다. (TODO 이유 찾아봐야함)
             GroupDetailResponse groupDetailResponse = new GroupDetailResponse(
                     groupResponse.getGroupId(),
                     groupResponse.getGroupTitle(),
@@ -108,19 +106,13 @@ public class GroupService {
 
 
     public void joinGroup(UUID groupId) {
-        // 유저를 그룹에 추가하는 코드
-        // SecurityContext 에서 유저 정보 추출하는 메소드
-        UserDetails userDetails = globalService.extractFromSecurityContext();
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername())).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()
                 .role(GroupUserEntity.GroupRoleType.Member)
                 .group(groupEntity)
-                .user(userEntity)
+                .user(globalService.myUserEntity())
                 .build();
-
         group_userRepository.save(groupUserEntity);
     }
 
@@ -137,16 +129,13 @@ public class GroupService {
             }
         }
 
-        UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
-
-        UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
         GroupEntity groupEntity = groupRepository.findByGroupId(inviteCodeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         inviteCodeRepository.save(InviteCodeEntity
                 .builder()
                 .inviteCode(buf.toString())
                 .group(groupEntity)
-                .user(userEntity)
+                .user(globalService.myUserEntity())
                 .endDateTime(globalService.plusDate(now, inviteCodeRequest.getDuring()))
                 .build());
 

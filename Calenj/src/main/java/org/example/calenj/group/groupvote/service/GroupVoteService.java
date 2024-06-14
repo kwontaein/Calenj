@@ -28,27 +28,16 @@ public class GroupVoteService {
 
     public void makeVote(GroupVoteRequest request) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        groupVoteRepository.save(request.toEntity(userDetails.getUsername(), groupEntity));
 
-        GroupVoteEntity groupVoteEntity = GroupVoteEntity.GroupVoteBuilder()
-                .voteCreator(userDetails.getUsername())
-                .voteTitle(request.getVoteTitle())
-                .voteCreated(request.getVoteCreated())
-                .voteEndDate(request.getVoteEndDate())
-                .isMultiple(request.getIsMultiple())
-                .anonymous(request.getAnonymous())
-                .group(groupEntity)
-                .build();
+        GroupVoteEntity groupVoteEntity = groupVoteRepository.findGroupVoteEntityByVoteId(request.getVoteId()).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
 
-        groupVoteRepository.save(groupVoteEntity);
-
-        GroupVoteEntity groupVoteEntity2 = groupVoteRepository.findGroupVoteEntityByVoteId(groupVoteEntity.getVoteId()).orElseThrow(() -> new RuntimeException("투표를 찾을 수 없습니다."));
         int i = 0;
         for (String items : request.getPostedVoteChoiceDTO()) {
             voteChoiceRepository.save(VoteChoiceEntity
                     .builder()
-                    .vote(groupVoteEntity2)
+                    .vote(groupVoteEntity)
                     .voteItem(items)
                     .voteIndex(i)
                     .build());

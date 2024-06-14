@@ -3,7 +3,6 @@ package org.example.calenj.calendar.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
-import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -29,16 +28,12 @@ public class UserScheduleEntity {
     @JoinColumn(name = "schedule_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
-    //카테고리
-    private String category;
+    @Column(name = "tag_ids")
+    private String tagIds;
 
     //제목
     @Column(name = "user_schedule_title")
     private String userScheduleTitle;
-
-    //내용
-    @Column(name = "user_schedule_content")
-    private String userScheduleContent;
 
     //시작일
     @Column(name = "schedule_start_datetime")
@@ -48,27 +43,19 @@ public class UserScheduleEntity {
     @Column(name = "schedule_end_datetime")
     private Timestamp scheduleEndDateTime;
 
-    //반복여부
-    @Column(name = "schedule_repeat")
-    private boolean scheduleRepeat;
+    //종일이벤트
+    @Column(name = "user_schedule_all_day")
+    private boolean userScheduleAllDay;
 
-    //반복 기간
-    @Column(name = "schedule_repeat_period")
-    private Timestamp scheduleRepeatPeriod;
+    //종일이벤트
+    @Column(name = "user_schedule_form_state")
+    private String userScheduleFormState;
 
-    //반복 주기
-    @Column(name = "schedule_repeat_delay")
-    private int scheduleRepeatDelay;
+    //내용
+    @Column(name = "user_schedule_content")
+    private String userScheduleContent;
 
-
-    // UserScheduleEntity 수정 메소드
-    public void updateScheduleDetails(ScheduleRequest scheduleRequest) {
-        this.scheduleStartDateTime = scheduleRequest.getScheduleStartDateTime();
-        this.scheduleEndDateTime = scheduleRequest.getScheduleEndDateTime();
-        this.userScheduleTitle = scheduleRequest.getUserScheduleTitle();
-        this.userScheduleContent = scheduleRequest.getUserScheduleContent();
-        this.scheduleRepeat = scheduleRequest.isScheduleRepeat();
-        this.scheduleRepeatPeriod = scheduleRequest.getScheduleRepeatPeriod();
-        this.scheduleRepeatDelay = scheduleRequest.getScheduleRepeatDelay();
-    }
+    //todoList
+    @Column(name = "user_schedule_todo_list")
+    private String userScheduleTodoList;
 }

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
 import {ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
-import {updateSubScreenMode, updateSubScreenWidthtSize} from "../../../../entities/redux";
+import {updateSubScreenMode, updateSubScreenWidthSize} from "../../../../entities/redux";
 import {contentSize} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
@@ -23,14 +23,14 @@ export const useScreenMode = (param:string, contentSize:contentSize, showUserLis
         if(contentWidth <= (ScrollMin_width + ScrollMarginInline) && screenWidthSize > ScrollMin_width){
             //contentWidth이 ScrollMin_width + ScrollMarginInline 보다 작아진 만큼 subScreen크기 갱신나옴
             //contentWidth <= (ScrollMin_width + ScrollMarginInline) 조건이라 contentWidth-(ScrollMin_width+ScrollMarginInline) < 0
-            dispatch(updateSubScreenWidthtSize({screenWidthSize:screenWidthSize+(contentWidth-(ScrollMin_width+ScrollMarginInline))}));
+            dispatch(updateSubScreenWidthSize({screenWidthSize:screenWidthSize+(contentWidth-(ScrollMin_width+ScrollMarginInline))}));
         }
 
         //기존 subScreenSize가 contentWidth의 초과한만큼 빼도 최소크기이상이면
         if(screenWidthSize+(contentWidth-(ScrollMin_width+ScrollMarginInline))>ScrollMin_width){
             if(screenRowFlex) return
             setScreenRowFlex(true);
-            dispatch(updateSubScreenWidthtSize({screenWidthSize: ScrollMin_width}))//다시 최소 사이즈로 초기화
+            dispatch(updateSubScreenWidthSize({screenWidthSize: ScrollMin_width}))//다시 최소 사이즈로 초기화
         }else{
             if(!screenRowFlex) return
             setScreenRowFlex(false);
