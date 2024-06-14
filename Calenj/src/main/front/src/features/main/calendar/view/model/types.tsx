@@ -49,7 +49,7 @@ export interface DateEvent {
         formState: string,
         content: string,
         todoList: string[],
-        repeatStateResponse: RepeatState,
+        repeatState: RepeatState,
     }
 }
 

@@ -196,7 +196,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                 formState: formState,
                 content: content,
                 todoList: todo,
-                repeatStateResponse: repeatState,
+                repeatState: repeatState,
             },
         }
         if (repeat) {

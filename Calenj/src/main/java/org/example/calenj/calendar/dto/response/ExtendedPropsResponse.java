@@ -29,7 +29,6 @@ public class ExtendedPropsResponse {
     public static String[] convertStringToArray(String input) {
         input = input.trim(); // 공백 제거
         input = input.substring(1, input.length() - 1); // 대괄호 제거
-        String[] array = input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
-        return array;
+        return input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
     }
 }
