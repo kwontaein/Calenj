@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {EventApi, EventClickArg} from "@fullcalendar/react";
-import {DateEvent, RepeatOption, ReturnCalendar, ReturnExtendedProps} from "./types";
+import {DateEvent, ReturnCalendar} from "./types";
 import {RRule, Options, Weekday, ByWeekday} from 'rrule';
-import axios, {AxiosResponse} from "axios";
 import chroma from "chroma-js";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
 import {RepeatState} from "../../../../../entities/calendar";
-import {EventTagDTO, UserDateEvent} from "../../../../../entities/reactQuery";
+import {EventTagDTO} from "../../../../../entities/reactQuery";
 import {useFetchUserDateEvent} from "../../../../../entities/reactQuery/model/queryModel";
 
 
@@ -35,12 +34,15 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             repeatWeek,
             repeatEnd,
             startTime,
-            repeatDeadLine,
+            repeatDeadline,
             repeatOption
         } = repeatState;
+
+
         const options: Partial<Options> = {
             dtstart: start,
         };
+        const [newStartTime, newEndTime] = [new Date(startTime.toString()).getHours(), new Date(startTime.toString()).getMinutes()];
 
         if (repeatMode === "cycle") {
             options.freq = freqHash[repeatOption as RepeatOption];
@@ -55,17 +57,15 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             })
             options.byweekday = byWeekData;
         }
-        if (repeatDeadLine === "count") {
+        if (repeatDeadline === "count") {
             options.count = repeatCount;
-        } else if (repeatDeadLine === "date") {
-            options.until = repeatEnd;
+        } else if (repeatDeadline === "date") {
+            options.until = new Date(repeatEnd.toString());
         }
-
-        console.log(new Date(startTime.toString()).getHours(), new Date(startTime.toString()).getMinutes());
         /* const startHour=new Date(startTime.toString()).getHours();
          const startMinute=new Date(startTime.toString()).getMinutes();*/
-        options.byhour = new Date(startTime.toString()).getHours();
-        options.byminute =  new Date(startTime.toString()).getMinutes();
+        options.byhour = newStartTime;
+        options.byminute = newEndTime;
         return options
     }
 
@@ -73,8 +73,6 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         if (!userEventDateState.data) {
             return []
         }
-        console.log(dynamicEventTag)
-        console.log(userEventDateState.data)
         const events = userEventDateState.data.map((event): DateEvent => {
             const {tagKeys, formState, content, todoList, repeatState} = event.extendedProps
             const {repeat, startTime, endTime} = repeatState;//반복여부
@@ -100,13 +98,17 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     repeatState: repeatState,
                 },
             }
-            console.log(endTime.toString() ,startTime.toString())
             if (repeat) {
                 newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
                 newEvent.rrule = useRruleSetting(repeatState, new Date(event.start.toString()))
             }
             return newEvent;
-        })
+        }).filter((event)=>
+            event.extendedProps.tagKeys.some((tagId)=>
+                dynamicEventTag[tagId].isClick
+            )
+        )
+        console.log(events)
         setCurrentEvents(events);
     }
 
