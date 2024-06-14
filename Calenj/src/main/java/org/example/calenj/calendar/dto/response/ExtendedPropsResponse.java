@@ -14,15 +14,22 @@ public class ExtendedPropsResponse {
     private String todoList;
 
     //태그 정보
-    private String tagKeys;
+    private String[] tagKeys;
 
     private RepeatStateResponse repeatStateResponse;
 
     public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
-        this.tagKeys = tag;
+        this.tagKeys = convertStringToArray(tag);
         this.scheduleId = scheduleId;
         this.content = content;
         this.todoList = todoList;
         this.formState = formState;
+    }
+
+    public static String[] convertStringToArray(String input) {
+        input = input.trim(); // 공백 제거
+        input = input.substring(1, input.length() - 1); // 대괄호 제거
+        String[] array = input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
+        return array;
     }
 }
