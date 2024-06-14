@@ -28,7 +28,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
 
     const useRruleSetting = (repeatState:RepeatState, start:Date) :Partial<Options> =>{
-        const {repeatMode,repeatNum, repeatCount, repeatWeek, repeatEnd, startTime, endTime, repeatDeadLine, repeatOption} =repeatState;
+        const {repeatMode,repeatNum, repeatCount, repeatWeek, repeatEnd, startTime, repeatDeadLine, repeatOption} =repeatState;
         const options: Partial<Options> = {
             dtstart: start,
         };
@@ -55,52 +55,54 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         options.byminute = startTime.getMinutes();
         return options
     }
+
     const setUserDateEvent = async () =>{
         if(!userEventDateState.data){
             return []
         }
+        console.log(dynamicEventTag)
         console.log(userEventDateState.data)
         const events =userEventDateState.data.map((event):DateEvent=>{
-                                const {tagKeys, formState, content, todoList, repeatStateResponse} = event.extendedProps
-                                const {repeat, startTime, endTime} =repeatStateResponse;//반복여부
-                                const tagKey = tagKeys[0]; //태그 키
-                                const color = dynamicEventTag[tagKey].color//지정한 태그의 색
+                const {tagKeys, formState, content, todoList, repeatState} = event.extendedProps
+                const {repeat, startTime, endTime} =repeatState;//반복여부
+                const tagKey = tagKeys[0]; //태그 키
+                const color = dynamicEventTag[tagKey].color//지정한 태그의 색
+                const [R, G, B]: number[] = chroma(color).rgb();
+                const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
 
-                                const [R, G, B]: number[] = chroma(color).rgb();
-                                const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
-
-                                const newEvent:DateEvent={
-                                    id: event.id,
-                                    title: event.title,
-                                    start: event.start,
-                                    end: event.end,
-                                    textColor: Brightness > 128 ? '#000000' : '#ffffff',
-                                    backgroundColor: color,
-                                    borderColor: color,
-                                    allDay: event.extendedProps.formState === "todo",
-                                    extendedProps: {
-                                        tagKeys: tagKeys,
-                                        formState:formState,
-                                        content: content,
-                                        todoList: todoList,
-                                        repeatStateResponse: repeatStateResponse,
-                                    },
-                                }
-                                if(repeat){
-                                    newEvent.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
-                                    newEvent.rrule = useRruleSetting(event.extendedProps.repeatStateResponse, event.start)
-                                }
-                                return newEvent;
-                            })
+                const newEvent:DateEvent={
+                    id: event.id,
+                    title: event.title,
+                    start: event.start,
+                    end: event.end,
+                    textColor: Brightness > 128 ? '#000000' : '#ffffff',
+                    backgroundColor: color,
+                    borderColor: color,
+                    allDay: event.extendedProps.formState === "todo",
+                    extendedProps: {
+                        tagKeys: tagKeys,
+                        formState:formState,
+                        content: content,
+                        todoList: todoList,
+                        repeatState: repeatState,
+                    },
+                }
+                if(repeat){
+                    newEvent.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
+                    newEvent.rrule = useRruleSetting(repeatState, event.start)
+                }
+                return newEvent;
+            })
         setCurrentEvents(events);
     }
 
 
     useEffect(() => {
-        if(data && userEventDateState.data){
+        const eventTag = Object.keys(dynamicEventTag)
+        if(data && userEventDateState.data && eventTag.length>1){
             setUserDateEvent()
         }
-    }, [data,userEventDateState.data]);
+    }, [data,userEventDateState.data,dynamicEventTag]);
 
 
 

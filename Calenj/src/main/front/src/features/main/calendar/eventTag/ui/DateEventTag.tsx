@@ -31,7 +31,7 @@ export const DateEventTag: React.FC = () => {
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const useCreateTag = useCreateEventTag();
 
-    const DateEventTagState = useFetchDateEventTag();
+    const dateEventTagState = useFetchDateEventTag();
 
     const dispatch = useDispatch()
     const updateEventTag = (id: string) => {
@@ -54,14 +54,14 @@ export const DateEventTag: React.FC = () => {
 
 
     useEffect(() => {
-        const eventTags = DateEventTagState.data;
+        const eventTags = dateEventTagState.data;
         if(eventTags){
             eventTags.forEach((tag:EventTagDTO)=>{
                 dispatch(createDateEventTag({tagId:tag.id,name:tag.name, color:tag.color, defaultTag:tag.defaultTag}))
             })
         }
 
-    }, [DateEventTagState.isLoading]);
+    }, [dateEventTagState.isLoading]);
 
 
 
