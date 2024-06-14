@@ -27,8 +27,17 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     };
 
 
-    const useRruleSetting = (repeatState:RepeatState, start:Date) :Partial<Options> =>{
-        const {repeatMode,repeatNum, repeatCount, repeatWeek, repeatEnd, startTime, repeatDeadLine, repeatOption} =repeatState;
+    const useRruleSetting = (repeatState: RepeatState, start: Date): Partial<Options> => {
+        const {
+            repeatMode,
+            repeatNum,
+            repeatCount,
+            repeatWeek,
+            repeatEnd,
+            startTime,
+            repeatDeadLine,
+            repeatOption
+        } = repeatState;
         const options: Partial<Options> = {
             dtstart: start,
         };
@@ -51,59 +60,62 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         } else if (repeatDeadLine === "date") {
             options.until = repeatEnd;
         }
-        options.byhour = startTime.getHours();
-        options.byminute = startTime.getMinutes();
+
+        console.log(new Date(startTime.toString()).getHours(), new Date(startTime.toString()).getMinutes());
+        /* const startHour=new Date(startTime.toString()).getHours();
+         const startMinute=new Date(startTime.toString()).getMinutes();*/
+        options.byhour = 10;
+        options.byminute = 45;
         return options
     }
 
-    const setUserDateEvent = async () =>{
-        if(!userEventDateState.data){
+    const setUserDateEvent = async () => {
+        if (!userEventDateState.data) {
             return []
         }
         console.log(dynamicEventTag)
         console.log(userEventDateState.data)
-        const events =userEventDateState.data.map((event):DateEvent=>{
-                const {tagKeys, formState, content, todoList, repeatState} = event.extendedProps
-                const {repeat, startTime, endTime} =repeatState;//반복여부
-                const tagKey = tagKeys[0]; //태그 키
-                const color = dynamicEventTag[tagKey].color//지정한 태그의 색
-                const [R, G, B]: number[] = chroma(color).rgb();
-                const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
+        const events = userEventDateState.data.map((event): DateEvent => {
+            const {tagKeys, formState, content, todoList, repeatState} = event.extendedProps
+            const {repeat, startTime, endTime} = repeatState;//반복여부
+            const tagKey = tagKeys[0]; //태그 키
+            const color = dynamicEventTag[tagKey].color//지정한 태그의 색
+            const [R, G, B]: number[] = chroma(color).rgb();
+            const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
 
-                const newEvent:DateEvent={
-                    id: event.id,
-                    title: event.title,
-                    start: event.start,
-                    end: event.end,
-                    textColor: Brightness > 128 ? '#000000' : '#ffffff',
-                    backgroundColor: color,
-                    borderColor: color,
-                    allDay: event.extendedProps.formState === "todo",
-                    extendedProps: {
-                        tagKeys: tagKeys,
-                        formState:formState,
-                        content: content,
-                        todoList: todoList,
-                        repeatState: repeatState,
-                    },
-                }
-                if(repeat){
-                    newEvent.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
-                    newEvent.rrule = useRruleSetting(repeatState, event.start)
-                }
-                return newEvent;
-            })
+            const newEvent: DateEvent = {
+                id: event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                textColor: Brightness > 128 ? '#000000' : '#ffffff',
+                backgroundColor: color,
+                borderColor: color,
+                allDay: event.extendedProps.formState === "todo",
+                extendedProps: {
+                    tagKeys: tagKeys,
+                    formState: formState,
+                    content: content,
+                    todoList: todoList,
+                    repeatState: repeatState,
+                },
+            }
+            if (repeat) {
+                newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
+                newEvent.rrule = useRruleSetting(repeatState, event.start)
+            }
+            return newEvent;
+        })
         setCurrentEvents(events);
     }
 
 
     useEffect(() => {
         const eventTag = Object.keys(dynamicEventTag)
-        if(data && userEventDateState.data && eventTag.length>1){
+        if (data && userEventDateState.data && eventTag.length > 1) {
             setUserDateEvent()
         }
-    }, [data,userEventDateState.data,dynamicEventTag]);
-
+    }, [data, userEventDateState.data, dynamicEventTag]);
 
 
     //이벤트 변경시 api 처리
@@ -116,7 +128,6 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         , []);
 
 
-
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
         if (
             window.confirm(`${clickInfo.event.title}`)
@@ -126,5 +137,5 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     }, []);
 
 
-    return {currentEvents, handleEvents,handleEventClick}
+    return {currentEvents, handleEvents, handleEventClick}
 }

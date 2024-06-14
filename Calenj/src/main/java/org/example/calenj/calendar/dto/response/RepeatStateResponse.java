@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -23,7 +24,7 @@ public class RepeatStateResponse {
 
     private String repeatDeadline;
 
-    private Timestamp repeatEnd;
+    private Date repeatEnd;
 
     private int repeatCount;
 
