@@ -8,7 +8,7 @@ export interface ReturnCalendar {
     handleEvents: (events: EventApi[]) => void,
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick: (clickInfo: EventClickArg) => void,
-    currentEvents: EventApi[],
+    currentEvents: DateEvent[],
 }
 
 export interface TodoItem {
@@ -49,21 +49,7 @@ export interface DateEvent {
         formState: string,
         content: string,
         todoList: string[],
-        repeatState?: RepeatState,
+        repeatStateResponse: RepeatState,
     }
 }
 
-export interface saveDateEvent {
-    id: string,
-    title: string,
-    start: Date,
-    end: Date,
-    allDay: boolean,
-    extendedProps: {
-        tagKeys: string[],
-        formState: string,
-        content: string,
-        todoList: string[],
-        repeatState?: RepeatState,
-    }
-}

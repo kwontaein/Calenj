@@ -32,7 +32,7 @@ public class CalendarController {
     /**
      * 개인 스케쥴 조회
      **/
-    @GetMapping("api/getUserSchedule")
+    @GetMapping("api/getUserDateEvent")
     public List<ScheduleResponse> selectUserSchedule() {
         return calendarService.getScheduleList();
     }

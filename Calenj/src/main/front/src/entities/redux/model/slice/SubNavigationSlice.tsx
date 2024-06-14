@@ -27,7 +27,7 @@ export interface DispatchSubNavigationProps {
     updateSubClickState: (payload: { clickState:string}) => void;
     updateSubScreenMode:(payload: { mode:string}) => void;
     updateSubScreenHeightSize:(payload: { screenHeightSize:number}) => void;
-    updateSubScreenWidthtSize:(payload: { screenWidthSize:number}) => void;
+    updateSubScreenWidthSize:(payload: { screenWidthSize:number}) => void;
 }
 
 export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSubNavigationProps => ({
@@ -35,7 +35,7 @@ export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSub
     updateSubClickState : (payload: { clickState:string}) => dispatch(updateSubClickState(payload)),
     updateSubScreenMode : (payload: { mode:string}) => dispatch(updateSubScreenMode(payload)),
     updateSubScreenHeightSize : (payload: { screenHeightSize:number}) => dispatch(updateSubScreenHeightSize(payload)),
-    updateSubScreenWidthtSize : (payload: { screenWidthSize:number}) => dispatch(updateSubScreenWidthtSize(payload)),
+    updateSubScreenWidthSize : (payload: { screenWidthSize:number}) => dispatch(updateSubScreenWidthSize(payload)),
 
 });
 
@@ -71,7 +71,7 @@ const subNavigation = createSlice({
         updateSubScreenHeightSize: (state, action :PayloadAction<{ screenHeightSize:number }>)=>{
             state.screenHeightSize = action.payload.screenHeightSize
         },
-        updateSubScreenWidthtSize: (state, action :PayloadAction<{ screenWidthSize:number }>)=>{
+        updateSubScreenWidthSize: (state, action :PayloadAction<{ screenWidthSize:number }>)=>{
             state.screenWidthSize = action.payload.screenWidthSize
         },
 
@@ -79,7 +79,7 @@ const subNavigation = createSlice({
 })
 
 
-export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthtSize,updateSubParam} = subNavigation.actions;
+export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthSize,updateSubParam} = subNavigation.actions;
 
 
 export default subNavigation.reducer;

@@ -1,8 +1,19 @@
 //api 를 통하여 쿠키를 post 하여 boolean 값을 return 받는다.
 //accessToken 만료 시 refreshToken 체크 후 재발급, 모든 토큰 만료 시 재로그인 필요
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import {jwtFilter} from "../../authentication/jwt";
-import {FriendEvent, FriendList, GroupDetail, GroupList_item, NoticeList, VoteDetail, VoteList,Event} from "./types";
+import {
+    Event,
+    FriendEvent,
+    FriendList,
+    GroupDetail,
+    GroupList_item,
+    NoticeList,
+    VoteDetail,
+    VoteList,
+    EventTagDTO,
+    UserDateEvent
+} from "./types";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
@@ -164,6 +175,35 @@ export const getFriendRequest = async (): Promise<Event[] | null> => {
         });
 
     } catch (error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
+
+export const getDateEventTag = async (): Promise<EventTagDTO[]|null> =>{
+    try{
+        return await axios.get('api/getEventTag').then((res:AxiosResponse<EventTagDTO[]>)=>res.data)
+    }catch (error){
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
+
+export const getUserDateEvent = async ():Promise<UserDateEvent[]|null> =>{
+    try{
+        return await axios.get("api/getUserDateEvent")
+            .then((res : AxiosResponse) => res.data)
+    }catch (error){
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {

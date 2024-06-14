@@ -9,7 +9,7 @@ import {
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {updateSubScreenHeightSize, updateSubScreenWidthtSize} from "../../../../entities/redux/model/slice/SubNavigationSlice";
+import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux/model/slice/SubNavigationSlice";
 import {useDispatch} from "react-redux";
 
 export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)
@@ -41,13 +41,13 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
             if(showUserList) {
                 const smallNewWidth = newWidth - GroupUserList_Container_width
                 if(smallNewWidth>ScrollMin_width && smallNewWidth<(maxScroll-GroupUserList_Container_width)){
-                    // updateSubScreenWidthtSize({screenWidthSize: smallNewWidth})
-                    dispatch(updateSubScreenWidthtSize({screenWidthSize: smallNewWidth}))
+                    // updateSubScreenWidthSize({screenWidthSize: smallNewWidth})
+                    dispatch(updateSubScreenWidthSize({screenWidthSize: smallNewWidth}))
                 }
             }else {
                 if(newWidth>ScrollMin_width && newWidth<maxScroll){
-                    // updateSubScreenWidthtSize({screenWidthSize:newWidth})
-                    dispatch(updateSubScreenWidthtSize({screenWidthSize: newWidth}))
+                    // updateSubScreenWidthSize({screenWidthSize:newWidth})
+                    dispatch(updateSubScreenWidthSize({screenWidthSize: newWidth}))
                 }
             }
         }else if(currentMode ==="column"){

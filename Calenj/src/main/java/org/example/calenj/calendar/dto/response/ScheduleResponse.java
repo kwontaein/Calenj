@@ -17,18 +17,16 @@ public class ScheduleResponse {
     private Timestamp end;
     //하루종일
     private boolean allDay;
-    //태그 정보
-    private String tag;
+
     //추가정보
     private ExtendedPropsResponse extendedProps;
 
-    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag) {
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay) {
         this.scheduleId = scheduleId;
         this.title = title;
         this.start = start;
         this.end = end;
         this.allDay = allDay;
-        this.tag = tag;
     }
 
     //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String

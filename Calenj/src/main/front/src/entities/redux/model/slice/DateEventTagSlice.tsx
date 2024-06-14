@@ -2,12 +2,7 @@ import {NavigationProps} from "./NavigatgionSlice";
 import {PointColor, PointColor2} from "../../../../shared/ui/SharedStyled";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export interface EventTagDTO {
-    id: string,
-    name: string,
-    color: string,
-    defaultTag: boolean, //기본 태그여부
-}
+
 
 export interface dynamicEventProps {
     [tagId: string]: {

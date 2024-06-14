@@ -41,7 +41,7 @@ import {RepeatEvent} from './RepeatEvent'
 import {ByWeekday, Options, RRule, Weekday} from "rrule";
 
 ;
-import {DateEvent, RepeatOption, saveDateEvent, TodoItem} from "../model/types";
+import {DateEvent, RepeatOption, TodoItem} from "../model/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
 import {FormatOptionLabelMeta, MultiValue} from "react-select";
@@ -49,6 +49,7 @@ import {ColorOption, CustomSelector} from "../../../../../shared/ui/CustomSelect
 import axios from "axios";
 import {v4 as uuidv4} from "uuid";
 import chroma from "chroma-js";
+import {UserDateEvent} from "../../../../../entities/reactQuery";
 
 
 interface CalendarProps {
@@ -195,7 +196,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                 formState: formState,
                 content: content,
                 todoList: todo,
-                repeatState: repeatState,
+                repeatStateResponse: repeatState,
             },
         }
         if (repeat) {
@@ -225,13 +226,12 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
             options.byminute = startTime.getMinutes();
             event.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
             event.rrule = options
-            console.log(options)
         }
 
         calendarApi.addEvent(event)
 
 
-        const saveEvent: saveDateEvent = {
+        const saveEvent: UserDateEvent = {
             id: UUid,
             title: event.title,
             start: event.start,
@@ -303,7 +303,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                                 type: 'SET_FORM_STATE',
                                 payload: "todo"
                             })}
-                                                    style={{marginInline: '5px'}}>
+                            style={{marginInline: '5px'}}>
                                 할 일
                             </Modal_Condition_Button>
                             <Modal_Condition_Button $isAble={formState === "schedule"} onClick={() => eventDispatch({

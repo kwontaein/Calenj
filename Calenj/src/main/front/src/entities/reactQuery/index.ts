@@ -9,6 +9,7 @@ export {
     useMutationCookie,
     useFetchVoteDetail,
     useFetchFriendEvent,
+    useFetchDateEventTag,
 } from './model/queryModel'
 export {
     type GroupDetail,
@@ -22,6 +23,8 @@ export {
     type VoteChoiceResponse,
     type VoteDetail,
     type groupMembers,
+    type EventTagDTO,
+    type UserDateEvent,
 } from './api/types'
 
 export {
@@ -35,4 +38,5 @@ export {
     QUERY_VOTE_LIST_KEY,
     QUERY_VOTE_DETAIL_KEY,
     QUERY_NOTICE_LIST_KEY,
+    QUERY_DATE_EVENT_TAG_KEY,
 } from './model/queryModel'
