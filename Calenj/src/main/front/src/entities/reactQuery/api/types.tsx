@@ -128,7 +128,7 @@ export interface UserDateEvent {
         formState: string,
         content: string,
         todoList: string[],
-        repeatStateResponse: RepeatState,
+        repeatState: RepeatState,
     }
 }
 
