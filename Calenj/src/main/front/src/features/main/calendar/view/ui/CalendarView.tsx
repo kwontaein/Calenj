@@ -13,10 +13,12 @@ import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
 import {AddDateEvent} from "./AddDateEvent";
+import {useFetchDateEventTag} from "../../../../../entities/reactQuery";
 
 
 export const CalendarView: React.FC = () => {
-    const { handleEvents, handleEventClick } = useCalendar();
+    const {data} = useFetchDateEventTag();
+    const { currentEvents ,handleEvents, handleEventClick } = useCalendar(data);
     const [addEvent,setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg|null>(null);
     const onClose = ()=>{
@@ -24,6 +26,8 @@ export const CalendarView: React.FC = () => {
     }
 
     return (
+        <>
+        {data &&
             <GridCalendar_Container>
                 {addEvent &&
                     <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
@@ -42,6 +46,7 @@ export const CalendarView: React.FC = () => {
                     }}
                     nowIndicator={true}
                     height="99.5%"
+                    events={currentEvents}
                     eventsSet={handleEvents}
                     select={(selectInfo: DateSelectArg)=> {
                         setAddEvent(true)
@@ -51,5 +56,7 @@ export const CalendarView: React.FC = () => {
 
                 />
             </GridCalendar_Container>
+        }
+        </>
     );
 };

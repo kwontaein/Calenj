@@ -1,3 +1,5 @@
+import {RepeatState} from "../../calendar";
+
 export interface GroupList_item {
     groupId: string;
     groupTitle: string;
@@ -108,6 +110,27 @@ export interface Event {
     ownUserId: string
 }
 
+export interface EventTagDTO {
+    id: string,
+    name: string,
+    color: string,
+    defaultTag: boolean, //기본 태그여부
+}
+
+export interface UserDateEvent {
+    id: string,
+    title: string,
+    start: Date,
+    end: Date,
+    allDay: boolean,
+    extendedProps: {
+        tagKeys: string[],
+        formState: string,
+        content: string,
+        todoList: string[],
+        repeatStateResponse: RepeatState,
+    }
+}
 
 
 export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;

@@ -1,8 +1,6 @@
 import {EventTagEdit_Container, EventTagItem_Container} from "./EventTagEditStyled";
 import {useEffect, useRef, useState} from "react";
 import {
-    createDateEventTag,
-    EventTagDTO,
     updateTagColor
 } from "../../../../../entities/redux/model/slice/DateEventTagSlice";
 import {ColorSelector} from "../../../../../shared/ui/ColorSelector";

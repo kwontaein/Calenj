@@ -1,5 +1,6 @@
 import {NavigationProps, updateNavigation} from "../../../../entities/redux/model/slice/NavigatgionSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
 
 export const useNavigation = ():(navigate:string, groupId?: string)=>void =>{
     const dispatch = useDispatch()

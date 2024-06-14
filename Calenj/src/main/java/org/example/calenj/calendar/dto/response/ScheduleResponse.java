@@ -18,6 +18,7 @@ public class ScheduleResponse {
     //하루종일
     private boolean allDay;
     //태그 정보
+
     //추가정보
     private ExtendedPropsResponse extendedProps;
 

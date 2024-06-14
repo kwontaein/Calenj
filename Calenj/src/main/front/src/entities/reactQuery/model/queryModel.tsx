@@ -10,7 +10,8 @@ import {
     getFriendList,
     getVoteDetail,
     getFriendResponse,
-    getFriendRequest
+    getFriendRequest,
+    getDateEventTag, getUserDateEvent
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -23,9 +24,9 @@ import {
     Event,
     FetchData,
     ReceiveData,
-    VoteDetail
+    VoteDetail,
+    EventTagDTO, UserDateEvent
 } from "../api/types";
-import {endPointMap} from "../../redux/model/module/StompMiddleware";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
 export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";
@@ -38,6 +39,9 @@ export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
 export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
 export const QUERY_VOTE_DETAIL_KEY : string = 'QUERY_VOTE_DETAIL_KEY'
 export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
+export const QUERY_DATE_EVENT_TAG_KEY: string ='QUERY_DATE_EVENT_TAG_KEY'
+export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
+
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -96,6 +100,18 @@ export const useFetchFriendEvent = () =>
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
     })
 
+export const useFetchDateEventTag = () =>
+    useQuery<EventTagDTO[]|null, Error>({
+        queryKey: [QUERY_DATE_EVENT_TAG_KEY],
+        queryFn:getDateEventTag,
+    })
+
+export const useFetchUserDateEvent = ()=>
+    useQuery<UserDateEvent[]|null,Error>({
+        queryKey: [QUERY_USER_DATE_EVENT_KEY],
+        queryFn:getUserDateEvent,
+    })
+
 
 
 /**수정관련 */
@@ -109,7 +125,6 @@ export const useMutationCookie = (queryClient :QueryClient) =>
             // await queryClient.invalidateQueries({queryKey: [QUERY_GROUP_LIST_KEY]});
             // await queryClient.invalidateQueries({queryKey: [QUERY_FRIEND_LIST_KEY]});
     },})
-
 
 
 
