@@ -16,7 +16,7 @@ public class ExtendedPropsResponse {
     //태그 정보
     private String[] tagKeys;
 
-    private RepeatStateResponse repeatStateResponse;
+    private RepeatStateResponse repeatState;
 
     public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
         this.tagKeys = convertStringToArray(tag);

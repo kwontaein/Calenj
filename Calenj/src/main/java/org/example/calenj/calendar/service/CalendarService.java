@@ -82,7 +82,7 @@ public class CalendarService {
             RepeatStateResponse repeatState = repeatStateMap.get(schedule.getScheduleId());
             if (repeatState != null) {
                 ExtendedPropsResponse extendedProps = schedule.getExtendedProps();
-                extendedProps.setRepeatStateResponse(repeatState); // RepeatStateResponse 설정
+                extendedProps.setRepeatState(repeatState); // RepeatStateResponse 설정
             }
         });
         System.out.println("scheduleResponses : \n" + scheduleResponses);
