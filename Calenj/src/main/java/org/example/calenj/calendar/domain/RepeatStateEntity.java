@@ -27,6 +27,9 @@ public class RepeatStateEntity {
     @Column(name = "end_time")
     private Timestamp endTime;
 
+    @Column(name = "repeat_num")
+    private int repeatNum;
+
     @Column(name = "is_repeat")
     private boolean repeat;
 

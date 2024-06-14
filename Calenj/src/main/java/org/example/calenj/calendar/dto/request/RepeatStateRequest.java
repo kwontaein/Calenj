@@ -18,6 +18,8 @@ public class RepeatStateRequest {
 
     private boolean repeat;
 
+    private int repeatNum;
+
     private String repeatOption;
 
     private String repeatMode;
@@ -37,6 +39,7 @@ public class RepeatStateRequest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .repeat(repeat)
+                .repeatNum(repeatNum)
                 .repeatOption(repeatOption)
                 .repeatMode(repeatMode)
                 .repeatDeadline(repeatDeadline)

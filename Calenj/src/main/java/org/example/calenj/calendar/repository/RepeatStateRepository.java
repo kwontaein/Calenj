@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface RepeatStateRepository extends JpaRepository<RepeatStateEntity, UserScheduleEntity> {
 
     @Query("SELECT new org.example.calenj.calendar.dto.response.RepeatStateResponse" +
-            "(Rs.scheduleId.scheduleId,Rs.startTime,Rs.endTime,Rs.repeat,Rs.repeatOption,Rs.repeatMode,Rs.repeatDeadline,Rs.repeatEnd,Rs.repeatCount,Rs.repeatWeek)" +
+            "(Rs.scheduleId.scheduleId,Rs.startTime,Rs.endTime,Rs.repeatNum,Rs.repeat,Rs.repeatOption,Rs.repeatMode,Rs.repeatDeadline,Rs.repeatEnd,Rs.repeatCount,Rs.repeatWeek)" +
             " FROM Schedule_Repeat_State Rs WHERE Rs.scheduleId.scheduleId in :Ids")
     List<RepeatStateResponse> findAllByIds(@Param("Ids") List<UUID> Ids);
 }
