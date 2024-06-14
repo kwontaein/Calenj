@@ -64,8 +64,8 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         console.log(new Date(startTime.toString()).getHours(), new Date(startTime.toString()).getMinutes());
         /* const startHour=new Date(startTime.toString()).getHours();
          const startMinute=new Date(startTime.toString()).getMinutes();*/
-        options.byhour = 10;
-        options.byminute = 45;
+        options.byhour = new Date(startTime.toString()).getHours();
+        options.byminute =  new Date(startTime.toString()).getMinutes();
         return options
     }
 
@@ -86,8 +86,8 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             const newEvent: DateEvent = {
                 id: event.id,
                 title: event.title,
-                start: event.start,
-                end: event.end,
+                start: new Date(event.start.toString()),
+                end:  new Date(event.end.toString()),
                 textColor: Brightness > 128 ? '#000000' : '#ffffff',
                 backgroundColor: color,
                 borderColor: color,
@@ -100,9 +100,10 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     repeatState: repeatState,
                 },
             }
+            console.log(endTime.toString() ,startTime.toString())
             if (repeat) {
                 newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
-                newEvent.rrule = useRruleSetting(repeatState, event.start)
+                newEvent.rrule = useRruleSetting(repeatState, new Date(event.start.toString()))
             }
             return newEvent;
         })
