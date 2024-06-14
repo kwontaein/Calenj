@@ -117,7 +117,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
             repeat,
             repeatMode,
             repeatOption,
-            repeatDeadLine,
+            repeatDeadline,
             repeatNum,
             repeatCount,
             repeatWeek,
@@ -142,7 +142,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
         }
 
         if (repeat) {
-            if (repeatMode === "" || repeatDeadLine === "") {
+            if (repeatMode === "" || repeatDeadline === "") {
                 window.alert('반복 설정을 해주세요')
                 return
             }
@@ -154,7 +154,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                 window.alert('반복할 요일을 하나이상 선택해주세요.')
                 return;
             }
-            if (repeatDeadLine === "count" && repeatCount < 1) {
+            if (repeatDeadline === "count" && repeatCount < 1) {
                 window.alert('반복 횟수를 1이상으로 설정해주세요')
                 return
             }
@@ -162,7 +162,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                 window.alert('시작시간이 끝나는 시간보다 클 수 없습니다.')
                 return
             }
-            if (repeatDeadLine === "date" && (repeatEnd < startDate)) {
+            if (repeatDeadline === "date" && (repeatEnd < startDate)) {
                 window.alert('반복마감 기간을 설정한 시작날짜 이후로 설정해주세요.')
                 return
             }
@@ -182,6 +182,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
 
         const todo = todoList.map((item: TodoItem) => item.content);
         const UUid = uuidv4();
+
         const event: DateEvent = {
             id: UUid,
             title: title,
@@ -217,9 +218,9 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                 })
                 options.byweekday = byWeekData;
             }
-            if (repeatDeadLine === "count") {
+            if (repeatDeadline === "count") {
                 options.count = repeatCount;
-            } else if (repeatDeadLine === "date") {
+            } else if (repeatDeadline === "date") {
                 options.until = repeatEnd;
             }
             options.byhour = startTime.getHours();
@@ -239,7 +240,6 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
             allDay: event.allDay,
             extendedProps: event.extendedProps,
         }
-        console.log(UUid);
         axios.post("api/saveUserSchedule", saveEvent)
             .then(() => window.alert('일정이 생성되었습니다.'));
         onClose()
