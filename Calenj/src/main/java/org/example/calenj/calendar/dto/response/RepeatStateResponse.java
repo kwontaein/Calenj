@@ -3,7 +3,7 @@ package org.example.calenj.calendar.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
@@ -11,9 +11,9 @@ import java.util.UUID;
 public class RepeatStateResponse {
     private UUID scheduleId;
 
-    private Date startTime;
+    private Timestamp startTime;
 
-    private Date endTime;
+    private Timestamp endTime;
 
     private boolean repeat;
 
@@ -23,7 +23,7 @@ public class RepeatStateResponse {
 
     private String repeatDeadline;
 
-    private Date repeatEnd;
+    private Timestamp repeatEnd;
 
     private int repeatCount;
 

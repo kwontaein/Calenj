@@ -5,15 +5,16 @@ import org.example.calenj.calendar.domain.RepeatStateEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
 public class RepeatStateRequest {
     private UserScheduleEntity scheduleId;
 
-    private Date startTime;
+    private Timestamp startTime;
 
-    private Date endTime;
+    private Timestamp endTime;
 
     private boolean repeat;
 

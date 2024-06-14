@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.calenj.calendar.domain.Ids.RepeatStateId;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity(name = "Schedule_Repeat_State")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
@@ -21,10 +22,10 @@ public class RepeatStateEntity {
     private UserScheduleEntity scheduleId;
 
     @Column(name = "start_time")
-    private Date startTime;
+    private Timestamp startTime;
 
     @Column(name = "end_time")
-    private Date endTime;
+    private Timestamp endTime;
 
     @Column(name = "is_repeat")
     private boolean repeat;
