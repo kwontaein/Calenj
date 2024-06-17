@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import FullCalendar, {DateSelectArg, EventApi, EventInput} from "@fullcalendar/react";
 import {useCalendar} from "../model/useCalendar";
-import {GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
+import {Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -14,6 +14,11 @@ import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
 import {AddDateEvent} from "./AddDateEvent";
 import {ExternalEvents} from "../../stamp/ExternalEvents";
+import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
+import {useComponentSize} from "../../../../../shared/model";
+import {boolean} from "yup";
+import {VoteFilterToggleBox} from "../../../../group/board/vote/filter/ui/VoteFilterToggleBox";
+import {Toggle_Container, Toggle_Item} from "../../../../../shared/ui/SharedStyled";
 
 // 이벤트 인터페이스 정의
 interface Event {
@@ -36,6 +41,20 @@ export const CalendarView: React.FC = () => {
     const onClose = () => {
         setAddEvent(false)
     }
+
+    const nodeRef = useRef(null);
+    const [position, setPosition] = useState({x: 20, y: 20});
+    const [contentRef, contentSize] = useComponentSize()
+    const [dragAble, setDragAble] = useState<boolean>(false);
+    const handleStop = (e: DraggableEvent, data: DraggableData) => {
+        const {x, y} = data;
+        // Calculate the closest corner
+        const closestX = x < contentSize.width / 2 ? 20 : contentSize.width - 170;
+        const closestY = y < contentSize.height / 2 ? 20 : contentSize.height - 170;
+
+        setPosition({x: closestX, y: closestY});
+    };
+
     const [state, setState] = useState<AppState>({
         weekendsVisible: true,
         externalEvents: [
@@ -51,7 +70,7 @@ export const CalendarView: React.FC = () => {
         const newEvent: Event = {
             id: Date.now(), // 고유 ID 생성을 위해 현재 시간의 타임스탬프 사용
             title: "New Event",
-            color: "#333333",
+            color: "#02daff",
             custom: "custom details"
         };
 
@@ -63,8 +82,28 @@ export const CalendarView: React.FC = () => {
 
     return (
         <>
-            <ExternalEvents events={state.externalEvents} onEventAdd={onEventAdd}/>
-            <GridCalendar_Container>
+
+            <Draggable nodeRef={nodeRef}
+                       defaultPosition={{x: 20, y: 20}}
+                       position={position}
+                       onStop={handleStop}
+                       disabled={dragAble}>
+                <Draggable_Container ref={nodeRef}>
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div>수정</div>
+                        <Toggle_Container $isClick={dragAble}
+                                          onClick={() => {
+                                              setDragAble((prevState) => !prevState)
+                                          }}>
+                            <Toggle_Item $toggleState={dragAble}/>
+                        </Toggle_Container>
+                    </div>
+                    <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
+                </Draggable_Container>
+            </Draggable>
+
+
+            <GridCalendar_Container ref={contentRef}>
                 {addEvent &&
                     <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
                 }

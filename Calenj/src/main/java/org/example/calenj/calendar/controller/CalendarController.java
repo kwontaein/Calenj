@@ -60,6 +60,8 @@ public class CalendarController {
     @PostMapping("api/saveStamp")
     public void saveStamp(@RequestBody StampRequest stampRequest) {
         //스탬프 DB에 저장
+        //Stamp redis 에 저장
+        //특정 주기 (예 : 5분) 마다 DB에 저장 후 redis 에서 삭제
         calendarService.saveStamp(stampRequest);
     }
 
