@@ -10,24 +10,23 @@ import {
     RepeatIcon_Container,
     RepeatNum_Input,
     RepeatState_Container,
-    RepeatText_Container, RepeatWeek_Container, SelectContainer,
+    RepeatText_Container, SelectContainer,
 } from "./RePeatEventStyled";
 import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {ko} from "date-fns/locale/ko";
 import {
-    EventDateAction,
-    EventDateState,
+    DateEventAction,
+    DateEventState,
     RepeatAction,
     RepeatState
 } from "../../../../../entities/calendar";
 import {CheckBox_Label, CheckBoxStyle} from "../../../../../shared/ui/SharedStyled";
 import {InfoBox} from "../../../../../shared/ui/InfoBox";
-import {repeat} from "rrule/dist/esm/helpers";
 
 
 interface EventDateProps {
-    eventState: EventDateState;
-    eventDispatch: React.Dispatch<EventDateAction>;
+    eventState: DateEventState;
+    eventDispatch: React.Dispatch<DateEventAction>;
     repeatState: RepeatState;
     repeatDispatch: React.Dispatch<RepeatAction>;
 }

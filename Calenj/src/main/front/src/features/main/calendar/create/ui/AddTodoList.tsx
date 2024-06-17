@@ -5,8 +5,8 @@ import {
     ListInput_Container, TodoList_Container, TodoListContent_Drop_Btn, TodoListEmptyText,
     TodoListItem_Container, TodoListItem_Content
 } from "./AddToDoListStyled";
-import React, {ChangeEvent, useRef, useState} from "react";
-import {ReturnTodo} from "../model/types";
+import React, {ChangeEvent} from "react";
+import {ReturnTodo, TodoItem} from "../model/types";
 
 export const AddTodoList:React.FC<ReturnTodo> = ({contentRef,todoList, setContent, addList, removeItem}) =>{
 
@@ -21,7 +21,7 @@ export const AddTodoList:React.FC<ReturnTodo> = ({contentRef,todoList, setConten
             </ListInput_Container>
             <TodoList_Container>
                 {todoList.length!==0 ?
-                    (todoList.map((list) => (
+                    (todoList.map((list:TodoItem) => (
                         <TodoListItem_Container key={list.id}>
                             <TodoListItem_Content>
                                 {list.content}

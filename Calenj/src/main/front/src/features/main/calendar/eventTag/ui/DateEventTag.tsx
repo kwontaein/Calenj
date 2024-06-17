@@ -99,7 +99,7 @@ export const DateEventTag: React.FC = () => {
                                                        onClick={() => tagName === "" ? setTagName(id) : setTagName('')}>
                                     <i className="fi fi-rr-menu-dots-vertical"></i>
                                 </TagItemIcon_Container>
-                                {tagName === id && <EventTagEdit id={id} index={index}/>}
+                                {tagName === id && <EventTagEdit id={id} top={tagItemRefs.current[index]?.getBoundingClientRect().top||0}/>}
                             </div>
 
                         </TagItem_Container>

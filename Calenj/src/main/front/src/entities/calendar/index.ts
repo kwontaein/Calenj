@@ -1,2 +1,2 @@
-export {initialEventDateState, EventDateReducer, type EventDateAction, type EventDateState} from './model/eventDateReducer';
+export {initialEventDateState, DateEventReducer, type DateEventAction, type DateEventState} from './model/dateEventReducer';
 export {initialRepeatState, RepeatReducer, type RepeatAction, type RepeatState} from './model/repeatDateReducer'
