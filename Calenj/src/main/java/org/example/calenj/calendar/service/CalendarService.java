@@ -58,6 +58,7 @@ public class CalendarService {
 
     public void saveSchedule(ScheduleRequest scheduleRequest) {
         UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+        System.out.println(scheduleRequest.getExtendedProps().getRepeatState());
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 

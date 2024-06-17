@@ -4,16 +4,42 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.14 일정 이벤트DB 연돟">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.17 create_DateEvent refactoring">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/api/postDateEventApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/model/useAddDateEvent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/model/useDateEventTag.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/AddDateEvent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/utils/addRruleOptions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/utils/beforeCheckEvent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarEventView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarEventViewStyled.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/TodoListView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/TodoListViewStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/model/eventDateReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/calendar/model/dateEventReducer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/ui/CreateGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/create/ui/CreateGroup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListStyle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListStyle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/DateEventTag.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEdit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEditStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/ui/EventTagEditStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/useCalendar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddDateEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/EventDatePickerView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/EventDatePickerView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/dto/response/ExtendedPropsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/dto/response/ExtendedPropsResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/model/useTodoList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/model/useTodoList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddDateEvent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddDateEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/AddDateEventStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddToDoListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/AddToDoListStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/AddTodoList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/AddTodoList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/CalendarView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/EventDatePickerStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/EventDatePickerStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/EventDatePickerView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/EventDatePickerView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/RePeatEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/RePeatEventStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/ui/RepeatEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/RepeatEvent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/view/utils/event-utils.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomSelector.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,11 +145,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\create" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\create\model" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\create\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view\utils" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\eventTag\api" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\shared\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\view\model" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems" />
     </key>
   </component>
   <component name="RunManager">
@@ -171,6 +197,8 @@
       <workItem from="1718160743972" duration="29558000" />
       <workItem from="1718244680880" duration="21014000" />
       <workItem from="1718328346634" duration="14465000" />
+      <workItem from="1718431658332" duration="1098000" />
+      <workItem from="1718588710267" duration="28453000" />
     </task>
     <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
       <option name="closed" value="true" />
@@ -300,7 +328,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718344564852</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="06.14 시간 버그수정">
+      <option name="closed" value="true" />
+      <created>1718354529441</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1718354529441</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,7 +382,9 @@
     <MESSAGE value="06.12 태그 이벤트추가 제작" />
     <MESSAGE value="06.13 customSelector 추가" />
     <MESSAGE value="06.14 일정 이벤트DB 연돟" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.14 일정 이벤트DB 연돟" />
+    <MESSAGE value="06.14 시간 버그수정" />
+    <MESSAGE value="06.17 create_DateEvent refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.17 create_DateEvent refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -354,8 +392,12 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/eventTag/model/useCreateEventTag.tsx</url>
           <line>8</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/create/ui/AddDateEvent.tsx</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

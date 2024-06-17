@@ -6,7 +6,7 @@ export interface RepeatState {
     repeatNum: number,//반복횟수 (주기)
     repeatOption: string,//반복 형식(주/달/년) -주기
     repeatMode:string, //반복모드 (주기/요일)
-    repeatDeadLine :string, //반복 마감
+    repeatDeadline :string, //반복 마감
     repeatEnd: Date; //반복 마감기간
     repeatCount:number, //반복횟수
     repeatWeek :boolean[],
@@ -33,7 +33,7 @@ export const initialRepeatState: RepeatState = {
     repeat: false,
     repeatOption: "일",
     repeatNum: 1,
-    repeatDeadLine : "date",
+    repeatDeadline : "date",
     repeatEnd: new Date(),
     repeatMode:"none",
     repeatWeek :new Array(7).fill(false),
@@ -53,7 +53,7 @@ export const RepeatReducer = (state: RepeatState, action: RepeatAction): RepeatS
         case 'SET_REPEAT_NUM':
             return { ...state, repeatNum: action.payload };
         case 'SET_REPEAT_DEADLINE':
-            return { ...state, repeatDeadLine: action.payload };
+            return { ...state, repeatDeadline: action.payload };
         case 'SET_REPEAT_END':
             return { ...state, repeatEnd: action.payload };
         case 'SET_REPEAT_MODE':

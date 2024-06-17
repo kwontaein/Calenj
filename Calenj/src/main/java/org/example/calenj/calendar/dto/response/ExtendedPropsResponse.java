@@ -16,7 +16,7 @@ public class ExtendedPropsResponse {
     //태그 정보
     private String[] tagKeys;
 
-    private RepeatStateResponse RepeatState;
+    private RepeatStateResponse repeatState;
 
     public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
         this.tagKeys = convertStringToArray(tag);
@@ -29,6 +29,6 @@ public class ExtendedPropsResponse {
     public static String[] convertStringToArray(String input) {
         input = input.trim(); // 공백 제거
         input = input.substring(1, input.length() - 1); // 대괄호 제거
-        return input.split(",\\s*");
+        return input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
     }
 }

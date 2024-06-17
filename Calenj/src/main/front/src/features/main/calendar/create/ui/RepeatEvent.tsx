@@ -10,24 +10,23 @@ import {
     RepeatIcon_Container,
     RepeatNum_Input,
     RepeatState_Container,
-    RepeatText_Container, RepeatWeek_Container, SelectContainer,
+    RepeatText_Container, SelectContainer,
 } from "./RePeatEventStyled";
 import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {ko} from "date-fns/locale/ko";
 import {
-    EventDateAction,
-    EventDateState,
+    DateEventAction,
+    DateEventState,
     RepeatAction,
     RepeatState
 } from "../../../../../entities/calendar";
 import {CheckBox_Label, CheckBoxStyle} from "../../../../../shared/ui/SharedStyled";
 import {InfoBox} from "../../../../../shared/ui/InfoBox";
-import {repeat} from "rrule/dist/esm/helpers";
 
 
 interface EventDateProps {
-    eventState: EventDateState;
-    eventDispatch: React.Dispatch<EventDateAction>;
+    eventState: DateEventState;
+    eventDispatch: React.Dispatch<DateEventAction>;
     repeatState: RepeatState;
     repeatDispatch: React.Dispatch<RepeatAction>;
 }
@@ -216,7 +215,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                                             onMouseEnter={()=>setHoverState("기간")}
                                             onMouseLeave={()=>setHoverState("")}>
                                 <CheckBoxStyle disabled={!repeatState.repeat} type={"checkbox"}
-                                               checked={repeatState.repeatDeadLine==="date"}
+                                               checked={repeatState.repeatDeadline==="date"}
                                                onChange={()=>repeatDispatch({type:'SET_REPEAT_DEADLINE', payload:'date'})}></CheckBoxStyle>
                                 기간
                             </CheckBox_Label>
@@ -226,7 +225,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                             <CheckBox_Label onMouseEnter={()=>setHoverState("횟수")}
                                             onMouseLeave={()=>setHoverState("")}>
                                 <CheckBoxStyle disabled={!repeatState.repeat} type={"checkbox"}
-                                               checked={repeatState.repeatDeadLine==="count"}
+                                               checked={repeatState.repeatDeadline==="count"}
                                                onChange={()=>repeatDispatch({type:'SET_REPEAT_DEADLINE', payload:'count'})}></CheckBoxStyle>
                                 횟수
                             </CheckBox_Label>
@@ -236,7 +235,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                         </RepeatText_Container>
 
                         <RepeatText_Container>
-                            {repeatState.repeatDeadLine === "date" &&
+                            {repeatState.repeatDeadline === "date" &&
                                 <RepeatEndDatePicker
                                     disabled={!repeatState.repeat}
                                     dateFormat={'yy.MM.dd 까지 반복'} // 날짜 형태
@@ -250,7 +249,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch
                                     locale={ko}
                                 />
                             }
-                            {repeatState.repeatDeadLine === "count" &&
+                            {repeatState.repeatDeadline === "count" &&
                                 <>
                                     <RepeatNum_Input type={"number"}
                                                      $numLength={(repeatState.repeatCount + "").split("").length}
