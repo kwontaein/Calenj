@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import {BackGroundColor} from "../../../../../shared/ui/SharedStyled";
 
-export const EventTagEdit_Container = styled.div<{$index:number, $colorChange: boolean}>`
+export const EventTagEdit_Container = styled.div<{$top:number, $colorChange: boolean}>`
     width: ${props=>props.$colorChange ? "220px" : "150px"};
     display: flex;
     flex-direction: column;
     position:absolute;
     border-radius: 4px;
     left: 304px;
-    top: ${props=>props.$index *30 +35}px;
+    top: ${props=>props.$top}px;
     background-color: ${BackGroundColor};
     z-index: 1;
 `

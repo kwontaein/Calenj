@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 
 // Initial state
-export interface EventDateState {
+export interface DateEventState {
     startDate: Date;
     endDate: Date;
     title: string;
@@ -14,7 +14,7 @@ export interface EventDateState {
 }
 
 // Define actions
-export type EventDateAction =
+export type DateEventAction =
     | { type: 'SET_START_DATE'; payload: Date }
     | { type: 'SET_END_DATE'; payload: Date }
     | { type: 'SET_TITLE'; payload: string }
@@ -27,7 +27,7 @@ export type EventDateAction =
     ;
 
 // Initial state
-export const initialEventDateState: EventDateState = {
+export const initialEventDateState: DateEventState = {
     startDate: new Date(),
     endDate: new Date(),
     title: '',
@@ -40,7 +40,7 @@ export const initialEventDateState: EventDateState = {
 };
 
 // Reducer function
-export const EventDateReducer = (state: EventDateState, action: EventDateAction): EventDateState => {
+export const DateEventReducer = (state: DateEventState, action: DateEventAction): DateEventState => {
     switch (action.type) {
         case 'SET_START_DATE':
             return { ...state, startDate: action.payload };

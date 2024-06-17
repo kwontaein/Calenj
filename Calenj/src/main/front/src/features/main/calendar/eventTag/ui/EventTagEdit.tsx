@@ -10,10 +10,10 @@ import axios, {AxiosResponse} from "axios";
 
 interface TagEditProps {
     id: string,
-    index: number,
+    top: number,
 }
 
-export const EventTagEdit: React.FC<TagEditProps> = ({id, index}) => {
+export const EventTagEdit: React.FC<TagEditProps> = ({id, top}) => {
     const [colorModal, setColorModal] = useState<boolean>(false);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const dispatch = useDispatch()
@@ -27,7 +27,7 @@ export const EventTagEdit: React.FC<TagEditProps> = ({id, index}) => {
             });
     }
     return (
-        <EventTagEdit_Container $index={index} $colorChange={colorModal}>
+        <EventTagEdit_Container $top={top} $colorChange={colorModal}>
             {!(dynamicEventTag[id].defaultTag) &&
                 <EventTagItem_Container onClick={deleteTag}>
                     삭제하기

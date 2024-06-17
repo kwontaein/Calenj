@@ -12,8 +12,9 @@ import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
-import {AddDateEvent} from "./AddDateEvent";
+import {AddDateEvent} from "../../create/";
 import {useFetchDateEventTag} from "../../../../../entities/reactQuery";
+import {CalendarEventView} from "./CalendarEventView";
 
 
 export const CalendarView: React.FC = () => {
@@ -47,13 +48,16 @@ export const CalendarView: React.FC = () => {
                     nowIndicator={true}
                     height="99.5%"
                     events={currentEvents}
+                    dayMaxEventRows={2}
                     eventsSet={handleEvents}
                     select={(selectInfo: DateSelectArg)=> {
                         setAddEvent(true)
                         setSelectInfo(selectInfo);
                     }}
                     eventClick={handleEventClick}
-
+                    eventContent={(eventInfo) => (
+                        <CalendarEventView eventInfo={eventInfo}/>
+                    )}
                 />
             </GridCalendar_Container>
         }

@@ -18,21 +18,23 @@ export const  CustomSelector:React.FC<SelectorProps> = ({options,setValue}) =>{
 
     const colourStyles: StylesConfig<ColorOption, true> = {
         control: (styles) => ({ ...styles, backgroundColor: ThemaColor2, border: `1px solid ${TextColor}77`, minHeight:'25px', height:'30px'}),
-        valueContainer : (styles) =>({display: 'flex', flexDirection:'row', width:'200px', height:'25px'}),
-        input:(styles) =>({width:'0px'}),
-        dropdownIndicator:(styles) =>({fontSize:'8px'}),
-        clearIndicator:(styles)=>({fontSize:'8px'}),
+        valueContainer : (styles) =>({ ...styles,width:'200px', height:'30px', boxSizing: 'content-box', padding:'0 0 0 3px',marginTop:'-3px'}),
+        input:(styles) =>({ ...styles}),
+        indicatorsContainer: (styles) =>({...styles, height:'30px'}),
+        dropdownIndicator:(styles) =>({ ...styles, fontSize:'8px', width:'30px', height:'30px',padding:'5px'}),
+        clearIndicator:(styles)=>({ ...styles, fontSize:'8px',width:'30px', height:'30px',padding:'5px'}),
+        menu : (styles) =>({...styles, backgroundColor:BackGroundColor, borderRadius:'4px'}),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
             const color = chroma(data.color);
             return {
                 ...styles,
                 backgroundColor: isDisabled
-                    ? undefined
+                    ? BackGroundColor
                     : isSelected
                         ? data.color
                         : isFocused
                             ? color.alpha(0.1).css()
-                            : TextColor,
+                            : ThemaColor2,
                 color: isDisabled
                     ? '#ccc'
                     : isSelected

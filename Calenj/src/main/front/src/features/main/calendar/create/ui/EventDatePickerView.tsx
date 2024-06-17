@@ -1,15 +1,13 @@
 import {DatePicker_Container, DatePickerIcon_Container, EventDatePicker} from "./EventDatePickerStyled";
 import {ko} from "date-fns/locale/ko";
 import React from "react";
-import {EventDateAction, EventDateState} from "../../../../../entities/calendar";
+import {DateEventAction, DateEventState} from "../../../../../entities/calendar";
 interface EventDateProps {
-    eventState: EventDateState;
-    eventDispatch: React.Dispatch<EventDateAction>;
+    eventState: DateEventState;
+    eventDispatch: React.Dispatch<DateEventAction>;
 }
 export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,eventDispatch})=>{
     const {formState,startDate,endDate, startMonth,endMonth} = eventState
-
-
 
     const endDateHandler = (date:Date) => {
         if(date<eventState.startDate){

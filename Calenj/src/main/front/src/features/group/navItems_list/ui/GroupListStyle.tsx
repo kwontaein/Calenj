@@ -144,6 +144,7 @@ export const GroupTitleView_Container = styled.div`
     flex-direction: row;
     position: fixed;
     left: 4.5em;
+    z-index: 2;
 `
 export const GroupTitleViewTail = styled.div`
     background-color: black;
