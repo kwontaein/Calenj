@@ -38,17 +38,18 @@ interface AppState {
 
 export const CalendarView: React.FC = () => {
     const {data} = useFetchDateEventTag();
-    const { currentEvents ,handleEvents, handleEventClick } = useCalendar(data);
-    const [addEvent,setAddEvent] = useState<boolean>(false);
-    const [selectInfo, setSelectInfo] = useState<DateSelectArg|null>(null);
-    const onClose = ()=>{
-        setAddEvent(false)
-    }
-
+    const {currentEvents, handleEvents, handleEventClick} = useCalendar(data);
+    const [addEvent, setAddEvent] = useState<boolean>(false);
+    const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
     const nodeRef = useRef(null);
     const [position, setPosition] = useState({x: 20, y: 20});
     const [contentRef, contentSize] = useComponentSize()
     const [dragAble, setDragAble] = useState<boolean>(false);
+
+    const onClose = () => {
+        setAddEvent(false)
+    }
+
     const handleStop = (e: DraggableEvent, data: DraggableData) => {
         const {x, y} = data;
         // Calculate the closest corner
@@ -84,60 +85,58 @@ export const CalendarView: React.FC = () => {
     };
 
     return (
-        <>    <Draggable nodeRef={nodeRef}
-                         defaultPosition={{x: 20, y: 20}}
-                         position={position}
-                         onStop={handleStop}
-                         disabled={dragAble}>
-            <Draggable_Container ref={nodeRef}>
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <div>수정</div>
-                    <Toggle_Container $isClick={dragAble}
-                                      onClick={() => {
-                                          setDragAble((prevState) => !prevState)
-                                      }}>
-                        <Toggle_Item $toggleState={dragAble}/>
-                    </Toggle_Container>
-                </div>
-                <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
-            </Draggable_Container>
-        </Draggable>
-        {data &&
+        <>
+            <Draggable nodeRef={nodeRef}
+                       defaultPosition={{x: 20, y: 20}}
+                       position={position}
+                       onStop={handleStop}
+                       disabled={dragAble}>
+                <Draggable_Container ref={nodeRef}>
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div>수정</div>
+                        <Toggle_Container $isClick={dragAble}
+                                          onClick={() => {
+                                              setDragAble((prevState) => !prevState)
+                                          }}>
+                            <Toggle_Item $toggleState={dragAble}/>
+                        </Toggle_Container>
+                    </div>
+                    <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
+                </Draggable_Container>
+            </Draggable>
+            {data &&
+                <GridCalendar_Container ref={contentRef}>
+                    {addEvent &&
+                        <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
+                    }
+                    <StyledFullCalendar
 
-
-
-            <GridCalendar_Container ref={contentRef}>
-                {addEvent &&
-                    <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
-                }
-                <StyledFullCalendar
-
-                    plugins={[rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-                    initialView="dayGridMonth"
-                    selectable={!addEvent}
-                    editable={true}
-                    locale="ko"
-                    headerToolbar={{
-                        left: "prevYear,prev,next,nextYear today",
-                        center: "title",
-                        right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-                    }}
-                    nowIndicator={true}
-                    height="99.5%"
-                    events={currentEvents}
-                    dayMaxEventRows={2}
-                    eventsSet={handleEvents}
-                    select={(selectInfo: DateSelectArg)=> {
-                        setAddEvent(true)
-                        setSelectInfo(selectInfo);
-                    }}
-                    eventClick={handleEventClick}
-                    eventContent={(eventInfo) => (
-                        <CalendarEventView eventInfo={eventInfo}/>
-                    )}
-                />
-            </GridCalendar_Container>
-        }
+                        plugins={[rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+                        initialView="dayGridMonth"
+                        selectable={!addEvent}
+                        editable={true}
+                        locale="ko"
+                        headerToolbar={{
+                            left: "prevYear,prev,next,nextYear today",
+                            center: "title",
+                            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+                        }}
+                        nowIndicator={true}
+                        height="99.5%"
+                        events={currentEvents}
+                        dayMaxEventRows={2}
+                        eventsSet={handleEvents}
+                        select={(selectInfo: DateSelectArg) => {
+                            setAddEvent(true)
+                            setSelectInfo(selectInfo);
+                        }}
+                        eventClick={handleEventClick}
+                        eventContent={(eventInfo) => (
+                            <CalendarEventView eventInfo={eventInfo}/>
+                        )}
+                    />
+                </GridCalendar_Container>
+            }
         </>
     );
 };
