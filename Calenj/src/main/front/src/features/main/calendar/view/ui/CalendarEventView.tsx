@@ -34,7 +34,6 @@ export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
     }, [selectBox, dropDown]);
 
     useEffect(() => {
-        console.log(eventInfo)
     }, []);
 
     const calenderType = eventInfo.view.type
@@ -59,7 +58,11 @@ export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
                     }
                 </EventView_Title>
             </EventView_Content>
-            {dropDown && <TodoListView top={selectBox.current?.getBoundingClientRect().top} left={selectBox.current?.getBoundingClientRect().left} width={contentSize.width}/>}
+            {(eventInfo.event.allDay && dropDown) &&
+                <TodoListView top={selectBox.current?.getBoundingClientRect().top}
+                              left={selectBox.current?.getBoundingClientRect().left}
+                              width={contentSize.width}
+                              extendedProps={eventInfo.event.extendedProps}/>}
         </EventView_Container>
     )
 }

@@ -34,7 +34,6 @@ export const CalendarView: React.FC = () => {
                     <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
                 }
                 <StyledFullCalendar
-
                     plugins={[rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                     initialView="dayGridMonth"
                     selectable={!addEvent}
@@ -47,6 +46,7 @@ export const CalendarView: React.FC = () => {
                     }}
                     nowIndicator={true}
                     height="99.5%"
+                    navLinks={true}
                     events={currentEvents}
                     dayMaxEventRows={2}
                     eventsSet={handleEvents}
@@ -54,6 +54,7 @@ export const CalendarView: React.FC = () => {
                         setAddEvent(true)
                         setSelectInfo(selectInfo);
                     }}
+                    eventChange={(e) => console.log(e)} //이벤트 변경 시 이벤트에 대한 상태
                     eventClick={handleEventClick}
                     eventContent={(eventInfo) => (
                         <CalendarEventView eventInfo={eventInfo}/>

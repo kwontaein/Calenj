@@ -7,7 +7,6 @@ export const TodoListView_Container = styled.div<{$top:number,$left:number, $wid
     background-color: ${ThemaColor2};
     position: absolute;
     border-radius: 5px;
-    z-index: 2;
     top:${props => props.$top}px; 
     left:${props => props.$left}px;
     margin-top: 22px;
