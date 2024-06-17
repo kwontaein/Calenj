@@ -39,7 +39,7 @@ export const CalendarView: React.FC = () => {
     const [state, setState] = useState<AppState>({
         weekendsVisible: true,
         externalEvents: [
-            {id: 34432, title: "Art 1", color: "#0097a7", custom: "fdsfdsfds"},
+            {id: 34432, title: "Art 1", color: "#0097a7", custom: "커스텀 내용"},
             {id: 323232, title: "Art 2", color: "#f44336"},
             {id: 1111, title: "Art 3", color: "#f57f17"},
             {id: 432432, title: "Art 4", color: "#90a4ae"}
@@ -60,7 +60,7 @@ export const CalendarView: React.FC = () => {
             externalEvents: [...prevState.externalEvents, newEvent]
         }));
     };
-    
+
     return (
         <>
             <ExternalEvents events={state.externalEvents} onEventAdd={onEventAdd}/>
