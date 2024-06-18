@@ -1,6 +1,6 @@
 import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
-import {useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import {AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
@@ -22,6 +22,7 @@ export const MessageScrollBox:React.FC =()=>{
     const {param} = useSelector((state:RootState)=>state.subNavigateInfo)
     const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
     const scrollRef =useMessageScroll(param,messageList)
+    const {userData} = useSelector((state:RootState)=>state.userData);
 
     const loadFile = useMemo(() => {
         return throttleByAnimationFrame(() => {
@@ -36,6 +37,7 @@ export const MessageScrollBox:React.FC =()=>{
             loadFile();
         }
     });
+
 
 
     const MessageBox = useMemo(() => {
@@ -67,7 +69,7 @@ export const MessageScrollBox:React.FC =()=>{
                                                 $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{message.userId}</NickNameContainer>
+                                                    <NickNameContainer>{userData[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>

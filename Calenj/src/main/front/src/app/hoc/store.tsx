@@ -11,6 +11,8 @@ import subNavigateReducer from '../../entities/redux/model/slice/SubNavigationSl
 import boardOptionReducer from '../../entities/redux/model/slice/BoardOptionSlice';
 import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSlice';
 import calendarReducer from "../../entities/redux/model/slice/CalendarControllerSlice";
+import UserDataReducer from "../../entities/redux/model/slice/UserDataSlice";
+
 // 루트 사가 생성
 function* rootSaga() {
     // all 함수는 여러 사가를 합쳐주는 역할을 한다.
@@ -26,6 +28,7 @@ const rootReducer = combineReducers({
   boardOption:boardOptionReducer,
   dateEventTag:dateEventTagReducer,
   calendarController : calendarReducer,
+  userData : UserDataReducer,
 });
 
 

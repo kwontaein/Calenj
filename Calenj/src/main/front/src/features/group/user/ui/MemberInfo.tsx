@@ -19,7 +19,6 @@ export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
 
     return (
         <div>
-            <p>이메일 : {user.userId}</p>
             <p>닉네임 : {user.nickName}</p>
             {localStorage.getItem("userId") === user.userId ? " " : <p>공통 : {profile?.sameGroup}</p>}
             <p>소개 : {profile?.introduce}</p>
