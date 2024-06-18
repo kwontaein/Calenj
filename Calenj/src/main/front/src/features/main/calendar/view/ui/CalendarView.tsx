@@ -52,11 +52,7 @@ export const CalendarView: React.FC = () => {
 
     const handleStop = (e: DraggableEvent, data: DraggableData) => {
         const {x, y} = data;
-        // Calculate the closest corner
-        const closestX = x < contentSize.width / 2 ? 20 : contentSize.width - 170;
-        const closestY = y < contentSize.height / 2 ? 20 : contentSize.height - 170;
-
-        setPosition({x: closestX, y: closestY});
+        setPosition({x, y});
     };
 
     const [state, setState] = useState<AppState>({
@@ -105,7 +101,7 @@ export const CalendarView: React.FC = () => {
                 </Draggable_Container>
             </Draggable>
             {data &&
-                <GridCalendar_Container>
+                <GridCalendar_Container ref={contentRef}>
                     {addEvent &&
                         <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
                     }
