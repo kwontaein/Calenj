@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.example.calenj.global.service.RedisService;
 import org.example.calenj.user.repository.UserRepository;
 import org.example.calenj.user.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,14 +34,16 @@ public class JwtTokenProvider {
 
     final UserRepository userRepository;
     final HttpServletResponse response;
+    final RedisService redisService;
     private final Key key;
     private final long Hours = 60 * 60 * 1000L;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserRepository userRepository, HttpServletResponse response) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserRepository userRepository, HttpServletResponse response, RedisService redisService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userRepository = userRepository;
         this.response = response;
+        this.redisService = redisService;
     }
 
     // 클레임에서 권한 추출을 위한 도우미 메서드
@@ -59,23 +63,17 @@ public class JwtTokenProvider {
 
         System.out.println("토큰 생성 실행");
 
-        String accessToken = generateAccessTokenInFirstTime(authentication);
+        String accessToken = generateAccessTokenBy(authentication.getName(), authentication.getAuthorities());
         String refreshToken = generateRefreshToken();
 
         //쿠키 생성 부분
         createCookie(response, "accessToken", accessToken);
-        createCookie(response, "refreshToken", refreshToken);
-
+        redisService.saveUserToken(authentication.getName(), refreshToken);
         return JwtToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-    }
-
-    //AccessToken 최초 생성 메소드
-    private String generateAccessTokenInFirstTime(Authentication authentication) {
-        return generateAccessTokenBy(authentication.getName(), authentication.getAuthorities());
     }
 
     //AccessToken 생성 메소드
@@ -98,24 +96,28 @@ public class JwtTokenProvider {
     public JwtToken refreshAccessToken(String refreshToken) {
         String newAccessToken;
         String newRefreshToken;
-        
+
+        //토큰에서 id 찾기
+        String userId = redisService.getUserIdByToken(refreshToken);
+
+        if (userId == null) {
+            System.out.println("유효하지 않은 리프레시 토큰입니다");
+            return null;
+        }
+
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
-        UserEntity userEntity = userRepository.findByRefreshToken(refreshToken)
+        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userId))
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());
 
-        if (validateToken(refreshToken).equals("Expired JWT Token") /*|| remainingTime <= oneDay*/) {
-            // 만료 기간이 1일 이하인 경우 리프레시 토큰도 새로 발급
-            newRefreshToken = generateRefreshToken();
-            userRepository.updateUserRefreshToken(newRefreshToken, userEntity.getUserEmail());
-        } else {
-            newRefreshToken = refreshToken;
-        }
+        //리프레시 토큰도 새로 발급
+        newRefreshToken = generateRefreshToken();
+        //redis 에 저장
+        redisService.updateUserToken(userEntity.getUserEmail(), newRefreshToken);
 
         //쿠키 값 재지정
         createCookie(response, "accessToken", newAccessToken);
-        createCookie(response, "refreshToken", newRefreshToken);
 
         return JwtToken.builder()
                 .grantType("Bearer")

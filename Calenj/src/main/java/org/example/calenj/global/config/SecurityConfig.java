@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.JWT.JwtAuthenticationEntryPoint;
 import org.example.calenj.global.JWT.JwtAuthenticationFilter;
 import org.example.calenj.global.JWT.JwtTokenProvider;
+import org.example.calenj.global.service.RedisService;
 import org.example.calenj.user.repository.UserRepository;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     JwtTokenProvider jwtTokenProvider;
     private final
     UserRepository userRepository;
+    private final RedisService redisService;
 
 
     //private String logout_url = "https://kauth.kakao.com/oauth/logout?client_id=${kakao.client.id}&logout_redirect_utl=${kakao.logout_redirect_url}";
@@ -59,7 +61,7 @@ public class SecurityConfig {
                 // 필터처리 후 에러처리하는 핸들러
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행하겠다는 설정이다.
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
