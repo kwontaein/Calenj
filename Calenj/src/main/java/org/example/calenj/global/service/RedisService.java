@@ -94,19 +94,10 @@ public class RedisService {
     /**
      * 리프레시 토큰 값 유무 조회
      */
-    public String getUserIdByToken(String token) {
-        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
-        Map<Object, Object> allUserTokens = hashOps.entries("user");
-
-        for (Map.Entry<Object, Object> entry : allUserTokens.entrySet()) {
-            String userId = (String) entry.getKey();
-            Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
-            if (token.equals(userTokenMap.get("token"))) {
-                return userId;
-            }
-        }
-
-        return null; // Return null if token is not found
+    public boolean isUserTokenValid(String userId, String token) {
+        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+        String storedToken = hashOps.get("user:" + userId, "token");
+        return token.equals(storedToken);
     }
 
     public void deleteUserToken(String userId) {

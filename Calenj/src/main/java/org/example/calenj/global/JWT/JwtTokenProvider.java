@@ -93,20 +93,19 @@ public class JwtTokenProvider {
     }
 
     // RefreshToken 을 사용하여 AccessToken 재발급 메소드
-    public JwtToken refreshAccessToken(String refreshToken) {
+    public JwtToken refreshAccessToken(Authentication authentication, String refreshToken) {
         String newAccessToken;
         String newRefreshToken;
 
         //토큰에서 id 찾기
-        String userId = redisService.getUserIdByToken(refreshToken);
-
-        if (userId == null) {
+        boolean token = redisService.isUserTokenValid(authentication.getName(), refreshToken);
+        if (!token) {
             System.out.println("유효하지 않은 리프레시 토큰입니다");
             return null;
         }
 
         // 리프레시 토큰에서 사용자 정보 및 권한 추출 -> 불가능
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userId))
+        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(authentication.getName()))
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         newAccessToken = generateAccessTokenBy(userEntity.getUsername(), userEntity.getAuthorities());

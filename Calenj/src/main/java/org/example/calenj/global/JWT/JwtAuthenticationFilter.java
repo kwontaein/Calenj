@@ -64,18 +64,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 httpResponse.setContentType("application/json");
             } else if (DbRefreshToken != null && RefreshValidate.equals("true")) { //리프레시 토큰이 있고, 유효한지 검사
                 //토큰 발행
-                JwtToken newToken = jwtTokenProvider.refreshAccessToken(DbRefreshToken);
+                JwtToken newToken = jwtTokenProvider.refreshAccessToken(authentication, DbRefreshToken);
                 authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            } else if (RefreshValidate.equals("Invalid JWT Token")) {
+            } else if (!RefreshValidate.equals("true")) {
+                response = tokenFalse(httpResponse, authentication);
                 writer.print("Invalid JWT Token");
-            } else if (RefreshValidate.equals("Expired JWT Token")) {
-                writer.print("ALL_TOKEN_EXPIRED");
-            } else {
-                writer.print("UNKNOWN_EXCEPTION");
             }
-            response = tokenFalse(httpResponse, authentication);
 
             writer.flush();
             writer.close();
