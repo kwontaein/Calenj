@@ -83,13 +83,51 @@ public class RedisService {
     }
 
     /**
-     * 유저 토큰 조회
+     * 유저 아이디로 토큰 조회
      */
-    public String getUserToken(String userId) {
+    public String getUserTokenById(String userId) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
         Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
         return (String) userTokenMap.get("token");
     }
 
+    /**
+     * 리프레시 토큰 값 유무 조회
+     */
+    public String getUserIdByToken(String token) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        Map<Object, Object> allUserTokens = hashOps.entries("user");
+
+        for (Map.Entry<Object, Object> entry : allUserTokens.entrySet()) {
+            String userId = (String) entry.getKey();
+            Map<Object, Object> userTokenMap = hashOps.entries("user:" + userId);
+            if (token.equals(userTokenMap.get("token"))) {
+                return userId;
+            }
+        }
+
+        return null; // Return null if token is not found
+    }
+
+    public void deleteUserToken(String userId) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        hashOps.delete("user:" + userId, "token");
+    }
+
+
+    // Method to set a new token for a user
+    public void updateUserToken(String userId, String newToken) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+
+        // Get the current token (optional step, for validation if needed)
+        String currentToken = getUserTokenById(userId);
+        if (currentToken != null) {
+            // Update the token value
+            hashOps.put("user:" + userId, "token", newToken);
+        } else {
+            // Handle case where the token does not exist
+            throw new RuntimeException("Token not found for user: " + userId);
+        }
+    }
 
 }

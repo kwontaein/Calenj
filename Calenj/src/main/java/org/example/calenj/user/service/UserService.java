@@ -11,6 +11,7 @@ import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.global.service.RedisService;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
@@ -48,6 +49,7 @@ public class UserService {
     private final FriendRepository friendRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TagRepository tagRepository;
+    private final RedisService redisService;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -134,10 +136,8 @@ public class UserService {
 
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             tokenInfo = jwtTokenProvider.generateToken(authentication);
-            System.out.println("authentication : " + authentication);
             // 4. refreshToken 정보 저장
-            userRepository.updateUserRefreshToken(tokenInfo.getRefreshToken(), userEntity.getUserEmail());
-
+            redisService.saveUserToken(userEntity.getUserEmail(), tokenInfo.getRefreshToken());
 
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
@@ -158,11 +158,13 @@ public class UserService {
 
         if (requestCookie != null) {
             for (Cookie cookie : requestCookie) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    System.out.println(cookie.getValue());
-                    UserEntity userEntity = userRepository.findByRefreshToken(cookie.getValue())
-                            .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-                    if (userEntity != null) {
+                if ("accessToken".equals(cookie.getName()) && jwtTokenProvider.validateToken(cookie.getValue()).equals("true")) {
+                    System.out.println("액세스 토큰 : " + cookie.getValue());
+
+                    Authentication authentication = jwtTokenProvider.getAuthentication(cookie.getValue());
+                    String refreshToken = redisService.getUserTokenById(authentication.getName());
+
+                    if (refreshToken != null) {
                         checkCookie = true;
                     }
                 }
@@ -185,7 +187,6 @@ public class UserService {
         userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
         removeCookie(response, "accessToken");
-        removeCookie(response, "refreshToken");
     }
 
     /**
