@@ -5,10 +5,10 @@ export const fileFilter = (messages: string[]) => {
         const [chatUUID,sendDate,userId,messageType,messageContent] = message.split("$", 6);
 
         const loadMsg: Message = {
-            chatUUID: chatUUID,
+            chatUUID: chatUUID.trim(),
             sendDate: sendDate.slice(1, 17),
-            userId:userId,
-            messageType: messageType,
+            userId:userId.trim(),
+            messageType: messageType.trim(),
             message: messageContent,
         };
 

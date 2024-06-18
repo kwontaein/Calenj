@@ -6,9 +6,9 @@ export interface GroupList_item {
     groupCreated: string;
 }
 export interface groupMembers {
-    groupRoleType: String;
-    group_user_location: String;
-    nickName: String;
+    groupRoleType: string;
+    group_user_location: string;
+    nickName: string;
     onlineStatus: string;
     userId: string;
 }

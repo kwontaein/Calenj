@@ -24,10 +24,10 @@ export const useChatFetching = (param:string):
         //초기 세팅
         const {chatUUID, sendDate, userId, messageType, message} = stomp.receiveMessage
         const loadMsg: Message = {
-            chatUUID: !pageParam ? "시작라인" : chatUUID,
+            chatUUID: !pageParam ? "시작라인" : chatUUID.trim(),
             sendDate: !pageParam ? "" : sendDate,
-            userId: !pageParam ? "" : userId,
-            messageType: !pageParam ? "" : messageType,
+            userId: !pageParam ? "" : userId.trim(),
+            messageType: !pageParam ? "" : messageType.trim(),
             message: !pageParam ? "" : message.toString(),
         };
         return loadMsg;
