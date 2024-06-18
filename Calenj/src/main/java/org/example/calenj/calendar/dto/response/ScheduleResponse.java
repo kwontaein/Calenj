@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class ScheduleResponse {
     //스케쥴 아이디
-    private UUID scheduleId;
+    private UUID id;
     //제목
     private String title;
     //시작일
@@ -23,7 +23,7 @@ public class ScheduleResponse {
     private ExtendedPropsResponse extendedProps;
 
     public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay) {
-        this.scheduleId = scheduleId;
+        this.id = scheduleId;
         this.title = title;
         this.start = start;
         this.end = end;
@@ -32,7 +32,7 @@ public class ScheduleResponse {
 
     //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
     public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList) {
-        this.scheduleId = scheduleId;
+        this.id = scheduleId;
         this.title = title;
         this.start = start;
         this.end = end;
