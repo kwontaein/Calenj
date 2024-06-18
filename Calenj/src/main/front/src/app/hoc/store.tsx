@@ -10,7 +10,7 @@ import navigateReducer from '../../entities/redux/model/slice/NavigatgionSlice';
 import subNavigateReducer from '../../entities/redux/model/slice/SubNavigationSlice';
 import boardOptionReducer from '../../entities/redux/model/slice/BoardOptionSlice';
 import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSlice';
-
+import calendarReducer from "../../entities/redux/model/slice/CalendarControllerSlice";
 // 루트 사가 생성
 function* rootSaga() {
     // all 함수는 여러 사가를 합쳐주는 역할을 한다.
@@ -25,6 +25,7 @@ const rootReducer = combineReducers({
   subNavigateInfo:subNavigateReducer,
   boardOption:boardOptionReducer,
   dateEventTag:dateEventTagReducer,
+  calendarController : calendarReducer,
 });
 
 

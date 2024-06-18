@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, TextColor2, ThemaColor2} from "../../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, TextColor2, ThemeColor2} from "../../../../../shared/ui/SharedStyled";
 
 export const AddToDoList_Container = styled.div`
     margin-left: 10px;
@@ -17,13 +17,13 @@ export const AddToDo_Input = styled.input`
     width: calc(100% - 52px);
     height: calc(100% - 6px);
     border-radius: 5px 0 0 5px;
-    border-block: 2px solid ${ThemaColor2};
-    border-left: 2px solid ${ThemaColor2};
+    border-block: 2px solid ${ThemeColor2};
+    border-left: 2px solid ${ThemeColor2};
     border-right: 0;
     padding-left: 10px;
     font-size: 14px;
     color: ${TextColor};
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
 
     &:focus {
         outline: none;

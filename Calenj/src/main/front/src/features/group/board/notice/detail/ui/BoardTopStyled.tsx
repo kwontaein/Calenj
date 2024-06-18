@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import { TextColor, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 interface DetailTopProps{
     $state:string,
@@ -9,7 +9,7 @@ export const BoardDetailTop_Container = styled.div`
     height: 38px;
     padding-inline: 10px;
     padding-block: 15px;
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
     color: ${TextColor};
     display: flex;
     flex-direction: row;

@@ -1,34 +1,33 @@
-import styled, {css, keyframes} from 'styled-components'
+import styled from 'styled-components'
 import {createGlobalStyle} from 'styled-components'
 
 
 interface UnfocusBackgroundProps {
     focus: string;
 }
-
-interface ClickAbleProps {
-    $isAble?: boolean;
+interface ClickAbleProps{
+    $isAble? :boolean;
 }
 
 
 /**
  * SubNavColor, button색
- * @param ThemaColor3
+ * @param ThemeColor3
  */
-export const ThemaColor3 = "#2B2E33";//SubNav 222831
+export const ThemeColor3 = "#2B2E33";//SubNav 222831
 /**EventNavColor
  *  @param ThemaColor2
  */
-export const ThemaColor2 = "#373B42"; //채팅 및 EventNav 31363F
+export const ThemeColor2 ="#373B42"; //채팅 및 EventNav 31363F
 
 export const SubScreenColor = "rgb(51,55,62)" //subScreen
 
 export const BackGroundColor = "#212227";
 
 export const TextColor = "#EEEEEE";
-export const TextColor2 = "#c2c2c2";
+export const TextColor2 ="#c2c2c2";
 export const PointColor = "#0070E8";
-export const PointColor2 = "#FFD369"
+export const PointColor2 ="#FFD369"
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -38,18 +37,16 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         overflow: hidden;
         user-select: none; /* Standard */
-
-        ::-webkit-scrollbar-thumb {
+        
+        ::-webkit-scrollbar-thumb{
             background: ${PointColor}; /* 스크롤바의 색상 */
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar {
-            width: 4px; /* 스크롤바의 너비 */
+            width: 4px;  /* 스크롤바의 너비 */
         }
-
         ::-webkit-scrollbar-track {
-            background: ${ThemaColor3};
+            background: ${ThemeColor3};
             margin-block: 5px;
             border-radius: 10px;
         }
@@ -71,14 +68,13 @@ export const GlobalStyle = createGlobalStyle`
     button {
         appearance: none;
         border: 0;
-        background-color: ${ThemaColor2};
+        background-color: ${ThemeColor2};
         cursor: pointer;
         color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
-        padding: 5px;
+        padding:5px;
         border-radius: 5px;
-
-        &:hover {
-            background-color: ${ThemaColor2}77;
+        &:hover{
+            background-color: ${ThemeColor2}77;
         }
     }
 
@@ -86,16 +82,14 @@ export const GlobalStyle = createGlobalStyle`
         color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
         font-size: 15px;
     }
-
-    option {
-        background-color: ${ThemaColor3};
+    option{
+        background-color: ${ThemeColor3};
         border-radius: 2px;
     }
-
-    select {
+    select{
         border-radius: 2px;
-        color: ${TextColor};
-
+        color : ${TextColor};
+        
     }
 `;
 
@@ -111,17 +105,15 @@ export const CheckBoxStyle = styled.input`
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid ${ThemaColor3};
-    background-color: ${ThemaColor2};
+    border: 2px solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
     margin-right: 5px;
     /* 체크됐을 때의 색상 */
-
     &:checked {
         background-color: ${PointColor}; /* 체크됐을 때의 배경색 */
         border-color: ${TextColor}; /* 체크됐을 때의 테두리 색 */
         border: 2px solid ${TextColor}
     }
-
     &:focus {
         box-shadow: ${PointColor}; /* 포커스 효과 */
     }
@@ -156,7 +148,7 @@ export const InfoTail = styled.div`
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     margin-top: -6px;
     position: relative;
     z-index: 0;
@@ -166,11 +158,12 @@ export const InfoContent = styled.div`
     width: auto;
     padding: 5px;
     font-size: 12px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     position: relative;
     z-index: 1;
     border-radius: 2px;
 `
+
 
 
 export const SignUpFormContainer = styled.div<UnfocusBackgroundProps>`
@@ -239,6 +232,7 @@ export const FormLable = styled.label`
 `;
 
 
+
 export const UserListView = styled.li`
     list-style: none;
     white-space: nowrap;
@@ -250,7 +244,7 @@ export const UserListView = styled.li`
     align-items: center;
 
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemeColor3};
     }
 `
 
@@ -263,9 +257,12 @@ export const ListView = styled.li`
     padding: 10px;
 
     &:hover {
-        background-color: ${ThemaColor2};
+        background-color: ${ThemeColor2};
     }
 `
+
+
+
 
 
 export const DEFAULT_HR = styled.hr`
@@ -273,13 +270,13 @@ export const DEFAULT_HR = styled.hr`
     outline: 0;
     border: 0;
     color: black;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemaColor3});
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemeColor3});
     height: .1em;
 `
 
 
 export const SignState_Button = styled.button`
-    background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
+    background-color: ${ThemeColor2}; /* 전체 페이지 배경색 */
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;
@@ -287,7 +284,9 @@ export const SignState_Button = styled.button`
 `;
 
 
-export const Modal_Background = styled.div`
+
+
+export const Modal_Background =styled.div`
     width: 100%;
     height: 100%;
     position: fixed;
@@ -300,7 +299,7 @@ export const Modal_Background = styled.div`
 `
 
 export const Modal_Container = styled.div`
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
     width: 440px; //500, 570
     height: 500px;
     border-radius: 5px;
@@ -310,16 +309,16 @@ export const ModalTopBar_Container = styled.div`
     background-color: ${BackGroundColor};
     width: calc(100% - 30px);
     height: 15px;
-    padding: 15px;
+    padding : 15px;
     font-size: 16px;
     border-radius: 5px 5px 0 0;
 `
 
-export const ModalContent_Container = styled.div`
+export const ModalContent_Container =styled.div`
     width: calc(100% - 40px);
     height: calc(100% - 85px);
     padding: 20px;
-
+    
 `
 
 export const Modal_Condition_Button = styled.button<ClickAbleProps>`
@@ -329,46 +328,10 @@ export const Modal_Condition_Button = styled.button<ClickAbleProps>`
     display: flex;
     justify-content: center;
     align-items: center;
-
+    
     ${props => props.$isAble &&
             `background-color : ${PointColor};
              &:hover{background-color : ${PointColor}77;
              }
     `}
 `
-
-interface ToggleProps {
-    $isClick?: boolean,
-    $toggleState?: boolean,
-}
-
-export const Toggle_Container = styled.div<ToggleProps>`
-    font-size: 0;
-    width: 20%;
-    height: 18px;
-    padding-inline: 1px;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor2};
-    border: 1px solid ${TextColor2};
-    border-radius: 50px;
-    display: flex;
-    justify-content: center;`
-export const Toggle_Item = styled.div<ToggleProps>`
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
-    ${props => props.$toggleState !== undefined && css
-            `animation: ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
-    }
-`
-/**ToggleBox*/
-
-const moveToggle = (toggle: boolean) => keyframes`
-    from {
-
-    }
-    to {
-        ${!toggle && `transform: translateX(-60%)`};
-        ${toggle && `transform: translateX(60%)`};
-    }
-`;

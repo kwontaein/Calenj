@@ -1,5 +1,5 @@
 import styled, { keyframes, css  } from 'styled-components';
-import {PointColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 interface FilterClickProps{
@@ -57,7 +57,7 @@ export const SubScreenFilter_Btn = styled.button`
     height: 25px;
     border-radius: 5px;
     &:hover{
-        background-color: ${ThemaColor2};
+        background-color: ${ThemeColor2};
     }
 `
 
@@ -90,7 +90,7 @@ export const FilterToggle_Container = styled.div<FilterClickProps>`
     width: 20%;
     height: 18px;
     padding-inline: 1px;
-    border:1px solid  ${props => props.$isClick ? TextColor2 : ThemaColor3};
+    border:1px solid  ${props => props.$isClick ? TextColor2 : ThemeColor3};
     border-radius: 50px;
     display: flex;
     justify-content: center;
@@ -99,7 +99,7 @@ export const FilterToggleItem = styled.div<FilterClickProps>`
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
+    background-color: ${props => props.$isClick ? PointColor : ThemeColor3};
     ${props => props.$toggleState!==undefined && css
     `animation : ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
 }

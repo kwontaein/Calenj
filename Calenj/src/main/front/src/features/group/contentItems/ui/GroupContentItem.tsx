@@ -1,4 +1,4 @@
-import {FullScreen_div, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 import {
     CustomScreen_MessageBox_Container,
     CustomScreen_SubContent_Container,

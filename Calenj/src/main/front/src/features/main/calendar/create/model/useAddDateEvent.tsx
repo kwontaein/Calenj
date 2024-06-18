@@ -1,5 +1,5 @@
 import {useConfirm} from "../../../../../shared/model";
-import {useEffect, useReducer} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {beforeCheckEvent} from "../utils/beforeCheckEvent";
 import chroma from "chroma-js";
 import {DateEvent, ReturnTodo, TodoItem} from "./types";
@@ -15,6 +15,8 @@ import {
 } from "../../../../../entities/calendar";
 import {useTodoList} from "./useTodoList";
 import {DateSelectArg} from "@fullcalendar/react";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../entities/redux";
 
 interface ReturnAddEvent{
     repeatState: RepeatState,
@@ -26,13 +28,25 @@ interface ReturnAddEvent{
     postEvent:()=>void,
 }
 
-export const useAddDateEvent = (initialAdjustedStartDate:Date, initialAdjustedEndDate:Date, selectInfo: DateSelectArg, onClose:()=>void):ReturnAddEvent =>{
+export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):ReturnAddEvent =>{
     const calendarApi = selectInfo?.view.calendar;
+
+    function adjustDate(dateStr: string, allDay: boolean): Date {
+        const date = new Date(dateStr);
+        if (allDay) {
+            date.setHours(date.getHours() - 9);
+        }
+        return date;
+    }
+
+    const initStartDate = adjustDate(selectInfo.startStr ,selectInfo.allDay);
+    const initEndDate =adjustDate(selectInfo.endStr, selectInfo.allDay);
+
     const [eventState, eventDispatch] = useReducer(DateEventReducer, {
         ...initialEventDateState,
-        startDate: initialAdjustedStartDate,
-        endDate: initialAdjustedEndDate,
-        formState: selectInfo.allDay ? 'todo' : 'promise'
+        startDate: initStartDate,
+        endDate: initEndDate,
+        formState: selectInfo?.allDay ? 'todo' : 'promise'
     });
     const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
     const {formState, startDate, endDate, title, content, backgroundColor, tagKeys} = eventState
@@ -52,8 +66,6 @@ export const useAddDateEvent = (initialAdjustedStartDate:Date, initialAdjustedEn
             eventDispatch({type: 'SET_END_DATE', payload: new Date(+startDate + 1800000)})
         }
     }, [startDate]);
-
-
 
     const postEvent = () => {
         const {repeat, startTime, endTime, repeatEnd, repeatDeadline} = repeatState
@@ -92,7 +104,7 @@ export const useAddDateEvent = (initialAdjustedStartDate:Date, initialAdjustedEn
             }
         }
 
-        calendarApi.addEvent(event)
+        calendarApi?.addEvent(event)
 
         const saveEvent: UserDateEvent = {
             id: UUid,

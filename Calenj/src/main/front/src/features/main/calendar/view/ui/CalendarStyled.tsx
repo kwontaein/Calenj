@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
-import {BackGroundColor, TextColor} from "../../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor} from "../../../../../shared/ui/SharedStyled";
 
 
 export const GridCalendar_Container = styled.div`
@@ -19,6 +19,21 @@ export const GridCalendar_Container = styled.div`
 
     .fc-daygrid-event{
         z-index: auto !important;
+    }
+    .fc-popover-body{ 
+        height: 157px;
+        overflow-y: auto;
+    }
+    .fc-toolbar-title{
+        margin-left: 0.5em;
+        font-size: 30px;
+    }
+    .fc-header-toolbar{ //상단 헤더
+        margin-bottom: 1.0em;
+        margin-top: 0.5em;
+    }
+    .fc-daygrid-day-top{
+        flex-direction: unset;
     }
 `
 export const Draggable_Container = styled.div`

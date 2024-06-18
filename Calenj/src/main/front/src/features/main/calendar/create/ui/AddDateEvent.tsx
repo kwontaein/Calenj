@@ -5,7 +5,7 @@ import {
     ModalContent_Container,
     ModalTopBar_Container
 } from "../../../../../shared/ui/SharedStyled";
-import React, {ChangeEvent, useRef} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
     AddFriend_Button,
@@ -29,32 +29,22 @@ import {DateSelectArg} from "@fullcalendar/react";
 import {EventDatePickerView} from "./EventDatePickerView";
 import {AddTodoList} from './AddTodoList'
 import {RepeatEvent} from './RepeatEvent'
-import {CustomSelector} from "../../../../../shared/ui/CustomSelector";
+import {MultiSelector} from "../../../../../shared/ui/MultiSelector";
 
 import {useAddDateEvent} from "../model/useAddDateEvent";
 import {useDateEventTag} from "../model/useDateEventTag";
 
 
+
 interface CalendarProps {
     onClose: () => void,
-    selectInfo: DateSelectArg,
+    selectInfo : DateSelectArg
 }
 
-export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => {
+export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
     const modalBackground = useRef<HTMLDivElement>(null);
-    function adjustDate(dateStr: string, allDay: boolean): Date {
-        const date = new Date(dateStr);
-        if (allDay) {
-            date.setHours(date.getHours() - 9);
-        }
-        return date;
-    }
-    const initialAdjustedStartDate = adjustDate(selectInfo.startStr, selectInfo.allDay);
-    const initialAdjustedEndDate = adjustDate(selectInfo.endStr, selectInfo.allDay);
     //eventState & repeatState
-    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal}
-        = useAddDateEvent(initialAdjustedStartDate, initialAdjustedEndDate,selectInfo, onClose)
-
+    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,selectInfo)
     const {formState, title, content} = eventState
     const {selectorOptionProps, setTag} =useDateEventTag(eventDispatch)
 
@@ -83,7 +73,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, selectInfo}) => 
                                 지정태그
                             </DateEventTagContent>
                             <DateEventTagSelector_Container>
-                                <CustomSelector options={selectorOptionProps()} setValue={setTag}/>
+                                <MultiSelector options={selectorOptionProps()} setValue={setTag}/>
 
                             </DateEventTagSelector_Container>
                         </DateEventTag_Container>

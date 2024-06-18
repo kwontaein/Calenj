@@ -52,9 +52,14 @@ const eventTag = createSlice({
             if (state.dynamicEventTag[action.payload.tagId]) {
                 state.dynamicEventTag[action.payload.tagId].color = action.payload.color;
             }
+        },
+        deleteDateEventTag: (state, action: PayloadAction<{ tagId: string;}>) => {
+            if (state.dynamicEventTag[action.payload.tagId]) {
+                state.dynamicEventTag[action.payload.tagId].name = '';
+            }
         }
     },
 })
 
-export const {createDateEventTag, updateTagClickState, updateTagColor} = eventTag.actions;
+export const {createDateEventTag, updateTagClickState, updateTagColor,deleteDateEventTag} = eventTag.actions;
 export default eventTag.reducer;

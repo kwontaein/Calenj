@@ -3,13 +3,13 @@ import {
     SubNavigate_padding,
     SubNavigateTopBar_height
 } from "../../../features/group/subNavItems/ui/GroupSubNavigationStyle";
-import {BackGroundColor, ThemaColor2} from "../../../shared/ui/SharedStyled";
+import {BackGroundColor, ThemeColor2} from "../../../shared/ui/SharedStyled";
 
 export const EventTopBar_Container = styled.div`
     width: calc(100% -${SubNavigate_padding*2}px);
     height: ${SubNavigateTopBar_height}px;
     padding: ${SubNavigate_padding}px;
-    background-color : ${ThemaColor2};
+    background-color : ${ThemeColor2};
     border-bottom: 1.2px ${BackGroundColor} solid;
     display: flex;
     flex-direction: row;
