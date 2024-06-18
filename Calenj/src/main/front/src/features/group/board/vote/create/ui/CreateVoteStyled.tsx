@@ -4,8 +4,8 @@ import {
     PointColor,
     TextColor,
     TextColor2,
-    ThemaColor2,
-    ThemaColor3
+    ThemeColor2,
+    ThemeColor3
 } from "../../../../../../shared/ui/SharedStyled";
 import DatePicker from "react-datepicker";
 
@@ -24,11 +24,11 @@ export const MiniVote_Input = styled.input`
     height: ${MiniVote_Input_height}px;
     margin-block: 5px;
     border-radius: 5px;
-    border: 2px solid ${ThemaColor2};
+    border: 2px solid ${ThemeColor2};
     padding-left: 10px;
     font-size: 14px;
     color: ${TextColor};
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
 
     &:focus {
         outline: none;
@@ -77,8 +77,8 @@ export const VoteType_Radio = styled.input`
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid ${ThemaColor3};
-    background-color: ${ThemaColor2};
+    border: 2px solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
     margin-right: 5px;
     margin-top: 5px;
     /* 체크됐을 때의 색상 */
@@ -183,8 +183,8 @@ export const VoteCheckStyle_CheckBox = styled.input`
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid ${ThemaColor3};
-    background-color: ${ThemaColor2};
+    border: 2px solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
     margin-right: 5px;
     /* 체크됐을 때의 색상 */
     &:checked {
@@ -204,8 +204,8 @@ export const DatePicker_Styled = styled(DatePicker)`
     height : 20px;
     margin-block: 5px;
     border-radius: 5px;
-    border: 0 solid ${ThemaColor3};
-    background-color: ${ThemaColor2};
+    border: 0 solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
     color:${TextColor};
 `;
 
@@ -215,10 +215,10 @@ export const VoteCounter_DatePicker = styled(DatePicker)`
     width: 200%;
     height: 30px;
     margin-block: 5px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     color:${TextColor};
     border-radius: 5px;
-    border: 2px solid ${ThemaColor2};
+    border: 2px solid ${ThemeColor2};
     padding-left: 10px;
     font-size: 14px;
     &:focus{

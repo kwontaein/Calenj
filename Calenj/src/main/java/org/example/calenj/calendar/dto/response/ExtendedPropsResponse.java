@@ -11,7 +11,7 @@ public class ExtendedPropsResponse {
     //내용
     private String content;
     //내용
-    private String todoList;
+    private String[] todoList;
 
     //태그 정보
     private String[] tagKeys;
@@ -22,7 +22,7 @@ public class ExtendedPropsResponse {
         this.tagKeys = convertStringToArray(tag);
         this.scheduleId = scheduleId;
         this.content = content;
-        this.todoList = todoList;
+        this.todoList = convertStringToArray(todoList);
         this.formState = formState;
     }
 

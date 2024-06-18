@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 const GroupNoticeModal_TopContent_Container_height = 40
@@ -15,11 +15,11 @@ export const GroupNoticeModal_Textarea = styled.textarea`
     margin-top: 10px;
     padding: 5px;
     border-radius: 5px;
-    border: 2px solid ${ThemaColor2};
+    border: 2px solid ${ThemeColor2};
     font-size: 15px;
     resize: none;
     font-weight: 550;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     color: ${TextColor};
 
     &:focus {
@@ -34,15 +34,14 @@ export const GroupNoticeTitle_Input = styled.input`
     height: ${GroupNoticeTitle_Input_height}px;
     padding: 5px;
     border-radius: 5px;
-    border: 2px solid ${ThemaColor2};
+    border: 2px solid ${ThemeColor2};
     font-size: 15px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     color: ${TextColor};
 
     &:focus {
         outline: none;
-        border: 2px solid;
-        border-color: ${PointColor};
+        border: 2px solid ${PointColor};
     }
 `
 

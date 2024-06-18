@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
-import {ColorOption} from "../../../../../shared/ui/CustomSelector";
+import {ColorOption} from "../../../../../shared/ui/MultiSelector";
 import {MultiValue} from "react-select";
 import {DateEventAction} from "../../../../../entities/calendar";
 
@@ -15,7 +15,7 @@ export const useDateEventTag = (eventDispatch :React.Dispatch<DateEventAction>) 
     //selector에 옵션 넘기기
     const selectorOptionProps = (): ColorOption[] => {
         const options: ColorOption[] = []
-        Object.keys(dynamicEventTag).map((id) => {
+        Object.keys(dynamicEventTag).forEach((id) => {
             const option: ColorOption = {
                 id: id,
                 value: dynamicEventTag[id].name,
@@ -23,7 +23,9 @@ export const useDateEventTag = (eventDispatch :React.Dispatch<DateEventAction>) 
                 color: dynamicEventTag[id].color,
                 isDisabled: dynamicEventTag[id].name === '그룹 일정',
             }
-            options.push(option)
+            if(dynamicEventTag[id].name!==''){
+                options.push(option)
+            }
         })
         return options
     }

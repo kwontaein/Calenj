@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {PointColor, TextColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 interface subScreenWidthProps{
     $subScreenWidth: number;
@@ -19,7 +19,7 @@ export const GroupVoteListView_Li = styled.li`
     padding-block: 5px;
     margin-block: 2px;
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemeColor3};
     }
 `
 

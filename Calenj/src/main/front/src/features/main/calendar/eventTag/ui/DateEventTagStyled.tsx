@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {PointColor, TextColor, ThemaColor3} from "../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../shared/ui/SharedStyled";
 
 export const tagPaddingLeft = 20;
 
@@ -17,6 +17,7 @@ export const TagTop_Container = styled.div`
     height: 30px;
     display: flex;
     flex-direction: row;
+    background-color: rgb(0,0,0,0.3);
     margin-bottom: 5px;
         &:hover {
         background-color: rgb(0,0,0,0.3);

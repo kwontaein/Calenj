@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import {PointColor2, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor2} from "../../../../shared/ui/SharedStyled";
 
-interface CheckbeforSender {
+interface CheckBeforeSender {
     $sameUser: boolean,
 }
 
@@ -25,7 +25,7 @@ export const ScrollableDiv = styled.div`
 
 
 /** 메시지 관련 styled */
-export const MessageBoxContainer = styled.div<CheckbeforSender>`
+export const MessageBoxContainer = styled.div<CheckBeforeSender>`
     padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
     padding-inline: 12px;
     padding-bottom: 0px;

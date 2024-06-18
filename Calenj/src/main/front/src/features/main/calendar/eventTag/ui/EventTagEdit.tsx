@@ -1,6 +1,7 @@
 import {EventTagEdit_Container, EventTagItem_Container} from "./EventTagEditStyled";
 import {useEffect, useRef, useState} from "react";
 import {
+    deleteDateEventTag,
     updateTagColor
 } from "../../../../../entities/redux/model/slice/DateEventTagSlice";
 import {ColorSelector} from "../../../../../shared/ui/ColorSelector";
@@ -24,6 +25,7 @@ export const EventTagEdit: React.FC<TagEditProps> = ({id, top}) => {
         axios.post('api/deleteTag', {id})
             .then(() => {
                 window.alert('태그를 삭제했습니다.')
+                dispatch(deleteDateEventTag({tagId:id}))
             });
     }
     return (

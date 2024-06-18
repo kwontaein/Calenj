@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {ThemaColor2} from "../../../../shared/ui/SharedStyled";
+import {ThemeColor2} from "../../../../shared/ui/SharedStyled";
 
 export const GroupInviteModal_Container =styled.div`
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     width: 400px;
     min-height: 200px;
     max-height: 500px;

@@ -32,13 +32,6 @@ export const GroupListView: React.FC = () => {
     //그룹 목록 불러오기
     const groupListState = useFetchGroupList(stomp.isOnline)
 
-    //로딩 이후 navigation 세팅
-    useEffect(() => {
-        if (groupListState.data && groupListState.data[0]){
-            navigationDirect("group", groupListState.data[0].groupId)
-        }
-    }, [groupListState.isLoading]);
-
 
     return (
         <div>

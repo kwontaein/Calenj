@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import {
-    BackGroundColor,
     PointColor,
     TextColor,
-    TextColor2,
-    ThemaColor2,
-    ThemaColor3
+    ThemeColor2,
+    ThemeColor3
 } from "../../../../../shared/ui/SharedStyled";
 
 interface ClickProps {
@@ -91,7 +89,7 @@ export const RepeatCheckState_Div = styled.div<ClickProps>`
     font-size: 12px;
     margin-right: 5px;
     cursor: pointer;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor2};
+    background-color: ${props => props.$isClick ? PointColor : ThemeColor2};
     transition: background-color 0.5 ease-in;
 `
 export const InfoIcon_Container = styled.div`
@@ -168,7 +166,7 @@ export const RepeatWeek_Container = styled.div`
     font-size: 14px;
     border-radius: 4px;
     color: ${TextColor};
-    background: ${ThemaColor2};
+    background: ${ThemeColor2};
     border: 1px solid transparent;
     display: flex;
     justify-content: center;
@@ -195,7 +193,7 @@ export const PatternContent = styled.div<ClickProps>`
     justify-content: center;
     margin-inline: 3px;
     border-radius: 50%;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
+    background-color: ${props => props.$isClick ? PointColor : ThemeColor3};
     color:${TextColor};
     font-size: 12px;
 `

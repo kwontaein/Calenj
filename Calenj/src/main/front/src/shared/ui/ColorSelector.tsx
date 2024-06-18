@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ColorResult, SketchPicker} from 'react-color';
 import styled from "styled-components";
-import {BackGroundColor, Modal_Condition_Button, TextColor, ThemaColor3} from "./SharedStyled";
+import {BackGroundColor, Modal_Condition_Button, TextColor, ThemeColor3} from "./SharedStyled";
 
 
 
@@ -11,7 +11,7 @@ const StyledSketchPicker = styled(SketchPicker)`
       
         input {
             color: ${TextColor} !important;
-            background-color: ${ThemaColor3};
+            background-color: ${ThemeColor3};
         }
     
         .flexbox-fix,

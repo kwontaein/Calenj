@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import {PointColor, TextColor, ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import {SubNavigation_Container_width} from "../../subNavItems/ui/GroupSubNavigationStyle";
 
 /** 받은 메시지가 있는지 확인하기 위한 Props*/
@@ -63,7 +63,7 @@ export const GroupList_HR = styled.div`
     outline: 0;
     border: 0;
     border-radius: 50px;
-    background: ${ThemaColor3};
+    background: ${ThemeColor3};
     height: .2em;
     width:30px;
     margin-block: 10px;
@@ -91,7 +91,7 @@ export const Li_GroupList_Item = styled.li<navigatePram>`
      justify-content: center;
      list-style: none;
      margin-block: 8px;
-     background-color:  ${props => (props.$isClick  ? PointColor : ThemaColor3)};
+     background-color:  ${props => (props.$isClick  ? PointColor : ThemeColor3)};
      border-radius:  ${props => (props.$isClick  ? "19px" : "50px")};
      white-space: nowrap;
      cursor: pointer;
@@ -170,7 +170,7 @@ export const GroupTitleViewContent = styled.div`
 export const Btn_CalenJ_Icon = styled.button<navigatePram>`
      appearance: none;
      list-style: none;
-     background-color: ${props => props.$isClick ? PointColor :ThemaColor3 };
+     background-color: ${props => props.$isClick ? PointColor :ThemeColor3 };
      height: 50px;
      width: 50px;
      border:0;
@@ -195,7 +195,7 @@ export const Btn_CalenJ_Icon = styled.button<navigatePram>`
 export const Btn_MakeGroup = styled.button`
      appearance: none;
      list-style: none;
-     background-color: ${ThemaColor3};
+     background-color: ${ThemeColor3};
      height: 50px;
      width: 50px;
      border:0;

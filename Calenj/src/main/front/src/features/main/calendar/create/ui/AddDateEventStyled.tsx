@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../shared/ui/SharedStyled";
 import Select from 'react-select';
 import {Simulate} from "react-dom/test-utils";
 
@@ -73,7 +73,7 @@ export const DateEventTagSelector = styled(Select)`
     border-radius: 4px;
     border: 1px solid transparent;
     color : ${TextColor};
-    background: ${ThemaColor3}
+    background: ${ThemeColor3}
 `
 
 export const DateEventTagColor =styled.div<{$color:string}>`
@@ -105,8 +105,8 @@ export const EventContent_TextArea = styled.textarea<InputProps>`
     width : calc(100% - 40px);
     height : calc(100% - 20px);
     margin-left: 10px;
-    background-color: ${ThemaColor2};
-    border : 1px solid ${ThemaColor2};
+    background-color: ${ThemeColor2};
+    border : 1px solid ${ThemeColor2};
     font-size: 14px;
     padding : 10px;
     overflow-y: auto; /* 수직 스크롤을 활성화. */

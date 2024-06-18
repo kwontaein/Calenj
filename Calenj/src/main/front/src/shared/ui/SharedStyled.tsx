@@ -12,13 +12,13 @@ interface ClickAbleProps{
 
 /**
  * SubNavColor, button색
- * @param ThemaColor3
+ * @param ThemeColor3
  */
-export const ThemaColor3 = "#2B2E33";//SubNav 222831
+export const ThemeColor3 = "#2B2E33";//SubNav 222831
 /**EventNavColor
  *  @param ThemaColor2
  */
-export const ThemaColor2 ="#373B42"; //채팅 및 EventNav 31363F
+export const ThemeColor2 ="#373B42"; //채팅 및 EventNav 31363F
 
 export const SubScreenColor = "rgb(51,55,62)" //subScreen
 
@@ -46,7 +46,7 @@ export const GlobalStyle = createGlobalStyle`
             width: 4px;  /* 스크롤바의 너비 */
         }
         ::-webkit-scrollbar-track {
-            background: ${ThemaColor3};
+            background: ${ThemeColor3};
             margin-block: 5px;
             border-radius: 10px;
         }
@@ -68,13 +68,13 @@ export const GlobalStyle = createGlobalStyle`
     button {
         appearance: none;
         border: 0;
-        background-color: ${ThemaColor2};
+        background-color: ${ThemeColor2};
         cursor: pointer;
         color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
         padding:5px;
         border-radius: 5px;
         &:hover{
-            background-color: ${ThemaColor2}77;
+            background-color: ${ThemeColor2}77;
         }
     }
 
@@ -83,7 +83,7 @@ export const GlobalStyle = createGlobalStyle`
         font-size: 15px;
     }
     option{
-        background-color: ${ThemaColor3};
+        background-color: ${ThemeColor3};
         border-radius: 2px;
     }
     select{
@@ -105,8 +105,8 @@ export const CheckBoxStyle = styled.input`
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid ${ThemaColor3};
-    background-color: ${ThemaColor2};
+    border: 2px solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
     margin-right: 5px;
     /* 체크됐을 때의 색상 */
     &:checked {
@@ -148,7 +148,7 @@ export const InfoTail = styled.div`
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     margin-top: -6px;
     position: relative;
     z-index: 0;
@@ -158,7 +158,7 @@ export const InfoContent = styled.div`
     width: auto;
     padding: 5px;
     font-size: 12px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     position: relative;
     z-index: 1;
     border-radius: 2px;
@@ -244,7 +244,7 @@ export const UserListView = styled.li`
     align-items: center;
 
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemeColor3};
     }
 `
 
@@ -257,7 +257,7 @@ export const ListView = styled.li`
     padding: 10px;
 
     &:hover {
-        background-color: ${ThemaColor2};
+        background-color: ${ThemeColor2};
     }
 `
 
@@ -270,13 +270,13 @@ export const DEFAULT_HR = styled.hr`
     outline: 0;
     border: 0;
     color: black;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemaColor3});
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemeColor3});
     height: .1em;
 `
 
 
 export const SignState_Button = styled.button`
-    background-color: ${ThemaColor2}; /* 전체 페이지 배경색 */
+    background-color: ${ThemeColor2}; /* 전체 페이지 배경색 */
     color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
     height: 30px;
     border-radius: 20px;
@@ -299,7 +299,7 @@ export const Modal_Background =styled.div`
 `
 
 export const Modal_Container = styled.div`
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
     width: 440px; //500, 570
     height: 500px;
     border-radius: 5px;
