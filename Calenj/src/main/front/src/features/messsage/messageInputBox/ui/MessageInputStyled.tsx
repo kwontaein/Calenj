@@ -1,9 +1,9 @@
-import {TextColor, TextColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {TextColor, TextColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
 import {MessageSend_Container_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
 
 export const MessageSend_Input = styled.input`
-    background-color: ${ThemaColor3}60;
+    background-color: ${ThemeColor3}60;
     color: ${TextColor};
     border-radius: 4px;
     border: 1px solid ${TextColor2};

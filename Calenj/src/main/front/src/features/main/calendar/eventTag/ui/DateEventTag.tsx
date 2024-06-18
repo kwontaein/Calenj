@@ -81,6 +81,7 @@ export const DateEventTag: React.FC = () => {
             {tagToggle && <>
                 <BottomContent_Container>
                     {Object.keys(dynamicEventTag).map((id: string, index: number) => (
+                        (dynamicEventTag[id].name!=='' &&
                         <TagItem_Container key={id} $isClick={tagName === id}>
                             <TagItemContent_Container>
                                 <CustomCheckBox
@@ -103,6 +104,7 @@ export const DateEventTag: React.FC = () => {
                             </div>
 
                         </TagItem_Container>
+                        )
                     ))}
                     {useCreateTag.createTag &&
                         <CreateEventTag useCreateTag={useCreateTag}/>

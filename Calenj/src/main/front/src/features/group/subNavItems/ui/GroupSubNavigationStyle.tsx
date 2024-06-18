@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {BackGroundColor, TextColor, TextColor2, ThemaColor2, ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_height: number = 32;
@@ -18,7 +18,7 @@ export const SubNavigation_Container = styled.div`
     border-radius: 10px 0 0 0;
     min-width: ${SubNavigation_Container_width}px;
     height: 100%;
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
 
 `
 
@@ -26,7 +26,7 @@ export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
     height: ${SubNavigateTopBar_height}px;
     padding: ${SubNavigate_padding}px;
     border-bottom: ${subNavigateBorder}px #222831 solid;
-    background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemaColor3 };
+    background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemeColor3 };
     border-radius: 10px 0 0 0;
    
     &:hover {
@@ -131,7 +131,7 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
 export const Hr_SubNavigation = styled.hr`
     margin: 10px;
     height: 2px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     border: 0;
     border-radius: 10px;
 `

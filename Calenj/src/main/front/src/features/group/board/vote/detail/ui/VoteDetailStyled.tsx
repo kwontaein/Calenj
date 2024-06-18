@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
-import {PointColor, TextColor, ThemaColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 
@@ -26,10 +26,10 @@ export const TrasformButton = styled.button<VoteProps>`
     margin-top: 15px;
     font-size: 15px;
     border-radius: 5px;
-    border: 1px solid ${ThemaColor2};
+    border: 1px solid ${ThemeColor2};
     cursor: pointer;
     transition : background-color 0.3s ease;
-    background-color: ${props => props.$ableClick ? PointColor : ThemaColor2};
+    background-color: ${props => props.$ableClick ? PointColor : ThemeColor2};
     &:hover{
         ${props => props.$ableClick && `
             background-color : ${PointColor}77;
@@ -45,9 +45,9 @@ export const TrasformButton = styled.button<VoteProps>`
 export const TransVoteContainer = styled.div<VoteAble>`
     width: calc(100% - 20px);
     height: calc(100% - 20px);
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
     border-radius: 10px;
-    border: 1px solid ${ThemaColor2};
+    border: 1px solid ${ThemeColor2};
     padding: 10px;
     margin-Top: 20px;
     ${props => props.$end && `
@@ -71,11 +71,11 @@ export const VoteContent_Container = styled.div`
 `
 
 export const ViewVoter_Container =styled.div`
-    border: 2px solid ${ThemaColor2} ;
+    border: 2px solid ${ThemeColor2} ;
     width: calc(100% - 20px);
     max-height: 220px;
     border-radius: 5px;
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
     padding: 10px;
     overflow-y: auto; /* 수직 스크롤을 활성화. */
 `
@@ -83,7 +83,7 @@ export const VoteResult_Hr = styled.hr`
     width: 100%;
     margin-block: 10px;
     height: 2px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
     border: 0;
     border-radius: 10px;
 `
@@ -194,7 +194,7 @@ export const CurrentVotePersentLine_BG = styled.div`
     width: calc(100% - 4px);
     height: 3px;
     margin: 2px;
-    background-color: ${ThemaColor2};
+    background-color: ${ThemeColor2};
 `
 
 

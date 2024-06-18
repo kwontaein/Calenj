@@ -1,6 +1,6 @@
 /** NoticeList **/
 import styled from "styled-components";
-import {ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 interface subScreenWidthProps{
     $subScreenWidth: number;
 }
@@ -17,7 +17,7 @@ export const GroupNoticeListView_Li = styled.li`
     margin-block: 2px;
 
     &:hover {
-        background-color: ${ThemaColor3};
+        background-color: ${ThemeColor3};
     }
 `
 

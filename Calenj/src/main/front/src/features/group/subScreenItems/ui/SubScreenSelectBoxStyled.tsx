@@ -4,8 +4,8 @@ import {
     PointColor,
     TextColor,
     TextColor2,
-    ThemaColor2,
-    ThemaColor3
+    ThemeColor2,
+    ThemeColor3
 } from "../../../../shared/ui/SharedStyled";
 
 interface OptionProps{
@@ -65,7 +65,7 @@ export const SubScreenIcon_Container=styled.div<OptionProps>`
     height: 25px;
     border-radius: 50%;
     border: transparent solid;
-    background-color: ${props => props.$filter ? PointColor :ThemaColor2};
+    background-color: ${props => props.$filter ? PointColor :ThemeColor2};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,7 +88,7 @@ export const SubScreenIcon_Container=styled.div<OptionProps>`
         
         &:hover{
             border:3px solid ${PointColor};
-            background-color: ${ThemaColor3};
+            background-color: ${ThemeColor3};
             color: ${TextColor};
         }`
     }

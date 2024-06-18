@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import {ThemaColor3} from "../../../../shared/ui/SharedStyled";
+import {ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 export const GroupUserList_Container_width = 200;
 export const GroupUserList_Container = styled.div`
     width: ${GroupUserList_Container_width}px;
     height: 100%;
     font-size: 13px;
-    background-color: ${ThemaColor3};
+    background-color: ${ThemeColor3};
 `
 export const UserProfile = styled.img<{ $isOnline: boolean | undefined }>`
     border: ${({$isOnline}) => $isOnline ? 'green' : 'gray'} 3px inset;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TextColor2, ThemaColor3} from "../../../../../../shared/ui/SharedStyled";
+import {TextColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 export const GroupVoteList_Container = styled.div`
     width: 100%;
@@ -12,7 +12,7 @@ export const GroupVoteListDivision = styled.div`
     padding-block: 5px;
     padding-inline: 2px;
     color: ${TextColor2};
-    background-color: ${ThemaColor3}A5;
+    background-color: ${ThemeColor3}A5;
 `
 export const GroupVoteListContainer = styled.div`
     height: calc(100% - 40px);

@@ -19,6 +19,7 @@ interface CalendarEventProps{
 export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
     const [dropDown, setDropDown] = useState<boolean>(false);
     const [selectBox, contentSize]= useComponentSize()
+    const calenderType = eventInfo.view.type
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -26,17 +27,20 @@ export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
                 setDropDown(false);
             }
         };
-        if(dropDown){
+        //스크롤 발생 시 닫기
+        const handleScroll = () => {
+            setDropDown(false);
+        };
+
+        if (dropDown) {
             document.addEventListener('mousedown', handleClickOutside);
-        }else{
+            window.addEventListener('scroll', handleScroll, true); // 'true'를 사용하여 캡처 단계에서 이벤트를 처리합니다.
+        } else {
             document.removeEventListener('mousedown', handleClickOutside);
+            window.removeEventListener('scroll', handleScroll, true);
         }
     }, [selectBox, dropDown]);
 
-    useEffect(() => {
-    }, []);
-
-    const calenderType = eventInfo.view.type
 
 
     return(
@@ -48,7 +52,7 @@ export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
                 </EventView_Time>
                 <EventView_Title $color={(calenderType !=="listWeek" && (eventInfo.event.allDay || calenderType !=="dayGridMonth")) ? eventInfo.textColor : TextColor}>
                     {eventInfo.event.title}
-                    {(eventInfo.event.allDay && calenderType!=="listWeek") &&
+                    {(eventInfo.event.allDay && calenderType!=="listWeek" && calenderType!=="dayGridMonth") &&
                         <EventView_DropDown_Container $color={eventInfo.textColor}>
                             {dropDown ?
                                 <i className="fi fi-rr-angle-small-up"/>:
@@ -58,11 +62,12 @@ export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
                     }
                 </EventView_Title>
             </EventView_Content>
-            {(eventInfo.event.allDay && dropDown) &&
+            {(eventInfo.event.allDay && dropDown && calenderType!=="listWeek" && calenderType!=="dayGridMonth") &&
                 <TodoListView top={selectBox.current?.getBoundingClientRect().top}
                               left={selectBox.current?.getBoundingClientRect().left}
                               width={contentSize.width}
-                              extendedProps={eventInfo.event.extendedProps}/>}
+                              todoList={eventInfo.event.extendedProps.todoList}
+                              color={eventInfo.event.backgroundColor}/>}
         </EventView_Container>
     )
 }
