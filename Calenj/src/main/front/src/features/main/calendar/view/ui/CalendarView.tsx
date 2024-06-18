@@ -1,13 +1,12 @@
-import React, {useEffect, useRef, useState} from "react";
-import FullCalendar, {DateSelectArg, EventApi, EventInput} from "@fullcalendar/react";
+import React, {useRef, useState} from "react";
+import {DateSelectArg} from "@fullcalendar/react";
 import {useCalendar} from "../model/useCalendar";
 import {Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin, {DateClickArg} from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import rrulePlugin from '@fullcalendar/rrule'
-
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
@@ -15,11 +14,11 @@ import "@fullcalendar/list/main.css";
 import {AddDateEvent} from "../../create/";
 import {useFetchDateEventTag} from "../../../../../entities/reactQuery";
 import {CalendarEventView} from "./CalendarEventView";
-import {useCalendarController} from "../model/useCalendarController";
-import {boolean} from "yup";
 import {useComponentSize} from "../../../../../shared/model";
 import {Toggle_Container, Toggle_Item} from "../../../../../shared/ui/SharedStyled";
 import {ExternalEvents} from "../../stamp/ExternalEvents";
+import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
+
 
 // 이벤트 인터페이스 정의
 interface Event {
