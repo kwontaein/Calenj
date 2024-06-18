@@ -347,7 +347,7 @@ export const Toggle_Container = styled.div<ToggleProps>`
     width: 20%;
     height: 18px;
     padding-inline: 1px;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor2};
+    background-color: ${props => props.$isClick ? PointColor : ThemeColor2};
     border: 1px solid ${TextColor2};
     border-radius: 50px;
     display: flex;
@@ -356,7 +356,7 @@ export const Toggle_Item = styled.div<ToggleProps>`
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: ${props => props.$isClick ? PointColor : ThemaColor3};
+    background-color: ${props => props.$isClick ? PointColor : ThemeColor3};
     ${props => props.$toggleState !== undefined && css
             `animation: ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
     }

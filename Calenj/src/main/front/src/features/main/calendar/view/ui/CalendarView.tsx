@@ -18,6 +18,7 @@ import {useComponentSize} from "../../../../../shared/model";
 import {Toggle_Container, Toggle_Item} from "../../../../../shared/ui/SharedStyled";
 import {ExternalEvents} from "../../stamp/ExternalEvents";
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
+import {useCalendarController} from "../model/useCalendarController";
 
 
 // 이벤트 인터페이스 정의
@@ -39,6 +40,7 @@ export const CalendarView: React.FC = () => {
     const {currentEvents, handleEvents, handleEventClick} = useCalendar(data);
     const [addEvent, setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
+    const {calendarRef, handleNavLinkDayClick} = useCalendarController();
     const nodeRef = useRef(null);
     const [position, setPosition] = useState({x: 20, y: 20});
     const [contentRef, contentSize] = useComponentSize()
