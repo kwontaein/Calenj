@@ -23,7 +23,7 @@ interface SubScreenProps {
 export const Vote: React.FC<SubScreenProps> = ({subWidth}) => {
     const [voteList,endVoteList] = useVoteList();
     const boardOption = useSelector((state:RootState) => state.boardOption)
-    const { param } = useSelector((state:RootState) => state.subNavigateInfo)
+    const { param } = useSelector((state:RootState) => state.group_subNavState)
     const voteListState = useFetchVoteList(param)
 
 

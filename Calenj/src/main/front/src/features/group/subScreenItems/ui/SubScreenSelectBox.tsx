@@ -16,7 +16,7 @@ import {useEffect} from "react";
 
 export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, isSearching})=>{
     const {searchRef, filter, setSearchWord} = useSelectBoxState(isSearching)
-    const {clickState} = useSelector((state:RootState) => state.subNavigateInfo)
+    const {clickState} = useSelector((state:RootState) => state.group_subNavState)
     const boardOption = useSelector((state:RootState)=>state.boardOption);
     const dispatch = useDispatch()
 

@@ -10,7 +10,7 @@ interface ContentCompositionProps{
 }
 
 export const GroupContentTopItem : React.FC<ContentCompositionProps> = ({showUserListMutate,showUserList}) =>{
-    const clickState = useSelector((state:RootState) => state.subNavigateInfo.clickState)
+    const clickState = useSelector((state:RootState) => state.group_subNavState.clickState)
 
     return(
         <FullScreen_div style={{display:'flex', flexDirection:'row', justifyContent:'right'}}>

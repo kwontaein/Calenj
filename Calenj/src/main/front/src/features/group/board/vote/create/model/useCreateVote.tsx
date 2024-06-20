@@ -11,7 +11,7 @@ import {AxiosError} from "axios";
 import {jwtFilter} from "../../../../../../entities/authentication/jwt";
 
 export const useCreateVote = (voteList:VoteContent[], selectedDate:Date, title:string, multipleOption:boolean, anonymousOption:boolean) => {
-    const { param } = useSelector((state:RootState) => state.subNavigateInfo)
+    const { param } = useSelector((state:RootState) => state.group_subNavState)
     const voteListState = useFetchVoteList(param)
     const dispatch = useDispatch()
 

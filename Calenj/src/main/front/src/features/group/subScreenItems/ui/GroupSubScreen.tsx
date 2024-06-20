@@ -17,7 +17,7 @@ import {ContentsCompositionProps} from "../model/types";
 
 
 export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth, showUserList}) =>{
-    const {clickState, mode} = useSelector((state:RootState) => state.subNavigateInfo)
+    const {clickState, mode} = useSelector((state:RootState) => state.group_subNavState)
 
     return(
             <GroupSubScreen_Container $mode={mode}>

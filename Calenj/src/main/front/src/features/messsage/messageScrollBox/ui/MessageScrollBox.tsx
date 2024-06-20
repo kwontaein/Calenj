@@ -19,7 +19,7 @@ import {dateOperation} from "../lib/dateOperation";
 
 export const MessageScrollBox:React.FC =()=>{
     const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
-    const {param} = useSelector((state:RootState)=>state.subNavigateInfo)
+    const {param} = useSelector((state:RootState)=>state.group_subNavState)
     const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
     const scrollRef =useMessageScroll(param,messageList)
     const {userData} = useSelector((state:RootState)=>state.userData);

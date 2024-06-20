@@ -8,7 +8,7 @@ import {RootState} from "../../../../entities/redux";
 export const useInviteCode = (setModalOpen: React.Dispatch<React.SetStateAction<boolean>>) :[inviteLink:string, invite : ()=>void] =>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [friends, setFriends] = useState<Friends[] | null>(null);
-    const groupId= useSelector((state:RootState)=> state.subNavigateInfo.param)
+    const groupId= useSelector((state:RootState)=> state.group_subNavState.param)
 
     const invite = () => {
         inviteCodeApi(groupId)

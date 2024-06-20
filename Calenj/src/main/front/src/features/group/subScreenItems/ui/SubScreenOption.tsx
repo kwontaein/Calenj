@@ -8,7 +8,7 @@ import {SubScreenProps} from "../model/types";
 
 export const SubScreenOption : React.FC<SubScreenProps> = ({showUserList}) =>{
     const {selectBox, showSelectBox, isSearching, ExitBoardDetail, setShowSelectBox} = useBoardState()
-    const { clickState } = useSelector((state:RootState) => state.subNavigateInfo)
+    const { clickState } = useSelector((state:RootState) => state.group_subNavState)
     const boardOption = useSelector((state:RootState) => state.boardOption)
 
     return(

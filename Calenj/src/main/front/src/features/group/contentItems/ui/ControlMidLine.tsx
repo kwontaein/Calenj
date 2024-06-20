@@ -5,7 +5,7 @@ import {ContentItemProps} from "../model/types";
 import {useScreenHandler} from "../model/useScreenHandler";
 
 export const ControlMidLine :React.FC<ContentItemProps> =({showUserList, contentSize}) =>{
-    const {mode} = useSelector((state:RootState)=>state.subNavigateInfo)
+    const {mode} = useSelector((state:RootState)=>state.group_subNavState)
     const [handleMouseDown] = useScreenHandler(showUserList, mode,contentSize);
 
     return(
