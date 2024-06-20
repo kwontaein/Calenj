@@ -5,20 +5,16 @@ import {useFetchFriendsList} from "../../../../entities/reactQuery";
 import {addFriendApi} from "../api/addFrendApi";
 
 
-
-
-
-
 const FriendList: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
     const friendListState = useFetchFriendsList();
 
-
     return (
         <div>
             <div>
-                <input type="text" value={inputValue} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>setInputValue(e.target.value)}/>
+                <input type="text" value={inputValue}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}/>
                 <button onClick={() => addFriendApi(inputValue)}>친구 추가</button>
             </div>
             {friendListState.isLoading && <div>Loading...</div>}

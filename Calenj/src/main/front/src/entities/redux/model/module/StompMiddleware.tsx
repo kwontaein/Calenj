@@ -25,7 +25,7 @@ interface StompData {
 
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
-export const toggleCurrentMap =new Map();
+export const toggleCurrentMap = new Map();
 export const BoardFilterMap = new Map();
 export const BoardSearchMap = new Map();
 export const BoardParamMap = new Map();
@@ -127,7 +127,7 @@ function* startStomp(destination: Destination): any {
         });
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
-        console.log(receiveData.payload.receiveMessage.state)
+        console.log(receiveData.payload.receiveMessage)
 
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userId)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
@@ -194,7 +194,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
-                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg"){
+                    if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg") {
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));
                         })

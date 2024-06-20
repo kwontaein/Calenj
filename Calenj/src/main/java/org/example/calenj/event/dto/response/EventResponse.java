@@ -15,9 +15,9 @@ public class EventResponse {
 
     private UUID eventId;
     // 이벤트 발생자
-    private String ownUserId;
+    private UUID ownUserId;
     // 이벤트 요청받은 사람
-    private String eventUserId;
+    private UUID eventUserId;
     // 이벤트 목적
     private String eventPurpose;
     // 이벤트 이름
