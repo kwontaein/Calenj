@@ -1,6 +1,3 @@
-import {BoardOptionState, DispatchBoardOptionProps} from "../../../../entities/redux/model/slice/BoardOptionSlice";
-import {DispatchSubNavigationProps, SubNavigateState} from "../../../../entities/redux/model/slice/SubNavigationSlice";
-
 
 export interface ContentsCompositionProps{
     showUserList:boolean,

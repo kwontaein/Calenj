@@ -23,12 +23,12 @@ export const CalendarFromSelector: React.FC = () => {
     const {gridForm} = useSelector((state:RootState)=>state.calendarController)
 
     const formStyles: StylesConfig<GridOption, false> = {
-        control: (styles) => ({ ...styles, backgroundColor: ThemeColor2, border: `1px solid ${TextColor}77`, height: '30px',width:'calc(100% - 2px)', padding:'5px' }),
-        valueContainer: (styles) => ({ ...styles, height: '30px', overflow: 'auto' }),
-        indicatorsContainer: (styles) => ({ ...styles, height: '30px' }),
+        container:(styles) => ({...styles, height:'34px'}),
+        control: (styles) => ({ ...styles, backgroundColor: ThemeColor2, border: `1px solid ${TextColor}77`, minHeight:'none',height: '30px',width:'calc(100% - 2px)', padding:'2px' }),
+        valueContainer: (styles) => ({ ...styles, height: '26px', overflow: 'auto' }),
+        indicatorsContainer: (styles) => ({ ...styles, height: '26px' }),
         input: (styles) => ({ ...styles, padding: '0', color:TextColor }),
-        dropdownIndicator: (styles) => ({ ...styles, fontSize: '8px', width: '30px', height: '30px', padding: '5px' }),
-        clearIndicator: (styles) => ({ ...styles, fontSize: '8px', width: '30px', height: '30px', padding: '5px' }),
+        dropdownIndicator: (styles) => ({ ...styles, fontSize: '8px', width: '26px', height: '30px', padding: '5px' }),
         menu: (styles) => ({ ...styles, backgroundColor: BackGroundColor, borderRadius: '4px', width:'100px' }),
         option: (styles, { isFocused, isSelected }) => {
             return {

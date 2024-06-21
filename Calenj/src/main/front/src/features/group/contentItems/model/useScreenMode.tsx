@@ -7,13 +7,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 
 export const useScreenMode = (param:string, contentSize:contentSize, showUserList:boolean):boolean =>{
-    const subNavigateInfo = useSelector((state:RootState) => state.subNavigateInfo)
-    const [screenRowFlex,setScreenRowFlex] = useState<boolean>(subNavigateInfo.mode==="row"); //true: flex == row
+    const group_subNavState = useSelector((state:RootState) => state.group_subNavState)
+    const [screenRowFlex,setScreenRowFlex] = useState<boolean>(group_subNavState.mode==="row"); //true: flex == row
     const dispatch = useDispatch();
 
     //전체 스크린의 넓이에 따른 subScreenMode 전환
     useEffect(() => {
-        const {screenWidthSize} = subNavigateInfo
+        const {screenWidthSize} = group_subNavState
         //contentSize-subScreenSize = MessageBoxSize
         let contentWidth = contentSize.width - screenWidthSize;
 
@@ -35,7 +35,7 @@ export const useScreenMode = (param:string, contentSize:contentSize, showUserLis
             if(!screenRowFlex) return
             setScreenRowFlex(false);
         }
-    }, [param,contentSize.width,showUserList,subNavigateInfo.clickState]);
+    }, [param,contentSize.width,showUserList,group_subNavState.clickState]);
 
 
     useEffect(()=>{

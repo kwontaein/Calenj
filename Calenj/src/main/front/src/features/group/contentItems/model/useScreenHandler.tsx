@@ -9,7 +9,7 @@ import {
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux/model/slice/SubNavigationSlice";
+import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux/model/slice/GroupSubNavigationSlice";
 import {useDispatch} from "react-redux";
 
 export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)
