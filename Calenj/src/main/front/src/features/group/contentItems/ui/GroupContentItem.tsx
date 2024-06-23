@@ -22,40 +22,40 @@ interface ContentCompositionProps{
 }
 
 export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, contentSize, showUserList}) =>{
-    const subNavigateInfo = useSelector((state:RootState) => state.subNavigateInfo)
+    const group_subNavState = useSelector((state:RootState) => state.group_subNavState)
     const screenRowFlex = useScreenMode(param,contentSize,showUserList);
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if(param===subNavigateInfo.param){
+        if(param===group_subNavState.param){
             dispatch(updateAppPosition({target: "group", param: param}));
         }
-    }, [param,subNavigateInfo.param]);
+    }, [param,group_subNavState.param]);
 
     return(
-        param ===subNavigateInfo.param &&
+        param ===group_subNavState.param &&
             <FullScreen_div style={{display:"flex"}}>
                     <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showUserList={showUserList}>
-                        <CustomScreen_MessageBox_Container $clickState={subNavigateInfo.clickState===""}
-                                                           $mode={subNavigateInfo.mode}
-                                                           $height={subNavigateInfo.screenHeightSize}
+                        <CustomScreen_MessageBox_Container $clickState={group_subNavState.clickState===""}
+                                                           $mode={group_subNavState.mode}
+                                                           $height={group_subNavState.screenHeightSize}
                                                            $width={showUserList ?
-                                                               subNavigateInfo.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
-                                                               subNavigateInfo.screenWidthSize/contentSize.width * 100}>
+                                                               group_subNavState.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
+                                                               group_subNavState.screenWidthSize/contentSize.width * 100}>
 
                             <MessageContainer/>
                         </CustomScreen_MessageBox_Container>
-                        {subNavigateInfo.clickState !=="" &&
+                        {group_subNavState.clickState !=="" &&
                         <CustomScreen_SubContent_Container $screenRowFlex={screenRowFlex}
-                                                           $mode={subNavigateInfo.mode}
-                                                           $height={subNavigateInfo.screenHeightSize}
+                                                           $mode={group_subNavState.mode}
+                                                           $height={group_subNavState.screenHeightSize}
                                                            $width={showUserList ?
-                                                               subNavigateInfo.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
-                                                               subNavigateInfo.screenWidthSize/contentSize.width * 100}>
+                                                               group_subNavState.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
+                                                               group_subNavState.screenWidthSize/contentSize.width * 100}>
 
                             {screenRowFlex && <ControlMidLine showUserList={showUserList} contentSize={contentSize}/>}
                             <GroupSubScreen showUserList={showUserList}
-                                            subScreenWidth={screenRowFlex ? subNavigateInfo.screenWidthSize :
+                                            subScreenWidth={screenRowFlex ? group_subNavState.screenWidthSize :
                                                 (showUserList ? contentSize.width-GroupUserList_Container_width: contentSize.width)}/>
                             {!screenRowFlex && <ControlMidLine showUserList={showUserList} contentSize={contentSize}/>}
                         </CustomScreen_SubContent_Container>}

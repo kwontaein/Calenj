@@ -6,7 +6,7 @@ import {ScrollMin_width} from "../../../../features/messsage/messageScrollBox/ui
 
 
 
-export interface SubNavigationProps {
+export interface Group_SubNavigationProps {
     param:string,
     clickState:string,
     mode:string,
@@ -16,8 +16,8 @@ export interface SubNavigationProps {
 
 
 
-export interface SubNavigateState{
-    subNavigateInfo:SubNavigationProps;
+export interface Group_SubNavigateState{
+    group_subNavState:Group_SubNavigationProps;
 }
 
 
@@ -40,13 +40,13 @@ export const mapDispatchToSubNavigationProps = (dispatch: Dispatch): DispatchSub
 });
 
 //(Component Props로 전달하기 위한 interface)
-export const mapStateToSubNavigationProps = (state: RootState): SubNavigateState => ({
-    subNavigateInfo: state.subNavigateInfo, // store에서 가져올 상태를 매핑
+export const mapStateToSubNavigationProps = (state: RootState): Group_SubNavigateState => ({
+    group_subNavState: state.group_subNavState, // store에서 가져올 상태를 매핑
 });
 
 
 // 초기상태
-const initialState: SubNavigationProps ={
+const initialState: Group_SubNavigationProps ={
     param:'',
     clickState:'',
     mode:'',
@@ -55,8 +55,8 @@ const initialState: SubNavigationProps ={
 }
 
 
-const subNavigation = createSlice({
-    name:'subNavigateInfo',
+const group_subNavigation = createSlice({
+    name:'group_subNavigationState',
     initialState,
     reducers:{
         updateSubParam: (state, action :PayloadAction<{ param:string }>)=>{
@@ -79,7 +79,7 @@ const subNavigation = createSlice({
 })
 
 
-export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthSize,updateSubParam} = subNavigation.actions;
+export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthSize,updateSubParam} = group_subNavigation.actions;
 
 
-export default subNavigation.reducer;
+export default group_subNavigation.reducer;

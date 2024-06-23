@@ -9,7 +9,7 @@ export const useVoteList = ():[VoteList[],VoteList[]] =>{
     const [endVoteList, setEndVoteList] = useState<VoteList[]>([]);
 
     const boardOption = useSelector((state:RootState) => state.boardOption)
-    const { param } = useSelector((state:RootState) => state.subNavigateInfo)
+    const { param } = useSelector((state:RootState) => state.group_subNavState)
     const voteListState = useFetchVoteList(param)
 
     useEffect(() => {

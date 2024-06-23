@@ -18,12 +18,14 @@ public class UserResponse {
     private String userPassword;
     private String userEmail;
     private String userPhone;
+    private String introduce;
     private String userJoinDate;
-    private String userRole;
+    private String userIntroduce;
 
-    public UserResponse(String nickname, String userEmail, String userPhone, String userJoinDate) {
+    public UserResponse(String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate) {
         this.nickname = nickname;
         this.userEmail = userEmail;
+        this.userIntroduce =userIntroduce;
         this.userPhone = userPhone;
         this.userJoinDate = userJoinDate;
     }

@@ -25,7 +25,9 @@ export const ContentsComposition :React.FC<QueryProps>=({isLoading})=>{
 
     //그룹 디테일 불러오기
     useEffect( () => {
-        setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,navigateParam]));
+        if(navigate ==="group" && navigateParam!==''){
+            setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY,navigateParam]));
+        }
     }, [isLoading,navigateParam]);
 
     const showUserListMutate = () =>setShowUserList(!showUserList)

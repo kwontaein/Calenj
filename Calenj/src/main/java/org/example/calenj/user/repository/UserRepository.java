@@ -1,5 +1,6 @@
 package org.example.calenj.user.repository;
 
+import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,6 +21,10 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByUserUsedName(@Param("user_used_name") String userName);
 
     Optional<UserEntity> findByRefreshToken(String refreshToken); //optional -> nullPointerException 방지
+    // 첫 번째 쿼리: GroupEntity 조회
+    @Query("SELECT new org.example.calenj.group.groupinfo.dto.response.GroupResponse(g.groupId, g.groupTitle, g.groupCreated ,g.groupCreator) FROM Group_table g WHERE g.groupId = :groupId")
+    Optional<GroupResponse> findGroupById(@Param("groupId") UUID groupId);
+
 
     //refreshToken 저장 쿼리
     @Modifying(clearAutomatically = true)

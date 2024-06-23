@@ -6,9 +6,9 @@ export interface GroupList_item {
     groupCreated: string;
 }
 export interface groupMembers {
-    groupRoleType: String;
-    group_user_location: String;
-    nickName: String;
+    groupRoleType: string;
+    group_user_location: string;
+    nickName: string;
     onlineStatus: string;
     userId: string;
 }
@@ -132,6 +132,13 @@ export interface UserDateEvent {
     }
 }
 
+export interface UserInfo{
+    nickname:string,
+    userEmail :string,
+    userIntroduce :string,
+    userPhone :string,
+    userJoinDate :string;
+}
 
 export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
 export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message

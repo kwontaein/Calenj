@@ -1,6 +1,6 @@
 import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
-import {useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import {AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
@@ -19,9 +19,10 @@ import {dateOperation} from "../lib/dateOperation";
 
 export const MessageScrollBox:React.FC =()=>{
     const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
-    const {param} = useSelector((state:RootState)=>state.subNavigateInfo)
+    const {param} = useSelector((state:RootState)=>state.group_subNavState)
     const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
     const scrollRef =useMessageScroll(param,messageList)
+    const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
 
     const loadFile = useMemo(() => {
         return throttleByAnimationFrame(() => {
@@ -36,6 +37,7 @@ export const MessageScrollBox:React.FC =()=>{
             loadFile();
         }
     });
+
 
 
     const MessageBox = useMemo(() => {
@@ -67,7 +69,7 @@ export const MessageScrollBox:React.FC =()=>{
                                                 $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{message.userId}</NickNameContainer>
+                                                    <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>
