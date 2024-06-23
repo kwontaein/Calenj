@@ -1,0 +1,1 @@
+export {RequestFriendView} from './ui/RequestFriendView'

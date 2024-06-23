@@ -2,7 +2,7 @@ import {CalendarController, CalendarFromSelector} from "../../calendar/controlle
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
-import {FriendEventBarItems} from "../../friend/request";
+import {FriendEventBarItems} from "../../friend/request/requestInput";
 
 export const MainEventTopBar: React.FC = () =>{
     const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)

@@ -1,8 +1,8 @@
-import {UserListView, MiniText} from '../../../../../shared/ui/SharedStyled'
-import {useFetchRequestFriendList} from "../../../../../entities/reactQuery";
+import {UserListView, MiniText} from '../../../../../../shared/ui/SharedStyled'
+import {useFetchRequestFriendList} from "../../../../../../entities/reactQuery";
 import {requestFriendApi} from "../api/requestFriendApi";
 
-const RequestFriend: React.FC = () => {
+const ReceivedFriendList: React.FC = () => {
     //그룹 목록 불러오기
     const requestFriendState = useFetchRequestFriendList();
 
@@ -29,4 +29,4 @@ const RequestFriend: React.FC = () => {
         </div>
     )
 }
-export default RequestFriend;
+export default ReceivedFriendList;

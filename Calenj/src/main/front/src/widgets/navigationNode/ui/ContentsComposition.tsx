@@ -11,6 +11,7 @@ import {RootState} from "../../../entities/redux";
 import {GroupContentItem,GroupContentTopItem} from "../../../features/group/contentItems";
 import {CalendarView} from "../../../features/main/calendar/view";
 import {MainEventTopBar} from "../../../features/main/eventBarItems/ui/MainEventTopBar";
+import {RequestFriendView} from "../../../features/main/friend/request/view";
 
 interface QueryProps {
     isLoading :boolean
@@ -36,6 +37,7 @@ export const ContentsComposition :React.FC<QueryProps>=({isLoading})=>{
     return(
 
         <FullScreen_div ref={contentRef}>
+            <RequestFriendView onClose={()=>{}} myRequest={true}/>
             <EventTopBar_Container>
                 {(navigate ==="group"&& groupDetail && !isLoading) &&
                 <GroupContentTopItem showUserListMutate={showUserListMutate} showUserList={showUserList}/>}
