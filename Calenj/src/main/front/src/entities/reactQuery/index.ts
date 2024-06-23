@@ -10,6 +10,7 @@ export {
     useFetchVoteDetail,
     useFetchFriendEvent,
     useFetchDateEventTag,
+    useFetchUserInfo,
 } from './model/queryModel'
 export {
     type GroupDetail,
@@ -25,6 +26,7 @@ export {
     type groupMembers,
     type EventTagDTO,
     type UserDateEvent,
+    type UserInfo,
 } from './api/types'
 
 export {
@@ -39,4 +41,5 @@ export {
     QUERY_VOTE_DETAIL_KEY,
     QUERY_NOTICE_LIST_KEY,
     QUERY_DATE_EVENT_TAG_KEY,
+    QUERY_USER_INFO_KEY,
 } from './model/queryModel'

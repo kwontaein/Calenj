@@ -91,9 +91,9 @@ public class UserService {
      * 유저정보 확인
      **/
     public UserResponse selectUserInfo() {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        Optional<UserEntity> user = userRepository.findByUserEmail(userDetails.getUsername());
-        return user.map(userEntity -> new UserResponse(userEntity.getNickname(), userEntity.getUserEmail(), userEntity.getUserPhone(), userEntity.getUserJoinDate())).orElse(null);
+        UserEntity user = globalService.myUserEntity();
+        System.out.println("userInfo :"+ user + user);
+        return new UserResponse(user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate());
     }
 
     /**

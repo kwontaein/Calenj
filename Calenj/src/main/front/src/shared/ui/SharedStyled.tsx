@@ -278,11 +278,9 @@ export const DEFAULT_HR = styled.hr`
 
 
 export const SignState_Button = styled.button`
-    background-color: ${ThemeColor2}; /* 전체 페이지 배경색 */
-    color: ${TextColor}; /* 전체 페이지 텍스트 색상 */
-    height: 30px;
-    border-radius: 20px;
-    border: 0;
+    height: 100%;
+    width: 50px;
+    font-size: 10px;
 `;
 
 

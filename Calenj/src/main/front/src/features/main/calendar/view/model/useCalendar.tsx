@@ -57,7 +57,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             )
         )
         setCurrentEvents(events);
-        console.log(events)
+        // console.log(events)
     }
 
 

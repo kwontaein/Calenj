@@ -87,6 +87,7 @@ public class UserController {
      */
     @GetMapping("/api/getUserInfo")
     public UserResponse getUserInfo() { //유저 프로필 업데이트
+        System.out.println("selectUserInfo: "+userService.selectUserInfo());
         return userService.selectUserInfo();
     }
 

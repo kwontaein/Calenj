@@ -56,7 +56,6 @@ export const DateEventTag: React.FC = () => {
     useEffect(() => {
         const eventTags = dateEventTagState.data;
         if(eventTags){
-            console.log(eventTags)
             eventTags.forEach((tag:EventTagDTO)=>{
                 dispatch(createDateEventTag({tagId:tag.id,name:tag.name, color:tag.color, defaultTag:tag.defaultTag}))
             })

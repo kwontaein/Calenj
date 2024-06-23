@@ -1,29 +1,37 @@
 import {SubNavigation,ContentsComposition} from "../../navigationNode";
 import {FullScreen_div} from '../../../shared/ui/SharedStyled'
 import React, {useEffect, useRef, useState} from "react";
-import {connect, useDispatch} from 'react-redux'
+import {connect, useDispatch, useSelector} from 'react-redux'
 import {
     NavigateState,
     DispatchNavigationProps,
     mapStateToNavigationProps,
     mapDispatchToNavigationProps, NavigationProps,
 } from '../../../entities/redux/model/slice/NavigatgionSlice'
-import {useFetchGroupDetail} from '../../../entities/reactQuery'
+import {useFetchGroupDetail, useFetchUserInfo} from '../../../entities/reactQuery'
 import {GroupListView} from "../../../features/group/navItems_list";
-import {userDataPush} from "../../../entities/redux";
+import {registerUserName, RootState} from "../../../entities/redux";
 
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo,updateNavigation})=>{
 
+    const userId = localStorage.getItem('userId')
+    const userInfo = useFetchUserInfo(userId||''); //사용자정보 저장
+
+    useEffect(() => {
+        console.log(userInfo.data)
+    }, [userInfo.isLoading]);
     //reactQuery로 그룹 디테일정보 fetching
     const groupDetailState = useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
+
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         //사용자 정보 push
         if(groupDetailState.data){
             groupDetailState.data.members.forEach((groupMember)=>{
-                dispatch(userDataPush({userId:groupMember.userId, userName: groupMember.nickName}))
+                dispatch(registerUserName({userId:groupMember.userId, userName: groupMember.nickName}))
             })
         }
     }, [groupDetailState.data]);
