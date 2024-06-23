@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class FriendController {
     public String requestFriend(@RequestBody FriendRequest request) {
         //친구 요청 보내기
         //만약 상대가 보낸 요청이 있다면, 내 테이블에 추가 후 상태 변경하기
-        return friendService.requestFriend(request.getFriendUserName());
+        return friendService.requestFriend(request.getFriendUserId());
     }
 
     /**
@@ -43,7 +44,7 @@ public class FriendController {
     public String responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
-        return friendService.responseFriend(request.getFriendUserName(), request.getIsAccept());
+        return friendService.responseFriend(UUID.fromString(request.getFriendUserId()), request.getIsAccept());
     }
 
     /**

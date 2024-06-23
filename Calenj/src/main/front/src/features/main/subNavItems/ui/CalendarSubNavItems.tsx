@@ -1,22 +1,16 @@
 import {DateEventTag} from "../../calendar/eventTag";
 import {CalendarController, CalendarFromSelector} from "../../calendar/controller";
-import {SubNavProfile} from "./SubNavProfile";
-import {FriendList} from "../../friend";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux";
+import FriendList from "../../friend/ui/FriendList";
+import RequestFriend from "../../friend/ui/RequestFriend";
 
-export const CalendarSubNavItems: React.FC = () =>{
-    const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)
-
-
-    return(
+export const CalendarSubNavItems: React.FC = () => {
+    return (
         <>
-            <SubNavProfile/>
-            <CalendarController/>
             <CalendarFromSelector/>
-            {clickState === 'calendar' && <DateEventTag/>}
-            {clickState === 'friend' && <FriendList/>}
-
+            <CalendarController/>
+            <DateEventTag/>
+            <FriendList/>
+            <RequestFriend/>
         </>
     )
 }

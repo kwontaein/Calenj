@@ -15,7 +15,7 @@ const RequestFriend: React.FC = () => {
                     <ul>
                         {requestFriendState.data.map((events) => (
                             <UserListView key={events.eventId}>
-                                {events.eventUserId} 님이 보낸 친구 요청
+                                친구 요청
                                 <br/>
                                 -{events.createDate}-
                                 <br/>

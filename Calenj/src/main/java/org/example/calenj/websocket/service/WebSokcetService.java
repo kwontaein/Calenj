@@ -238,7 +238,7 @@ public class WebSokcetService {
 
         ChatMessageResponse response = filterNullFields(message);
         response.setOnlineUserList(getUsers(message.getParam()));
-        sendSwitch(authentication, message, response, target);
+        sendSwitch(message, response, target);
 
     }
 
@@ -249,7 +249,7 @@ public class WebSokcetService {
      * @param message  전달받은 정보들
      * @param response 전달할 정보들
      **/
-    public void sendSwitch(Authentication authentication, ChatMessageRequest message, ChatMessageResponse response, String target) {
+    public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
         switch (message.getState()) {
             case ALARM: {
                 int setPoint = countLinesUntilEndPoint(message);
@@ -302,6 +302,17 @@ public class WebSokcetService {
             }
         }
     }
+
+
+    public void userAlarm(UUID userId, String kind) {
+
+        ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+        chatMessageResponse.setUserId(userId);
+        chatMessageResponse.setParam(kind);
+        chatMessageResponse.setState(ChatMessageRequest.fileType.ALARM);
+        template.convertAndSend("/topic/personalTopic/" + userId, chatMessageResponse);
+    }
+
 
     /**
      * response 설정
