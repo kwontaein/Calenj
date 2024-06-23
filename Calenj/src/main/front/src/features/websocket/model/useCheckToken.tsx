@@ -10,6 +10,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {subscribeFilter} from "../utils/subscribeFilter";
 import {SubScribeType} from "./types";
 import {sagaRefresh} from "../../../app/hoc/store";
+import {useEffect} from "react";
+import {useFetchUserInfo} from "../../../entities/reactQuery";
 
 
 export const useCheckToken = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
@@ -26,6 +28,7 @@ export const useCheckToken = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
             dispatch(updateOnline({isOnline: "OFFLINE"}));
             dispatch(updateLoading({loading: true}));
         } else {
+            // features/websocket/api
             subscribeCheckApi()
                 .then((res) => {
                     dispatch(updateOnline({isOnline: "ONLINE"}))
@@ -37,6 +40,9 @@ export const useCheckToken = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
                         return value.groupId;
                     })
                     let subScribe = subscribeFilter(friendArr, groupArr, arr.userId)
+                    
+                    localStorage.setItem('userId', arr.userId); // Id 저장
+                    //stomp 연결시작 => dispatch synchronizationStomp >> Saga.Next()
                     dispatch(synchronizationStomp({destination: subScribe}));
                     dispatch(updateStompState({isConnect: true}))
                 })

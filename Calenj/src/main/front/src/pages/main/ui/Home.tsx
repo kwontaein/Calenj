@@ -9,6 +9,7 @@ import {
     mapStateToStompProps
 } from '../../../entities/redux/model/slice/StompReducer';
 import {SignStateWidget} from '../../../widgets/signState';
+import {useFetchUserInfo} from "../../../entities/reactQuery";
 const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (

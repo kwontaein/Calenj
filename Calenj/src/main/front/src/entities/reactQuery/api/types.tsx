@@ -132,6 +132,13 @@ export interface UserDateEvent {
     }
 }
 
+export interface UserInfo{
+    nickname:string,
+    userEmail :string,
+    userIntroduce :string,
+    userPhone :string,
+    userJoinDate :string;
+}
 
 export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
 export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message

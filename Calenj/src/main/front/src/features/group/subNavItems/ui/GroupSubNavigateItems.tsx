@@ -11,8 +11,8 @@ export const GroupSubNavigateItems:React.FC<SubNavigationProps> = ({groupId}) =>
 
     return(
         <SubNavigateContents_Container>
-                <Hr_SubNavigation/>
-                <SubNavigationButton subItem={'그룹일정'} subItemsHandler={subItemsHandler} />
+            <SubNavigationButton subItem={'그룹일정'} subItemsHandler={subItemsHandler} />
+            <Hr_SubNavigation/>
                 <ListToggleDiv onClick={toggleHandler}>
                     {toggleState ?
                         <i style={{marginRight: '5px'}} className="fi fi-rr-angle-small-down"/> :

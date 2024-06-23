@@ -1,7 +1,7 @@
 import {dynamicEventProps} from "./DateEventTagSlice";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-interface UserDataProps {
+interface MappingNameProps {
     [userId:string]:{
         userName:string,
     }
@@ -9,25 +9,25 @@ interface UserDataProps {
 
 
 
-export interface UserDataState {
-    userData: UserDataProps,
+export interface RegisterUserNameState {
+    userNameRegister: MappingNameProps,
 }
 
 // 초기상태
-const initialState: UserDataState = {
-    userData: {}
+const initialState: RegisterUserNameState = {
+    userNameRegister: {}
 }
 
 
 
 
 const userData = createSlice({
-    name: 'userData',
+    name: 'mappingUserName',
     initialState,
     reducers: {
-        userDataPush: (state, action: PayloadAction<{userId: string,userName: string }>) => {
-            state.userData = {
-                ...state.userData,
+        registerUserName: (state, action: PayloadAction<{userId: string,userName: string }>) => {
+            state.userNameRegister = {
+                ...state.userNameRegister,
                 [action.payload.userId]: {
                     userName: action.payload.userName,
                 }
@@ -37,5 +37,5 @@ const userData = createSlice({
 })
 
 
-export const {userDataPush} = userData.actions;
+export const {registerUserName} = userData.actions;
 export default userData.reducer;

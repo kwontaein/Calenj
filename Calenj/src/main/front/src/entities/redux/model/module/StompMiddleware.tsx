@@ -189,7 +189,6 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
             destination.map((sub: (string)[], index: number) => {
-                if (index === 0) localStorage.setItem('userId', sub[index])
                 sub.map((param: (string)) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
@@ -221,7 +220,10 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                 stompClient.send("/app/closeConnection")
             }
             //stompClient.disconnect();//연결 끊기(완전히
-            stompClient.deactivate().then(r => console.log("임시 비활성화")); //연결 끊기(임시 비활성화
+            stompClient.deactivate().then(r => {
+                localStorage.removeItem('userId')
+                console.log("임시 비활성화")
+            }); //연결 끊기(임시 비활성화
         };
         //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
         //인자로는 확장의 최장크기(크기제한)
