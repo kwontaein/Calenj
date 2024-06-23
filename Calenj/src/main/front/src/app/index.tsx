@@ -2,12 +2,12 @@ import Home from '../pages/main/ui/Home';
 import {SignUpForm} from "../pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {InviteGroup} from "../features/group/invite";
-import {FriendList} from "../features/main/friend/ui/FriendList";
+import {FriendList} from "../features/main/friend/list";
 
 import React, {useEffect, useState} from 'react';
 
 import {useSelector} from "react-redux";
-import RequestFriend from "../features/main/friend/ui/RequestFriend";
+import RequestFriend from "../features/main/friend/request/ui/RequestFriend";
 import {FullScreen_div} from "../shared/ui/SharedStyled";
 import {useFetchCookie} from "../entities/reactQuery";
 import ImageUploadView from "../shared/ui/ImageUploadView";
@@ -18,7 +18,7 @@ import {RootState} from "../entities/redux";
 import {sagaRefresh, sagaTask} from "./hoc/store";
 
 
-export const App: React.FC = () => {
+export const App: React.FC =() => {
     const cookieState = useFetchCookie();
     const loading = useSelector((state: RootState) => state.stomp.loading); // 리덕스 상태 구독
     const checkToken = useCheckToken(sagaRefresh);

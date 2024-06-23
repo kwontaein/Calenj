@@ -1,5 +1,5 @@
-import {UserListView, MiniText} from '../../../../shared/ui/SharedStyled'
-import {useFetchRequestFriendList} from "../../../../entities/reactQuery";
+import {UserListView, MiniText} from '../../../../../shared/ui/SharedStyled'
+import {useFetchRequestFriendList} from "../../../../../entities/reactQuery";
 import {requestFriendApi} from "../api/requestFriendApi";
 
 const RequestFriend: React.FC = () => {
