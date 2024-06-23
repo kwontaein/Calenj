@@ -22,7 +22,7 @@ export const MessageScrollBox:React.FC =()=>{
     const {param} = useSelector((state:RootState)=>state.group_subNavState)
     const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
     const scrollRef =useMessageScroll(param,messageList)
-    const {userData} = useSelector((state:RootState)=>state.userData);
+    const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
 
     const loadFile = useMemo(() => {
         return throttleByAnimationFrame(() => {
@@ -69,7 +69,7 @@ export const MessageScrollBox:React.FC =()=>{
                                                 $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{userData[message.userId].userName}</NickNameContainer>
+                                                    <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>{message.message}</MessageContentContainer>

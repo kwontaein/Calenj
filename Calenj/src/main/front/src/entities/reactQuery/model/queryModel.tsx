@@ -11,7 +11,7 @@ import {
     getVoteDetail,
     getFriendResponse,
     getFriendRequest,
-    getDateEventTag, getUserDateEvent
+    getDateEventTag, getUserDateEvent, getUserInfo
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -25,7 +25,7 @@ import {
     FetchData,
     ReceiveData,
     VoteDetail,
-    EventTagDTO, UserDateEvent
+    EventTagDTO, UserDateEvent, UserInfo
 } from "../api/types";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
@@ -41,7 +41,7 @@ export const QUERY_VOTE_DETAIL_KEY : string = 'QUERY_VOTE_DETAIL_KEY'
 export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
 export const QUERY_DATE_EVENT_TAG_KEY: string ='QUERY_DATE_EVENT_TAG_KEY'
 export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
-
+export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -112,7 +112,11 @@ export const useFetchUserDateEvent = ()=>
         queryFn:getUserDateEvent,
     })
 
-
+export const useFetchUserInfo = (userId:string) =>
+    useQuery<UserInfo|null,Error>({
+        queryKey: [QUERY_USER_INFO_KEY,userId],
+        queryFn:getUserInfo,
+    })
 
 /**수정관련 */
 

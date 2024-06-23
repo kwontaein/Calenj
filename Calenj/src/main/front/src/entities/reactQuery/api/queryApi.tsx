@@ -12,7 +12,7 @@ import {
     VoteDetail,
     VoteList,
     EventTagDTO,
-    UserDateEvent
+    UserDateEvent, UserInfo
 } from "./types";
 
 //쿠키체크
@@ -203,6 +203,21 @@ export const getUserDateEvent = async ():Promise<UserDateEvent[]|null> =>{
     try{
         return await axios.get("api/getUserDateEvent")
             .then((res : AxiosResponse) => res.data)
+    }catch (error){
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
+
+export const getUserInfo = async ():Promise<UserInfo|null> =>{
+    try{
+        return await axios.get("api/getUserInfo")
+            .then((res :AxiosResponse)=> res.data)
     }catch (error){
         const axiosError = error as AxiosError;
         console.log(axiosError);

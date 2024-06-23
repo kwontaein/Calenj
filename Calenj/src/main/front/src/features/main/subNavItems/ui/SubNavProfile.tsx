@@ -10,8 +10,23 @@ import {
     SubNavProfile_div
 } from "./SubNavProfileStyled";
 import {SubNavProfileTop} from "./SubNavProfileTop";
+import {useEffect, useState} from "react";
+import {QUERY_GROUP_DETAIL_KEY, QUERY_USER_INFO_KEY, UserInfo} from "../../../../entities/reactQuery";
+import {useQueryClient} from "@tanstack/react-query";
 
 export const SubNavProfile :React.FC = () =>{
+    const userId =localStorage.getItem('userId');
+    const queryClient = useQueryClient();
+    const [userInfo, setUserInfo] = useState<UserInfo>()
+
+    const userData:UserInfo |undefined = queryClient.getQueryData([QUERY_USER_INFO_KEY,userId]);
+    //그룹 디테일 불러오기
+    useEffect( () => {
+        if(userData){
+            setUserInfo(userData);
+        }
+    }, [userData]);
+
     return(
         <SubNavProfile_Container>
             <SubNavProfileTop/>
@@ -26,10 +41,10 @@ export const SubNavProfile :React.FC = () =>{
                 </Profile_Container>
                 <ProfileText_Container>
                     <NickName_Container>
-                        구록불
+                        { userInfo?.nickname}
                     </NickName_Container>
                     <Introduction_Container>
-                        안녕하세요 저는 캘린제이 백엔드 개발자 권태인입니다.
+                        {userInfo?.userIntroduce}
                     </Introduction_Container>
                     <FriendsNum_Container>
                         친구 50

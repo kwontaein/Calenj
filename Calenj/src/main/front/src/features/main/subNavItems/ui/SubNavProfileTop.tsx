@@ -7,6 +7,7 @@ import {
 } from "./SubNavProfileTopStyled";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, updateMainSubNavigation} from "../../../../entities/redux";
+import {LogoutButton} from "../../../authentication/logout";
 
 export const SubNavProfileTop :React.FC = () =>{
     const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)
@@ -34,7 +35,7 @@ export const SubNavProfileTop :React.FC = () =>{
                 </ProfileClickPointer_Container>
             </SubProfileTopMenu_Container>
 
-            <Logout_Button>로그아웃</Logout_Button>
+            <LogoutButton/>
 
         </SubNavProfileTop_Container>
     )
