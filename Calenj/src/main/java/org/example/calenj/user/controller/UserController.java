@@ -59,7 +59,7 @@ public class UserController {
     /**
      * 로그인
      */
-    @PostMapping("/api/getUserInfo")
+    @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody UserRequest userRequest) {
         return userService.login(userRequest.getUserEmail(), userRequest.getUserPassword());
     }
