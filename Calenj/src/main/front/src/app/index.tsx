@@ -2,12 +2,12 @@ import Home from '../pages/main/ui/Home';
 import {SignUpForm} from "../pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {InviteGroup} from "../features/group/invite";
-import {FriendList} from "../features/main/friend/list";
+import {FriendList} from "../features/main/friend/friendLiist";
 
 import React, {useEffect, useState} from 'react';
 
 import {useSelector} from "react-redux";
-import RequestFriend from "../features/main/friend/request/ui/RequestFriend";
+import ReceivedFriendList from "../features/main/friend/request/view/ui/ReceivedFriendList";
 import {FullScreen_div} from "../shared/ui/SharedStyled";
 import {useFetchCookie} from "../entities/reactQuery";
 import ImageUploadView from "../shared/ui/ImageUploadView";
@@ -42,7 +42,7 @@ export const App: React.FC =() => {
                             <Route path={":inviteCode"} element={<InviteGroup/>}/>
                         </Route>
                         <Route path={"/friend"} element={<FriendList/>}/>
-                        <Route path={"/requestFriend"} element={<RequestFriend/>}/>
+                        <Route path={"/requestFriend"} element={<ReceivedFriendList/>}/>
                         <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                     </Routes>

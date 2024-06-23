@@ -13,7 +13,7 @@ export const MessageSend_Input = styled.input`
 `
 
 
-export const MessageSend_Cotainer = styled.form`
+export const MessageSend_Container = styled.form`
     height: ${MessageSend_Container_height}px; //메시지 박스크기 50px
     display: flex;
 `

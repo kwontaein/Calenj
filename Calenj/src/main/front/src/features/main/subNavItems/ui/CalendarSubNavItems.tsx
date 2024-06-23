@@ -1,6 +1,6 @@
 import {DateEventTag} from "../../calendar/eventTag";
 import {SubNavProfile} from "../../../user/userSimpleProfile";
-import {FriendList} from "../../friend/list";
+import {FriendList} from "../../friend/friendLiist";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 

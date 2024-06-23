@@ -24,11 +24,11 @@ export const MiniVote_Input = styled.input`
     height: ${MiniVote_Input_height}px;
     margin-block: 5px;
     border-radius: 5px;
-    border: 2px solid ${ThemeColor2};
     padding-left: 10px;
     font-size: 14px;
     color: ${TextColor};
     background-color: ${ThemeColor2};
+    border: 2px solid ${ThemeColor2};
 
     &:focus {
         outline: none;
