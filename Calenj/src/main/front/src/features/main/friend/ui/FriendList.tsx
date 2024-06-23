@@ -1,11 +1,10 @@
-import axios, {AxiosResponse, AxiosError} from 'axios';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {UserListView, MiniText} from '../../../../shared/ui/SharedStyled'
 import {useFetchFriendsList} from "../../../../entities/reactQuery";
 import {addFriendApi} from "../api/addFrendApi";
 
 
-const FriendList: React.FC = () => {
+export const FriendList: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
     const friendListState = useFetchFriendsList();
@@ -33,4 +32,3 @@ const FriendList: React.FC = () => {
         </div>
     )
 }
-export default FriendList;

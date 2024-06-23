@@ -2,7 +2,7 @@ import Home from '../pages/main/ui/Home';
 import {SignUpForm} from "../pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {InviteGroup} from "../features/group/invite";
-import FriendList from "../features/main/friend/ui/FriendList";
+import {FriendList} from "../features/main/friend/ui/FriendList";
 
 import React, {useEffect, useState} from 'react';
 
