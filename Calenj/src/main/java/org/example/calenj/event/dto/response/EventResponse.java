@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class EventResponse {
 
-
     private UUID eventId;
+    private String nickName;
     // 이벤트 발생자
     private UUID ownUserId;
     // 이벤트 요청받은 사람
@@ -26,6 +26,5 @@ public class EventResponse {
     private EventEntity.statusType eventStatus;
     //이벤트 생성일
     private String createDate;
-
 
 }
