@@ -21,18 +21,18 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
 
     //모든 이벤트 리스트
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse" +
-            "(e.eventId,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId")
+            "(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId")
     Optional<List<EventResponse>> EventListById(@Param("userId") UUID userId);
 
     //요청한 친구 추가 이벤트
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId and e.eventName=RequestFriend and e.eventStatus=2")
-    Optional<List<EventResponse>> RequestEventListById(@Param("userId") UUID userId);
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:userId and e.eventName=RequestFriend and e.eventStatus=:statusType")
+    Optional<List<EventResponse>> RequestEventListById(@Param("userId") UUID userId, @Param("statusType") EventEntity.statusType statusType);
 
     //요청받은 친구 추가 이벤트
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=2")
-    Optional<List<EventResponse>> ResponseEventListById(@Param("userId") UUID userId);
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=:statusType")
+    Optional<List<EventResponse>> ResponseEventListById(@Param("userId") UUID userId, @Param("statusType") EventEntity.statusType statusType);
 
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
     Optional<List<EventResponse>> isDuplicatedEvent(@Param("ownUserId") UUID ownUserId, @Param("friendId") UUID friendId);
 
     default boolean checkIfDuplicatedEvent(UUID ownUserId, UUID friendId) {

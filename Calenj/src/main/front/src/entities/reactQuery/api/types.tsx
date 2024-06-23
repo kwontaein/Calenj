@@ -5,6 +5,7 @@ export interface GroupList_item {
     groupTitle: string;
     groupCreated: string;
 }
+
 export interface groupMembers {
     groupRoleType: string;
     group_user_location: string;
@@ -22,22 +23,23 @@ export interface GroupDetail {
 }
 
 
-export interface NoticeList{
-    noticeId : string;
-    noticeTitle : string;
-    noticeContent : string;
-    noticeCreator : string;
-    noticeCreated : string;
+export interface NoticeList {
+    noticeId: string;
+    noticeTitle: string;
+    noticeContent: string;
+    noticeCreator: string;
+    noticeCreated: string;
 }
 
 export interface NoticeDetail {
     groupId: string;
-    noticeContent : string;
+    noticeContent: string;
     noticeCreated: string;
     noticeCreator: string;
-    noticeWatcher:string[];
-    noticeTitle:string;
+    noticeWatcher: string[];
+    noticeTitle: string;
 }
+
 export interface VoteList {
     voteId: string;
     myId: string;
@@ -48,26 +50,24 @@ export interface VoteList {
     voteEndDate: string;
 }
 
-export interface VoteChoiceResponse{
-    voteItem:string;
-    voter:string[];
-    voteIndex:number
+export interface VoteChoiceResponse {
+    voteItem: string;
+    voter: string[];
+    voteIndex: number
 }
 
-export interface VoteDetail{
-    voteCreator : string;
-    voteTitle : string;
-    voteCreated:string;
-    voteEndDate:string;
-    isMultiple:boolean;
-    anonymous:boolean;
-    voteWatcher:string[]
-    voter:string[];
-    countVoter:string[];
-    voteChoiceResponse:VoteChoiceResponse[];
+export interface VoteDetail {
+    voteCreator: string;
+    voteTitle: string;
+    voteCreated: string;
+    voteEndDate: string;
+    isMultiple: boolean;
+    anonymous: boolean;
+    voteWatcher: string[]
+    voter: string[];
+    countVoter: string[];
+    voteChoiceResponse: VoteChoiceResponse[];
 }
-
-
 
 
 export interface FriendList {
@@ -86,12 +86,13 @@ export interface FriendEvent {
     eventStatus: string
     eventUserId: string
     ownUserId: string
+    nickName: string
 }
 
 export interface Message {
     chatUUID: string,
     sendDate: string,
-    userId:string,
+    userId: string,
     messageType: string,
     message: string,
 }
@@ -133,5 +134,5 @@ export interface UserDateEvent {
 }
 
 
-export type FetchData = ({ pageParam }: FetchDataParams) => Promise<Message[] | any[]>;
-export type ReceiveData = ({pageParam}: {pageParam?: number | undefined}) => Message
+export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
+export type ReceiveData = ({pageParam}: { pageParam?: number | undefined }) => Message

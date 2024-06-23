@@ -73,7 +73,6 @@ public class FriendController {
      */
     @GetMapping("/api/requestedList")
     public List<EventResponse> ResponseFriendList() {
-        System.out.println(friendService.ResponseFriendList());
         return friendService.ResponseFriendList();
     }
 

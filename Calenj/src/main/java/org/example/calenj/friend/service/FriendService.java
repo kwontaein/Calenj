@@ -52,20 +52,15 @@ public class FriendService {
         UserEntity ownUser = globalService.myUserEntity();
 
         if (friendUserName.equals(ownUser.getUsername())) {
-            System.out.println("나에게 친구 추가는 불가능합니다.");
             return "나에게 친구 추가는 불가능합니다.";
         }
 
         // 친구 추가할 유저 정보 조회
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
 
-        try {
-            //상대방 요청 정보가 있다면
-            friendRepository.findFriendById(friendUser.getUserId()).orElseThrow(() -> new RuntimeException("요청 정보가 없습니다."));
+        if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
             return repositorySetting(friendUser.getUserId(), friendUser.getNickname());
-        } catch (Exception e) {
-            e.printStackTrace();
-            //없다면 저장
+        } else {
             onlyOne(ownUser, friendUser, friendUser.getUserId());
             return "";
         }
@@ -113,7 +108,6 @@ public class FriendService {
                     .createDate(String.valueOf(LocalDate.now()))
                     .ChattingRoomId(UUID.randomUUID())
                     .status(FriendEntity.statusType.WAITING).build();
-
             //이벤트테이블추가
             EventEntity eventEntity = EventEntity
                     .builder()
@@ -159,12 +153,12 @@ public class FriendService {
     //내가 받은 요청 목록
     public List<EventResponse> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
+        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
     }
 
     //내가 보낸 요청 목록
     public List<EventResponse> RequestFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
+        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
     }
 }
