@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
+import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
 import {ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 import {updateSubScreenMode, updateSubScreenWidthSize} from "../../../../entities/redux";
 import {contentSize} from "./types";

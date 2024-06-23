@@ -18,7 +18,6 @@ export const SubNavProfileTop :React.FC = () =>{
 
     return (
         <SubNavProfileTop_Container>
-
             <SubProfileTopMenu_Container>
                 <ProfileClickPointer_Container $isClick={clickState==="calendar"}
                                                onClick={()=>subNavHandler('calendar')}
@@ -34,9 +33,7 @@ export const SubNavProfileTop :React.FC = () =>{
                     </ProfileIcon_Container>
                 </ProfileClickPointer_Container>
             </SubProfileTopMenu_Container>
-
             <LogoutButton/>
-
         </SubNavProfileTop_Container>
     )
 }

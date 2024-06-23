@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import {
-    SubNavigate_padding,
+    SubNavigate_padding, SubNavigate_paddingBlock,
     SubNavigateTopBar_height
 } from "../../../features/group/subNavItems/ui/GroupSubNavigationStyle";
 import {BackGroundColor, ThemeColor2} from "../../../shared/ui/SharedStyled";
 
 export const EventTopBar_Container = styled.div`
-    width: calc(100% -${SubNavigate_padding*2}px);
+    width: calc(100% -${SubNavigate_padding * 2}px);
     height: ${SubNavigateTopBar_height}px;
     padding: ${SubNavigate_padding}px;
-    background-color : ${ThemeColor2};
-    border-bottom: 1.2px ${BackGroundColor} solid;
+    padding-block: ${SubNavigate_paddingBlock}px;
+    background-color: ${ThemeColor2};
+    border-bottom: 1px ${BackGroundColor} solid;
     display: flex;
     flex-direction: row;
-    justify-content: right ;
+    justify-content: right;
 `
 
 export const ContentsScreen_div = styled.div`

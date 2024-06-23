@@ -1,10 +1,10 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {ListView, MiniText} from '../../../../shared/ui/SharedStyled'
+import {ListView, MiniText} from '../../../../../shared/ui/SharedStyled'
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
-import {QUERY_FRIEND_LIST_KEY, useFetchFriendEvent} from '../../../../entities/reactQuery'
-import {jwtFilter} from "../../../../entities/authentication/jwt";
+import {QUERY_FRIEND_LIST_KEY, useFetchFriendEvent} from '../../../../../entities/reactQuery'
+import {jwtFilter} from "../../../../../entities/authentication/jwt";
 
 interface Event {
     createDate: string

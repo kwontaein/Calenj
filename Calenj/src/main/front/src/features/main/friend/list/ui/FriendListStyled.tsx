@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {tagPaddingLeft} from "../../calendar/eventTag/ui/DateEventTagStyled";
+import {tagPaddingLeft} from "../../../calendar/eventTag/ui/DateEventTagStyled";
 
 export const FriendTop_Container = styled.div`
     width: 100%;

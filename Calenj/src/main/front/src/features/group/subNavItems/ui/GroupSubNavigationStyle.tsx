@@ -4,6 +4,7 @@ import {BackGroundColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_height: number = 32;
 export const SubNavigate_padding: number = 14;
+export const SubNavigate_paddingBlock : number =10;
 export const subNavigateBorder = 1.2;
 export const SubNavigationItem_height: number = 30;
 export const SubNavigationItem_margin: number = 5;
@@ -25,7 +26,8 @@ export const SubNavigation_Container = styled.div`
 export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
     height: ${SubNavigateTopBar_height}px;
     padding: ${SubNavigate_padding}px;
-    border-bottom: ${subNavigateBorder}px #222831 solid;
+    padding-block: ${SubNavigate_paddingBlock}px;
+    border-bottom: ${subNavigateBorder}px ${BackGroundColor} solid;
     background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemeColor3 };
     border-radius: 10px 0 0 0;
    

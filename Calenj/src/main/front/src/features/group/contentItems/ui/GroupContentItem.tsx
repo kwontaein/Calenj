@@ -4,9 +4,9 @@ import {
     CustomScreen_SubContent_Container,
     TransContentsScreen_div
 } from "./ContentCompositionStyle";
-import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
+import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
 import {GroupSubScreen} from "../../subScreenItems";
-import {GroupUserList} from "../../user";
+import {GroupUserList} from "../../members";
 import { useDispatch, useSelector} from 'react-redux'
 import {MessageContainer} from "../../../../widgets/message";
 import {useScreenMode} from "../model/useScreenMode";

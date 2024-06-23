@@ -4,12 +4,12 @@ import {PointColor, TextColor, ThemeColor3} from "../../../../shared/ui/SharedSt
 
 export const SubNavProfile_Container= styled.div`
     width: calc(100% - 20px);
-    height : 100px;
+    height : 120px;
     padding:10px;
 `
 
 export const SubNavProfile_Content_Container =styled.div`
-    height: calc(100% - ${topContent_HeightSize+15}px); // + padding*2
+    height: calc(100% - ${topContent_HeightSize+15}px); // + padding
     padding-top: 15px;
     display: flex;
     flex-direction: row;
