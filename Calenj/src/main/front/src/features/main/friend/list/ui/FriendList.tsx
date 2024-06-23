@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
-import {UserListView, MiniText} from '../../../../shared/ui/SharedStyled'
-import {useFetchFriendsList} from "../../../../entities/reactQuery";
-import {addFriendApi} from "../api/addFrendApi";
+import {UserListView, MiniText} from '../../../../../shared/ui/SharedStyled'
+import {useFetchFriendsList} from "../../../../../entities/reactQuery";
+import {addFriendApi} from "../../request/api/addFrendApi";
 import {FriendTop_Container, TopContent_Container, TopIcon_Container} from "./FriendListStyled";
 
 

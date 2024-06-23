@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {MessageSend_Container_height, ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
-import {GroupUserList_Container_width} from "../../user/ui/GroupUserListStyled";
+import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
 import {
-    SubNavigate_padding,
+    SubNavigate_paddingBlock,
     subNavigateBorder,
     SubNavigateTopBar_height, SubNavigation_Container_width
 } from "../../subNavItems/ui/GroupSubNavigationStyle";
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux/model/slice/GroupSubNavigationSlice";
+import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux";
 import {useDispatch} from "react-redux";
 
 export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)
@@ -51,7 +51,7 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
                 }
             }
         }else if(currentMode ==="column"){
-            const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_padding*2)+subNavigateBorder-MiddleLine_Size);
+            const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_paddingBlock*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
             if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_height-SubNavigateTopBar_height-MessageSend_Container_height-3){
                 dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))

@@ -10,6 +10,7 @@ import {useComponentSize} from '../../../shared/model'
 import {RootState} from "../../../entities/redux";
 import {GroupContentItem,GroupContentTopItem} from "../../../features/group/contentItems";
 import {CalendarView} from "../../../features/main/calendar/view";
+import {MainEventTopBar} from "../../../features/main/eventBarItems/ui/MainEventTopBar";
 
 interface QueryProps {
     isLoading :boolean
@@ -38,6 +39,7 @@ export const ContentsComposition :React.FC<QueryProps>=({isLoading})=>{
             <EventTopBar_Container>
                 {(navigate ==="group"&& groupDetail && !isLoading) &&
                 <GroupContentTopItem showUserListMutate={showUserListMutate} showUserList={showUserList}/>}
+                {navigate ==="main" && <MainEventTopBar/>}
             </EventTopBar_Container>
 
 

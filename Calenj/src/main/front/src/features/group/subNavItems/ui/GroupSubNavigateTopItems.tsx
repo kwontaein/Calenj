@@ -36,7 +36,6 @@ export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTi
 
     return(
         <SubNavigateTopBar_Container ref={selectBox} $isClick={showEventSelector} >
-
             <SubNavigateTopBar_Content_Container>
                 <FullScreen_div onClick={()=>{setShowEventSelector((prev)=>!prev)}} style={{display:"flex"}}>
                     <SubNavigateTopBar_leftContent>
