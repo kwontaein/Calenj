@@ -128,6 +128,7 @@ function* startStomp(destination: Destination): any {
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
+        console.log(receiveData.payload.receiveMessage)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userId)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {

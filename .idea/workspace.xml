@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.21 subNavProfile 제작 #2">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/model/types.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.25 친구요청 (완료)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/contentView/ui/MainContentView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/contentView/ui/MainContentView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/api/requestFreindApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/api/requestFreindApi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInputStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInputStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/ui/SubNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/ui/SubNavigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelector.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,11 +113,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\requestInput\api" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\viewManager" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\eventTag\ui" />
     </key>
   </component>
   <component name="RunManager">
@@ -355,7 +349,23 @@
       <option name="project" value="LOCAL" />
       <updated>1718943514517</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="06.25 friendView 제작">
+      <option name="closed" value="true" />
+      <created>1719296205645</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1719296205645</updated>
+    </task>
+    <task id="LOCAL-00024" summary="06.25 친구요청 (완료)">
+      <option name="closed" value="true" />
+      <created>1719299288370</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1719299288370</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -408,7 +418,9 @@
     <MESSAGE value="06.18 nickName 매칭" />
     <MESSAGE value="06.21 subNavProfile 제작" />
     <MESSAGE value="06.21 subNavProfile 제작 #2" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.21 subNavProfile 제작 #2" />
+    <MESSAGE value="06.25 friendView 제작" />
+    <MESSAGE value="06.25 친구요청 (완료)" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.25 친구요청 (완료)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

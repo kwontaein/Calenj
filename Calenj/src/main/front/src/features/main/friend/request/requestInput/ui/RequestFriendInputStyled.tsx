@@ -26,6 +26,8 @@ const shake = keyframes`
     }
 `;
 
+
+
 export const FriendEventBarItems_Container = styled.div`
     width: auto;
     height: 100%;

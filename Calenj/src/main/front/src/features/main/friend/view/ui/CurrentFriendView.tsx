@@ -5,6 +5,8 @@ import {AllFriendView} from "./AllFriendView";
 import {OnlineFriendView} from "./OnlineFriendView";
 import {RequestFriendView} from "./RequestFriendView";
 import {WaitingFriendView} from "./WaitingFriendView";
+import {useFetchFriendEvent} from "../../../../../entities/reactQuery";
+import {useEffect} from "react";
 
 export const CurrentFriendView: React.FC =() =>{
     const {viewState} = useSelector((state:RootState) => state.friendViewState)
