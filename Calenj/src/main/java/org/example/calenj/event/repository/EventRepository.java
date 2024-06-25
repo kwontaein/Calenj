@@ -25,11 +25,11 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     Optional<List<EventResponse>> EventListById(@Param("userId") UUID userId);
 
     //요청한 친구 추가 이벤트
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.ownUserId.userId =:userId and e.eventName=RequestFriend and e.eventStatus=WATING")
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.ownUserId.userId =:userId and e.eventName=RequestFriend and e.eventStatus=WAITING")
     Optional<List<EventResponse>> RequestEventListById(@Param("userId") UUID userId);
 
     //요청받은 친구 추가 이벤트
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=WATING")
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=WAITING")
     Optional<List<EventResponse>> ResponseEventListById(@Param("userId") UUID userId);
 
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
@@ -40,6 +40,6 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
         return duplicatedEvents.isPresent() && !duplicatedEvents.get().isEmpty();
     }
 
-    @Query("SELECT e.eventContent FROM Events e WHERE e.ownUserId.userId =:userId and e.eventUserId =:myUserId and e.eventName=RequestFriend  and e.eventStatus=WATING")
+    @Query("SELECT e.eventContent FROM Events e WHERE e.ownUserId.userId =:userId and e.eventUserId =:myUserId and e.eventName=RequestFriend  and e.eventStatus=WAITING")
     Optional<String> findEventContentByIds(UUID myUserId, UUID userId);
 }
