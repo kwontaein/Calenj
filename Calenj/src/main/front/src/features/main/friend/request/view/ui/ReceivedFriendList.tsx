@@ -1,5 +1,5 @@
 import {useFetchRequestFriendList} from "../../../../../../entities/reactQuery";
-import {getUserProfileApi} from "../../../../../group/members/index"
+import {getUserProfileApi} from "../../../../../group/members"
 import {
     ReceivedFriend_DatePlace, ReceivedFriend_Hr, ReceivedFriend_ImagePlace,
     ReceivedFriend_NamePlace, ReceivedFriend_ProfilePlace, ReceivedFriend_ResponseBtn, ReceivedFriend_TextPlace,
@@ -9,8 +9,21 @@ import {
 import {useState} from "react";
 import {Profile} from "../../../../../group/members/model/types";
 
+interface RequestFriendProps{
+    chatUUID: string
+    eventContent:string
+    introduce: string
+    joinDate: string
+    nickName: string
+    sameFriend: string[]
+    sameGroup : string[]
+}
+
 export const ReceivedFriendList: React.FC = () => {
     const [profile, setProfile] = useState<Profile | null>(null);
+    const [requestModal, setRequestModal] = useState<boolean>(false)
+    const [userInfo,setUserInfo] = useState<RequestFriendProps>()
+
     //그룹 목록 불러오기
     const requestFriendState = useFetchRequestFriendList();
 

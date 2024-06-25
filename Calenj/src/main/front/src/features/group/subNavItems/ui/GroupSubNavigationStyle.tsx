@@ -20,8 +20,6 @@ export const SubNavigation_Container = styled.div`
     min-width: ${SubNavigation_Container_width}px;
     height: 100%;
     background-color: ${ThemeColor3};
-    position: relative;
-    z-index:1;
 `
 
 export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`

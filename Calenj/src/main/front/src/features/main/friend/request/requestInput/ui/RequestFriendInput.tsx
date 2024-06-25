@@ -6,11 +6,13 @@ import {
 } from "./RequestFriendInputStyled";
 import {useEffect, useRef, useState} from "react";
 import {requestFriendApi} from "../api/requestFreindApi";
+import {RequestFriendView} from "../../view";
 
 export const RequestFriendInput: React.FC = () => {
     const [userId, setUserId] = useState<string>("");
     const [message,setMessage] = useState<string>('')
     const inputRef = useRef<HTMLInputElement>(null);
+    const [userView,setUserView]= useState<boolean>(false);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserId(event.target.value);
@@ -21,17 +23,18 @@ export const RequestFriendInput: React.FC = () => {
             setMessage('요청할 아이디를 입력해주세요.')
             return
         }
-        requestFriendApi(userId).then((response:AddFriendProps)=>{
-            if(!response.success){
-                setMessage(response.message)
-            }else{
-                window.alert(response.message)
-                if(inputRef.current){
-                    inputRef.current.value ='';
-                    setUserId('');
-                }
-            }
-        })
+        setUserView(true)
+        // requestFriendApi(userId).then((response:AddFriendProps)=>{
+        //     if(!response.success){
+        //         setMessage(response.message)
+        //     }else{
+        //         window.alert(response.message)
+        //         if(inputRef.current){
+        //             inputRef.current.value ='';
+        //             setUserId('');
+        //         }
+        //     }
+        // })
     };
 
     useEffect(() => {
@@ -44,6 +47,7 @@ export const RequestFriendInput: React.FC = () => {
 
     return (
         <>
+            {userView &&<RequestFriendView myRequest={true} onClose={()=>setUserView(false)}/>}
             <FriendEventBarItems_Container>
                 <AddFriendInput_Container className={!(message==='') ? "shake" : ""}>
                     <AddFriendInput type={"text"}

@@ -39,6 +39,12 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
 
     const [linkFriend, setLinkFriend] = useState<UserInfo[]>(initData)
 
+    const requestCancel = () =>{
+        if(myRequest) {
+            onClose()
+        }
+    }
+
     return createPortal(
         <Modal_Background>
             <Modal_Container style={{width: '500px', height: 'auto', backgroundColor: 'transparent'}}>
@@ -127,7 +133,7 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
 
 
                         <RequestFriendViewButton_Container>
-                            <Modal_Condition_Button style={{height: '100%', marginRight: '10px'}}>
+                            <Modal_Condition_Button style={{height: '100%', marginRight: '10px'}} onClick={requestCancel}>
                                 {myRequest ? "취소" : "거절"}
                             </Modal_Condition_Button>
                             <Modal_Condition_Button style={{height: '100%'}} $isAble={true}>
