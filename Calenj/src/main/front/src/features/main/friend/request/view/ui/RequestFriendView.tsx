@@ -41,14 +41,14 @@ export const RequestFriendView :React.FC<RequestFriendProps> =({onClose, myReque
     return createPortal(
         <Modal_Background>
             <Modal_Container style={{width:'500px', height:'auto', backgroundColor:'transparent'}}>
+                {!myRequest &&
                 <SpeechBox_Container>
                     <SpeechTail/>
-                    {!myRequest &&
                         <SpeechTextBox>
                             ㅎㅇ 권태인임 받으삼
                         </SpeechTextBox>
-                    }
                 </SpeechBox_Container>
+                }
                 <RequestFriendView_Container $myRequest={myRequest}>
                     <UserProfile_Container>
                         <UserProfile/>
