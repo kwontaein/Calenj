@@ -80,43 +80,44 @@ public class FriendService {
     }
 
     private boolean isAlreadyFriend(UserEntity friendUser) {
-        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
+        if(friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
             return true;
         }
         return false;
     }
 
     private AddFriendResponse createErrorResponse(String message) {
-        return responseSetting(false, message);
+        return responseSetting(false, message, null);
     }
 
-    private AddFriendResponse createSuccessResponse(String message) {
-        return responseSetting(true, message);
+    private AddFriendResponse createSuccessResponse(String message, UUID userId) {
+        return responseSetting(true, message, userId);
     }
 
     private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser, AddFriendResponse response) {
         if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
-            return repositorySetting();
+            return repositorySetting(friendUser.getUserId());
         } else {
             return onlyOne(ownUser, friendUser.getUserId());
         }
     }
 
-    public AddFriendResponse repositorySetting() {
-        return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?");
+    public AddFriendResponse repositorySetting(UUID friendUserId) {
+        return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?", friendUserId);
     }
 
     public AddFriendResponse onlyOne(UserEntity ownUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
         if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
-            return createSuccessResponse("친구 정보 조회에 성공했습니다.");
+            return createSuccessResponse("친구 정보 조회에 성공했습니다.", friendUserId);
         }
         return createErrorResponse("이미 요청한 유저입니다");
     }
 
-    public AddFriendResponse responseSetting(boolean isSuccess, String message) {
+    public AddFriendResponse responseSetting(boolean isSuccess, String message, UUID userId) {
         AddFriendResponse response = new AddFriendResponse();
         response.setSuccess(isSuccess);
         response.setMessage(message);
+        response.setUserId(userId);
         return response;
     }
 
@@ -195,7 +196,7 @@ public class FriendService {
         } else {
             acceptFriend(friendUserName);
             webSokcetService.userAlarm(friendUserName, "친구수락");
-            return createSuccessResponse("친구 요청을 수락했습니다.");
+            return createSuccessResponse("친구 요청을 수락했습니다.", friendUserName);
         }
     }
 

@@ -7,7 +7,7 @@ import {
     ReceivedFriendListView
 } from "./ReceivedFriendListStyled";
 import {useState} from "react";
-import {Profile} from "../../../../../group/members/model/types";
+import {UserInfo} from "../../../../../user/userInfo";
 
 interface RequestFriendProps{
     chatUUID: string
@@ -20,7 +20,7 @@ interface RequestFriendProps{
 }
 
 export const ReceivedFriendList: React.FC = () => {
-    const [profile, setProfile] = useState<Profile | null>(null);
+    const [profile, setProfile] = useState<UserInfo | null>(null);
     const [requestModal, setRequestModal] = useState<boolean>(false)
     const [userInfo,setUserInfo] = useState<RequestFriendProps>()
 
@@ -29,9 +29,9 @@ export const ReceivedFriendList: React.FC = () => {
 
     const getUserProfile = async (userId: string) => {
         try {
-            const res = await getUserProfileApi(userId);
-            setProfile(res.data);
-            console.log(res.data);
+            const userData = await getUserProfileApi(userId);
+            setProfile(userData);
+            console.log(userData);
         } catch (error) {
             window.alert('잘못된 접근입니다. 재시작을 해주세요.');
         }

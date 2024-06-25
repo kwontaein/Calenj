@@ -1,5 +1,5 @@
 import {Modal_Background, Modal_Condition_Button, Modal_Container} from "../../../../../../shared/ui/SharedStyled";
-import React, {useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
     Content_Container, ListItem_Container, ListItem_Name_Container, ListItem_Profile_Container,
@@ -16,28 +16,32 @@ import {
     UserProfile,
     UserProfile_Container
 } from "./RequestFriendViewStyled";
+import {getUserProfileApi, UserInfo} from "../../../../../user/userInfo";
+import {AHMFormat, changeDateForm} from "../../../../../../shared/lib";
 
 interface RequestFriendProps {
     onClose: () => void,
     myRequest: boolean, // 보낸요청 or 받은요청
+    userKey : string,
+    userId:string,
 }
 
-interface UserInfo {
-    id: string,
-    name: string,
-}
 
-interface GroupInfo {
-    id: string,
-    groupName: string,
-}
 
-export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequest}) => {
+export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequest, userKey, userId}) => {
     const [viewState, setViewState] = useState<string>("introduce")
-    const initData = [{id: '123', name: '김말이순대'}, {id: '456', name: '간순대'}, {id: '789', name: '짜장순대'}]
-    const groupData = [{id: '123', groupName: '권사모'}, {id: '456', groupName: '순대모임'}, {id: '789', groupName: '캘린제이 개발'}]
+    const [userInfo,setUserInfo] = useState<UserInfo|null>(null)
+    const [sendMsg, setSendMsg] = useState<string>();
 
-    const [linkFriend, setLinkFriend] = useState<UserInfo[]>(initData)
+    const getUserInfo =async () =>{
+        const userData = await getUserProfileApi(userKey);
+        setUserInfo(userData)
+    }
+
+    useEffect(()=>{
+        getUserInfo()
+    }, []);
+
 
     const requestCancel = () =>{
         if(myRequest) {
@@ -48,19 +52,21 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
     return createPortal(
         <Modal_Background>
             <Modal_Container style={{width: '500px', height: 'auto', backgroundColor: 'transparent'}}>
-                {!myRequest && <SpeechBox_Container>
-                    <SpeechTail/>
-                    <SpeechTextBox>
-                        ㅎㅇ 권태인임 받으삼
-                    </SpeechTextBox>
-                </SpeechBox_Container>
+                {!myRequest &&
+                    <SpeechBox_Container>
+                        <SpeechTail/>
+                        <SpeechTextBox>
+                            ㅎㅇ 권태인임 받으삼
+                        </SpeechTextBox>
+                    </SpeechBox_Container>
                 }
+                {userInfo &&
                 <RequestFriendView_Container $myRequest={myRequest}>
                     <UserProfile_Container>
                         <UserProfile/>
                         <UserName_Container>
-                            <UserName>구록불</UserName>
-                            <UserId>ku_rook_bul</UserId>
+                            <UserName>{userInfo.nickName}</UserName>
+                            <UserId>{userId}</UserId>
                         </UserName_Container>
                     </UserProfile_Container>
                     <Content_Container>
@@ -86,25 +92,25 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
                                         가입시기:
                                     </UserInfoTitle_Text>
                                     <UserInfoContent_Text>
-                                        2024년 6월 23일
+                                        {AHMFormat(changeDateForm(userInfo.joinDate)).substring(0,14)}
                                     </UserInfoContent_Text>
                                     <UserInfoTitle_Text>
                                         소개:
                                     </UserInfoTitle_Text>
                                     <UserInfoContent_Text>
-                                        안녕하세요 권태인입니다. 와~... 보소
+                                        {userInfo.introduce}
                                     </UserInfoContent_Text>
                                 </>
                             }
                             {viewState ==='knowTogether' &&
                                 <UserInfoContent_Container>
-                                    {linkFriend.map((user)=>(
-                                        <ListItem_Container key={user.id}>
+                                    {userInfo?.sameFriend.map((friend)=>(
+                                        <ListItem_Container key={friend}>
                                             <ListItem_Profile_Container>
 
                                             </ListItem_Profile_Container>
                                             <ListItem_Name_Container>
-                                                {user.name}
+                                                {friend}
                                             </ListItem_Name_Container>
                                         </ListItem_Container>
                                     ))}
@@ -112,13 +118,13 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
                             }
                             {viewState === 'sameGroup' &&
                                 <UserInfoContent_Container>
-                                    {groupData.map((group) => (
-                                        <ListItem_Container key={group.id}>
+                                    {userInfo.sameGroup.map((group) => (
+                                        <ListItem_Container key={group}>
                                             <ListItem_Profile_Container style={{borderRadius: '10px'}}>
 
                                             </ListItem_Profile_Container>
                                             <ListItem_Name_Container>
-                                                {group.groupName}
+                                                {group}
                                             </ListItem_Name_Container>
                                         </ListItem_Container>
                                     ))}
@@ -126,9 +132,8 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
                             }
                         </UserInfo_Container>
                         {myRequest &&
-                            <RequestMemo_Container placeholder={'상대방이 내가 누구인지 알 수 있도록 간단하게 소개해주세요.'}>
-
-                            </RequestMemo_Container>
+                            <RequestMemo_Container placeholder={'상대방이 내가 누구인지 알 수 있도록 간단하게 소개해주세요.'}
+                                                   onChange={(e: ChangeEvent<HTMLTextAreaElement>)=>setSendMsg(e.target.value)} maxLength={30}/>
                         }
 
 
@@ -142,6 +147,7 @@ export const RequestFriendView: React.FC<RequestFriendProps> = ({onClose, myRequ
                         </RequestFriendViewButton_Container>
                     </Content_Container>
                 </RequestFriendView_Container>
+                }
             </Modal_Container>
         </Modal_Background>,
         document.body
