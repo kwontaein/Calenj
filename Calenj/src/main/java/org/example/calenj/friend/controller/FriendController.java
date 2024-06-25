@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.event.dto.response.EventResponse;
 import org.example.calenj.friend.dto.request.FriendRequest;
 import org.example.calenj.friend.dto.response.FriendResponse;
+import org.example.calenj.friend.dto.response.AddFriendResponse;
 import org.example.calenj.friend.service.FriendService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class FriendController {
      * 친구 요청하기
      */
     @PostMapping("/api/requestFriend")
-    public String requestFriend(@RequestBody FriendRequest request) {
+    public AddFriendResponse requestFriend(@RequestBody FriendRequest request) {
         //친구 요청 보내기
         //만약 상대가 보낸 요청이 있다면, 내 테이블에 추가 후 상태 변경하기
         return friendService.requestFriend(request.getFriendUserId());
@@ -41,24 +42,11 @@ public class FriendController {
      * 친구 요청에 응답하기
      */
     @PostMapping("/api/myResponse")
-    public String responseFriend(@RequestBody FriendRequest request) {
+    public AddFriendResponse responseFriend(@RequestBody FriendRequest request) {
         //친구 요청 응답
         //승인인지 거절인지 받아서 전달
         return friendService.responseFriend(UUID.fromString(request.getFriendUserId()), request.getIsAccept());
     }
-
-    /**
-     * 내 이벤트 목록
-     * 내 이벤트 목록...? 이거 왜 만들었누
-     * 알림목록인가 ???
-     */
-    /*@PostMapping("/api/myEvents")
-    public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
-
-        List<EventResponse> events = friendService.myEvents(request.getUserName());
-        System.out.println(events.toString());
-        return friendService.myEvents(request.getUserName());
-    }*/
 
     /**
      * 내가 요청한 목록

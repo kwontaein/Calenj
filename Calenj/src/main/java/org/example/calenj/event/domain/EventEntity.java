@@ -35,6 +35,10 @@ public class EventEntity {
     @Column(name = "event_user_id")
     private UUID eventUserId;
 
+    // 이벤트 글
+    @Column(name = "event_content")
+    private String eventContent;
+
     // 이벤트 목적
     @Column(name = "event_purpose")
     private String eventPurpose;

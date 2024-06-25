@@ -11,4 +11,5 @@ public class FriendRequest {
     private String userName;
     private String isAccept;
     private String friendUserId;
+    private String eventContent;
 }
