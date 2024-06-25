@@ -41,5 +41,5 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     }
 
     @Query("SELECT e.eventContent FROM Events e WHERE e.ownUserId.userId =:userId and e.eventUserId =:myUserId and e.eventName=RequestFriend  and e.eventStatus=WAITING")
-    Optional<String> findEventContentByIds(UUID myUserId, UUID userId);
+    Optional<String> findEventContentByIds(@Param("myUserId") UUID myUserId, @Param("userId") UUID userId);
 }

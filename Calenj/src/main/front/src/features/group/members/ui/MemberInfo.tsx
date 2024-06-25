@@ -3,7 +3,6 @@ import {getUserProfileApi} from "../api/getUserProfileApi";
 import {Profile, UserModalProps} from "../model/types";
 
 
-
 export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
     const [profile, setProfile] = useState<Profile | null>(null);
 
@@ -11,6 +10,7 @@ export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
         getUserProfileApi(user.userId)
             .then((res) => {
                 setProfile(res.data);
+                console.log(res.data)
             })
             .catch(() => {
                 window.alert('잘못된 접근입니다. 재시작을 해주세요.');

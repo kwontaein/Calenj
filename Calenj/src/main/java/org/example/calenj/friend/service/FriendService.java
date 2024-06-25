@@ -49,30 +49,60 @@ public class FriendService {
 
     public AddFriendResponse requestFriend(String friendUserName) {
         AddFriendResponse response = new AddFriendResponse();
-        // 로그인된 유저 정보 조회
         UserEntity ownUser = globalService.myUserEntity();
 
-        if (friendUserName.equals(ownUser.getUsername())) {
-            response.setMessage("나에게 친구 추가는 불가능합니다.");
-            response.setSuccess(false);
+        // Check if the user is trying to add themselves
+        if (isAddingSelf(friendUserName, ownUser, response)) {
             return response;
         }
 
-        // 친구 추가할 유저 정보 조회
+        // Retrieve friend user information
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
         if (friendUser == null) {
-            response.setMessage("존재하지 않는 아이디입니다. 아이디를 다시 확인해주세요.");
-            response.setSuccess(false);
+            return createErrorResponse(response, "존재하지 않는 아이디입니다. 아이디를 다시 확인해주세요.");
+        }
+
+        // Check if they are already friends
+        if (isAlreadyFriend(friendUser, response)) {
             return response;
         }
 
-        if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
-            response = (repositorySetting(friendUser.getUserId(), friendUser.getNickname(), response));
-        } else {
-            response = (onlyOne(ownUser, friendUser, friendUser.getUserId(), response));
+        // Process the friend request
+        return processFriendRequest(ownUser, friendUser, response);
+    }
+
+    private boolean isAddingSelf(String friendUserName, UserEntity ownUser, AddFriendResponse response) {
+        if (friendUserName.equals(ownUser.getUserUsedName())) {
+            response.setMessage("나에게 친구 추가는 불가능합니다.");
+            response.setSuccess(false);
+            return true;
         }
+        return false;
+    }
+
+    private boolean isAlreadyFriend(UserEntity friendUser, AddFriendResponse response) {
+        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
+            response.setSuccess(false);
+            response.setMessage("이미 친구입니다.");
+            return true;
+        }
+        return false;
+    }
+
+    private AddFriendResponse createErrorResponse(AddFriendResponse response, String message) {
+        response.setMessage(message);
+        response.setSuccess(false);
         return response;
     }
+
+    private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser, AddFriendResponse response) {
+        if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
+            return repositorySetting(friendUser.getUserId(), friendUser.getNickname(), response);
+        } else {
+            return onlyOne(ownUser, friendUser, friendUser.getUserId(), response);
+        }
+    }
+
 
     public AddFriendResponse repositorySetting(UUID friendUserId, String nickName, AddFriendResponse response) {
 
@@ -101,6 +131,7 @@ public class FriendService {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
         response.setSuccess(true);
         response.setMessage("상대가 보낸 요청이 이미 있기에, 친구 추가합니다.");
         return response;
