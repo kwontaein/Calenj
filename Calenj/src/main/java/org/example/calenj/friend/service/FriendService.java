@@ -76,6 +76,12 @@ public class FriendService {
 
     public AddFriendResponse repositorySetting(UUID friendUserId, String nickName, AddFriendResponse response) {
 
+        if (friendRepository.findFriendById(friendUserId).orElse(null).getIsAccept() == "ACCEPT") {
+            response.setSuccess(false);
+            response.setMessage("이미 친구입니다.");
+            return response;
+        }
+
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 
         FriendEntity friendEntity = FriendEntity
@@ -101,6 +107,7 @@ public class FriendService {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
         response.setSuccess(true);
         response.setMessage("상대가 보낸 요청이 이미 있기에, 친구 추가합니다.");
         return response;

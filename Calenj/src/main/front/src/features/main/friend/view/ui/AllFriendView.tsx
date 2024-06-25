@@ -1,5 +1,5 @@
-export const AllFriendView: React.FC = () =>{
-    return(
+export const AllFriendView: React.FC = () => {
+    return (
         <>
 
         </>

@@ -22,7 +22,6 @@ public class UserResponse {
     private String userUsedName;
     private String userJoinDate;
     private String userIntroduce;
-    private String userUsedName;
 
     public UserResponse(String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate, String userUsedName) {
         this.nickname = nickname;
