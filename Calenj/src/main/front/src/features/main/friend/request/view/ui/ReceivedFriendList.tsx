@@ -1,6 +1,4 @@
-import {UserListView, MiniText} from '../../../../../../shared/ui/SharedStyled'
 import {useFetchRequestFriendList} from "../../../../../../entities/reactQuery";
-import {responseFriendApi} from "../api/responseFriendApi";
 import {getUserProfileApi} from "../../../../../group/members/index"
 import {
     ReceivedFriend_DatePlace, ReceivedFriend_Hr, ReceivedFriend_ImagePlace,
@@ -8,7 +6,7 @@ import {
     ReceivedFriendList_Container, ReceivedFriendListUL,
     ReceivedFriendListView
 } from "./ReceivedFriendListStyled";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Profile} from "../../../../../group/members/model/types";
 
 export const ReceivedFriendList: React.FC = () => {
@@ -52,6 +50,6 @@ export const ReceivedFriendList: React.FC = () => {
                     <ReceivedFriend_Hr/>
                 </ReceivedFriendListUL>
             )}
-        </div>
+        </ReceivedFriendList_Container>
     )
 }

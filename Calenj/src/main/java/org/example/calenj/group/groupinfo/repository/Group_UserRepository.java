@@ -19,7 +19,7 @@ public interface Group_UserRepository extends JpaRepository<GroupUserEntity, Gro
 
 
     //같이 속한 그룹 표시
-    @Query("SELECT gu.group.groupTitle FROM Group_User gu WHERE gu.user.userEmail = :userEmail or gu.user.userEmail = :myEmail ")
+    @Query("SELECT gu.group.groupId FROM Group_User gu WHERE gu.user.userEmail = :userEmail or gu.user.userEmail = :myEmail ")
     List<String> findGroupIds(@Param("userEmail") String userEmail, @Param("myEmail") String myEmail);
 
 }
