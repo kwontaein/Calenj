@@ -4,12 +4,13 @@ import {
     AddFriendInput_Container,
     FriendEventBarItems_Container, Message_Container, WarningMessage_Div
 } from "./RequestFriendInputStyled";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {requestFriendApi} from "../api/requestFreindApi";
 
 export const RequestFriendInput: React.FC = () => {
     const [userId, setUserId] = useState<string>("");
     const [message,setMessage] = useState<string>('')
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserId(event.target.value);
@@ -25,6 +26,10 @@ export const RequestFriendInput: React.FC = () => {
                 setMessage(response.message)
             }else{
                 window.alert(response.message)
+                if(inputRef.current){
+                    inputRef.current.value ='';
+                    setUserId('');
+                }
             }
         })
     };
@@ -41,7 +46,10 @@ export const RequestFriendInput: React.FC = () => {
         <>
             <FriendEventBarItems_Container>
                 <AddFriendInput_Container className={!(message==='') ? "shake" : ""}>
-                    <AddFriendInput type={"text"} placeholder={"ID로 친구 추가"} value={userId}
+                    <AddFriendInput type={"text"}
+                                    ref ={inputRef}
+                                    placeholder={"ID로 친구 추가"}
+                                    value={userId}
                                     onChange={handleInputChange}/>
                     <AddFriendButton onClick={handleButtonClick}>요청 보내기</AddFriendButton>
                 </AddFriendInput_Container>
