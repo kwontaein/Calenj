@@ -15,12 +15,16 @@ const ReceivedFriendList: React.FC = () => {
                     <ul>
                         {requestFriendState.data.map((events) => (
                             <UserListView key={events.eventId}>
-                                {events.eventUserId} 님이 보낸 친구 요청
-                                <br/>
-                                -{events.createDate}-
-                                <br/>
-                                <button onClick={() => requestFriendApi(events.ownUserId, "ACCEPT")}>친구 수락</button>
-                                <button onClick={() => requestFriendApi(events.ownUserId, "REJECT")}>친구 거절</button>
+                                <div>
+                                    {events.nickName}으로부터
+                                    친구 요청
+                                    <br/>
+                                    -{events.createDate}-
+                                </div>
+                                <div>
+                                    <button onClick={() => requestFriendApi(events.ownUserId, "ACCEPT")}>친구 수락</button>
+                                    <button onClick={() => requestFriendApi(events.ownUserId, "REJECT")}>친구 거절</button>
+                                </div>
                             </UserListView>
                         ))}
                     </ul>

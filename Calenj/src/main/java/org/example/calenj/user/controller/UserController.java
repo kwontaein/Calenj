@@ -87,6 +87,7 @@ public class UserController {
      */
     @GetMapping("/api/getUserInfo")
     public UserResponse getUserInfo() { //유저 프로필 업데이트
+        System.out.println("selectUserInfo: " + userService.selectUserInfo());
         return userService.selectUserInfo();
     }
 
@@ -105,6 +106,7 @@ public class UserController {
      */
     @PostMapping("/api/getProfile")
     public UserProfileResponse getProfile(@RequestBody UserRequest userRequest) { //유저 프로필 표시
+        System.out.println("출력 : " + userService.getUserProfile(userRequest.getUserId()));
         return userService.getUserProfile(userRequest.getUserId());
     }
 

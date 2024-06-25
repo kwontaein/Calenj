@@ -10,8 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileResponse {
+    private String nickName;
     private String introduce;    // 소개
     private String joinDate;    // 가입일
     private List<String> sameGroup;// 같이 있는 그룹
+    private List<String> sameFriend;// 함께 아는 친구
     private String chatUUID;// 개인 메세지 버튼
 }

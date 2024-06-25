@@ -257,7 +257,6 @@ export const UserListView = styled.li`
     text-overflow: ellipsis;
     margin-top: -1px;
     padding: 10px;
-    display: flex;
     align-items: center;
 
     &:hover {
