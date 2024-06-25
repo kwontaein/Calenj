@@ -6,7 +6,7 @@ import {
     TextColor2,
     ThemeColor2,
     ThemeColor3
-} from "../../../../../shared/ui/SharedStyled";
+} from "../../../../../../shared/ui/SharedStyled";
 
 const shake = keyframes`
     0% {

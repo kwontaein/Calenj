@@ -2,7 +2,7 @@ import {CalendarController, CalendarFromSelector} from "../../calendar/controlle
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
-import {FriendEventBarSelect} from "../../friend/request/ui/FriendEventBarSelect";
+import {FriendEventBarSelect} from "../../friend/EventTopLeft/ui/FriendEventBarSelect";
 import {FriendEventBarItems} from "../../friend/request/requestInput";
 
 export const MainEventTopBar: React.FC = () => {
@@ -32,13 +32,13 @@ export const MainEventTopBar: React.FC = () => {
                 }
             </LeftEventBar_Container>
             <RightEventBar_Container>
-                {clickState==='calendar' &&
+                {clickState === 'calendar' &&
                     <>
                         <CalendarFromSelector/>
                         <CalendarController/>
                     </>
                 }
-                {clickState==='friend' &&
+                {clickState === 'friend' &&
                     <FriendEventBarItems/>
                 }
             </RightEventBar_Container>
