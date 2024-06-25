@@ -48,7 +48,7 @@ public class FriendService {
     }
 
     public AddFriendResponse requestFriend(String friendUserName) {
-        AddFriendResponse response = null;
+        AddFriendResponse response = new AddFriendResponse();
         // 로그인된 유저 정보 조회
         UserEntity ownUser = globalService.myUserEntity();
 

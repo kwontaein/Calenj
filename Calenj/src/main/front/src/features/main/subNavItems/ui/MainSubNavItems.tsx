@@ -4,7 +4,7 @@ import {FriendList} from "../../friend/friendList";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 
-export const CalendarSubNavItems: React.FC = () => {
+export const MainSubNavItems: React.FC = () => {
     const {clickState, friendParam} = useSelector((state: RootState) => state.main_subNavState)
 
 

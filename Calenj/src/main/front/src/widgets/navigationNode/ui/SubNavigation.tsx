@@ -8,7 +8,7 @@ import {QUERY_GROUP_DETAIL_KEY} from "../../../entities/reactQuery";
 import {GroupSubNavigateTopItems,GroupSubNavigateItems} from "../../../features/group/subNavItems";
 import {GroupDetail} from "../../../entities/reactQuery";
 import {RootState} from "../../../entities/redux";
-import {CalendarSubNavItems} from "../../../features/main/subNavItems";
+import {MainSubNavItems} from "../../../features/main/subNavItems";
 
 interface QueryProps {
     isLoading :boolean
@@ -35,7 +35,7 @@ export const SubNavigation:React.FC<QueryProps> =({isLoading})=>{
             {(navigateInfo.navigate === "group" && groupDetail && !isLoading)&&
                 <GroupSubNavigateItems groupId={groupDetail.groupId}/>
             }
-            {navigateInfo.navigate ==="main" && <CalendarSubNavItems/>}
+            {navigateInfo.navigate ==="main" && <MainSubNavItems/>}
         </SubNavigation_Container>
     )
 }
