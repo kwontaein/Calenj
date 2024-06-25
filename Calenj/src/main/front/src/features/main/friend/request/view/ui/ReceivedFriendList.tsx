@@ -31,20 +31,16 @@ export const ReceivedFriendList: React.FC = () => {
             {requestFriendState.data && (
                 <ReceivedFriendListUL>
                     {requestFriendState.data.map((events) => (
-                        <ReceivedFriendListView key={events.eventId}>
+                        <ReceivedFriendListView key={events.eventId} onClick={() => getUserProfile(events.eventUserId)}>
                             <ReceivedFriend_ProfilePlace>
                                 <ReceivedFriend_ImagePlace>
                                 </ReceivedFriend_ImagePlace>
                                 <ReceivedFriend_TextPlace>
                                     <ReceivedFriend_NamePlace><b>{events.nickName} </b>
                                         으로부터 친구 요청</ReceivedFriend_NamePlace>
-                                    <ReceivedFriend_DatePlace> -{events.createDate}-</ReceivedFriend_DatePlace>
+                                    <ReceivedFriend_DatePlace> {events.createDate}</ReceivedFriend_DatePlace>
                                 </ReceivedFriend_TextPlace>
                             </ReceivedFriend_ProfilePlace>
-                            <ReceivedFriend_ResponseBtn>
-                                <i className="bi bi-mailbox2-flag"
-                                   onClick={() => getUserProfile(events.eventUserId)}></i>
-                            </ReceivedFriend_ResponseBtn>
                         </ReceivedFriendListView>
                     ))}
                     <ReceivedFriend_Hr/>
