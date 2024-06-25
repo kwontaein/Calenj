@@ -93,8 +93,7 @@ public class UserService {
      **/
     public UserResponse selectUserInfo() {
         UserEntity user = globalService.myUserEntity();
-        System.out.println("userInfo :" + user + user);
-        return new UserResponse(user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate());
+        return new UserResponse(user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate(), user.getUserUsedName());
     }
 
     /**
