@@ -68,7 +68,7 @@ export const AddFriendButton = styled.button`
     }
 `
 export const WarningMessage_Div = styled.div`
-    margin-top: 5px;
+    margin-top: 40px;
     background-color: ${ThemeColor2};
     height: 10px;
     text-align: center;
@@ -77,10 +77,11 @@ export const WarningMessage_Div = styled.div`
     justify-content: left;
     align-items: center;
     color: ${PointColor2};
-    position: relative;
+    position: absolute;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid ${PointColor2};
+
 `
 
 export const Message_Container = styled.div`

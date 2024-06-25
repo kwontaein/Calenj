@@ -20,11 +20,11 @@ export const RequestFriendInput: React.FC = () => {
             setMessage('요청할 아이디를 입력해주세요.')
             return
         }
-        requestFriendApi(userId).then((message:string)=>{
-            if(message !== '친구요청에 성공했습니다.'){
-                setMessage(message)
+        requestFriendApi(userId).then((response:AddFriendProps)=>{
+            if(!response.success){
+                setMessage(response.message)
             }else{
-                window.alert(message)
+                window.alert(response.message)
             }
         })
     };
@@ -38,13 +38,20 @@ export const RequestFriendInput: React.FC = () => {
     }, [message]);
 
     return (
-        <FriendEventBarItems_Container>
-            <AddFriendInput_Container className={!(message==='') ? "shake" : ""}>
-                <AddFriendInput type={"text"} placeholder={"ID로 친구 추가"} value={userId}
-                                onChange={handleInputChange}/>
-                <AddFriendButton onClick={handleButtonClick}>요청 보내기</AddFriendButton>
-            </AddFriendInput_Container>
-            {!(message==='') && <WarningMessage_Div><i className="bi bi-exclamation-triangle-fill"></i> <Message_Container>{message}</Message_Container> </WarningMessage_Div>}
-        </FriendEventBarItems_Container>
+        <>
+            <FriendEventBarItems_Container>
+                <AddFriendInput_Container className={!(message==='') ? "shake" : ""}>
+                    <AddFriendInput type={"text"} placeholder={"ID로 친구 추가"} value={userId}
+                                    onChange={handleInputChange}/>
+                    <AddFriendButton onClick={handleButtonClick}>요청 보내기</AddFriendButton>
+                </AddFriendInput_Container>
+            </FriendEventBarItems_Container>
+            {!(message==='') &&
+            <WarningMessage_Div>
+                <i className="bi bi-exclamation-triangle-fill"></i>
+                <Message_Container>{message}</Message_Container>
+            </WarningMessage_Div>
+            }
+        </>
     )
 }
