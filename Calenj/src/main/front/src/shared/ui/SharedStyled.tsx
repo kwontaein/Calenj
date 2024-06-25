@@ -95,7 +95,17 @@ export const GlobalStyle = createGlobalStyle`
     select {
         border-radius: 2px;
         color: ${TextColor};
-
+    }
+    
+    input{
+        border: 2px solid ${ThemeColor2};
+        outline: none;
+        appearance: none; /* 기본 브라우저 스타일 제거 */
+        color: ${TextColor};
+        &:focus {
+            outline: none;
+            border: 2px solid ${PointColor};
+        }
     }
 `;
 
@@ -369,3 +379,4 @@ const moveToggle = (toggle: boolean) => keyframes`
         ${toggle && `transform: translateX(60%)`};
     }
 `;
+
