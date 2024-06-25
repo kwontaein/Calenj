@@ -61,8 +61,7 @@ public class FriendService {
         if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
             return repositorySetting(friendUser.getUserId(), friendUser.getNickname());
         } else {
-            onlyOne(ownUser, friendUser, friendUser.getUserId());
-            return "";
+            return onlyOne(ownUser, friendUser, friendUser.getUserId());
         }
     }
 
@@ -153,12 +152,16 @@ public class FriendService {
     //내가 받은 요청 목록
     public List<EventResponse> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
+        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
     }
 
     //내가 보낸 요청 목록
     public List<EventResponse> RequestFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
+        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
+    }
+
+    public String getEventContent(String myUserId, UUID userId) {
+        return eventRepository.findEventContentByIds(UUID.fromString(myUserId), userId).orElse("");
     }
 }
