@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {TextColor2, ThemeColor2, ThemeColor3} from "../../../../../shared/ui/SharedStyled";
 
 export const Controller_Container = styled.div`
-    width: calc(100% - 10px);
+    width: auto;
     height: 30px;
     padding-inline: 5px;
     display: flex;

@@ -9,7 +9,7 @@ import {
 } from "../../../../../shared/ui/SharedStyled";
 
 export const FriendEventBarSelect_Container = styled.div`
-    width: 100%;
+    width: auto;
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -31,15 +31,17 @@ export const FriendSelectButton_Container = styled.div`
     justify-content: space-between;
     padding: 0 5px;
 `
-export const FriendSelectButton = styled.div`
+export const FriendSelectButton = styled.div<{$isAble:boolean}>`
     height: 100%;
     font-size: 13px;
     display: flex;
     align-items: center;
     padding: 0 14px;
     border-radius: 5px;
-
+    margin-inline: 2px;
+    ${props => props.$isAble && `background-color : ${ThemeColor3};`}
+    
     &:hover {
-        background-color: ${ThemeColor3};
+        background-color: ${ThemeColor3}77 ;
     }
 `

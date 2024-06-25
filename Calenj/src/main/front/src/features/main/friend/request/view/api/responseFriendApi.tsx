@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const requestFriendApi = (friendUserId: string, isAccept: string) => {
+export const responseFriendApi = (friendUserId: string, isAccept: string) => {
     axios.post('/api/myResponse', {
         friendUserId: friendUserId,
         isAccept: isAccept,

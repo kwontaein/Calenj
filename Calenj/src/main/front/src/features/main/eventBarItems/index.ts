@@ -1,1 +1,1 @@
-export {} from './ui/MainEventTopBar'
+export {MainEventTopBar} from './ui/MainEventTopBar'

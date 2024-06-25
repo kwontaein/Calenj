@@ -37,7 +37,7 @@ export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
     return (
 
         <FullScreen_div ref={contentRef}>
-            <RequestFriendView onClose={()=>{}} myRequest={true}/>
+            {/*<RequestFriendView onClose={()=>{}} myRequest={true}/>*/}
             <EventTopBar_Container>
                 {(navigate === "group" && groupDetail && !isLoading) &&
                     <GroupContentTopItem showUserListMutate={showUserListMutate} showUserList={showUserList}/>}

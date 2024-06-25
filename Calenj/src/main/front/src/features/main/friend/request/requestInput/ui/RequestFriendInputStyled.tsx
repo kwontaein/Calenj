@@ -27,7 +27,7 @@ const shake = keyframes`
 `;
 
 export const FriendEventBarItems_Container = styled.div`
-    width: 100%;
+    width: auto;
     height: 100%;
     flex-direction: row;
     justify-content: space-between;
@@ -41,7 +41,6 @@ export const AddFriendInput_Container = styled.div`
     padding: 0 10px 0 10px;
 
     &.shake {
-        border: 1px ${PointColor2} solid;
         animation: ${shake} 0.5s linear;
     }
 `
@@ -51,23 +50,27 @@ export const AddFriendInput = styled.input`
     width: 150px;
     height: 100%;
     color: ${TextColor};
-
     &:focus {
         outline: none;
+        border: none;
     }
 `
 export const AddFriendButton = styled.button`
     background-color: ${PointColor};
     border: none;
+    width: 90px;
     height: 70%;
     display: flex;
     align-items: center;
     justify-content: center;
+    &:hover{
+        background-color: ${PointColor}77;
+    }
 `
 export const WarningMessage_Div = styled.div`
-    margin-top: 10px;
+    margin-top: 5px;
     background-color: ${ThemeColor2};
-    height: 20px;
+    height: 10px;
     text-align: center;
     display: flex;
     font-size: 10px;
@@ -76,6 +79,11 @@ export const WarningMessage_Div = styled.div`
     color: ${PointColor2};
     position: relative;
     padding: 10px;
-    border-radius: 10px;
-    border: 1px solid white;
+    border-radius: 5px;
+    border: 1px solid ${PointColor2};
+`
+
+export const Message_Container = styled.div`
+    font-size: 12px;
+    margin-left: 10px;
 `
