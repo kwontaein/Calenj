@@ -34,7 +34,7 @@ export const GroupListView: React.FC = () => {
 
 
     return (
-        <div>
+        <div style={{display:'flex', zIndex:'1'}}>
             {showMakeGroup && <CreateGroup onClose={()=>setShowMakeGroup(false)}></CreateGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (

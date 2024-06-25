@@ -98,6 +98,7 @@ export const useFetchFriendEvent = () =>
     useQuery<Event[] | null, Error>({
         queryKey: [QUERY_FRIEND_LIST_KEY],
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
+        refetchInterval: false,
     })
 
 export const useFetchDateEventTag = () =>

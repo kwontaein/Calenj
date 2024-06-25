@@ -5,6 +5,8 @@ import {RootState} from "../../../../entities/redux";
 import {FriendEventBarSelector} from "../../friend/viewManager/ui/FriendEventBarSelector";
 import {RequestFriendInput} from "../../friend/request/requestInput";
 import {LeftEventBar_Container, MainEventTopBar_Container, RightEventBar_Container} from "./MainEventTopBarStyled";
+import {Simulate} from "react-dom/test-utils";
+import click = Simulate.click;
 
 export const MainEventTopBar: React.FC = () => {
     const {clickState, friendParam} = useSelector((state: RootState) => state.main_subNavState)
@@ -16,7 +18,7 @@ export const MainEventTopBar: React.FC = () => {
                     <FriendEventBarSelector/>
                 }
             </LeftEventBar_Container>
-            <RightEventBar_Container>
+            <RightEventBar_Container $coverAble={clickState==='friend'}>
                 {clickState === 'calendar' &&
                     <>
                         <CalendarFromSelector/>
