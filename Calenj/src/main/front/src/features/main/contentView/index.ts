@@ -1,0 +1,1 @@
+export {MainContentView} from './ui/MainContentView'

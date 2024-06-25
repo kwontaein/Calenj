@@ -1,1 +1,1 @@
-export {CalendarSubNavItems} from './ui/CalendarSubNavItems'
+export {MainSubNavItems} from './ui/MainSubNavItems'
