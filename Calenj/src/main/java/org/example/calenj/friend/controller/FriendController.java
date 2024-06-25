@@ -46,20 +46,7 @@ public class FriendController {
         //승인인지 거절인지 받아서 전달
         return friendService.responseFriend(UUID.fromString(request.getFriendUserId()), request.getIsAccept());
     }
-
-    /**
-     * 내 이벤트 목록
-     * 내 이벤트 목록...? 이거 왜 만들었누
-     * 알림목록인가 ???
-     */
-    /*@PostMapping("/api/myEvents")
-    public List<EventResponse> myEvents(@RequestBody FriendRequest request) {
-
-        List<EventResponse> events = friendService.myEvents(request.getUserName());
-        System.out.println(events.toString());
-        return friendService.myEvents(request.getUserName());
-    }*/
-
+    
     /**
      * 내가 요청한 목록
      */

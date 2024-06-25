@@ -13,6 +13,7 @@ import java.util.UUID;
 public class EventResponse {
 
     private UUID eventId;
+
     private String nickName;
     // 이벤트 발생자
     private UUID ownUserId;
@@ -26,5 +27,6 @@ public class EventResponse {
     private EventEntity.statusType eventStatus;
     //이벤트 생성일
     private String createDate;
-
+    //이벤트 내용(소개글)
+    private String eventContent;
 }
