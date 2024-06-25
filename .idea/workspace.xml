@@ -4,29 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.23 friendEvent 제작시작">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/RequestFriendView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/RequestFriendViewStyled.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.21 subNavProfile 제작 #2">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/eventBarItems/ui/MainEventTopBarStyled.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/create/ui/CreateVoteStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/controller/ui/CalendarControllerStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/calendar/controller/ui/CalendarControllerStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/eventBarItems/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/eventBarItems/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/eventBarItems/ui/MainEventTopBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/eventBarItems/ui/MainEventTopBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/list/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/friendLiist/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/list/ui/FriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/friendLiist/ui/FriendList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/list/ui/FriendListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/friendLiist/ui/FriendListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/api/addFrendApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/api/addFrendApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/api/requestFriendApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/api/requestFriendApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/ui/FriendEventBarItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/FriendEventBarItems.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/ui/FriendEventBarItemsStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/FriendEventBarItemsStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/ui/MyRequest.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/MyRequestList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/ui/RequestFriend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/ReceivedFriendList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/subNavItems/ui/CalendarSubNavItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/subNavItems/ui/CalendarSubNavItems.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/EventTopLeft/ui/FriendEventBarSelect.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/EventTopLeft/ui/FriendEventBarSelectStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelectorStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/FriendEventBarItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/FriendEventBarItemsStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInputStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/api/addFrendApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/api/requestFreindApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/api/requestFriendApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/api/responseFriendApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/ReceivedFriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/ReceivedFriendList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/ui/ContentsComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/ui/ContentsComposition.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationParent/ui/NavigationComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationParent/ui/NavigationComposition.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +66,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="SeungJae" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -132,11 +128,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\view" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\view\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\requestInput" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\friendLiist" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\requestInput\api" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\viewManager" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\calendar\eventTag\ui" />
     </key>
   </component>
   <component name="RunManager">
@@ -368,23 +364,7 @@
       <option name="project" value="LOCAL" />
       <updated>1718943514517</updated>
     </task>
-    <task id="LOCAL-00023" summary="06.23 사용자 정보 가져오기">
-      <option name="closed" value="true" />
-      <created>1719115707280</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1719115707280</updated>
-    </task>
-    <task id="LOCAL-00024" summary="06.23 friendEvent 제작시작">
-      <option name="closed" value="true" />
-      <created>1719129173356</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1719129173357</updated>
-    </task>
-    <option name="localTasksCounter" value="25" />
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,9 +417,7 @@
     <MESSAGE value="06.18 nickName 매칭" />
     <MESSAGE value="06.21 subNavProfile 제작" />
     <MESSAGE value="06.21 subNavProfile 제작 #2" />
-    <MESSAGE value="06.23 사용자 정보 가져오기" />
-    <MESSAGE value="06.23 friendEvent 제작시작" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.23 friendEvent 제작시작" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.21 subNavProfile 제작 #2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -457,12 +435,6 @@
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx</url>
           <line>27</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileTopStyled.tsx</url>
-          <line>5</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

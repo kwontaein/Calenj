@@ -101,6 +101,7 @@ export const GlobalStyle = createGlobalStyle`
         border: 2px solid ${ThemeColor2};
         outline: none;
         appearance: none; /* 기본 브라우저 스타일 제거 */
+        background-color: ${ThemeColor2};
         color: ${TextColor};
         &:focus {
             outline: none;
@@ -256,7 +257,6 @@ export const UserListView = styled.li`
     text-overflow: ellipsis;
     margin-top: -1px;
     padding: 10px;
-    display: flex;
     align-items: center;
 
     &:hover {

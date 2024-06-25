@@ -1,8 +1,8 @@
 package org.example.calenj.friend.repository;
 
-import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.domain.FriendEntity;
 import org.example.calenj.friend.domain.ids.FriendId;
+import org.example.calenj.friend.dto.response.FriendResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +21,9 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
     Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
 
-    @Query("delete from Friends f where f.ownUserId =:userId")
+    @Modifying
+    @Transactional
+    @Query("delete from Friends f where f.ownUserId.userId =:userId")
     void deleteByOwnUserId(@Param("userId") UUID userId);
 
     @Modifying(clearAutomatically = true)
@@ -32,4 +34,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId")
     Optional<String> findFriendChattRoomId(@Param("userId") UUID userId);
 
+    @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
+    Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 }

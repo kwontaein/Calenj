@@ -32,7 +32,6 @@ export const logout = async (): Promise<boolean> => {
 };
 
 
-
 //그룹리스트
 export const getGroupList = async (): Promise<GroupList_item[] | null> => {
     try {
@@ -52,7 +51,7 @@ export const getGroupList = async (): Promise<GroupList_item[] | null> => {
     }
 }
 
-export const getGroupDetail = async (groupId:string): Promise<GroupDetail | null> => {
+export const getGroupDetail = async (groupId: string): Promise<GroupDetail | null> => {
     try {
         const response = await axios.post('/api/groupDetail', {
             groupId: groupId
@@ -70,15 +69,15 @@ export const getGroupDetail = async (groupId:string): Promise<GroupDetail | null
 }
 
 //공지리스트
-export const getNoticeList = async (groupId:string): Promise<NoticeList[]|null>=> {
-    try{
-        const response = await axios.post('/api/noticeList',{groupId:groupId});
+export const getNoticeList = async (groupId: string): Promise<NoticeList[] | null> => {
+    try {
+        const response = await axios.post('/api/noticeList', {groupId: groupId});
         // console.log(response.data);
         return response.data
-    }catch(error){
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
-        if(axiosError.response?.data){
+        if (axiosError.response?.data) {
             jwtFilter((axiosError.response.data) as string);
         }
         return null;
@@ -87,7 +86,7 @@ export const getNoticeList = async (groupId:string): Promise<NoticeList[]|null>=
 
 
 //투표리스트 불러오기
-export const getVoteList = async (groupId:string): Promise<VoteList[] | null> => {
+export const getVoteList = async (groupId: string): Promise<VoteList[] | null> => {
     try {
         const response = await axios.post('/api/voteList', {groupId: groupId});
 
@@ -102,7 +101,7 @@ export const getVoteList = async (groupId:string): Promise<VoteList[] | null> =>
     }
 }
 
-export const getVoteDetail= async (voteId:string) : Promise<VoteDetail | null> =>{
+export const getVoteDetail = async (voteId: string): Promise<VoteDetail | null> => {
     try {
         const response = await axios.post('/api/voteDetail', null, {
             params: {
@@ -110,16 +109,15 @@ export const getVoteDetail= async (voteId:string) : Promise<VoteDetail | null> =
             }
         }) // 객체의 속성명을 'id'로 설정
         return response.data;
-    }catch(error) {
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
-        if(axiosError.response?.data){
+        if (axiosError.response?.data) {
             jwtFilter((axiosError.response.data) as string);
         }
         return null;
     }
 }
-
 
 
 //친구리스트 불러오기
@@ -144,9 +142,9 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
 
 
 //요청받은 친구 이벤트 가져오기
-export const getFriendResponse= async (): Promise<FriendEvent[] | null> => {
+export const getFriendResponse = async (): Promise<FriendEvent[] | null> => {
     try {
-        const response = await axios.get('/api/ResponseFriendList');
+        const response = await axios.get('/api/requestedList');
         console.log('친구 요청 받은 목록을 불러옵니다.');
         const data = response.data as FriendEvent[];
         return data.sort((a, b) => {
@@ -185,10 +183,10 @@ export const getFriendRequest = async (): Promise<Event[] | null> => {
     }
 }
 
-export const getDateEventTag = async (): Promise<EventTagDTO[]|null> =>{
-    try{
-        return await axios.get('api/getEventTag').then((res:AxiosResponse<EventTagDTO[]>)=>res.data)
-    }catch (error){
+export const getDateEventTag = async (): Promise<EventTagDTO[] | null> => {
+    try {
+        return await axios.get('api/getEventTag').then((res: AxiosResponse<EventTagDTO[]>) => res.data)
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {
@@ -199,11 +197,11 @@ export const getDateEventTag = async (): Promise<EventTagDTO[]|null> =>{
     }
 }
 
-export const getUserDateEvent = async ():Promise<UserDateEvent[]|null> =>{
-    try{
+export const getUserDateEvent = async (): Promise<UserDateEvent[] | null> => {
+    try {
         return await axios.get("api/getUserDateEvent")
-            .then((res : AxiosResponse) => res.data)
-    }catch (error){
+            .then((res: AxiosResponse) => res.data)
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {

@@ -2,43 +2,29 @@ import {CalendarController, CalendarFromSelector} from "../../calendar/controlle
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
-import {FriendEventBarItems} from "../../friend/request/requestInput";
+import {FriendEventBarSelector} from "../../friend/viewManager/ui/FriendEventBarSelector";
+import {RequestFriendInput} from "../../friend/request/requestInput";
+import {LeftEventBar_Container, MainEventTopBar_Container, RightEventBar_Container} from "./MainEventTopBarStyled";
 
-export const MainEventTopBar: React.FC = () =>{
-    const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)
-
-    const MainEventTopBar_Container = styled.div`
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    `
-    const RightEventBar_Container = styled.div`
-        display: flex;
-        flex-direction: row;
-    `
-    const LeftEventBar_Container = styled.div`
-        display: flex;
-        flex-direction: row;
-    `
+export const MainEventTopBar: React.FC = () => {
+    const {clickState, friendParam} = useSelector((state: RootState) => state.main_subNavState)
 
     return (
         <MainEventTopBar_Container>
             <LeftEventBar_Container>
-                {clickState==='friend' &&
-                    <></>
+                {clickState === 'friend' &&
+                    <FriendEventBarSelector/>
                 }
             </LeftEventBar_Container>
             <RightEventBar_Container>
-                {clickState==='calendar' &&
+                {clickState === 'calendar' &&
                     <>
                         <CalendarFromSelector/>
                         <CalendarController/>
                     </>
                 }
-                {clickState==='friend' &&
-                    <FriendEventBarItems/>
+                {clickState === 'friend' &&
+                    <RequestFriendInput/>
                 }
             </RightEventBar_Container>
         </MainEventTopBar_Container>

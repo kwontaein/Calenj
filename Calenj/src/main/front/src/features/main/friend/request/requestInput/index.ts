@@ -1,1 +1,1 @@
-export {FriendEventBarItems} from './ui/FriendEventBarItems'
+export {RequestFriendInput} from './ui/RequestFriendInput'

@@ -2,7 +2,7 @@ import Home from '../pages/main/ui/Home';
 import {SignUpForm} from "../pages/signup";
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import {InviteGroup} from "../features/group/invite";
-import {FriendList} from "../features/main/friend/friendLiist";
+import {FriendList} from "../features/main/friend/friendList";
 
 import React, {useEffect, useState} from 'react';
 
@@ -18,7 +18,7 @@ import {RootState} from "../entities/redux";
 import {sagaRefresh, sagaTask} from "./hoc/store";
 
 
-export const App: React.FC =() => {
+export const App: React.FC = () => {
     const cookieState = useFetchCookie();
     const loading = useSelector((state: RootState) => state.stomp.loading); // 리덕스 상태 구독
     const checkToken = useCheckToken(sagaRefresh);

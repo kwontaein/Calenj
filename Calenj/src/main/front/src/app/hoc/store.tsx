@@ -13,6 +13,8 @@ import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSl
 import calendarReducer from "../../entities/redux/model/slice/CalendarControllerSlice";
 import UserDataReducer from "../../entities/redux/model/slice/UserNameRegisterSlice";
 import MainSubNavigationReducer from "../../entities/redux/model/slice/MainSubNavigationSlice";
+import friendViewReducer from "../../entities/redux/model/slice/FriendViewSlice";
+
 // 루트 사가 생성
 function* rootSaga() {
     // all 함수는 여러 사가를 합쳐주는 역할을 한다.
@@ -30,6 +32,7 @@ const rootReducer = combineReducers({
   calendarController : calendarReducer,
   userNameRegister : UserDataReducer,
   main_subNavState : MainSubNavigationReducer,
+  friendViewState :friendViewReducer,
 });
 
 

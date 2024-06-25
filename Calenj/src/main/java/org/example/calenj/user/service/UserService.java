@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -92,6 +91,7 @@ public class UserService {
      **/
     public UserResponse selectUserInfo() {
         UserEntity user = globalService.myUserEntity();
+        System.out.println("userInfo :" + user + user);
         return new UserResponse(user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate());
     }
 
@@ -224,18 +224,18 @@ public class UserService {
     public UserProfileResponse getUserProfile(UUID userId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String myUserId = userDetails.getUsername();
-        System.out.println("userId : " + userId);
 
-        UserEntity user = userRepository.findByUserId(userId).orElseThrow(RuntimeException::new);
         UserProfileResponse userProfileResponse = new UserProfileResponse();
 
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
 
-        userProfileResponse.setIntroduce(user.getUserIntroduce());
-        userProfileResponse.setJoinDate(user.getUserJoinDate());
-
+        userProfileResponse.setNickName(userEntity.getNickname());
+        userProfileResponse.setIntroduce(userEntity.getUserIntroduce());
+        userProfileResponse.setJoinDate(userEntity.getUserJoinDate());
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserEmail(), myUserId));
-        userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(user.getUserId()).orElse(null));
+        userProfileResponse.setSameFriend(friendRepository.DuplicateFriendList(UUID.fromString(myUserId), userId).orElse(null));
+        userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(userEntity.getUserId()).orElse(null));
+
         return userProfileResponse;
     }
 
