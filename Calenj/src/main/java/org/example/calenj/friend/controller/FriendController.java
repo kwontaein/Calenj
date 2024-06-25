@@ -64,4 +64,21 @@ public class FriendController {
         return friendService.ResponseFriendList();
     }
 
+
+    /**
+     * 요청 정보 저장
+     */
+    @PostMapping("/api/saveRequest")
+    public void saveRequest(@RequestBody FriendRequest friendRequest) {
+        friendService.saveFriend(friendRequest.getFriendUserId());
+    }
+
+
+    /**
+     * 친구 응답
+     */
+    @PostMapping("/api/saveResponse")
+    public void saveResponse(@RequestBody FriendRequest friendRequest) {
+        friendService.acceptFriend(friendRequest.getFriendId());
+    }
 }

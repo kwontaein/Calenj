@@ -96,20 +96,18 @@ public class FriendService {
 
     private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser, AddFriendResponse response) {
         if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
-            return repositorySetting(friendUser.getUserId(), friendUser.getNickname());
+            return repositorySetting();
         } else {
-            return onlyOne(ownUser, friendUser, friendUser.getUserId());
+            return onlyOne(ownUser, friendUser.getUserId());
         }
     }
 
-    public AddFriendResponse repositorySetting(UUID friendUserId, String nickName) {
-        //acceptFriend(friendUserId,nickName);
+    public AddFriendResponse repositorySetting() {
         return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?");
     }
 
-    public AddFriendResponse onlyOne(UserEntity ownUser, UserEntity friendUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
+    public AddFriendResponse onlyOne(UserEntity ownUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
         if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
-            //saveFriend(ownUser, friendUser, friendUserId);
             return createSuccessResponse("친구 정보 조회에 성공했습니다.");
         }
         return createErrorResponse("이미 요청한 유저입니다");
@@ -122,11 +120,14 @@ public class FriendService {
         return response;
     }
 
-    public void saveFriend(UserEntity ownUser, UserEntity friendUser, UUID friendUserId) {
+    public void saveFriend(String friendUsedName) {
+        UserEntity ownUser = globalService.myUserEntity();
+        UserEntity friendUser = getUserEntityByUserName(friendUsedName);
+
         FriendEntity friendEntity = FriendEntity
                 .builder()
                 .ownUserId(ownUser)
-                .friendUserId(friendUserId)
+                .friendUserId(friendUser.getUserId())
                 .nickName(friendUser.getNickname())
                 .createDate(String.valueOf(LocalDate.now()))
                 .ChattingRoomId(UUID.randomUUID())
@@ -135,7 +136,7 @@ public class FriendService {
         EventEntity eventEntity = EventEntity
                 .builder()
                 .ownUserId(ownUser)
-                .eventUserId(friendUserId)
+                .eventUserId(friendUser.getUserId())
                 .eventPurpose("Friend Request")
                 .eventName(EventEntity.eventType.RequestFriend)
                 .eventStatus(EventEntity.statusType.WAITING)
@@ -144,17 +145,18 @@ public class FriendService {
 
         friendRepository.save(friendEntity);
         eventRepository.save(eventEntity);
-        webSokcetService.userAlarm(friendUserId, "친구요청");
+        webSokcetService.userAlarm(friendUser.getUserId(), "친구요청");
     }
 
-    public void acceptFriend(UUID friendUserId, String nickName) {
+    public void acceptFriend(UUID friendUserId) {
+        UserEntity friendUser = getUserEntityById(friendUserId);
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 
         FriendEntity friendEntity = FriendEntity
                 .builder()
                 .ownUserId(globalService.myUserEntity())
                 .friendUserId(friendUserId)
-                .nickName(nickName)
+                .nickName(friendUser.getNickname())
                 .createDate(String.valueOf(LocalDate.now()))
                 .ChattingRoomId(UUID.randomUUID())
                 .status(FriendEntity.statusType.ACCEPT)
@@ -167,7 +169,7 @@ public class FriendService {
         // 파일을 저장한다.
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
             String nowTime = globalService.nowTime();
-            stream.write(nickName.getBytes(StandardCharsets.UTF_8));
+            stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
             stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
             stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
         } catch (Throwable e) {
@@ -176,8 +178,6 @@ public class FriendService {
     }
 
     public AddFriendResponse responseFriend(UUID friendUserName, String isAccept) {
-        AddFriendResponse response = new AddFriendResponse();
-
         //요청 정보가 없다면 오류 반환
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserName).orElse(null);
         if (friendResponse == null) {
@@ -193,8 +193,7 @@ public class FriendService {
             webSokcetService.userAlarm(friendUserName, "친구거절");
             return createErrorResponse("친구 요청을 거절했습니다.");
         } else {
-            UserEntity friendUser = getUserEntityById(friendUserName);
-            repositorySetting(friendUserName, friendUser.getNickname());
+            acceptFriend(friendUserName);
             webSokcetService.userAlarm(friendUserName, "친구수락");
             return createSuccessResponse("친구 요청을 수락했습니다.");
         }
