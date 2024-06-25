@@ -143,7 +143,7 @@ public class FriendService {
 
 
     public AddFriendResponse responseFriend(UUID friendUserName, String isAccept) {
-        AddFriendResponse response = null;
+        AddFriendResponse response = new AddFriendResponse();
 
         //요청 정보가 없다면 오류 반환
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserName).orElse(null);

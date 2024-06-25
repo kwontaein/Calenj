@@ -30,7 +30,7 @@ import {
 import {StompState} from "../../redux/model/slice/StompReducer";
 
 export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";
-export const QUERY_NEW_CAHT_KEY: string = "QUERY_NEW_CAHT_KEY";
+export const QUERY_NEW_CHAT_KEY: string = "QUERY_NEW_CHAT_KEY";
 export const QUERY_COOKIE_KEY: string = 'QUERY_COOKIE_KEY';
 export const QUERY_FRIEND_LIST_KEY: string = 'QUERY_FRIEND_LIST_KEY'
 export const QUERY_REQUEST_FRIEND_LIST: string ="QUERY_REQUEST_FRIEND_LIST"
@@ -159,7 +159,7 @@ export const useChatFileInfinite = (param:string, newMsgLength:number, stomp:Sto
 
 export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNewChat:ReceiveData) =>
     useInfiniteQuery({
-    queryKey: [QUERY_NEW_CAHT_KEY, param],
+    queryKey: [QUERY_NEW_CHAT_KEY, param],
     queryFn: receiveNewChat,
     getNextPageParam: (_lastPage, _allPages, _lastPageParam, allPageParams) => {
         return allPageParams.length;

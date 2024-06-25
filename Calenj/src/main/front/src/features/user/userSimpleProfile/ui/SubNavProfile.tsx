@@ -2,12 +2,12 @@ import {
     FriendsNum_Container,
     Introduction_Container,
     NickName_Container,
-    Profile_Container,
+    Profile_Container, Profile_UserUseName_Container,
     ProfileEditButton_div, ProfileText_Container,
     SubNavEmpty_div,
     SubNavProfile_Container,
     SubNavProfile_Content_Container,
-    SubNavProfile_div
+    SubNavProfile_div, UserInfo_ModifyIcon_Container, UserUseName_Content
 } from "./SubNavProfileStyled";
 import {SubNavProfileBottom} from "./SubNavProfileBottom";
 import {useEffect, useState} from "react";
@@ -24,11 +24,20 @@ export const SubNavProfile :React.FC = () =>{
     useEffect( () => {
         if(userData){
             setUserInfo(userData);
+            console.log(userData)
         }
     }, [userData]);
 
     return(
         <SubNavProfile_Container>
+            <Profile_UserUseName_Container>
+                <UserUseName_Content>
+                    {userInfo?.userUsedName}
+                </UserUseName_Content>
+                <UserInfo_ModifyIcon_Container>
+                    <i className="bi bi-gear-fill"></i>
+                </UserInfo_ModifyIcon_Container>
+            </Profile_UserUseName_Container>
             <SubNavProfile_Content_Container>
                 <Profile_Container>
                     <SubNavProfile_div/>
@@ -52,7 +61,6 @@ export const SubNavProfile :React.FC = () =>{
                 </ProfileText_Container>
             </SubNavProfile_Content_Container>
             <SubNavProfileBottom/>
-
         </SubNavProfile_Container>
     )
 }
