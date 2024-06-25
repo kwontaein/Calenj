@@ -106,7 +106,6 @@ public class UserController {
      */
     @PostMapping("/api/getProfile")
     public UserProfileResponse getProfile(@RequestBody UserRequest userRequest) { //유저 프로필 표시
-        System.out.println("출력 : " + userService.getUserProfile(userRequest.getUserId()));
         return userService.getUserProfile(userRequest.getUserId());
     }
 
