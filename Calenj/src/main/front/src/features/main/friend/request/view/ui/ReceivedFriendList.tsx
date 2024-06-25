@@ -47,7 +47,10 @@ export const ReceivedFriendList: React.FC = () => {
                                 <i className="bi bi-mailbox2-flag"
                                    onClick={() => getUserProfile(events.ownUserId)}></i>
                             </ReceivedFriend_ResponseBtn>
-                            
+                            <div>
+                                <button onClick={() => responseFriendApi(events.ownUserId, "ACCEPT")}>친구 수락</button>
+                                <button onClick={() => responseFriendApi(events.ownUserId, "REJECT")}>친구 거절</button>
+                            </div>
                         </ReceivedFriendListView>
                     ))}
                     <ReceivedFriend_Hr/>
