@@ -41,5 +41,10 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     }
 
     @Query("SELECT e.eventContent FROM Events e WHERE e.ownUserId.userId =:userId and e.eventUserId =:myUserId and e.eventName=RequestFriend  and e.eventStatus=WAITING")
-    Optional<String> findEventContentByIds(UUID myUserId, UUID userId);
+    Optional<String> findEventContentByIds(@Param("myUserId") UUID myUserId, @Param("userId") UUID userId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional //update 는 해당 어노테이션이 필요함
+    @Query(value = "DELETE from Events e where e.ownUserId.userId =:userId")
+    void deleteByUserId(@Param("userId") UUID userId);
 }

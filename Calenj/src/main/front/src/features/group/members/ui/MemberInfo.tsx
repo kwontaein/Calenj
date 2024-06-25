@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {getUserProfileApi} from "../api/getUserProfileApi";
-import {Profile, UserModalProps} from "../model/types";
-
+import {getUserProfileApi, UserInfo} from "../../../user/userInfo";
+import {UserModalProps} from "../model/types";
 
 
 export const MemberInfo: React.FC<UserModalProps> = ({user, onClose}) => {
-    const [profile, setProfile] = useState<Profile | null>(null);
+    const [profile, setProfile] = useState<UserInfo | null>(null);
 
     useEffect(() => {
         getUserProfileApi(user.userId)
-            .then((res) => {
-                setProfile(res.data);
+            .then((userInfo) => {
+                setProfile(userInfo);
             })
             .catch(() => {
                 window.alert('잘못된 접근입니다. 재시작을 해주세요.');

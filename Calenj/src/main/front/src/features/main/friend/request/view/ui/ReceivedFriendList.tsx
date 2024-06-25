@@ -1,40 +1,64 @@
-import {UserListView, MiniText} from '../../../../../../shared/ui/SharedStyled'
-import {QUERY_FRIEND_LIST_KEY, useFetchRequestFriendList} from "../../../../../../entities/reactQuery";
-import {responseFriendApi} from "../api/responseFriendApi";
-import {useQueryClient} from "@tanstack/react-query";
+import {useFetchRequestFriendList} from "../../../../../../entities/reactQuery";
+import {getUserProfileApi} from "../../../../../group/members"
+import {
+    ReceivedFriend_DatePlace, ReceivedFriend_Hr, ReceivedFriend_ImagePlace,
+    ReceivedFriend_NamePlace, ReceivedFriend_ProfilePlace, ReceivedFriend_ResponseBtn, ReceivedFriend_TextPlace,
+    ReceivedFriendList_Container, ReceivedFriendListUL,
+    ReceivedFriendListView
+} from "./ReceivedFriendListStyled";
+import {useState} from "react";
+import {UserInfo} from "../../../../../user/userInfo";
+
+interface RequestFriendProps{
+    chatUUID: string
+    eventContent:string
+    introduce: string
+    joinDate: string
+    nickName: string
+    sameFriend: string[]
+    sameGroup : string[]
+}
 
 export const ReceivedFriendList: React.FC = () => {
+    const [profile, setProfile] = useState<UserInfo | null>(null);
+    const [requestModal, setRequestModal] = useState<boolean>(false)
+    const [userInfo,setUserInfo] = useState<RequestFriendProps>()
+
     //그룹 목록 불러오기
     const requestFriendState = useFetchRequestFriendList();
-    const queryClient = useQueryClient();
+
+    const getUserProfile = async (userId: string) => {
+        try {
+            const userData = await getUserProfileApi(userId);
+            setProfile(userData);
+            console.log(userData);
+        } catch (error) {
+            window.alert('잘못된 접근입니다. 재시작을 해주세요.');
+        }
+    };
+
+
     return (
-        <div>
+        <ReceivedFriendList_Container>
             {requestFriendState.isLoading && <div>Loading...</div>}
             {requestFriendState.data && (
-                <div>
-                    <h2>Request Friend List</h2>
-                    <ul>
-                        {requestFriendState.data.map((events) => (
-                            <UserListView key={events.eventId}>
-                                <div>
-                                    {events.nickName}으로부터
-                                    친구 요청
-                                    <br/>
-                                    -{events.createDate}-
-                                </div>
-                                <div>
-                                    <button onClick={() => responseFriendApi(events.ownUserId, "ACCEPT").then(()=> queryClient.refetchQueries({queryKey:[QUERY_FRIEND_LIST_KEY]}))}>
-                                        친구 수락
-                                    </button>
-                                    <button onClick={() => responseFriendApi(events.ownUserId, "REJECT").then(()=> queryClient.refetchQueries({queryKey:[QUERY_FRIEND_LIST_KEY]}))}>
-                                        친구 거절
-                                    </button>
-                                </div>
-                            </UserListView>
-                        ))}
-                    </ul>
-                </div>
+                <ReceivedFriendListUL>
+                    {requestFriendState.data.map((events) => (
+                        <ReceivedFriendListView key={events.eventId} onClick={() => getUserProfile(events.eventUserId)}>
+                            <ReceivedFriend_ProfilePlace>
+                                <ReceivedFriend_ImagePlace>
+                                </ReceivedFriend_ImagePlace>
+                                <ReceivedFriend_TextPlace>
+                                    <ReceivedFriend_NamePlace><b>{events.nickName} </b>
+                                        으로부터 친구 요청</ReceivedFriend_NamePlace>
+                                    <ReceivedFriend_DatePlace> {events.createDate}</ReceivedFriend_DatePlace>
+                                </ReceivedFriend_TextPlace>
+                            </ReceivedFriend_ProfilePlace>
+                        </ReceivedFriendListView>
+                    ))}
+                    <ReceivedFriend_Hr/>
+                </ReceivedFriendListUL>
             )}
-        </div>
+        </ReceivedFriendList_Container>
     )
 }

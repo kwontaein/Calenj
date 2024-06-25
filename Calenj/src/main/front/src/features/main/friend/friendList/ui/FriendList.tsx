@@ -3,10 +3,6 @@ import {useFetchFriendsList} from "../../../../../entities/reactQuery";
 import {FriendTop_Container, TopContent_Container, TopIcon_Container} from "./FriendListStyled";
 
 
-
-
-
-
 export const FriendList: React.FC = () => {
     const [friendToggle, setFriendToggle] = useState<boolean>(true);
     const [inputValue, setInputValue] = useState<string>('');
@@ -29,9 +25,9 @@ export const FriendList: React.FC = () => {
                 </TopIcon_Container>
             </FriendTop_Container>
             {friendToggle &&
-            <>
-
-            </>}
+                <>
+                    
+                </>}
         </div>
     )
 }
