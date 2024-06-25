@@ -19,14 +19,16 @@ public class UserResponse {
     private String userEmail;
     private String userPhone;
     private String introduce;
+    private String userUsedName;
     private String userJoinDate;
     private String userIntroduce;
 
-    public UserResponse(String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate) {
+    public UserResponse(String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate, String userUsedName) {
         this.nickname = nickname;
         this.userEmail = userEmail;
-        this.userIntroduce =userIntroduce;
+        this.userIntroduce = userIntroduce;
         this.userPhone = userPhone;
         this.userJoinDate = userJoinDate;
+        this.userUsedName = userUsedName;
     }
 }
