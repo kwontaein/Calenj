@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {topContent_HeightSize} from "./SubNavProfileTopStyled";
+import {topContent_HeightSize} from "./SubNavProfileBottomStyled";
 import {PointColor, TextColor, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 export const SubNavProfile_Container= styled.div`

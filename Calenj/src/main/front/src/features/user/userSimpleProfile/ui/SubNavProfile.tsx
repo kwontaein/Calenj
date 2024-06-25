@@ -9,7 +9,7 @@ import {
     SubNavProfile_Content_Container,
     SubNavProfile_div
 } from "./SubNavProfileStyled";
-import {SubNavProfileTop} from "./SubNavProfileTop";
+import {SubNavProfileBottom} from "./SubNavProfileBottom";
 import {useEffect, useState} from "react";
 import {QUERY_GROUP_DETAIL_KEY, QUERY_USER_INFO_KEY, UserInfo} from "../../../../entities/reactQuery";
 import {useQueryClient} from "@tanstack/react-query";
@@ -29,7 +29,6 @@ export const SubNavProfile :React.FC = () =>{
 
     return(
         <SubNavProfile_Container>
-            <SubNavProfileTop/>
             <SubNavProfile_Content_Container>
                 <Profile_Container>
                     <SubNavProfile_div/>
@@ -52,6 +51,8 @@ export const SubNavProfile :React.FC = () =>{
 
                 </ProfileText_Container>
             </SubNavProfile_Content_Container>
+            <SubNavProfileBottom/>
+
         </SubNavProfile_Container>
     )
 }

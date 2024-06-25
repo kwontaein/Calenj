@@ -6,6 +6,7 @@ import org.example.calenj.event.dto.response.EventResponse;
 import org.example.calenj.event.repository.EventRepository;
 import org.example.calenj.friend.domain.FriendEntity;
 import org.example.calenj.friend.dto.response.FriendResponse;
+import org.example.calenj.friend.dto.response.AddFriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
@@ -32,7 +33,7 @@ public class FriendService {
 
 
     public UserEntity getUserEntityByUserName(String userName) {
-        UserEntity userEntity = userRepository.findByUserUsedName(userName).orElseThrow(() -> new RuntimeException());
+        UserEntity userEntity = userRepository.findByUserUsedName(userName).orElse(null);
         return userEntity;
     }
 
@@ -46,27 +47,34 @@ public class FriendService {
         return friendRepository.findFriendListById(myUserID).orElseThrow(() -> new RuntimeException("친구 목록이 비었습니다"));
     }
 
-    public String requestFriend(String friendUserName) {
-
+    public AddFriendResponse requestFriend(String friendUserName) {
+        AddFriendResponse response = new AddFriendResponse();
         // 로그인된 유저 정보 조회
         UserEntity ownUser = globalService.myUserEntity();
 
         if (friendUserName.equals(ownUser.getUsername())) {
-            return "나에게 친구 추가는 불가능합니다.";
+            response.setMessage("나에게 친구 추가는 불가능합니다.");
+            response.setSuccess(false);
+            return response;
         }
 
         // 친구 추가할 유저 정보 조회
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
+        if (friendUser == null) {
+            response.setMessage("존재하지 않는 아이디입니다. 아이디를 다시 확인해주세요.");
+            response.setSuccess(false);
+            return response;
+        }
 
         if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
-            return repositorySetting(friendUser.getUserId(), friendUser.getNickname());
+            response = (repositorySetting(friendUser.getUserId(), friendUser.getNickname(), response));
         } else {
-            onlyOne(ownUser, friendUser, friendUser.getUserId());
-            return "";
+            response = (onlyOne(ownUser, friendUser, friendUser.getUserId(), response));
         }
+        return response;
     }
 
-    public String repositorySetting(UUID friendUserId, String nickName) {
+    public AddFriendResponse repositorySetting(UUID friendUserId, String nickName, AddFriendResponse response) {
 
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 
@@ -93,11 +101,13 @@ public class FriendService {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
-        return "상대가 보낸 요청이 이미 있기에, 친구 추가합니다.";
+        response.setSuccess(true);
+        response.setMessage("상대가 보낸 요청이 이미 있기에, 친구 추가합니다.");
+        return response;
     }
 
-    public String onlyOne(UserEntity ownUser, UserEntity friendUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
+    public AddFriendResponse onlyOne(UserEntity ownUser, UserEntity friendUser, UUID friendUserId, AddFriendResponse response) {//동일한 요청 정보가 있다면? -> 저장x
+
         if (!eventRepository.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
             // 아니라면 내 친구 테이블에 추가
             FriendEntity friendEntity = FriendEntity
@@ -122,18 +132,27 @@ public class FriendService {
             friendRepository.save(friendEntity);
             eventRepository.save(eventEntity);
             webSokcetService.userAlarm(friendUserId, "친구요청");
-            return "친구 요청에 성공했습니다";
+            response.setSuccess(true);
+            response.setMessage("친구 요청에 성공했습니다");
+            return response;
         }
-        return "이미 요청한 유저입니다";
+        response.setSuccess(false);
+        response.setMessage("이미 요청한 유저입니다");
+        return response;
     }
 
 
-    public String responseFriend(UUID friendUserName, String isAccept) {
+    public AddFriendResponse responseFriend(UUID friendUserName, String isAccept) {
+        AddFriendResponse response = null;
+
         //요청 정보가 없다면 오류 반환
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserName).orElse(null);
         if (friendResponse == null) {
-            return "올바르지 않은 요청입니다.";
+            response.setMessage("올바르지 않은 요청입니다.");
+            response.setSuccess(false);
+            return response;
         }
+
         //거절이라면
         if (isAccept.equals("REJECT")) {
             //요청한 유저 친구목록에서 삭제
@@ -141,24 +160,32 @@ public class FriendService {
             //이벤트 상태 거절로 변경
             eventRepository.updateEventFriendRequest(friendUserName, EventEntity.statusType.REJECT);
             webSokcetService.userAlarm(friendUserName, "친구거절");
-            return "친구 요청을 거절했습니다.";
+            response.setMessage("친구 요청을 거절했습니다.");
+            response.setSuccess(false);
+            return response;
         } else {
             UserEntity friendUser = getUserEntityById(friendUserName);
-            repositorySetting(friendUserName, friendUser.getNickname());
+            repositorySetting(friendUserName, friendUser.getNickname(), response);
             webSokcetService.userAlarm(friendUserName, "친구수락");
-            return "친구 요청을 수락했습니다.";
+            response.setMessage("친구 요청을 수락했습니다.");
+            response.setSuccess(true);
+            return response;
         }
     }
 
     //내가 받은 요청 목록
     public List<EventResponse> ResponseFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
+        return eventRepository.ResponseEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
     }
 
     //내가 보낸 요청 목록
     public List<EventResponse> RequestFriendList() {
         UserDetails userDetails = globalService.extractFromSecurityContext();
-        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername()), EventEntity.statusType.WAITING).orElse(null);
+        return eventRepository.RequestEventListById(UUID.fromString(userDetails.getUsername())).orElse(null);
+    }
+
+    public String getEventContent(String myUserId, UUID userId) {
+        return eventRepository.findEventContentByIds(UUID.fromString(myUserId), userId).orElse("");
     }
 }

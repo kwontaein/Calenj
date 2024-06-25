@@ -12,6 +12,7 @@ import {GroupContentItem, GroupContentTopItem} from "../../../features/group/con
 import {CalendarView} from "../../../features/main/calendar/view";
 import {MainEventTopBar} from "../../../features/main/eventBarItems/ui/MainEventTopBar";
 import {RequestFriendView} from "../../../features/main/friend/request/view";
+import {MainContentView} from "../../../features/main/contentView/ui/MainContentView";
 
 interface QueryProps {
     isLoading: boolean
@@ -48,7 +49,7 @@ export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
             <ContentsScreen_div>
                 {(navigate === "group" && groupDetail && !isLoading) &&
                     <GroupContentItem param={navigateParam} contentSize={contentSize} showUserList={showUserList}/>}
-                {navigate === "main" && <CalendarView/>}
+                {navigate === "main" && <MainContentView/>}
             </ContentsScreen_div>
         </FullScreen_div>
     )

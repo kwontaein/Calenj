@@ -4,12 +4,12 @@ import {
     SubNavProfileTop_Container,
     SubNavProfileTop_Content,
     SubProfileTopMenu_Container
-} from "./SubNavProfileTopStyled";
+} from "./SubNavProfileBottomStyled";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, updateMainSubNavigation} from "../../../../entities/redux";
 import {LogoutButton} from "../../../authentication/logout";
 
-export const SubNavProfileTop :React.FC = () =>{
+export const SubNavProfileBottom :React.FC = () =>{
     const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)
     const dispatch = useDispatch();
     const subNavHandler = (target:string)=>{
