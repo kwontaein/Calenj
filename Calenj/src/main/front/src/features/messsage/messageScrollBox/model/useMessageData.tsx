@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {
-    QUERY_NEW_CAHT_KEY,
+    QUERY_NEW_CHAT_KEY,
     useChatFileInfinite,
     useReceiveChatInfinite
 } from "../../../../entities/reactQuery/model/queryModel";
@@ -54,7 +54,7 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
             chatFile.refetch().then(() => {
                 //newMessage 비우기
                 if (!newChat.data) return
-                queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                     pages: data?.pages.slice(0, 1),
                     pageParams: data?.pageParams.slice(0, 1)
                 }));
@@ -68,7 +68,7 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
         const removeDuplicatesList = [...new Set(messageList.map((message)=> JSON.stringify(message)))]
             .map((message) => JSON.parse(message)) as Message[];
         if(messageList.length !== removeDuplicatesList.length){
-            queryClient.setQueryData([QUERY_NEW_CAHT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                 pages: data?.pages.slice(0, removeDuplicatesList.length),
                 pageParams: data?.pageParams.slice(0, removeDuplicatesList.length)
             }));

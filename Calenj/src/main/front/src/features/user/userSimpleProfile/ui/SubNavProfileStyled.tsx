@@ -4,15 +4,46 @@ import {PointColor, TextColor, ThemeColor3} from "../../../../shared/ui/SharedSt
 
 export const SubNavProfile_Container= styled.div`
     width: calc(100% - 20px);
-    height : 120px;
+    height : 140px;
     padding:10px;
 `
 
 export const SubNavProfile_Content_Container =styled.div`
-    height: calc(100% - ${topContent_HeightSize+15}px); // + padding
-    padding-top: 15px;
+    height: calc(100% - ${topContent_HeightSize+40}px); // + padding
+    width: 100%;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
+`
+
+export const Profile_UserUseName_Container = styled.div`
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+`
+
+export const UserUseName_Content = styled.div`
+    width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+`
+
+export const UserInfo_ModifyIcon_Container =styled.div`
+    width:30px;
+    height: 100%;
+    color: ${TextColor};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover{
+        color: ${TextColor}77;
+    }
 `
 
 export const Profile_Container = styled.div`

@@ -18,7 +18,6 @@ import {
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
     const response = await axios.post('/api/postCookie');
-
     return response.data;
 }
 export const logout = async (): Promise<boolean> => {

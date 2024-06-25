@@ -5,8 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 
 export const MainSubNavItems: React.FC = () => {
-    const {clickState, friendParam} = useSelector((state: RootState) => state.main_subNavState)
-
+    const {clickState} = useSelector((state: RootState) => state.main_subNavState)
 
     return (
         <>
