@@ -23,14 +23,12 @@ export const FriendEventBarSelector: React.FC = () => {
     const requestFriendState = useFetchRequestFriendList();
 
     useEffect(() => {
-        console.log(stomp.receiveMessage.param)
         if(stomp.receiveMessage.param ==='친구요청'){
             queryClient.refetchQueries({queryKey:[QUERY_REQUEST_FRIEND_LIST]})
         }
     }, [stomp]);
 
     useEffect(() => {
-        console.log(requestFriendState.data)
     }, [requestFriendState]);
 
     return (

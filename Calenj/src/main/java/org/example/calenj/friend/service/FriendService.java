@@ -80,7 +80,7 @@ public class FriendService {
     }
 
     private boolean isAlreadyFriend(UserEntity friendUser) {
-        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
+        if(friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
             return true;
         }
         return false;

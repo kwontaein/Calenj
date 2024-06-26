@@ -5,9 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.25 친구요청 (완료)">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userInfo/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userInfo/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/api/getUserProfileApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userInfo/api/getUserProfileApi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/model/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/ui/MemberInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/members/ui/MemberInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/requestInput/ui/RequestFriendInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/ReceivedFriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/ReceivedFriendList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/RequestFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/request/view/ui/RequestFriendView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/main/friend/viewManager/ui/FriendEventBarSelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/dto/response/AddFriendResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/dto/response/AddFriendResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,40 +97,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build Calenj.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.CalenjApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;SeungJae&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/IntelliJProjectFork/Calenj/Calenj/src/main/front/src/features/group/board/notice/list&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\IntelliJProjectFork\\Calenj\\Calenj\\src\\main\\front\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build Calenj.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.CalenjApplication.executor": "Run",
+    "git-widget-placeholder": "SeungJae",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/IntelliJProjectFork/Calenj/Calenj/src/main/front/src/features/group/board/notice/list",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\IntelliJProjectFork\\Calenj\\Calenj\\src\\main\\front\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\list" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\user\userInfo\model" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\user\userInfo\api" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems\ui" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\subNavItems" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\request\requestInput\api" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend\viewManager" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\main\friend" />
     </key>
   </component>
   <component name="RunManager">
@@ -365,7 +378,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719299288370</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="06.25 merge 전 commit">
+      <option name="closed" value="true" />
+      <created>1719324444494</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1719324444494</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -395,7 +416,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="02.06 git fork &amp; request pull" />
     <MESSAGE value="02.06 npm 모듈 셋팅" />
     <MESSAGE value="02.15 checkout 전 commit" />
     <MESSAGE value="05.28 VoteFile =&gt; FSD 파일구조로 변경" />
@@ -420,7 +440,8 @@
     <MESSAGE value="06.21 subNavProfile 제작 #2" />
     <MESSAGE value="06.25 friendView 제작" />
     <MESSAGE value="06.25 친구요청 (완료)" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.25 친구요청 (완료)" />
+    <MESSAGE value="06.25 merge 전 commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.25 merge 전 commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -438,6 +459,12 @@
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx</url>
           <line>27</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx</url>
+          <line>27</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
