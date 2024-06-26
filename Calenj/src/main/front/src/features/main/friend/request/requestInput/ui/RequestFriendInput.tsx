@@ -9,34 +9,14 @@ import {requestFriendApi} from "../api/requestFreindApi";
 import {getUserProfileApi} from "../../../../../user/userInfo";
 import {RequestFriendView} from "../../view";
 import {UserInfo} from "../../../../../user/userInfo";
+import {useUserName} from "../model/useUserName";
 
 
 
 export const RequestFriendInput: React.FC = () => {
-    const [userId, setUserId] = useState<string>("");
-    const [message, setMessage] = useState<string>('')
     const inputRef = useRef<HTMLInputElement>(null);
-    const [showModal,setShowModal] = useState<boolean>(false)
-    const [userKey,setUserKey] = useState<string>()
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserId(event.target.value);
-    };
-
-    const handleButtonClick = () => {
-        if (userId.trim() === "") {
-            setMessage('요청할 아이디를 입력해주세요.')
-            return
-        }
-        requestFriendApi(userId).then(async(response: AddFriendProps) => {
-            if (response.success) {
-                window.alert(response.message)
-                setUserKey(response.userId);
-                setShowModal(true)
-            } else {
-                setMessage(response.message)
-            }
-        })
-    };
+    const [userId, setUserId] = useState<string>("");
+    const  {showModal, message,  userKey, handleButtonClick, setShowModal} = useUserName();
 
     const closeModal = () =>{
         setShowModal(false)
@@ -45,14 +25,9 @@ export const RequestFriendInput: React.FC = () => {
             setUserId('');
         }
     }
-
-    useEffect(() => {
-        if (message !== '') {
-            setTimeout(() => {
-                setMessage('')
-            }, 5000)
-        }
-    }, [message]);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserId(event.target.value);
+    };
 
     return (
         <>
@@ -64,7 +39,7 @@ export const RequestFriendInput: React.FC = () => {
                                     placeholder={"ID로 친구 추가"}
                                     value={userId}
                                     onChange={handleInputChange}/>
-                    <AddFriendButton onClick={handleButtonClick}>요청 보내기</AddFriendButton>
+                    <AddFriendButton onClick={()=>handleButtonClick(userId)}>요청 보내기</AddFriendButton>
                 </AddFriendInput_Container>
             </FriendEventBarItems_Container>
             {!(message === '') &&
