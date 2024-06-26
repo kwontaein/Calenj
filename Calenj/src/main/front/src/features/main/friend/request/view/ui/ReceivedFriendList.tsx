@@ -9,20 +9,21 @@ import {
 import {useState} from "react";
 import {UserInfo} from "../../../../../user/userInfo";
 
-interface RequestFriendProps{
+interface RequestFriendProps {
     chatUUID: string
-    eventContent:string
+    eventContent: string
     introduce: string
     joinDate: string
     nickName: string
     sameFriend: string[]
-    sameGroup : string[]
+    sameGroup: string[]
+    userName: string
 }
 
 export const ReceivedFriendList: React.FC = () => {
     const [profile, setProfile] = useState<UserInfo | null>(null);
     const [requestModal, setRequestModal] = useState<boolean>(false)
-    const [userInfo,setUserInfo] = useState<RequestFriendProps>()
+    const [userInfo, setUserInfo] = useState<RequestFriendProps>()
 
     //그룹 목록 불러오기
     const requestFriendState = useFetchRequestFriendList();
