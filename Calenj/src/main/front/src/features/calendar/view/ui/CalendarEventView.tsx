@@ -12,10 +12,9 @@ import {Simulate} from "react-dom/test-utils";
 import drop = Simulate.drop;
 import {TodoListView} from "./TodoListView";
 import {useComponentSize} from "../../../../shared/model";
+import {CalendarEventProps} from "../model/types";
 
-interface CalendarEventProps{
-    eventInfo: EventContentArg
-}
+
 export const CalendarEventView:React.FC<CalendarEventProps> = ({eventInfo}) =>{
     const [dropDown, setDropDown] = useState<boolean>(false);
     const [selectBox, contentSize]= useComponentSize()

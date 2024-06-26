@@ -4,24 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.26 파일경로 리팩토링 #2">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/api/postDateEventApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/api/postDateEventApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useAddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useAddDateEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useDateEventTag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useDateEventTag.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddDateEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddDateEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddDateEventStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddToDoListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/AddToDoListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/EventDatePickerStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/EventDatePickerStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/EventDatePickerView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/EventDatePickerView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RePeatEventStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RePeatEventStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RepeatEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RepeatEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/addRruleOptions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/addRruleOptions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/beforeCheckEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/beforeCheckEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.26 파일경로 리팩토링 #3">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/stamp/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/stamp/ExternalEvents.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/stamp/ui/ExternalEvents.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarEventView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarEventView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarView.tsx" afterDir="false" />
     </list>
@@ -130,11 +115,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\calendar\stamp\ui" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\widgets\navigationNode\main\subNavItems" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\widgets\navigationNode\main\evnetBarItmes" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\widgets\navigationNode\main\contentView" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\widgets\navigationNode" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\widgets\navigationNode\nodeComposition" />
     </key>
   </component>
   <component name="RunManager">
@@ -407,7 +392,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719378688662</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="06.26 파일경로 리팩토링 #3">
+      <option name="closed" value="true" />
+      <created>1719379667046</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1719379667046</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +430,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="05.29 voteFilter =&gt; FSD 정리완료" />
     <MESSAGE value="05.29 Group파일 =&gt; FSD 정리완료" />
     <MESSAGE value="05.30 FSD 적용 (완)" />
     <MESSAGE value="06.01 오타수정" />
@@ -462,7 +454,8 @@
     <MESSAGE value="06.26 친구요청 정보조회" />
     <MESSAGE value="06.26 파일경로 리팩토링" />
     <MESSAGE value="06.26 파일경로 리팩토링 #2" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.26 파일경로 리팩토링 #2" />
+    <MESSAGE value="06.26 파일경로 리팩토링 #3" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.26 파일경로 리팩토링 #3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

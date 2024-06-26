@@ -18,7 +18,7 @@ import {Toggle_Container, Toggle_Item} from "../../../../shared/ui/SharedStyled"
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
 import {useCalendarController} from "../model/useCalendarController";
 import {AddDateEvent} from "../../createEvent";
-import {ExternalEvents} from "../../stamp/ExternalEvents";
+import {ExternalEvents} from "../../stamp";
 import {AppState, CustomEvent} from "../model/types";
 
 
