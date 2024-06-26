@@ -23,8 +23,8 @@ export const SubNavProfile :React.FC = () =>{
     //그룹 디테일 불러오기
     useEffect( () => {
         if(userData){
+            console.log(userData.userUsedName)
             setUserInfo(userData);
-            console.log(userData)
         }
     }, [userData]);
 
