@@ -10,8 +10,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendRequest {
-    private String userName;
-    private String isAccept;
+    private String userName; 
+    private String isAccept; //응답할 때 보내는 거
     private String friendUserId;
     private String eventContent;
     private UUID friendId;

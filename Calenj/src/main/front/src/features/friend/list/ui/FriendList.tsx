@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useFetchFriendsList} from "../../../../entities/reactQuery";
+import {useFetchFriendList} from "../../../../entities/reactQuery";
 import {FriendTop_Container, TopContent_Container, TopIcon_Container} from "./FriendListStyled";
 
 
@@ -7,7 +7,7 @@ export const FriendList: React.FC = () => {
     const [friendToggle, setFriendToggle] = useState<boolean>(true);
     const [inputValue, setInputValue] = useState<string>('');
     //그룹 목록 불러오기
-    const friendListState = useFetchFriendsList();
+    const friendListState = useFetchFriendList();
 
 
     return (
@@ -26,8 +26,9 @@ export const FriendList: React.FC = () => {
             </FriendTop_Container>
             {friendToggle &&
                 <>
-                    
-                </>}
+
+                </>
+            }
         </div>
     )
 }

@@ -121,7 +121,8 @@ public class FriendService {
         return response;
     }
 
-    public void saveFriend(String friendUsedName) {
+    public void saveFriend(String friendUsedName,String eventContent) {
+        System.out.println("friendUsedName :" +friendUsedName);
         UserEntity ownUser = globalService.myUserEntity();
         UserEntity friendUser = getUserEntityByUserName(friendUsedName);
 
@@ -136,6 +137,8 @@ public class FriendService {
         //이벤트테이블추가
         EventEntity eventEntity = EventEntity
                 .builder()
+                .eventContent(eventContent)
+                .eventUserNickName(friendUser.getNickname())
                 .ownUserId(ownUser)
                 .eventUserId(friendUser.getUserId())
                 .eventPurpose("Friend Request")
@@ -178,9 +181,10 @@ public class FriendService {
         }
     }
 
-    public AddFriendResponse responseFriend(UUID friendUserName, String isAccept) {
+    public AddFriendResponse responseFriend(UUID friendUserId, String isAccept) {
+
         //요청 정보가 없다면 오류 반환
-        FriendResponse friendResponse = friendRepository.findFriendById(friendUserName).orElse(null);
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
         if (friendResponse == null) {
             return createErrorResponse("올바르지 않은 요청입니다.");
         }
@@ -188,15 +192,15 @@ public class FriendService {
         //거절이라면
         if (isAccept.equals("REJECT")) {
             //요청한 유저 친구목록에서 삭제
-            friendRepository.deleteByOwnUserId(friendUserName);
+            friendRepository.deleteByOwnUserId(friendUserId);
             //이벤트 상태 거절로 변경
-            eventRepository.updateEventFriendRequest(friendUserName, EventEntity.statusType.REJECT);
-            webSokcetService.userAlarm(friendUserName, "친구거절");
+            eventRepository.updateEventFriendRequest(friendUserId, EventEntity.statusType.REJECT);
+            webSokcetService.userAlarm(friendUserId, "친구거절");
             return createErrorResponse("친구 요청을 거절했습니다.");
-        } else {
-            acceptFriend(friendUserName);
-            webSokcetService.userAlarm(friendUserName, "친구수락");
-            return createSuccessResponse("친구 요청을 수락했습니다.", friendUserName);
+        }else {
+            acceptFriend(friendUserId);
+            webSokcetService.userAlarm(friendUserId, "친구수락");
+            return createSuccessResponse("친구 요청을 수락했습니다.", friendUserId);
         }
     }
 

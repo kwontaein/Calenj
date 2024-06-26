@@ -5,11 +5,8 @@ import {
     FriendEventBarItems_Container, Message_Container, WarningMessage_Div
 } from "./RequestFriendInputStyled";
 import {useEffect, useRef, useState} from "react";
-import {requestFriendApi} from "../api/requestFreindApi";
-import {getUserProfileApi} from "../../../user/userInfo";
-import {RequestFriendView} from "../../requestFriend";
-import {UserInfo} from "../../../user/userInfo";
 import {useUserName} from "../model/useUserName";
+import {FriendEventDetail} from "../../detail";
 
 
 
@@ -31,7 +28,7 @@ export const RequestFriendInput: React.FC = () => {
 
     return (
         <>
-            {(showModal && userKey) && <RequestFriendView myRequest={true} onClose={closeModal} userKey={userKey}/>}
+            {(showModal && userKey) && <FriendEventDetail myRequest={true} onClose={closeModal} userKey={userKey} waitingView={false}/>}
             <FriendEventBarItems_Container>
                 <AddFriendInput_Container className={!(message === '') ? "shake" : ""}>
                     <AddFriendInput type={"text"}

@@ -9,10 +9,8 @@ import {EventTopBar_Container, ContentsScreen_div} from "./ContentsCompositionSt
 import {useComponentSize} from '../../../../shared/model'
 import {RootState} from "../../../../entities/redux";
 import {GroupContentItem, GroupContentTopItem} from "../../../../features/group/contentItems";
-import {CalendarView} from "../../../../features/calendar/view";
-import {MainEventTopBar} from "../../main/evnetBarItmes/ui/MainEventTopBar";
-import {RequestFriendView} from "../../../../features/friend/requestFriend";
-import {MainContentView} from "../../main/contentView/ui/MainContentView";
+import {MainEventTopBar} from "../../main/evnetBarItmes";
+import {MainContentView} from "../../main/contentView";
 
 interface QueryProps {
     isLoading: boolean

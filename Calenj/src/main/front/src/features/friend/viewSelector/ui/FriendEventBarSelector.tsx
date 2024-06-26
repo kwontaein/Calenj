@@ -7,9 +7,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {updateViewState} from "../../../../entities/redux/model/slice/FriendViewSlice";
 import {
-    QUERY_FRIEND_LIST_KEY, QUERY_REQUEST_FRIEND_LIST,
-    useFetchFriendEvent,
-    useFetchRequestFriendList
+    QUERY_FRIEND_LIST_KEY,
+    QUERY_REQUEST_FRIEND_LIST, QUERY_RESPONSE_FRIEND_LIST,
+    useFetchRequestFriendList, useFetchResponseFriendList
 } from "../../../../entities/reactQuery";
 import {useEffect} from "react";
 import {useQueryClient} from "@tanstack/react-query";
@@ -17,19 +17,13 @@ import {useQueryClient} from "@tanstack/react-query";
 export const FriendEventBarSelector: React.FC = () => {
     const viewState = useSelector((state:RootState) => state.friendViewState.viewState);
     const dispatch = useDispatch();
-    const queryClient = useQueryClient();
 
-    const stomp = useSelector((state:RootState) => state.stomp);
+    const responseFriendState = useFetchResponseFriendList();
     const requestFriendState = useFetchRequestFriendList();
 
-    useEffect(() => {
-        if(stomp.receiveMessage.param ==='친구요청'){
-            queryClient.refetchQueries({queryKey:[QUERY_REQUEST_FRIEND_LIST]})
-        }
-    }, [stomp]);
 
-    useEffect(() => {
-    }, [requestFriendState]);
+
+
 
     return (
         <FriendEventBarSelect_Container>
@@ -42,16 +36,16 @@ export const FriendEventBarSelector: React.FC = () => {
                 <FriendSelectButton $isAble={viewState==='all'} onClick={()=> dispatch(updateViewState({viewState:'all'}))}>
                     모두
                 </FriendSelectButton>
-                <FriendSelectButton $isAble={viewState==='request'} onClick={()=> dispatch(updateViewState({viewState:'request'}))}>
+                <FriendSelectButton $isAble={viewState==='response'} onClick={()=> dispatch(updateViewState({viewState:'response'}))}>
                     요청
-                    {requestFriendState.data &&
-                       ( requestFriendState.data.length >0 &&
+                    {responseFriendState.data &&
+                       ( responseFriendState.data.length >0 &&
                         <SignOfFriendAlarm>
                         </SignOfFriendAlarm>
                        )
                     }
                 </FriendSelectButton>
-                <FriendSelectButton $isAble={viewState==='waiting'} onClick={()=> dispatch(updateViewState({viewState:'waiting'}))}>
+                <FriendSelectButton $isAble={viewState==='request'} onClick={()=> dispatch(updateViewState({viewState:'request'}))}>
                     대기
                 </FriendSelectButton>
             </FriendSelectButton_Container>

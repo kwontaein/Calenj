@@ -32,6 +32,7 @@ export const UserUseName_Content = styled.div`
     display: flex;
     align-items: center;
     font-size: 10px;
+    user-select: text;
 `
 
 export const UserInfo_ModifyIcon_Container =styled.div`

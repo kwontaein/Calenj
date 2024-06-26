@@ -1,25 +1,19 @@
 import styled from "styled-components";
-import {
-    PointColor,
-    PointColor2,
-    TextColor,
-    TextColor2,
-    ThemeColor2,
-    ThemeColor3
-} from "../../../../shared/ui/SharedStyled";
+
 import exp from "node:constants";
+import {PointColor2, TextColor2, ThemeColor2, ThemeColor3} from "./SharedStyled";
 
 
-export const ReceivedFriendList_Container = styled.div`
+export const FriendList_Container = styled.div`
     width: calc(100% - 20px);
     border-radius: 5px;
     padding: 10px;
 `
-export const ReceivedFriendListUL = styled.ul`
+export const FriendListUL = styled.ul`
     padding: 0;
 `
 
-export const ReceivedFriendListView = styled.li`
+export const FriendListView = styled.li`
     padding: 10px;
     height: 45px;
     align-items: center;
@@ -31,11 +25,11 @@ export const ReceivedFriendListView = styled.li`
         background-color: ${ThemeColor2};
     }
 `
-export const ReceivedFriend_ProfilePlace = styled.div`
+export const Friend_ProfilePlace = styled.div`
     display: flex;
     align-items: center;
 `
-export const ReceivedFriend_ImagePlace = styled.div`
+export const Friend_ImagePlace = styled.div`
     width: 40px;
     height: 40px;
     margin: 0 10px 0 0;
@@ -43,23 +37,23 @@ export const ReceivedFriend_ImagePlace = styled.div`
     border: 2px inherit ${ThemeColor3};
     background-color: white;
 `
-export const ReceivedFriend_TextPlace = styled.div`
+export const Friend_TextPlace = styled.div`
     width: auto;
 
 `
-export const ReceivedFriend_NamePlace = styled.div`
+export const Friend_NamePlace = styled.div`
     width: auto;
     font-size: 15px;
 `
 
-export const ReceivedFriend_DatePlace = styled.div`
+export const Friend_DatePlace = styled.div`
     width: auto;
     font-size: 13px;
     color: ${PointColor2};
 
 `
 
-export const ReceivedFriend_ResponseBtn = styled.div`
+export const Friend_ResponseBtn = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -71,7 +65,7 @@ export const ReceivedFriend_ResponseBtn = styled.div`
     font-size: 15px;
 `
 
-export const ReceivedFriend_Hr = styled.hr`
+export const Friend_Hr = styled.hr`
     background-color: ${TextColor2}77;
     border: 0;
     height: 1px;

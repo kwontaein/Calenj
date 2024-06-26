@@ -28,7 +28,7 @@ export const ScrollableDiv = styled.div`
 export const MessageBoxContainer = styled.div<CheckBeforeSender>`
     padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
     padding-inline: 12px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     user-select: text;
 `
 export const ProfileContainer = styled.div<UserProfile>`

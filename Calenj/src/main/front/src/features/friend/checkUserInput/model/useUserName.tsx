@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {requestFriendApi} from "../api/requestFreindApi";
+import {RequestFriendResponse} from "./types";
 
 interface ReturnCheckUser{
     showModal:boolean,
@@ -28,7 +29,7 @@ export const useUserName = ():ReturnCheckUser =>{
             setMessage('요청할 아이디를 입력해주세요.')
             return
         }
-        requestFriendApi(userId).then(async(response: CheckUserName) => {
+        requestFriendApi(userId).then(async(response: RequestFriendResponse) => {
             if (response.success) {
                 window.alert(response.message)
                 setUserKey(response.userId);

@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 const userProfileSize = 100;
 
 export const RequestFriendView_Container = styled.div<{$myRequest:boolean}>`
     width: calc(100% - 20px);
-    height: ${props => props.$myRequest ? '380px':'250px'};
+    height: ${props => props.$myRequest ? '350px':'250px'};
     background-color: ${ThemeColor3};
     border-radius: 10px;
     padding: 10px;
@@ -48,6 +48,7 @@ export const UserProfile_Container = styled.div`
     flex-direction: row;
 `
 
+
 export const UserProfile = styled.div`
     width: ${userProfileSize}px;
     height: ${userProfileSize}px;
@@ -59,7 +60,7 @@ export const UserProfile = styled.div`
 `
 
 export const UserName_Container = styled.div`
-    max-width: calc(100% - ${userProfileSize + 20}px);
+    width:calc(100% - ${userProfileSize +16 +40}px);
     margin-left: 10px;
 `
 
@@ -69,7 +70,20 @@ export const UserName = styled.div`
 export const UserId = styled.div`
     font-size: 12px;
     margin-left: 2px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
+
+export const FriendDetail_Close_Button = styled.div`
+    width: auto;
+    height: 15px;
+    &:hover{
+        color: ${TextColor2};
+    }
+`
+
 export const Content_Container = styled.div`
     width: calc(100% - 20px);
     height: calc(100% - ${userProfileSize-30}px);
@@ -125,6 +139,16 @@ export const UserInfoContent_Container = styled.div`
     overflow-y: auto;
 `
 
+export const EmptyData_Content = styled.div`
+    width: 100%;
+    height: 100%;
+    color:${TextColor}77;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+`
+
 export const ListItem_Container = styled.div`
     height : 40px;
     width: 100%;
@@ -154,11 +178,11 @@ export const ListItem_Name_Container = styled.div`
 
 export const RequestMemo_Container = styled.textarea`
     margin-block: 10px;
-    height: 90px;
+    height: 50px;
     border-radius: 10px;
     width: calc(100% - 10px);
     background-color: ${ThemeColor2};
-    padding: 5px;
+    padding: 10px 5px 5px;
     border: 2px solid ${ThemeColor2};
     font-size: 12px;
     resize: none;
