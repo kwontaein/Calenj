@@ -1,11 +1,18 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import {RequestFriendResponse} from "../model/types";
+import {jwtFilter} from "../../../../entities/authentication/jwt";
 
-export const requestFriendApi = async (friendUserId:string) :Promise<CheckUserName> => {
+export const requestFriendApi = async (friendUserId:string) :Promise<RequestFriendResponse> => {
     return axios.post('/api/requestFriend', {friendUserId: friendUserId}) // 객체의 속성명을 'id'로 설정;
             .then((res:AxiosResponse) => {
                 return res.data
             })
             .catch((error) => {
-                window.alert('알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.');
+                const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if (axiosError.response?.status) {
+                    console.log(axiosError.response.status);
+                    jwtFilter((axiosError.response.status).toString());
+                }
             })
     }

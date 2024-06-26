@@ -84,10 +84,12 @@ export interface FriendEvent {
     eventName: string
     eventPurpose: string
     eventStatus: string
-    eventUserId: string
+    receivedUserId: string
     ownUserId: string
     nickName: string
 }
+
+
 
 export interface Message {
     chatUUID: string,
@@ -101,15 +103,6 @@ interface FetchDataParams {
     pageParam?: number;
 }
 
-export interface Event {
-    createDate: string
-    eventId: number
-    eventName: string
-    eventPurpose: string
-    eventStatus: string
-    eventUserId: string
-    ownUserId: string
-}
 
 export interface EventTagDTO {
     id: string,

@@ -1,0 +1,1 @@
+export {FriendEventDetail} from './ui/FriendEventDetail'

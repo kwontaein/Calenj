@@ -21,7 +21,6 @@ import {
     FriendList,
     FriendEvent,
     Message,
-    Event,
     FetchData,
     ReceiveData,
     VoteDetail,
@@ -34,6 +33,8 @@ export const QUERY_NEW_CHAT_KEY: string = "QUERY_NEW_CHAT_KEY";
 export const QUERY_COOKIE_KEY: string = 'QUERY_COOKIE_KEY';
 export const QUERY_FRIEND_LIST_KEY: string = 'QUERY_FRIEND_LIST_KEY'
 export const QUERY_REQUEST_FRIEND_LIST: string ="QUERY_REQUEST_FRIEND_LIST"
+export const QUERY_RESPONSE_FRIEND_LIST: string ="QUERY_RESPONSE_FRIEND_LIST"
+
 export const QUERY_GROUP_DETAIL_KEY:string = 'QUERY_GROUP_DETAIL_KEY'
 export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
 export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
@@ -42,6 +43,7 @@ export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
 export const QUERY_DATE_EVENT_TAG_KEY: string ='QUERY_DATE_EVENT_TAG_KEY'
 export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
 export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
+
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -75,7 +77,7 @@ export const useFetchVoteList = (groupId:string) =>
         queryFn: () => getVoteList(groupId), //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-export const useFetchFriendsList= () =>
+export const useFetchFriendList= () =>
 useQuery<FriendList[] | null, Error>({
     queryKey: [QUERY_FRIEND_LIST_KEY],
     queryFn: getFriendList,
@@ -87,16 +89,16 @@ export const useFetchVoteDetail= (voteId:string) =>
         queryFn: () => getVoteDetail(voteId),
     });
 
-export const  useFetchRequestFriendList= () =>
+export const  useFetchResponseFriendList= () =>
     useQuery<FriendEvent[] | null, Error>({
-        queryKey: [QUERY_REQUEST_FRIEND_LIST],
+        queryKey: [QUERY_RESPONSE_FRIEND_LIST],
         queryFn: getFriendResponse,
     });
 
 
-export const useFetchFriendEvent = () =>
-    useQuery<Event[] | null, Error>({
-        queryKey: [QUERY_FRIEND_LIST_KEY],
+export const useFetchRequestFriendList = () =>
+    useQuery<FriendEvent[] | null, Error>({
+        queryKey: [QUERY_REQUEST_FRIEND_LIST],
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
         refetchInterval: false,
     })

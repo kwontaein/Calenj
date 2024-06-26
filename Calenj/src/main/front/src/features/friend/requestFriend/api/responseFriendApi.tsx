@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
+import {jwtFilter} from "../../../../entities/authentication/jwt";
 
 export const responseFriendApi = (friendUserId: string, isAccept: string):Promise<void> => {
     return axios.post('/api/myResponse', {
@@ -8,6 +9,11 @@ export const responseFriendApi = (friendUserId: string, isAccept: string):Promis
             .then(() => window.alert(`친구 요청을 ${isAccept === "ACCEPT" ? "수락" : "거절"}했습니다.`))
             .catch((error) => {
                 window.alert('응답에 실패했습니다.');
-                console.log(error.response.status);
+                const axiosError = error as AxiosError;
+                console.log(axiosError);
+                if (axiosError.response?.status) {
+                    console.log(axiosError.response.status);
+                    jwtFilter((axiosError.response.status).toString());
+                }
             })
 }

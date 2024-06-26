@@ -70,15 +70,7 @@ public class FriendController {
      */
     @PostMapping("/api/saveRequest")
     public void saveRequest(@RequestBody FriendRequest friendRequest) {
-        friendService.saveFriend(friendRequest.getFriendUserId());
+        friendService.saveFriend(friendRequest.getUserName(),friendRequest.getEventContent());
     }
 
-
-    /**
-     * 친구 응답
-     */
-    @PostMapping("/api/saveResponse")
-    public void saveResponse(@RequestBody FriendRequest friendRequest) {
-        friendService.acceptFriend(friendRequest.getFriendId());
-    }
 }
