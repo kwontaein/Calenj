@@ -10,5 +10,7 @@ export interface Profile {
     introduce: string;    // 소개
     joinDate: string;    // 가입일
     sameGroup: string[];// 같이 있는 그룹
+    sameFriend: string[];// 같이 아는 친구
     chatUUID: number;// 개인 메세지 버튼
+    userName: string;
 }
