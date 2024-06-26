@@ -29,7 +29,6 @@ export const RequestFriendInput: React.FC = () => {
                     inputRef.current.value = '';
                     setUserId('');
                 }
-                
             } else {
                 setMessage(response.message)
             }
