@@ -1,8 +1,10 @@
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../entities/redux";
-import {ColorOption} from "../../../../../shared/ui/MultiSelector";
+
 import {MultiValue} from "react-select";
-import {DateEventAction} from "../../../../../entities/calendar";
+import {RootState} from "../../../../entities/redux";
+import {ColorOption} from "../../../../shared/ui/MultiSelector";
+import {DateEventAction} from "../../../../entities/calendar";
+
 
 interface ReturnDateEventTag{
     setTag :(values: MultiValue<ColorOption>) => void,

@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../shared/ui/SharedStyled";
 import Select from 'react-select';
 import {Simulate} from "react-dom/test-utils";
+import {BackGroundColor, PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 interface ButtonProps{
     $isClick : boolean,

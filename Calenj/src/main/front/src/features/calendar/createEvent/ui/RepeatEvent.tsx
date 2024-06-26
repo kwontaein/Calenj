@@ -14,14 +14,10 @@ import {
 } from "./RePeatEventStyled";
 import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {ko} from "date-fns/locale/ko";
-import {
-    DateEventAction,
-    DateEventState,
-    RepeatAction,
-    RepeatState
-} from "../../../../../entities/calendar";
-import {CheckBox_Label, CheckBoxStyle} from "../../../../../shared/ui/SharedStyled";
-import {InfoBox} from "../../../../../shared/ui/InfoBox";
+import {InfoBox} from "../../../../shared/ui/InfoBox";
+import {DateEventAction, DateEventState, RepeatAction, RepeatState} from "../../../../entities/calendar";
+import {CheckBox_Label, CheckBoxStyle} from "../../../../shared/ui/SharedStyled";
+
 
 
 interface EventDateProps {

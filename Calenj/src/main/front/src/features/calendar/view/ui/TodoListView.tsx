@@ -2,14 +2,9 @@ import {TodoList_Item, TodoListView_Container} from "./TodoListViewStyled";
 import {createPortal} from "react-dom";
 import {useEffect, useId} from "react";
 import chroma from "chroma-js";
+import {EventViewProps} from "../model/types";
 
-interface EventViewProps{
-    top:number|undefined,
-    left:number|undefined
-    width:number,
-    todoList:string[],
-    color:string,
-}
+
 export const TodoListView :React.FC<EventViewProps> = ({top, left, width, todoList, color}) =>{
     const todoId = useId()
     const [R, G, B]: number[] = chroma(color).rgb();

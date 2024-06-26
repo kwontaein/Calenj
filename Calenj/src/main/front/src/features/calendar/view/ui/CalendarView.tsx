@@ -11,29 +11,17 @@ import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
-import {AddDateEvent} from "../../../main/calendar/create";
 import {useFetchDateEventTag} from "../../../../entities/reactQuery";
 import {CalendarEventView} from "./CalendarEventView";
 import {useComponentSize} from "../../../../shared/model";
 import {Toggle_Container, Toggle_Item} from "../../../../shared/ui/SharedStyled";
-import {ExternalEvents} from "../../stamp/ExternalEvents";
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
 import {useCalendarController} from "../model/useCalendarController";
+import {AddDateEvent} from "../../createEvent";
+import {ExternalEvents} from "../../stamp/ExternalEvents";
+import {AppState, CustomEvent} from "../model/types";
 
 
-// 이벤트 인터페이스 정의
-interface Event {
-    id: number;
-    title: string;
-    color: string;
-    custom?: string;
-}
-
-interface AppState {
-    weekendsVisible: boolean;
-    externalEvents: Event[];
-    calendarEvents: Event[];
-}
 
 export const CalendarView: React.FC = () => {
     const {data} = useFetchDateEventTag();
@@ -67,7 +55,7 @@ export const CalendarView: React.FC = () => {
     });
 
     const onEventAdd = () => {
-        const newEvent: Event = {
+        const newEvent: CustomEvent= {
             id: Date.now(), // 고유 ID 생성을 위해 현재 시간의 타임스탬프 사용
             title: "New Event",
             color: "#02daff",

@@ -1,22 +1,23 @@
-import {useConfirm} from "../../../../../shared/model";
 import {useEffect, useReducer, useState} from "react";
 import {beforeCheckEvent} from "../utils/beforeCheckEvent";
 import chroma from "chroma-js";
 import {DateEvent, ReturnTodo, TodoItem} from "./types";
 import {v4 as uuidv4} from "uuid";
 import {addRruleOptions} from "../utils/addRruleOptions";
-import {UserDateEvent} from "../../../../../entities/reactQuery";
 import {postDateEventApi} from "../api/postDateEventApi";
-import {
-    DateEventReducer, DateEventState, DateEventAction,
-    initialEventDateState,
-    initialRepeatState, RepeatAction,
-    RepeatReducer, RepeatState
-} from "../../../../../entities/calendar";
+
 import {useTodoList} from "./useTodoList";
 import {DateSelectArg} from "@fullcalendar/react";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../entities/redux";
+import {UserDateEvent} from "../../../../entities/reactQuery";
+import {
+    DateEventAction,
+    DateEventReducer,
+    DateEventState, initialEventDateState, initialRepeatState,
+    RepeatAction, RepeatReducer,
+    RepeatState
+} from "../../../../entities/calendar";
+import {useConfirm} from "../../../../shared/model";
 
 interface ReturnAddEvent{
     repeatState: RepeatState,

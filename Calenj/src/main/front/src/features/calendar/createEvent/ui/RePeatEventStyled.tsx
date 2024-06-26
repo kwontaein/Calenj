@@ -1,11 +1,6 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import {
-    PointColor,
-    TextColor,
-    ThemeColor2,
-    ThemeColor3
-} from "../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 interface ClickProps {
     $isClick: boolean,

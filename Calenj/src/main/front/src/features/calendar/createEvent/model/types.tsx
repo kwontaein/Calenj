@@ -1,8 +1,8 @@
 import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
 import React from "react";
 import {Dictionary} from "@fullcalendar/core";
-import {RepeatState} from "../../../../../entities/calendar";
 import {Options} from "rrule";
+import {RepeatState} from "../../../../entities/calendar";
 
 export interface ReturnCalendar {
     handleEvents: (events: EventApi[]) => void,

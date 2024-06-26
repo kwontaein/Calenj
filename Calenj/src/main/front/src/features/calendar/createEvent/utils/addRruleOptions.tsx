@@ -1,6 +1,6 @@
-import {RepeatState} from "../../../../../entities/calendar";
 import {ByWeekday, Options, RRule, Weekday} from "rrule";
 import {RepeatOption} from "../model/types";
+import {RepeatState} from "../../../../entities/calendar";
 
 const weekArr = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA]
 

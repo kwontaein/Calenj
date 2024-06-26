@@ -1,10 +1,4 @@
-import {
-    Modal_Background,
-    Modal_Condition_Button,
-    Modal_Container,
-    ModalContent_Container,
-    ModalTopBar_Container
-} from "../../../../../shared/ui/SharedStyled";
+
 import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
@@ -24,15 +18,22 @@ import {
     EventContent_TextArea,
     ModalButton_Container,
 } from "./AddDateEventStyled";
-import '../../../../../shared/ui/DatePicker.scss';
+import '../../../../shared/ui/DatePicker.scss';
 import {DateSelectArg} from "@fullcalendar/react";
 import {EventDatePickerView} from "./EventDatePickerView";
 import {AddTodoList} from './AddTodoList'
 import {RepeatEvent} from './RepeatEvent'
-import {MultiSelector} from "../../../../../shared/ui/MultiSelector";
+
 
 import {useAddDateEvent} from "../model/useAddDateEvent";
 import {useDateEventTag} from "../model/useDateEventTag";
+import {
+    Modal_Background,
+    Modal_Condition_Button,
+    Modal_Container, ModalContent_Container,
+    ModalTopBar_Container
+} from "../../../../shared/ui/SharedStyled";
+import {MultiSelector} from "../../../../shared/ui/MultiSelector";
 
 
 

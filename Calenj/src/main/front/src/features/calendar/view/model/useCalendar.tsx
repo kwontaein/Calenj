@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {EventApi, EventClickArg} from "@fullcalendar/react";
-import {DateEvent, ReturnCalendar} from "../../../main/calendar/create/model/types";
 import chroma from "chroma-js";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {EventTagDTO} from "../../../../entities/reactQuery";
 import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
-import {addRruleOptions} from "../../../main/calendar/create/utils/addRruleOptions";
+import {DateEvent, ReturnCalendar} from "../../createEvent/model/types";
+import {addRruleOptions} from "../../createEvent/utils/addRruleOptions";
 
 
 export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalendar => {
