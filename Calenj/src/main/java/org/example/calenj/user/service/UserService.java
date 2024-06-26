@@ -230,6 +230,7 @@ public class UserService {
 
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
 
+        userProfileResponse.setUserName(userEntity.getUserUsedName());
         userProfileResponse.setNickName(userEntity.getNickname());
         userProfileResponse.setIntroduce(userEntity.getUserIntroduce());
         userProfileResponse.setJoinDate(userEntity.getUserJoinDate());

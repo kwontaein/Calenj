@@ -17,4 +17,5 @@ public class UserProfileResponse {
     private List<String> sameFriend;// 함께 아는 친구
     private String chatUUID;// 개인 메세지 버튼
     private String eventContent;
+    private String userName;
 }
