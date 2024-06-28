@@ -146,7 +146,7 @@ function createStompConnection() {
 
     return new Promise((res, rej) => {
 
-        const sock = new SockJS(stompUrl);
+        const sock =()=> new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
         // const client = new Client();
         // // client.webSocketFactory()
@@ -188,11 +188,12 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
     return eventChannel(emit => {
         //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
         const subscribeMessage = () => {
-            destination.map((sub: (string)[], index: number) => {
-                sub.map((param: (string)) => {
+            destination.map((sub: string[], index: number) => {
+                sub.map((param: string) => {
                     stompClient.subscribe(`/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                         emit(JSON.parse(iMessage.body));
                     })
+                    //공통으로 쓰는 것(1:N)은 각각의 개인 구독(/user)처리를 추가로 해야함, 개인 구독을 통해 파일을 읽어오는 등의 개인적 처리는 상대방에게 공유되지 않음
                     if (subscribeDirection[index] === "groupMsg" || subscribeDirection[index] === "friendMsg") {
                         stompClient.subscribe(`/user/topic/${subscribeDirection[index]}/${param}`, (iMessage: IMessage) => {
                             emit(JSON.parse(iMessage.body));

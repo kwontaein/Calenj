@@ -4,53 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.26 파일경로 리팩토링 #4">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/api/responseEventApi.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/api/requestFriendApi.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/RequestFriendList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/responseFriend/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/FriendListStyled.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="06.27 유저 친구수락 제작완료">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/OnlineUserStorageSlice.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/api/requestFreindApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/api/requestFreindApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/model/useUserName.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/model/useUserName.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/ui/RequestFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/checkUserInput/ui/RequestFriendInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/api/responseFriendApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/api/responseFriendApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/MyRequestList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/ReceivedFriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/responseFriend/ui/ResponseFriendList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/ReceivedFriendListStyled.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/RequestFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/RequestFriendViewStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetaulStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/AllFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/CurrentFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/CurrentFriendView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/FriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/FriendList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/FriendListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/FriendListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/OnlineFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/RequestFriendView.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/WaitingFriendView.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/viewSelector/ui/FriendEventBarSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/viewSelector/ui/FriendEventBarSelector.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/FriendViewSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/FriendViewSlice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/RequestFriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/requestFriend/ui/RequestFriendList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/responseFriend/ui/ResponseFriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/responseFriend/ui/ResponseFriendList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/subNavItems/ui/MainSubNavItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/subNavItems/ui/MainSubNavItems.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/domain/EventEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/domain/EventEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/dto/response/EventResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/dto/response/EventResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/event/repository/EventRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/controller/FriendController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/controller/FriendController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/dto/request/FriendRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/dto/request/FriendRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useCheckToken.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/FriendListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/FriendListStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/repository/FriendRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/repository/FriendRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/service/FriendService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/repository/Group_UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupinfo/repository/Group_UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/dto/response/ChatMessageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/dto/response/ChatMessageResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/service/WebSokcetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/service/WebSocketService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,11 +141,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\reactQuery\model" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\friend\list\ui" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\friend\detail\ui" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\friend\view\ui" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\friend\responseFriend\ui" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\friend\requestFriend\ui" />
     </key>
   </component>
   <component name="RunManager">
@@ -218,7 +201,8 @@
       <workItem from="1718955051308" duration="10266000" />
       <workItem from="1719033099555" duration="1793000" />
       <workItem from="1719374894270" duration="2552000" />
-      <workItem from="1719413355442" duration="1192000" />
+      <workItem from="1719413355442" duration="1307000" />
+      <workItem from="1719554560987" duration="18393000" />
     </task>
     <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
       <option name="closed" value="true" />
@@ -452,7 +436,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719379750070</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="06.27 유저 친구수락 제작완료">
+      <option name="closed" value="true" />
+      <created>1719426796893</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1719426796893</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,7 +474,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="05.30 FSD 적용 (완)" />
     <MESSAGE value="06.01 오타수정" />
     <MESSAGE value="06.03 이메일 인증(완료)" />
     <MESSAGE value="06.04 이벤트 모달 ui 제작" />
@@ -507,7 +498,8 @@
     <MESSAGE value="06.26 파일경로 리팩토링 #2" />
     <MESSAGE value="06.26 파일경로 리팩토링 #3" />
     <MESSAGE value="06.26 파일경로 리팩토링 #4" />
-    <option name="LAST_COMMIT_MESSAGE" value="06.26 파일경로 리팩토링 #4" />
+    <MESSAGE value="06.27 유저 친구수락 제작완료" />
+    <option name="LAST_COMMIT_MESSAGE" value="06.27 유저 친구수락 제작완료" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -523,7 +515,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx</url>
-          <line>27</line>
+          <line>28</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

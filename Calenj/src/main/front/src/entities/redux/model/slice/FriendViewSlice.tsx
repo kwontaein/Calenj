@@ -19,6 +19,7 @@ const friendViewState = createSlice({
 })
 
 
+
 export const {updateViewState} = friendViewState.actions
 
 

@@ -35,8 +35,8 @@ export const ResponseFriendList: React.FC = () => {
             {responseFriendState.data && (
                 <FriendListUL>
                     {responseFriendState.data.map((event:FriendEvent) => (
-                            <>
-                            <FriendListView key={event.eventId}  onClick={()=>showResponseInfo(event.ownUserId)}>
+                        <div key={event.eventId}>
+                            <FriendListView onClick={()=>showResponseInfo(event.ownUserId)}>
                                 <Friend_ProfilePlace>
                                     <Friend_ImagePlace/>
                                     <Friend_TextPlace>
@@ -47,9 +47,8 @@ export const ResponseFriendList: React.FC = () => {
                                 </Friend_ProfilePlace>
                             </FriendListView>
                             <Friend_Hr/>
-                            </>
-                        ))}
-                    <Friend_Hr/>
+                        </div>
+                    ))}
                 </FriendListUL>
             )}
         </FriendList_Container>

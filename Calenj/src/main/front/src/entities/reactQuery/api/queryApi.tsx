@@ -12,7 +12,7 @@ import {
     VoteList,
     EventTagDTO,
     UserDateEvent, UserInfo
-} from "./types";
+} from "../model/types";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {

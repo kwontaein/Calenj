@@ -21,9 +21,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
     Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
 
-    @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
-    Optional<String> findFriendByIdIsAccept(@Param("userId") UUID userId);
-
+    @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:myUserId and f.friendUserId =:userId and f.status =ACCEPT")
+    Optional<String> findFriendByIdIsAccept(@Param("userId") UUID userId, @Param("myUserId") UUID myUserId);
     @Modifying
     @Transactional
     @Query("delete from Friends f where f.ownUserId.userId =:userId")
@@ -34,8 +33,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query(value = "UPDATE Friends SET status =:statusType WHERE own_user_id = :requestUserId", nativeQuery = true)
     void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("statusType") FriendEntity.statusType statusType);
 
-    @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId")
-    Optional<String> findFriendChattRoomId(@Param("userId") UUID userId);
+    @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.friendUserId =:userId")
+    Optional<String> findFriendChatRoomId(@Param("userId") UUID userId);
 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);

@@ -8,6 +8,7 @@ import {
 } from "../../../../shared/ui/FriendListStyled";
 import {FriendEventDetail} from "../../detail";
 import {FriendEvent, FriendList, useFetchFriendList} from "../../../../entities/reactQuery";
+import {useEffect} from "react";
 
 export const AllFriendView: React.FC = () => {
     const friendListState = useFetchFriendList();
@@ -18,17 +19,17 @@ export const AllFriendView: React.FC = () => {
             {friendListState.data && (
                 <FriendListUL>
                     {friendListState.data.map((friend:FriendList) => (
-                    <>
-                    <FriendListView key={friend.friendId}>
-                        <Friend_ProfilePlace>
-                            <Friend_ImagePlace/>
-                            <Friend_TextPlace>
-                                <Friend_NamePlace><b>{friend.nickName}</b></Friend_NamePlace>
-                            </Friend_TextPlace>
-                        </Friend_ProfilePlace>
-                    </FriendListView>
-                    <Friend_Hr/>
-                    </>
+                    <div key={friend.chattingRoomId}>
+                        <FriendListView>
+                            <Friend_ProfilePlace>
+                                <Friend_ImagePlace/>
+                                <Friend_TextPlace>
+                                    <Friend_NamePlace><b>{friend.nickName}</b></Friend_NamePlace>
+                                </Friend_TextPlace>
+                            </Friend_ProfilePlace>
+                        </FriendListView>
+                        <Friend_Hr/>
+                    </div>
                 ))}
                 </FriendListUL>
             )}

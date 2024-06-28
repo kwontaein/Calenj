@@ -24,6 +24,7 @@ export interface Message {
     chatUUID: string,
     state: stateType,
     onlineUserList: string[],
+    target:string,
     messageType: string,
 }
 
@@ -190,6 +191,7 @@ const initialState: StompState = {
         chatUUID: '',
         onlineUserList: [],
         messageType: '',
+        target:'',
     }, // 초기 message 상태
     requestFile: '',
     nowLine: -1,
