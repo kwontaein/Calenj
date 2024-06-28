@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class WebSokcetService {
+public class WebSocketService {
 
     private final UserRepository userRepository;
     private final GlobalService globalService;
@@ -237,6 +237,7 @@ public class WebSokcetService {
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
+        response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
         sendSwitch(message, response, target);
 

@@ -34,22 +34,21 @@ export const RequestFriendList : React.FC = () =>{
             {requestFriendState.data && (
                 <FriendListUL>
                     {requestFriendState.data.map((event:FriendEvent) => (
-                        <FriendListView key={event.eventId} onClick={()=>showRequestInfo(event.receivedUserId)}>
-                            <>
-                            <Friend_ProfilePlace>
-                                <Friend_ImagePlace>
-                                </Friend_ImagePlace>
-                                <Friend_TextPlace>
-                                    <Friend_NamePlace><b>{event.nickName}</b>
-                                        님의 응답 대기중</Friend_NamePlace>
-                                    <Friend_DatePlace> {event.createDate}</Friend_DatePlace>
-                                </Friend_TextPlace>
-                            </Friend_ProfilePlace>
+                        <div key={event.eventId}>
+                            <FriendListView onClick={()=>showRequestInfo(event.receivedUserId)}>
+                                <Friend_ProfilePlace>
+                                    <Friend_ImagePlace>
+                                    </Friend_ImagePlace>
+                                    <Friend_TextPlace>
+                                        <Friend_NamePlace><b>{event.nickName}</b>
+                                            님의 응답 대기중</Friend_NamePlace>
+                                        <Friend_DatePlace> {event.createDate}</Friend_DatePlace>
+                                    </Friend_TextPlace>
+                                </Friend_ProfilePlace>
+                            </FriendListView>
                             <Friend_Hr/>
-                            </>
-                        </FriendListView>
+                        </div>
                     ))}
-                    <Friend_Hr/>
                 </FriendListUL>
             )}
         </FriendList_Container>

@@ -25,7 +25,7 @@ import {
     ReceiveData,
     VoteDetail,
     EventTagDTO, UserDateEvent, UserInfo
-} from "../api/types";
+} from "./types";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
 export const QUERY_CHATTING_KEY: string = "QUERY_CHATTING_KEY";

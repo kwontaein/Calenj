@@ -88,7 +88,6 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
 
     const messageList = useMemo(() => {
         if (chatFile.data) {
-            console.log(chatFile.data)
             return [...chatFile.data.pages.reduce((prev, current) => prev.concat(current))]
         }
         return [];

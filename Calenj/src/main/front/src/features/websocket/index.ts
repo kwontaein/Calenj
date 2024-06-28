@@ -1,1 +1,1 @@
-export {useCheckToken} from './model/useCheckToken'
+export {useStomp} from './model/useStomp'

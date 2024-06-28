@@ -27,7 +27,7 @@ export {
     type EventTagDTO,
     type UserDateEvent,
     type UserInfo,
-} from './api/types'
+} from './model/types'
 
 export {
     QUERY_FRIEND_LIST_KEY,

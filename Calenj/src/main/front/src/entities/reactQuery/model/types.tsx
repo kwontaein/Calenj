@@ -71,7 +71,7 @@ export interface VoteDetail {
 
 
 export interface FriendList {
-    friendId: string;
+    friendUserId: string;
     nickName: string;
     chattingRoomId: number;
     friendAddDate: string;

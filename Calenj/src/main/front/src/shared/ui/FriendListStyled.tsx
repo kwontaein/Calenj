@@ -69,4 +69,5 @@ export const Friend_Hr = styled.hr`
     background-color: ${TextColor2}77;
     border: 0;
     height: 1px;
+    margin: 0;
 `
