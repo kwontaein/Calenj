@@ -32,6 +32,7 @@ export const UserUseName_Content = styled.div`
     display: flex;
     align-items: center;
     font-size: 10px;
+    user-select: text;
 `
 
 export const UserInfo_ModifyIcon_Container =styled.div`
@@ -96,6 +97,7 @@ export const NickName_Container = styled.div`
     width: 100%;
     height: 30%;
     font-size: 14px;
+    font-weight: 550;
 `
 export const Introduction_Container = styled.div`
     width:calc(100% - 2px);

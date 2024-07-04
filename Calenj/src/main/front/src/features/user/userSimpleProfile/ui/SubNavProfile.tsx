@@ -11,19 +11,24 @@ import {
 } from "./SubNavProfileStyled";
 import {SubNavProfileBottom} from "./SubNavProfileBottom";
 import {useEffect, useState} from "react";
-import {QUERY_GROUP_DETAIL_KEY, QUERY_USER_INFO_KEY, UserInfo} from "../../../../entities/reactQuery";
+import {
+    FriendList,
+    QUERY_GROUP_DETAIL_KEY,
+    QUERY_USER_INFO_KEY,
+    useFetchFriendList,
+    UserInfo
+} from "../../../../entities/reactQuery";
 import {useQueryClient} from "@tanstack/react-query";
 
 export const SubNavProfile :React.FC = () =>{
     const userId =localStorage.getItem('userId');
     const queryClient = useQueryClient();
     const [userInfo, setUserInfo] = useState<UserInfo>()
-
+    const friendListState = useFetchFriendList();
     const userData:UserInfo |undefined = queryClient.getQueryData([QUERY_USER_INFO_KEY,userId]);
     //그룹 디테일 불러오기
     useEffect( () => {
         if(userData){
-            console.log(userData.userUsedName)
             setUserInfo(userData);
         }
     }, [userData]);
@@ -49,13 +54,13 @@ export const SubNavProfile :React.FC = () =>{
                 </Profile_Container>
                 <ProfileText_Container>
                     <NickName_Container>
-                        { userInfo?.nickname}
+                        {userInfo?.nickname}
                     </NickName_Container>
                     <Introduction_Container>
                         {userInfo?.userIntroduce}
                     </Introduction_Container>
                     <FriendsNum_Container>
-                        친구 50
+                        나의 친구 {friendListState.data && friendListState.data.length}
                     </FriendsNum_Container>
 
                 </ProfileText_Container>

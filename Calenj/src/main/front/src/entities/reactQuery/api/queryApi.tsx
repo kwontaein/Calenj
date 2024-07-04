@@ -3,7 +3,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {jwtFilter} from "../../authentication/jwt";
 import {
-    Event,
     FriendEvent,
     FriendList,
     GroupDetail,
@@ -13,7 +12,7 @@ import {
     VoteList,
     EventTagDTO,
     UserDateEvent, UserInfo
-} from "./types";
+} from "../model/types";
 
 //쿠키체크
 export const checkCookie = async (): Promise<boolean> => {
@@ -144,7 +143,7 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
 export const getFriendResponse = async (): Promise<FriendEvent[] | null> => {
     try {
         const response = await axios.get('/api/requestedList');
-        console.log('친구 요청 받은 목록을 불러옵니다.');
+        console.log('친구요청 받은 목록을 불러옵니다.');
         const data = response.data as FriendEvent[];
         return data.sort((a, b) => {
             return (Number(b.createDate) - Number(a.createDate));
@@ -162,11 +161,11 @@ export const getFriendResponse = async (): Promise<FriendEvent[] | null> => {
 
 
 //요청한 친구 이벤트 가져오기
-export const getFriendRequest = async (): Promise<Event[] | null> => {
+export const getFriendRequest = async (): Promise<FriendEvent[] | null> => {
     try {
         const response = await axios.get('/api/myRequestList');
         console.log('친구 요청한 목록을 불러옵니다.');
-        const data = response.data as Event[];
+        const data = response.data as FriendEvent[];
         return data.sort((a, b) => {
             return (Number(b.createDate) - Number(a.createDate));
         });
@@ -181,6 +180,8 @@ export const getFriendRequest = async (): Promise<Event[] | null> => {
         return null;
     }
 }
+
+
 
 export const getDateEventTag = async (): Promise<EventTagDTO[] | null> => {
     try {

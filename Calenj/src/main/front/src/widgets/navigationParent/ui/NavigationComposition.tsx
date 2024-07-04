@@ -1,4 +1,4 @@
-import {SubNavigation,ContentsComposition} from "../../navigationNode";
+import {SubNavigation,ContentsComposition} from "../../navigationNode/nodeComposition";
 import {FullScreen_div} from '../../../shared/ui/SharedStyled'
 import React, {useEffect, useRef, useState} from "react";
 import {connect, useDispatch, useSelector} from 'react-redux'

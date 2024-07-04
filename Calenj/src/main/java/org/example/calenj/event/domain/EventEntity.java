@@ -55,6 +55,10 @@ public class EventEntity {
     @Column(name = "create_date")
     private String createDate;
 
+    // 이벤트 요청받은 사람 닉네임
+    @Column(name = "event_user_nickname")
+    private String eventUserNickName;
+
     @Getter
     @RequiredArgsConstructor
     public enum statusType { //enum을 활용한 권한종류 설정

@@ -225,7 +225,6 @@ public class UserService {
     public UserProfileResponse getUserProfile(UUID userId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String myUserId = userDetails.getUsername();
-
         UserProfileResponse userProfileResponse = new UserProfileResponse();
 
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
@@ -236,7 +235,7 @@ public class UserService {
         userProfileResponse.setJoinDate(userEntity.getUserJoinDate());
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserId(), UUID.fromString(myUserId)));
         userProfileResponse.setSameFriend(friendRepository.DuplicateFriendList(UUID.fromString(myUserId), userId).orElse(null));
-        userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(userEntity.getUserId()).orElse(null));
+        userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId()).orElse(null));
         userProfileResponse.setEventContent(friendService.getEventContent(myUserId, userEntity.getUserId()));
         return userProfileResponse;
     }

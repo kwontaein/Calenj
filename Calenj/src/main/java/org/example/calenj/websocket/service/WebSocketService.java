@@ -237,6 +237,7 @@ public class WebSocketService {
         message.setSendDate(nowTime);
 
         ChatMessageResponse response = filterNullFields(message);
+        response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
         sendSwitch(message, response, target);
 
