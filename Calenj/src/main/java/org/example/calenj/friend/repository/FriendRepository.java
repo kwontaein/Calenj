@@ -35,7 +35,7 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("statusType") FriendEntity.statusType statusType);
 
     @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId")
-    Optional<String> findFriendChattRoomId(@Param("userId") UUID userId);
+    Optional<String> findFriendChatRoomId(@Param("userId") UUID userId);
 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
