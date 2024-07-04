@@ -21,8 +21,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
     Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
 
-    @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
-    Optional<String> findFriendByIdIsAccept(@Param("userId") UUID userId);
+    @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:myUserId and f.friendUserId =:userId and f.status =ACCEPT")
+    Optional<String> findFriendByIdIsAccept(@Param("userId") UUID userId, @Param("myUserId") UUID myUserId);
 
     @Modifying
     @Transactional

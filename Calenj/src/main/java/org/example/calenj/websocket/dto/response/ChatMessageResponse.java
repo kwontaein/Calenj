@@ -22,6 +22,7 @@ public class ChatMessageResponse {
     private String sendDate;
     private UUID chatUUID;
     private Set<String> onlineUserList;
+    private String target;
 
     @Getter
     @RequiredArgsConstructor

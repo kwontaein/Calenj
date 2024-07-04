@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class WebSokcetService {
+public class WebSocketService {
 
     private final UserRepository userRepository;
     private final GlobalService globalService;

@@ -11,7 +11,7 @@ import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
-import org.example.calenj.websocket.service.WebSokcetService;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final WebSokcetService webSokcetService;
+    private final WebSocketService webSocketService;
 
 
     public UserEntity getUserEntityByUserName(String userName) {
@@ -64,7 +64,7 @@ public class FriendService {
         }
 
         // 이미 친구인 경우
-        if (isAlreadyFriend(friendUser)) {
+        if (isAlreadyFriend(friendUser, ownUser)) {
             return createErrorResponse("이미 친구입니다.");
         }
 
@@ -79,8 +79,8 @@ public class FriendService {
         return false;
     }
 
-    private boolean isAlreadyFriend(UserEntity friendUser) {
-        if(friendRepository.findFriendByIdIsAccept(friendUser.getUserId()).orElse("Null").equals("ACCEPT")) {
+    private boolean isAlreadyFriend(UserEntity friendUser, UserEntity ownUser) {
+        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId(), ownUser.getUserId()).orElse("Null").equals("ACCEPT")) {
             return true;
         }
         return false;
@@ -146,11 +146,12 @@ public class FriendService {
 
         friendRepository.save(friendEntity);
         eventRepository.save(eventEntity);
-        webSokcetService.userAlarm(friendUser.getUserId(), "친구요청");
+        webSocketService.userAlarm(friendUser.getUserId(), "친구요청");
     }
 
     public void acceptFriend(UUID friendUserId) {
         UserEntity friendUser = getUserEntityById(friendUserId);
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 
         FriendEntity friendEntity = FriendEntity
@@ -159,7 +160,7 @@ public class FriendService {
                 .friendUserId(friendUserId)
                 .nickName(friendUser.getNickname())
                 .createDate(String.valueOf(LocalDate.now()))
-                .ChattingRoomId(UUID.randomUUID())
+                .ChattingRoomId(friendResponse.getChattingRoomId())
                 .status(FriendEntity.statusType.ACCEPT)
                 .build();
 
@@ -191,11 +192,11 @@ public class FriendService {
             friendRepository.deleteByOwnUserId(friendUserName);
             //이벤트 상태 거절로 변경
             eventRepository.updateEventFriendRequest(friendUserName, EventEntity.statusType.REJECT);
-            webSokcetService.userAlarm(friendUserName, "친구거절");
+            webSocketService.userAlarm(friendUserName, "친구거절");
             return createErrorResponse("친구 요청을 거절했습니다.");
         } else {
             acceptFriend(friendUserName);
-            webSokcetService.userAlarm(friendUserName, "친구수락");
+            webSocketService.userAlarm(friendUserName, "친구수락");
             return createSuccessResponse("친구 요청을 수락했습니다.", friendUserName);
         }
     }

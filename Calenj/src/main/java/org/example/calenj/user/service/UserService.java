@@ -234,7 +234,7 @@ public class UserService {
         userProfileResponse.setNickName(userEntity.getNickname());
         userProfileResponse.setIntroduce(userEntity.getUserIntroduce());
         userProfileResponse.setJoinDate(userEntity.getUserJoinDate());
-        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserEmail(), myUserId));
+        userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserId(), UUID.fromString(myUserId)));
         userProfileResponse.setSameFriend(friendRepository.DuplicateFriendList(UUID.fromString(myUserId), userId).orElse(null));
         userProfileResponse.setChatUUID(friendRepository.findFriendChattRoomId(userEntity.getUserId()).orElse(null));
         userProfileResponse.setEventContent(friendService.getEventContent(myUserId, userEntity.getUserId()));
