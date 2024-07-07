@@ -3,9 +3,6 @@ import {RootState} from "../types";
 import {Dispatch} from 'redux';
 import {ScrollMin_width} from "../../../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 
-
-
-
 export interface Group_SubNavigationProps {
     param:string,
     clickState:string,

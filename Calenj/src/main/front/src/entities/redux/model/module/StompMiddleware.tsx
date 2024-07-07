@@ -29,6 +29,7 @@ export const toggleCurrentMap = new Map();
 export const BoardFilterMap = new Map();
 export const BoardSearchMap = new Map();
 export const BoardParamMap = new Map();
+export const ChatContentMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
@@ -128,7 +129,7 @@ function* startStomp(destination: Destination): any {
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
-        console.log(receiveData.payload.receiveMessage)
+        console.log(receiveData.payload.receiveMessage.state)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userId)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {

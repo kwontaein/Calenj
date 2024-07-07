@@ -22,12 +22,11 @@ import {CheckBox_Label, CheckBoxStyle} from "../../../../shared/ui/SharedStyled"
 
 interface EventDateProps {
     eventState: DateEventState;
-    eventDispatch: React.Dispatch<DateEventAction>;
     repeatState: RepeatState;
     repeatDispatch: React.Dispatch<RepeatAction>;
 }
 
-export const RepeatEvent: React.FC<EventDateProps> = ({eventState, eventDispatch, repeatState, repeatDispatch}) => {
+export const RepeatEvent: React.FC<EventDateProps> = ({eventState, repeatState, repeatDispatch}) => {
     const [hoverState,setHoverState] = useState<string>("")
 
     useEffect(() => {

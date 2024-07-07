@@ -5,6 +5,6 @@ export {updateSubParam, updateSubScreenWidthSize, updateSubScreenHeightSize, upd
 export {updateMainSubNavigation} from './model/slice/MainSubNavigationSlice'
 export {updateLoading, updateOnline, synchronizationStomp, updateAppPosition, receivedStompMsg, sendStompMsg, requestFile} from './model/slice/StompReducer';
 export {updateToken, updateCodeValid} from './model/slice/EmailValidationSlice';
-export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, endPointMap, toggleCurrentMap} from './model/module/StompMiddleware'
+export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, endPointMap, toggleCurrentMap, ChatContentMap} from './model/module/StompMiddleware'
 export {type RootState} from './model/types'
 export {registerUserName} from './model/slice/UserNameRegisterSlice'

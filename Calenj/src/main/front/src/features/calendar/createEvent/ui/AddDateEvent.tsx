@@ -132,7 +132,6 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
                         </EventContent_Container>
                     }
                     {formState === "schedule" && <RepeatEvent eventState={eventState}
-                                                              eventDispatch={eventDispatch}
                                                               repeatState={repeatState}
                                                               repeatDispatch={repeatDispatch}/>}
                     {formState === "promise" &&
