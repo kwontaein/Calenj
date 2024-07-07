@@ -1,5 +1,12 @@
+import {ChangeEvent} from "react";
+
 export interface MessageInput{
-    chatRef: React.RefObject<HTMLInputElement>,
-    setContent: React.Dispatch<React.SetStateAction<string>>,
-    sendMessage: (e: React.FormEvent<HTMLFormElement>) =>void,
+    chatRef: React.RefObject<HTMLTextAreaElement>,
+    handleKeyPress : (event:  React.KeyboardEvent<HTMLTextAreaElement>) => void,
+    textAreaHandler:  (e: ChangeEvent<HTMLTextAreaElement>)=>void,
+}
+
+export interface MessageInputProps{
+    inputSize : number,
+    setInputSize : React.Dispatch<React.SetStateAction<number>>
 }

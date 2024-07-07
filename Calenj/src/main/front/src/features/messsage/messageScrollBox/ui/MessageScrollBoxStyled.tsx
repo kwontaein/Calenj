@@ -11,15 +11,18 @@ interface UserProfile{
 
 export const ScrollMin_width = 350;
 export const ScrollMarginInline = 10;
-export const MessageSend_Container_height = 50;
+export const MessageSend_Container_height = 60;
 
 
-
+export const MessageScroll_Container = styled.div<{$inputSize:number}>`
+    height: calc(100% - ${props=> props.$inputSize}px);
+    
+`
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
     max-width: calc(100% - ${ScrollMarginInline}); //padding만큼 뺌
-    height: calc(100% - ${MessageSend_Container_height}px);
+    height: 100%;
     margin-inline: ${ScrollMarginInline / 2}px;
 `;
 

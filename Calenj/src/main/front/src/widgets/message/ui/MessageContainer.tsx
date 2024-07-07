@@ -3,7 +3,7 @@ import {
 } from './MessageContainerStyled'
 
 import {MessageInput, MessageScrollBox} from "../../../features/messsage";
-import ImagesUploadComponent from "../../../shared/ui/MultiImageUploadView";
+import {useState} from "react";
 
 export const MessageContainer: React.FC = () => {
 
