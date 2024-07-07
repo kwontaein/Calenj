@@ -19,7 +19,7 @@ export const EventTopBar_Container = styled.div`
 
 export const ContentsScreen_div = styled.div`
     width:100%;
-    height: calc(100% - ${SubNavigateTopBar_height + SubNavigate_padding*2}px);
+    height: calc(100% - ${SubNavigateTopBar_height + SubNavigate_paddingBlock*2}px);
     display: flex;
     flex-direction: row;
 `

@@ -20,7 +20,6 @@ import {useStomp} from "../features/websocket";
 import {RootState} from "../entities/redux";
 import {sagaRefresh, sagaTask} from "./hoc/store";
 import {useQueryClient} from "@tanstack/react-query";
-import {updateFriendOnline, updateGroupOnline} from "../entities/redux/model/slice/OnlineUserStorageSlice";
 
 
 export const App: React.FC = () => {

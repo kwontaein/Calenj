@@ -7,8 +7,6 @@ interface MappingNameProps {
     }
 }
 
-
-
 export interface RegisterUserNameState {
     userNameRegister: MappingNameProps,
 }

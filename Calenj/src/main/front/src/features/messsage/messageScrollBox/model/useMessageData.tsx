@@ -21,7 +21,7 @@ interface useMessageData{
 
 export const useMessageData = (param:string,target:string) :useMessageData=>{
     const [newMsgLength,setNewMsgLength] = useState(0);
-    const [fetchData,receiveNewChat]=useChatFetching(param)
+    const [fetchData,receiveNewChat] = useChatFetching(param) //데이터 패치함수
     const stomp = useSelector((state:RootState)=>state.stomp);
     const queryClient = useQueryClient();
 

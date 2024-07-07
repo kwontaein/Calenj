@@ -1,17 +1,20 @@
-import {MessageSend_Container, MessageSend_Input} from "./MessageInputStyled";
-import {ChangeEvent, useRef, useState} from "react";
+import {MessageSend_Container, MessageSend_Textarea} from "./MessageInputStyled";
 import {useMessageInput} from "../model/useMessageInput";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
 
-export const MessageInput = () =>{
-    const {chatRef,setContent,sendMessage}=useMessageInput()
-
+export const MessageInput : React.FC = () =>{
+    const {chatRef, handleKeyPress, textAreaHandler}=useMessageInput()
+    const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
 
     return(
-            <MessageSend_Container onSubmit={sendMessage}>
-                <MessageSend_Input type='text' onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setContent(e.target.value)
-                }} ref={chatRef}>
-                </MessageSend_Input>
-            </MessageSend_Container>
+        <MessageSend_Container $inputSize={inputSize}>
+            <MessageSend_Textarea
+                ref={chatRef}
+                rows={1}
+                onChange={textAreaHandler}
+                onKeyDown={handleKeyPress}>
+            </MessageSend_Textarea>
+        </MessageSend_Container>
     )
 }

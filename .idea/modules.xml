@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Calenj.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Calenj.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Calenj.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Calenj.test.iml" />
     </modules>
   </component>
 </project>

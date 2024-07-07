@@ -1,6 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {MessageSend_Container_height, ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
-import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
+import React, {useEffect, useRef, useState} from "react";
+import {
+    MessageSend_Container_height,
+    ScrollMarginInline,
+    ScrollMin_width
+} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
+import {GroupUserList_Container_width} from "../../members";
 import {
     SubNavigate_paddingBlock,
     subNavigateBorder,
@@ -9,8 +13,8 @@ import {
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux";
-import {useDispatch} from "react-redux";
+import {RootState, updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux";
+import {useDispatch, useSelector} from "react-redux";
 
 export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)
     : [handleMouseDown:(e: React.MouseEvent)=>void] => {
@@ -18,6 +22,9 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
     const dispatch = useDispatch();
     const [isResizing, setIsResizing] = useState<boolean>(false); //마우스 Down 시 true로 바껴 이벤트 활성화
     const defaultContentSize = GroupList_Container_width + SubNavigation_Container_width;
+    const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
+    const beforeInputSize = useRef<number>(60);
+    const {screenHeightSize} = useSelector((state:RootState) => state.group_subNavState);
 
     //마우스로 subScreen의 크기를 조절하는 코드
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -53,12 +60,19 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
         }else if(currentMode ==="column"){
             const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_paddingBlock*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_height-SubNavigateTopBar_height-MessageSend_Container_height-3){
+            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_height-SubNavigateTopBar_height-inputSize-3){
                 dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
             }
         }
 
     }
+
+    useEffect(() => {
+        if(beforeInputSize.current!= inputSize){
+            // dispatch(updateSubScreenHeightSize({screenHeightSize:screenHeightSize+(beforeInputSize.current-inputSize)}))
+            beforeInputSize.current = inputSize
+        }
+    }, [inputSize]);
 
     // 마우스 이벤트 추가
     useEffect(() => {
