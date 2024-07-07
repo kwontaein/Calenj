@@ -1,20 +1,20 @@
 import React, {useState} from "react";
-import axios from "axios";
 import {imageUploadApi} from "../api/imageUploadApi";
-interface ReturnFileHandler{
-    handleDrop : (event: React.DragEvent<HTMLDivElement>) => void,
+
+interface ReturnFileHandler {
+    handleDrop: (event: React.DragEvent<HTMLDivElement>) => void,
     handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void,
-    handleDragLeave : ()=>void,
-    handleCancel : (index: number) =>void,
-    handleUpload : () =>void,
-    handleFileChange : (event: React.ChangeEvent<HTMLInputElement>)=>void
-    file : File[],
-    setFiles :  React.Dispatch<React.SetStateAction<File[]>>,
-    previews : string[],
-    dragOver : boolean,
+    handleDragLeave: () => void,
+    handleCancel: (index: number) => void,
+    handleUpload: () => void,
+    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    file: File[],
+    setFiles: React.Dispatch<React.SetStateAction<File[]>>,
+    previews: string[],
+    dragOver: boolean,
 }
 
-export const useMultiImageHandler = () :ReturnFileHandler=>{
+export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const [dragOver, setDragOver] = useState(false);
@@ -23,9 +23,9 @@ export const useMultiImageHandler = () :ReturnFileHandler=>{
         const files = event.target.files;
         if (files) {
             const selectedFilesArray = Array.from(files);
-            setSelectedFiles([...selectedFiles, ...selectedFilesArray]);
+            setSelectedFiles(prevFiles => [...prevFiles, ...selectedFilesArray]);
             const previewUrls = selectedFilesArray.map(file => URL.createObjectURL(file));
-            setPreviews([...previews, ...previewUrls]);
+            setPreviews(prevPreviews => [...prevPreviews, ...previewUrls]);
         }
     };
 
@@ -37,17 +37,15 @@ export const useMultiImageHandler = () :ReturnFileHandler=>{
                 formData.append('userId', userId);
                 formData.append('files', file);
             });
-            imageUploadApi(formData)
+            imageUploadApi(formData);
         } else {
             console.warn('No files selected');
         }
     };
 
     const handleCancel = (index: number) => {
-        const updatedSelectedFiles = selectedFiles.filter((_, idx) => idx !== index);
-        const updatedPreviews = previews.filter((_, idx) => idx !== index);
-        setSelectedFiles(updatedSelectedFiles);
-        setPreviews(updatedPreviews);
+        setSelectedFiles(prevFiles => prevFiles.filter((_, idx) => idx !== index));
+        setPreviews(prevPreviews => prevPreviews.filter((_, idx) => idx !== index));
     };
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
@@ -56,9 +54,9 @@ export const useMultiImageHandler = () :ReturnFileHandler=>{
         const files = event.dataTransfer.files;
         if (files) {
             const selectedFilesArray = Array.from(files);
-            setSelectedFiles([...selectedFiles, ...selectedFilesArray]);
+            setSelectedFiles(prevFiles => [...prevFiles, ...selectedFilesArray]);
             const previewUrls = selectedFilesArray.map(file => URL.createObjectURL(file));
-            setPreviews([...previews, ...previewUrls]);
+            setPreviews(prevPreviews => [...prevPreviews, ...previewUrls]);
         }
     };
 
@@ -76,12 +74,11 @@ export const useMultiImageHandler = () :ReturnFileHandler=>{
         handleDragOver,
         handleDragLeave,
         handleCancel,
-        handleUpload ,
+        handleUpload,
         handleFileChange,
-        file : selectedFiles,
-        setFiles : setSelectedFiles,
+        file: selectedFiles,
+        setFiles: setSelectedFiles,
         previews,
         dragOver
-    }
+    };
 }
-

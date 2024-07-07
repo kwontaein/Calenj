@@ -306,7 +306,6 @@ public class WebSocketService {
 
 
     public void userAlarm(UUID userId, String kind) {
-
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setUserId(userId);
         chatMessageResponse.setParam(kind);
@@ -408,7 +407,6 @@ public class WebSocketService {
         System.out.println("filteredUserNames : " + filteredUserNames);
         return filteredUserNames;
     }
-
 }
 
 

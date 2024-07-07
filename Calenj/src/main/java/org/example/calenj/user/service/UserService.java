@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.repository.TagRepository;
+import org.example.calenj.event.service.EventService;
 import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
-import org.example.calenj.friend.service.FriendService;
 import org.example.calenj.global.JWT.JwtToken;
 import org.example.calenj.global.JWT.JwtTokenProvider;
 import org.example.calenj.global.service.GlobalService;
@@ -44,10 +44,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final GlobalService globalService;
+
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
-    private final FriendService friendService;
     private final FriendRepository friendRepository;
+
+    private final EventService eventService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TagRepository tagRepository;
     private final RedisService redisService;
@@ -220,7 +222,7 @@ public class UserService {
     /**
      * 유저 프로필 받아오는 메소드
      *
-     * @param userId 유저 아이디
+     * @param userId 받아올 유저 아이디
      **/
     public UserProfileResponse getUserProfile(UUID userId) {
         UserDetails userDetails = globalService.extractFromSecurityContext();
@@ -236,7 +238,7 @@ public class UserService {
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserId(), UUID.fromString(myUserId)));
         userProfileResponse.setSameFriend(friendRepository.DuplicateFriendList(UUID.fromString(myUserId), userId).orElse(null));
         userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId()).orElse(null));
-        userProfileResponse.setEventContent(friendService.getEventContent(myUserId, userEntity.getUserId()));
+        userProfileResponse.setEventContent(eventService.getEventContent(myUserId, userEntity.getUserId()));
         return userProfileResponse;
     }
 

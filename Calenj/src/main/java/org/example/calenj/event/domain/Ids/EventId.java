@@ -1,4 +1,4 @@
-package org.example.calenj.event.Ids;
+package org.example.calenj.event.domain.Ids;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
