@@ -17,21 +17,21 @@ import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
 import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 
-export const MessageScrollBox:React.FC =()=>{
-    const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
-    const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
-    const {param} = useSelector((state:RootState)=>state.group_subNavState)
-    const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
+export const MessageScrollBox: React.FC = () => {
+    const {navigate} = useSelector((state: RootState) => state.navigateInfo) //target
+    const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
+    const {param} = useSelector((state: RootState) => state.group_subNavState)
+    const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
 
-    const {messageList,newMessageList,chatFile} = useMessageData(param,navigate)
-    const scrollRef =useMessageScroll(param,messageList)
+    const {messageList, newMessageList, chatFile} = useMessageData(param, navigate)
+    const scrollRef = useMessageScroll(param, messageList)
 
     const loadFile = useMemo(() => {
         return throttleByAnimationFrame(() => {
             if (!scrollRef.current) return
             chatFile.fetchNextPage()
         })
-    },[param])
+    }, [param])
 
     const topRef = useIntersect((entry, observer) => {
         if (chatFile.hasNextPage && !chatFile.isFetching) {
@@ -41,10 +41,8 @@ export const MessageScrollBox:React.FC =()=>{
     });
 
 
-
-
     const MessageBox = useMemo(() => {
-        const connectList = [...[...messageList].reverse(),...newMessageList]
+        const connectList = [...[...messageList].reverse(), ...newMessageList]
         if (!chatFile.isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef}>
@@ -55,26 +53,25 @@ export const MessageScrollBox:React.FC =()=>{
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
                                                  $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
-                                                     dateOperation(connectList[index-1].sendDate, message.sendDate)}>
+                                                     dateOperation(connectList[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <hr data-content={"NEW"}></hr> :
                                     ((index && connectList[index - 1]?.userId === message.userId) &&
-                                    dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
+                                    dateOperation(connectList[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                            <MessageContentContainer2>{message.message.replace(/\\lineChange/g, '\n')}</MessageContentContainer2>
+                                            <MessageContentContainer2>{message.message.replace(/\\lineChange/g, '\n ')}</MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer
-                                                $userId={message.userId}></ProfileContainer>
+                                            <ProfileContainer $userId={message.userId}></ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
                                                     <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
-                                                <MessageContentContainer>{message.message.replace(/\\lineChange/g, '\n')}</MessageContentContainer>
+                                                <MessageContentContainer>{message.message.replace(/\\lineChange/g, '\n ')}</MessageContentContainer>
                                             </MessageContainer>
                                         </RowFlexBox>
                                     ))
@@ -89,7 +86,7 @@ export const MessageScrollBox:React.FC =()=>{
     }, [messageList, newMessageList]);
 
 
-    return(
+    return (
         <MessageScroll_Container $inputSize={inputSize}>
             {MessageBox}
         </MessageScroll_Container>

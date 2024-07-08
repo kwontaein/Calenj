@@ -81,9 +81,9 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
                 destination: `${url}`,
                 body: JSON.stringify(data),
             })
-
         })
     })
+    onlineStateSetting(stompClient);
     yield put(updateLoading({loading: true}));
 
 }
@@ -147,7 +147,7 @@ function createStompConnection() {
 
     return new Promise((res, rej) => {
 
-        const sock =()=> new SockJS(stompUrl);
+        const sock = () => new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
         // const client = new Client();
         // // client.webSocketFactory()
@@ -203,24 +203,10 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                 })
             })
         };
-
         subscribeMessage();
+
         return function unsubscribe() {
-            const userId = localStorage.getItem("userId");
-            if (userId != null) {
-                const data: StompData = {
-                    param: `${userId}`, //groupMsg,friendMsg
-                    state: "SEND", //0:endpoint 로드
-                    message: "OFFLINE"
-                }
-                const url = `/app/personalTopic`
-                stompClient.publish({
-                    destination: `${url}`,
-                    body: JSON.stringify(data),
-                })
-                //서버의 웹소켓 끊기
-                stompClient.send("/app/closeConnection")
-            }
+            onlineStateSetting(stompClient);
             //stompClient.disconnect();//연결 끊기(완전히
             stompClient.deactivate().then(r => {
                 localStorage.removeItem('userId')
@@ -230,4 +216,21 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
         //인자로는 확장의 최장크기(크기제한)
     }, buffers.expanding<number>(1000) || buffers.none())
+}
+
+function onlineStateSetting(stompClient: CompatClient) {
+    const userId = localStorage.getItem("userId");
+    console.log("onlineStateSetting 실행", userId)
+    if (userId != null) {
+        const data: StompData = {
+            param: `${userId}`, //groupMsg,friendMsg
+            state: "SEND", //0:endpoint 로드
+            message: "OnlineState"
+        }
+        const url = `/app/personalTopic`
+        stompClient.publish({
+            destination: `${url}`,
+            body: JSON.stringify(data),
+        })
+    }
 }

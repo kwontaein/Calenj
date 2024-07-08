@@ -8,7 +8,6 @@ import org.example.calenj.global.auth.EmailVerificationService;
 import org.example.calenj.global.auth.PhoneVerificationService;
 import org.example.calenj.global.auth.dto.request.ValidateRequest;
 import org.example.calenj.global.auth.dto.response.ValidateResponse;
-import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.global.service.RedisService;
 import org.example.calenj.user.dto.request.UserRequest;
 import org.example.calenj.user.dto.response.UserProfileResponse;
@@ -16,7 +15,6 @@ import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,8 +26,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
-    private final GlobalService globalService;
 
     private final RedisService redisService;
 
@@ -69,8 +65,8 @@ public class UserController {
      */
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        userService.logout(userDetails, response);
+
+        userService.logout(response);
         return "logout";
     }
 

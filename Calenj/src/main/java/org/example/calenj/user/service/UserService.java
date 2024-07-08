@@ -22,6 +22,7 @@ import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -53,6 +54,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TagRepository tagRepository;
     private final RedisService redisService;
+    private final WebSocketService webSocketService;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -129,22 +131,17 @@ public class UserService {
             // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
             // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
             // Spring Security 는 실제로 패스워드 값을 Authentication 객체에 저장하지 않습니다.
             // 따라서 authentication.getCredentials() 메서드를 호출하면 항상 null 이 반환됩니다.
             // 패스워드를 검증하기 위한 작업은 UserDetailsService 의 loadUserByUsername 메서드에서 이루어집니다.
-
             //검증이 되었다면 -> refreshToken 저장 유무를 불러와서, 있다면 토큰 재발급, 없다면 아예 발급, 만료 기간 여부에 따라서도 기능을 구분
-
             // 3. 인증 정보를 기반으로 JWT 토큰 생성
             tokenInfo = jwtTokenProvider.generateToken(authentication);
             // 4. refreshToken 정보 저장
             redisService.saveUserToken(userEntity.getUserEmail(), tokenInfo.getRefreshToken());
-
             return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
         } catch (BadCredentialsException e) {
             // 비밀번호가 틀린 경우
-            System.out.println("2");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("PW_ERROR");
         }
 
@@ -180,14 +177,13 @@ public class UserService {
     /**
      * 로그아웃
      *
-     * @param userDetails 시큐리티 유저 정보
-     * @param response    쿠키를 삭제하기 위한 response
+     * @param response 쿠키를 삭제하기 위한 response
      **/
     @Transactional
-    public void logout(UserDetails userDetails, HttpServletResponse response) {
-        //DB 에서 리프레시 토큰 값 삭제
-        userRepository.updateUserRefreshTokenToNull(userDetails.getUsername());
+    public void logout(HttpServletResponse response) {
         //쿠키를 제거함으로서 로그인 토큰 정보 제거
+        UserDetails userDetails = globalService.extractFromSecurityContext();
+        redisService.deleteUserToken(userDetails.getUsername());
         removeCookie(response, "accessToken");
     }
 
@@ -202,7 +198,6 @@ public class UserService {
 
         List<GroupResponse> groupResponse = groupRepository.findByUserEntity_UserId(UUID.fromString(userId)).orElse(null);
         List<FriendResponse> friendResponse = friendRepository.findFriendListById(UUID.fromString(userId)).orElse(null);
-        System.out.println(friendResponse);
         return new UserSubscribeResponse(friendResponse, groupResponse, String.valueOf(userEntity.getUserId()));
     }
 

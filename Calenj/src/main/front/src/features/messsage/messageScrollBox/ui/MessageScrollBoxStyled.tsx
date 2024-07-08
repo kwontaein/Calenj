@@ -5,7 +5,7 @@ interface CheckBeforeSender {
     $sameUser: boolean,
 }
 
-interface UserProfile{
+interface UserProfile {
     $userId: string | undefined
 }
 
@@ -14,9 +14,9 @@ export const ScrollMarginInline = 10;
 export const MessageSend_Container_height = 60;
 
 
-export const MessageScroll_Container = styled.div<{$inputSize:number}>`
-    height: calc(100% - ${props=> props.$inputSize}px);
-    
+export const MessageScroll_Container = styled.div<{ $inputSize: number }>`
+    height: calc(100% - ${props => props.$inputSize}px);
+
 `
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
@@ -50,7 +50,7 @@ export const ProfileContainer = styled.div<UserProfile>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 
@@ -66,6 +66,7 @@ export const DateContainer = styled.div`
 `
 export const MessageContentContainer = styled.div`
     max-width: ${ScrollMin_width - 74}px;
+    white-space: pre-wrap;
 `
 
 /**메세지를 담는 컨테이너 1 */
@@ -96,6 +97,7 @@ export const DateContainer2 = styled.div`
 export const MessageContentContainer2 = styled.div`
     margin-left: 6px;
     max-width: ${ScrollMin_width - 74}px;
+    white-space: pre-wrap; /* 개행과 공백을 유지합니다. */
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
@@ -109,7 +111,6 @@ export const MessageContainer2 = styled.div`
         }
     }
 `
-
 
 
 //채팅 endPoint선

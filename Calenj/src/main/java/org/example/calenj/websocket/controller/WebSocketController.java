@@ -6,7 +6,6 @@ import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 
@@ -36,8 +35,6 @@ public class WebSocketController {
 
     //세션 끊기
     @MessageMapping("/closeConnection")
-    public void closeConnection(WebSocketSession session) throws IOException {
-        System.out.println("session : " + session);
-        session.close();
+    public void closeConnection() throws IOException {
     }
 }

@@ -19,12 +19,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,7 +69,7 @@ public class WebSocketService {
      * @param message 전달받은 내용
      **/
     public void saveChattingToFile(ChatMessageRequest message) {
-        System.out.println("실행??" + message.getMessage());
+        System.out.println("getMessage : \n" + message.getMessage());
         // 파일을 저장한다.
         // 메시지 내용
         List<String> lines = getFile(message);
@@ -84,6 +83,7 @@ public class WebSocketService {
                         message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
+        System.out.println("messageContent : \n" + messageContent);
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
                 String Title = "시작라인 $어서오세요! \n";
@@ -131,6 +131,7 @@ public class WebSocketService {
                 .toList();
 
         previousLines.addAll(previousLines2);
+        System.out.println("previousLines : " + previousLines);
 
         if (previousLines.isEmpty()) {
             return null;
@@ -205,9 +206,6 @@ public class WebSocketService {
      * 내용 변경하는 람다
      **/
     public static Function<String, String> stringTransformer = str -> {
-
-        // str = str.replaceAll("\\b\\d{4}.\\d{2}.\\d{2} \\d{2}:\\d{2}:\\d{2}\\b", "");
-        // str = str.replaceAll("\\b[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\b", "");
         str = str.replaceAll("\\[\\]", "");
         return str;
     };
@@ -292,18 +290,26 @@ public class WebSocketService {
     public void personalEvent(Authentication authentication, ChatMessageRequest request) {
         UserEntity userEntity = returnUserEntity(authentication);
         String userId = String.valueOf(userEntity.getUserId());
-
         ChatMessageResponse response = filterNullFields(request);
-        response.setOnlineUserList(getUsers(request.getParam()));
-
-        if (request.getParam() == userId && request.getMessage() == "OFFLINE") {
-            Set<String> destinations = getDestination(userId);
-            for (String destination : destinations) {
-                template.convertAndSend(destination, response);
-            }
+        if (request.getMessage() != null && request.getMessage().equals("OnlineState")) {
+            sendOnlineState(userId, response);
         }
     }
 
+    public void sendOnlineState(String userId, ChatMessageResponse response) {
+        //내 구독 정보들 받아다가
+        System.out.println("sendOnlineState 실행");
+        //온라인 유저 정보 다시 반환
+        for (String destination : getDestination(userId)) {
+            //온라인 유저 정보 받아서
+            Set<String> userList = getUsers(extractUUID(destination));
+            //내 정보 제거하고
+            userList.remove(userId);
+            //반환정보에 담기
+            response.setOnlineUserList(userList);
+            template.convertAndSend(destination, response);
+        }
+    }
 
     public void userAlarm(UUID userId, String kind) {
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
@@ -371,6 +377,15 @@ public class WebSocketService {
         return filteredUserNames;
     }
 
+    public static String extractUUID(String url) {
+        Pattern pattern = Pattern.compile("([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$");
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
     /**
      * 내가 구독한 토픽
      *
@@ -384,7 +399,7 @@ public class WebSocketService {
                                 .map(simpSubscription -> simpSubscription.getDestination())
                 )
                 .collect(Collectors.toSet());
-        System.out.println("destinations : \n" + destinations);
+        System.out.println(destinations);
         return destinations;
     }
 
