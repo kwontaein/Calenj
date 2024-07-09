@@ -291,21 +291,39 @@ public class WebSocketService {
         UserEntity userEntity = returnUserEntity(authentication);
         String userId = String.valueOf(userEntity.getUserId());
         ChatMessageResponse response = filterNullFields(request);
-        if (request.getMessage() != null) {
+
+        if (request.getMessage() != null && request.getMessage().contains("ONLINE")) {
+            //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
+            sendOnlineStateFirstTime(userId, response);
+            sendOnlineState(userId, response);
+        } else if (request.getMessage() != null && request.getMessage().contains("OFFLINE")) {
+
+            //끊을 시 -> 오프라인이라고만 알리기
             sendOnlineState(userId, response);
         }
     }
 
-    public void sendOnlineState(String userId, ChatMessageResponse response) {
-        //내 구독 정보들 받아다가
-        System.out.println("sendOnlineState 실행");
+    public void sendOnlineStateFirstTime(String userId, ChatMessageResponse response) {
         //온라인 유저 정보 다시 반환
         for (String destination : getDestination(userId)) {
             //온라인 유저 정보 받아서
-            Set<String> userList = getUsers(extractUUID(destination));
-            if (response.getMessage().contains("OFFLINE")) {
-                userList.remove(userId);
-            }
+            Set<String> userList = getUsers(destination);
+            userList.add(userId);
+            //반환정보에 담기
+            response.setOnlineUserList(userList);
+            response.setTarget(extractTopic(destination));
+            response.setParam(extractUUID(destination));
+            template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + extractUUID(destination) + "/" + extractTopic(destination), response);
+        }
+    }
+
+    public void sendOnlineState(String userId, ChatMessageResponse response) {
+        //온라인 유저 정보 다시 반환
+        for (String destination : getDestination(userId)) {
+            //온라인 유저 정보 받아서
+            Set<String> userList = new HashSet<>();
+            userList.add(userId);
+
             //반환정보에 담기
             response.setOnlineUserList(userList);
             response.setTarget(extractTopic(destination));
