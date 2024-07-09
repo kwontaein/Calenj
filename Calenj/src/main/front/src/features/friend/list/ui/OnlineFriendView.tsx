@@ -17,11 +17,6 @@ export const OnlineFriendView: React.FC =() =>{
     const userId = localStorage.getItem('userId');
     const {userList} = useSelector((state:RootState) => state.onlineStorage.friend)[userId||''];
 
-    useEffect(() => {
-        if(friendListState.data){
-            console.log(userList)
-        }
-    }, [friendListState]);
 
     return (
         <FriendList_Container>
