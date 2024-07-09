@@ -212,7 +212,7 @@ export const DatePicker_Styled = styled(DatePicker)`
 
 
 export const VoteCounter_DatePicker = styled(DatePicker)`
-    width: 200%;
+    width: 188%;
     height: 30px;
     margin-block: 5px;
     background-color: ${ThemeColor2};

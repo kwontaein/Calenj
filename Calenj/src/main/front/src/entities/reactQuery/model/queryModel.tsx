@@ -49,6 +49,7 @@ export const useFetchCookie= () =>
     useQuery<boolean, Error>({
         queryKey: [QUERY_COOKIE_KEY],
         queryFn: checkCookie, //HTTP 요청함수 (Promise 를 반환하는 함수)
+        refetchInterval:false,
     });
 
 export const useFetchGroupList = (isOnline:string) =>

@@ -31,10 +31,7 @@ const ImagesUploadComponent: React.FC = () => {
                     accept="image/*"
                     onChange={handleFileChange}
                     multiple
-                    style={{display: 'none'}}
                     id="fileInput"/>
-
-
                 {previews.map((preview, index) => (
                     <div key={index}>
                         <img src={preview} alt={`Preview ${index}`} style={{maxWidth: '100px', maxHeight: '100px'}}/>
