@@ -332,7 +332,7 @@ public class WebSocketService {
         response.setOnlineUserList(friendList);
         response.setParam(userId);
         response.setTarget("friendMsg");
-        template.convertAndSendToUser(userId, "/topic/personalTopic/" + userId, response);
+        template.convertAndSend("/topic/personalTopic/" + userId, response);
     }
 
     public void sendOnlineState(String userId, ChatMessageResponse response) {
