@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import {PointColor2} from "../../../../shared/ui/SharedStyled";
+import {PointColor2, TextColor2, ThemeColor2} from "../../../../shared/ui/SharedStyled";
 
 interface CheckBeforeSender {
     $sameUser: boolean,
 }
 
-interface UserProfile {
+interface UserProfile{
     $userId: string | undefined
 }
 
@@ -14,9 +14,9 @@ export const ScrollMarginInline = 10;
 export const MessageSend_Container_height = 60;
 
 
-export const MessageScroll_Container = styled.div<{ $inputSize: number }>`
-    height: calc(100% - ${props => props.$inputSize}px);
-
+export const MessageScroll_Container = styled.div<{$inputSize:number}>`
+    height: calc(100% - ${props=> props.$inputSize}px);
+    
 `
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
@@ -50,7 +50,7 @@ export const ProfileContainer = styled.div<UserProfile>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: 40px 40px; /* 너비 100px, 높이 100px */
 `
 
@@ -67,6 +67,7 @@ export const DateContainer = styled.div`
 export const MessageContentContainer = styled.div`
     max-width: ${ScrollMin_width - 74}px;
     white-space: pre-wrap;
+    word-wrap: break-word;
 `
 
 /**메세지를 담는 컨테이너 1 */
@@ -97,20 +98,22 @@ export const DateContainer2 = styled.div`
 export const MessageContentContainer2 = styled.div`
     margin-left: 6px;
     max-width: ${ScrollMin_width - 74}px;
-    white-space: pre-wrap; /* 개행과 공백을 유지합니다. */
+    word-wrap: break-word;
+    white-space: pre-wrap;
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
     padding: 2px;
-
+    
     &:hover {
         ${DateContainer2} {
             color: gray;
         }
     }
 `
+
 
 
 //채팅 endPoint선
@@ -121,16 +124,16 @@ export const HR_ChatEndPoint = styled.hr`
     border: 0;
     color: black;
     text-align: center;
-    height: 1.5em;
+    height: 1em;
 
     &:before {
         content: '';
-        background: linear-gradient(to right, rgba(0, 0, 0, 0), #b24ad0, #802bc2);
+        background: ${PointColor2}77;
         position: absolute;
         left: 0;
         top: 50%;
         width: 100%;
-        height: 2px;
+        height: 1px;
     }
 
     &:after {
@@ -138,14 +141,42 @@ export const HR_ChatEndPoint = styled.hr`
         position: relative;
         display: inline-block;
         padding: 0 .3em;
-        line-height: 1.5em;
-        margin-left: 90vw;
-        color: white;
+        color: ${PointColor2};
         border-radius: 10px;
-        font-size: 15px;
-        font-weight: bold;
+        font-size: 12px;
         font-family: sans-serif;
-        background-color: #b24ad0;
+        background-color:${ThemeColor2};
     }
 `
 
+export const HR_NewDate = styled.hr`
+    line-height: 1em;
+    position: relative;
+    outline: 0;
+    border: 0;
+    color: black;
+    text-align: center;
+    height: 1em;
+
+    &:before {
+        content: '';
+        background: ${TextColor2}77;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+    }
+
+    &:after {
+        content: attr(data-content);
+        position: relative;
+        display: inline-block;
+        padding: 0 .3em;
+        color: ${TextColor2};
+        border-radius: 10px;
+        font-size: 12px;
+        font-family: sans-serif;
+        background-color:${ThemeColor2};
+    }
+`

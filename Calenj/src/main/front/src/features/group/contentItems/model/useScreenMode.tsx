@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
+import {GroupUserList_Container_width} from "../../members";
 import {ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 import {updateSubScreenMode, updateSubScreenWidthSize} from "../../../../entities/redux";
 import {contentSize} from "./types";
@@ -10,6 +10,8 @@ export const useScreenMode = (param:string, contentSize:contentSize, showUserLis
     const group_subNavState = useSelector((state:RootState) => state.group_subNavState)
     const [screenRowFlex,setScreenRowFlex] = useState<boolean>(group_subNavState.mode==="row"); //true: flex == row
     const dispatch = useDispatch();
+
+
 
     //전체 스크린의 넓이에 따른 subScreenMode 전환
     useEffect(() => {
