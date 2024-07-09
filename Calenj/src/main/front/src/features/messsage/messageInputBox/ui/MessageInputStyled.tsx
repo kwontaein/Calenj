@@ -8,7 +8,7 @@ export const MessageSend_Textarea = styled.textarea`
     border-radius: 4px;
     resize: none;
     border: 1px solid ${TextColor2};
-    width: calc(100% - 24px);
+    width: calc(100% - 80px);
     margin-inline: 12px;
     font-size: 15px;
     padding: 9px;
@@ -17,8 +17,8 @@ export const MessageSend_Textarea = styled.textarea`
 `
 
 
-export const MessageSend_Container = styled.div<{$inputSize:number}>`
-    height: ${props=>props.$inputSize-20}px; //padding 만큼 빼기
+export const MessageSend_Container = styled.div<{ $inputSize: number }>`
+    height: ${props => props.$inputSize - 20}px; //padding 만큼 빼기
     padding-inline: 10px;
     display: flex;
 `
