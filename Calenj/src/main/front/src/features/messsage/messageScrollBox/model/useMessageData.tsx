@@ -94,9 +94,10 @@ export const useMessageData = (param: string, target: string): useMessageData =>
         return [];
     }, [chatFile.data])
 
-    const compareDate = (date1: string, date2: string): boolean => {
-        if (changeDateForm(date1).getDate() !== changeDateForm(date2).getDate()) return true
-        if (changeDateForm(date1).getMonth() !== changeDateForm(date2).getMonth()) return true
+
+    const compareDate = (date1:string, date2:string):boolean =>{
+        if(changeDateForm(date1).getDate() !== changeDateForm(date2).getDate()) return true
+        if(changeDateForm(date1).getMonth() !== changeDateForm(date2).getMonth()) return true
         return changeDateForm(date1).getFullYear() !== changeDateForm(date2).getFullYear();
     }
 
