@@ -83,7 +83,7 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
             })
         })
     })
-    onlineStateSetting(stompClient);
+    onlineStateSetting(stompClient, "ONLINE");
     yield put(updateLoading({loading: true}));
 
 }
@@ -130,6 +130,7 @@ function* startStomp(destination: Destination): any {
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
         console.log(receiveData.payload.receiveMessage.state)
+        console.log(receiveData.payload.receiveMessage)
         if (receiveData.payload.receiveMessage.state === "SEND" && (localStorage.getItem('userId') !== receiveData.payload.receiveMessage.userId)) {
             endPointMap.set(receiveData.payload.receiveMessage.param, endPointMap.get(receiveData.payload.receiveMessage.param) + 1)
         } else if (receiveData.payload.receiveMessage.state === "ALARM") {
@@ -206,7 +207,7 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
         subscribeMessage();
 
         return function unsubscribe() {
-            onlineStateSetting(stompClient);
+            onlineStateSetting(stompClient, "OFFLINE");
             //stompClient.disconnect();//연결 끊기(완전히
             stompClient.deactivate().then(r => {
                 localStorage.removeItem('userId')
@@ -218,14 +219,14 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
     }, buffers.expanding<number>(1000) || buffers.none())
 }
 
-function onlineStateSetting(stompClient: CompatClient) {
+function onlineStateSetting(stompClient: CompatClient, msg: string) {
     const userId = localStorage.getItem("userId");
     console.log("onlineStateSetting 실행", userId)
     if (userId != null) {
         const data: StompData = {
             param: `${userId}`, //groupMsg,friendMsg
-            state: "SEND", //0:endpoint 로드
-            message: "OnlineState"
+            state: "ALARM", //0:endpoint 로드
+            message: msg
         }
         const url = `/app/personalTopic`
         stompClient.publish({

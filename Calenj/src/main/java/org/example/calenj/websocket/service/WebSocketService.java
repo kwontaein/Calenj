@@ -291,7 +291,7 @@ public class WebSocketService {
         UserEntity userEntity = returnUserEntity(authentication);
         String userId = String.valueOf(userEntity.getUserId());
         ChatMessageResponse response = filterNullFields(request);
-        if (request.getMessage() != null && request.getMessage().equals("OnlineState")) {
+        if (request.getMessage() != null) {
             sendOnlineState(userId, response);
         }
     }
@@ -303,10 +303,14 @@ public class WebSocketService {
         for (String destination : getDestination(userId)) {
             //온라인 유저 정보 받아서
             Set<String> userList = getUsers(extractUUID(destination));
-            //내 정보 제거하고
-            userList.remove(userId);
+            System.out.println("response.getMessage() : " + response.getMessage());
+            if (response.getMessage().contains("OFFLINE")) {
+                userList.remove(userId);
+            }
             //반환정보에 담기
             response.setOnlineUserList(userList);
+            response.setParam(extractUUID(destination));
+            System.out.println("online : " + response.getOnlineUserList());
             template.convertAndSend(destination, response);
         }
     }
@@ -399,7 +403,6 @@ public class WebSocketService {
                                 .map(simpSubscription -> simpSubscription.getDestination())
                 )
                 .collect(Collectors.toSet());
-        System.out.println(destinations);
         return destinations;
     }
 
@@ -410,7 +413,6 @@ public class WebSocketService {
      **/
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
-
         Set<String> filteredUserNames = simpUsers.stream()
                 .filter(simpUser -> simpUser.getSessions().stream()
                         .anyMatch(session -> session.getSubscriptions().stream()
@@ -418,8 +420,6 @@ public class WebSocketService {
                                 )))
                 .map(SimpUser::getName)
                 .collect(Collectors.toSet());
-
-        System.out.println("filteredUserNames : " + filteredUserNames);
         return filteredUserNames;
     }
 }
