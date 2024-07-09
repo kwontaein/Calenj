@@ -31,6 +31,9 @@ export const PointColor = "#0070E8";
 export const PointColor2 = "#FFD369"
 
 export const GlobalStyle = createGlobalStyle`
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+ 
     body {
         background-color: ${BackGroundColor}; /* 전체 페이지 배경색 */
         margin: 0;
@@ -38,6 +41,8 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         overflow: hidden;
         user-select: none; /* Standard */
+        font-family: "Noto Sans KR", sans-serif;
+
 
         ::-webkit-scrollbar-thumb {
             background: ${PointColor}; /* 스크롤바의 색상 */
@@ -103,11 +108,16 @@ export const GlobalStyle = createGlobalStyle`
         appearance: none; /* 기본 브라우저 스타일 제거 */
         background-color: ${ThemeColor2};
         color: ${TextColor};
+        font-family: "Noto Sans KR", sans-serif;
 
         &:focus {
             outline: none;
             border: 2px solid ${PointColor};
         }
+    }
+    
+    textarea{
+        font-family: "Noto Sans KR", sans-serif;
     }
 `;
 
