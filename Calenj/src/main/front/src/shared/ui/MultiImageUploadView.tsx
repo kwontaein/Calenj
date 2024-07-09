@@ -1,5 +1,14 @@
 import React from 'react';
-import {useMultiImageHandler} from "../model";
+import {useMultiImageHandler} from '../model/useMultiImageHandler';
+import {
+    DeleteButton,
+    EditButton,
+    FileName,
+    ImageHoverBackground,
+    ImageHoverBox,
+    ImageInputContainer, ImagePreview,
+    ImagePreviewContainer, ImagePreviewDiv, OptionButtons
+} from "./MultiImageUploadStyled";
 
 const ImagesUploadComponent: React.FC = () => {
     const {
@@ -10,43 +19,51 @@ const ImagesUploadComponent: React.FC = () => {
         handleUpload,
         handleFileChange,
         file,
-        setFiles,
         previews,
         dragOver
     } = useMultiImageHandler();
 
     return (
         <>
-            <div
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                style={{
-                    border: dragOver ? '2px dashed blue' : '2px solid black',
-                    borderRadius: '5px',
-                    textAlign: 'center'
-                }}>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    multiple
-                    id="fileInput"/>
-                {previews.map((preview, index) => (
-                    <div key={index}>
-                        <img src={preview} alt={`Preview ${index}`} style={{maxWidth: '100px', maxHeight: '100px'}}/>
-                        <button onClick={() => handleCancel(index)}>취소</button>
-                    </div>
-                ))}
-                {file.length > 0 && (
+            {dragOver && (
+                <ImageHoverBackground>
+                    <ImageHoverBox>
+                        Drop your files here
+                    </ImageHoverBox>
+                </ImageHoverBackground>
+            )}
+                <ImageInputContainer
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                >
+                    <input type="file" accept="image/*" onChange={handleFileChange} multiple style={{display: 'none'}}
+                           id="fileInput"/>
                     <div>
-                        <button onClick={handleUpload}>업로드</button>
-                    </div>
-                )}
-            </div>
+                        {previews.map((preview, index) => (
+                            <ImagePreviewDiv key={index}>
+                                <OptionButtons>
+                                    <EditButton onClick={() => handleCancel(index)}>
+                                        <i className="bi bi-pencil-square"></i>
+                                    </EditButton>
+                                    <DeleteButton onClick={() => handleCancel(index)}>
+                                        <i className="bi bi-trash-fill"></i>
+                                    </DeleteButton>
+                                </OptionButtons>
+                                <ImagePreviewContainer>
+                                    <ImagePreview src={preview} alt={`Preview ${index}`}/>
+                                </ImagePreviewContainer>
+                                <div>파일이름</div>
+                            </ImagePreviewDiv>
+                        ))}</div>
 
-
-            <button onClick={() => document.getElementById('fileInput')?.click()}>파일선택</button>
+                    {file.length > 0 && (
+                        <FileName>
+                            <button onClick={handleUpload}>업로드</button>
+                        </FileName>
+                    )}
+                </ImageInputContainer>
+                <button onClick={() => document.getElementById('fileInput')?.click()}>파일선택</button>
         </>
     );
 };
