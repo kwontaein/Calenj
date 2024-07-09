@@ -9,18 +9,15 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {subscribeFilter} from "../utils/subscribeFilter";
 import {SubScribeType} from "./types";
-import {sagaRefresh} from "../../../app/hoc/store";
 import {useEffect, useState} from "react";
 import {
     QUERY_FRIEND_LIST_KEY,
     QUERY_REQUEST_FRIEND_LIST,
     QUERY_RESPONSE_FRIEND_LIST,
-    useFetchUserInfo
 } from "../../../entities/reactQuery";
 import {
-    createFriendOnline,
-    updateFriendOnline,
-    updateGroupOnline
+    createFriendOnline, updateFriendOffline,
+    updateFriendOnline, updateGroupOnlineUserList,
 } from "../../../entities/redux/model/slice/OnlineUserStorageSlice";
 import {useQueryClient} from "@tanstack/react-query";
 
@@ -34,19 +31,25 @@ export const useStomp = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
 
     useEffect(() => {
         if(!userId) return
-
-        const {param,state,target, onlineUserList} =stomp.receiveMessage
+        const {param,state,target, onlineUserList, message} =stomp.receiveMessage
 
         //온라인 리스트 처리
-        if(state==="ALARM"){
-            if(target ==="friendMsg" && onlineUserList.length > 1){ //1번배열 = 친구 id
-                onlineUserList.forEach((userParam, index)=>{
-                    if(userParam!==userId){
-                        dispatch(updateFriendOnline({personalKey:userId, userParam: onlineUserList[index]}))
+        if(state==="ALARM" && message!==null){
+            const onlineState = message[0]
+            if(target ==="friendMsg"){ //내 id는 필수로 들어가기 때문
+                if(onlineState ==='ONLINE'){
+                    const friendIdList = onlineUserList.filter((friendId) => friendId!=userId)// 내 id 제거
+                    if(friendIdList.length>0){
+                        friendIdList.map((friendId)=>{
+                            dispatch(updateFriendOnline({personalKey:userId, userParam: friendId}))
+                        })
                     }
-                })
+                }else if(onlineState === 'OFFLINE'){
+                    dispatch(updateFriendOffline({personalKey:userId, offlineUser: onlineUserList.toString()}))
+                }
+
             }else if(target ==="groupMsg"){
-                dispatch(updateGroupOnline({groupKey:param, onlineList: onlineUserList}))
+                dispatch(updateGroupOnlineUserList({groupKey:param, onlineList: onlineUserList}))
             }
         }
         //친구요청 처리
@@ -59,8 +62,9 @@ export const useStomp = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
             queryClient.refetchQueries({queryKey:[QUERY_REQUEST_FRIEND_LIST]})
         }
 
-
     }, [stomp]);
+
+
 
 
 

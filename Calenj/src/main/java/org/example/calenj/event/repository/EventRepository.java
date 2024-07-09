@@ -1,6 +1,6 @@
 package org.example.calenj.event.repository;
 
-import org.example.calenj.event.Ids.EventId;
+import org.example.calenj.event.domain.Ids.EventId;
 import org.example.calenj.event.domain.EventEntity;
 import org.example.calenj.event.dto.response.EventResponse;
 import org.springframework.data.jpa.repository.JpaRepository;

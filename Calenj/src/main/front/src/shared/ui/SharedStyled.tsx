@@ -96,13 +96,14 @@ export const GlobalStyle = createGlobalStyle`
         border-radius: 2px;
         color: ${TextColor};
     }
-    
-    input{
+
+    input {
         border: 2px solid ${ThemeColor2};
         outline: none;
         appearance: none; /* 기본 브라우저 스타일 제거 */
         background-color: ${ThemeColor2};
         color: ${TextColor};
+
         &:focus {
             outline: none;
             border: 2px solid ${PointColor};
@@ -153,7 +154,6 @@ export const MiniText = styled.div`
 export const RowFlexBox = styled.div`
     display: flex;
     flex-direction: row;
-    align-items: center;
 `
 
 export const Info_Container = styled.div`
@@ -250,7 +250,9 @@ export const FormLable = styled.label`
 `;
 
 
-export const UserListView = styled.li`
+export const UserListView = styled.li<{ $isOnline: boolean | undefined }>`
+
+    opacity: ${({$isOnline}) => $isOnline ? 1 : 0.5};
     list-style: none;
     white-space: nowrap;
     overflow: hidden;
@@ -260,6 +262,7 @@ export const UserListView = styled.li`
     align-items: center;
     display: flex;
     flex-direction: row;
+
     &:hover {
         background-color: ${ThemeColor3};
     }

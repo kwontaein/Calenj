@@ -1,10 +1,9 @@
 package org.example.calenj.friend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calenj.event.dto.response.EventResponse;
 import org.example.calenj.friend.dto.request.FriendRequest;
-import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.dto.response.AddFriendResponse;
+import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.service.FriendService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,29 +47,13 @@ public class FriendController {
         return friendService.responseFriend(UUID.fromString(request.getFriendUserId()), request.getIsAccept());
     }
 
-    /**
-     * 내가 요청한 목록
-     */
-    @GetMapping("/api/myRequestList")
-    public List<EventResponse> RequestFriendList() {
-        return friendService.RequestFriendList();
-    }
-
-    /**
-     * 요청 받은 목록
-     */
-    @GetMapping("/api/requestedList")
-    public List<EventResponse> ResponseFriendList() {
-        return friendService.ResponseFriendList();
-    }
-
 
     /**
      * 요청 정보 저장
      */
     @PostMapping("/api/saveRequest")
     public void saveRequest(@RequestBody FriendRequest friendRequest) {
-        friendService.saveFriend(friendRequest.getUserName(),friendRequest.getEventContent());
+        friendService.saveFriend(friendRequest.getUserName(), friendRequest.getEventContent());
     }
 
 }

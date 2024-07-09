@@ -3,7 +3,7 @@ package org.example.calenj.event.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.calenj.event.Ids.EventId;
+import org.example.calenj.event.domain.Ids.EventId;
 import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 

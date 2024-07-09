@@ -8,8 +8,7 @@ export const GroupUserList_Container = styled.div`
     font-size: 13px;
     background-color: ${ThemeColor3};
 `
-export const UserProfile = styled.img<{ $isOnline: boolean | undefined }>`
-    border: ${({$isOnline}) => $isOnline ? 'green' : 'gray'} 3px inset;
+export const UserProfile = styled.img`
     border-radius: 50%;
     width: 25px;
     height: 25px;
