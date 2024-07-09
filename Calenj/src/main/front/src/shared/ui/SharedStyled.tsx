@@ -250,7 +250,9 @@ export const FormLable = styled.label`
 `;
 
 
-export const UserListView = styled.li`
+export const UserListView = styled.li<{ $isOnline: boolean | undefined }>`
+
+    opacity: ${({$isOnline}) => $isOnline ? 1 : 0.5};
     list-style: none;
     white-space: nowrap;
     overflow: hidden;
@@ -260,6 +262,7 @@ export const UserListView = styled.li`
     align-items: center;
     display: flex;
     flex-direction: row;
+
     &:hover {
         background-color: ${ThemeColor3};
     }

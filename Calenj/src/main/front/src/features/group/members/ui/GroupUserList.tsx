@@ -9,7 +9,6 @@ import {RootState} from "../../../../entities/redux";
 import {GroupDetail, groupMembers} from "../../../../entities/reactQuery";
 
 
-
 export const GroupUserList: React.FC = () => {
     const [groupDetail, setGroupDetail] = useState<GroupDetail>();
     const queryClient = useQueryClient();
@@ -38,17 +37,16 @@ export const GroupUserList: React.FC = () => {
         <GroupUserList_Container>
             {groupDetail &&
                 (groupDetail.members.map((member) => (
-                    <UserListView key={member.userId} onClick={() => setSelectedUser(member)}>
-                        <UserProfile src={`/image/savedImage/${member.userId}.jpeg`}
-                                     onError={onErrorImg}
-                                     $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userId)}/>
-                        <span style={{height:'100%', display:'flex', alignItems:'center'}}>
+                    <UserListView key={member.userId} onClick={() => setSelectedUser(member)}
+                                  $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userId)}>
+                        <UserProfile src={`/image/savedImage/${member.userId}.jpeg`} onError={onErrorImg}/>
+                        <span style={{height: '100%', display: 'flex', alignItems: 'center'}}>
                             {member.nickName} {localStorage.getItem(`userId`) === member.userId && '(나)'}
                         </span>
                     </UserListView>)))
             }
             {/* 모달 창 */}
-            {selectedUser && <MemberInfo user={selectedUser} onClose={()=>setSelectedUser(null)}/>}
+            {selectedUser && <MemberInfo user={selectedUser} onClose={() => setSelectedUser(null)}/>}
         </GroupUserList_Container>
 
     );
