@@ -23,7 +23,7 @@ export const MessageScrollBox:React.FC =()=>{
     const {param} = useSelector((state:RootState)=>state.group_subNavState)
     const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
 
-    const {messageList,newMessageList,chatFile, compareDate} = useMessageData(param,navigate)
+    const {messageList, newMessageList, chatFile, compareDate} = useMessageData(param,navigate)
     const scrollRef =useMessageScroll(param,messageList)
 
     const loadFile = useMemo(() => {
@@ -43,47 +43,45 @@ export const MessageScrollBox:React.FC =()=>{
 
 
     const MessageBox = useMemo(() => {
-        const connectList = [...[...messageList].reverse(),...newMessageList]
+        const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=> messageData.chatUUID!=="시작라인");
         if (!chatFile.isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef}>
                     <div className="scrollTop" ref={topRef}></div>
+                    {connectList.map((message: Message , index: number) => (
+                        <div key={message.chatUUID}>
+                            {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate)) &&
+                                <HR_NewDate data-content={AHMFormat(changeDateForm(message.sendDate.slice(0,16))).slice(0,13)}></HR_NewDate>}
+                            <MessageBoxContainer className={message.chatUUID}
+                                                 key={message.chatUUID + index}
+                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
+                                                     dateOperation(connectList[index-1].sendDate, message.sendDate)}>
+                                {message.chatUUID === '엔드포인트' ?
 
-                    {connectList.map((message: Message | null, index: number) => (
-                        ((message !== null && message.chatUUID !== "시작라인") &&
-                            <div key={message.chatUUID}>
-                                {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate)) &&
-                                    <HR_NewDate data-content={AHMFormat(changeDateForm(message.sendDate.slice(0,16))).slice(0,13)}></HR_NewDate>}
-                                <MessageBoxContainer className={message.chatUUID}
-                                                     key={message.chatUUID + index}
-                                                     $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
-                                                         dateOperation(connectList[index-1].sendDate, message.sendDate)}>
-                                    {message.chatUUID === '엔드포인트' ?
-
-                                        <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                        ((index && connectList[index - 1]?.userId === message.userId) &&
-                                        dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
-                                            <MessageContainer2>
-                                                <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                                <MessageContentContainer2>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer2>
-                                            </MessageContainer2>
-                                        ) : (
-                                            <RowFlexBox style={{width: 'auto'}}>
-                                                <ProfileContainer
-                                                    $userId={message.userId}></ProfileContainer>
-                                                <MessageContainer>
-                                                    <RowFlexBox>
-                                                        <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
-                                                        <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
-                                                    </RowFlexBox>
-                                                    <MessageContentContainer>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer>
-                                                </MessageContainer>
-                                            </RowFlexBox>
-                                        ))
-                                    }
-                                </MessageBoxContainer>
-                            </div>)
-                    ))}
+                                    <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
+                                    ((index && connectList[index - 1]?.userId === message.userId) &&
+                                    dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
+                                        <MessageContainer2>
+                                            <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                            <MessageContentContainer2>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer2>
+                                        </MessageContainer2>
+                                    ) : (
+                                        <RowFlexBox style={{width: 'auto'}}>
+                                            <ProfileContainer
+                                                $userId={message.userId}></ProfileContainer>
+                                            <MessageContainer>
+                                                <RowFlexBox>
+                                                    <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
+                                                    <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
+                                                </RowFlexBox>
+                                                <MessageContentContainer>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer>
+                                            </MessageContainer>
+                                        </RowFlexBox>
+                                    ))
+                                }
+                            </MessageBoxContainer>
+                        </div>)
+                    )}
                     <div className="scrollBottom" style={{marginTop: '10px'}}></div>
                 </ScrollableDiv>
             );
