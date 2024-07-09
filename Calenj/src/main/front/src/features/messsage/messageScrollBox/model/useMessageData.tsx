@@ -96,8 +96,6 @@ export const useMessageData = (param:string,target:string) :useMessageData=>{
     }, [chatFile.data])
 
     const compareDate = (date1:string, date2:string):boolean =>{
-        if(date1.length!==16 || date2.length!==16) return false
-
         if(changeDateForm(date1).getDate() !== changeDateForm(date2).getDate()) return true
         if(changeDateForm(date1).getMonth() !== changeDateForm(date2).getMonth()) return true
         return changeDateForm(date1).getFullYear() !== changeDateForm(date2).getFullYear();
