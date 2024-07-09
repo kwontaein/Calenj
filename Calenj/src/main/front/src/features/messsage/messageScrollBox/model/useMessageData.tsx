@@ -16,7 +16,7 @@ interface useMessageData {
     messageList: Message[],
     newMessageList: Message[],
     chatFile: UseInfiniteQueryResult<InfiniteData<Message[], unknown>, Error>,
-    compareDate: (date1: string, date2: string) => boolean,
+    compareDate: (date1:string,date2:string) => boolean,
 }
 
 
@@ -101,5 +101,5 @@ export const useMessageData = (param: string, target: string): useMessageData =>
     }
 
 
-    return {messageList, newMessageList, chatFile, compareDate}
+    return {messageList,newMessageList,chatFile, compareDate}
 }
