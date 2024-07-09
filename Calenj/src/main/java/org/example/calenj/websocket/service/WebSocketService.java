@@ -303,14 +303,13 @@ public class WebSocketService {
         for (String destination : getDestination(userId)) {
             //온라인 유저 정보 받아서
             Set<String> userList = getUsers(extractUUID(destination));
-            System.out.println("response.getMessage() : " + response.getMessage());
             if (response.getMessage().contains("OFFLINE")) {
                 userList.remove(userId);
             }
             //반환정보에 담기
             response.setOnlineUserList(userList);
+            response.setTarget(extractTopic(destination));
             response.setParam(extractUUID(destination));
-            System.out.println("online : " + response.getOnlineUserList());
             template.convertAndSend(destination, response);
         }
     }
@@ -383,6 +382,15 @@ public class WebSocketService {
 
     public static String extractUUID(String url) {
         Pattern pattern = Pattern.compile("([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$");
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    public static String extractTopic(String url) {
+        Pattern pattern = Pattern.compile("/topic/([^/]*)");
         Matcher matcher = pattern.matcher(url);
         if (matcher.find()) {
             return matcher.group(1);
