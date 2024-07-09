@@ -105,6 +105,13 @@ public class UserController {
         return userService.getUserProfile(userRequest.getUserId());
     }
 
+    /**
+     * 친구 요청 유저 프로필 받아오기
+     */
+    @PostMapping("/api/getFriendUserProfile")
+    public UserProfileResponse getFriendUserProfile(@RequestBody UserRequest userRequest) { //유저 프로필 표시
+        return userService.getFriendUserProfile(userRequest.getUserId());
+    }
     //메일 인증 부분------------------------------------------------------------------------------
 
     /**

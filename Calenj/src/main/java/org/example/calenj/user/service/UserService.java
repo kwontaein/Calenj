@@ -215,25 +215,40 @@ public class UserService {
     }
 
     /**
-     * 유저 프로필 받아오는 메소드
+     * 친구 요청 유저 프로필 받아오는 메소드
+     *
+     * @param userId 받아올 유저 아이디
+     **/
+    public UserProfileResponse getFriendUserProfile(UUID userId) {
+        String myUserId = globalService.extractFromSecurityContext().getUsername();
+        UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
+
+        UserProfileResponse userProfileResponse = getUserProfile(userId);
+
+        userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId()).orElse(null));
+        userProfileResponse.setEventContent(eventService.getEventContent(myUserId, userEntity.getUserId()));
+        return userProfileResponse;
+    }
+
+    /**
+     * 기본 유저 프로필 받아오는 메소드
      *
      * @param userId 받아올 유저 아이디
      **/
     public UserProfileResponse getUserProfile(UUID userId) {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        String myUserId = userDetails.getUsername();
         UserProfileResponse userProfileResponse = new UserProfileResponse();
 
+        String myUserId = globalService.extractFromSecurityContext().getUsername();
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
 
         userProfileResponse.setUserName(userEntity.getUserUsedName());
         userProfileResponse.setNickName(userEntity.getNickname());
         userProfileResponse.setIntroduce(userEntity.getUserIntroduce());
         userProfileResponse.setJoinDate(userEntity.getUserJoinDate());
+        //같이 속한 그룹
         userProfileResponse.setSameGroup(group_userRepository.findGroupIds(userEntity.getUserId(), UUID.fromString(myUserId)));
+        //함께 아는 친구
         userProfileResponse.setSameFriend(friendRepository.DuplicateFriendList(UUID.fromString(myUserId), userId).orElse(null));
-        userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId()).orElse(null));
-        userProfileResponse.setEventContent(eventService.getEventContent(myUserId, userEntity.getUserId()));
         return userProfileResponse;
     }
 
