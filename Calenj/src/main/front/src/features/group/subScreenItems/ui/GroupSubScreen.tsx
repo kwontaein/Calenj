@@ -10,6 +10,7 @@ import {Notice} from "../../board/notice/list";
 import {RootState} from "../../../../entities/redux";
 import {SubScreenOption} from "./SubScreenOption";
 import {ContentsCompositionProps} from "../model/types";
+import {useEffect} from "react";
 
 
 
@@ -18,6 +19,7 @@ import {ContentsCompositionProps} from "../model/types";
 
 export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth, showUserList}) =>{
     const {clickState, mode} = useSelector((state:RootState) => state.group_subNavState)
+
 
     return(
             <GroupSubScreen_Container $mode={mode}>

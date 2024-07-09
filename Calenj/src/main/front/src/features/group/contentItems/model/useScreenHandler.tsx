@@ -24,7 +24,19 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
     const defaultContentSize = GroupList_Container_width + SubNavigation_Container_width;
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
     const beforeInputSize = useRef<number>(60);
-    const {screenHeightSize} = useSelector((state:RootState) => state.group_subNavState);
+    const {screenHeightSize,mode} = useSelector((state:RootState) => state.group_subNavState);
+
+
+    //input사이즈 + subScreenHeight의 크기가 전체화면의 크기를 초과하지 않도록 조정
+    useEffect(() => {
+        if(mode==="row") return
+        if(screenHeightSize >= contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3){
+            const newHeight = screenHeightSize - (screenHeightSize -(contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3))
+            dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
+        }
+    }, [inputSize]);
+
+
 
     //마우스로 subScreen의 크기를 조절하는 코드
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -60,7 +72,7 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
         }else if(currentMode ==="column"){
             const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_paddingBlock*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
-            if(newHeight >=185 && newHeight <=contentSize.height-SubNavigateTopBar_height-SubNavigateTopBar_height-inputSize-3){
+            if(newHeight >=185 && newHeight <=contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3){
                 dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
             }
         }

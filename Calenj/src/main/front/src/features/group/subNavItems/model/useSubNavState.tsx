@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
-import {toggleCurrentMap} from "../../../../entities/redux/model/module/StompMiddleware";
-import {updateSubClickState, updateSubParam} from "../../../../entities/redux/model/slice/GroupSubNavigationSlice";
+import {updateSubClickState, updateSubParam,toggleCurrentMap} from "../../../../entities/redux";
 import {useDispatch} from "react-redux";
 
 export const useSubNavState = (groupId:string)
@@ -35,10 +34,10 @@ export const useSubNavState = (groupId:string)
     }
     const toggleHandler : ()=>void = () =>{
         if(groupId){
-            const subNavgationState =toggleCurrentMap.get(groupId);
-            subNavgationState.toggleState = !(subNavgationState.toggleState);
-            setToggleState(subNavgationState.toggleState);
-            toggleCurrentMap.set(groupId,subNavgationState);
+            const subNavigationState =toggleCurrentMap.get(groupId);
+            subNavigationState.toggleState = !(subNavigationState.toggleState);
+            setToggleState(subNavigationState.toggleState);
+            toggleCurrentMap.set(groupId,subNavigationState);
         }
     }
 

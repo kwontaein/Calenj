@@ -42,7 +42,7 @@ export const GroupUserList: React.FC = () => {
                         <UserProfile src={`/image/savedImage/${member.userId}.jpeg`}
                                      onError={onErrorImg}
                                      $isOnline={stomp.receiveMessage.onlineUserList.includes(member.userId)}/>
-                        <span>
+                        <span style={{height:'100%', display:'flex', alignItems:'center'}}>
                             {member.nickName} {localStorage.getItem(`userId`) === member.userId && '(나)'}
                         </span>
                     </UserListView>)))
