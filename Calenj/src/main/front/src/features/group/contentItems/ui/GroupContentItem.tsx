@@ -3,7 +3,7 @@ import {
     CustomScreen_MessageBox_Container,
     CustomScreen_SubContent_Container,
     TransContentsScreen_div
-} from "./ContentCompositionStyle";
+} from "./GroupContentItemStyled";
 import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
 import {GroupSubScreen} from "../../subScreenItems";
 import {GroupUserList} from "../../members";
@@ -31,6 +31,7 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
             dispatch(updateAppPosition({target: "group", param: param}));
         }
     }, [param,group_subNavState.param]);
+
 
     return(
         param ===group_subNavState.param &&

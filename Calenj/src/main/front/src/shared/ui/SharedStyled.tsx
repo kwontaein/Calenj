@@ -258,7 +258,8 @@ export const UserListView = styled.li`
     margin-top: -1px;
     padding: 10px;
     align-items: center;
-
+    display: flex;
+    flex-direction: row;
     &:hover {
         background-color: ${ThemeColor3};
     }

@@ -12,6 +12,7 @@ export const useMessageInput = ():MessageInput =>{
     const param = useSelector((state:RootState) => state.navigateInfo.navigateParam)
     const {inputSize, inputMaxSize} = useSelector((state:RootState) => state.messageInputSize);
 
+
     const [content, setContent] = useState<string>( '');
     const chatRef = useRef<HTMLTextAreaElement>(null);// 채팅 input Ref
     const dispatch = useDispatch()
@@ -68,8 +69,18 @@ export const useMessageInput = ():MessageInput =>{
 
 
     const sendMessage = () => {
-        if (content === '') return;
-        dispatch(sendStompMsg({target: 'groupMsg', param: param, message: content, messageType: "message"}))
+
+        //무의미한 \n 제거
+        const newContent:string = content.split('\n').reduce((prev,current)=>{
+            if(prev ===''){
+                return prev + current
+            }else{
+                return prev + '\n' + current
+            }
+        })
+        if (newContent === '') return;
+
+        dispatch(sendStompMsg({target: 'groupMsg', param: param, message: newContent, messageType: "message"}))
         setContent('');
         if (chatRef.current) {
             chatRef.current.value = ''

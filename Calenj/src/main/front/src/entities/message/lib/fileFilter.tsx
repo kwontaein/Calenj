@@ -11,7 +11,6 @@ export const fileFilter = (messages: string[]) => {
             messageType: messageType.trim(),
             message: messageContent,
         };
-
         return loadMsg;
     }).filter((msg: Message | null) => msg !== null);  // null이 아닌 메시지만 필터링
 
