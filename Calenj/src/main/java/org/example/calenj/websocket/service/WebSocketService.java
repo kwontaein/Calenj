@@ -304,17 +304,33 @@ public class WebSocketService {
     }
 
     public void sendOnlineStateFirstTime(String userId, ChatMessageResponse response) {
+        Set<String> friendList = new HashSet<>();
+
         //온라인 유저 정보 다시 반환
         for (String destination : getDestination(userId)) {
             //온라인 유저 정보 받아서
             Set<String> userList = getUsers(destination);
+            if (userList == null) {
+                userList = new HashSet<>();
+            }
             userList.add(userId);
+
             //반환정보에 담기
             response.setOnlineUserList(userList);
             response.setTarget(extractTopic(destination));
             response.setParam(extractUUID(destination));
-            template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + extractUUID(destination) + "/" + extractTopic(destination), response);
+
+            if (extractTopic(destination).equals("friendMsg")) {
+                friendList.addAll(userList);
+            } else {
+                template.convertAndSendToUser(userId, destination, response);
+            }
         }
+
+        response.setOnlineUserList(friendList);
+        response.setParam(userId);
+        response.setTarget("friendMsg");
+        template.convertAndSend("/topic/personalTopic/" + userId, response);
     }
 
     public void sendOnlineState(String userId, ChatMessageResponse response) {

@@ -30,7 +30,7 @@ const OnlineList = createSlice({
                 }
             }
         },
-        updateGroupOnline: (state, action: PayloadAction<{ groupKey: string, onlineList: string[] }>) => {
+        updateGroupOnlineUserList: (state, action: PayloadAction<{ groupKey: string, onlineList: string[] }>) => {
             state.group={
                 ...state.group,
                 [action.payload.groupKey]:{
@@ -48,15 +48,7 @@ const OnlineList = createSlice({
                 }
             }
         },
-        mutateGroupOnline:(state, action : PayloadAction<{ groupKey: string, offlineUser: string }>) =>{
-            state.group={
-                ...state.group,
-                [action.payload.groupKey]:{
-                    userList : state.group[action.payload.groupKey].userList.filter((userParam)=> userParam!== action.payload.offlineUser)
-                }
-            }
-        },
-        mutateFriendOnline:(state, action : PayloadAction<{ personalKey: string, offlineUser: string }>) =>{
+        updateFriendOffline:(state, action : PayloadAction<{ personalKey: string, offlineUser: string }>) =>{
             state.friend={
                 ...state.friend,
                 [action.payload.personalKey]:{
@@ -68,6 +60,6 @@ const OnlineList = createSlice({
 })
 
 
-export const { createFriendOnline, updateGroupOnline, updateFriendOnline, mutateGroupOnline, mutateFriendOnline } =OnlineList.actions;
+export const { createFriendOnline, updateGroupOnlineUserList, updateFriendOnline, updateFriendOffline } =OnlineList.actions;
 
 export default OnlineList.reducer;
