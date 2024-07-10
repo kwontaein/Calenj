@@ -1,7 +1,6 @@
 package org.example.calenj.image.service;
 
 import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -138,20 +136,25 @@ public class ImageService {
         //db에 이미지 저장
     }
 
-    public void saveMultiImage(MultipartFile[] multipartFiles, String param) {
+    public boolean saveMultiImage(MultipartFile[] multipartFiles, String param) {
         Set<String> imageIds = new HashSet<>();
-        for (MultipartFile file : multipartFiles) {
-            fileValid(UUID.randomUUID(), file);
-            imageIds.add(UUID.randomUUID() + file.getName());
-        }
+        try {
+            for (MultipartFile file : multipartFiles) {
+                fileValid(UUID.randomUUID(), file);
+                imageIds.add(UUID.randomUUID() + file.getName());
+            }
 
-        ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
+        /* ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
         chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
         chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
         chatMessageRequest.setSendDate(LocalDate.now().toString());
         chatMessageRequest.setMessage(imageIds.toString());
         chatMessageRequest.setParam(param);
 
-        webSocketService.saveChattingToFile(chatMessageRequest);
+        webSocketService.saveChattingToFile(chatMessageRequest);*/
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

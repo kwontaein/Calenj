@@ -30,9 +30,12 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
             selectedFiles.forEach(file => {
                 formData.append('userId', userId);
                 formData.append('files', file);
+                console.log("file", file)
             });
-            console.log(formData)
-            await imageUploadApi(formData).then(()=>{
+            console.log("formData")
+            console.log(formData.getAll('files'))
+
+            await imageUploadApi(formData).then(() => {
                 setPreviews([]);
                 setSelectedFiles([]);
             });
