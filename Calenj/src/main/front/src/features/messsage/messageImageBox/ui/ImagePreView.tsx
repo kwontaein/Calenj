@@ -1,6 +1,6 @@
 import {Modal_Background} from "../../../../shared/ui/SharedStyled";
 import React, {useRef} from "react";
-import {ImagePreviewProps, MultiImageScreenProps} from "../model/types";
+import {ImagePreviewProps, MultiImageScreenProps} from "../../messageInputBox/model/types";
 import {ImagePreview} from "../../../../shared/ui/MultiImageUploadStyled";
 import {ImagePreView_Container} from "./ImagePreViewStyled";
 

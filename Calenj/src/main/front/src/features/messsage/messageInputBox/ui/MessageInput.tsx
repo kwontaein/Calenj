@@ -8,8 +8,8 @@ import {useMessageInput} from "../model/useMessageInput";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {useEffect, useState} from "react";
-import {useComponentSize, useMultiImageHandler} from "../../../../shared/model";
-import {MultiImageScreen} from "./MultiImageScreen";
+import { useMultiImageHandler} from "../../../../shared/model";
+import {MultiImageScreen} from "../../messageImageBox";
 
 export const MessageInput : React.FC = () =>{
     const multiImageHandler = useMultiImageHandler();

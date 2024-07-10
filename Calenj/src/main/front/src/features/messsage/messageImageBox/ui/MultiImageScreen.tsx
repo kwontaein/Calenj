@@ -6,7 +6,7 @@ import {
     OptionButtons
 } from "../../../../shared/ui/MultiImageUploadStyled";
 import React, {useEffect, useState} from "react";
-import {ImageHandlerProps} from "../model/types";
+import {ImageHandlerProps} from "../../messageInputBox/model/types";
 import {HR_ImageLine, MultiImage_Container} from "./MultiImageScreenStyled";
 import {useComponentSize} from "../../../../shared/model";
 import {FileModifyModal} from "./FileModifyModal";
