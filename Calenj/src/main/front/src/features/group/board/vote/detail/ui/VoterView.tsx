@@ -2,14 +2,16 @@ import {MyVoteIcon, ViewVoter_Container, VoteResult_Hr} from "./VoteDetailStyled
 import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import React from "react";
 import {VoteChoiceResponse} from "../../../../../../entities/reactQuery";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../../entities/redux";
 
 interface VoterProps{
-    isCreator :boolean,
     voted : VoteChoiceResponse[],
 }
 
-export const VoterView:React.FC<VoterProps> = ({voted,isCreator}) =>{
-
+export const VoterView:React.FC<VoterProps> = ({voted}) =>{
+    const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
+    const userId = localStorage.getItem('userId')
     return (
         <ViewVoter_Container>
             {voted.map((result,index)=>(
@@ -25,12 +27,13 @@ export const VoterView:React.FC<VoterProps> = ({voted,isCreator}) =>{
                     }
                     {result.voter.map((voterUser, index) => (
                         <RowFlexBox key={index}>
-                            {isCreator &&
+                            {voterUser === userId ?
                                 <MyVoteIcon>
                                     나
-                                </MyVoteIcon>
+                                </MyVoteIcon> :
+                                <MyVoteIcon style={{backgroundColor:'transparent', width:'8px'}}/>
                             }
-                            <div style={{marginInline:'3px', fontSize:'14px'}}>{voterUser}</div>
+                            <div style={{marginInline:'3px', fontSize:'14px'}}>{userNameRegister[voterUser].userName}</div>
                         </RowFlexBox>
                     ))}
                 </div>

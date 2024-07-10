@@ -2,7 +2,7 @@ import {CalendarController, CalendarFromSelector} from "../../../../../features/
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
-import {FriendEventBarSelector} from "../../../../../features/friend/viewSelector/ui/FriendEventBarSelector";
+import {FriendEventBarSelector} from "../../../../../features/friend/viewSelector";
 import {RequestFriendInput} from "../../../../../features/friend/checkUserInput";
 import {LeftEventBar_Container, MainEventTopBar_Container, RightEventBar_Container} from "./MainEventTopBarStyled";
 import {Simulate} from "react-dom/test-utils";

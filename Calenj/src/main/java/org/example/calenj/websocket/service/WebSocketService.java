@@ -290,16 +290,18 @@ public class WebSocketService {
     public void personalEvent(Authentication authentication, ChatMessageRequest request) {
         UserEntity userEntity = returnUserEntity(authentication);
         String userId = String.valueOf(userEntity.getUserId());
-        ChatMessageResponse response = filterNullFields(request);
 
-        if (request.getMessage() != null && request.getMessage().contains("ONLINE")) {
+        if (request.getMessage() == null) {
+            return;
+        }
+
+        if (request.getMessage().contains("ONLINE")) {
             //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
-            sendOnlineStateFirstTime(userId, response);
-            sendOnlineState(userId, response);
-        } else if (request.getMessage() != null && request.getMessage().contains("OFFLINE")) {
-
+            sendOnlineStateFirstTime(userId, filterNullFields(request));
+            sendOnlineState(userId, filterNullFields(request));
+        } else if (request.getMessage().contains("OFFLINE")) {
             //끊을 시 -> 오프라인이라고만 알리기
-            sendOnlineState(userId, response);
+            sendOnlineState(userId, filterNullFields(request));
         }
     }
 

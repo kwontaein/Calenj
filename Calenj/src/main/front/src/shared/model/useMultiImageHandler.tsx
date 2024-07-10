@@ -1,18 +1,8 @@
-import React, {useState} from "react";
-import {imageUploadApi} from "../api/imageUploadApi";
+import {useState, useEffect} from 'react';
+import {imageUploadApi} from '../api/imageUploadApi';
+import {ReturnFileHandler} from "./types";
 
-interface ReturnFileHandler {
-    handleDrop: (event: React.DragEvent<HTMLDivElement>) => void,
-    handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void,
-    handleDragLeave: () => void,
-    handleCancel: (index: number) => void,
-    handleUpload: () => void,
-    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-    file: File[],
-    setFiles: React.Dispatch<React.SetStateAction<File[]>>,
-    previews: string[],
-    dragOver: boolean,
-}
+
 
 export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -37,7 +27,7 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
                 formData.append('userId', userId);
                 formData.append('files', file);
             });
-            imageUploadApi(formData);
+            await imageUploadApi(formData);
         } else {
             console.warn('No files selected');
         }
@@ -48,10 +38,10 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         setPreviews(prevPreviews => prevPreviews.filter((_, idx) => idx !== index));
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = (event: DragEvent) => {
         event.preventDefault();
         setDragOver(false);
-        const files = event.dataTransfer.files;
+        const files = event.dataTransfer?.files;
         if (files) {
             const selectedFilesArray = Array.from(files);
             setSelectedFiles(prevFiles => [...prevFiles, ...selectedFilesArray]);
@@ -60,18 +50,32 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         }
     };
 
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDragOver = (event: DragEvent) => {
         event.preventDefault();
-        setDragOver(true);
+        if (!dragOver) {
+            setDragOver(true);
+        }
     };
 
     const handleDragLeave = () => {
         setDragOver(false);
     };
 
+    useEffect(() => {
+        window.addEventListener('drop', handleDrop);
+        window.addEventListener('dragover', handleDragOver);
+        window.addEventListener('dragleave', handleDragLeave);
+
+        return () => {
+            window.removeEventListener('drop', handleDrop);
+            window.removeEventListener('dragover', handleDragOver);
+            window.removeEventListener('dragleave', handleDragLeave);
+        };
+    }, []);
+
     return {
-        handleDrop,
-        handleDragOver,
+        handleDrop: (event) => handleDrop(event.nativeEvent as DragEvent),
+        handleDragOver: (event) => handleDragOver(event.nativeEvent as DragEvent),
         handleDragLeave,
         handleCancel,
         handleUpload,

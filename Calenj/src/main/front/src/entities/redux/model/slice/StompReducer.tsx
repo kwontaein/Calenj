@@ -19,12 +19,12 @@ type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "";
 export interface Message {
     param: string,
     message: string | string[],
-    userId:string,
+    userId: string,
     sendDate: string,
     chatUUID: string,
     state: stateType,
     onlineUserList: string[],
-    target:string,
+    target: string,
     messageType: string,
 }
 
@@ -66,7 +66,7 @@ export interface DispatchStompProps {
         receiveMessage: {
             param: string,
             message: string,
-            userId:string,
+            userId: string,
             sendDate: string,
             state: stateType,
             chatUUID: string,
@@ -95,7 +95,7 @@ export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps 
         receiveMessage: {
             param: string,
             message: string,
-            userId:string,
+            userId: string,
             sendDate: string,
             state: stateType,
             chatUUID: string,
@@ -136,7 +136,7 @@ export const requestFile = (payload: { target: string, param: string, requestFil
 
 
 //메시지 전송 (주소, 식별자, 메시지 넣기)
-export const sendStompMsg = (payload: { target: string, param: string, message: string , messageType:string}) => ({
+export const sendStompMsg = (payload: { target: string, param: string, message: string, messageType: string }) => ({
     type: SEND_STOMP_MSG,
     payload: payload,
 });
@@ -144,11 +144,13 @@ export const sendStompMsg = (payload: { target: string, param: string, message: 
 
 //메시지 받기
 //채널에서 take로 받아온 message를 받아 action에 대한 payload전달 (dispatch)
+
+
 export const receivedStompMsg = (payload: {
     receiveMessage: {
         param: string,
         message: string,
-        userId:string,
+        userId: string,
         sendDate: string,
         state: stateType,
         chatUUID: string
@@ -185,13 +187,13 @@ const initialState: StompState = {
     receiveMessage: {
         param: '',
         message: '',
-        userId : '',
+        userId: '',
         sendDate: '',
         state: '',
         chatUUID: '',
         onlineUserList: [],
         messageType: '',
-        target:'',
+        target: '',
     }, // 초기 message 상태
     requestFile: '',
     nowLine: -1,
@@ -234,7 +236,7 @@ const StompReducer = handleActions(
             target: action.payload.target,
             param: action.payload.param,
             message: action.payload.message,
-            messageType:action.payload.messageType,
+            messageType: action.payload.messageType,
         }),
 
         [RECEIVED_STOMP_MSG]: (state, action) => ({

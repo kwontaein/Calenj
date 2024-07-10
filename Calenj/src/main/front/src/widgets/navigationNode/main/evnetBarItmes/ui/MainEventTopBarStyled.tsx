@@ -14,7 +14,7 @@ export const RightEventBar_Container = styled.div<{$coverAble:boolean}>`
     flex-direction: row;
     justify-content: right;
     position: relative;
-    z-index: 0;
+    z-index: 4;
     height: 32px;
     &::before {
         content: "";

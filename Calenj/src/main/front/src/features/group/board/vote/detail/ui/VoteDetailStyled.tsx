@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
-import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
 
@@ -93,9 +93,12 @@ export const MyVoteIcon =styled.div`
     background-color: ${PointColor};
     color: white;
     font-weight: 550;
-    font-size: 10px;
-    padding: 3px;
-    margin-top: 1px;`
+    font-size: 9px;
+    padding: 2px;
+    padding-inline: 4px;
+    margin-right: 5px;
+    margin-top: 3px;
+`
 
 export const VoteConditionItem_Container = styled.div`
     width: 100%;
@@ -135,7 +138,7 @@ export const Vote_CheckBox = styled.input`
     height: 1.2rem;
     appearance: none;//모양해제
     border-radius: 50%;
-    background-color: #ffffff;
+    background-color: ${TextColor2};
     transition: background-color 300ms;
     cursor: pointer;
 
@@ -144,17 +147,18 @@ export const Vote_CheckBox = styled.input`
         content: '';
         color: transparent;
         display: block;
-        width: inherit;
-        height: inherit;
+        width: 100%;
+        height: 100%;
         border-radius: inherit;
-        border: 0;
+        border: none;
         background-color: transparent;
-        background-size: contain;
+        background-size: cover;
         box-shadow: inset 0 0 0 1px #ccd3d8;
     }
 
     &:checked {
-        background-color: #0070E8;
+        background-color: ${PointColor};
+         border: 1px solid ${ThemeColor3};
     }
 
     &:checked::before {

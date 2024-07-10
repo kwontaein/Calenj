@@ -38,7 +38,7 @@ export const VoteDetail:React.FC = () => {
                             </RowFlexBox>
                         </VoteConditionItem_Container>
                         {(viewVoter && voteItems) ?
-                            <VoterView voted={voteItems} isCreator={data.voteCreator === userId}/>
+                            <VoterView voted={voteItems}/>
                             :
                             <VoteDetailContent
                                 voteItems={voteItems}  //정렬된 값을 넘김
@@ -50,7 +50,7 @@ export const VoteDetail:React.FC = () => {
                             />
                         }
                         {(data.countVoter.length>0||voteEnd) &&
-                            <VoterViewButton data={data} setViewVoter={setViewVoter}/>
+                            <VoterViewButton data={data} setViewVoter={setViewVoter} viewVoter={viewVoter}/>
                         }
                     </VoteContent_Container>
                 }

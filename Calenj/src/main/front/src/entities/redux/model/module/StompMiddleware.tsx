@@ -11,6 +11,7 @@ import {
     UPDATE_STOMP_STATE,
     updateLoading,
 } from "../slice/StompReducer"
+import {date} from "yup";
 
 
 type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT";
@@ -227,7 +228,8 @@ function onlineStateSetting(stompClient: CompatClient, msg: string) {
         const data: StompData = {
             param: `${userId}`, //groupMsg,friendMsg
             state: "ALARM", //0:endpoint 로드
-            message: msg
+            message: msg,
+
         }
         const url = `/app/personalTopic`
         stompClient.publish({

@@ -3,3 +3,4 @@ export {useComponentSize} from './useComponentSize';
 export {useIntersect} from './useIntersect'
 export {useFileImageHandler} from './useFileImageHandler';
 export {useMultiImageHandler} from './useMultiImageHandler'
+export {type ReturnFileHandler} from './types';

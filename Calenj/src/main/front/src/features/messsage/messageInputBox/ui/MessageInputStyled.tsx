@@ -31,18 +31,27 @@ export const MessageIcon_Container = styled.div`
     &:hover{
         color: ${TextColor};
     }
+    overflow-y: auto;
 `
 
-export const MessageSend_Box = styled.div<{$isFocus:boolean}>`
+export const Message_Box_Container = styled.div<{$isFocus:boolean}>`
     width: calc(100% - 24px);
     border: 1px solid ${props=> props.$isFocus ? TextColor : TextColor2};
     height: calc(100% - 20px);
     margin-inline: 12px;
     border-radius: 5px;
     display: flex;
+    flex-direction: column;
+`
+
+
+export const MessageInput_Container = styled.div`
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
 `
+
 
 
 

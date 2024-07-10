@@ -6,8 +6,9 @@ import {VoteDetail} from "../../../../../../entities/reactQuery";
 interface VoteDetailProps{
     data:VoteDetail,
     setViewVoter: React.Dispatch<React.SetStateAction<boolean>>
+    viewVoter : boolean
 }
-export const VoterViewButton : React.FC<VoteDetailProps> = ({data,setViewVoter}) =>{
+export const VoterViewButton : React.FC<VoteDetailProps> = ({data,setViewVoter, viewVoter}) =>{
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
     return(
@@ -25,7 +26,7 @@ export const VoterViewButton : React.FC<VoteDetailProps> = ({data,setViewVoter})
             }
             {isHovered &&
                 <VoteResultHover_div>
-                    투표현황 보기
+                    {viewVoter ? "투표하러 가기":"투표현황 보기"}
                 </VoteResultHover_div>
             }
         </RowFlexBox>
