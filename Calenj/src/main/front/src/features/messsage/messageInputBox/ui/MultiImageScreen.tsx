@@ -1,16 +1,17 @@
 import {
     DeleteButton,
-    EditButton, ImageHoverBackground, ImageHoverBox, ImagePreview,
+    EditButton, FileName_Container, ImageHoverBackground, ImageHoverBox, ImagePreview,
     ImagePreviewContainer,
     ImagePreviewDiv,
     OptionButtons
 } from "../../../../shared/ui/MultiImageUploadStyled";
 import React from "react";
 import {ImageHandlerProps} from "../model/types";
+import {MultiImage_Container} from "./MultiImageScreenStyled";
 
 
 
-export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHandler}) =>{
+export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHandler, maxWidth}) =>{
 
     return(
         <div>
@@ -23,7 +24,7 @@ export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHand
             )}
             <input type="file" accept="image/*" onChange={useMultiImageHandler.handleFileChange} multiple style={{display: 'none'}}
                    id="fileInput"/>
-            <div>
+            <MultiImage_Container $maxWidth={maxWidth}>
                 {useMultiImageHandler.previews.map((preview, index) => (
                     <ImagePreviewDiv key={index}>
                         <OptionButtons>
@@ -37,9 +38,10 @@ export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHand
                         <ImagePreviewContainer>
                             <ImagePreview src={preview} alt={`Preview ${index}`}/>
                         </ImagePreviewContainer>
-                        <div>파일이름</div>
+                        <FileName_Container>파일이름</FileName_Container>
                     </ImagePreviewDiv>
-                ))}</div>
+                ))}
+            </MultiImage_Container>
         </div>
     )
 }

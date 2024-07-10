@@ -8,10 +8,9 @@ import {updateInputSize} from "../../../../entities/redux/model/slice/InputSizeS
 
 
 
-export const useMessageInput = ():MessageInput =>{
+export const useMessageInput = (fileLength:number):MessageInput =>{
     const param = useSelector((state:RootState) => state.navigateInfo.navigateParam)
     const {inputSize, inputMaxSize} = useSelector((state:RootState) => state.messageInputSize);
-
 
     const [content, setContent] = useState<string>( '');
     const chatRef = useRef<HTMLTextAreaElement>(null);// 채팅 input Ref
@@ -49,18 +48,20 @@ export const useMessageInput = ():MessageInput =>{
     const reSizingInputHeight = ()=>{
         if(!chatRef.current) return
         chatRef.current.style.height = '40px'; //height 초기화
+        //최대 넓이를 넘지 않도록 input 사이즈 조정
         chatRef.current.style.height = chatRef.current.scrollHeight +2 < inputMaxSize ? chatRef.current.scrollHeight +2+'px' : inputMaxSize+'px';
-
+        //input의 크기
         const height = +(chatRef.current.style.height.replace('px',''))
 
         if(inputSize !== chatRef.current.scrollHeight){
-            dispatch(updateInputSize({inputSize: 20 + height }))
+            dispatch(updateInputSize({inputSize: (fileLength >0 ? 170 : 20) + height }))
         }
     }
 
+
     useEffect(() => {
         reSizingInputHeight()
-    }, [inputMaxSize]);
+    }, [inputMaxSize,fileLength]);
 
     const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) =>{
         reSizingInputHeight()

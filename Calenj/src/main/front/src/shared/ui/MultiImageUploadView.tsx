@@ -3,7 +3,7 @@ import {useMultiImageHandler} from '../model';
 import {
     DeleteButton,
     EditButton,
-    FileName,
+    FileName, FileName_Container,
     ImageHoverBackground,
     ImageHoverBox,
     ImageInputContainer, ImagePreview,
@@ -53,7 +53,7 @@ const MultiImageUploadView: React.FC = () => {
                                 <ImagePreviewContainer>
                                     <ImagePreview src={preview} alt={`Preview ${index}`}/>
                                 </ImagePreviewContainer>
-                                <div>파일이름</div>
+                                <FileName_Container>파일이름</FileName_Container>
                             </ImagePreviewDiv>
                         ))}</div>
 
