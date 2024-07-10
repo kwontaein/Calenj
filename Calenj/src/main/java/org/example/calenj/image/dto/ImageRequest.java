@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ImageRequest {
-    private String usedId;
+    private String param;
     private MultipartFile multipartFile;
     private MultipartFile[] multipartFiles;
 }
