@@ -30,7 +30,7 @@ export const ImageInputContainer = styled.div`
 export const ImagePreviewDiv = styled.div`
     display: inline-block;
     justify-content: center;
-    margin: 0 20px;
+    margin: 0 10px;
     width: 120px;
     height: 150px;
     border-radius: 5px;
@@ -40,19 +40,30 @@ export const ImagePreviewContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 110px;
-    height: 110px;
+    width: calc(100% - 10px);
+    height: 80px;
     margin: 5px;
+`
+export const FileName_Container = styled.div`
+    width: 100%;
+    padding-inline: 5px;
+    box-sizing: border-box;
+    height: 20px;
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 
 export const ImagePreview = styled.img`
-    max-width: 100px;
-    max-height: 100px;
+    max-width :100%;
+    max-height: 100%;
     border-radius: 2px;
 `
 export const OptionButtons = styled.div`
-    position: absolute;
+    display: flex;
+    flex-direction: row;
     margin-left: 80px;
     background-color: ${ThemeColor3};
     border-radius: 5px;

@@ -14,4 +14,5 @@ export interface MessageInputProps{
 
 export interface ImageHandlerProps{
     useMultiImageHandler: ReturnFileHandler;
+    maxWidth:number;
 }

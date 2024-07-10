@@ -65,7 +65,6 @@ export const DateContainer = styled.div`
     margin-top: 2px;
 `
 export const MessageContentContainer = styled.div`
-    min-width: ${ScrollMin_width - 74}px;
     white-space: pre-wrap;
     word-wrap: break-word;
 `

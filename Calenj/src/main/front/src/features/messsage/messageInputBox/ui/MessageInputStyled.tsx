@@ -16,6 +16,7 @@ export const MessageSend_Textarea = styled.textarea`
         border: 1px solid transparent;
         outline: none;
     }
+    overflow-y: unset;
 
 
 `
