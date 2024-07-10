@@ -142,7 +142,7 @@ public class ImageService {
         Set<String> imageIds = new HashSet<>();
         for (MultipartFile file : multipartFiles) {
             fileValid(UUID.randomUUID(), file);
-            imageIds.add(UUID.randomUUID().toString());
+            imageIds.add(UUID.randomUUID() + file.getName());
         }
 
         ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
