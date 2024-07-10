@@ -13,6 +13,7 @@ export interface ReturnFileHandler {
     file: File[];
     setFiles: React.Dispatch<React.SetStateAction<File[]>>;
     previews: PreviewData[];
+    setPreviews :  React.Dispatch<React.SetStateAction<PreviewData[]>>
     dragOver: boolean;
 }
 

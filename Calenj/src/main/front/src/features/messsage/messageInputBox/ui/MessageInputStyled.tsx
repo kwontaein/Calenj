@@ -12,12 +12,10 @@ export const MessageSend_Textarea = styled.textarea`
     line-height: 20px;
     box-sizing: border-box; /* padding과 border를 높이에 포함 */
     border: 1px solid transparent;
-
-    &:focus {
+    &:focus{
         border: 1px solid transparent;
         outline: none;
     }
-
     overflow-y: unset;
 
 
@@ -31,23 +29,22 @@ export const MessageIcon_Container = styled.div`
     justify-content: center;
     align-items: center;
     color: ${TextColor2};
-
-    &:hover {
+    &:hover{
         color: ${TextColor};
     }
-
     overflow-y: auto;
 `
 
-export const Message_Box_Container = styled.div<{ $isFocus: boolean }>`
+export const Message_Box_Container = styled.div<{$isFocus:boolean}>`
     width: calc(100% - 24px);
-    border: 1px solid ${props => props.$isFocus ? TextColor : TextColor2};
+    border: 1px solid ${props=> props.$isFocus ? TextColor : TextColor2};
     height: calc(100% - 20px);
     margin-inline: 12px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
 `
+
 
 export const MessageInput_Container = styled.div`
     display: flex;
@@ -56,9 +53,9 @@ export const MessageInput_Container = styled.div`
     width: 100%;
 `
 
-export const MessageSend_Container = styled.div<{ $inputSize: number }>`
+export const MessageSend_Container = styled.div<{$inputSize:number}>`
     width: calc(100% - 20px);
-    height: ${props => props.$inputSize}px; //padding 만큼 빼기
+    height: ${props=>props.$inputSize}px; //padding 만큼 빼기
     padding-inline: 10px;
     display: flex;
     align-items: center;
