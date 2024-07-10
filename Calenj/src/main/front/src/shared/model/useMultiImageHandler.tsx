@@ -1,12 +1,11 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {imageUploadApi} from '../api/imageUploadApi';
-import {ReturnFileHandler} from "./types";
-
+import {PreviewData, ReturnFileHandler} from "./types";
 
 
 export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [previews, setPreviews] = useState<string[]>([]);
+    const [previews, setPreviews] = useState<PreviewData[]>([]);
     const [dragOver, setDragOver] = useState(false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,20 +13,29 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         if (files) {
             const selectedFilesArray = Array.from(files);
             setSelectedFiles(prevFiles => [...prevFiles, ...selectedFilesArray]);
-            const previewUrls = selectedFilesArray.map(file => URL.createObjectURL(file));
+            const previewUrls = selectedFilesArray.map(file => {
+                return {
+                    image: URL.createObjectURL(file),
+                    name: file.name,
+                }
+            });
             setPreviews(prevPreviews => [...prevPreviews, ...previewUrls]);
         }
     };
 
     const handleUpload = async () => {
         if (selectedFiles.length > 0) {
-            const userId: string | null = localStorage.getItem('userId') || "userId";
+            const userId: string = localStorage.getItem('userId') || "userId";
             const formData = new FormData();
             selectedFiles.forEach(file => {
                 formData.append('userId', userId);
                 formData.append('files', file);
             });
-            await imageUploadApi(formData);
+            console.log(formData)
+            await imageUploadApi(formData).then(()=>{
+                setPreviews([]);
+                setSelectedFiles([]);
+            });
         } else {
             console.warn('No files selected');
         }
@@ -45,7 +53,12 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         if (files) {
             const selectedFilesArray = Array.from(files);
             setSelectedFiles(prevFiles => [...prevFiles, ...selectedFilesArray]);
-            const previewUrls = selectedFilesArray.map(file => URL.createObjectURL(file));
+            const previewUrls = selectedFilesArray.map(file => {
+                return {
+                    image: URL.createObjectURL(file),
+                    name: file.name,
+                }
+            });
             setPreviews(prevPreviews => [...prevPreviews, ...previewUrls]);
         }
     };

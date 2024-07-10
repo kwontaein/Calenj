@@ -51,6 +51,7 @@ export const GlobalStyle = createGlobalStyle`
 
         ::-webkit-scrollbar {
             width: 4px; /* 스크롤바의 너비 */
+            height: 4px;
         }
 
         ::-webkit-scrollbar-track {

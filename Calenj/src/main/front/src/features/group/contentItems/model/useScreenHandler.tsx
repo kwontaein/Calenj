@@ -16,7 +16,7 @@ import {contentSize} from './types'
 import {RootState, updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
 
-export const useScreenHandler = (showUserList:boolean, currentMode:string, contentSize:contentSize,)
+export const useScreenHandler = (showMemberList:boolean, currentMode:string, contentSize:contentSize,)
     : [handleMouseDown:(e: React.MouseEvent)=>void] => {
 
     const dispatch = useDispatch();
@@ -57,7 +57,7 @@ export const useScreenHandler = (showUserList:boolean, currentMode:string, conte
             const newWidth = (contentSize.width + defaultContentSize) - e.clientX;
             // contentSize.width + defaultContentSize = 전체 화면의 크기 (ContentComposition + Main,subNavigation)
 
-            if(showUserList) {
+            if(showMemberList) {
                 const smallNewWidth = newWidth - GroupUserList_Container_width
                 if(smallNewWidth>ScrollMin_width && smallNewWidth<(maxScroll-GroupUserList_Container_width)){
                     // updateSubScreenWidthSize({screenWidthSize: smallNewWidth})

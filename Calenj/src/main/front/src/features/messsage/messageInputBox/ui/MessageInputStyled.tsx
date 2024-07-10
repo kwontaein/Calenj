@@ -1,4 +1,4 @@
-import {TextColor, TextColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor2, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
 import {MessageSend_Container_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
 
@@ -58,8 +58,11 @@ export const MessageInput_Container = styled.div`
 
 
 export const MessageSend_Container = styled.div<{$inputSize:number}>`
+    width: calc(100% - 20px);
     height: ${props=>props.$inputSize}px; //padding 만큼 빼기
     padding-inline: 10px;
     display: flex;
     align-items: center;
 `
+
+
