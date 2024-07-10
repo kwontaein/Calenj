@@ -53,10 +53,6 @@ export const MessageInput_Container = styled.div`
     width: 100%;
 `
 
-
-
-
-
 export const MessageSend_Container = styled.div<{$inputSize:number}>`
     width: calc(100% - 20px);
     height: ${props=>props.$inputSize}px; //padding 만큼 빼기
