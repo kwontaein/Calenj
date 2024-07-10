@@ -5,10 +5,12 @@ import {RootState} from "../../../../entities/redux";
 import {MessageInput} from "./types";
 import {debounce} from "../../../../shared/lib";
 import {updateInputSize} from "../../../../entities/redux/model/slice/InputSizeSlice";
+import {ReturnFileHandler} from "../../../../shared/model";
+import {imageUploadApi} from "../../../../shared/api/imageUploadApi";
 
 
 
-export const useMessageInput = (fileLength:number):MessageInput =>{
+export const useMessageInput = (multiImageHandler:ReturnFileHandler):MessageInput =>{
     const param = useSelector((state:RootState) => state.navigateInfo.navigateParam)
     const {inputSize, inputMaxSize} = useSelector((state:RootState) => state.messageInputSize);
 
@@ -54,14 +56,14 @@ export const useMessageInput = (fileLength:number):MessageInput =>{
         const height = +(chatRef.current.style.height.replace('px',''))
 
         if(inputSize !== chatRef.current.scrollHeight){
-            dispatch(updateInputSize({inputSize: (fileLength >0 ? 170 : 20) + height }))
+            dispatch(updateInputSize({inputSize: (multiImageHandler.file.length >0 ? 185 : 20) + height }))
         }
     }
 
 
     useEffect(() => {
         reSizingInputHeight()
-    }, [inputMaxSize,fileLength]);
+    }, [inputMaxSize,multiImageHandler.file.length]);
 
     const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) =>{
         reSizingInputHeight()
@@ -79,8 +81,12 @@ export const useMessageInput = (fileLength:number):MessageInput =>{
                 return prev + '\n' + current
             }
         })
-        if (newContent === '') return;
 
+        if(multiImageHandler.file.length>0){
+            multiImageHandler.handleUpload()
+        }
+
+        if (newContent === '') return;
         dispatch(sendStompMsg({target: 'groupMsg', param: param, message: newContent, messageType: "message"}))
         setContent('');
         if (chatRef.current) {

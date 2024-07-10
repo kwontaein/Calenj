@@ -8,22 +8,21 @@ import {useMessageInput} from "../model/useMessageInput";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {useEffect, useState} from "react";
-import MultiImageUploadView from "../../../../shared/ui/MultiImageUploadView";
 import {useComponentSize, useMultiImageHandler} from "../../../../shared/model";
 import {MultiImageScreen} from "./MultiImageScreen";
-import {updateInputSize} from "../../../../entities/redux/model/slice/InputSizeSlice";
 
-export const MessageInput: React.FC = () => {
+export const MessageInput : React.FC = () =>{
     const multiImageHandler = useMultiImageHandler();
-    const {chatRef, handleKeyPress, textAreaHandler} = useMessageInput(multiImageHandler.file.length)
-    const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
-    const [isFocus, setIsFocus] = useState(false);
-    const [contentRef, contentSize] = useComponentSize();
+    const {chatRef, handleKeyPress, textAreaHandler} = useMessageInput(multiImageHandler)
+    const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
+    const [isFocus, setIsFocus] = useState(false)
 
-    return (
+
+
+    return(
         <MessageSend_Container $inputSize={inputSize}>
-            <Message_Box_Container $isFocus={isFocus} ref={contentRef}>
-                <MultiImageScreen useMultiImageHandler={multiImageHandler} maxWidth={contentSize.width}/>
+            <Message_Box_Container $isFocus={isFocus}>
+                <MultiImageScreen useMultiImageHandler={multiImageHandler} isFocus={isFocus}/>
                 <MessageInput_Container>
                     <MessageIcon_Container onClick={() => document.getElementById('fileInput')?.click()}>
                         <i className="bi bi-plus-circle-fill"></i>

@@ -17,15 +17,15 @@ import {useEffect} from "react";
 
 
 
-export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth, showUserList}) =>{
-    const {clickState, mode} = useSelector((state:RootState) => state.group_subNavState)
+export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth}) =>{
+    const {clickState, mode, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
 
 
     return(
             <GroupSubScreen_Container $mode={mode}>
             <GroupSubScreenTop_Container>
                 {clickState}
-                <SubScreenOption showUserList={showUserList}/>
+                <SubScreenOption/>
             </GroupSubScreenTop_Container>
             <GroupSubScreenContent_Container>
                 {clickState === "투표" &&

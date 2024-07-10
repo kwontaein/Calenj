@@ -7,7 +7,7 @@ import {GroupUserList_Container_width} from '../../members'
 
 interface ScreenModeProps{
     $screenRowFlex :boolean,
-    $showUserList?:boolean,
+    $showMemberList?:boolean,
 }
 interface CustomScreenProps{
     $mode:string,
@@ -50,7 +50,7 @@ export const EventTopBarSubContent = styled.div`
 `
 
 export const TransContentsScreen_div = styled.div<ScreenModeProps>`
-    width:${props=>props.$showUserList? `calc(100% - ${GroupUserList_Container_width}px)`: `100%`};
+    width:${props=>props.$showMemberList ? `calc(100% - ${GroupUserList_Container_width}px)`: `100%`};
     height: 100%;
     display: flex;
     flex-direction: ${props => props.$screenRowFlex? "row" :"column"};

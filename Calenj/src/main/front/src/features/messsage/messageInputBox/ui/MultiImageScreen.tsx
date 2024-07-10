@@ -5,14 +5,17 @@ import {
     ImagePreviewDiv,
     OptionButtons
 } from "../../../../shared/ui/MultiImageUploadStyled";
-import React from "react";
+import React, {useEffect} from "react";
 import {ImageHandlerProps} from "../model/types";
-import {MultiImage_Container} from "./MultiImageScreenStyled";
+import {HR_ImageLine, MultiImage_Container} from "./MultiImageScreenStyled";
+import {useComponentSize} from "../../../../shared/model";
 
 
-export const MultiImageScreen: React.FC<ImageHandlerProps> = ({useMultiImageHandler, maxWidth}) => {
-    return (
-        <div>
+export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHandler, isFocus}) =>{
+    const [contentRef, contentSize] = useComponentSize()
+
+    return(
+        <div ref={contentRef}>
             {useMultiImageHandler.dragOver && (
                 <ImageHoverBackground>
                     <ImageHoverBox>
@@ -20,10 +23,9 @@ export const MultiImageScreen: React.FC<ImageHandlerProps> = ({useMultiImageHand
                     </ImageHoverBox>
                 </ImageHoverBackground>
             )}
-            <input type="file" accept="image/*" onChange={useMultiImageHandler.handleFileChange} multiple
-                   style={{display: 'none'}}
+            <input type="file" accept="image/*" onChange={useMultiImageHandler.handleFileChange} multiple style={{display: 'none'}}
                    id="fileInput"/>
-            <MultiImage_Container $maxWidth={maxWidth}>
+            <MultiImage_Container $exist={useMultiImageHandler.file.length>0} $widthSize={contentSize.width}>
                 {useMultiImageHandler.previews.map((preview, index) => (
                     <ImagePreviewDiv key={index}>
                         <OptionButtons>
@@ -35,12 +37,13 @@ export const MultiImageScreen: React.FC<ImageHandlerProps> = ({useMultiImageHand
                             </DeleteButton>
                         </OptionButtons>
                         <ImagePreviewContainer>
-                            <ImagePreview src={preview} alt={`Preview ${index}`}/>
+                            <ImagePreview src={preview.image} alt={`Preview ${index}`}/>
                         </ImagePreviewContainer>
-                        <FileName_Container>파일이름</FileName_Container>
+                        <FileName_Container>{preview.name}</FileName_Container>
                     </ImagePreviewDiv>
                 ))}
             </MultiImage_Container>
+            {useMultiImageHandler.file.length>0 && <HR_ImageLine $isFocus={isFocus}/>}
         </div>
     )
 }

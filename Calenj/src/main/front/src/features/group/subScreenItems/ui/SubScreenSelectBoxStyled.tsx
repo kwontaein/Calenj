@@ -14,7 +14,7 @@ interface OptionProps{
     $filter?:boolean,
 }
 interface SubScreenProps{
-    $showUserList: boolean
+    $showMemberList: boolean
 }
 
 // props에 따라 width와 height을 변경하는 애니메이션 정의
@@ -101,7 +101,7 @@ export const SubScreenSelector_Container =styled.div<OptionProps & SubScreenProp
     height: auto;
     display: flex;
     top: 90px;
-    right: ${props=> props.$showUserList ? "215px" :"15px"}; //GroupUserList의 크기만큼 더함
+    right: ${props=> props.$showMemberList ? "215px" :"15px"}; //GroupUserList의 크기만큼 더함
     flex-direction: column;
     background-color: ${BackGroundColor};
     position: fixed;

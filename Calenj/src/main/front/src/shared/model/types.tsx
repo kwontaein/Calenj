@@ -1,3 +1,8 @@
+
+export interface PreviewData{
+    image : string,
+    name : string,
+}
 export interface ReturnFileHandler {
     handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
     handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
@@ -7,6 +12,7 @@ export interface ReturnFileHandler {
     handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     file: File[];
     setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-    previews: string[];
+    previews: PreviewData[];
     dragOver: boolean;
 }
+
