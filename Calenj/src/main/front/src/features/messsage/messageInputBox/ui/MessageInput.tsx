@@ -19,7 +19,6 @@ export const MessageInput: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const [isFocus, setIsFocus] = useState(false);
     const [contentRef, contentSize] = useComponentSize();
-    console.log("contentSize.width", contentSize.width);
 
     return (
         <MessageSend_Container $inputSize={inputSize}>

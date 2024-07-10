@@ -11,7 +11,6 @@ import {MultiImage_Container} from "./MultiImageScreenStyled";
 
 
 export const MultiImageScreen: React.FC<ImageHandlerProps> = ({useMultiImageHandler, maxWidth}) => {
-    console.log("maxWidth", maxWidth);
     return (
         <div>
             {useMultiImageHandler.dragOver && (
