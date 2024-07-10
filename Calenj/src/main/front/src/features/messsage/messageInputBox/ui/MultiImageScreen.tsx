@@ -10,10 +10,9 @@ import {ImageHandlerProps} from "../model/types";
 import {MultiImage_Container} from "./MultiImageScreenStyled";
 
 
-
-export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHandler, maxWidth}) =>{
-
-    return(
+export const MultiImageScreen: React.FC<ImageHandlerProps> = ({useMultiImageHandler, maxWidth}) => {
+    console.log("maxWidth", maxWidth);
+    return (
         <div>
             {useMultiImageHandler.dragOver && (
                 <ImageHoverBackground>
@@ -22,7 +21,8 @@ export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHand
                     </ImageHoverBox>
                 </ImageHoverBackground>
             )}
-            <input type="file" accept="image/*" onChange={useMultiImageHandler.handleFileChange} multiple style={{display: 'none'}}
+            <input type="file" accept="image/*" onChange={useMultiImageHandler.handleFileChange} multiple
+                   style={{display: 'none'}}
                    id="fileInput"/>
             <MultiImage_Container $maxWidth={maxWidth}>
                 {useMultiImageHandler.previews.map((preview, index) => (
