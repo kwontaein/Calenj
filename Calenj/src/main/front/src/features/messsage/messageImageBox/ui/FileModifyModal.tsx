@@ -8,7 +8,7 @@ import {
     ModifyButton_Container
 } from "./FileModifyModalStyled";
 import React, {ChangeEvent, useRef, useState} from "react";
-import {MultiImageScreenProps} from "../model/types";
+import {MultiImageScreenProps} from "../../messageInputBox/model/types";
 import {ImagePreview} from "../../../../shared/ui/MultiImageUploadStyled";
 import {PreviewData} from "../../../../shared/model/types";
 
