@@ -103,17 +103,8 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     input {
-        border: 2px solid ${ThemeColor2};
-        outline: none;
-        appearance: none; /* 기본 브라우저 스타일 제거 */
-        background-color: ${ThemeColor2};
-        color: ${TextColor};
         font-family: "Noto Sans KR", sans-serif;
 
-        &:focus {
-            outline: none;
-            border: 2px solid ${PointColor};
-        }
     }
     
     textarea{
@@ -318,6 +309,7 @@ export const Modal_Background = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
     background-color: rgba(0, 0, 0, 0.3);
 `
 

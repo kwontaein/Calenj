@@ -1,23 +1,8 @@
 import {useState, useEffect} from 'react';
 import {imageUploadApi} from '../api/imageUploadApi';
+import {ReturnFileHandler} from "./types";
 
-interface FilePreview {
-    file: File;
-    preview: string;
-}
 
-interface ReturnFileHandler {
-    handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
-    handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
-    handleDragLeave: () => void;
-    handleCancel: (index: number) => void;
-    handleUpload: () => void;
-    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    file: File[];
-    setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-    previews: string[];
-    dragOver: boolean;
-}
 
 export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);

@@ -70,24 +70,25 @@ export const CalendarView: React.FC = () => {
 
     return (
         <>
-            <Draggable nodeRef={nodeRef}
-                       defaultPosition={{x: 20, y: 20}}
-                       position={position}
-                       onStop={handleStop}
-                       disabled={dragAble}>
-                <Draggable_Container ref={nodeRef}>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <div>수정</div>
-                        <Toggle_Container $isClick={dragAble}
-                                          onClick={() => {
-                                              setDragAble((prevState) => !prevState)
-                                          }}>
-                            <Toggle_Item $toggleState={dragAble}/>
-                        </Toggle_Container>
-                    </div>
-                    <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
-                </Draggable_Container>
-            </Draggable>
+            {/*<Draggable nodeRef={nodeRef}*/}
+            {/*           defaultPosition={{x: 20, y: 20}}*/}
+            {/*           position={position}*/}
+            {/*           onStop={handleStop}*/}
+            {/*           disabled={dragAble}>*/}
+            {/*    <Draggable_Container ref={nodeRef}>*/}
+            {/*        <div style={{display: "flex", justifyContent: "space-between"}}>*/}
+            {/*            <div>수정</div>*/}
+            {/*            <Toggle_Container $isClick={dragAble}*/}
+            {/*                              onClick={() => {*/}
+            {/*                                  setDragAble((prevState) => !prevState)*/}
+            {/*                              }}>*/}
+            {/*                <Toggle_Item $toggleState={dragAble}/>*/}
+            {/*            </Toggle_Container>*/}
+            {/*        </div>*/}
+            {/*        <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>*/}
+            {/*    </Draggable_Container>*/}
+            {/*</Draggable>*/}
+
             {data &&
                 <GridCalendar_Container ref={contentRef}>
                     {addEvent &&

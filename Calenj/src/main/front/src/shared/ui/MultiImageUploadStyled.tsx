@@ -28,7 +28,6 @@ export const ImageInputContainer = styled.div`
     margin-bottom: 10px;
 `
 export const ImagePreviewDiv = styled.div`
-
     display: inline-block;
     justify-content: center;
     margin: 0 20px;
@@ -50,7 +49,7 @@ export const ImagePreviewContainer = styled.div`
 export const ImagePreview = styled.img`
     max-width: 100px;
     max-height: 100px;
-    border-radius: 10px;
+    border-radius: 2px;
 `
 export const OptionButtons = styled.div`
     position: absolute;

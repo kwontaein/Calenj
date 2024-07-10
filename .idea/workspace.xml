@@ -5,15 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.09 채팅input + subScreen 문제해결">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MultiImageScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/OnlineUserStorageSlice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/OnlineUserStorageSlice.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/service/WebSocketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/websocket/service/WebSocketService.java" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/controller/ui/CalendarFormSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/controller/ui/CalendarFormSelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/CalendarView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/model/useVoteContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetailStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterViewButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoterViewButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/ui/MessageInputStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useMultiImageHandler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useMultiImageHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/MultiImageUploadStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/MultiImageUploadStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/MultiImageUploadView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/MultiImageUploadView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/evnetBarItmes/ui/MainEventTopBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/evnetBarItmes/ui/MainEventTopBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/evnetBarItmes/ui/MainEventTopBarStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/main/evnetBarItmes/ui/MainEventTopBarStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupvote/controller/GroupVoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupvote/controller/GroupVoteController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,6 +214,7 @@
       <workItem from="1720318733257" duration="28806000" />
       <workItem from="1720484648436" duration="11262000" />
       <workItem from="1720501714704" duration="177000" />
+      <workItem from="1720584037583" duration="11429000" />
     </task>
     <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
       <option name="closed" value="true" />

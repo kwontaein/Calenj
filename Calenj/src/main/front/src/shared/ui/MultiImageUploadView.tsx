@@ -1,5 +1,5 @@
 import React from 'react';
-import {useMultiImageHandler} from '../model/useMultiImageHandler';
+import {useMultiImageHandler} from '../model';
 import {
     DeleteButton,
     EditButton,
@@ -10,7 +10,7 @@ import {
     ImagePreviewContainer, ImagePreviewDiv, OptionButtons
 } from "./MultiImageUploadStyled";
 
-const ImagesUploadComponent: React.FC = () => {
+const MultiImageUploadView: React.FC = () => {
     const {
         handleDrop,
         handleDragOver,
@@ -68,4 +68,4 @@ const ImagesUploadComponent: React.FC = () => {
     );
 };
 
-export default ImagesUploadComponent;
+export default MultiImageUploadView;

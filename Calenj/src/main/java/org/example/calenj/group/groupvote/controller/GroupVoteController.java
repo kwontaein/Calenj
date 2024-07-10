@@ -32,12 +32,12 @@ public class GroupVoteController {
         return groupService.voteDetail(voteId);
     }
 
-    @PostMapping("/api/voteUpdate")
+    @PostMapping("/api/updateVote")
     public void voteUpdate(@RequestBody GroupVoteRequest groupVoteRequest) {
         groupService.updateVote(groupVoteRequest.getVoteId(), groupVoteRequest.getMyVote());
     }
 
-    @PostMapping("/api/voteEndDateUpdate")
+    @PostMapping("/api/updateVoteEndDate")
     public void voteEndDateUpdate(@RequestBody GroupVoteRequest groupVoteRequest) {
         groupService.voteEndDateUpdate(groupVoteRequest.getVoteId(), groupVoteRequest.getVoteEndDate());
     }

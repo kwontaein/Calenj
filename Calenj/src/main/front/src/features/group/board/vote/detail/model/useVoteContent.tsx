@@ -33,6 +33,7 @@ export const useVoteContent = (voteParam:string, isAttend:boolean, myVote:boolea
         if(!checkVoteBefore()){
             return
         }
+
         updateVoteApi(voteParam,myVote).then(()=>{
             refetch()//refetch
             if(myVote.includes(true)){//한개 이상을 찍어야 내 투표가 완료된 것
