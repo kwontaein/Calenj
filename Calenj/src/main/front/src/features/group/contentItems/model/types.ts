@@ -3,6 +3,5 @@ export interface contentSize{
     height:number,
 }
 export interface ContentItemProps{
-    showUserList:boolean,
     contentSize:contentSize,
 }

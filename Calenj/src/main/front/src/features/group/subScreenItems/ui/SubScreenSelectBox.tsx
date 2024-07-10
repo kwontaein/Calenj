@@ -14,9 +14,9 @@ import {updateClickState} from "../../../../entities/redux";
 import {useEffect} from "react";
 
 
-export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, isSearching})=>{
+export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({isSearching})=>{
     const {searchRef, filter, setSearchWord} = useSelectBoxState(isSearching)
-    const {clickState} = useSelector((state:RootState) => state.group_subNavState)
+    const {clickState, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
     const boardOption = useSelector((state:RootState)=>state.boardOption);
     const dispatch = useDispatch()
 
@@ -24,7 +24,7 @@ export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({showUserList, i
     return(
         <>
             {(clickState ==="투표" || clickState ==="공지") &&
-                <SubScreenSelector_Container $clickState={clickState} $option={boardOption.clickState} $showUserList={showUserList}>
+                <SubScreenSelector_Container $clickState={clickState} $option={boardOption.clickState} $showMemberList={showMemberList}>
                     <SubScreenOption_Container $option={boardOption.clickState}>
 
                         {boardOption.clickState ==="filter" && <OptionStateText_Container>필터 설정</OptionStateText_Container>}

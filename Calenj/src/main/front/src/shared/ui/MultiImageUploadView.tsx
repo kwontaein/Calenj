@@ -51,9 +51,9 @@ const MultiImageUploadView: React.FC = () => {
                                     </DeleteButton>
                                 </OptionButtons>
                                 <ImagePreviewContainer>
-                                    <ImagePreview src={preview} alt={`Preview ${index}`}/>
+                                    <ImagePreview src={preview.image} alt={`Preview ${index}`}/>
                                 </ImagePreviewContainer>
-                                <FileName_Container>파일이름</FileName_Container>
+                                <FileName_Container>{preview.name}</FileName_Container>
                             </ImagePreviewDiv>
                         ))}</div>
 

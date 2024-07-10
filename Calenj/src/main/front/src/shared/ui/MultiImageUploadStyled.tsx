@@ -32,7 +32,7 @@ export const ImagePreviewDiv = styled.div`
     justify-content: center;
     margin: 0 10px;
     width: 120px;
-    height: 150px;
+    height: calc(100% - 10px);
     border-radius: 5px;
     background-color: ${ThemeColor3};
 `
@@ -45,7 +45,7 @@ export const ImagePreviewContainer = styled.div`
     margin: 5px;
 `
 export const FileName_Container = styled.div`
-    width: 100%;
+    width: calc(100% - 10px);
     padding-inline: 5px;
     box-sizing: border-box;
     height: 20px;
@@ -53,6 +53,7 @@ export const FileName_Container = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 12px;
 `
 
 

@@ -18,7 +18,6 @@ interface QueryProps {
 }
 
 export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
-    const [showUserList, setShowUserList] = useState<boolean>(false);
     const [groupDetail, setGroupDetail] = useState<GroupDetail>();
     const [contentRef, contentSize] = useComponentSize(); //컴포넌트의 크기를 가져옴
     const {navigate, navigateParam} = useSelector((state: RootState) => state.navigateInfo)
@@ -36,7 +35,6 @@ export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
         }
     }, [isLoading, navigateParam]);
 
-    const showUserListMutate = () => setShowUserList(!showUserList)
 
     return (
 
@@ -44,14 +42,14 @@ export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
             {/*<RequestFriendView onClose={()=>{}} myRequest={true}/>*/}
             <EventTopBar_Container>
                 {(navigate === "group" && groupDetail && !isLoading) &&
-                    <GroupContentTopItem showUserListMutate={showUserListMutate} showUserList={showUserList}/>}
+                    <GroupContentTopItem/>}
                 {navigate === "main" && <MainEventTopBar/>}
             </EventTopBar_Container>
 
 
             <ContentsScreen_div>
                 {(navigate === "group" && groupDetail && !isLoading) &&
-                    <GroupContentItem param={navigateParam} contentSize={contentSize} showUserList={showUserList}/>}
+                    <GroupContentItem param={navigateParam} contentSize={contentSize}/>}
                 {navigate === "main" && <MainContentView/>}
             </ContentsScreen_div>
         </FullScreen_div>

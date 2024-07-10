@@ -9,6 +9,7 @@ export interface Group_SubNavigationProps {
     mode:string,
     screenHeightSize:number,
     screenWidthSize:number,
+    showMemberList:boolean,
 }
 
 
@@ -49,6 +50,7 @@ const initialState: Group_SubNavigationProps ={
     mode:'',
     screenHeightSize:185,
     screenWidthSize:ScrollMin_width,
+    showMemberList:false,
 }
 
 
@@ -71,12 +73,14 @@ const group_subNavigation = createSlice({
         updateSubScreenWidthSize: (state, action :PayloadAction<{ screenWidthSize:number }>)=>{
             state.screenWidthSize = action.payload.screenWidthSize
         },
-
+        updateShowMemberList: (state)=>{
+            state.showMemberList = !state.showMemberList
+        },
     },
 })
 
 
-export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthSize,updateSubParam} = group_subNavigation.actions;
+export const {updateSubClickState,updateSubScreenMode,updateSubScreenHeightSize,updateSubScreenWidthSize,updateSubParam, updateShowMemberList} = group_subNavigation.actions;
 
 
 export default group_subNavigation.reducer;

@@ -4,7 +4,7 @@ import {
     CustomScreen_SubContent_Container,
     TransContentsScreen_div
 } from "./GroupContentItemStyled";
-import {GroupUserList_Container_width} from "../../members/ui/GroupUserListStyled";
+import {GroupUserList_Container_width} from "../../members";
 import {GroupSubScreen} from "../../subScreenItems";
 import {GroupUserList} from "../../members";
 import { useDispatch, useSelector} from 'react-redux'
@@ -18,12 +18,11 @@ import {ControlMidLine} from "./ControlMidLine";
 interface ContentCompositionProps{
     param : string,
     contentSize:{width:number,height:number}
-    showUserList : boolean,
 }
 
-export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, contentSize, showUserList}) =>{
+export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, contentSize}) =>{
     const group_subNavState = useSelector((state:RootState) => state.group_subNavState)
-    const screenRowFlex = useScreenMode(param,contentSize,showUserList);
+    const screenRowFlex = useScreenMode(param,contentSize,group_subNavState.showMemberList);
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -36,11 +35,11 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
     return(
         param ===group_subNavState.param &&
             <FullScreen_div style={{display:"flex"}}>
-                    <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showUserList={showUserList}>
+                    <TransContentsScreen_div $screenRowFlex={screenRowFlex} $showMemberList={group_subNavState.showMemberList}>
                         <CustomScreen_MessageBox_Container $clickState={group_subNavState.clickState===""}
                                                            $mode={group_subNavState.mode}
                                                            $height={group_subNavState.screenHeightSize}
-                                                           $width={showUserList ?
+                                                           $width={group_subNavState.showMemberList ?
                                                                group_subNavState.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
                                                                group_subNavState.screenWidthSize/contentSize.width * 100}>
 
@@ -50,19 +49,18 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
                         <CustomScreen_SubContent_Container $screenRowFlex={screenRowFlex}
                                                            $mode={group_subNavState.mode}
                                                            $height={group_subNavState.screenHeightSize}
-                                                           $width={showUserList ?
+                                                           $width={group_subNavState.showMemberList ?
                                                                group_subNavState.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
                                                                group_subNavState.screenWidthSize/contentSize.width * 100}>
 
-                            {screenRowFlex && <ControlMidLine showUserList={showUserList} contentSize={contentSize}/>}
-                            <GroupSubScreen showUserList={showUserList}
-                                            subScreenWidth={screenRowFlex ? group_subNavState.screenWidthSize :
-                                                (showUserList ? contentSize.width-GroupUserList_Container_width: contentSize.width)}/>
-                            {!screenRowFlex && <ControlMidLine showUserList={showUserList} contentSize={contentSize}/>}
+                            {screenRowFlex && <ControlMidLine contentSize={contentSize}/>}
+                            <GroupSubScreen subScreenWidth={screenRowFlex ? group_subNavState.screenWidthSize :
+                                                (group_subNavState.showMemberList ? contentSize.width-GroupUserList_Container_width: contentSize.width)}/>
+                            {!screenRowFlex && <ControlMidLine contentSize={contentSize}/>}
                         </CustomScreen_SubContent_Container>}
                     </TransContentsScreen_div>
 
-                    {showUserList && <GroupUserList/>}
+                    {group_subNavState.showMemberList && <GroupUserList/>}
             </FullScreen_div>
     )
 }

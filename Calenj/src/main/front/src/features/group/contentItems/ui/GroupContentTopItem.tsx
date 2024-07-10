@@ -1,16 +1,15 @@
-import { useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {EventTopBarContent, EventTopBarSubContent} from "./GroupContentItemStyled";
 import React from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 import {RootState} from "../../../../entities/redux";
+import {updateShowMemberList} from "../../../../entities/redux/model/slice/GroupSubNavigationSlice";
 
-interface ContentCompositionProps{
-    showUserListMutate : ()=>void,
-    showUserList :boolean,
-}
 
-export const GroupContentTopItem : React.FC<ContentCompositionProps> = ({showUserListMutate,showUserList}) =>{
-    const clickState = useSelector((state:RootState) => state.group_subNavState.clickState)
+
+export const GroupContentTopItem : React.FC = () =>{
+    const {clickState, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
+    const dispatch = useDispatch()
 
     return(
         <FullScreen_div style={{display:'flex', flexDirection:'row', justifyContent:'right'}}>
@@ -26,8 +25,8 @@ export const GroupContentTopItem : React.FC<ContentCompositionProps> = ({showUse
                 <EventTopBarSubContent>
                     <i className="fi fi-ss-calendar"></i>
                 </EventTopBarSubContent>}
-            <EventTopBarContent $isClick={showUserList}
-                                onClick={showUserListMutate}>
+            <EventTopBarContent $isClick={showMemberList}
+                                onClick={()=>dispatch(updateShowMemberList())}>
                 <i className="fi fi-ss-users"></i>
             </EventTopBarContent>
         </FullScreen_div>
