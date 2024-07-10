@@ -96,6 +96,7 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         file: selectedFiles,
         setFiles: setSelectedFiles,
         previews,
+        setPreviews,
         dragOver
     };
 }
