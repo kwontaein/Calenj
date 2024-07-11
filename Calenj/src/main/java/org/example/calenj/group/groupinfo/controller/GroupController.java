@@ -38,8 +38,6 @@ public class GroupController {
     //그룹 세부정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailResponse groupDetail(@RequestBody GroupDetailRequest groupDetailrequest) {
-        System.out.println("-------------------------------------------------------");
-        imageService.getAllImageById(groupDetailrequest.getGroupId().toString());
         return groupService.groupDetail(groupDetailrequest.getGroupId()).orElseThrow(() -> new RuntimeException("조회 실패"));
     }
 
