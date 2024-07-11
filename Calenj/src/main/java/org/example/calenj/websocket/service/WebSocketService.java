@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,7 @@ public class WebSocketService {
     private final GlobalService globalService;
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
+
 
     /**
      * 유저정보 반환
@@ -256,6 +258,8 @@ public class WebSocketService {
             }
             case READ: {
                 List<String> file = readGroupChattingFile(message);
+                Map<String, String> images = getAllImageById(message.getParam());
+                response.setImages(images);
                 response.setMessage(file);
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
@@ -464,6 +468,35 @@ public class WebSocketService {
                 .collect(Collectors.toSet());
         return filteredUserNames;
     }
+
+    public Map<String, String> getAllImageById(String param) {
+        List<String> lines = getFile(param);
+        Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
+
+        Map<String, String> extractedMap = lines.stream()
+                .filter(line -> line.contains("$ image"))
+                .flatMap(line -> {
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        String matchedGroup = matcher.group(1);
+                        return List.of(matchedGroup.split(", ")).stream();
+                    }
+                    return Stream.empty();
+                })
+                .filter(extractedPart -> !extractedPart.isEmpty())
+                .map(part -> part.split("/"))
+                .filter(parts -> parts.length == 2)
+                .collect(Collectors.toMap(
+                        parts -> parts[0].trim(),
+                        parts -> parts[1].trim(),
+                        (existing, replacement) -> existing, // 중복 키 처리
+                        LinkedHashMap::new // 순서 보장을 위해 LinkedHashMap 사용
+                ));
+
+        extractedMap.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+        return extractedMap;
+    }
+
 }
 
 
