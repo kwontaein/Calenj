@@ -9,7 +9,7 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<PreviewData[]>([]);
     const [dragOver, setDragOver] = useState(false);
-    const groupId = useSelector((state: RootState) => state.group_subNavState.param)
+    const groupId= useSelector((state:RootState)=> state.group_subNavState.param)
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -34,12 +34,9 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
             formData.append('userId', userId);
             selectedFiles.forEach(file => {
                 formData.append('files', file);
-                console.log("file", file)
             });
-            console.log("formData")
-            console.log(formData.getAll('files'))
-
-            await imageUploadApi(formData).then(() => {
+            console.log(formData)
+            await imageUploadApi(formData).then(()=>{
                 setPreviews([]);
                 setSelectedFiles([]);
             });
