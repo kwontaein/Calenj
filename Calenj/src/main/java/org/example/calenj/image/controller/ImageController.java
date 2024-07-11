@@ -19,7 +19,7 @@ public class ImageController {
     private final GlobalService globalService;
 
     @PostMapping("/api/userProfileUpload")
-    public void userProfileUpload(@RequestParam("files") MultipartFile file, @RequestParam(name = "param") String id) {
+    public void userProfileUpload(@RequestParam("file") MultipartFile file, @RequestParam(name = "param") String id) {
         imageService.fileValid(UUID.fromString(id), file);
     }
 

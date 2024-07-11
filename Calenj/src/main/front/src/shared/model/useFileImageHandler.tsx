@@ -1,21 +1,22 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {imageUploadApi} from "../api/imageUploadApi";
+import {userProfileUploadApi} from "../api/userProfileUploadApi";
 
-interface ReturnFileHandler{
-    handleDrop : (event: React.DragEvent<HTMLDivElement>) => void,
+interface ReturnFileHandler {
+    handleDrop: (event: React.DragEvent<HTMLDivElement>) => void,
     handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void,
-    handleDragLeave : ()=>void,
-    handlePaste : (event: React.ClipboardEvent<HTMLInputElement>) => void, //붙여넣기
-    handleCancel : () =>void,
-    handleUpload : () =>void,
-    handleFileChange : (event: React.ChangeEvent<HTMLInputElement>)=>void
-    file : File|null,
-    imageUrl : string | null,
-    dragOver : boolean,
+    handleDragLeave: () => void,
+    handlePaste: (event: React.ClipboardEvent<HTMLInputElement>) => void, //붙여넣기
+    handleCancel: () => void,
+    handleUpload: () => void,
+    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    file: File | null,
+    imageUrl: string | null,
+    dragOver: boolean,
 }
 
-export const useFileImageHandler = (): ReturnFileHandler =>{
+export const useFileImageHandler = (): ReturnFileHandler => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewURL, setPreviewURL] = useState<string | null>(null);
     const [dragOver, setDragOver] = useState(false);
@@ -43,12 +44,12 @@ export const useFileImageHandler = (): ReturnFileHandler =>{
         if (selectedFile) {
             const data = new FormData();
 
-            const userId= localStorage.getItem('userId');
-            if(!userId) return
-            data.append('Id', userId);
+            const userId = localStorage.getItem('userId');
+            if (!userId) return
+            data.append('param', userId);
             data.append('file', selectedFile);
 
-            imageUploadApi(data)
+            userProfileUploadApi(data)
         } else {
             console.warn('No file selected');
             // 파일 선택 안 됨 처리
@@ -93,17 +94,16 @@ export const useFileImageHandler = (): ReturnFileHandler =>{
     };
 
 
-
     return {
         handleDrop,
         handleDragOver,
         handleDragLeave,
         handlePaste,
         handleCancel,
-        handleUpload ,
+        handleUpload,
         handleFileChange,
-        file : selectedFile,
-        imageUrl : previewURL,
+        file: selectedFile,
+        imageUrl: previewURL,
         dragOver
     }
 }
