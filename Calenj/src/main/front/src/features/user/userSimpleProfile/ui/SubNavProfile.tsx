@@ -23,9 +23,10 @@ import {Link} from "react-router-dom";
 
 export const SubNavProfile :React.FC = () =>{
     const userId =localStorage.getItem('userId');
-    const queryClient = useQueryClient();
     const [userInfo, setUserInfo] = useState<UserInfo>()
     const friendListState = useFetchFriendList();
+    const queryClient = useQueryClient();
+
     const userData:UserInfo |undefined = queryClient.getQueryData([QUERY_USER_INFO_KEY,userId]);
     //그룹 디테일 불러오기
     useEffect( () => {
@@ -49,7 +50,7 @@ export const SubNavProfile :React.FC = () =>{
             </Profile_UserUseName_Container>
             <SubNavProfile_Content_Container>
                 <Profile_Container>
-                    <SubNavProfile_div $userId={userInfo?.userUsedName||''}/>
+                    <SubNavProfile_div $userId={userInfo?.userId||''}/>
                     <SubNavEmpty_div>
                         <ProfileEditButton_div>
                             <i className="fi fi-sr-plus-small" style={{marginTop:'3px'}}></i>

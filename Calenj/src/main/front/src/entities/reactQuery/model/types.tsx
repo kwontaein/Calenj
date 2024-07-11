@@ -133,7 +133,8 @@ export interface UserInfo{
     userPhone :string,
     userJoinDate :string,
     userUsedName: string,
+    userId:string,
 }
 
 export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
-export type ReceiveData = ({pageParam}: { pageParam?: number | undefined }) => Message
+export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message

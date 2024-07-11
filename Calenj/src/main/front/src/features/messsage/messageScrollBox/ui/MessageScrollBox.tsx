@@ -1,6 +1,6 @@
 import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
-import {useEffect, useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {AHMFormat, AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useComponentSize, useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
@@ -10,7 +10,7 @@ import {
     DateContainer2, HR_ChatEndPoint, HR_NewDate,
     MessageBoxContainer, MessageContainer,
     MessageContainer2, MessageContentContainer,
-    MessageContentContainer2, MessageScroll_Container, NickNameContainer, ProfileContainer,
+    MessageContentContainer2, MessageGridView, MessageScroll_Container, NickNameContainer, ProfileContainer,
     ScrollableDiv
 } from "./MessageScrollBoxStyled";
 import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
@@ -39,18 +39,30 @@ export const MessageScrollBox:React.FC =()=>{
             loadFile();
         }
     });
-
+    interface ImageData {
+        chatUUID:string,
+        image:string,
+        imageName:string,
+    }
+    const [images,setImages] = useState<ImageData>()
 
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=> messageData.chatUUID!=="시작라인");
+        const imageList = connectList.map((message:Message)=> {
+            if(message.messageType === 'image'){
+
+            }
+
+        })
+
         if (!chatFile.isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef}>
                     <div className="scrollTop" ref={topRef}></div>
                     {connectList.map((message: Message , index: number) => (
                         <div key={message.chatUUID}>
-                            {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate)) &&
+                            {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate) &&( message.chatUUID!=='엔드포인트')) &&
                                 <HR_NewDate data-content={AHMFormat(changeDateForm(message.sendDate.slice(0,16))).slice(0,13)}></HR_NewDate>}
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
@@ -63,7 +75,9 @@ export const MessageScrollBox:React.FC =()=>{
                                     dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                            <MessageContentContainer2>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer2>
+                                            <MessageContentContainer2>
+                                                {message.messageType ===null && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                            </MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
@@ -75,7 +89,21 @@ export const MessageScrollBox:React.FC =()=>{
                                                     <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
-                                                <MessageContentContainer>{message.message.replace(/\\lineChange/g, '\n').trim()}</MessageContentContainer>
+                                                <MessageContentContainer>
+                                                    {message.messageType ==='image' &&
+                                                            // <>
+                                                            //     {message.message}
+                                                            // </>
+                                                        <MessageGridView>
+                                                            {message.message.trim().slice(1,message.message.length-2).split(',').map((image)=>(
+                                                                <>
+                                                                    {image +'\n'}
+                                                                </>
+                                                            ))}
+                                                        </MessageGridView>
+                                                    }
+                                                    {message.messageType ===null && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                </MessageContentContainer>
                                             </MessageContainer>
                                         </RowFlexBox>
                                     ))

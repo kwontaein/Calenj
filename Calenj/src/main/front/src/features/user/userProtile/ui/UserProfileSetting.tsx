@@ -25,7 +25,7 @@ export const UserProfileSetting: React.FC = () => {
                         <Profile_Image $userId={"2c7f2d75-6dcd-4802-929d-174cb65dce22"}/>
                         <Profile_Name_Container>
                             <Profile_Nickname>닉네임</Profile_Nickname>
-                            <Profile_Option>•••</Profile_Option>
+                            <Profile_Option><i className="bi bi-three-dots"></i></Profile_Option>
                         </Profile_Name_Container>
                     </Top_Container>
                     <Profile_Edit_Btn>프로필편집</Profile_Edit_Btn>
