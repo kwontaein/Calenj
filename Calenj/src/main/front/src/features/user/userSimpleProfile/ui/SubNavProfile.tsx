@@ -31,6 +31,7 @@ export const SubNavProfile :React.FC = () =>{
     useEffect( () => {
         if(userData){
             setUserInfo(userData);
+            console.log(userData)
         }
     }, [userData]);
 
@@ -48,7 +49,7 @@ export const SubNavProfile :React.FC = () =>{
             </Profile_UserUseName_Container>
             <SubNavProfile_Content_Container>
                 <Profile_Container>
-                    <SubNavProfile_div/>
+                    <SubNavProfile_div $userId={userInfo?.userUsedName||''}/>
                     <SubNavEmpty_div>
                         <ProfileEditButton_div>
                             <i className="fi fi-sr-plus-small" style={{marginTop:'3px'}}></i>

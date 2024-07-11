@@ -2,7 +2,7 @@ import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
 import {useEffect, useMemo} from "react";
 import {AHMFormat, AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
-import {useIntersect} from "../../../../shared/model";
+import {useComponentSize, useIntersect} from "../../../../shared/model";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {
@@ -68,7 +68,8 @@ export const MessageScrollBox:React.FC =()=>{
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
                                             <ProfileContainer
-                                                $userId={message.userId}></ProfileContainer>
+                                                $userId={message.userId}>
+                                            </ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
                                                     <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
