@@ -15,6 +15,7 @@ export const MessageSend_Container_height = 60;
 
 
 export const MessageScroll_Container = styled.div<{$inputSize:number}>`
+    width: 100%;
     height: calc(100% - ${props=> props.$inputSize}px);
     
 `
@@ -51,7 +52,8 @@ export const ProfileContainer = styled.div<UserProfile>`
     font-weight: 550;
     user-select: none;
     background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
-    background-size: 40px 40px; /* 너비 100px, 높이 100px */
+    background-size: cover;
+
 `
 
 
@@ -91,21 +93,22 @@ export const DateContainer2 = styled.div`
     color: transparent;
     font-size: 12px;
     margin-top: 2px;
-    letter-spacing: -1px;
-    width: 50px;
+    letter-spacing: -1.1px;
 `
 export const MessageContentContainer2 = styled.div`
-    margin-left: 6px;
-    max-width: ${ScrollMin_width - 74}px;
+    margin-left: 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
+    padding-inline: 2px;
+    width: calc(100% - 60px);
 `
 /** 메시지를 담는 컨테이너 2*/
 export const MessageContainer2 = styled.div`
     display: flex;
     flex-direction: row;
-    padding: 2px;
-    
+    padding-block: 2px;
+    width: 100%;
+
     &:hover {
         ${DateContainer2} {
             color: gray;
