@@ -68,14 +68,14 @@ public class WebSocketService {
      *
      * @param message 전달받은 내용
      **/
-    public void saveChattingToFile(ChatMessageRequest message) {
+    public UUID saveChattingToFile(ChatMessageRequest message) {
         System.out.println("getMessage : \n" + message.getMessage());
         // 파일을 저장한다.
         // 메시지 내용
         List<String> lines = getFile(message);
 
         if (lines == null) {
-            return;
+            return null;
         }
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
@@ -94,6 +94,7 @@ public class WebSocketService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return messageUUid;
     }
 
     /**
@@ -366,7 +367,7 @@ public class WebSocketService {
      **/
 
     // null이 아닌 필드만 포함시키는 메소드
-    private ChatMessageResponse filterNullFields(ChatMessageRequest request) {
+    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
         ChatMessageResponse filteredResponse = new ChatMessageResponse();
         if (request.getParam() != null) {
             filteredResponse.setParam(request.getParam());

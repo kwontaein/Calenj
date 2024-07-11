@@ -1,12 +1,15 @@
 import {useEffect, useState} from 'react';
 import {imageUploadApi} from '../api/imageUploadApi';
 import {PreviewData, ReturnFileHandler} from "./types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../entities/redux";
 
 
 export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<PreviewData[]>([]);
     const [dragOver, setDragOver] = useState(false);
+    const groupId = useSelector((state: RootState) => state.group_subNavState.param)
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -27,8 +30,9 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         if (selectedFiles.length > 0) {
             const userId: string = localStorage.getItem('userId') || "userId";
             const formData = new FormData();
+            formData.append('groupId', groupId);
+            formData.append('userId', userId);
             selectedFiles.forEach(file => {
-                formData.append('userId', userId);
                 formData.append('files', file);
                 console.log("file", file)
             });

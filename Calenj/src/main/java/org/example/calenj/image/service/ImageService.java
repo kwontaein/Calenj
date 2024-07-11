@@ -1,8 +1,11 @@
 package org.example.calenj.image.service;
 
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.websocket.dto.request.ChatMessageRequest;
+import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,11 +26,13 @@ public class ImageService {
     private final String imageDir;
     private WebSocketService webSocketService;
     private GlobalService globalService;
+    private SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-    public ImageService(@Value("${image-dir}") String imageDir) {
+    public ImageService(@Value("${image-dir}") String imageDir, WebSocketService webSocketService, GlobalService globalService, SimpMessagingTemplate template) {
         this.imageDir = imageDir;
         this.webSocketService = webSocketService;
         this.globalService = globalService;
+        this.template = template;
     }
 
 
@@ -141,17 +146,22 @@ public class ImageService {
         try {
             for (MultipartFile file : multipartFiles) {
                 fileValid(UUID.randomUUID(), file);
-                imageIds.add(UUID.randomUUID() + file.getName());
+                System.out.println(file.getOriginalFilename());
+                imageIds.add(UUID.randomUUID() + " / " + file.getOriginalFilename());
             }
 
-        /* ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
-        chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
-        chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
-        chatMessageRequest.setSendDate(LocalDate.now().toString());
-        chatMessageRequest.setMessage(imageIds.toString());
-        chatMessageRequest.setParam(param);
+            ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
+            chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
+            chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
+            chatMessageRequest.setSendDate(globalService.nowTime());
+            chatMessageRequest.setMessage(imageIds.toString());
+            chatMessageRequest.setParam(param);
 
-        webSocketService.saveChattingToFile(chatMessageRequest);*/
+            ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
+            chatMessageResponse.setTarget("groupMsg");
+            chatMessageResponse.setChatUUID(webSocketService.saveChattingToFile(chatMessageRequest));
+
+            template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
             return true;
         } catch (Exception e) {
             return false;
