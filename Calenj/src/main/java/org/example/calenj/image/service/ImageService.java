@@ -156,6 +156,7 @@ public class ImageService {
             chatMessageRequest.setSendDate(globalService.nowTime());
             chatMessageRequest.setMessage(imageIds.toString());
             chatMessageRequest.setParam(param);
+            chatMessageRequest.setMessageType("image");
 
             ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
             chatMessageResponse.setTarget("groupMsg");
