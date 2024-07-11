@@ -1,6 +1,11 @@
 package org.example.calenj.image.service;
 
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.websocket.dto.request.ChatMessageRequest;
+import org.example.calenj.websocket.dto.response.ChatMessageResponse;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,14 +16,28 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 
 @Service
 public class ImageService {
     private final String imageDir;
+    private WebSocketService webSocketService;
+    private GlobalService globalService;
+    private SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-    public ImageService(@Value("${image-dir}") String imageDir) {
+    public ImageService(@Value("${image-dir}") String imageDir, WebSocketService webSocketService, GlobalService globalService, SimpMessagingTemplate template) {
         this.imageDir = imageDir;
+        this.webSocketService = webSocketService;
+        this.globalService = globalService;
+        this.template = template;
+    }
+
+
+    public void saveProfileImage(UUID uuid, MultipartFile file) {
+        uploadImage(uuid, file);
     }
 
     /**
@@ -32,26 +51,20 @@ public class ImageService {
         return contentType != null && contentType.startsWith("image");
     }
 
-
-    // 이미지 DB 저장
-    public void saveImage(String originalFileName, byte[] imageBytes, int paramId) {
-        //db에 이미지 저장
-    }
-
     /**
      * 업로드된 이미지를 서버에 저장합니다.
      *
      * @param file 파일
      */
-    public void fileValid(String id, MultipartFile file) {
+    public void fileValid(UUID uuid, MultipartFile file) {
         try {
             // 파일 유효성 검사
             if (!isValidImage(file)) {
                 // 유효하지 않은 파일 유형 처리
                 return; // 다음 파일로 건너뜁니다
             }
-            // 데이터베이스에 이미지를 저장하기 위한 서비스 메서드 호출
-            uploadImage(id, file);
+            // 이미지를 저장하기 위한 서비스 메서드 호출
+            uploadImage(uuid, file);
         } catch (Exception e) {
             // 다른 예외 처리
             e.printStackTrace(); // 예외를 로깅하는 것이 좋습니다
@@ -60,13 +73,14 @@ public class ImageService {
 
     /**
      * 업로드된 이미지를 서버에 저장합니다.
+     * id로 이미지 저장
      */
-    public void uploadImage(String id, MultipartFile file) {
+    public void uploadImage(UUID uuid, MultipartFile file) {
         // 이미지 파일의 확장자 추출
         final String extension = file.getContentType().split("/")[1];
         // 이미지 파일 이름을 고유한 이름으로 생성 (UUID와 확장자 조합)
-        final String imageName = id + "." + extension;
 
+        final String imageName = uuid + "." + extension;
         try {
             // 이미지를 저장할 파일 객체 생성
             final File newfile = new File(imageDir + imageName);
@@ -122,4 +136,36 @@ public class ImageService {
         }
     }
 
+    // 이미지 DB 저장
+    public void saveImage(String originalFileName, byte[] imageBytes, int paramId) {
+        //db에 이미지 저장
+    }
+
+    public boolean saveMultiImage(MultipartFile[] multipartFiles, String param) {
+        Set<String> imageIds = new HashSet<>();
+        try {
+            for (MultipartFile file : multipartFiles) {
+                fileValid(UUID.randomUUID(), file);
+                System.out.println(file.getOriginalFilename());
+                imageIds.add(UUID.randomUUID() + " / " + file.getOriginalFilename());
+            }
+
+            ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
+            chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
+            chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
+            chatMessageRequest.setSendDate(globalService.nowTime());
+            chatMessageRequest.setMessage(imageIds.toString());
+            chatMessageRequest.setParam(param);
+            chatMessageRequest.setMessageType("image");
+
+            ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
+            chatMessageResponse.setTarget("groupMsg");
+            chatMessageResponse.setChatUUID(webSocketService.saveChattingToFile(chatMessageRequest));
+
+            template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

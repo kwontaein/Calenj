@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const imageUploadApi = (data: FormData): Promise<void> => {
+export const userProfileUploadApi = (data: FormData): Promise<void> => {
     console.log('api')
-    console.log(data.getAll('files'))
-    return axios.post('/api/imageUpload', data, {
+    console.log(data.getAll('file'))
+    return axios.post('/api/userProfileUpload', data, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

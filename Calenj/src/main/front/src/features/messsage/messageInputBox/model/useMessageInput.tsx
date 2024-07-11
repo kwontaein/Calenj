@@ -9,37 +9,36 @@ import {ReturnFileHandler} from "../../../../shared/model";
 import {imageUploadApi} from "../../../../shared/api/imageUploadApi";
 
 
+export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageInput => {
+    const param = useSelector((state: RootState) => state.navigateInfo.navigateParam)
+    const {inputSize, inputMaxSize} = useSelector((state: RootState) => state.messageInputSize);
 
-export const useMessageInput = (multiImageHandler:ReturnFileHandler):MessageInput =>{
-    const param = useSelector((state:RootState) => state.navigateInfo.navigateParam)
-    const {inputSize, inputMaxSize} = useSelector((state:RootState) => state.messageInputSize);
-
-    const [content, setContent] = useState<string>( '');
+    const [content, setContent] = useState<string>('');
     const chatRef = useRef<HTMLTextAreaElement>(null);// 채팅 input Ref
     const dispatch = useDispatch()
 
     //채팅 내용 디바운싱
     const saveContent = useMemo(() => {
-        return debounce(()=>{
-            if(chatRef.current){
-                ChatContentMap.set(param,chatRef.current.value)
+        return debounce(() => {
+            if (chatRef.current) {
+                ChatContentMap.set(param, chatRef.current.value)
             }
-        },500)
+        }, 500)
     }, [param, chatRef]);
 
     useEffect(() => {
         saveContent()
     }, [content]);
 
-    useEffect(()=>{
-        if(chatRef.current){
+    useEffect(() => {
+        if (chatRef.current) {
             chatRef.current.value = ChatContentMap.get(param) || ''
             reSizingInputHeight()
         }
-    },[param])
+    }, [param])
 
 
-    const handleKeyPress = (event:  React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             sendMessage()
@@ -47,25 +46,25 @@ export const useMessageInput = (multiImageHandler:ReturnFileHandler):MessageInpu
     };
 
     //input 사이즈 조절
-    const reSizingInputHeight = ()=>{
-        if(!chatRef.current) return
+    const reSizingInputHeight = () => {
+        if (!chatRef.current) return
         chatRef.current.style.height = '40px'; //height 초기화
         //최대 넓이를 넘지 않도록 input 사이즈 조정
-        chatRef.current.style.height = chatRef.current.scrollHeight +2 < inputMaxSize ? chatRef.current.scrollHeight +2+'px' : inputMaxSize+'px';
+        chatRef.current.style.height = chatRef.current.scrollHeight + 2 < inputMaxSize ? chatRef.current.scrollHeight + 2 + 'px' : inputMaxSize + 'px';
         //input의 크기
-        const height = +(chatRef.current.style.height.replace('px',''))
+        const height = +(chatRef.current.style.height.replace('px', ''))
 
-        if(inputSize !== chatRef.current.scrollHeight){
-            dispatch(updateInputSize({inputSize: (multiImageHandler.file.length >0 ? 185 : 20) + height }))
+        if (inputSize !== chatRef.current.scrollHeight) {
+            dispatch(updateInputSize({inputSize: (multiImageHandler.file.length > 0 ? 185 : 20) + height}))
         }
     }
 
 
     useEffect(() => {
         reSizingInputHeight()
-    }, [inputMaxSize,multiImageHandler.file.length]);
+    }, [inputMaxSize, multiImageHandler.file.length]);
 
-    const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) =>{
+    const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         reSizingInputHeight()
         setContent(e.target.value)
     }
@@ -74,15 +73,15 @@ export const useMessageInput = (multiImageHandler:ReturnFileHandler):MessageInpu
     const sendMessage = () => {
 
         //무의미한 \n 제거
-        const newContent:string = content.split('\n').reduce((prev,current)=>{
-            if(prev ===''){
+        const newContent: string = content.split('\n').reduce((prev, current) => {
+            if (prev === '') {
                 return prev + current
-            }else{
+            } else {
                 return prev + '\n' + current
             }
         })
 
-        if(multiImageHandler.file.length>0){
+        if (multiImageHandler.file.length > 0) {
             multiImageHandler.handleUpload()
         }
 

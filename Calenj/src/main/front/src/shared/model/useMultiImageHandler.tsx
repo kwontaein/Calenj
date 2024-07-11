@@ -30,8 +30,9 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
         if (selectedFiles.length > 0) {
             const userId: string = localStorage.getItem('userId') || "userId";
             const formData = new FormData();
+            formData.append('groupId', groupId);
+            formData.append('userId', userId);
             selectedFiles.forEach(file => {
-                formData.append('userId', userId);
                 formData.append('files', file);
             });
             console.log(formData)
