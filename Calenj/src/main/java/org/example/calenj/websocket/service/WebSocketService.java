@@ -2,6 +2,7 @@ package org.example.calenj.websocket.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.image.service.ImageService;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
@@ -34,6 +35,7 @@ public class WebSocketService {
     private final GlobalService globalService;
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
+    private final ImageService imageService;
 
     /**
      * 유저정보 반환
@@ -256,6 +258,8 @@ public class WebSocketService {
             }
             case READ: {
                 List<String> file = readGroupChattingFile(message);
+                List<String> images = imageService.getAllImageById(message.getParam());
+                response.setImages(images);
                 response.setMessage(file);
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;

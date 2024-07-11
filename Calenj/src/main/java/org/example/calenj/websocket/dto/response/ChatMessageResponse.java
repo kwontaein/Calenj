@@ -23,6 +23,7 @@ public class ChatMessageResponse {
     private UUID chatUUID;
     private Set<String> onlineUserList;
     private String target;
+    private List<String> images;
 
     @Getter
     @RequiredArgsConstructor

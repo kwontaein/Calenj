@@ -174,7 +174,7 @@ public class ImageService {
         }
     }
 
-    public String getAllImageById(String param) {
+    public List<String> getAllImageById(String param) {
         List<String> lines = webSocketService.getFile(param);
         Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
         List<String> extractedParts = lines.stream()
@@ -191,6 +191,6 @@ public class ImageService {
                 .collect(Collectors.toList());
 
         extractedParts.forEach(System.out::println);
-        return "";
+        return extractedParts;
     }
 }
