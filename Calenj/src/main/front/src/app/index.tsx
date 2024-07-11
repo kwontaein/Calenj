@@ -21,6 +21,7 @@ import {RootState} from "../entities/redux";
 import {sagaRefresh, sagaTask} from "./hoc/store";
 import {useQueryClient} from "@tanstack/react-query";
 import {UserSetting} from "../pages/settings";
+import {UserProfileSetting} from "../features/user/userProtile/ui/UserProfileSetting";
 
 
 export const App: React.FC = () => {
@@ -48,7 +49,7 @@ export const App: React.FC = () => {
                         </Route>
                         <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
-                        <Route path={"/userSetting"} element={<UserSetting/>}/>
+                        <Route path={"/userSetting"} element={<UserProfileSetting/>}/>
                     </Routes>
                 </BrowserRouter>
             }

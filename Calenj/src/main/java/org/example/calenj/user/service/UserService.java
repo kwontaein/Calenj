@@ -240,7 +240,7 @@ public class UserService {
 
         String myUserId = globalService.extractFromSecurityContext().getUsername();
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
-
+        userProfileResponse.setUserId(userEntity.getUserId());
         userProfileResponse.setUserName(userEntity.getUserUsedName());
         userProfileResponse.setNickName(userEntity.getNickname());
         userProfileResponse.setIntroduce(userEntity.getUserIntroduce());

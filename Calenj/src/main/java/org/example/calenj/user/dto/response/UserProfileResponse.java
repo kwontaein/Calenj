@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +19,6 @@ public class UserProfileResponse {
     private String chatUUID;// 개인 메세지 버튼
     private String eventContent;
     private String userName;
+    private UUID userId;
+
 }
