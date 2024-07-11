@@ -149,9 +149,10 @@ public class ImageService {
         Set<String> imageIds = new HashSet<>();
         try {
             for (MultipartFile file : multipartFiles) {
-                fileValid(UUID.randomUUID(), file);
+                UUID uuid = UUID.randomUUID();
+                fileValid(uuid, file);
                 System.out.println(file.getOriginalFilename());
-                imageIds.add(UUID.randomUUID() + " / " + file.getOriginalFilename());
+                imageIds.add(uuid + " / " + file.getOriginalFilename());
             }
 
             ChatMessageRequest chatMessageRequest = new ChatMessageRequest();

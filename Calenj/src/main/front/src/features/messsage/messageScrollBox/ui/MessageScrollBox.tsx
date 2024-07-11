@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {
     DateContainer,
-    DateContainer2, HR_ChatEndPoint, HR_NewDate,
+    DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
     MessageBoxContainer, MessageContainer,
     MessageContainer2, MessageContentContainer,
     MessageContentContainer2, MessageGridView, MessageScroll_Container, NickNameContainer, ProfileContainer,
@@ -39,22 +39,13 @@ export const MessageScrollBox:React.FC =()=>{
             loadFile();
         }
     });
-    interface ImageData {
-        chatUUID:string,
-        image:string,
-        imageName:string,
-    }
-    const [images,setImages] = useState<ImageData>()
+
+
 
 
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=> messageData.chatUUID!=="시작라인");
-        const imageList = connectList.map((message:Message)=> {
-            if(message.messageType === 'image'){
 
-            }
-
-        })
 
         if (!chatFile.isLoading) {
             return (
@@ -76,7 +67,7 @@ export const MessageScrollBox:React.FC =()=>{
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
-                                                {message.messageType ===null && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                {message.messageType==='null' && message.message.replace(/\\lineChange/g, '\n').trim()}
                                             </MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
@@ -90,19 +81,25 @@ export const MessageScrollBox:React.FC =()=>{
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>
-                                                    {message.messageType ==='image' &&
-                                                            // <>
-                                                            //     {message.message}
-                                                            // </>
-                                                        <MessageGridView>
-                                                            {message.message.trim().slice(1,message.message.length-2).split(',').map((image)=>(
-                                                                <>
-                                                                    {image +'\n'}
-                                                                </>
-                                                            ))}
-                                                        </MessageGridView>
-                                                    }
-                                                    {message.messageType ===null && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                    <>
+                                                        {message.messageType === 'image' && (
+                                                            <MessageGridView>
+                                                                {message.message.trim().slice(1, -1).split(',').map((image, index) => (
+                                                                    <ImageWrapper key={index}>
+                                                                        <ImageContent $image={image.split('/')[0].trim()}>
+                                                                            {image.split('/')[0].trim()}
+                                                                            {/*{image.split('/')[1].trim()}*/}
+                                                                        </ImageContent>
+                                                                    </ImageWrapper>
+                                                                ))}
+                                                            </MessageGridView>
+                                                        )}
+                                                        {message.messageType === 'null' && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
+                                                    </>
                                                 </MessageContentContainer>
                                             </MessageContainer>
                                         </RowFlexBox>

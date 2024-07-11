@@ -134,7 +134,7 @@ export const ImageWrapper = styled.div`
     max-height: inherit;
     border-radius: 2px;
 `
-export const ImageContent = styled.div`
+export const ImageContent = styled.div<{$image:string}>`
     width: 100%;
     height: 100%;
     margin: 0;
@@ -145,6 +145,8 @@ export const ImageContent = styled.div`
     font-family: inherit;
     font-size: 100%;
     vertical-align: baseline;
+    background-image: ${props => props.$image? `url("/image/savedImage/${props.$image.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-size: cover;
 `
 
 

@@ -104,8 +104,16 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     input {
+        border: 2px solid ${ThemeColor2};
+        outline: none;
+        background-color: ${ThemeColor2};
+        color: ${TextColor};
         font-family: "Noto Sans KR", sans-serif;
 
+        &:focus {
+            outline: none;
+            border: 2px solid ${PointColor};
+        }
     }
     
     textarea{
