@@ -124,3 +124,15 @@ export const HR_Setting = styled.hr`
     margin: 20px;
     width: calc(100%);
 `
+export const Ect_Setting = styled.div`
+
+    padding: 20px;
+`
+export const Password_Set_Btn = styled.div`
+    background-color: ${PointColor};
+    width: 100px;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 13px;
+`

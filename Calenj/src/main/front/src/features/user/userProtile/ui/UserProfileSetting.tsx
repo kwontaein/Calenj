@@ -3,7 +3,7 @@ import {
     Profile_Image, Profile_Name_Container, Profile_Nickname, Profile_Option,
     Profile_Top,
     ProfileSetting_Container, Setting_Container,
-    SettingName, Top_Container, HR_Setting,
+    SettingName, Top_Container, HR_Setting, Ect_Setting, Password_Set_Btn,
 } from "./UserProfileSettingStyled";
 import ProfileList from "./ProfileContent";
 import {QUERY_USER_INFO_KEY, UserInfo} from "../../../../entities/reactQuery";
@@ -42,6 +42,11 @@ export const UserProfileSetting: React.FC = () => {
                         <ProfileList profileData={profileData}/>
                     </Profile_Content_Container>
                 </Profile_Container>
+                <SettingName>비밀번호 및 계정</SettingName>
+                <Ect_Setting>
+                    <Password_Set_Btn>비밀번호 변경하기</Password_Set_Btn>
+                    <Password_Set_Btn>비밀번호 변경하기</Password_Set_Btn>
+                </Ect_Setting>
             </ProfileSetting_Container>
         </Setting_Container>
     );
