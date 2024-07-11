@@ -19,6 +19,7 @@ import {
     UserInfo
 } from "../../../../entities/reactQuery";
 import {useQueryClient} from "@tanstack/react-query";
+import {Link} from "react-router-dom";
 
 export const SubNavProfile :React.FC = () =>{
     const userId =localStorage.getItem('userId');
@@ -39,9 +40,11 @@ export const SubNavProfile :React.FC = () =>{
                 <UserUseName_Content>
                     {userInfo?.userUsedName}
                 </UserUseName_Content>
+                <Link to="/userSetting">
                 <UserInfo_ModifyIcon_Container>
                     <i className="bi bi-gear-fill"></i>
                 </UserInfo_ModifyIcon_Container>
+                </Link>
             </Profile_UserUseName_Container>
             <SubNavProfile_Content_Container>
                 <Profile_Container>

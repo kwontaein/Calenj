@@ -3,7 +3,7 @@ import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../share
 
 export const FileModifyModal_Container= styled.div`
     width: 400px;
-    height: 220px;
+    height: 180px;
     background-color: ${ThemeColor3};
     border-radius: 10px;
     padding: 40px;
@@ -52,6 +52,6 @@ export const ModifyButton_Container = styled.div`
     justify-content: right;
     display: flex;
     flex-direction: row;
-    margin-top: 50px;
+    margin-top: 20px;
     margin-left: 20px;
 `

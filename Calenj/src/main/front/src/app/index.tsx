@@ -20,6 +20,7 @@ import {useStomp} from "../features/websocket";
 import {RootState} from "../entities/redux";
 import {sagaRefresh, sagaTask} from "./hoc/store";
 import {useQueryClient} from "@tanstack/react-query";
+import {UserSetting} from "../pages/settings";
 
 
 export const App: React.FC = () => {
@@ -47,6 +48,7 @@ export const App: React.FC = () => {
                         </Route>
                         <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
+                        <Route path={"/userSetting"} element={<UserSetting/>}/>
                     </Routes>
                 </BrowserRouter>
             }
