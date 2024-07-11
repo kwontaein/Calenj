@@ -17,8 +17,12 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -167,5 +171,25 @@ public class ImageService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String getAllImageById(String param) {
+        List<String> lines = webSocketService.getFile(param);
+        Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
+        List<String> extractedParts = lines.stream()
+                .filter(line -> line.contains("$ image"))
+                .map(line -> {
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        return matcher.group(1);
+                    } else {
+                        return "";
+                    }
+                })
+                .filter(extractedPart -> !extractedPart.isEmpty())
+                .collect(Collectors.toList());
+
+        extractedParts.forEach(System.out::println);
+        return "";
     }
 }

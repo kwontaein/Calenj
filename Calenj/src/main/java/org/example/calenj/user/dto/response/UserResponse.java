@@ -26,7 +26,7 @@ public class UserResponse {
     private String userIntroduce;
     private UUID userId;
 
-    public UserResponse(UUID userId,String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate, String userUsedName) {
+    public UserResponse(UUID userId, String nickname, String userEmail, String userIntroduce, String userPhone, String userJoinDate, String userUsedName) {
         this.userId = userId;
         this.nickname = nickname;
         this.userEmail = userEmail;
