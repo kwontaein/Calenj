@@ -8,6 +8,7 @@ import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -23,7 +24,7 @@ public class ChatMessageResponse {
     private UUID chatUUID;
     private Set<String> onlineUserList;
     private String target;
-    private List<String> images;
+    private Map<String, String> images;
 
     @Getter
     @RequiredArgsConstructor
