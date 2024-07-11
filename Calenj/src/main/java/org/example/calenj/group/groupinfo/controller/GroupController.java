@@ -8,6 +8,7 @@ import org.example.calenj.group.groupinfo.dto.response.GroupDetailResponse;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.dto.response.InviteCodeResponse;
 import org.example.calenj.group.groupinfo.service.GroupService;
+import org.example.calenj.image.service.ImageService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
+    private final ImageService imageService;
 
     //그룹 만들기
     @PostMapping("/api/createGroup")
@@ -36,6 +38,8 @@ public class GroupController {
     //그룹 세부정보 가져오기
     @PostMapping("/api/groupDetail")
     public GroupDetailResponse groupDetail(@RequestBody GroupDetailRequest groupDetailrequest) {
+        System.out.println("-------------------------------------------------------");
+        imageService.getAllImageById(groupDetailrequest.getGroupId().toString());
         return groupService.groupDetail(groupDetailrequest.getGroupId()).orElseThrow(() -> new RuntimeException("조회 실패"));
     }
 

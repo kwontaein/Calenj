@@ -9,10 +9,16 @@ import {
 } from "../../../../shared/ui/SharedStyled";
 import {number} from "yup";
 
+export const Setting_Container = styled.div`
+    background-color: ${ThemeColor2};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 export const ProfileSetting_Container = styled.div`
     background-color: ${ThemeColor2};
-    width: 700px;
-    height: 100%;
+    padding: 10px;
 `
 
 export const SettingName = styled.div`
@@ -23,7 +29,7 @@ export const Profile_Container = styled.div`
     background-color: ${BackGroundColor};
     margin-inline: 20px;
     width: 600px;
-    height: 400px;
+    padding: 10px;
     border-radius: 10px;
 `
 
@@ -35,7 +41,7 @@ export const Profile_Top = styled.div`
     align-items: center;
 `
 
-export const Profile_Image = styled.div<{ $userId: string }>`
+export const Profile_Image = styled.div<{ $userId: string | null }>`
     width: 100px;
     height: 100px;
     border: 3px solid ${ThemeColor2};
@@ -112,4 +118,9 @@ export const Profile_Content_Edit = styled.div`
     &:hover {
         background-color: ${ThemeColor2}77;
     }
+`
+
+export const HR_Setting = styled.hr`
+    margin: 20px;
+    width: calc(100%);
 `
