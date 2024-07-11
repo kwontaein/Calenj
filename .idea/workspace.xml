@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.10 file이름 변경 #2">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userProtile/ui/UserProfileSetting.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/settings/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/pages/settings/ui/UserSetting.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageImageBox/ui/FileModifyModalStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageImageBox/ui/FileModifyModalStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBoxStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useMultiImageHandler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useMultiImageHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
