@@ -130,8 +130,7 @@ function* startStomp(destination: Destination): any {
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
-        console.log(receiveData.payload.receiveMessage.state)
-        console.log(receiveData.payload.receiveMessage)
+        console.log(receiveData.payload.receiveMessage.message)
 
         const {state, param, userId, message, endPoint} = receiveData.payload.receiveMessage
         if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {

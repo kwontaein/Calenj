@@ -149,7 +149,13 @@ public class WebSocketService {
         if (parts.length != 5) {
             throw new IllegalArgumentException("라인 형식이 잘못되었습니다: " + line);
         }
-        return new MessageResponse(parts[0], parts[1], parts[2], parts[3], parts[4]);
+        String chatId = parts[0].replace("[", "").replace("]", "").trim();
+        String date = parts[1].replace("[", "").replace("]", "").trim();
+        String userId = parts[2].replace("[", "").replace("]", "").trim();
+        String messageType = parts[3].replace("[", "").replace("]", "").trim();
+        String messageContent = parts[4].replace("[", "").replace("]", "").trim();
+
+        return new MessageResponse(chatId, date, userId, messageType, messageContent);
     }
 
     /**
