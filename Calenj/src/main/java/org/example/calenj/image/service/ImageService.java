@@ -148,7 +148,7 @@ public class ImageService {
                 UUID uuid = UUID.randomUUID();
                 fileValid(uuid, file);
                 System.out.println(file.getOriginalFilename());
-                imageIds.add(uuid + " / " + file.getOriginalFilename());
+                imageIds.add(uuid.toString());
             }
 
             ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
@@ -157,11 +157,11 @@ public class ImageService {
             chatMessageRequest.setSendDate(globalService.nowTime());
             chatMessageRequest.setMessage(imageIds.toString());
             chatMessageRequest.setParam(param);
-            chatMessageRequest.setMessageType("image");
+            chatMessageRequest.setMessageType("file");
+            chatMessageRequest.setChatUUID(webSocketService.saveChattingToFile(chatMessageRequest));
 
             ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
             chatMessageResponse.setTarget("groupMsg");
-            chatMessageResponse.setChatUUID(webSocketService.saveChattingToFile(chatMessageRequest));
 
             template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
             return true;

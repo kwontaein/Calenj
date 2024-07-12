@@ -6,6 +6,7 @@ import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
+import org.example.calenj.websocket.dto.response.MessageResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpSubscription;
 import org.springframework.messaging.simp.user.SimpUser;
@@ -102,7 +103,7 @@ public class WebSocketService {
      *
      * @param message 전달받은 내용
      **/
-    public List<String> readGroupChattingFile(ChatMessageRequest message) {
+    public List<MessageResponse> readGroupChattingFile(ChatMessageRequest message) {
         List<String> lines = getFile(message.getParam());
 
         if (lines == null) {
@@ -111,7 +112,7 @@ public class WebSocketService {
 
         Collections.reverse(lines); // 파일 내용을 역순으로 정렬
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
+                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -133,10 +134,23 @@ public class WebSocketService {
 
         previousLines.addAll(previousLines2);
 
-        if (previousLines.isEmpty()) {
+        List<MessageResponse> messageResponses = previousLines.stream()
+                .map(WebSocketService::parseLineToChatMessage)
+                .collect(Collectors.toList());
+
+        if (messageResponses.isEmpty()) {
             return null;
         }
-        return previousLines;
+        return messageResponses;
+    }
+
+    public static MessageResponse parseLineToChatMessage(String line) {
+        String[] parts = line.split("\\$");
+        System.out.println(parts.length);
+        if (parts.length != 5) {
+            throw new IllegalArgumentException("라인 형식이 잘못되었습니다: " + line);
+        }
+        return new MessageResponse(parts[0], parts[1], parts[2], parts[3], parts[4]);
     }
 
     /**
@@ -144,7 +158,7 @@ public class WebSocketService {
      *
      * @param message 전달받은 내용
      **/
-    public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
+    public List<MessageResponse> readGroupChattingFileSlide(ChatMessageRequest message) {
 
         List<String> lines = getFile(message.getParam());
         Collections.reverse(lines);
@@ -163,11 +177,15 @@ public class WebSocketService {
 
         //message.setNowLine(startIndex + previousLines.size());
 
-        if (previousLines.isEmpty()) {
+        List<MessageResponse> messageResponses = previousLines.stream()
+                .map(WebSocketService::parseLineToChatMessage)
+                .collect(Collectors.toList());
+
+        if (messageResponses.isEmpty()) {
             return null;
         }
 
-        return previousLines;
+        return messageResponses;
     }
 
     /**
@@ -227,14 +245,18 @@ public class WebSocketService {
      * @param authentication 웹소켓 인증 정보
      **/
     public void defaultSend(Authentication authentication, ChatMessageRequest message, String target) {
-
+        //내정보 받기
         UserEntity userEntity = returnUserEntity(authentication);
+        //현재시간 받기
         String nowTime = globalService.nowTime();
 
+        //보내는 사람 아이디 설정
         message.setUserId(userEntity.getUserId());
+        //보내는 날짜 설정
         message.setSendDate(nowTime);
-
+        //response 채우기
         ChatMessageResponse response = filterNullFields(message);
+        //target 정하기
         response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
         sendSwitch(message, response, target);
@@ -257,23 +279,28 @@ public class WebSocketService {
                 return;
             }
             case READ: {
-                List<String> file = readGroupChattingFile(message);
-                Map<String, String> images = getAllImageById(message.getParam());
+                response.setMessage(readGroupChattingFile(message));
+                List<String> images = getAllImageById(message.getParam());
                 response.setImages(images);
-                response.setMessage(file);
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case RELOAD: {
-                List<String> file = readGroupChattingFileSlide(message);
-                response.setMessage(file);
+                response.setMessage(readGroupChattingFileSlide(message));
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case SEND: {
                 saveChattingToFile(message);
-                response.setMessage(Collections.singletonList(message.getMessage()));
-                response.setChatUUID(message.getChatUUID());
+
+                MessageResponse messageResponse = new MessageResponse(
+                        message.getChatUUID().toString(),
+                        message.getSendDate(),
+                        message.getUserId().toString(),
+                        message.getMessageType(),
+                        message.getMessage());
+
+                response.setMessage(Collections.singletonList(messageResponse));
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
@@ -307,6 +334,9 @@ public class WebSocketService {
         }
     }
 
+    /**
+     * 나한테 모든 온라인 목록 보내기
+     */
     public void sendOnlineStateFirstTime(String userId, ChatMessageResponse response) {
         Set<String> friendList = new HashSet<>();
 
@@ -337,6 +367,9 @@ public class WebSocketService {
         template.convertAndSend("/topic/personalTopic/" + userId, response);
     }
 
+    /**
+     * 나 온라인이라고 토픽들에게 알리기
+     */
     public void sendOnlineState(String userId, ChatMessageResponse response) {
         //온라인 유저 정보 다시 반환
         for (String destination : getDestination(userId)) {
@@ -373,16 +406,9 @@ public class WebSocketService {
         if (request.getParam() != null) {
             filteredResponse.setParam(request.getParam());
         }
-        if (request.getMessage() != null) {
-            filteredResponse.setMessage(Collections.singletonList(request.getMessage()));
-        }
         if (request.getUserId() != null) {
             filteredResponse.setUserId(request.getUserId());
         }
-        if (request.getSendDate() != null) {
-            filteredResponse.setSendDate(request.getSendDate());
-        }
-
         filteredResponse.setState(request.getState());
         filteredResponse.setEndPoint(request.getEndPoint());
         // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
@@ -427,6 +453,10 @@ public class WebSocketService {
         return null;
     }
 
+    /**
+     * 구독 주제 빼오기
+     */
+
     public static String extractTopic(String url) {
         Pattern pattern = Pattern.compile("/topic/([^/]*)");
         Matcher matcher = pattern.matcher(url);
@@ -469,12 +499,18 @@ public class WebSocketService {
         return filteredUserNames;
     }
 
-    public Map<String, String> getAllImageById(String param) {
+    /**
+     * 파일에 저장된 모든 이미지 빼오기
+     *
+     * @param param
+     * @return
+     */
+    public List<String> getAllImageById(String param) {
         List<String> lines = getFile(param);
         Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
 
-        Map<String, String> extractedMap = lines.stream()
-                .filter(line -> line.contains("$ image"))
+        List<String> extractedParts = lines.stream()
+                .filter(line -> line.contains("$ image $"))
                 .flatMap(line -> {
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
@@ -483,18 +519,9 @@ public class WebSocketService {
                     }
                     return Stream.empty();
                 })
-                .filter(extractedPart -> !extractedPart.isEmpty())
-                .map(part -> part.split("/"))
-                .filter(parts -> parts.length == 2)
-                .collect(Collectors.toMap(
-                        parts -> parts[0].trim(),
-                        parts -> parts[1].trim(),
-                        (existing, replacement) -> existing, // 중복 키 처리
-                        LinkedHashMap::new // 순서 보장을 위해 LinkedHashMap 사용
-                ));
+                .collect(Collectors.toList());
 
-        extractedMap.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
-        return extractedMap;
+        return extractedParts;
     }
 
 }
