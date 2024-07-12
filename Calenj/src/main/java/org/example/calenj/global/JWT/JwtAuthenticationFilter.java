@@ -41,10 +41,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             authentication = jwtTokenProvider.getAuthentication(token);
             DbRefreshToken = redisService.getUserTokenById(authentication.getName());
             RefreshValidate = jwtTokenProvider.validateToken(DbRefreshToken);
-            System.out.println("토큰이 있음\n" +
-                    "\nauthentication : " + authentication +
-                    "\nDbRefreshToken : " + DbRefreshToken +
-                    "\nRefreshValidate : " + RefreshValidate);
         }
         // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서
         HttpServletResponse httpResponse = (HttpServletResponse) response;

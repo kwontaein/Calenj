@@ -67,6 +67,33 @@ public class WebSocketService {
     }
 
     /**
+     * 특정 문장 모두 삭제
+     *
+     * @param param
+     * @param lineToDelete
+     * @return
+     */
+    public boolean deleteAllMatchingLines(String param, String lineToDelete) {
+        String filePath = "C:\\chat\\chat" + param;
+        try {
+            // 파일의 모든 줄을 읽어옵니다.
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
+
+            // lineToDelete와 일치하지 않는 모든 줄을 필터링합니다.
+            List<String> updatedLines = lines.stream()
+                    .filter(line -> !line.contains(lineToDelete))
+                    .collect(Collectors.toList());
+
+            // 필터링된 줄들을 다시 파일에 씁니다.
+            Files.write(Paths.get(filePath), updatedLines, Charset.defaultCharset());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 채팅내용 파일에 저장
      *
      * @param message 전달받은 내용
@@ -83,10 +110,19 @@ public class WebSocketService {
         if (message.getChatUUID() != null && message.getMessageType() == "file") {
             messageUUid = message.getChatUUID();
         }
-        String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
-                "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " +
-                        message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
-                message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
+        String messageContent;
+
+        if (message.getState() == ChatMessageRequest.fileType.SEND) {
+            messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
+        } else {
+            messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
+            if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
+                System.out.println("실행됨");
+            } else {
+                System.out.println("실패됨");
+            }
+        }
+
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
@@ -170,7 +206,7 @@ public class WebSocketService {
 
         List<String> lines = getFile(message.getParam());
         Collections.reverse(lines);
-        System.out.println("message.getNowLine() :"+ message.getNowLine());
+        System.out.println("message.getNowLine() :" + message.getNowLine());
         int batchSize = 20;
         //위로 아래로인지 구분
         //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
@@ -267,6 +303,7 @@ public class WebSocketService {
         //target 정하기
         response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
+        response.setReceivedUUID(UUID.randomUUID());
         sendSwitch(message, response, target);
 
     }

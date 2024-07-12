@@ -24,6 +24,7 @@ export interface ReceivedStomp {
     onlineUserList: string[],
     target: string,
     userId:string,
+    receivedUUID:string,
 }
 
 
@@ -190,6 +191,7 @@ const initialState: StompState = {
         onlineUserList: [],
         target: '',
         userId:'',
+        receivedUUID:''
     }, // 초기 message 상태
     requestFile: '',
     nowLine: -1,

@@ -8,7 +8,7 @@ import org.example.calenj.group.groupinfo.dto.response.GroupDetailResponse;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.dto.response.InviteCodeResponse;
 import org.example.calenj.group.groupinfo.service.GroupService;
-import org.example.calenj.image.service.ImageService;
+import org.example.calenj.file.service.FileService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
-    private final ImageService imageService;
+    private final FileService fileService;
 
     //그룹 만들기
     @PostMapping("/api/createGroup")

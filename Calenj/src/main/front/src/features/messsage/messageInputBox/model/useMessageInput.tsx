@@ -86,6 +86,7 @@ export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageIn
         }
 
         if (newContent === '') return;
+        //메세지 전송
         dispatch(sendStompMsg({target: 'groupMsg', param: param, message: newContent, messageType: "message"}))
         setContent('');
         if (chatRef.current) {
