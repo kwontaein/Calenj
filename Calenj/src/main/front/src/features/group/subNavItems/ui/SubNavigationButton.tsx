@@ -8,7 +8,7 @@ import {SubNavProps} from '../model/types';
 
 
 export const SubNavigationButton:React.FC<SubNavProps> = ({subItem,subItemsHandler}) =>{
-    const { clickState} = useSelector((state:RootState) => state.group_subNavState)
+    const { clickState} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
     return(
         <SubNavigateItem_Container

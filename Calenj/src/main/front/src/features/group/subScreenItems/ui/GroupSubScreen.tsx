@@ -18,7 +18,7 @@ import {useEffect} from "react";
 
 
 export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth}) =>{
-    const {clickState, mode, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
+    const {clickState, mode, showMemberList} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
 
     return(

@@ -20,7 +20,7 @@ import {dateOperation} from "../lib/dateOperation";
 export const MessageScrollBox:React.FC =()=>{
     const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
-    const {param} = useSelector((state:RootState)=>state.group_subNavState)
+    const {param} = useSelector((state:RootState)=>state.subNavigation.group_subNavState)
     const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
 
     const {messageList, newMessageList, chatFile, compareDate} = useMessageData(param,navigate)

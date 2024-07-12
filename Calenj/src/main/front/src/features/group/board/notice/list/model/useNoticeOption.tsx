@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {string} from "yup";
 
 export const useNoticeOption = ():[()=>void,(param:string)=>void] =>{
-    const groupId = useSelector((state:RootState)=> state.group_subNavState.param)
+    const groupId = useSelector((state:RootState)=> state.subNavigation.group_subNavState.param)
     const dispatch = useDispatch();
     const checkNoticeParam = () => {
         const noticeParam = BoardParamMap.get(`${groupId}Notice`);

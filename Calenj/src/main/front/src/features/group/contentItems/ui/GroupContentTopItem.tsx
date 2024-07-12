@@ -3,12 +3,12 @@ import {EventTopBarContent, EventTopBarSubContent} from "./GroupContentItemStyle
 import React from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 import {RootState} from "../../../../entities/redux";
-import {updateShowMemberList} from "../../../../entities/redux/model/slice/GroupSubNavigationSlice";
+import {updateGroupShowMemberList} from "../../../../entities/redux/model/slice/SubNavigationSlice";
 
 
 
 export const GroupContentTopItem : React.FC = () =>{
-    const {clickState, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
+    const {clickState, showMemberList} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const dispatch = useDispatch()
 
     return(
@@ -26,7 +26,7 @@ export const GroupContentTopItem : React.FC = () =>{
                     <i className="fi fi-ss-calendar"></i>
                 </EventTopBarSubContent>}
             <EventTopBarContent $isClick={showMemberList}
-                                onClick={()=>dispatch(updateShowMemberList())}>
+                                onClick={()=>dispatch(updateGroupShowMemberList())}>
                 <i className="fi fi-ss-users"></i>
             </EventTopBarContent>
         </FullScreen_div>
