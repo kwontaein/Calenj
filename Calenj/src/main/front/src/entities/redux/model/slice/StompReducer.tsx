@@ -13,12 +13,12 @@ export const UPDATE_APP_POSITION = "UPDATE_APP_POSITION"
 export const UPDATE_STOMP_STATE = "UPDATE_STOMP_STATE"
 
 //todo 추가 하나
-type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "ONLINE" | "";
-type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "";
+type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "ONLINE" | "OFFLINE" | "";
+type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "OFFLINE" | "";
 
-export interface Message {
+export interface ReceivedStomp {
     param: string,
-    message: string | string[],
+    message: Message[],
     userId: string,
     sendDate: string,
     chatUUID: string,
@@ -28,13 +28,21 @@ export interface Message {
     messageType: string,
 }
 
+export interface Message {
+    chatUUID: string,
+    sendDate: string,
+    userId: string,
+    messageType: string,
+    message: string | string[],
+}
+
 //초기상태 정의
 export interface StompState {
     destination: Destination,
     target: string,
     param: string,
     message: string, //송신한 메시지
-    receiveMessage: Message, //받은 메세지 정보
+    receiveMessage: ReceivedStomp, //받은 메세지 정보
     requestFile: requestType,
     nowLine: number,
     isOnline: string, //온라인여부
@@ -186,7 +194,7 @@ const initialState: StompState = {
     message: '',
     receiveMessage: {
         param: '',
-        message: '',
+        message: [],
         userId: '',
         sendDate: '',
         state: '',

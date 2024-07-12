@@ -324,11 +324,11 @@ public class WebSocketService {
             return;
         }
 
-        if (request.getMessage().contains("ONLINE")) {
+        if (request.getState() == ChatMessageRequest.fileType.ONLINE) {
             //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
             sendOnlineStateFirstTime(userId, filterNullFields(request));
             sendOnlineState(userId, filterNullFields(request));
-        } else if (request.getMessage().contains("OFFLINE")) {
+        } else if (request.getState() == ChatMessageRequest.fileType.OFFLINE) {
             //끊을 시 -> 오프라인이라고만 알리기
             sendOnlineState(userId, filterNullFields(request));
         }
@@ -353,7 +353,7 @@ public class WebSocketService {
             response.setOnlineUserList(userList);
             response.setTarget(extractTopic(destination));
             response.setParam(extractUUID(destination));
-
+            response.setState(ChatMessageRequest.fileType.ONLINE);
             if (extractTopic(destination).equals("friendMsg")) {
                 friendList.addAll(userList);
             } else {
@@ -376,6 +376,10 @@ public class WebSocketService {
             //온라인 유저 정보 받아서
             Set<String> userList = new HashSet<>();
             userList.add(userId);
+
+            if (response.getState() == ChatMessageRequest.fileType.ONLINE) {
+                response.setState(ChatMessageRequest.fileType.ONLINE);
+            }
 
             //반환정보에 담기
             response.setOnlineUserList(userList);
