@@ -98,12 +98,6 @@ export interface Message {
     message: string,
 }
 
-export interface ImageStorage{
-    [imageId:string]:{
-        name:string,
-    }
-}
-
 interface FetchDataParams {
     pageParam?: number;
 }

@@ -22,53 +22,49 @@ import {
 import {useQueryClient} from "@tanstack/react-query";
 
 
-export const useStomp = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
+export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => {
     const dispatch = useDispatch()
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const queryClient = useQueryClient();
-    const [userId,setUserId] = useState<string>();
+    const [userId, setUserId] = useState<string>();
 
 
     useEffect(() => {
-        if(!userId) return
-        const {param,state,target, onlineUserList, message} =stomp.receiveMessage
+        if (!userId) return
+        const {param, state, target, onlineUserList, message,} = stomp.receiveMessage
 
         //온라인 리스트 처리
-        if(state==="ALARM" && message!==null){
-            const onlineState = message[0]
-            if(target ==="friendMsg"){ //내 id는 필수로 들어가기 때문
-                if(onlineState ==='ONLINE'){
-                    const friendIdList = onlineUserList.filter((friendId) => friendId!=userId)// 내 id 제거
-                    if(friendIdList.length>0){
-                        friendIdList.map((friendId)=>{
-                            dispatch(updateFriendOnline({personalKey:userId, userParam: friendId}))
+        if (message !== null) {
+            if (target === "friendMsg") { //내 id는 필수로 들어가기 때문
+                if (state === 'ONLINE') {
+                    const friendIdList = onlineUserList.filter((friendId) => friendId != userId)// 내 id 제거
+                    if (friendIdList.length > 0) {
+                        friendIdList.map((friendId) => {
+                            dispatch(updateFriendOnline({personalKey: userId, userParam: friendId}))
                         })
                     }
-                }else if(onlineState === 'OFFLINE'){
-                    dispatch(updateFriendOffline({personalKey:userId, offlineUser: onlineUserList.toString()}))
+                } else if (state === 'OFFLINE') {
+                    dispatch(updateFriendOffline({personalKey: userId, offlineUser: onlineUserList.toString()}))
                 }
 
-            }else if(target ==="groupMsg"){
-                dispatch(updateGroupOnlineUserList({groupKey:param, onlineList: onlineUserList}))
+            } else if (target === "groupMsg") {
+                dispatch(updateGroupOnlineUserList({groupKey: param, onlineList: onlineUserList}))
             }
         }
         //친구요청 처리
-        if(param ==='친구요청'){
-            queryClient.refetchQueries({queryKey:[QUERY_RESPONSE_FRIEND_LIST]})
-        }else if(param ==='친구수락'){
-            queryClient.refetchQueries({queryKey:[QUERY_REQUEST_FRIEND_LIST]})
-            queryClient.refetchQueries({queryKey:[QUERY_FRIEND_LIST_KEY]})
-        }else if(param ==='친구거절'){
-            queryClient.refetchQueries({queryKey:[QUERY_REQUEST_FRIEND_LIST]})
+        if (param === '친구요청') {
+            queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
+        } else if (param === '친구수락') {
+            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
+            queryClient.refetchQueries({queryKey: [QUERY_FRIEND_LIST_KEY]})
+        } else if (param === '친구거절') {
+            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
         }
 
     }, [stomp]);
 
 
-
-
-
-    return  (cookie: boolean) => {
+    return (cookie: boolean) => {
         if (stomp.isConnect && !cookie) {//로그인이 아닌데 stomp가 연결되어 있으면
             sagaRefresh()//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         }
@@ -85,7 +81,7 @@ export const useStomp = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
                     let arr = res.data
 
                     setUserId(arr.userId)//사용자 id 세팅
-                    dispatch(createFriendOnline({personalKey:arr.userId})) //친구 온라인 리스트를 담는 배열생성
+                    dispatch(createFriendOnline({personalKey: arr.userId})) //친구 온라인 리스트를 담는 배열생성
 
                     let friendArr = Array.from(arr.friendList, (value: SubScribeType) => {
                         return value.chattingRoomId;
@@ -94,7 +90,7 @@ export const useStomp = (sagaRefresh:()=>void):(cookie:boolean)=>void =>{
                         return value.groupId;
                     })
                     let subScribe = subscribeFilter(friendArr, groupArr, arr.userId)
-                    
+
                     localStorage.setItem('userId', arr.userId); // Id 저장
                     //stomp 연결시작 => dispatch synchronizationStomp >> Saga.Next()
                     dispatch(synchronizationStomp({destination: subScribe}));

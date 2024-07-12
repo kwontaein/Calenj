@@ -14,7 +14,7 @@ import {
 import {date} from "yup";
 
 
-type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT";
+type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT" | "ONLINE" | "OFFLINE";
 
 interface StompData {
     param: string | number,
@@ -130,9 +130,8 @@ function* startStomp(destination: Destination): any {
         if (timeout) isRunning = false;
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
-        console.log(receiveData.payload.receiveMessage.state)
+        console.log(receiveData.payload.receiveMessage.message)
 
-        console.log(receiveData.payload.receiveMessage)
         const {state, param, userId, message, endPoint} = receiveData.payload.receiveMessage
         if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
             endPointMap.set(param, endPointMap.get(param) + 1)
@@ -222,15 +221,13 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
     }, buffers.expanding<number>(1000) || buffers.none())
 }
 
-function onlineStateSetting(stompClient: CompatClient, msg: string) {
+function onlineStateSetting(stompClient: CompatClient, msg: stateType) {
     const userId = localStorage.getItem("userId");
     console.log("onlineStateSetting 실행", userId)
     if (userId != null) {
         const data: StompData = {
             param: `${userId}`, //groupMsg,friendMsg
-            state: "ALARM", //0:endpoint 로드
-            message: msg,
-
+            state: msg, //0:endpoint 로드
         }
         const url = `/app/personalTopic`
         stompClient.publish({

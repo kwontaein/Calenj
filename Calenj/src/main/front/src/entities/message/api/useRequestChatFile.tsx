@@ -1,9 +1,10 @@
-import {requestFile} from "../../redux/model/slice/StompReducer";
+import {requestFile} from "../../redux";
 import {useDispatch} from "react-redux";
 import store from "../../../app/hoc/store";
+import {Message} from "../../reactQuery";
 
 
-export const useRequestChatFile = (param:string):(pageParam: number) => Promise<string[] | never[]> => {
+export const useRequestChatFile = (param:string):(pageParam: number) => Promise<Message[] | never[]> => {
     const dispatch = useDispatch()
 
     //페이지에 따라 요청을 함
@@ -42,7 +43,7 @@ export const useRequestChatFile = (param:string):(pageParam: number) => Promise<
                 }
             });
         }).then((res) => {
-            return [...res as string[]]; // Promise 결과로 받은 값을 배열로 변환하여 반환
+            return res as Message[]; // Promise 결과로 받은 값을 배열로 변환하여 반환
         }).catch(() => {
             return [];
         });

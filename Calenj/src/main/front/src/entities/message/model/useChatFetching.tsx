@@ -1,7 +1,6 @@
 import {useSelector} from "react-redux";
 import {useRequestChatFile} from "../api/useRequestChatFile";
 import {Message} from "../../reactQuery";
-import {fileFilter} from "../lib/fileFilter";
 import {RootState} from "../../redux";
 
 
@@ -12,8 +11,7 @@ export const useChatFetching = (param:string):
 
     const fetchData = async ({pageParam = 0}) => {
         try {
-            const message = await requestChatFile(pageParam);
-            return fileFilter(message); // 처리된 결과 출력
+            return await requestChatFile(pageParam)
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
