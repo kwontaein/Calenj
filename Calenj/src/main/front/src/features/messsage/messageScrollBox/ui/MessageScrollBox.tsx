@@ -23,10 +23,11 @@ export const MessageScrollBox:React.FC =()=>{
     const {param} = useSelector((state:RootState)=>state.subNavigation.group_subNavState)
     const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
 
-    const {messageList, newMessageList, chatFile, compareDate} = useMessageData(param,navigate)
+    const {messageList, newMessageList, chatFile, compareDate} = useMessageData(param, navigate)
     const scrollRef =useMessageScroll(param,messageList)
 
     const loadFile = useMemo(() => {
+        console.log(param)
         return throttleByAnimationFrame(() => {
             if (!scrollRef.current) return
             chatFile.fetchNextPage()
@@ -39,8 +40,6 @@ export const MessageScrollBox:React.FC =()=>{
             loadFile();
         }
     });
-
-
 
 
     const MessageBox = useMemo(() => {

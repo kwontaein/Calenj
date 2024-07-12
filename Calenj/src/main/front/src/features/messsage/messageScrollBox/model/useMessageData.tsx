@@ -22,11 +22,11 @@ interface useMessageData {
 
 export const useMessageData = (param: string, target: string): useMessageData => {
     const [newMsgLength, setNewMsgLength] = useState(0);
-    const [fetchData, receiveNewChat] = useChatFetching(param) //데이터 패치함수
+    const {requestFile,receiveNewChat} = useChatFetching(param) //데이터 패치함수
     const stomp = useSelector((state: RootState) => state.stomp);
     const queryClient = useQueryClient();
 
-    const chatFile = useChatFileInfinite(param, newMsgLength, stomp ,fetchData)
+    const chatFile = useChatFileInfinite(param, newMsgLength, stomp ,requestFile)
     const newChat = useReceiveChatInfinite(param, stomp, receiveNewChat)
 
 
@@ -40,7 +40,7 @@ export const useMessageData = (param: string, target: string): useMessageData =>
         if ((!newChat.isFetching) && state === "SEND") {
             newChat.fetchNextPage();
         }
-    }, [stomp])
+    }, [stomp.receiveMessage.receivedUUID])
 
 
     useEffect(() => {
@@ -93,6 +93,7 @@ export const useMessageData = (param: string, target: string): useMessageData =>
 
     const messageList = useMemo(() => {
         if (chatFile.data) {
+            console.log(chatFile.data)
             return [...chatFile.data.pages.reduce((prev, current) => prev.concat(current))]
         }
         return [];

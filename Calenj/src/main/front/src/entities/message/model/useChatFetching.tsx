@@ -1,18 +1,22 @@
 import {useSelector} from "react-redux";
-import {useRequestChatFile} from "../api/useRequestChatFile";
+import {useRequestChatFile} from "./useRequestChatFile";
 import {Message} from "../../reactQuery";
 import {RootState} from "../../redux";
 import {fileFilter} from "../lib/fileFilter";
+import {useState} from "react";
 
+interface ReturnChatFetching{
+        requestFile :({pageParam}: {pageParam?: number | undefined}) => Promise<Message[]>,
+        receiveNewChat : ({pageParam}: {pageParam?: number | undefined}) => Message
+}
 
-export const useChatFetching = (param:string):
-    [({pageParam}: {pageParam?: number | undefined}) => Promise<Message[]>, ({pageParam}: {pageParam?: number | undefined}) => Message] => {
+export const useChatFetching = (param:string): ReturnChatFetching=> {
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
-    const requestChatFile = useRequestChatFile(param)
+    const receivedChatFile = useRequestChatFile(param)
 
-    const fetchData = async ({pageParam = 0}) => {
+    const requestFile = async ({pageParam = 0}) => {
         try {
-            const fileMessage = await requestChatFile(pageParam)
+            const fileMessage = await receivedChatFile(pageParam)
             return fileFilter(fileMessage);
 
         } catch (error) {
@@ -36,5 +40,5 @@ export const useChatFetching = (param:string):
             return stomp.receiveMessage.message[0];
         }
     }
-    return [fetchData,receiveNewChat]
+    return {requestFile,receiveNewChat}
 }

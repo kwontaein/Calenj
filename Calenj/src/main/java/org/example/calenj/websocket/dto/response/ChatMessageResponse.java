@@ -22,6 +22,7 @@ public class ChatMessageResponse {
     private String target;
     private List<String> images;
     private List<MessageResponse> message;
+    private UUID receivedUUID;
 
     @Getter
     @RequiredArgsConstructor
