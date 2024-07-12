@@ -146,7 +146,6 @@ public class WebSocketService {
 
     public static MessageResponse parseLineToChatMessage(String line) {
         String[] parts = line.split("\\$");
-        System.out.println(parts.length);
         if (parts.length != 5) {
             throw new IllegalArgumentException("라인 형식이 잘못되었습니다: " + line);
         }
