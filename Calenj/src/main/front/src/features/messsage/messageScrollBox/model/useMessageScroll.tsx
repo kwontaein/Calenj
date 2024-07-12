@@ -102,7 +102,6 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         //저장된 스크롤 포인트가 있으면 세팅
         else {
             scrollRef.current.scrollTop = (scrollPointMap.get(param) + (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
-            console.log('스크롤 높이 : '+scrollRef.current?.scrollHeight)
         }
 
         const {scrollHeight, clientHeight} = scrollRef.current;
@@ -144,7 +143,6 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
     //메시지 파일 요청 시 nowLine을 업데이트 > 현재 scrollTop 저장
     useEffect(() => {
         const {requestFile,nowLine} = stomp
-        console.log("stomp.nowLine : "+stomp.nowLine)
         if(!scrollRef.current || requestFile !=="RELOAD") return
         setPrevScrollHeight(scrollRef.current.scrollHeight)
     }, [stomp.nowLine]);

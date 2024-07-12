@@ -32,6 +32,7 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
     }, [param,group_subNavState.param]);
 
 
+
     return(
         param ===group_subNavState.param &&
             <FullScreen_div style={{display:"flex"}}>
@@ -43,7 +44,7 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
                                                                group_subNavState.screenWidthSize/(contentSize.width-GroupUserList_Container_width) * 100:
                                                                group_subNavState.screenWidthSize/contentSize.width * 100}>
 
-                            <MessageContainer/>
+                        <MessageContainer/>
                         </CustomScreen_MessageBox_Container>
                         {group_subNavState.clickState !=="" &&
                         <CustomScreen_SubContent_Container $screenRowFlex={screenRowFlex}

@@ -267,6 +267,7 @@ public class WebSocketService {
         //target 정하기
         response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
+        response.setReceivedUUID(UUID.randomUUID());
         sendSwitch(message, response, target);
 
     }
