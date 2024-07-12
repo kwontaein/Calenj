@@ -17,11 +17,11 @@ public class ChatMessageResponse {
     private UUID userId;
     private ChatMessageRequest.fileType state;
     private String param;
-    private List<MessageResponse> message;
     private int endPoint;
     private Set<String> onlineUserList;
     private String target;
     private List<String> images;
+    private List<MessageResponse> message;
 
     @Getter
     @RequiredArgsConstructor
