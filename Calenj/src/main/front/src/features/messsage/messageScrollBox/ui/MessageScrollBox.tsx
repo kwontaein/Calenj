@@ -46,13 +46,12 @@ export const MessageScrollBox:React.FC =()=>{
     const MessageBox = useMemo(() => {
         const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=> messageData.chatUUID!=="시작라인");
 
-
         if (!chatFile.isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef}>
                     <div className="scrollTop" ref={topRef}></div>
                     {connectList.map((message: Message , index: number) => (
-                        <div key={message.chatUUID}>
+                        <div key={message.chatUUID +index}>
                             {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate) &&( message.chatUUID!=='엔드포인트')) &&
                                 <HR_NewDate data-content={AHMFormat(changeDateForm(message.sendDate.slice(0,16))).slice(0,13)}></HR_NewDate>}
                             <MessageBoxContainer className={message.chatUUID}
@@ -67,7 +66,7 @@ export const MessageScrollBox:React.FC =()=>{
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
-                                                {message.messageType==='null' && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                {(message.messageType==='null'||message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
                                             </MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
@@ -94,7 +93,7 @@ export const MessageScrollBox:React.FC =()=>{
                                                                 ))}
                                                             </MessageGridView>
                                                         )}
-                                                        {message.messageType === 'null' && (
+                                                        {(message.messageType === 'null'||message.messageType === null) && (
                                                             <div>
                                                                 {message.message.replace(/\\lineChange/g, '\n').trim()}
                                                             </div>

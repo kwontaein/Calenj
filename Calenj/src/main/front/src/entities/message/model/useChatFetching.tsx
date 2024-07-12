@@ -2,6 +2,7 @@ import {useSelector} from "react-redux";
 import {useRequestChatFile} from "../api/useRequestChatFile";
 import {Message} from "../../reactQuery";
 import {RootState} from "../../redux";
+import {fileFilter} from "../lib/fileFilter";
 
 
 export const useChatFetching = (param:string):
@@ -11,7 +12,9 @@ export const useChatFetching = (param:string):
 
     const fetchData = async ({pageParam = 0}) => {
         try {
-            return await requestChatFile(pageParam)
+            const fileMessage = await requestChatFile(pageParam)
+            return fileFilter(fileMessage);
+
         } catch (error) {
             console.error(error); // 오류 처리
             return [];
@@ -20,16 +23,18 @@ export const useChatFetching = (param:string):
 
     const receiveNewChat = ({pageParam = 0}) => {
         //초기 세팅
-        const {chatUUID, sendDate, userId, messageType, message} = stomp.receiveMessage
-        const loadMsg: Message = {
-            chatUUID: !pageParam ? "시작라인" : chatUUID.trim(),
-            sendDate: !pageParam ? "" : sendDate,
-            userId: !pageParam ? "" : userId.trim(),
-            messageType: !pageParam ? "" : messageType.trim(),
-            message: !pageParam ? "" : message.toString(),
-        };
-        return loadMsg;
+        if(pageParam===0){
+            const startMsg: Message = {
+                chatUUID:"시작라인",
+                sendDate: '',
+                userId: "",
+                messageType: "",
+                message: "",
+            };
+            return  startMsg;
+        }else{
+            return stomp.receiveMessage.message[0];
+        }
     }
-
     return [fetchData,receiveNewChat]
 }

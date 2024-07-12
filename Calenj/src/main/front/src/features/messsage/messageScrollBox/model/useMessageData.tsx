@@ -26,18 +26,21 @@ export const useMessageData = (param: string, target: string): useMessageData =>
     const stomp = useSelector((state: RootState) => state.stomp);
     const queryClient = useQueryClient();
 
-    const chatFile = useChatFileInfinite(param, newMsgLength, stomp, fetchData)
+    const chatFile = useChatFileInfinite(param, newMsgLength, stomp ,fetchData)
     const newChat = useReceiveChatInfinite(param, stomp, receiveNewChat)
 
+
     useEffect(() => {
+
         const {state} = stomp.receiveMessage;
+        // console.log(!newChat.isFetching)
         //해당 방의 채팅내용만 받아옴
         if (param !== stomp.receiveMessage.param) return
         //셋팅 이후 send를 받음 =>1.READ한 파일 세팅 이후 처리
         if ((!newChat.isFetching) && state === "SEND") {
             newChat.fetchNextPage();
         }
-    }, [stomp.receiveMessage.chatUUID])
+    }, [stomp])
 
 
     useEffect(() => {
@@ -80,6 +83,7 @@ export const useMessageData = (param: string, target: string): useMessageData =>
 
     const newMessageList = useMemo(() => {
         if (newChat.data) {
+            // setNewMsgLength(newChat.data.pageParams.length - 1)
             //중복제거
             return removeDuplicate(newChat.data.pages)
         }

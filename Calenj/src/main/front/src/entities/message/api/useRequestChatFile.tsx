@@ -38,6 +38,7 @@ export const useRequestChatFile = (param:string):(pageParam: number) => Promise<
                 const {receiveMessage} = store.getState().stomp;
                 //아래 조건이 충족되어야만 값을 저장할 수 있음
                 if ((receiveMessage.state === "READ" && pageParam === 0) || (receiveMessage.state === "RELOAD" && pageParam > 0)) {
+                    console.log(receiveMessage)
                     res(receiveMessage.message); // 값 반환
                     unsubscribe(); // 구독 취소
                 }

@@ -136,4 +136,4 @@ export interface UserInfo {
 }
 
 export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
-export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message
+export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message;

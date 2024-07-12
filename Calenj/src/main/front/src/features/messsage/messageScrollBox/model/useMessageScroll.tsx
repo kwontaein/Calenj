@@ -24,6 +24,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
             updateScroll()
         });
     }, [param]);
+
     
     useEffect(() => {
         addScrollEvent()
@@ -33,13 +34,6 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
             scrollPointMap.set(param,beforeScrollTop.current);
         }
     }, [param,messageList])
-
-    useEffect(() => {
-      const {state} = stomp.receiveMessage
-        if(state==="RELOAD"){
-            addScrollEvent()
-        }
-    }, [stomp.receiveMessage]);
 
 
     useEffect(() => {
@@ -86,8 +80,10 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (!scrollRef.current) return
-        scrollRef.current.addEventListener('scroll', updateScroll_throttling);
 
+        scrollRef.current.addEventListener('scroll', updateScroll_throttling);
+        //메시지가 없으면 스크롤 세팅필요 X
+        if(messageList.length===0) return;
         //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
         if(scrollPointMap.get(param) === undefined){
             if (endPointMap.get(param) === 0){
@@ -106,6 +102,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         //저장된 스크롤 포인트가 있으면 세팅
         else {
             scrollRef.current.scrollTop = (scrollPointMap.get(param) + (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+            console.log('스크롤 높이 : '+scrollRef.current?.scrollHeight)
         }
 
         const {scrollHeight, clientHeight} = scrollRef.current;
@@ -116,20 +113,19 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
     }
 
 
-    //stomp의 chatUUID를 감지하여 소켓 이벤트 활성화 => updateScroll이후 다시 비활성화 => 불필요한 스크롤 업데이트 방지
+    //stomp 감지하여 소켓 이벤트 활성화 => updateScroll이후 다시 비활성화 => 불필요한 스크롤 업데이트 방지
     useEffect(() => {
         setSocketEvent(true);
         const {state} = stomp.receiveMessage;
         if (param !== stomp.receiveMessage.param || state!=="SEND") return
         updateScroll()
-    }, [stomp.receiveMessage.chatUUID]);
+    }, [stomp.receiveMessage]);
 
     //스크롤 상태에 따른 endPoint업데이트
     const updateScroll = () => {
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         const {userId} = stomp.receiveMessage
-
         beforeScrollTop.current = scrollTop - (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
 
         if(userId === localStorage.getItem('userId') && socketEvent){
@@ -145,8 +141,10 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         }
     }
 
+    //메시지 파일 요청 시 nowLine을 업데이트 > 현재 scrollTop 저장
     useEffect(() => {
-        const {requestFile} = stomp
+        const {requestFile,nowLine} = stomp
+        console.log("stomp.nowLine : "+stomp.nowLine)
         if(!scrollRef.current || requestFile !=="RELOAD") return
         setPrevScrollHeight(scrollRef.current.scrollHeight)
     }, [stomp.nowLine]);
@@ -158,8 +156,10 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         if(state!=="RELOAD") return
         // //저장한 이전높이인 prev만큼 빼줌
         if(!scrollRef.current || !prevScrollHeight) return;
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
-            setPrevScrollHeight(null)
+
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
+        scrollPointMap.set(param,scrollRef.current.scrollTop);
+        setPrevScrollHeight(null)
     },[messageList])
     //원하는 타이밍에 정확히 세팅하려면 메시지가 세팅이 완료된 후 함수를 호출해야함
 
