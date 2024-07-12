@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
+//채팅창의 input을 관리
 interface InputSizeState{
     inputSize :number,
     inputMaxSize:number

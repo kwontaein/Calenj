@@ -97,7 +97,7 @@ public class UserService {
      **/
     public UserResponse selectUserInfo() {
         UserEntity user = globalService.myUserEntity();
-        return new UserResponse(user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate(), user.getUserUsedName());
+        return new UserResponse(user.getUserId(), user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate(), user.getUserUsedName());
     }
 
     /**
@@ -240,7 +240,7 @@ public class UserService {
 
         String myUserId = globalService.extractFromSecurityContext().getUsername();
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저가 없서요"));
-
+        userProfileResponse.setUserId(userEntity.getUserId());
         userProfileResponse.setUserName(userEntity.getUserUsedName());
         userProfileResponse.setNickName(userEntity.getNickname());
         userProfileResponse.setIntroduce(userEntity.getUserIntroduce());

@@ -116,6 +116,39 @@ export const MessageContainer2 = styled.div`
     }
 `
 
+export const MessageGridView = styled.div`
+    display: grid;
+    height: fit-content;
+    grid-auto-flow: row;
+    grid-row-gap: .25rem;
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    text-indent: 0;
+    min-height: 0;
+    min-width: 0;
+    padding-top: .125rem;
+    padding-bottom: .125rem;
+    position: relative;
+`
+export const ImageWrapper = styled.div`
+    position: relative;
+    max-height: inherit;
+    border-radius: 2px;
+`
+export const ImageContent = styled.div<{$image:string}>`
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-family: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+    background-image: ${props => props.$image? `url("/image/savedImage/${props.$image.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-size: cover;
+`
+
 
 
 //채팅 endPoint선

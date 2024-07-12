@@ -12,11 +12,12 @@ import {RootState} from "../../../../entities/redux";
 import {GroupSubScreenProps} from "../model/types";
 import {updateClickState} from "../../../../entities/redux";
 import {useEffect} from "react";
+import {GroupEventOption} from "../../event/option";
 
 
 export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({isSearching})=>{
     const {searchRef, filter, setSearchWord} = useSelectBoxState(isSearching)
-    const {clickState, showMemberList} = useSelector((state:RootState) => state.group_subNavState)
+    const {clickState, showMemberList} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const boardOption = useSelector((state:RootState)=>state.boardOption);
     const dispatch = useDispatch()
 
@@ -57,6 +58,7 @@ export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({isSearching})=>
                     }
             </SubScreenSelector_Container>
             }
+            {clickState==='그룹일정'&& <GroupEventOption/>}
         </>
     )
 }

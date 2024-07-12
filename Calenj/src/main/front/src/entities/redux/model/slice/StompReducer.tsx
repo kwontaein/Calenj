@@ -30,11 +30,12 @@ export interface Message {
 
 //초기상태 정의
 export interface StompState {
+    receiveMessage: Message, //받은 메세지 정보
+
     destination: Destination,
     target: string,
     param: string,
     message: string, //송신한 메시지
-    receiveMessage: Message, //받은 메세지 정보
     requestFile: requestType,
     nowLine: number,
     isOnline: string, //온라인여부

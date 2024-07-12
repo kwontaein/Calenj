@@ -8,7 +8,7 @@ import {updateBoardFilter} from "../../../../../../entities/redux";
 export const useFilterState = ():[()=>void, (target:string)=>void,(target:string)=>void]=>{
     const {filter_setting} = useSelector((state:RootState) => state.boardOption)
     const {filterA, filterB} = filter_setting
-    const { param } = useSelector((state:RootState) => state.group_subNavState)
+    const { param } = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const dispatch = useDispatch()
 
 

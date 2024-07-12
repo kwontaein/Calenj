@@ -7,12 +7,11 @@ import {initializeStompChannel} from '../../entities/redux/model/module/StompMid
 import emailValidationReducer from '../../entities/redux/model/slice/EmailValidationSlice';
 import StompReducer, {updateStompState} from '../../entities/redux/model/slice/StompReducer';
 import navigateReducer from '../../entities/redux/model/slice/NavigatgionSlice';
-import subNavigateReducer from '../../entities/redux/model/slice/GroupSubNavigationSlice';
+import subNavigateReducer from '../../entities/redux/model/slice/SubNavigationSlice';
 import boardOptionReducer from '../../entities/redux/model/slice/BoardOptionSlice';
 import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSlice';
 import calendarReducer from "../../entities/redux/model/slice/CalendarControllerSlice";
 import UserDataReducer from "../../entities/redux/model/slice/UserNameRegisterSlice";
-import MainSubNavigationReducer from "../../entities/redux/model/slice/MainSubNavigationSlice";
 import friendViewReducer from "../../entities/redux/model/slice/FriendViewSlice";
 import onlineUserReducer from "../../entities/redux/model/slice/OnlineUserStorageSlice";
 import MessageInputSizeReducer from "../../entities/redux/model/slice/InputSizeSlice";
@@ -28,12 +27,11 @@ const rootReducer = combineReducers({
   stomp: StompReducer,
   emailValidation: emailValidationReducer,
   navigateInfo:navigateReducer,
-  group_subNavState:subNavigateReducer,
+  subNavigation:subNavigateReducer,
   boardOption:boardOptionReducer,
   dateEventTag:dateEventTagReducer,
   calendarController : calendarReducer,
   userNameRegister : UserDataReducer,
-  main_subNavState : MainSubNavigationReducer,
   friendViewState :friendViewReducer,
   onlineStorage : onlineUserReducer,
   messageInputSize : MessageInputSizeReducer,

@@ -21,7 +21,7 @@ interface ContentCompositionProps{
 }
 
 export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, contentSize}) =>{
-    const group_subNavState = useSelector((state:RootState) => state.group_subNavState)
+    const group_subNavState = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const screenRowFlex = useScreenMode(param,contentSize,group_subNavState.showMemberList);
     const dispatch = useDispatch()
 

@@ -37,9 +37,11 @@ export const DateEventTitle_Input = styled.input`
     transition: border-bottom-color 0.3s ease-in;
     &:focus{
         outline: none;
+        border:none;
         border-bottom: 2px solid ${PointColor};
     }
 `
+
 
 export const Category_Container = styled.div`
     margin-top: 20px;

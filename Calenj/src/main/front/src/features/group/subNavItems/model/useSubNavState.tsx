@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {updateSubClickState, updateSubParam,toggleCurrentMap} from "../../../../entities/redux";
+import {updateGroupSubClickState, updateGroupSubParam,toggleCurrentMap} from "../../../../entities/redux";
 import {useDispatch} from "react-redux";
 
 export const useSubNavState = (groupId:string)
@@ -13,8 +13,8 @@ export const useSubNavState = (groupId:string)
         }
         const subNavState = (toggleCurrentMap.get(groupId));
         setToggleState(subNavState.toggleState);
-        dispatch(updateSubClickState({clickState:subNavState.clickState}));
-        dispatch(updateSubParam({param:groupId}));
+        dispatch(updateGroupSubClickState({clickState:subNavState.clickState}));
+        dispatch(updateGroupSubParam({param:groupId}));
     }, [groupId]);
 
 
@@ -24,10 +24,10 @@ export const useSubNavState = (groupId:string)
             const subNavgationState = toggleCurrentMap.get(groupId);
             if (subNavgationState.clickState === target) {
                 subNavgationState.clickState = "";
-                dispatch(updateSubClickState({clickState: ""}));
+                dispatch(updateGroupSubClickState({clickState: ""}));
             } else {
                 subNavgationState.clickState = target;
-                dispatch(updateSubClickState({clickState: target}));
+                dispatch(updateGroupSubClickState({clickState: target}));
             }
             toggleCurrentMap.set(groupId, subNavgationState)
         }

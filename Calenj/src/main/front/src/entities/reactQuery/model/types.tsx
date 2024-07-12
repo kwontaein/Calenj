@@ -90,13 +90,18 @@ export interface FriendEvent {
 }
 
 
-
 export interface Message {
     chatUUID: string,
     sendDate: string,
     userId: string,
     messageType: string,
     message: string,
+}
+
+export interface ImageStorage{
+    [imageId:string]:{
+        name:string,
+    }
 }
 
 interface FetchDataParams {
@@ -126,14 +131,15 @@ export interface UserDateEvent {
     }
 }
 
-export interface UserInfo{
-    nickname:string,
-    userEmail :string,
-    userIntroduce :string,
-    userPhone :string,
-    userJoinDate :string,
+export interface UserInfo {
+    nickname: string,
+    userEmail: string,
+    userIntroduce: string,
+    userPhone: string,
+    userJoinDate: string,
     userUsedName: string,
+    userId:string,
 }
 
 export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
-export type ReceiveData = ({pageParam}: { pageParam?: number | undefined }) => Message
+export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message

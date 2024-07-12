@@ -49,10 +49,10 @@ public class WebSocketService {
     /**
      * 파일 받아오기
      *
-     * @param message 전달받은 내용
+     * @param param 받아올 파일아이디
      **/
-    public List<String> getFile(ChatMessageRequest message) {
-        String uuid = message.getParam();
+    public List<String> getFile(String param) {
+        String uuid = param;
         String filePath = "C:\\chat\\chat" + uuid;
         List<String> lines;
         try {
@@ -69,10 +69,9 @@ public class WebSocketService {
      * @param message 전달받은 내용
      **/
     public UUID saveChattingToFile(ChatMessageRequest message) {
-        System.out.println("getMessage : \n" + message.getMessage());
         // 파일을 저장한다.
         // 메시지 내용
-        List<String> lines = getFile(message);
+        List<String> lines = getFile(message.getParam());
 
         if (lines == null) {
             return null;
@@ -83,7 +82,6 @@ public class WebSocketService {
                         message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
                 message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
 
-        System.out.println("messageContent : \n" + messageContent);
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
                 String Title = "시작라인 $어서오세요! \n";
@@ -103,7 +101,7 @@ public class WebSocketService {
      * @param message 전달받은 내용
      **/
     public List<String> readGroupChattingFile(ChatMessageRequest message) {
-        List<String> lines = getFile(message);
+        List<String> lines = getFile(message.getParam());
 
         if (lines == null) {
             return null;
@@ -132,7 +130,6 @@ public class WebSocketService {
                 .toList();
 
         previousLines.addAll(previousLines2);
-        System.out.println("previousLines : " + previousLines);
 
         if (previousLines.isEmpty()) {
             return null;
@@ -147,7 +144,7 @@ public class WebSocketService {
      **/
     public List<String> readGroupChattingFileSlide(ChatMessageRequest message) {
 
-        List<String> lines = getFile(message);
+        List<String> lines = getFile(message.getParam());
         Collections.reverse(lines);
 
         int batchSize = 20;
@@ -178,7 +175,7 @@ public class WebSocketService {
      **/
     public int countLinesUntilEndPoint(ChatMessageRequest message) {
 
-        List<String> lines = getFile(message);
+        List<String> lines = getFile(message.getParam());
 
         if (lines == null) {
             return 0;
