@@ -80,6 +80,9 @@ public class WebSocketService {
             return null;
         }
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
+        if (message.getChatUUID() != null && message.getMessageType() == "file") {
+            messageUUid = message.getChatUUID();
+        }
         String messageContent = message.getState() == ChatMessageRequest.fileType.SEND ?
                 "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " +
                         message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n" :
@@ -87,7 +90,7 @@ public class WebSocketService {
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
-                String Title = "시작라인 $어서오세요! \n";
+                String Title = "시작라인 $어서오세요! $ $ $ $ \n";
                 stream.write(Title.getBytes(StandardCharsets.UTF_8));
             }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));

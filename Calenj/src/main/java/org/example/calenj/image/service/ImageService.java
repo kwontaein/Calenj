@@ -3,6 +3,7 @@ package org.example.calenj.image.service;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
+import org.example.calenj.websocket.dto.response.MessageResponse;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,6 +17,7 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -148,9 +150,10 @@ public class ImageService {
                 UUID uuid = UUID.randomUUID();
                 fileValid(uuid, file);
                 System.out.println(file.getOriginalFilename());
-                imageIds.add(uuid.toString());
+                imageIds.add("[[" + uuid + "],[" + file.getOriginalFilename() + "]]");
             }
 
+            UUID uuid = UUID.randomUUID();
             ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
             chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
             chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
@@ -158,11 +161,20 @@ public class ImageService {
             chatMessageRequest.setMessage(imageIds.toString());
             chatMessageRequest.setParam(param);
             chatMessageRequest.setMessageType("file");
-            chatMessageRequest.setChatUUID(webSocketService.saveChattingToFile(chatMessageRequest));
+            chatMessageRequest.setChatUUID(uuid);
+
+            webSocketService.saveChattingToFile(chatMessageRequest);
+
+            MessageResponse messageResponse = new MessageResponse(
+                    chatMessageRequest.getChatUUID().toString(),
+                    chatMessageRequest.getSendDate(),
+                    chatMessageRequest.getUserId().toString(),
+                    chatMessageRequest.getMessageType(),
+                    chatMessageRequest.getMessage());
 
             ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
+            chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
-
             template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
             return true;
         } catch (Exception e) {
