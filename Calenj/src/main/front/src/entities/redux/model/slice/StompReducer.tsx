@@ -1,6 +1,7 @@
 import {createAction, handleActions} from 'redux-actions';
 import {Dispatch} from 'redux';
 import {RootState} from "../types";
+import {Message} from "../../../reactQuery";
 
 // Action Types
 export const SYNCHRONIZATION_STOMP = 'SYNCHRONIZATION_STOMP';
@@ -28,13 +29,6 @@ export interface ReceivedStomp {
     messageType: string,
 }
 
-export interface Message {
-    chatUUID: string,
-    sendDate: string,
-    userId: string,
-    messageType: string,
-    message: string | string[],
-}
 
 //초기상태 정의
 export interface StompState {

@@ -170,7 +170,7 @@ public class WebSocketService {
 
         List<String> lines = getFile(message.getParam());
         Collections.reverse(lines);
-
+        System.out.println("message.getNowLine() :"+ message.getNowLine());
         int batchSize = 20;
         //위로 아래로인지 구분
         //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
