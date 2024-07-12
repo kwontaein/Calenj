@@ -14,7 +14,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
     const [socketEvent,setSocketEvent] = useState<boolean>(false); //내가 socketEvent를 발생시킨 여부 (식별하기 위해 사용)
     const dispatch = useDispatch();
     const stomp = useSelector((state:RootState)=>state.stomp); // 리덕스 상태 구독
-    const {screenHeightSize,mode, clickState} = useSelector((state:RootState)=>state.group_subNavState)
+    const {screenHeightSize,mode, clickState} = useSelector((state:RootState)=>state.subNavigation.group_subNavState)
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
     const beforeInputSize = useRef(inputSize);
 

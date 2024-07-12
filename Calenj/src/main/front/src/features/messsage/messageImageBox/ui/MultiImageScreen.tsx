@@ -19,10 +19,6 @@ export const MultiImageScreen :React.FC<ImageHandlerProps> = ({useMultiImageHand
     const [showPreviewIndex,setPreviewIndex] = useState(-1)
 
 
-    useEffect(() => {
-        console.log(useMultiImageHandler.file)
-    }, [useMultiImageHandler.file]);
-
     return(
         <div ref={contentRef}>
             {useMultiImageHandler.dragOver && (

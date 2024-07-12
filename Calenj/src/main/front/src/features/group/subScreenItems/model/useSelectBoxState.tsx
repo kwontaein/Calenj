@@ -16,7 +16,7 @@ export const useSelectBoxState =(isSearching:(word:string)=>void):SelectBoxRetur
     const [filter, setFilter] = useState<boolean>(false);
     const [searchWord,setSearchWord] = useState<string>('');
     const [loading,setLoading] = useState<boolean>(true);
-    const { param, clickState } = useSelector((state:RootState) => state.group_subNavState)
+    const { param, clickState } = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
     const boardOption = useSelector((state:RootState) => state.boardOption)
     const dispatch = useDispatch()

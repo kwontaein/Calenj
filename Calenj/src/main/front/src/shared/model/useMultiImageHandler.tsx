@@ -9,7 +9,7 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<PreviewData[]>([]);
     const [dragOver, setDragOver] = useState(false);
-    const groupId= useSelector((state:RootState)=> state.group_subNavState.param)
+    const groupId= useSelector((state:RootState)=> state.subNavigation.group_subNavState.param)
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;

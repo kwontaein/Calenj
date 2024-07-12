@@ -1,5 +1,5 @@
 import {SubScreenSelectBox} from "./SubScreenSelectBox";
-import {GroupSubScreenTopIcon_Container} from "./GroupSubScreenStyled";
+import {GroupSubScreenTopIcon_Container, OptionIcon_Container} from "./GroupSubScreenStyled";
 import {useBoardState} from "../model/useBoardState";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
@@ -7,7 +7,7 @@ import {RootState} from "../../../../entities/redux";
 
 export const SubScreenOption : React.FC = () =>{
     const {selectBox, showSelectBox, isSearching, ExitBoardDetail, setShowSelectBox} = useBoardState()
-    const { clickState } = useSelector((state:RootState) => state.group_subNavState)
+    const { clickState } = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const boardOption = useSelector((state:RootState) => state.boardOption)
 
     return(
@@ -15,13 +15,12 @@ export const SubScreenOption : React.FC = () =>{
                                          $isClick={showSelectBox}>
             {(clickState === "공지" && boardOption.noticeParam !== "") ?
                 <i className="fi fi-br-exit" style={{marginTop: "3px"}} onClick={ExitBoardDetail}></i>:
-                <div>
-                    {showSelectBox && <SubScreenSelectBox isSearching={isSearching}/>}
+                <OptionIcon_Container>
                     <i className="fi fi-rs-menu-dots" style={{marginTop: "3px"}}
-                       onClick={() => {
-                           setShowSelectBox((prev) => !prev)
-                       }}></i>
-                </div>
+                       onClick={() => {setShowSelectBox((prev) => !prev)}}>
+                    </i>
+                    {showSelectBox && <SubScreenSelectBox isSearching={isSearching}/>}
+                </OptionIcon_Container>
             }
         </GroupSubScreenTopIcon_Container>
     )

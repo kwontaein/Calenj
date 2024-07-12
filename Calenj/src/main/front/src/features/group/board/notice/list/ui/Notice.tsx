@@ -20,7 +20,7 @@ import {SubScreenProps} from "../model/types";
 export const Notice: React.FC<SubScreenProps> = ({subWidth}) => {
     const {clickState, noticeParam, search_keyWord} = useSelector((state:RootState)=>state.boardOption);
     const [checkNoticeParam,redirectDetail] =useNoticeOption()
-    const {param} = useSelector((state:RootState) => state.group_subNavState)
+    const {param} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
     const noticeListState = useFetchNoticeList(param)
 

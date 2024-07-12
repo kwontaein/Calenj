@@ -5,7 +5,7 @@ import {CalendarView} from "../../../../../features/calendar/view";
 
 export const MainContentView:React.FC = () =>{
 
-    const {clickState} = useSelector((state:RootState) => state.main_subNavState)
+    const {clickState} = useSelector((state:RootState) => state.subNavigation.main_subNavState)
     return(
         <>
             {clickState==='calendar' && <CalendarView/>}

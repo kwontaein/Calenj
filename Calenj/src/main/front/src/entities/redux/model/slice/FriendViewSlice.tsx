@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-interface FriendViewProps{
+interface FriendViewState{
     viewState:string,
 }
 
-const initialState: FriendViewProps = {
+const initialState: FriendViewState = {
     viewState :'online'
 }
 

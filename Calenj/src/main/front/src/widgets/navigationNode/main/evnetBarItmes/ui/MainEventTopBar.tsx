@@ -9,7 +9,7 @@ import {Simulate} from "react-dom/test-utils";
 import click = Simulate.click;
 
 export const MainEventTopBar: React.FC = () => {
-    const {clickState, friendParam} = useSelector((state: RootState) => state.main_subNavState)
+    const {clickState, friendParam} = useSelector((state: RootState) => state.subNavigation.main_subNavState)
 
     return (
         <MainEventTopBar_Container>

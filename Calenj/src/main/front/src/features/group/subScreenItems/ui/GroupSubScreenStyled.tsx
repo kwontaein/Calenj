@@ -32,7 +32,7 @@ export const GroupSubScreenTopIcon_Container = styled.div<OptionClick>`
     color:${props => props.$isClick ? TextColor:TextColor2};
     margin-right: 10px;
     &:hover{
-        color: ${TextColor};
+        color: ${TextColor}77;
     }
 `
 export const GroupSubScreenContent_Container =styled.div`
@@ -43,3 +43,9 @@ export const GroupSubScreenContent_Container =styled.div`
     overflow-y: auto; /* 수직 스크롤을 활성화. */
 `
 
+export const OptionIcon_Container = styled.div`
+    color:${TextColor};
+    &:hover{
+        color: ${TextColor}77;
+    }
+`

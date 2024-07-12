@@ -23,7 +23,7 @@ export const NoticeModal: React.FC = () => {
     const modalBackground = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch()
 
-    const groupId = useSelector((state:RootState) => state.group_subNavState.param)
+    const groupId = useSelector((state:RootState) => state.subNavigation.group_subNavState.param)
 
     useEffect(() => {
         inputRef.current?.focus();

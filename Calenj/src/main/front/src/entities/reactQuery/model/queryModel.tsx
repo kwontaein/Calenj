@@ -22,7 +22,7 @@ import {
     FriendEvent,
     Message,
     FetchData,
-    ReceiveData,
+    ReceivedData,
     VoteDetail,
     EventTagDTO, UserDateEvent, UserInfo
 } from "./types";
@@ -161,7 +161,7 @@ export const useChatFileInfinite = (param:string, newMsgLength:number, stomp:Sto
 
 
 
-export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNewChat:ReceiveData) =>
+export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNewChat:ReceivedData) =>
     useInfiniteQuery({
     queryKey: [QUERY_NEW_CHAT_KEY, param],
     queryFn: receiveNewChat,

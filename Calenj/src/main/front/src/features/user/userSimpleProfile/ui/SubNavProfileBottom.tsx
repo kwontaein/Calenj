@@ -10,7 +10,7 @@ import {RootState, updateMainSubNavigation} from "../../../../entities/redux";
 import {LogoutButton} from "../../../authentication/logout";
 
 export const SubNavProfileBottom :React.FC = () =>{
-    const {clickState, friendParam} = useSelector((state:RootState)=> state.main_subNavState)
+    const {clickState, friendParam} = useSelector((state:RootState)=> state.subNavigation.main_subNavState)
     const dispatch = useDispatch();
     const subNavHandler = (target:string)=>{
         dispatch(updateMainSubNavigation({clickState:target}));

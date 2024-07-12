@@ -10,7 +10,7 @@ import {NoticeButtonsProps} from "../model/types";
 
 
 export const CreateNoticeButton: React.FC<NoticeButtonsProps> = ({title,content}) => {
-    const {param} = useSelector((state:RootState)=> state.group_subNavState)
+    const {param} = useSelector((state:RootState)=> state.subNavigation.group_subNavState)
     const dispatch = useDispatch()
     const onClose = ()=>{
         dispatch(updateClickState({clickState: ''}))

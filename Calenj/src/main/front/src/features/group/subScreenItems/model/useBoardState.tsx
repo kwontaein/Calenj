@@ -15,7 +15,7 @@ export const useBoardState = ():BoardStateProps =>{
     const [showSelectBox, setShowSelectBox] = useState<boolean>(false); //selectBox on/off
     const [search,setSearch] = useState<boolean>(false); //옵션 선택현황
     const selectBox = useRef<HTMLDivElement>(null);
-    const {param, clickState} = useSelector((state:RootState) => state.group_subNavState)
+    const {param, clickState} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const boardOption = useSelector((state:RootState) => state.boardOption)
     const dispatch = useDispatch()
 

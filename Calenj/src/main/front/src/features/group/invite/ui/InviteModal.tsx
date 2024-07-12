@@ -25,7 +25,7 @@ export const InviteModal: React.FC<ModalProps> = ({onClose, inviteLink}) => {
     const modalBackground = useRef<HTMLDivElement>(null);
     const [groupDetail,setGroupDetail] =useState<GroupDetail|undefined>()
     const queryClient = useQueryClient();
-    const groupId= useSelector((state:RootState)=> state.group_subNavState.param)
+    const groupId= useSelector((state:RootState)=> state.subNavigation.group_subNavState.param)
 
     useEffect(() => {
            setGroupDetail(queryClient?.getQueryData([QUERY_GROUP_DETAIL_KEY,groupId]))

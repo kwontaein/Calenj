@@ -13,7 +13,7 @@ import {
 import {MiddleLine_Size} from "../../subScreenItems";
 import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
-import {RootState, updateSubScreenHeightSize, updateSubScreenWidthSize} from "../../../../entities/redux";
+import {RootState, updateGroupSubScreenWidthSize, updateGroupSubScreenHeightSize} from "../../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
 
 export const useScreenHandler = (showMemberList:boolean, currentMode:string, contentSize:contentSize,)
@@ -24,7 +24,7 @@ export const useScreenHandler = (showMemberList:boolean, currentMode:string, con
     const defaultContentSize = GroupList_Container_width + SubNavigation_Container_width;
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
     const beforeInputSize = useRef<number>(60);
-    const {screenHeightSize,mode} = useSelector((state:RootState) => state.group_subNavState);
+    const {screenHeightSize,mode} = useSelector((state:RootState) => state.subNavigation.group_subNavState);
 
 
     //input사이즈 + subScreenHeight의 크기가 전체화면의 크기를 초과하지 않도록 조정
@@ -32,7 +32,7 @@ export const useScreenHandler = (showMemberList:boolean, currentMode:string, con
         if(mode==="row") return
         if(screenHeightSize >= contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3){
             const newHeight = screenHeightSize - (screenHeightSize -(contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3))
-            dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
+            dispatch(updateGroupSubScreenHeightSize({screenHeightSize:newHeight}))
         }
     }, [inputSize]);
 
@@ -60,20 +60,20 @@ export const useScreenHandler = (showMemberList:boolean, currentMode:string, con
             if(showMemberList) {
                 const smallNewWidth = newWidth - GroupUserList_Container_width
                 if(smallNewWidth>ScrollMin_width && smallNewWidth<(maxScroll-GroupUserList_Container_width)){
-                    // updateSubScreenWidthSize({screenWidthSize: smallNewWidth})
-                    dispatch(updateSubScreenWidthSize({screenWidthSize: smallNewWidth}))
+                    // updateGroupSubScreenWidthSize({screenWidthSize: smallNewWidth})
+                    dispatch(updateGroupSubScreenWidthSize({screenWidthSize: smallNewWidth}))
                 }
             }else {
                 if(newWidth>ScrollMin_width && newWidth<maxScroll){
-                    // updateSubScreenWidthSize({screenWidthSize:newWidth})
-                    dispatch(updateSubScreenWidthSize({screenWidthSize: newWidth}))
+                    // updateGroupSubScreenWidthSize({screenWidthSize:newWidth})
+                    dispatch(updateGroupSubScreenWidthSize({screenWidthSize: newWidth}))
                 }
             }
         }else if(currentMode ==="column"){
             const newHeight = e.clientY- (SubNavigateTopBar_height+(SubNavigate_paddingBlock*2)+subNavigateBorder-MiddleLine_Size);
             //전체크기 - (*이벤트바+input의 크기) 보다 작아야함
             if(newHeight >=185 && newHeight <=contentSize.height-(SubNavigateTopBar_height*2)-inputSize-3){
-                dispatch(updateSubScreenHeightSize({screenHeightSize:newHeight}))
+                dispatch(updateGroupSubScreenHeightSize({screenHeightSize:newHeight}))
             }
         }
 
@@ -81,7 +81,7 @@ export const useScreenHandler = (showMemberList:boolean, currentMode:string, con
 
     useEffect(() => {
         if(beforeInputSize.current!= inputSize){
-            // dispatch(updateSubScreenHeightSize({screenHeightSize:screenHeightSize+(beforeInputSize.current-inputSize)}))
+            // dispatch(updateGroupSubScreenHeightSize({screenHeightSize:screenHeightSize+(beforeInputSize.current-inputSize)}))
             beforeInputSize.current = inputSize
         }
     }, [inputSize]);

@@ -2,7 +2,7 @@ import {Message} from "../../reactQuery";
 
 export const fileFilter = (messages: string[]) => {
     const messageEntries = Array.from(messages, (message: string) => {
-        const [chatUUID,sendDate,userId,messageType,messageContent] = message.split("$", 6);
+        const [chatUUID,sendDate,userId,messageType,messageContent] = message.split("$", 5);
 
         const loadMsg: Message = {
             chatUUID: chatUUID.trim(),
