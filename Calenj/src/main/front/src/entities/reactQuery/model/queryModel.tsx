@@ -172,4 +172,4 @@ export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNew
     enabled: param === stomp.param,
     refetchInterval:false,
     staleTime: Infinity,
-});
+    });

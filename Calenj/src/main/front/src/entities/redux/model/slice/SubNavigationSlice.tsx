@@ -17,7 +17,7 @@ interface Main_SubNavigationProps{
 }
 
 
-export interface Group_SubNavigateState{
+export interface SubNavigateState{
     group_subNavState:Group_SubNavigationProps;
     main_subNavState: Main_SubNavigationProps;
 }
@@ -26,7 +26,7 @@ export interface Group_SubNavigateState{
 
 
 // 초기상태
-const initialState: Group_SubNavigateState ={
+const initialState: SubNavigateState ={
    group_subNavState : {
        param:'',
        clickState:'',
@@ -42,7 +42,7 @@ const initialState: Group_SubNavigateState ={
 }
 
 
-const group_subNavigation = createSlice({
+const subNavigation = createSlice({
     name:'group_subNavigationState',
     initialState,
     reducers:{
@@ -74,7 +74,13 @@ const group_subNavigation = createSlice({
 })
 
 
-export const {updateGroupSubParam,updateGroupSubClickState,updateGroupSubScreenMode,updateGroupSubScreenHeightSize,updateGroupSubScreenWidthSize, updateGroupShowMemberList,updateMainSubNavigation} = group_subNavigation.actions;
+export const {updateGroupSubParam,
+            updateGroupSubClickState,
+            updateGroupSubScreenMode,
+            updateGroupSubScreenHeightSize,
+            updateGroupSubScreenWidthSize,
+            updateGroupShowMemberList,
+            updateMainSubNavigation} = subNavigation.actions;
 
 
-export default group_subNavigation.reducer;
+export default subNavigation.reducer;

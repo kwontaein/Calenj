@@ -20,13 +20,10 @@ type requestType = "ENDPOINT" | "READ" | "RELOAD" | "ONLINE" | "OFFLINE" | "";
 export interface ReceivedStomp {
     param: string,
     message: Message[],
-    userId: string,
-    sendDate: string,
-    chatUUID: string,
     state: stateType,
     onlineUserList: string[],
     target: string,
-    messageType: string,
+    userId:string,
 }
 
 
@@ -189,13 +186,10 @@ const initialState: StompState = {
     receiveMessage: {
         param: '',
         message: [],
-        userId: '',
-        sendDate: '',
         state: '',
-        chatUUID: '',
         onlineUserList: [],
-        messageType: '',
         target: '',
+        userId:'',
     }, // 초기 message 상태
     requestFile: '',
     nowLine: -1,

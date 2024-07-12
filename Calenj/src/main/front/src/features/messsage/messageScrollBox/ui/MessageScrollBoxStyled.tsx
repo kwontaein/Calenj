@@ -215,3 +215,7 @@ export const HR_NewDate = styled.hr`
         background-color:${ThemeColor2};
     }
 `
+
+export const WaitingBlock_Container = styled.div`
+    
+`
