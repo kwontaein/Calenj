@@ -10,9 +10,9 @@ interface ReturnChatFetching{
         receiveNewChat : ({pageParam}: {pageParam?: number | undefined}) => Message
 }
 
-export const useChatFetching = (param:string): ReturnChatFetching=> {
+export const useChatFetching = (): ReturnChatFetching=> {
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
-    const receivedChatFile = useRequestChatFile(param)
+    const receivedChatFile = useRequestChatFile(stomp.param)
 
     const requestFile = async ({pageParam = 0}) => {
         try {
