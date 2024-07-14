@@ -32,6 +32,7 @@ const ChatComponent: React.FC = () => {
 
     //api 중복 호출 방지
     const isFetchingRef = useRef(false); // 요청 진행 여부를 추적하는 ref
+    const isSendRef = useRef(false); // 요청 진행 여부를 추적하는 ref
 
     //높이 관련
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -62,6 +63,7 @@ const ChatComponent: React.FC = () => {
         }
     }, [stomp.receiveMessage.message]);
 
+
     //uuid로 스크롤 이동
     const scrollToMessage = useCallback((chatUUID: string) => {
         const messageDiv = messageRefs.current[chatUUID];
@@ -69,6 +71,8 @@ const ChatComponent: React.FC = () => {
             containerRef.current.scrollTop = messageDiv.offsetTop;
         }
     }, []);
+
+
     //스크롤 맨 밑으로 이동
     const scrollToBottom = useCallback(() => {
         if (containerRef.current) {
@@ -76,10 +80,24 @@ const ChatComponent: React.FC = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (newMessages.length > 0) {
+            console.log("실행1?")
+            if (containerRef.current) {
+                const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
+                console.log(scrollHeight - scrollTop, clientHeight + 300)
+                const isAtBottom = scrollHeight - scrollTop <= clientHeight + 300; // 바닥에서 50px 이내에 있을 경우
+                if (isAtBottom) {
+                    console.log("실행3?")
+                    scrollToBottom();
+                }
+            }
+        }
+    }, [newMessages, scrollToBottom]);
+
     //시작하자마자 데이터 받아오기
     useEffect(() => {
         fetchInitialMessages();
-
 
     }, []);
     //시작하자마자 데이터 받아오기 #2
@@ -92,6 +110,9 @@ const ChatComponent: React.FC = () => {
         setLastMessage(response.data[response.data.length - 1])
         setIsLastPage(true);
 
+        if (response.data[0].chatUUID === "시작라인") {
+            setIsFirstPage(true);
+        }
         setTimeout(() => {
             // 엔드포인트 메시지가 있는지 확인
             const hasEndPoint = response.data.some((message: Message) => message.chatUUID === "엔드포인트");
@@ -130,8 +151,14 @@ const ChatComponent: React.FC = () => {
             if (bottomDivRect && bottomDivRect.top <= containerRect.bottom && hasMoreBottom) {
                 fetchMoreMessages('newer', messages[messages.length - 1]?.chatUUID).then(r => console.log());
             }
-            if (lastPage && endPointDivRect && endPointDivRect.top <= containerRect.bottom) {
+            if (lastPage && endPointDivRect && endPointDivRect.top <= containerRect.bottom && !isSendRef.current) {
+                isSendRef.current = true; // 중복 호출 방지 플래그 설정
+
                 sendEndPoint(); // lastPage가 true이고 화면이 맨 아래에 닿았을 때 함수 호출
+
+                setTimeout(() => {
+                    isSendRef.current = false; // 일정 시간 후 다시 호출 가능하게 설정
+                }, 3000);
             }
         };
 

@@ -186,7 +186,7 @@ public class FileService {
         List<String> previousLines2 = lines.stream()
                 .filter(createFilterCondition(chatFileRequest.getParam()))
                 .skip(startIndex)
-                .limit(20)
+                .limit(30)
                 .map(stringTransformer)
                 .toList();
 
@@ -224,7 +224,7 @@ public class FileService {
 
         List<String> lines = getFile(chatFileRequest.getParam());
         Collections.reverse(lines);
-        int batchSize = 20;
+        int batchSize = 30;
         //위로 아래로인지 구분
         //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
         List<String> previousLines;
@@ -248,7 +248,7 @@ public class FileService {
 
             Collections.reverse(previousContents);
             previousLines = previousContents.stream()
-                    .limit(20)
+                    .limit(batchSize)
                     .collect(Collectors.toList());
             Collections.reverse(previousLines);
         }

@@ -99,6 +99,7 @@ public class WebSocketService {
      * @param message 전달받은 내용
      **/
     public UUID saveChattingToFile(ChatMessageRequest message) {
+        System.out.println("시발" + message.getState());
         // 파일을 저장한다.
         // 메시지 내용
         List<String> lines = getFile(message.getParam());
@@ -115,14 +116,14 @@ public class WebSocketService {
         if (message.getState() == ChatMessageRequest.fileType.SEND) {
             messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
         } else {
-            messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
             if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
+                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
                 System.out.println("실행됨");
             } else {
+                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
                 System.out.println("실패됨");
             }
         }
-
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
             if (lines == null) {
@@ -334,14 +335,12 @@ public class WebSocketService {
             }
             case SEND: {
                 saveChattingToFile(message);
-
                 MessageResponse messageResponse = new MessageResponse(
                         message.getChatUUID().toString(),
                         message.getSendDate(),
                         message.getUserId().toString(),
                         message.getMessageType(),
                         message.getMessage());
-
                 response.setMessage(Collections.singletonList(messageResponse));
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
                 return;
