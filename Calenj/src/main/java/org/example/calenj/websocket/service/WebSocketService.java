@@ -208,9 +208,6 @@ public class WebSocketService {
         Collections.reverse(lines);
         System.out.println("message.getNowLine() :" + message.getNowLine());
         int batchSize = 20;
-        //위로 아래로인지 구분
-        //라인 갯수만큼 스킵하거나, 전달받은 마지막 라인부터 시작
-        //int startIndex = message.isUpDown() ? message.getNowLine() : lines.indexOf(message.getLastLine()) + 1;
 
         List<String> previousLines = lines.stream()
                 .filter(createFilterCondition(message.getParam()))

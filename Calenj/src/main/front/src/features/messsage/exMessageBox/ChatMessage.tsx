@@ -15,6 +15,9 @@ const ChatComponent: React.FC = () => {
     const [lastMessage, setLastMessage] = useState<Message>();
 
     //맨 처음 페이지인지
+    const [alarm, setAlarm] = useState<number>(0);
+
+    //맨 처음 페이지인지
     const [firstPage, setIsFirstPage] = useState<boolean>(false);
     //맨 마지막 페이지인지
     const [lastPage, setIsLastPage] = useState<boolean>(true);
@@ -55,9 +58,7 @@ const ChatComponent: React.FC = () => {
         if (stomp.receiveMessage.message) {
             setNewMessages([...newMessages, ...stomp.receiveMessage.message]);
             setLastMessage(stomp.receiveMessage.message[stomp.receiveMessage.message.length - 1]);
-            setTimeout(() => {
-                scrollToBottom();
-            }, 50);
+            setAlarm(alarm + 1);
         }
     }, [stomp.receiveMessage.message]);
 
@@ -78,6 +79,8 @@ const ChatComponent: React.FC = () => {
     //시작하자마자 데이터 받아오기
     useEffect(() => {
         fetchInitialMessages();
+
+
     }, []);
     //시작하자마자 데이터 받아오기 #2
     const fetchInitialMessages = async () => {
@@ -88,9 +91,16 @@ const ChatComponent: React.FC = () => {
         setMessages(response.data);
         setLastMessage(response.data[response.data.length - 1])
         setIsLastPage(true);
+
         setTimeout(() => {
-            scrollToBottom();
-        }, 50);
+            // 엔드포인트 메시지가 있는지 확인
+            const hasEndPoint = response.data.some((message: Message) => message.chatUUID === "엔드포인트");
+            if (hasEndPoint) {
+                scrollToMessage("엔드포인트");
+            } else {
+                scrollToBottom();
+            }
+        }, 0);
     };
 
     //아래로 버튼 클릭시 상호작용
@@ -181,7 +191,7 @@ const ChatComponent: React.FC = () => {
 
             setTimeout(() => {
                 scrollToMessage(chatUUID);
-            }, 0);
+            }, 50);
 
         } catch (error) {
             console.error(`Error fetching ${position} messages:`, error);
@@ -193,15 +203,22 @@ const ChatComponent: React.FC = () => {
     };
 
     const handleSendMessage = () => {
-        dispatch(sendStompMsg({target: 'groupMsg', param: groupId, message: inputMessage, messageType: "message"}))
+        dispatch(sendStompMsg({target: 'groupMsg', param: groupId, message: inputMessage, messageType: "message"}));
+        setAlarm(0);
         setInputMessage(""); // 입력 필드 초기화
         setTimeout(() => {
             scrollToBottom();
-        }, 0);
+        }, 50);
     };
 
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
     const sendEndPoint = () => {
         dispatch(requestFile({target: 'groupMsg', param: groupId, requestFile: "ENDPOINT", nowLine: 0}));
+        setAlarm(0);
     };
 
     return (
@@ -219,23 +236,27 @@ const ChatComponent: React.FC = () => {
                         </div>
                     );
                 })}
-                {lastPage && newMessages.map((message) => (
-                    <div key={message.chatUUID} ref={(el) => messageRefs.current[message.chatUUID] = el}>
-                        <p>{message.message.replaceAll("\\lineChange", "\n")}</p>
-                        <small>{message.sendDate}</small>
-                    </div>
-                ))}
+                {lastPage && newMessages.map((message, index) => {
+                    return (
+                        <div key={message.chatUUID} ref={(el) => messageRefs.current[message.chatUUID] = el}>
+                            {(index === newMessages.length - alarm) && <hr/>}
+                            <p>{message.message.replaceAll("\\lineChange", "\n")}</p>
+                            <small>{message.sendDate}</small>
+                        </div>
+                    );
+                })}
                 {!lastPage ?
                     <div ref={bottomDivRef}></div> :
                     <div ref={endPointRef}></div>
                 }
                 <button onClick={goBottom} style={{position: 'fixed', bottom: '10px', right: '10px'}}>
-                    맨 아래로
+                    <p>새로운 메세지 : {alarm} 개</p>
+                    <p>맨 아래로</p>
                 </button>
             </div>
             <div>
-                <input type="text" value={inputMessage} onChange={handleInputChange}/>
-                <button onClick={handleSendMessage}>전송</button>
+                <input type="text" value={inputMessage} onChange={handleInputChange} onKeyDown={handleKeyPress}/>
+                <button onClick={handleSendMessage}> 전송</button>
             </div>
         </div>
     );
