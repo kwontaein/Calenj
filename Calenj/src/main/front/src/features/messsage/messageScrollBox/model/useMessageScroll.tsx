@@ -7,7 +7,7 @@ import {RootState} from '../../../../entities/redux'
 import {Message} from "../../../../entities/reactQuery";
 
 
-export const useMessageScroll = (param:string, messageList:Message[],) : React.MutableRefObject<HTMLDivElement|null> =>{
+export const useMessageScroll = (param:string, messageList:Message[], isFetching:boolean) : React.MutableRefObject<HTMLDivElement|null> =>{
     const scrollRef = useRef<HTMLDivElement | null>(null); //채팅스크롤 Ref
     const [prevScrollHeight , setPrevScrollHeight] = useState<number|null>(null);//RELOAD 시 이전 높이를 저장하는데 사용
     const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
@@ -25,15 +25,14 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         });
     }, [param]);
 
-    
+
     useEffect(() => {
-        addScrollEvent()
         return () => {
             if(beforeScrollTop.current===undefined) return
             //스크롤이 존재했는지 체크
             scrollPointMap.set(param,beforeScrollTop.current);
         }
-    }, [param,messageList])
+    }, [param]);
 
 
     useEffect(() => {
@@ -42,7 +41,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         if(clientHeight + scrollTop===scrollHeight) { //맨아래에 위치해 있으면 위치조정 필요 X
             beforeInputSize.current = inputSize;//return 전 input 사이즈 저장
             return
-        };
+        }
         scrollRef.current.scrollTop -=(beforeInputSize.current- inputSize)
         beforeScrollTop.current = scrollRef.current.scrollTop
         beforeInputSize.current = inputSize;
@@ -80,11 +79,10 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
         if (!scrollRef.current) return
-
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
         if(messageList.length===0) return;
-        //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황
+        //infiniteQuery 첫세팅 시에만 체크됨 => scrollPointMap이 등록되지 않은상황, 리패칭 시 스크롤세팅
         if(scrollPointMap.get(param) === undefined){
             if (endPointMap.get(param) === 0){
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -94,6 +92,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
                 const targetElement = scrollDiv.querySelector('.엔드포인트')
                 if (targetElement) {
                     const {bottom} = targetElement.getBoundingClientRect();
+
                     scrollRef.current.scrollTop = bottom - 300;
                     scrollPointMap.set(param, bottom - 300)
                 }
@@ -127,6 +126,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         const {userId} = stomp.receiveMessage
         beforeScrollTop.current = scrollTop - (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
 
+
         if(userId === localStorage.getItem('userId') && socketEvent){
             scrollToBottom();
         }
@@ -138,6 +138,7 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
         }else if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight){
             scrollToBottom();
         }
+
     }
 
     //메시지 파일 요청 시 nowLine을 업데이트 > 현재 scrollTop 저장
@@ -150,14 +151,17 @@ export const useMessageScroll = (param:string, messageList:Message[],) : React.M
 
 
     useEffect(()=>{
+        if(messageList.length===0) return
+        addScrollEvent()
+
         const {state} =stomp.receiveMessage
         if(state!=="RELOAD") return
         // //저장한 이전높이인 prev만큼 빼줌
         if(!scrollRef.current || !prevScrollHeight) return;
-
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight
         scrollPointMap.set(param,scrollRef.current.scrollTop);
         setPrevScrollHeight(null)
+
     },[messageList])
     //원하는 타이밍에 정확히 세팅하려면 메시지가 세팅이 완료된 후 함수를 호출해야함
 

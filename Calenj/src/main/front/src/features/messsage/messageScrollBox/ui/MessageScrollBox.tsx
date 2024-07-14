@@ -3,8 +3,8 @@ import {useMessageData} from "../model/useMessageData";
 import {useEffect, useMemo, useState} from "react";
 import {AHMFormat, AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useComponentSize, useIntersect} from "../../../../shared/model";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux";
+import {useDispatch, useSelector} from "react-redux";
+import {endPointMap, RootState, scrollPointMap, updateAppPosition} from "../../../../entities/redux";
 import {
     DateContainer,
     DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
@@ -18,32 +18,33 @@ import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 
 export const MessageScrollBox:React.FC =()=>{
-    const{navigate} = useSelector((state:RootState)=>state.navigateInfo) //target
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
-    const {param} = useSelector((state:RootState)=>state.subNavigation.group_subNavState)
     const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
+    const stomp = useSelector((state:RootState) => state.stomp)
+    const {messageList, newMessageList, chatFile, compareDate, isFetching} = useMessageData(stomp.param)
+    const scrollRef =useMessageScroll(stomp.param,messageList, isFetching)
 
-    const {messageList, newMessageList, chatFile, compareDate} = useMessageData(param, navigate)
-    const scrollRef =useMessageScroll(param,messageList)
 
     const loadFile = useMemo(() => {
-        console.log(param)
         return throttleByAnimationFrame(() => {
             if (!scrollRef.current) return
             chatFile.fetchNextPage()
         })
-    },[param])
+    },[stomp.param])
 
     const topRef = useIntersect((entry, observer) => {
-        if (chatFile.hasNextPage && !chatFile.isFetching) {
+        if (chatFile.hasNextPage && !chatFile.isFetching && !isFetching) {
             observer.unobserve(entry.target);
             loadFile();
         }
     });
 
 
+
     const MessageBox = useMemo(() => {
-        const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=> messageData.chatUUID!=="시작라인");
+        const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=>
+            (endPointMap.get(stomp.param) === 0 && messageData.chatUUID !== '엔드포인트' && messageData.chatUUID !== '시작라인') || (endPointMap.get(stomp.param) > 0 && messageData.chatUUID !== '시작라인')
+        );
 
         if (!chatFile.isLoading) {
             return (

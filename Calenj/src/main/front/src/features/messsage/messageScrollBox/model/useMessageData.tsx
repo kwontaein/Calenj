@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {
+    QUERY_CHATTING_KEY,
     QUERY_NEW_CHAT_KEY,
     useChatFileInfinite,
     useReceiveChatInfinite
@@ -17,23 +18,30 @@ interface useMessageData {
     newMessageList: Message[],
     chatFile: UseInfiniteQueryResult<InfiniteData<Message[], unknown>, Error>,
     compareDate: (date1:string,date2:string) => boolean,
+    isFetching:boolean,
 }
 
 
-export const useMessageData = (param: string, target: string): useMessageData => {
+export const useMessageData = (param: string): useMessageData => {
     const [newMsgLength, setNewMsgLength] = useState(0);
-    const {requestFile,receiveNewChat} = useChatFetching(param) //데이터 패치함수
+    const {requestFile,receiveNewChat} = useChatFetching() //데이터 패치함수
     const stomp = useSelector((state: RootState) => state.stomp);
     const queryClient = useQueryClient();
+    const chatFile = useChatFileInfinite(param, newMsgLength ,requestFile)
+    const newChat = useReceiveChatInfinite(param, receiveNewChat)
+    const [isFetching,setIsFetching] = useState<boolean>(endPointMap.get(param)>0)
 
-    const chatFile = useChatFileInfinite(param, newMsgLength, stomp ,requestFile)
-    const newChat = useReceiveChatInfinite(param, stomp, receiveNewChat)
+    useEffect(() => {
+        setIsFetching(chatFile.isRefetching)
+        if(chatFile.isRefetching) {
+            scrollPointMap.delete(param)
+        }
+    }, [chatFile.isRefetching]);
 
 
     useEffect(() => {
 
         const {state} = stomp.receiveMessage;
-        // console.log(!newChat.isFetching)
         //해당 방의 채팅내용만 받아옴
         if (param !== stomp.receiveMessage.param) return
         //셋팅 이후 send를 받음 =>1.READ한 파일 세팅 이후 처리
@@ -51,9 +59,13 @@ export const useMessageData = (param: string, target: string): useMessageData =>
 
 
     useEffect(() => {
-        if (stomp.param !== param) return
         if (endPointMap.get(param) > 0) {
-            scrollPointMap.delete(param)
+            if(chatFile.data){
+                queryClient.setQueryData([QUERY_CHATTING_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                    pages: data?.pages.slice(0, 1),
+                    pageParams: data?.pageParams.slice(0, 1)
+                }));
+            }
             chatFile.refetch().then(() => {
                 //newMessage 비우기
                 if (!newChat.data) return
@@ -63,6 +75,8 @@ export const useMessageData = (param: string, target: string): useMessageData =>
                 }));
             });
         }
+        setIsFetching(false)
+
     }, [param])
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
@@ -92,12 +106,11 @@ export const useMessageData = (param: string, target: string): useMessageData =>
 
 
     const messageList = useMemo(() => {
-        if (chatFile.data) {
-            console.log(chatFile.data)
+        if (chatFile.data && !isFetching) {
             return [...chatFile.data.pages.reduce((prev, current) => prev.concat(current))]
         }
         return [];
-    }, [chatFile.data])
+    }, [chatFile.data, isFetching])
 
 
     const compareDate = (date1:string, date2:string):boolean =>{
@@ -107,5 +120,5 @@ export const useMessageData = (param: string, target: string): useMessageData =>
     }
 
 
-    return {messageList,newMessageList,chatFile, compareDate}
+    return {messageList,newMessageList,chatFile, compareDate, isFetching}
 }
