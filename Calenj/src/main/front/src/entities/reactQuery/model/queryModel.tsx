@@ -137,7 +137,7 @@ export const useMutationCookie = (queryClient :QueryClient) =>
 
 
 
-export const useChatFileInfinite = (param:string, newMsgLength:number, stomp:StompState, fetchData :FetchData) =>
+export const useChatFileInfinite = (param:string, newMsgLength:number, fetchData :FetchData) =>
     useInfiniteQuery({
     queryKey: [QUERY_CHATTING_KEY, param],
     queryFn: fetchData,
@@ -153,7 +153,7 @@ export const useChatFileInfinite = (param:string, newMsgLength:number, stomp:Sto
         return allPages.reduce((prev, current) => prev.concat(current)).length + newMsgLength;
     }, //data의 값을 받아 처리할 수 있음
     initialPageParam:0,
-    enabled: param === stomp.param,
+    // enabled: param === stomp.param,
     staleTime: Infinity,
     refetchInterval:false,
     retry:3,
@@ -161,7 +161,7 @@ export const useChatFileInfinite = (param:string, newMsgLength:number, stomp:Sto
 
 
 
-export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNewChat:ReceivedData) =>
+export const useReceiveChatInfinite = (param:string, receiveNewChat:ReceivedData) =>
     useInfiniteQuery({
     queryKey: [QUERY_NEW_CHAT_KEY, param],
     queryFn: receiveNewChat,
@@ -169,7 +169,7 @@ export const useReceiveChatInfinite = (param:string, stomp:StompState,receiveNew
         return allPageParams.length;
     }, //data의 값을 받아 처리할 수 있음
     initialPageParam: 0,
-    enabled: param === stomp.param,
+    // enabled: param === stomp.param,
     refetchInterval:false,
     staleTime: Infinity,
     });
