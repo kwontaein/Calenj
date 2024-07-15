@@ -1,7 +1,14 @@
 import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {AHMFormat, AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
+import {
+    AHMFormat,
+    AHMFormatV2,
+    changeDateForm,
+    debounce,
+    shortAHMFormat,
+    throttleByAnimationFrame
+} from "../../../../shared/lib";
 import {useComponentSize, useIntersect} from "../../../../shared/model";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -43,9 +50,6 @@ export const MessageScrollBox2: React.FC = () => {
     const [lastMessage, setLastMessage] = useState<Message>();
 
     //맨 처음 페이지인지
-    const [alarm, setAlarm] = useState<number>(0);
-
-    //맨 처음 페이지인지
     const [firstPage, setIsFirstPage] = useState<boolean>(false);
     //맨 마지막 페이지인지
     const [lastPage, setIsLastPage] = useState<boolean>(true);
@@ -76,24 +80,19 @@ export const MessageScrollBox2: React.FC = () => {
     //높이 관련(메세지 uuid 위치로 이동)
     const messageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
+    const stompParam = useSelector((state: RootState) => state.stomp.param)
     const userId = localStorage.getItem("userId");
-    const {param} = useSelector((state: RootState) => state.subNavigation.group_subNavState)
 
     //웹소켓 메세지 받기
     useEffect(() => {
-        const {state} = stomp.receiveMessage;
-        if (param !== stomp.receiveMessage.param) return;
-        if (stomp.receiveMessage.message && stomp.receiveMessage.state === "SEND") {
-            setNewMessages([...newMessages, ...stomp.receiveMessage.message]);
-            setLastMessage(stomp.receiveMessage.message[stomp.receiveMessage.message.length - 1]);
-            if (userId === stomp.receiveMessage.message[0].userId) {
-                setAlarm(0);
-            } else {
-                setAlarm(alarm + 1);
-
-            }
+        const {state, param, message} = stomp.receiveMessage;
+        if (stompParam !== param || messages.length === 0) return;
+        if (message && state === "SEND") {
+            setNewMessages([...newMessages, ...message]);
+            setLastMessage(message[message.length - 1]);
         }
-    }, [stomp.receiveMessage.message]);
+    }, [stomp.receiveMessage.receivedUUID]);
+
 
     const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
         const messageDiv = messageRefs.current[chatUUID];
@@ -116,13 +115,12 @@ export const MessageScrollBox2: React.FC = () => {
     //시작하자마자 데이터 받아오기
     useEffect(() => {
         fetchInitialMessages();
-
-
     }, []);
+
     //시작하자마자 데이터 받아오기 #2
     const fetchInitialMessages = async () => {
         const response = await axios.post('/api/getChattingFile', {
-            param: param,
+            param: stompParam,
             userId: userId,
         });
         setMessages(response.data);
@@ -184,14 +182,13 @@ export const MessageScrollBox2: React.FC = () => {
             if (bottomDivRect && bottomDivRect.top <= containerRect.bottom && hasMoreBottom) {
                 fetchMoreMessages('newer', messages[messages.length - 1]?.chatUUID).then(r => console.log());
             }
-            if (lastPage && endPointDivRect && endPointDivRect.top <= containerRect.bottom && !isSendRef.current) {
-                isSendRef.current = true; // 중복 호출 방지 플래그 설정
-
-                sendEndPoint(); // lastPage가 true이고 화면이 맨 아래에 닿았을 때 함수 호출
-
-                setTimeout(() => {
-                    isSendRef.current = false; // 일정 시간 후 다시 호출 가능하게 설정
-                }, 3000);
+            if (lastPage && endPointDivRect && endPointDivRect.top <= containerRect.bottom) {
+                debouncing_EndPoint(); // lastPage가 true이고 화면이 맨 아래에 닿았을 때 함수 호출
+            }
+            //맨아래 ,
+            const {scrollHeight, clientHeight, scrollTop} = containerRef.current;
+            if (scrollHeight === clientHeight + scrollTop && lastPage) {
+                debouncing_EndPoint();
             }
         };
 
@@ -217,7 +214,7 @@ export const MessageScrollBox2: React.FC = () => {
             }, 500);
 
             const response = await axios.post('/api/ReloadChattingFile', {
-                param: param,
+                param: stompParam,
                 userId: userId,
                 chatId: chatUUID,
                 newOrOld: position
@@ -235,7 +232,6 @@ export const MessageScrollBox2: React.FC = () => {
                     setIsFirstPage(true);
                 }
                 if (newMessages[newMessages.length - 1].chatUUID === lastMessage?.chatUUID) {
-                    console.log("실행 비우기")
                     setNewMessages([]);
                     setIsLastPage(true);
                 }
@@ -253,7 +249,6 @@ export const MessageScrollBox2: React.FC = () => {
             });
 
             setTimeout(() => {
-                console.log(position);
                 scrollToMessage(chatUUID, position === 'newer');
             }, 0);
 
@@ -262,31 +257,32 @@ export const MessageScrollBox2: React.FC = () => {
         }
     };
 
-    const sendEndPoint = () => {
-        dispatch(requestFile({target: 'groupMsg', param: param, requestFile: "ENDPOINT", nowLine: 0}));
-        setAlarm(0);
-    };
+    const debouncing_EndPoint = useMemo(() => {
+        return debounce(() => {
+            dispatch(requestFile({target: 'groupMsg', param: stompParam, requestFile: "ENDPOINT", nowLine: 0}));
+        }, 1000);
+    }, [stompParam]);
 
+    const MessageBox = useMemo(() => {
 
-    const MessageBox = () => {
-        console.log(messages);
+        const connectList = lastPage ? [...messages, ...newMessages] : [...messages];
         return (
             <ScrollableDiv ref={containerRef}>
                 {!firstPage && <div className="scrollTop" ref={topDivRef}></div>}
-                {messages.map((message: Message, index: number) => (
+                {connectList.map((message: Message, index: number) => (
                     <div key={message.chatUUID}>
-                        {(index !== 0 && compareDate(messages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+                        {(index !== 0 && compareDate(connectList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
                             <HR_NewDate
                                 data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
                         <MessageBoxContainer className={message.chatUUID}
                                              key={message.chatUUID}
                                              ref={(el) => messageRefs.current[message.chatUUID] = el}
-                                             $sameUser={(index !== 0 && messages[index - 1]?.userId === message.userId) &&
-                                                 dateOperation(messages[index - 1].sendDate, message.sendDate)}>
+                                             $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
+                                                 dateOperation(connectList[index - 1].sendDate, message.sendDate)}>
                             {message.chatUUID === '엔드포인트' ?
                                 <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                ((index && messages[index - 1]?.userId === message.userId) &&
-                                dateOperation(messages[index - 1].sendDate, message.sendDate) ? (
+                                ((index && connectList[index - 1]?.userId === message.userId) &&
+                                dateOperation(connectList[index - 1].sendDate, message.sendDate) ? (
                                     <MessageContainer2>
                                         <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                         <MessageContentContainer2>
@@ -330,33 +326,23 @@ export const MessageScrollBox2: React.FC = () => {
                         </MessageBoxContainer>
                     </div>)
                 )}
-                {lastPage && newMessages.map((message, index) => {
-                    return (
-                        <div key={message.chatUUID} ref={(el) => messageRefs.current[message.chatUUID] = el}>
-                            {(index === newMessages.length - alarm) && <hr/>}
-                            <p>{message.message.replaceAll("\\lineChange", "\n")}</p>
-                            <small>{message.sendDate}</small>
-                        </div>
-                    );
-                })}
                 {!lastPage ?
                     <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomDivRef}></div> :
                     <div className="scrollBottom" style={{marginTop: '10px'}} ref={endPointRef}></div>
                 }
                 <button onClick={goBottom}
                         style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
-                    <p>새로운 알림 : {alarm}</p>
                     <p>맨 아래로</p>
                 </button>
 
             </ScrollableDiv>
         );
-    };
+    }, [messages, newMessages]);
 
 
     return (
         <MessageScroll_Container $inputSize={inputSize}>
-            {MessageBox()}
+            {MessageBox}
         </MessageScroll_Container>
     )
 }

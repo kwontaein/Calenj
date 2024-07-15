@@ -21,34 +21,40 @@ import {useNavigation} from "../model/useNavigation";
 import {createPortal} from "react-dom";
 
 
-
 export const GroupListView: React.FC = () => {
-    const  navigationDirect = useNavigation();
+    const navigationDirect = useNavigation();
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
-    const [titleView,setTitleView] = useState<string|null>(null);
+    const [titleView, setTitleView] = useState<string | null>(null);
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
-    const {navigateParam} = useSelector((state:RootState) => state.navigateInfo);
+    const {navigateParam} = useSelector((state: RootState) => state.navigateInfo);
 
     //그룹 목록 불러오기
     const groupListState = useFetchGroupList(stomp.isOnline)
-
+    useEffect(() => {
+        if (stomp.requestFile === "ENDPOINT") {
+            console.log("응 tothe 애")
+            endPointMap.set(stomp.param, 0);
+        }
+    }, [stomp])
 
     return (
         <>
-            {showMakeGroup && <CreateGroup onClose={()=>setShowMakeGroup(false)}></CreateGroup>}
+            {showMakeGroup && <CreateGroup onClose={() => setShowMakeGroup(false)}></CreateGroup>}
             {groupListState.isLoading && <div>Loading...</div>}
             {groupListState.data && (
                 <GroupList_Container>
                     <GroupListContent_Container>
-                        <Btn_CalenJ_Icon $isClick={navigateParam===""} onClick={() => navigationDirect("main")}/>
+                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => navigationDirect("main")}/>
                         <GroupList_HR/>
-                        {groupListState.data.map((group:GroupList_item) => (
+                        {groupListState.data.map((group: GroupList_item) => (
 
-                            <Li_GroupList_Item onMouseEnter={()=>{setTitleView(group.groupId)}}
-                                               onMouseLeave={()=>setTitleView(null)}
-                                               $isClick={navigateParam===group.groupId} key={group.groupId}
+                            <Li_GroupList_Item onMouseEnter={() => {
+                                setTitleView(group.groupId)
+                            }}
+                                               onMouseLeave={() => setTitleView(null)}
+                                               $isClick={navigateParam === group.groupId} key={group.groupId}
                                                onClick={() => navigationDirect("group", group.groupId)}>
-                                <NavigateState $isClick={navigateParam===group.groupId}/>
+                                <NavigateState $isClick={navigateParam === group.groupId}/>
                                 <GroupListTitle>
                                     {group.groupTitle}
                                 </GroupListTitle>
