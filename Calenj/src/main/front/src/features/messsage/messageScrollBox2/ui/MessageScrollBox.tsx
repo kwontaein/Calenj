@@ -32,29 +32,35 @@ export const MessageScrollBox2: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
     const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
-    const [chatUUID,setChatUUID] = useState<string|undefined>()
-    const {containerRef,messageRefs, scrollToMessage} = useMessageScroll(connectMessages, firstPage,lastPage, chatUUID)
+    const [chatUUID] = useState<string | undefined>()
+    const {
+        containerRef,
+        messageRefs,
+        scrollToMessage
+    } = useMessageScroll(connectMessages, firstPage, lastPage)
 
     const topRef = useIntersect((entry, observer) => {
-        if (!firstPage && connectMessages.length>0) {
+        if (!firstPage && connectMessages.length > 0) {
             observer.unobserve(entry.target);
-            fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID)=>{
-                if(!chatUUID) return
-                setChatUUID(chatUUID)
+            fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID) => {
+                if (!chatUUID) return
+                setTimeout(() => {
+                    scrollToMessage(chatUUID, true)
+                }, 50)
             })
         }
     });
     const bottomRef = useIntersect((entry, observer) => {
-        if (!lastPage && connectMessages.length>0) {
+        if (!lastPage && connectMessages.length > 0) {
             observer.unobserve(entry.target);
-            fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID)=>{
-                if(!chatUUID) return
-                setChatUUID(chatUUID)
+            fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID) => {
+                if (!chatUUID) return
+                setTimeout(() => {
+                    scrollToMessage(chatUUID, true)
+                }, 50)
             })
         }
     });
-    
-
 
 
     const MessageBox = useMemo(() => {
@@ -62,69 +68,70 @@ export const MessageScrollBox2: React.FC = () => {
         return (
             <ScrollableDiv ref={containerRef}>
                 {!firstPage && <div className="scrollTop" ref={topRef}></div>}
-                {connectMessages.length >0 &&
-                    ( connectMessages.map((message: Message, index: number) => (
-                    <div key={message.chatUUID}>
-                        {(index !== 0 && compareDate(connectMessages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
-                            <HR_NewDate
-                                data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
-                        <MessageBoxContainer className={message.chatUUID}
-                                             key={message.chatUUID}
-                                             ref={(el) => messageRefs.current[message.chatUUID] = el}
-                                             $sameUser={(index !== 0 && connectMessages[index - 1]?.userId === message.userId) &&
-                                                 dateOperation(connectMessages[index - 1].sendDate, message.sendDate)}>
-                            {message.chatUUID === '엔드포인트' ?
-                                <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                ((index && connectMessages[index - 1].userId === message.userId) &&
-                                dateOperation(connectMessages[index - 1].sendDate, message.sendDate) ? (
-                                    <MessageContainer2>
-                                        <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
-                                        <MessageContentContainer2>
-                                            {(message.messageType === 'null' || message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
-                                        </MessageContentContainer2>
-                                    </MessageContainer2>
-                                ) : (
-                                    <RowFlexBox style={{width: 'auto'}}>
-                                        <ProfileContainer
-                                            $userId={message.userId}>
-                                        </ProfileContainer>
-                                        <MessageContainer>
-                                            <RowFlexBox>
-                                                <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
-                                                <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
-                                            </RowFlexBox>
-                                            <MessageContentContainer>
-                                                <>
-                                                    {message.messageType === 'image' && (
-                                                        <MessageGridView>
-                                                            {message.message.trim().slice(1, -1).split(',').map((image, index) => (
-                                                                <ImageWrapper key={index}>
-                                                                    <ImageContent $image={image.split('/')[0].trim()}>
-                                                                        {image.split('/')[0].trim()}
-                                                                    </ImageContent>
-                                                                </ImageWrapper>
-                                                            ))}
-                                                        </MessageGridView>
-                                                    )}
-                                                    {(message.messageType === 'null' || message.messageType === null) && (
-                                                        <div>
-                                                            {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                        </div>
-                                                    )}
-                                                </>
-                                            </MessageContentContainer>
-                                        </MessageContainer>
-                                    </RowFlexBox>
-                                ))
-                            }
-                        </MessageBoxContainer>
-                    </div>)
-                ))}
+                {connectMessages.length > 0 &&
+                    (connectMessages.map((message: Message, index: number) => (
+                        <div key={message.chatUUID}>
+                            {(index !== 0 && compareDate(connectMessages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+                                <HR_NewDate
+                                    data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
+                            <MessageBoxContainer className={message.chatUUID}
+                                                 key={message.chatUUID}
+                                                 ref={(el) => messageRefs.current[message.chatUUID] = el}
+                                                 $sameUser={(index !== 0 && connectMessages[index - 1]?.userId === message.userId) &&
+                                                     dateOperation(connectMessages[index - 1].sendDate, message.sendDate)}>
+                                {message.chatUUID === '엔드포인트' ?
+                                    <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
+                                    ((index && connectMessages[index - 1].userId === message.userId) &&
+                                    dateOperation(connectMessages[index - 1].sendDate, message.sendDate) ? (
+                                        <MessageContainer2>
+                                            <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
+                                            <MessageContentContainer2>
+                                                {(message.messageType === 'null' || message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                            </MessageContentContainer2>
+                                        </MessageContainer2>
+                                    ) : (
+                                        <RowFlexBox style={{width: 'auto'}}>
+                                            <ProfileContainer
+                                                $userId={message.userId}>
+                                            </ProfileContainer>
+                                            <MessageContainer>
+                                                <RowFlexBox>
+                                                    <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
+                                                    <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
+                                                </RowFlexBox>
+                                                <MessageContentContainer>
+                                                    <>
+                                                        {message.messageType === 'image' && (
+                                                            <MessageGridView>
+                                                                {message.message.trim().slice(1, -1).split(',').map((image, index) => (
+                                                                    <ImageWrapper key={index}>
+                                                                        <ImageContent
+                                                                            $image={image.split('/')[0].trim()}>
+                                                                            {image.split('/')[0].trim()}
+                                                                        </ImageContent>
+                                                                    </ImageWrapper>
+                                                                ))}
+                                                            </MessageGridView>
+                                                        )}
+                                                        {(message.messageType === 'null' || message.messageType === null) && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                </MessageContentContainer>
+                                            </MessageContainer>
+                                        </RowFlexBox>
+                                    ))
+                                }
+                            </MessageBoxContainer>
+                        </div>)
+                    ))}
 
                 <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>
 
                 <button
-                        style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
+                    style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
                     <p>맨 아래로</p>
                 </button>
 

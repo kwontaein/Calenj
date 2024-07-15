@@ -20,7 +20,7 @@ export const MessageContainer: React.FC = () => {
         <MessageComponent_Container>
             {stompParam === navigateParam &&
                 <>
-                    <MessageScrollBox/>
+                    <MessageScrollBox2/>
                     <MessageInput/>
                 </>
             }

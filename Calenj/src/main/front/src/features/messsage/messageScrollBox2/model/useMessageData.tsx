@@ -1,4 +1,3 @@
-
 import {changeDateForm} from "../../../../shared/lib";
 import axios from "axios";
 import {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
@@ -9,15 +8,15 @@ import {useIntersect} from "../../../../shared/model";
 
 interface useMessageData {
     connectMessages: Message[],
-    firstPage:boolean,
-    lastPage:boolean,
-    fetchMoreMessages : (position: 'older' | 'newer', chatUUID?: string) => Promise<string|void>,
+    firstPage: boolean,
+    lastPage: boolean,
+    fetchMoreMessages: (position: 'older' | 'newer', chatUUID?: string) => Promise<string | void>,
     compareDate: (date1: string, date2: string) => boolean,
 }
 
 export const useMessageData = (): useMessageData => {
 
-    const stomp = useSelector((state:RootState) => state.stomp)
+    const stomp = useSelector((state: RootState) => state.stomp)
     const stompParam = useSelector((state: RootState) => state.stomp.param)
     const userId = localStorage.getItem("userId");
     //메세지목록
@@ -32,7 +31,7 @@ export const useMessageData = (): useMessageData => {
     //맨 마지막 페이지인지
     const [lastPage, setIsLastPage] = useState<boolean>(true);
     //api 중복 호출 방지
-    const [isFetching ,setIsFetching]= useState(false); // 요청 진행 여부를 추적하는 ref
+    const [isFetching, setIsFetching] = useState(false); // 요청 진행 여부를 추적하는 ref
 
 
     //시작하자마자 데이터 받아오기
@@ -51,21 +50,21 @@ export const useMessageData = (): useMessageData => {
         }
     }, [stomp.receiveMessage.receivedUUID]);
 
-    const connectMessages = useMemo(()=>{
-        if(messages.length===0) return []
+    const connectMessages = useMemo(() => {
+        if (messages.length === 0) return []
         if (messages[0].chatUUID === "시작라인") {
             setIsFirstPage(true);
-        }else{
+        } else {
             setIsFirstPage(false)
         }
-        if([...messages,...newMessages].at(-1)?.chatUUID === lastMessage?.chatUUID){
+        if ([...messages, ...newMessages].at(-1)?.chatUUID === lastMessage?.chatUUID) {
             setIsLastPage(true)
-        }else{
+        } else {
             setIsLastPage(false)
         }
 
-        return (lastPage ? [...messages, ...newMessages] : [...messages]).filter((message:Message)=> message.chatUUID !=="시작라인")
-    },[messages, newMessages])
+        return (lastPage ? [...messages, ...newMessages] : [...messages]).filter((message: Message) => message.chatUUID !== "시작라인")
+    }, [messages, newMessages])
 
 
     //데이터 => 초기 Message get
@@ -80,27 +79,15 @@ export const useMessageData = (): useMessageData => {
     };
 
 
-    //데이터 => 아래로 버튼 클릭시 상호작용
-    // const goBottom = async () => {
-    //     if (lastPage) { //마지막 페이지이고, 80개가 넘지 않으면 다시 불러올 필요 없음.
-    //         scrollToBottom();
-    //     } else {
-    //         getInitialMessages();
-    //     }
-    // }
-
-    //메세지 추가 로딩
-
-
     useEffect(() => {
-        if(!isFetching) return
-        setTimeout(()=>{
+        if (!isFetching) return
+        setTimeout(() => {
             setIsFetching(false);
-        },1000)
+        }, 1000)
     }, [connectMessages]);
 
     //데이터 => 추가 데이터 받기 및 가공
-    const fetchMoreMessages = async (position: 'older' | 'newer', chatUUID?: string):Promise<string|void> => {
+    const fetchMoreMessages = async (position: 'older' | 'newer', chatUUID?: string): Promise<string | void> => {
         if (!chatUUID || isFetching) return; // 메시지가 없거나 요청 진행 중이면 반환
         setIsFetching(true) // 요청 시작 플래그 설정
 
@@ -109,37 +96,34 @@ export const useMessageData = (): useMessageData => {
             userId: userId,
             chatId: chatUUID,
             newOrOld: position
-        }).then((response)=>{
+        }).then((response) => {
             setMessages(prevMessages => {
-                if(!response.data) return prevMessages
+                if (!response.data) return prevMessages
                 if (response.data[0].chatUUID === prevMessages[0]?.chatUUID) {
                     return prevMessages; // 동일한 메시지의 중복 방지
                 }
 
-                if(position ==='older'){
-                    if((response.data.length + prevMessages.length) >=120){
-                        return [...response.data,...prevMessages].slice(0, 60);
-                    }else{
+                if (position === 'older') {
+                    if ((response.data.length + prevMessages.length) >= 120) {
+                        return [...response.data, ...prevMessages].slice(0, 60);
+                    } else {
                         return [...response.data, ...prevMessages]
                     }
-                }else{ //position => newer
-                    if((response.data.length + prevMessages.length) >=120){
-                        return [...prevMessages, ...response.data].slice(prevMessages.length+response.data.length-62);
-                    }else{
+                } else { //position => newer
+                    if ((response.data.length + prevMessages.length) >= 120) {
+                        return [...prevMessages, ...response.data].slice(prevMessages.length + response.data.length - 62);
+                    } else {
                         return [...prevMessages, ...response.data]
                     }
                 }
             });
 
-        }).catch((err)=>{
+        }).catch((err) => {
             console.error(`Error fetching ${position} messages:`, err);
         });
 
         return chatUUID;
     };
-
-
-
 
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
