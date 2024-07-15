@@ -2,14 +2,14 @@ import {
     MessageComponent_Container,
 } from './MessageContainerStyled'
 
-import {MessageInput, MessageScrollBox} from "../../../features/messsage";
+import {MessageInput, MessageScrollBox, MessageScrollBox2} from "../../../features/messsage";
 import {useEffect, useState} from "react";
 import {RootState, updateAppPosition} from "../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
 
 export const MessageContainer: React.FC = () => {
-    const {navigate, navigateParam} = useSelector((state:RootState)=> state.navigateInfo);
-    const stompParam = useSelector((state:RootState)=>state.stomp.param)
+    const {navigate, navigateParam} = useSelector((state: RootState) => state.navigateInfo);
+    const stompParam = useSelector((state: RootState) => state.stomp.param)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -17,14 +17,14 @@ export const MessageContainer: React.FC = () => {
     }, []);
 
     return (
-            <MessageComponent_Container>
+        <MessageComponent_Container>
             {stompParam === navigateParam &&
                 <>
                     <MessageScrollBox/>
                     <MessageInput/>
                 </>
             }
-            </MessageComponent_Container>
+        </MessageComponent_Container>
 
     )
 }

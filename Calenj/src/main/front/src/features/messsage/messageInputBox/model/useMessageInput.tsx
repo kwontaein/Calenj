@@ -17,19 +17,6 @@ export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageIn
     const chatRef = useRef<HTMLTextAreaElement>(null);// 채팅 input Ref
     const dispatch = useDispatch()
 
-    //채팅 내용 디바운싱
-    const saveContent = useMemo(() => {
-        return debounce(() => {
-            if (chatRef.current) {
-                ChatContentMap.set(param, chatRef.current.value)
-            }
-        }, 500)
-    }, [param, chatRef]);
-
-    useEffect(() => {
-        saveContent()
-    }, [content]);
-
     useEffect(() => {
         if (chatRef.current) {
             chatRef.current.value = ChatContentMap.get(param) || ''
@@ -86,6 +73,8 @@ export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageIn
         }
 
         if (newContent === '') return;
+        //메세지 전송
+        console.log("메세지 전송 테슷흐")
         dispatch(sendStompMsg({target: 'groupMsg', param: param, message: newContent, messageType: "message"}))
         setContent('');
         if (chatRef.current) {

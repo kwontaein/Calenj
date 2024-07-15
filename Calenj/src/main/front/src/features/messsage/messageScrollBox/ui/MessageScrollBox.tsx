@@ -17,12 +17,12 @@ import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
 import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 
-export const MessageScrollBox:React.FC =()=>{
-    const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
-    const {userNameRegister} = useSelector((state:RootState)=>state.userNameRegister);
-    const stomp = useSelector((state:RootState) => state.stomp)
+export const MessageScrollBox: React.FC = () => {
+    const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
+    const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
+    const stomp = useSelector((state: RootState) => state.stomp)
     const {messageList, newMessageList, chatFile, compareDate, isFetching} = useMessageData(stomp.param)
-    const scrollRef =useMessageScroll(stomp.param,messageList, isFetching)
+    const scrollRef = useMessageScroll(stomp.param, messageList, isFetching)
 
 
     const loadFile = useMemo(() => {
@@ -30,7 +30,7 @@ export const MessageScrollBox:React.FC =()=>{
             if (!scrollRef.current) return
             chatFile.fetchNextPage()
         })
-    },[stomp.param])
+    }, [stomp.param])
 
     const topRef = useIntersect((entry, observer) => {
         if (chatFile.hasNextPage && !chatFile.isFetching && !isFetching) {
@@ -40,9 +40,8 @@ export const MessageScrollBox:React.FC =()=>{
     });
 
 
-
     const MessageBox = useMemo(() => {
-        const connectList = [...[...messageList].reverse(),...newMessageList].filter((messageData)=>
+        const connectList = [...[...messageList].reverse(), ...newMessageList].filter((messageData) =>
             (endPointMap.get(stomp.param) === 0 && messageData.chatUUID !== '엔드포인트' && messageData.chatUUID !== '시작라인') || (endPointMap.get(stomp.param) > 0 && messageData.chatUUID !== '시작라인')
         );
 
@@ -50,23 +49,24 @@ export const MessageScrollBox:React.FC =()=>{
             return (
                 <ScrollableDiv ref={scrollRef}>
                     <div className="scrollTop" ref={topRef}></div>
-                    {connectList.map((message: Message , index: number) => (
-                        <div key={message.chatUUID +index}>
-                            {(index !== 0 && compareDate(connectList[index-1].sendDate, message.sendDate) &&( message.chatUUID!=='엔드포인트')) &&
-                                <HR_NewDate data-content={AHMFormat(changeDateForm(message.sendDate.slice(0,16))).slice(0,13)}></HR_NewDate>}
+                    {connectList.map((message: Message, index: number) => (
+                        <div key={message.chatUUID + index}>
+                            {(index !== 0 && compareDate(connectList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+                                <HR_NewDate
+                                    data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID + index}
                                                  $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
-                                                     dateOperation(connectList[index-1].sendDate, message.sendDate)}>
+                                                     dateOperation(connectList[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
 
                                     <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
                                     ((index && connectList[index - 1]?.userId === message.userId) &&
-                                    dateOperation(connectList[index-1].sendDate, message.sendDate) ? (
+                                    dateOperation(connectList[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
-                                                {(message.messageType==='null'||message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                {(message.messageType === 'null' || message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
                                             </MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
@@ -85,7 +85,8 @@ export const MessageScrollBox:React.FC =()=>{
                                                             <MessageGridView>
                                                                 {message.message.trim().slice(1, -1).split(',').map((image, index) => (
                                                                     <ImageWrapper key={index}>
-                                                                        <ImageContent $image={image.split('/')[0].trim()}>
+                                                                        <ImageContent
+                                                                            $image={image.split('/')[0].trim()}>
                                                                             {image.split('/')[0].trim()}
                                                                             {/*{image.split('/')[1].trim()}*/}
                                                                         </ImageContent>
@@ -93,7 +94,7 @@ export const MessageScrollBox:React.FC =()=>{
                                                                 ))}
                                                             </MessageGridView>
                                                         )}
-                                                        {(message.messageType === 'null'||message.messageType === null) && (
+                                                        {(message.messageType === 'null' || message.messageType === null) && (
                                                             <div>
                                                                 {message.message.replace(/\\lineChange/g, '\n').trim()}
                                                             </div>
@@ -107,7 +108,6 @@ export const MessageScrollBox:React.FC =()=>{
                             </MessageBoxContainer>
                         </div>)
                     )}
-                    <div className="scrollBottom" style={{marginTop: '10px'}}></div>
                 </ScrollableDiv>
             );
         }
@@ -115,7 +115,7 @@ export const MessageScrollBox:React.FC =()=>{
     }, [messageList, newMessageList]);
 
 
-    return(
+    return (
         <MessageScroll_Container $inputSize={inputSize}>
             {MessageBox}
         </MessageScroll_Container>
