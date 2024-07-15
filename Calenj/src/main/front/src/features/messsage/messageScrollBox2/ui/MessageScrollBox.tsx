@@ -32,55 +32,51 @@ export const MessageScrollBox2: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
     const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
-    const {containerRef,messageRefs, scrollToMessage} = useMessageScroll(connectMessages, firstPage,lastPage)
-
+    const [chatUUID,setChatUUID] = useState<string|undefined>()
+    const {containerRef,messageRefs, scrollToMessage} = useMessageScroll(connectMessages, firstPage,lastPage, chatUUID)
 
     const topRef = useIntersect((entry, observer) => {
         if (!firstPage && connectMessages.length>0) {
             observer.unobserve(entry.target);
             fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID)=>{
-                if(chatUUID){
-                    scrollToMessage(chatUUID)
-                }
+                if(!chatUUID) return
+                setChatUUID(chatUUID)
             })
         }
     });
     const bottomRef = useIntersect((entry, observer) => {
-        if (!firstPage && connectMessages.length>0) {
+        if (!lastPage && connectMessages.length>0) {
             observer.unobserve(entry.target);
             fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID)=>{
-                if(chatUUID){
-                    scrollToMessage(chatUUID)
-                }
+                if(!chatUUID) return
+                setChatUUID(chatUUID)
             })
         }
     });
-
-
+    
 
 
 
     const MessageBox = useMemo(() => {
 
-        const connectList =connectMessages.filter((message:Message)=> message.chatUUID !=="시작라인");
         return (
             <ScrollableDiv ref={containerRef}>
                 {!firstPage && <div className="scrollTop" ref={topRef}></div>}
-                {connectList.length >0 &&
-                    ( connectList.map((message: Message, index: number) => (
+                {connectMessages.length >0 &&
+                    ( connectMessages.map((message: Message, index: number) => (
                     <div key={message.chatUUID}>
-                        {(index !== 0 && compareDate(connectList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+                        {(index !== 0 && compareDate(connectMessages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
                             <HR_NewDate
                                 data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
                         <MessageBoxContainer className={message.chatUUID}
                                              key={message.chatUUID}
                                              ref={(el) => messageRefs.current[message.chatUUID] = el}
-                                             $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
-                                                 dateOperation(connectList[index - 1].sendDate, message.sendDate)}>
+                                             $sameUser={(index !== 0 && connectMessages[index - 1]?.userId === message.userId) &&
+                                                 dateOperation(connectMessages[index - 1].sendDate, message.sendDate)}>
                             {message.chatUUID === '엔드포인트' ?
                                 <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                ((index && connectList[index - 1]?.userId === message.userId) &&
-                                dateOperation(connectList[index - 1].sendDate, message.sendDate) ? (
+                                ((index && connectMessages[index - 1].userId === message.userId) &&
+                                dateOperation(connectMessages[index - 1].sendDate, message.sendDate) ? (
                                     <MessageContainer2>
                                         <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                         <MessageContentContainer2>
@@ -125,7 +121,7 @@ export const MessageScrollBox2: React.FC = () => {
                     </div>)
                 ))}
 
-                <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div> :
+                <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>
 
                 <button
                         style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>

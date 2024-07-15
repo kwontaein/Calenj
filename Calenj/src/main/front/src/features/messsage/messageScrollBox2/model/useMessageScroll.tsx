@@ -13,7 +13,7 @@ interface ReturnScroll{
     scrollToMessage: (chatUUID: string, alignToBottom?: boolean) => void,
 }
 
-export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, lastPage:boolean) :ReturnScroll =>{
+export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, lastPage:boolean, chatUUID:string|undefined) :ReturnScroll =>{
 
     const dispatch = useDispatch();
     const stomp = useSelector((state:RootState)=>state.stomp)
@@ -62,20 +62,18 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
     }
 
 
-    //높이 관련(엔드포인트 찍기 위한 div)
-    //높이 관련(메세지 uuid 위치로 이동)
-
-
 
 
 
     // 스크롤 => chatUUID로 div를 조회하고 높이설정 => 메시지 fetchMoreMessages 이후 세팅
     const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
         const messageDiv = messageRefs.current[chatUUID];
+        console.log(chatUUID, messageDiv)
         if (messageDiv && containerRef.current) {
             if (alignToBottom) {
                 containerRef.current.scrollTop = messageDiv.offsetTop - containerRef.current.clientHeight + messageDiv.clientHeight;
             } else {
+                console.log('실행 하하하',  messageDiv.offsetTop)
                 containerRef.current.scrollTop = messageDiv.offsetTop - 80;
             }
         }
@@ -93,8 +91,14 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
 
 
     useEffect(() => {
-        if(clickState==='' || !containerRef.current) return;
-        containerRef.current.scrollTop += (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
+        if( !containerRef.current|| connectMessages.length===0 || mode!=="column") return;
+        const {scrollTop, scrollHeight, clientHeight} = containerRef.current
+        if(scrollTop+clientHeight === scrollHeight) return
+        if(clickState==='' && scrollHeight < scrollTop+screenHeightSize){
+            containerRef.current.scrollTop -= Math.round(screenHeightSize)
+        }else{
+            containerRef.current.scrollTop += Math.round(screenHeightSize);
+        }
     }, [clickState]);
 
 
@@ -102,14 +106,10 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
     const updateScroll = () => {
         if (!containerRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
-        const sendUser = stomp.receiveMessage.userId
         if(endPointMap.get(stompParam) ===0) return;
 
         //스크롤에 따른 표시
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight){
-            scrollToBottom();
-        }
-        if(userId ===sendUser){
             scrollToBottom();
         }
     }
@@ -130,6 +130,8 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
         if (!containerRef.current || connectMessages.length===0) return
         containerRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
+        if(!chatUUID) return;
+        scrollToMessage(chatUUID)
 
         if(!isRender.current){ //첫 랜더링에만 적용
             const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
@@ -151,7 +153,10 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
         const {param, state} = stomp.receiveMessage
         if(stompParam !== param || state!=='SEND' || connectMessages.length === 0 || !containerRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
-
+        const sendUser = stomp.receiveMessage.userId
+        if(userId ===sendUser){
+            return
+        }
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
             scrollToBottom();
         } else {
@@ -174,6 +179,12 @@ export const useMessageScroll = (connectMessages:Message[], firstPage:boolean, l
         //스크롤 조정
         if(connectMessages.length===0){
             isRender.current = false;
+            return
+        }
+        const sendUser = stomp.receiveMessage.userId
+        const state = stomp.receiveMessage.state
+        if(userId ===sendUser && state==='SEND'){
+            scrollToBottom();
         }
         addScrollEvent()
         return () => {

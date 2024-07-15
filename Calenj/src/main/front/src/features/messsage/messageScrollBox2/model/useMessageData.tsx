@@ -58,9 +58,14 @@ export const useMessageData = (): useMessageData => {
         }else{
             setIsFirstPage(false)
         }
+        if([...messages,...newMessages].at(-1)?.chatUUID === lastMessage?.chatUUID){
+            setIsLastPage(true)
+        }else{
+            setIsLastPage(false)
+        }
+
         return (lastPage ? [...messages, ...newMessages] : [...messages]).filter((message:Message)=> message.chatUUID !=="시작라인")
     },[messages, newMessages])
-
 
 
     //데이터 => 초기 Message get
@@ -87,6 +92,12 @@ export const useMessageData = (): useMessageData => {
     //메세지 추가 로딩
 
 
+    useEffect(() => {
+        if(!isFetching) return
+        setTimeout(()=>{
+            setIsFetching(false);
+        },1000)
+    }, [connectMessages]);
 
     //데이터 => 추가 데이터 받기 및 가공
     const fetchMoreMessages = async (position: 'older' | 'newer', chatUUID?: string):Promise<string|void> => {
@@ -106,30 +117,24 @@ export const useMessageData = (): useMessageData => {
                 }
 
                 if(position ==='older'){
-                    if(response.data.length >=120){
-                        return [response.data,...prevMessages].slice(0, 60);
+                    if((response.data.length + prevMessages.length) >=120){
+                        return [...response.data,...prevMessages].slice(0, 60);
                     }else{
-                        return [response.data, ...prevMessages]
+                        return [...response.data, ...prevMessages]
                     }
                 }else{ //position => newer
-                    if(response.data.length >=120){
+                    if((response.data.length + prevMessages.length) >=120){
                         return [...prevMessages, ...response.data].slice(prevMessages.length+response.data.length-62);
                     }else{
-                        if(response.data.at(-1).chatUUID === lastMessage?.chatUUID){
-                            setNewMessages([])
-                            setIsLastPage(true);
-                        }else{
-                            setIsLastPage(false);
-                        }
                         return [...prevMessages, ...response.data]
                     }
                 }
-
             });
-            setIsFetching(false)
+
         }).catch((err)=>{
             console.error(`Error fetching ${position} messages:`, err);
         });
+
         return chatUUID;
     };
 
