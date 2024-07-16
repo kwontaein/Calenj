@@ -34,7 +34,7 @@ export const MessageScrollBox2: React.FC = () => {
     const [lastMessage, setLastMessage] = useState<Message>();
     const [firstPage, setIsFirstPage] = useState<boolean>(false);
     const [lastPage, setIsLastPage] = useState<boolean>(true);
-    const [showDown, setShowDown] = useState<boolean>(true);
+    const [showDown, setShowDown] = useState<boolean>(true)
     const [hasMoreTop, setHasMoreTop] = useState(true);
     const [hasMoreBottom, setHasMoreBottom] = useState(true);
 
