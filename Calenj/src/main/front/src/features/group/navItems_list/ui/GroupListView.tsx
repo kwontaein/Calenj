@@ -32,7 +32,6 @@ export const GroupListView: React.FC = () => {
     const groupListState = useFetchGroupList(stomp.isOnline)
     useEffect(() => {
         if (stomp.requestFile === "ENDPOINT") {
-            console.log("응 tothe 애")
             endPointMap.set(stomp.param, 0);
         }
     }, [stomp])

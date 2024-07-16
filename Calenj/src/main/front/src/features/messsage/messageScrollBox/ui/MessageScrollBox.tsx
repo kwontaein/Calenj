@@ -48,7 +48,7 @@ export const MessageScrollBox: React.FC = () => {
         if (!chatFile.isLoading) {
             return (
                 <ScrollableDiv ref={scrollRef}>
-                    <div className="scrollTop" ref={topRef}>1</div>
+                    <div className="scrollTop" ref={topRef}></div>
                     {connectList.map((message: Message, index: number) => (
                         <div key={message.chatUUID + index}>
                             {(index !== 0 && compareDate(connectList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
@@ -108,7 +108,6 @@ export const MessageScrollBox: React.FC = () => {
                             </MessageBoxContainer>
                         </div>)
                     )}
-                    <div className="scrollBottom" style={{marginTop: '10px'}}>2</div>
                 </ScrollableDiv>
             );
         }
