@@ -1,4 +1,3 @@
-import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
@@ -7,17 +6,11 @@ import {
     changeDateForm,
     debounce,
     shortAHMFormat,
-    throttleByAnimationFrame
 } from "../../../../shared/lib";
-import {useComponentSize, useIntersect} from "../../../../shared/model";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    endPointMap,
     requestFile,
     RootState,
-    scrollPointMap,
-    sendStompMsg,
-    updateAppPosition
 } from "../../../../entities/redux";
 import {
     DateContainer,
