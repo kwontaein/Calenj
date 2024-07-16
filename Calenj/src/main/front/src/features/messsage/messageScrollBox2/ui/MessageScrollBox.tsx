@@ -45,7 +45,7 @@ export const MessageScrollBox2: React.FC = () => {
             fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID) => {
                 if (!chatUUID) return
                 setTimeout(() => {
-                    scrollToMessage(chatUUID, true)
+                    scrollToMessage(chatUUID)
                 }, 50)
             })
         }
