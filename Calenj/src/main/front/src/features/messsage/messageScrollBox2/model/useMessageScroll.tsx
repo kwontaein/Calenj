@@ -60,12 +60,10 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
     // 스크롤 => chatUUID로 div를 조회하고 높이설정 => 메시지 fetchMoreMessages 이후 세팅
     const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
         const messageDiv = messageRefs.current[chatUUID];
-        console.log(chatUUID, messageDiv)
         if (messageDiv && containerRef.current) {
             if (alignToBottom) { //아래로
                 containerRef.current.scrollTop = messageDiv.offsetTop - containerRef.current.clientHeight + messageDiv.clientHeight;
             } else { //위로
-                console.log('실행 하하하', messageDiv.offsetTop)
                 containerRef.current.scrollTop = messageDiv.offsetTop - 80;
             }
         }
