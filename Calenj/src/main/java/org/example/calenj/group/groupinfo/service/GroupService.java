@@ -40,7 +40,11 @@ public class GroupService {
     private final InviteCodeRepository inviteCodeRepository;
     private final SimpUserRegistry simpUserRegistry;
 
-    //그룹 만들기
+    /**
+     * 그룹 생성
+     *
+     * @param groupTitle 생성할 그룹 이름
+     */
     public void createGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
@@ -77,14 +81,23 @@ public class GroupService {
         }
     }
 
-    //그룹 목록 가져오기
+    /**
+     * 그룹 목록 가져오기
+     *
+     * @return 내가 속한 그룹 목록
+     */
     public List<GroupResponse> groupList() {
         String userId = globalService.extractFromSecurityContext().getUsername();
         return groupRepository.findByUserEntity_UserId(UUID.fromString(userId)).orElseThrow(() -> new RuntimeException("그룹을 찾을 수 없습니다."));
     }
 
 
-    //그룹 세부 정보 가져오기
+    /**
+     * 그룹 세부 정보 가져오기
+     *
+     * @param groupId 정보 가져올 그룹아이디
+     * @return 세부 정보
+     */
     public Optional<GroupDetailResponse> groupDetail(UUID groupId) {
         Optional<GroupResponse> groupOptional = groupRepository.findGroupById(groupId);
         if (groupOptional.isPresent()) {
@@ -105,6 +118,11 @@ public class GroupService {
     }
 
 
+    /**
+     * 그룹에 참여하기
+     *
+     * @param groupId 전달받은 그룹아이디
+     */
     public void joinGroup(UUID groupId) {
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
@@ -116,6 +134,12 @@ public class GroupService {
         group_userRepository.save(groupUserEntity);
     }
 
+    /**
+     * 초대 코드 생성하기
+     *
+     * @param inviteCodeRequest 초대코드 생성 요청 정보
+     * @return 초대 코드 8자리
+     */
     public String inviteCode(InviteCodeRequest inviteCodeRequest) {
         LocalDateTime now = LocalDateTime.now();
         Random rnd = new Random();
@@ -123,7 +147,7 @@ public class GroupService {
 
         for (int i = 0; i < 8; i++) {
             if (rnd.nextBoolean()) {
-                buf.append((char) ((int) (rnd.nextInt(26)) + 97));
+                buf.append((char) ((rnd.nextInt(26)) + 97));
             } else {
                 buf.append((rnd.nextInt(10)));
             }
@@ -143,7 +167,12 @@ public class GroupService {
 
     }
 
-    //초대 코드로 그룹 정보 반환 -> 기간 만료 or 잘못된 코드시 정보 반환해야함
+    /**
+     * 초대 코드로 그룹 정보 반환 -> 기간 만료 or 잘못된 코드시 오류 반환해야함
+     *
+     * @param inviteCode 초대 코드
+     * @return 코드로 그룹 정보 반환
+     */
     public InviteCodeResponse inviteGroup(String inviteCode) {
 
         InviteCodeResponse inviteCodeResponse = inviteCodeRepository.findByInviteCode(inviteCode).orElseThrow(() -> new RuntimeException("잘못된 코드입니다"));
@@ -162,7 +191,12 @@ public class GroupService {
         return inviteCodeResponse;
     }
 
-    //해당 param 구독자들 (온라인 여부)
+    /**
+     * 해당 그룹에 온라인인 유저 반환
+     *
+     * @param param 그룹아이디
+     * @return 온라인 유저 수
+     */
     public int getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
 
@@ -178,6 +212,9 @@ public class GroupService {
         return filteredUserNames.size();
     }
 
+    /**
+     * Scheduled 를 통해 시간이 지난 코드 자동 삭제
+     */
     @Scheduled(fixedDelay = 1000 * 60 * 30) // 30분마다 실행
     private void scheduledInviteCode() {
         // inviteCodeRepository.delete();

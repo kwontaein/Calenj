@@ -1,6 +1,7 @@
 package org.example.calenj.websocket.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
@@ -8,25 +9,18 @@ import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.example.calenj.websocket.dto.response.MessageResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpSubscription;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +30,7 @@ public class WebSocketService {
     private final GlobalService globalService;
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
+    private final FileService fileService;
 
 
     /**
@@ -48,239 +43,8 @@ public class WebSocketService {
         return userEntity;
     }
 
-
     /**
-     * 파일 받아오기
-     *
-     * @param param 받아올 파일아이디
-     **/
-    public List<String> getFile(String param) {
-        String uuid = param;
-        String filePath = "C:\\chat\\chat" + uuid;
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
-            return lines;
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 특정 문장 모두 삭제
-     *
-     * @param param
-     * @param lineToDelete
-     * @return
-     */
-    public boolean deleteAllMatchingLines(String param, String lineToDelete) {
-        String filePath = "C:\\chat\\chat" + param;
-        try {
-            // 파일의 모든 줄을 읽어옵니다.
-            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
-
-            // lineToDelete와 일치하지 않는 모든 줄을 필터링합니다.
-            List<String> updatedLines = lines.stream()
-                    .filter(line -> !line.contains(lineToDelete))
-                    .collect(Collectors.toList());
-
-            // 필터링된 줄들을 다시 파일에 씁니다.
-            Files.write(Paths.get(filePath), updatedLines, Charset.defaultCharset());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 채팅내용 파일에 저장
-     *
-     * @param message 전달받은 내용
-     **/
-    public UUID saveChattingToFile(ChatMessageRequest message) {
-        System.out.println("시발" + message.getState());
-        // 파일을 저장한다.
-        // 메시지 내용
-        List<String> lines = getFile(message.getParam());
-
-        if (lines == null) {
-            return null;
-        }
-        UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
-        if (message.getChatUUID() != null && message.getMessageType() == "file") {
-            messageUUid = message.getChatUUID();
-        }
-        String messageContent;
-
-        if (message.getState() == ChatMessageRequest.fileType.SEND) {
-            messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
-        } else {
-            if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실행됨");
-            } else {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실패됨");
-            }
-        }
-
-        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
-            if (lines == null) {
-                String Title = "시작라인 $어서오세요! $ $ $ $ \n";
-                stream.write(Title.getBytes(StandardCharsets.UTF_8));
-            }
-            stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
-            message.setChatUUID(messageUUid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return messageUUid;
-    }
-
-    /**
-     * 처음 파일 내용 읽어오기
-     *
-     * @param message 전달받은 내용
-     **/
-    public List<MessageResponse> readGroupChattingFile(ChatMessageRequest message) {
-        List<String> lines = getFile(message.getParam());
-
-        if (lines == null) {
-            return null;
-        }
-
-        Collections.reverse(lines); // 파일 내용을 역순으로 정렬
-        List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$"))
-                .filter(createFilterCondition(message.getParam()))
-                .map(stringTransformer)
-                .collect(Collectors.toList());
-
-        int startIndex = previousLines.size();
-
-        if (startIndex != 0) {
-            previousLines.add("엔드포인트$" + "[" + message.getSendDate() + "] $ readPoint" + " $ readPoint" +
-                    " $ " + "-----------------새로운 메세지-----------------");
-        }
-
-        // 내 엔드포인트가 최하단에 있을 경우엔 그냥 채팅 내용 불러오기 + 엔드포인트부터 위에 20개 불러오기
-        List<String> previousLines2 = lines.stream()
-                .filter(createFilterCondition(message.getParam()))
-                .skip(startIndex)
-                .limit(20)
-                .map(stringTransformer)
-                .toList();
-
-        previousLines.addAll(previousLines2);
-
-        List<MessageResponse> messageResponses = previousLines.stream()
-                .map(WebSocketService::parseLineToChatMessage)
-                .collect(Collectors.toList());
-
-        if (messageResponses.isEmpty()) {
-            return null;
-        }
-        return messageResponses;
-    }
-
-    public static MessageResponse parseLineToChatMessage(String line) {
-        String[] parts = line.split("\\$");
-        if (parts.length != 5) {
-            throw new IllegalArgumentException("라인 형식이 잘못되었습니다: " + line);
-        }
-        String chatId = parts[0].replace("[", "").replace("]", "").trim();
-        String date = parts[1].replace("[", "").replace("]", "").trim();
-        String userId = parts[2].replace("[", "").replace("]", "").trim();
-        String messageType = parts[3].replace("[", "").replace("]", "").trim();
-        String messageContent = parts[4].replace("[", "").replace("]", "").trim();
-
-        return new MessageResponse(chatId, date, userId, messageType, messageContent);
-    }
-
-    /**
-     * 위의 파일 내용 읽어오기
-     *
-     * @param message 전달받은 내용
-     **/
-    public List<MessageResponse> readGroupChattingFileSlide(ChatMessageRequest message) {
-
-        List<String> lines = getFile(message.getParam());
-        Collections.reverse(lines);
-        System.out.println("message.getNowLine() :" + message.getNowLine());
-        int batchSize = 20;
-
-        List<String> previousLines = lines.stream()
-                .filter(createFilterCondition(message.getParam()))
-                .skip(message.getNowLine())
-                .map(stringTransformer)
-                .limit(batchSize)
-                .collect(Collectors.toList());
-
-        //message.setNowLine(startIndex + previousLines.size());
-
-        List<MessageResponse> messageResponses = previousLines.stream()
-                .map(WebSocketService::parseLineToChatMessage)
-                .collect(Collectors.toList());
-
-        if (messageResponses.isEmpty()) {
-            return null;
-        }
-
-        return messageResponses;
-    }
-
-    /**
-     * 엔드포인트까지의 라인 갯수 세기
-     *
-     * @param message 전달받은 내용
-     **/
-    public int countLinesUntilEndPoint(ChatMessageRequest message) {
-
-        List<String> lines = getFile(message.getParam());
-
-        if (lines == null) {
-            return 0;
-        }
-
-        Collections.reverse(lines);
-        // 파일 내용을 역순으로 정렬
-
-        List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
-                .filter(createFilterCondition(message.getParam()))
-                .map(stringTransformer)
-                .collect(Collectors.toList());
-
-        Collections.reverse(previousLines);
-
-        if (previousLines.isEmpty()) {
-            return 0;
-        }
-
-        return previousLines.size();
-
-    }
-
-    /**
-     * 내용 변경하는 람다
-     **/
-    public static Function<String, String> stringTransformer = str -> {
-        str = str.replaceAll("\\[\\]", "");
-        return str;
-    };
-
-    /**
-     * 개인 토픽 관련 메세지 (알림 등)
-     *
-     * @param param 멈출 내용
-     **/
-    public static Predicate<String> createFilterCondition(String param) {
-        return line -> !line.contains("EndPoint" + " [" + param + "]");
-    }
-
-    /**
-     * 개인 토픽 관련 메세지 (알림 등)
+     * 기본 정보 세팅
      *
      * @param target         보낼 위치
      * @param message        전달받은 정보들
@@ -291,7 +55,6 @@ public class WebSocketService {
         UserEntity userEntity = returnUserEntity(authentication);
         //현재시간 받기
         String nowTime = globalService.nowTime();
-
         //보내는 사람 아이디 설정
         message.setUserId(userEntity.getUserId());
         //보내는 날짜 설정
@@ -307,7 +70,7 @@ public class WebSocketService {
     }
 
     /**
-     * 개인 토픽 관련 메세지 (알림 등)
+     * 요청에 따른 분기
      *
      * @param target   보낼 위치
      * @param message  전달받은 정보들
@@ -316,25 +79,12 @@ public class WebSocketService {
     public void sendSwitch(ChatMessageRequest message, ChatMessageResponse response, String target) {
         switch (message.getState()) {
             case ALARM: {
-                int setPoint = countLinesUntilEndPoint(message);
-                response.setEndPoint(setPoint);
-                template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
-                return;
-            }
-            case READ: {
-                response.setMessage(readGroupChattingFile(message));
-                List<String> images = getAllImageById(message.getParam());
-                response.setImages(images);
-                template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
-                return;
-            }
-            case RELOAD: {
-                response.setMessage(readGroupChattingFileSlide(message));
+                response.setEndPoint(fileService.countLinesUntilEndPoint(message));
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case SEND: {
-                saveChattingToFile(message);
+                fileService.saveChattingToFile(message);
                 MessageResponse messageResponse = new MessageResponse(
                         message.getChatUUID().toString(),
                         message.getSendDate(),
@@ -346,7 +96,7 @@ public class WebSocketService {
                 return;
             }
             case ENDPOINT: {
-                saveChattingToFile(message);
+                fileService.saveChattingToFile(message);
             }
         }
     }
@@ -376,7 +126,10 @@ public class WebSocketService {
     }
 
     /**
-     * 나한테 모든 온라인 목록 보내기
+     * 로그인 후 웹소켓 연결 시, 모든(나와 관련된) 온라인 유저 정보 불러오기
+     *
+     * @param userId   로그인 한 유저 아이디
+     * @param response 응답(온라인 상태 포함)
      */
     public void sendOnlineStateFirstTime(String userId, ChatMessageResponse response) {
         Set<String> friendList = new HashSet<>();
@@ -409,7 +162,10 @@ public class WebSocketService {
     }
 
     /**
-     * 나 온라인이라고 토픽들에게 알리기
+     * 온라인 상태 전송
+     *
+     * @param userId   로그인 한 유저 아이디
+     * @param response 응답(온라인 상태 포함)
      */
     public void sendOnlineState(String userId, ChatMessageResponse response) {
         //온라인 유저 정보 다시 반환
@@ -430,6 +186,12 @@ public class WebSocketService {
         }
     }
 
+    /**
+     * 유저에게 알람 보내기
+     *
+     * @param userId 알람 보낼 유저 아이디
+     * @param kind   알람 종류
+     */
     public void userAlarm(UUID userId, String kind) {
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setUserId(userId);
@@ -461,34 +223,11 @@ public class WebSocketService {
     }
 
     /**
-     * 토픽을 구독한 모든 유저 목록
+     * url(웹소켓 구독 주소) 에서 UUID 추출하기
      *
-     * @param authentication 웹소켓 인증 정보
-     **/
-    public Set<String> getAllUsers(Authentication authentication) {
-        Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
-        SimpUser simpUserOnly = simpUserRegistry.getUser(authentication.getName());
-
-        Set<String> myDestination = simpUserOnly.getSessions().stream()
-                .filter(simpSession -> !simpSession.getSubscriptions().isEmpty()) // 구독이 비어있지 않은 경우만 선택
-                .flatMap(simpSession -> simpSession.getSubscriptions().stream()) // 각 세션의 구독을 하나의 스트림으로 평면화
-                .map(SimpSubscription::getDestination) // 각 구독의 목적지를 선택하여 매핑
-                .collect(Collectors.toSet()); // Set으로 수집
-
-        Set<String> filteredUserNames = simpUsers.stream()
-                .filter(simpUser -> simpUser.getSessions().stream()
-                        .anyMatch(session -> session.getSubscriptions().stream()
-                                .anyMatch(subscription -> {
-                                    String destination = subscription.getDestination();
-                                    return myDestination.contains(destination);
-                                })))
-                .map(SimpUser::getName)
-                .collect(Collectors.toSet());
-
-        System.out.println(filteredUserNames);
-        return filteredUserNames;
-    }
-
+     * @param url 웹소켓 구독 주소
+     * @return
+     */
     public static String extractUUID(String url) {
         Pattern pattern = Pattern.compile("([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$");
         Matcher matcher = pattern.matcher(url);
@@ -499,9 +238,10 @@ public class WebSocketService {
     }
 
     /**
-     * 구독 주제 빼오기
+     * url(웹소켓 구독 주소) 에서 topic(그룹 / 친구) 추출하기
+     *
+     * @param url 웹소켓 구독 주소
      */
-
     public static String extractTopic(String url) {
         Pattern pattern = Pattern.compile("/topic/([^/]*)");
         Matcher matcher = pattern.matcher(url);
@@ -544,30 +284,6 @@ public class WebSocketService {
         return filteredUserNames;
     }
 
-    /**
-     * 파일에 저장된 모든 이미지 빼오기
-     *
-     * @param param
-     * @return
-     */
-    public List<String> getAllImageById(String param) {
-        List<String> lines = getFile(param);
-        Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
-
-        List<String> extractedParts = lines.stream()
-                .filter(line -> line.contains("$ image $"))
-                .flatMap(line -> {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        String matchedGroup = matcher.group(1);
-                        return List.of(matchedGroup.split(", ")).stream();
-                    }
-                    return Stream.empty();
-                })
-                .collect(Collectors.toList());
-
-        return extractedParts;
-    }
 
 }
 

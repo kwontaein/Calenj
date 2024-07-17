@@ -5,39 +5,41 @@ import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.example.calenj.websocket.dto.response.MessageResponse;
-import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
 public class FileService {
     private final String imageDir;
-    private WebSocketService webSocketService;
     private GlobalService globalService;
     private SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-    public FileService(@Value("${image-dir}") String imageDir, WebSocketService webSocketService, GlobalService globalService, SimpMessagingTemplate template) {
+    public FileService(@Value("${image-dir}") String imageDir, GlobalService globalService, SimpMessagingTemplate template) {
         this.imageDir = imageDir;
-        this.webSocketService = webSocketService;
         this.globalService = globalService;
         this.template = template;
     }
 
     /**
-     * 파일 형식을 확인합니다.
+     * 파일 형식이 이미지인지 확인
      *
      * @param file 전달된 파일
      */
@@ -48,7 +50,7 @@ public class FileService {
     }
 
     /**
-     * 업로드된 이미지를 서버에 저장합니다.
+     * 파일 유효성 검사
      *
      * @param file 파일
      */
@@ -68,8 +70,10 @@ public class FileService {
     }
 
     /**
-     * 업로드된 이미지를 서버에 저장합니다.
-     * id로 이미지 저장
+     * 이미지 하나 저장(유저프로필)
+     *
+     * @param uuid 유저 아이디
+     * @param file 전달받은 파일
      */
     public void uploadImage(UUID uuid, MultipartFile file) {
         // 이미지 파일의 확장자 추출
@@ -99,6 +103,13 @@ public class FileService {
         }
     }
 
+    /**
+     * 여러 파일 저장
+     *
+     * @param multipartFiles 파일들
+     * @param param          해당 파일을 사용한 토픽 uuid
+     * @return 저장 성공 실패 여부
+     */
     public boolean saveMultiImage(MultipartFile[] multipartFiles, String param) {
         Set<String> imageIds = new HashSet<>();
         try {
@@ -119,7 +130,7 @@ public class FileService {
             chatMessageRequest.setMessageType("file");
             chatMessageRequest.setChatUUID(uuid);
 
-            webSocketService.saveChattingToFile(chatMessageRequest);
+            saveChattingToFile(chatMessageRequest);
 
             MessageResponse messageResponse = new MessageResponse(
                     chatMessageRequest.getChatUUID().toString(),
@@ -128,7 +139,7 @@ public class FileService {
                     chatMessageRequest.getMessageType(),
                     chatMessageRequest.getMessage());
 
-            ChatMessageResponse chatMessageResponse = webSocketService.filterNullFields(chatMessageRequest);
+            ChatMessageResponse chatMessageResponse = filterNullFields(chatMessageRequest);
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
             template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
@@ -161,7 +172,10 @@ public class FileService {
 
     /**
      * 처음 파일 내용 읽어오기
-     **/
+     *
+     * @param chatFileRequest 내용 읽기 위한 요청 정보
+     * @return 파일 내용
+     */
     public List<MessageResponse> readGroupChattingFile(ChatFileRequest chatFileRequest) {
         List<String> lines = getFile(chatFileRequest.getParam());
         if (lines == null) {
@@ -203,6 +217,12 @@ public class FileService {
         return messageResponses;
     }
 
+    /**
+     * 파일에서 읽은 내용 slice 해서 배열에 담기
+     *
+     * @param line slice할 라인
+     * @return 메세지 dto 배열에 담기
+     */
     public static MessageResponse parseLineToChatMessage(String line) {
         String[] parts = line.split("\\$");
         if (parts.length != 5) {
@@ -219,7 +239,10 @@ public class FileService {
 
     /**
      * 추가 파일 내용 읽어오기
-     **/
+     *
+     * @param chatFileRequest 내용 읽기 위한 요청 정보
+     * @return 파일 내용
+     */
     public List<MessageResponse> readGroupChattingFileSlide(ChatFileRequest chatFileRequest) {
 
         List<String> lines = getFile(chatFileRequest.getParam());
@@ -269,7 +292,7 @@ public class FileService {
 
 
     /**
-     * 개인 토픽 관련 메세지 (알림 등)
+     * stream() 에서 해당 내용 만날 시 정지
      *
      * @param param 멈출 내용
      **/
@@ -284,4 +307,154 @@ public class FileService {
         str = str.replaceAll("\\[\\]", "");
         return str;
     };
+
+
+    /**
+     * 파일에 저장된 모든 이미지 빼오기
+     *
+     * @param param
+     * @return
+     */
+    public List<String> getAllImageById(String param) {
+        List<String> lines = getFile(param);
+        Pattern pattern = Pattern.compile("\\$ image \\$ \\[(.*)]");
+
+        List<String> extractedParts = lines.stream()
+                .filter(line -> line.contains("$ image $"))
+                .flatMap(line -> {
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        String matchedGroup = matcher.group(1);
+                        return List.of(matchedGroup.split(", ")).stream();
+                    }
+                    return Stream.empty();
+                })
+                .collect(Collectors.toList());
+
+        return extractedParts;
+    }
+
+    /**
+     * 특정 문장 모두 삭제
+     *
+     * @param param
+     * @param lineToDelete
+     * @return
+     */
+    public boolean deleteAllMatchingLines(String param, String lineToDelete) {
+        String filePath = "C:\\chat\\chat" + param;
+        try {
+            // 파일의 모든 줄을 읽어옵니다.
+            List<String> lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
+
+            // lineToDelete와 일치하지 않는 모든 줄을 필터링합니다.
+            List<String> updatedLines = lines.stream()
+                    .filter(line -> !line.contains(lineToDelete))
+                    .collect(Collectors.toList());
+
+            // 필터링된 줄들을 다시 파일에 씁니다.
+            Files.write(Paths.get(filePath), updatedLines, Charset.defaultCharset());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 채팅내용 파일에 저장
+     *
+     * @param message 전달받은 내용
+     **/
+    public UUID saveChattingToFile(ChatMessageRequest message) {
+        // 파일을 저장한다.
+        // 메시지 내용
+        List<String> lines = getFile(message.getParam());
+
+        if (lines == null) {
+            return null;
+        }
+        UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
+        if (message.getChatUUID() != null && message.getMessageType() == "file") {
+            messageUUid = message.getChatUUID();
+        }
+        String messageContent;
+
+        if (message.getState() == ChatMessageRequest.fileType.SEND) {
+            messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
+        } else {
+            if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
+                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
+                System.out.println("실행됨");
+            } else {
+                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
+                System.out.println("실패됨");
+            }
+        }
+
+        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
+            if (lines == null) {
+                String Title = "시작라인 $어서오세요! $ $ $ $ \n";
+                stream.write(Title.getBytes(StandardCharsets.UTF_8));
+            }
+            stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
+            message.setChatUUID(messageUUid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return messageUUid;
+    }
+
+    /**
+     * response 설정
+     *
+     * @param request 전달받은 정보들
+     **/
+
+    // null이 아닌 필드만 포함시키는 메소드
+    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
+        ChatMessageResponse filteredResponse = new ChatMessageResponse();
+        if (request.getParam() != null) {
+            filteredResponse.setParam(request.getParam());
+        }
+        if (request.getUserId() != null) {
+            filteredResponse.setUserId(request.getUserId());
+        }
+        filteredResponse.setState(request.getState());
+        filteredResponse.setEndPoint(request.getEndPoint());
+        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
+        return filteredResponse;
+    }
+
+    /**
+     * 엔드포인트까지의 라인 갯수 세기
+     *
+     * @param message 전달받은 내용
+     **/
+    public int countLinesUntilEndPoint(ChatMessageRequest message) {
+
+        List<String> lines = getFile(message.getParam());
+
+        if (lines == null) {
+            return 0;
+        }
+
+        Collections.reverse(lines);
+        // 파일 내용을 역순으로 정렬
+
+        List<String> previousLines = lines.stream()
+                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
+                .filter(createFilterCondition(message.getParam()))
+                .map(stringTransformer)
+                .collect(Collectors.toList());
+
+        Collections.reverse(previousLines);
+
+        if (previousLines.isEmpty()) {
+            return 0;
+        }
+
+        return previousLines.size();
+
+    }
 }

@@ -22,7 +22,6 @@ import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
 import org.example.calenj.user.repository.UserRepository;
-import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -41,22 +40,19 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final GlobalService globalService;
-
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final FriendRepository friendRepository;
-
-    private final EventService eventService;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TagRepository tagRepository;
-    private final RedisService redisService;
-    private final WebSocketService webSocketService;
+    private final UserRepository userRepository;
 
+    private final GlobalService globalService;
+    private final EventService eventService;
+    private final RedisService redisService;
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원가입
@@ -68,7 +64,6 @@ public class UserService {
         userRequest.setUserPassword(passwordEncoder.encode(userRequest.getUserPassword()));
         UserEntity user = userRequest.toEntity();
         user = userRepository.save(user);
-
 
         TagEntity tagEntity = TagEntity
                 .builder()

@@ -67,6 +67,12 @@ public class RedisService {
         return hashOps.entries("verify:" + email);
     }
 
+    /**
+     * 남은 유효 시간 계산
+     *
+     * @param key 유효 시간 확인할 키
+     * @return 유효 시간
+     */
     public long getRemainingTTL(String key) {
         Duration duration = Duration.ofDays(redisTemplate.getExpire(key));
         return duration != null ? duration.getSeconds() : -2;  // Duration이 null인 경우는 키가 존재하지 않을 때
@@ -74,6 +80,9 @@ public class RedisService {
 
     /**
      * 유저 토큰 저장
+     *
+     * @param userId 유저 아이디
+     * @param token  리프레시 토큰
      */
     public void saveUserToken(String userId, String token) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
@@ -84,6 +93,9 @@ public class RedisService {
 
     /**
      * 유저 아이디로 토큰 조회
+     *
+     * @param userId 유저 아이디
+     * @return 리프레시 토큰 조회 값
      */
     public String getUserTokenById(String userId) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
@@ -92,7 +104,11 @@ public class RedisService {
     }
 
     /**
-     * 리프레시 토큰 값 유무 조회
+     * 유효한(저장된) 토큰인지 검사
+     *
+     * @param userId 유저아이디
+     * @param token  리프레시토큰
+     * @return boolean
      */
     public boolean isUserTokenValid(String userId, String token) {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
@@ -100,13 +116,23 @@ public class RedisService {
         return token.equals(storedToken);
     }
 
+    /**
+     * 토큰 삭제
+     *
+     * @param userId 유저아이디
+     */
     public void deleteUserToken(String userId) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
         hashOps.delete("user:" + userId, "token");
     }
 
 
-    // Method to set a new token for a user
+    /**
+     * 리프레시 토큰 재발급 시 갱신
+     *
+     * @param userId   유저아이디
+     * @param newToken 새로운 리프레시 토큰
+     */
     public void updateUserToken(String userId, String newToken) {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
 

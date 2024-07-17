@@ -33,6 +33,9 @@ public class FriendService {
 
     /**
      * 이름으로 유저정보 가져오기
+     *
+     * @param userName 가져올 유저 사용자명
+     * @return 유저정보
      */
     public UserEntity getUserEntityByUserName(String userName) {
         UserEntity userEntity = userRepository.findByUserUsedName(userName).orElse(null);
@@ -41,6 +44,9 @@ public class FriendService {
 
     /**
      * ID로 유저정보 가져오기
+     *
+     * @param userID 가져올 유저 id
+     * @return 유저정보
      */
     public UserEntity getUserEntityById(UUID userID) {
         UserEntity userEntity = userRepository.findByUserId(userID).orElseThrow(() -> new RuntimeException());
@@ -49,6 +55,8 @@ public class FriendService {
 
     /**
      * 친구목록 가져오기
+     *
+     * @return 친구 목록
      */
     public List<FriendResponse> friendList() {
         UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
@@ -57,6 +65,9 @@ public class FriendService {
 
     /**
      * 친구 요청하기
+     *
+     * @param friendUserName
+     * @return
      */
     public AddFriendResponse requestFriend(String friendUserName) {
 
@@ -80,11 +91,15 @@ public class FriendService {
         }
 
         // 친구 요청
-        return processFriendRequest(ownUser, friendUser, response);
+        return processFriendRequest(ownUser, friendUser);
     }
 
     /**
      * 나에게 요청 검사
+     *
+     * @param friendUserName 친구 요청받은 유저 사용자명
+     * @param ownUser        친구 요청한 유저 정보
+     * @return 검사 값 boolean
      */
     private boolean isAddingSelf(String friendUserName, UserEntity ownUser) {
         if (friendUserName.equals(ownUser.getUserUsedName())) {
@@ -95,6 +110,10 @@ public class FriendService {
 
     /**
      * 이미 친구인지 검사
+     *
+     * @param friendUser 친구 요청받은 유저 정보
+     * @param ownUser    친구 요청한 유저 정보
+     * @return 검사 값 boolean
      */
     private boolean isAlreadyFriend(UserEntity friendUser, UserEntity ownUser) {
         if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId(), ownUser.getUserId()).orElse("Null").equals("ACCEPT")) {
@@ -105,6 +124,9 @@ public class FriendService {
 
     /**
      * 검사요소 통과 못할시 에러로 반환
+     *
+     * @param message 에러 메세지
+     * @return 응답
      */
     private AddFriendResponse createErrorResponse(String message) {
         return responseSetting(false, message, null);
@@ -112,6 +134,10 @@ public class FriendService {
 
     /**
      * 요청 성공시 반환
+     *
+     * @param message 성공 메세지
+     * @param userId  조회한 친구 아이디
+     * @return 응답
      */
     private AddFriendResponse createSuccessResponse(String message, UUID userId) {
         return responseSetting(true, message, userId);
@@ -119,8 +145,12 @@ public class FriendService {
 
     /**
      * 검사 통과 시 친구 요청 프로세스 진행
+     *
+     * @param ownUser    친구 요청한 유저 정보
+     * @param friendUser 친구 요청 받은 유저 정보
+     * @return 성공 / 실패시 응답 작성
      */
-    private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser, AddFriendResponse response) {
+    private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser) {
         if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
             return repositorySetting(friendUser.getUserId());
         } else {
@@ -130,6 +160,9 @@ public class FriendService {
 
     /**
      * 요청한 대상으로부터의 요청이 이미 있을 경우
+     *
+     * @param friendUserId 친구 요청 받은 유저 아이디
+     * @return 상대가 요청한 정보가 있고, 내가 요청했다면 -> 친구수락으로 보내기
      */
     public AddFriendResponse repositorySetting(UUID friendUserId) {
         return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?", friendUserId);
@@ -137,6 +170,10 @@ public class FriendService {
 
     /**
      * 전부 통과 시 친구 요청을 위한 친구 정보 반환
+     *
+     * @param ownUser      친구 요청한 유저 정보
+     * @param friendUserId 친구 요청 받은 유저 아이디
+     * @return 성공 / 실패시 응답 작성
      */
     public AddFriendResponse onlyOne(UserEntity ownUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
         if (!eventService.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
@@ -146,7 +183,12 @@ public class FriendService {
     }
 
     /**
-     * 응답 DTO 세팅
+     * 응답 정보 세팅
+     *
+     * @param isSuccess 친구 요청 과정 성공 / 실패 여부
+     * @param message   전달할 메세지
+     * @param userId    친구 요청할 유저 아이디
+     * @return
      */
     public AddFriendResponse responseSetting(boolean isSuccess, String message, UUID userId) {
         AddFriendResponse response = new AddFriendResponse();
@@ -158,6 +200,9 @@ public class FriendService {
 
     /**
      * 친구 요청 DB 저장
+     *
+     * @param friendUsedName 친구 사용자명
+     * @param eventContent   이벤트 종류
      */
     public void saveFriend(String friendUsedName, String eventContent) {
         UserEntity ownUser = globalService.myUserEntity();
@@ -179,6 +224,8 @@ public class FriendService {
 
     /**
      * 친구 수락
+     *
+     * @param friendUserId 수락할 친구 아이디
      */
     public void acceptFriend(UUID friendUserId) {
         UserEntity friendUser = getUserEntityById(friendUserId);
@@ -198,8 +245,6 @@ public class FriendService {
         friendRepository.save(friendEntity);
         eventService.updateFriendRequest(friendUserId, EventEntity.statusType.ACCEPT);
 
-        //:TODO 확인필요
-        // 파일을 저장한다.
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
             String nowTime = globalService.nowTime();
             stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
@@ -212,6 +257,9 @@ public class FriendService {
 
     /**
      * 친구 요청에 응답
+     *
+     * @param friendUserId 응답할 친구 아이디
+     * @param isAccept     수락여부
      */
     public AddFriendResponse responseFriend(UUID friendUserId, String isAccept) {
 
