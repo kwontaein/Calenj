@@ -59,10 +59,8 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                 dynamicEventTag[tagId].isClick
             )
         )
-        console.log(events)
 
         setCurrentEvents(events);
-        // console.log(events)
     }
 
 
@@ -77,7 +75,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
     //이벤트 변경시 api 처리
     const handleEvents = (event: EventChangeArg) => {
-        updateScheduleApi(event.event._def.publicId, event.event.start as Date, event.event.end as Date)
+        updateScheduleApi(event.event._def.publicId, event.event.start as Date, event.event.end as Date, event.event.extendedProps)
     }
 
 

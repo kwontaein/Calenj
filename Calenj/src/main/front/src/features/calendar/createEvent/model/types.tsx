@@ -24,12 +24,6 @@ export interface ReturnTodo {
     contentRef: React.RefObject<HTMLInputElement>
 }
 
-export interface ReturnExtendedProps {
-    formState: string,
-    content: string,
-    todoList: TodoItem[],
-    repeatState: RepeatState,
-}
 
 export type RepeatOption = '일' | '주' | '달' | '년';
 
