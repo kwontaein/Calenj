@@ -40,10 +40,12 @@ public class CalendarService {
      */
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
+        // 반복일정일 경우 -> 수정된 날짜만 미포함 + 해당 날짜에 새로운 스케쥴 생성
+        // 그냥 일정일 경우 -> 날짜만 변경
+
+
         UserScheduleEntity userSchedule = userScheduleRepository
                 .findById(new UserScheduleEntityId(scheduleRequest.getId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
-        //변경 감지를 통한 자동 업데이트
-        //userSchedule.updateScheduleDetails(scheduleRequest);
     }
 
     /**

@@ -58,4 +58,5 @@ public class UserScheduleEntity {
     //todoList
     @Column(name = "user_schedule_todo_list")
     private String userScheduleTodoList;
+
 }
