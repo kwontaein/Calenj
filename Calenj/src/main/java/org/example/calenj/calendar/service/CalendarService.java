@@ -65,6 +65,11 @@ public class CalendarService {
         scheduleRequest.getExtendedProps().getRepeatState().setRepeat(false);
         scheduleRequest.getExtendedProps().getRepeatState().setRepeatCount(1);
         scheduleRequest.setId(null);
+
+        if (scheduleRequest.getEnd() == null) {
+            scheduleRequest.setEnd(scheduleRequest.getStart());
+        }
+        
         scheduleRequest.setTitle(userScheduleEntity.getUserScheduleTitle());
 
         saveSchedule(scheduleRequest);
