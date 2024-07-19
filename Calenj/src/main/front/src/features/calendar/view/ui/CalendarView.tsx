@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import {DateSelectArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi, EventChangeArg} from "@fullcalendar/react";
 import {useCalendar} from "../model/useCalendar";
 import {Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -20,6 +20,7 @@ import {useCalendarController} from "../model/useCalendarController";
 import {AddDateEvent} from "../../createEvent";
 import {ExternalEvents} from "../../stamp";
 import {AppState, CustomEvent} from "../model/types";
+
 
 
 export const CalendarView: React.FC = () => {
@@ -54,7 +55,7 @@ export const CalendarView: React.FC = () => {
     });
 
     const onEventAdd = () => {
-        const newEvent: CustomEvent = {
+        const newEvent: CustomEvent= {
             id: Date.now(), // 고유 ID 생성을 위해 현재 시간의 타임스탬프 사용
             title: "New Event",
             color: "#02daff",
@@ -110,15 +111,11 @@ export const CalendarView: React.FC = () => {
                         navLinkDayClick={handleNavLinkDayClick}
                         events={currentEvents}
                         dayMaxEventRows={2}
-                        eventsSet={handleEvents}
                         select={(selectInfo: DateSelectArg) => {
                             setAddEvent(true)
                             setSelectInfo(selectInfo)
                         }}
-                        eventChange={(e) => {
-                            console.log(e.event.start)
-                            console.log(e.oldEvent.start)
-                        }} //이벤트 변경 시 이벤트에 대한 상태
+                        eventChange={(arg: EventChangeArg) => handleEvents(arg)} //이벤트 변경 시 이벤트에 대한 상태
                         eventClick={handleEventClick}
                         eventContent={(eventInfo) => (
                             <CalendarEventView eventInfo={eventInfo}/>

@@ -18,6 +18,7 @@ import {
     RepeatState
 } from "../../../../entities/calendar";
 import {useConfirm} from "../../../../shared/model";
+import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
 
 interface ReturnAddEvent{
     repeatState: RepeatState,
@@ -31,6 +32,7 @@ interface ReturnAddEvent{
 
 export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):ReturnAddEvent =>{
     const calendarApi = selectInfo?.view.calendar;
+    const userEventDateState = useFetchUserDateEvent()
 
     function adjustDate(dateStr: string, allDay: boolean): Date {
         const date = new Date(dateStr);
@@ -105,8 +107,6 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
             }
         }
 
-        calendarApi?.addEvent(event)
-
         const saveEvent: UserDateEvent = {
             id: UUid,
             title: event.title,
@@ -115,7 +115,9 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
             allDay: event.allDay,
             extendedProps: event.extendedProps,
         }
-        postDateEventApi(saveEvent)
+        postDateEventApi(saveEvent).then(()=>{
+            userEventDateState.refetch()
+        })
         onClose()
     }
 

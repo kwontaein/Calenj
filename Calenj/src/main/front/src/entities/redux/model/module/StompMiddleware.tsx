@@ -23,6 +23,7 @@ interface StompData {
     nowLine?: number;
 }
 
+
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
 export const toggleCurrentMap = new Map();
@@ -51,6 +52,8 @@ function* sendStomp(stompClient: CompatClient) {
     }
 
 }
+
+
 
 function* sendPublish(destination: Destination, stompClient: CompatClient) {
     destination.map((sub: (string | number)[], index: number) => {
@@ -134,6 +137,7 @@ function createStompConnection() {
         const sock = () => new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
 
+
         // WebSocket 에러 처리
         stompClient.onWebSocketError = (error: Error) => {
             console.error('Error with websocket', error);
@@ -192,6 +196,8 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                 console.log("임시 비활성화")
             }); //연결 끊기(임시 비활성화
         };
+        //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
+        //인자로는 확장의 최장크기(크기제한)
     }, buffers.expanding<number>(1000) || buffers.none())
 }
 

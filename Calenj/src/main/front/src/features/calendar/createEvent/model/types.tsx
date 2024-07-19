@@ -1,11 +1,11 @@
-import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
+import {DateSelectArg, EventAddArg, EventApi, EventChangeArg, EventClickArg} from "@fullcalendar/react";
 import React from "react";
 import {Dictionary} from "@fullcalendar/core";
 import {Options} from "rrule";
 import {RepeatState} from "../../../../entities/calendar";
 
 export interface ReturnCalendar {
-    handleEvents: (events: EventApi[]) => void,
+    handleEvents: (events: EventChangeArg) => void,
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick: (clickInfo: EventClickArg) => void,
     currentEvents: DateEvent[],

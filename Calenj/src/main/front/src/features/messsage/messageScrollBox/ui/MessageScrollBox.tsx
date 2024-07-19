@@ -1,10 +1,18 @@
-import {useMessageScroll} from "../../index";
 import {useMessageData} from "../model/useMessageData";
-import {useEffect, useMemo, useState} from "react";
-import {AHMFormat, AHMFormatV2, changeDateForm, shortAHMFormat, throttleByAnimationFrame} from "../../../../shared/lib";
-import {useComponentSize, useIntersect} from "../../../../shared/model";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {
+    AHMFormat,
+    AHMFormatV2,
+    changeDateForm,
+    debounce,
+    shortAHMFormat,
+    throttleByAnimationFrame
+} from "../../../../shared/lib";
 import {useDispatch, useSelector} from "react-redux";
-import {endPointMap, RootState, scrollPointMap, updateAppPosition} from "../../../../entities/redux";
+import {
+    requestFile,
+    RootState,
+} from "../../../../entities/redux";
 import {
     DateContainer,
     DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
@@ -16,53 +24,72 @@ import {
 import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
 import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
+import axios from "axios";
+import {useIntersect} from "../../../../shared/model";
+import {useMessageScroll} from "../model/useMessageScroll";
 
 export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
-    const stomp = useSelector((state: RootState) => state.stomp)
-    const {messageList, newMessageList, chatFile, compareDate, isFetching} = useMessageData(stomp.param)
-    const scrollRef = useMessageScroll(stomp.param, messageList, isFetching)
-
-
-    const loadFile = useMemo(() => {
-        return throttleByAnimationFrame(() => {
-            if (!scrollRef.current) return
-            chatFile.fetchNextPage()
-        })
-    }, [stomp.param])
+    const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
+    const [chatUUID, setChatUUID] = useState<string>('');
+    const [position, setPosition] = useState<string>('older');
+    const {
+        containerRef,
+        messageRefs,
+        scrollToMessage
+    } = useMessageScroll(connectMessages, firstPage, lastPage)
+    
+    useEffect(() => {
+        if (chatUUID !== '') {
+            scrollToMessage(chatUUID, position === "newer");
+        }
+    }, [connectMessages, chatUUID])
 
     const topRef = useIntersect((entry, observer) => {
-        if (chatFile.hasNextPage && !chatFile.isFetching && !isFetching) {
+        if (!firstPage && connectMessages.length > 0) {
             observer.unobserve(entry.target);
-            loadFile();
+            fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID) => {
+                if (!chatUUID) return;
+                setChatUUID(chatUUID);
+                setPosition("older");
+            });
+        }
+    });
+
+    const bottomRef = useIntersect((entry, observer) => {
+        if (!lastPage && connectMessages.length > 0) {
+            observer.unobserve(entry.target);
+            fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID) => {
+                if (!chatUUID) return;
+                setChatUUID(chatUUID);
+                setPosition("newer");
+
+            });
         }
     });
 
 
     const MessageBox = useMemo(() => {
-        const connectList = [...[...messageList].reverse(), ...newMessageList].filter((messageData) =>
-            (endPointMap.get(stomp.param) === 0 && messageData.chatUUID !== '엔드포인트' && messageData.chatUUID !== '시작라인') || (endPointMap.get(stomp.param) > 0 && messageData.chatUUID !== '시작라인')
-        );
 
-        if (!chatFile.isLoading) {
-            return (
-                <ScrollableDiv ref={scrollRef}>
-                    <div className="scrollTop" ref={topRef}></div>
-                    {connectList.map((message: Message, index: number) => (
-                        <div key={message.chatUUID + index}>
-                            {(index !== 0 && compareDate(connectList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+        return (
+            <ScrollableDiv ref={containerRef}>
+                {!firstPage && <div className="scrollTop" ref={topRef}></div>}
+                {connectMessages.length > 0 &&
+                    (connectMessages.map((message: Message, index: number) => (
+                        <div key={message.chatUUID}>
+                            {(index !== 0 && compareDate(connectMessages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
                                 <HR_NewDate
                                     data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
                             <MessageBoxContainer className={message.chatUUID}
-                                                 key={message.chatUUID + index}
-                                                 $sameUser={(index !== 0 && connectList[index - 1]?.userId === message.userId) &&
-                                                     dateOperation(connectList[index - 1].sendDate, message.sendDate)}>
+                                                 key={message.chatUUID}
+                                                 ref={(el) => messageRefs.current[message.chatUUID] = el}
+                                                 $sameUser={(index !== 0 && connectMessages[index - 1]?.userId === message.userId) &&
+                                                     dateOperation(connectMessages[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
-
                                     <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                    ((index && connectList[index - 1]?.userId === message.userId) &&
-                                    dateOperation(connectList[index - 1].sendDate, message.sendDate) ? (
+                                    ((index && connectMessages[index - 1].userId === message.userId) &&
+                                    dateOperation(connectMessages[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
@@ -88,7 +115,6 @@ export const MessageScrollBox: React.FC = () => {
                                                                         <ImageContent
                                                                             $image={image.split('/')[0].trim()}>
                                                                             {image.split('/')[0].trim()}
-                                                                            {/*{image.split('/')[1].trim()}*/}
                                                                         </ImageContent>
                                                                     </ImageWrapper>
                                                                 ))}
@@ -107,12 +133,18 @@ export const MessageScrollBox: React.FC = () => {
                                 }
                             </MessageBoxContainer>
                         </div>)
-                    )}
-                </ScrollableDiv>
-            );
-        }
-        return null;
-    }, [messageList, newMessageList]);
+                    ))}
+
+                <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>
+
+                <button
+                    style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
+                    <p>맨 아래로</p>
+                </button>
+
+            </ScrollableDiv>
+        );
+    }, [connectMessages]);
 
 
     return (

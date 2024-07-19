@@ -1,124 +1,136 @@
-import {useEffect, useMemo, useState} from "react";
-import {
-    QUERY_CHATTING_KEY,
-    QUERY_NEW_CHAT_KEY,
-    useChatFileInfinite,
-    useReceiveChatInfinite
-} from "../../../../entities/reactQuery/model/queryModel";
-import {useChatFetching} from "../../../../entities/message";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux";
-import {InfiniteData, UseInfiniteQueryResult, useQueryClient} from "@tanstack/react-query";
-import {Message} from '../../../../entities/reactQuery'
-import {endPointMap, scrollPointMap} from "../../../../entities/redux";
 import {changeDateForm} from "../../../../shared/lib";
+import axios from "axios";
+import {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Message} from "../../../../entities/reactQuery";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
+import {useIntersect} from "../../../../shared/model";
 
 interface useMessageData {
-    messageList: Message[],
-    newMessageList: Message[],
-    chatFile: UseInfiniteQueryResult<InfiniteData<Message[], unknown>, Error>,
-    compareDate: (date1:string,date2:string) => boolean,
-    isFetching:boolean,
+    connectMessages: Message[],
+    firstPage: boolean,
+    lastPage: boolean,
+    fetchMoreMessages: (position: 'older' | 'newer', chatUUID?: string) => Promise<string | void>,
+    compareDate: (date1: string, date2: string) => boolean,
 }
 
+export const useMessageData = (): useMessageData => {
 
-export const useMessageData = (param: string): useMessageData => {
-    const [newMsgLength, setNewMsgLength] = useState(0);
-    const {requestFile,receiveNewChat} = useChatFetching() //데이터 패치함수
-    const stomp = useSelector((state: RootState) => state.stomp);
-    const queryClient = useQueryClient();
-    const chatFile = useChatFileInfinite(param, newMsgLength ,requestFile)
-    const newChat = useReceiveChatInfinite(param, receiveNewChat)
-    const [isFetching,setIsFetching] = useState<boolean>(endPointMap.get(param)>0)
+    const stomp = useSelector((state: RootState) => state.stomp)
+    const stompParam = useSelector((state: RootState) => state.stomp.param)
+    const userId = localStorage.getItem("userId");
+    //메세지목록
+    const [messages, setMessages] = useState<Message[]>([]);
+    //웹소켓 메시지 목록
+    const [newMessages, setNewMessages] = useState<Message[]>([]);
+    //마지막 페이지인지 구분하기 위한 값
+    const [lastMessage, setLastMessage] = useState<Message>();
 
+    //맨 처음 페이지인지
+    const [firstPage, setIsFirstPage] = useState<boolean>(false);
+    //맨 마지막 페이지인지
+    const [lastPage, setIsLastPage] = useState<boolean>(true);
+    //api 중복 호출 방지
+    const [isFetching, setIsFetching] = useState(false); // 요청 진행 여부를 추적하는 ref
+
+
+    //시작하자마자 데이터 받아오기
     useEffect(() => {
-        setIsFetching(chatFile.isRefetching)
-        if(chatFile.isRefetching) {
-            scrollPointMap.delete(param)
+        getInitialMessages();
+    }, []);
+
+
+    //데이터 => 웹소켓 새로운 메세지 받기
+    useEffect(() => {
+        const {state, param, message} = stomp.receiveMessage;
+        if (stompParam !== param || messages.length === 0) return;
+        if (message && state === "SEND") {
+            setNewMessages([...newMessages, ...message]);
+            setLastMessage(message[message.length - 1]);
         }
-    }, [chatFile.isRefetching]);
+    }, [stomp.receiveMessage.receivedUUID]);
 
-
-    useEffect(() => {
-
-        const {state} = stomp.receiveMessage;
-        //해당 방의 채팅내용만 받아옴
-        if (param !== stomp.receiveMessage.param) return
-        //셋팅 이후 send를 받음 =>1.READ한 파일 세팅 이후 처리
-        if ((!newChat.isFetching) && state === "SEND") {
-            newChat.fetchNextPage();
+    const connectMessages = useMemo(() => {
+        if (messages.length === 0) return []
+        if (messages[0].chatUUID === "시작라인") {
+            setIsFirstPage(true);
+        } else {
+            setIsFirstPage(false)
         }
-    }, [stomp.receiveMessage.receivedUUID])
-
-
-    useEffect(() => {
-        if (newChat.data) {
-            setNewMsgLength(newChat.data?.pageParams.length - 1)
+        if ([...messages, ...newMessages].at(-1)?.chatUUID === lastMessage?.chatUUID) {
+            setIsLastPage(true)
+        } else {
+            setIsLastPage(false)
         }
-    }, [newChat.data]);
+
+        return (lastPage ? [...messages, ...newMessages] : [...messages]).filter((message: Message) => message.chatUUID !== "시작라인")
+    }, [messages, newMessages])
+
+
+    //데이터 => 초기 Message get
+    const getInitialMessages = async () => {
+        const response = await axios.post('/api/getChattingFile', {
+            param: stompParam,
+            userId: userId,
+        });
+        setMessages(response.data);
+        setLastMessage(response.data.at(-1))
+        setIsLastPage(true);
+    };
 
 
     useEffect(() => {
-        if (endPointMap.get(param) > 0) {
-            if(chatFile.data){
-                queryClient.setQueryData([QUERY_CHATTING_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                    pages: data?.pages.slice(0, 1),
-                    pageParams: data?.pageParams.slice(0, 1)
-                }));
-            }
-            chatFile.refetch().then(() => {
-                //newMessage 비우기
-                if (!newChat.data) return
-                queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                    pages: data?.pages.slice(0, 1),
-                    pageParams: data?.pageParams.slice(0, 1)
-                }));
+        if (!isFetching) return
+        setTimeout(() => {
+            setIsFetching(false);
+        }, 1000)
+    }, [connectMessages]);
+
+    //데이터 => 추가 데이터 받기 및 가공
+    const fetchMoreMessages = async (position: 'older' | 'newer', chatUUID?: string): Promise<string | void> => {
+        if (!chatUUID || isFetching) return; // 메시지가 없거나 요청 진행 중이면 반환
+        setIsFetching(true) // 요청 시작 플래그 설정
+
+        axios.post('/api/ReloadChattingFile', {
+            param: stompParam,
+            userId: userId,
+            chatId: chatUUID,
+            newOrOld: position
+        }).then((response) => {
+            setMessages(prevMessages => {
+                if (!response.data) return prevMessages
+                if (response.data[0].chatUUID === prevMessages[0]?.chatUUID) {
+                    return prevMessages; // 동일한 메시지의 중복 방지
+                }
+
+                if (position === 'older') {
+                    if ((response.data.length + prevMessages.length) >= 120) {
+                        return [...response.data, ...prevMessages].slice(0, 60);
+                    } else {
+                        return [...response.data, ...prevMessages]
+                    }
+                } else { //position => newer
+                    if ((response.data.length + prevMessages.length) >= 120) {
+                        return [...prevMessages, ...response.data].slice(prevMessages.length + response.data.length - 62);
+                    } else {
+                        return [...prevMessages, ...response.data]
+                    }
+                }
             });
-        }
-        setIsFetching(false)
 
-    }, [param])
+        }).catch((err) => {
+            console.error(`Error fetching ${position} messages:`, err);
+        });
+
+        return chatUUID;
+    };
+
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
-
-//반환되는 데이터
-    const removeDuplicate = (messageList: Message[]): Message[] => {
-        const removeDuplicatesList = [...new Set(messageList.map((message) => JSON.stringify(message)))]
-            .map((message) => JSON.parse(message)) as Message[];
-        if (messageList.length !== removeDuplicatesList.length) {
-            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                pages: data?.pages.slice(0, removeDuplicatesList.length),
-                pageParams: data?.pageParams.slice(0, removeDuplicatesList.length)
-            }));
-        }
-        return removeDuplicatesList;
-    }
-
-
-    const newMessageList = useMemo(() => {
-        if (newChat.data) {
-            // setNewMsgLength(newChat.data.pageParams.length - 1)
-            //중복제거
-            return removeDuplicate(newChat.data.pages)
-        }
-        return [];
-    }, [newChat.data])
-
-
-    const messageList = useMemo(() => {
-        if (chatFile.data && !isFetching) {
-            return [...chatFile.data.pages.reduce((prev, current) => prev.concat(current))]
-        }
-        return [];
-    }, [chatFile.data, isFetching])
-
-
-    const compareDate = (date1:string, date2:string):boolean =>{
-        if(changeDateForm(date1).getDate() !== changeDateForm(date2).getDate()) return true
-        if(changeDateForm(date1).getMonth() !== changeDateForm(date2).getMonth()) return true
+    const compareDate = (date1: string, date2: string): boolean => {
+        if (changeDateForm(date1).getDate() !== changeDateForm(date2).getDate()) return true
+        if (changeDateForm(date1).getMonth() !== changeDateForm(date2).getMonth()) return true
         return changeDateForm(date1).getFullYear() !== changeDateForm(date2).getFullYear();
     }
-
-
-    return {messageList,newMessageList,chatFile, compareDate, isFetching}
+    return {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate};
 }
