@@ -16,6 +16,8 @@ public class ScheduleRequest {
 
     private Timestamp start;
 
+    private Timestamp oldStart;
+
     private Timestamp end;
 
     private boolean allDay;
