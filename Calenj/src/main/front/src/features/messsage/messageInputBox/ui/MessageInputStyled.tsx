@@ -1,6 +1,6 @@
 import {PointColor2, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
-import {MessageSend_Container_height} from "../../messageScrollBox/ui/MessageScrollBoxStyled";
+import {MessageSend_Container_height} from "../../../../../public/dummy/messageScrollBox/ui/MessageScrollBoxStyled";
 
 export const MessageSend_Textarea = styled.textarea`
     background-color: transparent;

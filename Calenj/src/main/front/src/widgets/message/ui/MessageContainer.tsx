@@ -2,7 +2,7 @@ import {
     MessageComponent_Container,
 } from './MessageContainerStyled'
 
-import {MessageInput, MessageScrollBox, MessageScrollBox2} from "../../../features/messsage";
+import {MessageInput, MessageScrollBox} from "../../../features/messsage";
 import {useEffect, useState} from "react";
 import {RootState, updateAppPosition} from "../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,7 +20,7 @@ export const MessageContainer: React.FC = () => {
         <MessageComponent_Container>
             {stompParam === navigateParam &&
                 <>
-                    <MessageScrollBox2/>
+                    <MessageScrollBox/>
                     <MessageInput/>
                 </>
             }

@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../types";
-import {Dispatch} from 'redux';
-import {ScrollMin_width} from "../../../../features/messsage/messageScrollBox/ui/MessageScrollBoxStyled";
+import {ScrollMin_width} from "../../../../features/messsage";
+
 
 export interface Group_SubNavigationProps {
     param:string,

@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import {DateSelectArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi, EventChangeArg} from "@fullcalendar/react";
 import {useCalendar} from "../model/useCalendar";
 import {Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -111,12 +111,11 @@ export const CalendarView: React.FC = () => {
                         navLinkDayClick={handleNavLinkDayClick}
                         events={currentEvents}
                         dayMaxEventRows={2}
-                        eventsSet={handleEvents}
                         select={(selectInfo: DateSelectArg) => {
                             setAddEvent(true)
                             setSelectInfo(selectInfo)
                         }}
-                        eventChange={(e) => console.log(e)} //이벤트 변경 시 이벤트에 대한 상태
+                        eventChange={(arg: EventChangeArg) => handleEvents(arg)} //이벤트 변경 시 이벤트에 대한 상태
                         eventClick={handleEventClick}
                         eventContent={(eventInfo) => (
                             <CalendarEventView eventInfo={eventInfo}/>

@@ -32,7 +32,6 @@ export const SubNavProfile :React.FC = () =>{
     useEffect( () => {
         if(userData){
             setUserInfo(userData);
-            console.log(userData)
         }
     }, [userData]);
 

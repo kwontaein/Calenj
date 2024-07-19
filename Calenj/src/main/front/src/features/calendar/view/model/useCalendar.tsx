@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {EventApi, EventClickArg} from "@fullcalendar/react";
+import {EventAddArg, EventApi, EventChangeArg, EventClickArg} from "@fullcalendar/react";
 import chroma from "chroma-js";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
@@ -7,6 +7,7 @@ import {EventTagDTO} from "../../../../entities/reactQuery";
 import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
 import {DateEvent, ReturnCalendar} from "../../createEvent/model/types";
 import {addRruleOptions} from "../../createEvent/utils/addRruleOptions";
+import {updateScheduleApi} from "../api/updateScheduleApi";
 
 
 export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalendar => {
@@ -15,10 +16,12 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     const userEventDateState = useFetchUserDateEvent()
 
 
+    //DB에서 받아온 데이터 세팅
     const setUserDateEvent = async () => {
         if (!userEventDateState.data) {
             return []
         }
+
         const events = userEventDateState.data.map((event): DateEvent => {
             const {tagKeys, formState, content, todoList, repeatState} = event.extendedProps
             const {repeat, startTime, endTime} = repeatState;//반복여부
@@ -56,12 +59,14 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                 dynamicEventTag[tagId].isClick
             )
         )
+        console.log(events)
+
         setCurrentEvents(events);
         // console.log(events)
     }
 
 
-
+    //이벤트 태그를 불러온 후 데이터 세팅 호출
     useEffect(() => {
         const eventTag = Object.keys(dynamicEventTag)
         if (data && userEventDateState.data && eventTag.length > 1) {
@@ -71,12 +76,9 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
 
     //이벤트 변경시 api 처리
-    const handleEvents = useCallback(
-        (events: EventApi[]) => {
-            events.map((event) => {
-            })
-        }
-        , []);
+    const handleEvents = (event: EventChangeArg) => {
+        updateScheduleApi(event.event._def.publicId, event.event.start as Date, event.event.end as Date)
+    }
 
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {

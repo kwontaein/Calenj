@@ -1,9 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {
-    MessageSend_Container_height,
-    ScrollMarginInline,
-    ScrollMin_width
-} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
+
 import {GroupUserList_Container_width} from "../../members";
 import {
     SubNavigate_paddingBlock,
@@ -15,6 +11,7 @@ import {GroupList_Container_width} from "../../navItems_list/ui/GroupListStyle";
 import {contentSize} from './types'
 import {RootState, updateGroupSubScreenWidthSize, updateGroupSubScreenHeightSize} from "../../../../entities/redux";
 import {useDispatch, useSelector} from "react-redux";
+import {ScrollMarginInline, ScrollMin_width} from "../../../messsage/messageScrollBox/ui/MessageScrollBoxStyled";
 
 export const useScreenHandler = (showMemberList:boolean, currentMode:string, contentSize:contentSize,)
     : [handleMouseDown:(e: React.MouseEvent)=>void] => {

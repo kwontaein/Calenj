@@ -1,4 +1,4 @@
-import {ReturnExtendedProps, TodoItem} from "../model/types";
+import {TodoItem} from "../model/types";
 import {DateEventState, RepeatState} from "../../../../entities/calendar";
 
 export const beforeCheckEvent = (repeatState:RepeatState, eventState : DateEventState, todoList:TodoItem[]):boolean =>{
