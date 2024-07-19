@@ -23,7 +23,6 @@ interface StompData {
     nowLine?: number;
 }
 
-
 export const endPointMap = new Map();
 export const scrollPointMap = new Map();
 export const toggleCurrentMap = new Map();
@@ -52,23 +51,6 @@ function* sendStomp(stompClient: CompatClient) {
     }
 
 }
-
-//endPoint Update 를 위한 url 위치에 기반한 위치 업데이트
-function* requestChatFile(stompClient: CompatClient) {
-    while (true) {
-        const {payload} = yield take(REQUEST_FILE)//업데이트 될때까지 기다림
-        const {target, param, requestFile, nowLine} = yield payload;
-
-        const data: StompData = {
-            param: param,//메시지 주소
-            state: requestFile,
-            nowLine: nowLine,
-        }
-        const url = `/app/${target}`
-        stompClient.send(url, {}, JSON.stringify(data))
-    }
-}
-
 
 function* sendPublish(destination: Destination, stompClient: CompatClient) {
     destination.map((sub: (string | number)[], index: number) => {
@@ -114,7 +96,6 @@ function* startStomp(destination: Destination): any {
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga 의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
     yield fork(sendStomp, stompClient)
-    yield fork(requestChatFile, stompClient)
     yield fork(sendPublish, destination, stompClient)
     yield fork(closeWebSocketSaga, channel)
 
@@ -152,11 +133,6 @@ function createStompConnection() {
 
         const sock = () => new SockJS(stompUrl);
         const stompClient = Stomp.over(sock);
-        // const client = new Client();
-        // // client.webSocketFactory()
-        // client.webSocketFactory(()=>{
-        //     return new SockJs(stompUrl)
-        // })
 
         // WebSocket 에러 처리
         stompClient.onWebSocketError = (error: Error) => {
@@ -216,8 +192,6 @@ function createEventChannel(stompClient: CompatClient, destination: Destination)
                 console.log("임시 비활성화")
             }); //연결 끊기(임시 비활성화
         };
-        //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
-        //인자로는 확장의 최장크기(크기제한)
     }, buffers.expanding<number>(1000) || buffers.none())
 }
 

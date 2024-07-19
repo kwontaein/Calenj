@@ -1,18 +1,13 @@
 import {useMessageData} from "../model/useMessageData";
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
     AHMFormat,
     AHMFormatV2,
     changeDateForm,
-    debounce,
     shortAHMFormat,
-    throttleByAnimationFrame
 } from "../../../../shared/lib";
-import {useDispatch, useSelector} from "react-redux";
-import {
-    requestFile,
-    RootState,
-} from "../../../../entities/redux";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
 import {
     DateContainer,
     DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
@@ -39,7 +34,7 @@ export const MessageScrollBox2: React.FC = () => {
         messageRefs,
         scrollToMessage
     } = useMessageScroll(connectMessages, firstPage, lastPage)
-    
+
     useEffect(() => {
         if (chatUUID !== '') {
             scrollToMessage(chatUUID, position === "newer");
@@ -68,7 +63,6 @@ export const MessageScrollBox2: React.FC = () => {
             });
         }
     });
-
 
     const MessageBox = useMemo(() => {
 

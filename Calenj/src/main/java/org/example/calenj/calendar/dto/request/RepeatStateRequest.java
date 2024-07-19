@@ -48,7 +48,6 @@ public class RepeatStateRequest {
                 .repeatEnd(repeatEnd)
                 .repeatCount(repeatCount)
                 .repeatWeek(repeatWeek.toString())
-                .noRepeatDates(noRepeatDates.toString())
                 .build();
     }
 }
