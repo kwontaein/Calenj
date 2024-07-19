@@ -2,8 +2,6 @@ package org.example.calenj.global.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
@@ -13,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,7 +22,11 @@ public class GlobalService {
 
     private final UserRepository userRepository;
 
-    //SecurityContext 에서 유저 정보 추출하는 메소드
+    /**
+     * SecurityContext 에서 유저 정보 추출하는 메소드
+     *
+     * @return 유저 정보
+     */
     public UserDetails extractFromSecurityContext() { //id , password , 권한
         // SecurityContext 에서 Authentication 객체 추출
         SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -36,6 +36,11 @@ public class GlobalService {
         // 유저 정보 사용
     }
 
+    /**
+     * 현재 날짜와 시간 가져오기
+     *
+     * @return 현재 날짜와 시간
+     */
     public String nowTime() {
         // 현재 날짜와 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
@@ -52,6 +57,13 @@ public class GlobalService {
         return now.format(dateFormatter) + " " + now.format(timeFormatter);
     }
 
+    /**
+     * 7일 뒤의 날짜 구하기
+     *
+     * @param dateTime 전달받은 날짜
+     * @param times    시간
+     * @return 7일을 더한 값
+     */
     public String plusDate(LocalDateTime dateTime, int times) {
         // 현재 날짜와 시간 가져오기
         // 7일을 더한 날짜와 시간 구하기
@@ -68,6 +80,12 @@ public class GlobalService {
         return sevenDaysLater.format(dateFormatter) + " " + sevenDaysLater.format(timeFormatter);
     }
 
+    /**
+     * 날짜 비교
+     *
+     * @param endDate 마감일 가져와서
+     * @return 오늘이 지나지 않았다면 사용 가능
+     */
     public String compareDate(String endDate) {
         // 오늘 날짜와 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
@@ -86,6 +104,12 @@ public class GlobalService {
         }
     }
 
+    /**
+     * 리스트를 json형식 문자열로 변환
+     *
+     * @param transData 바꿀 목록
+     * @return json
+     */
     public String saveArrayList(List<String> transData) {
         // JSON 문자열로 변환
         ObjectMapper objectMapper = new ObjectMapper();
@@ -99,20 +123,11 @@ public class GlobalService {
         }
     }
 
-    public void createCookie(HttpServletResponse response, String tokenName, String tokenValue) {
-
-        // 만료 시간 정보 얻기
-        Cookie cookie;
-        cookie = new Cookie(tokenName, URLEncoder.encode(tokenValue, StandardCharsets.UTF_8));
-
-        // 쿠키 속성 설정
-        cookie.setHttpOnly(true);  //httponly 옵션 설정
-        cookie.setSecure(true); //https 옵션 설정
-        cookie.setPath("/"); // 모든 곳에서 쿠키열람이 가능하도록 설정
-        cookie.setMaxAge(24 * 60 * 60 * 1000); //쿠키 만료시간 설정
-        response.addCookie(cookie);
-    }
-
+    /**
+     * 내 유저 상세 정보 조회
+     *
+     * @return 내 정보
+     */
     public UserEntity myUserEntity() {
         UUID myUserID = UUID.fromString(extractFromSecurityContext().getUsername());
         UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));

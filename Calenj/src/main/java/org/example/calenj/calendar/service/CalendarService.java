@@ -6,15 +6,15 @@ import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
-import org.example.calenj.calendar.dto.request.StampRequest;
 import org.example.calenj.calendar.dto.request.TagRequest;
-import org.example.calenj.calendar.dto.response.*;
+import org.example.calenj.calendar.dto.response.ExtendedPropsResponse;
+import org.example.calenj.calendar.dto.response.RepeatStateResponse;
+import org.example.calenj.calendar.dto.response.ScheduleResponse;
+import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.repository.RepeatStateRepository;
-import org.example.calenj.calendar.repository.StampRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,39 +29,50 @@ import java.util.stream.Collectors;
 public class CalendarService {
     private final GlobalService globalService;
 
-    private final StampRepository stampRepository;
     private final UserScheduleRepository userScheduleRepository;
     private final TagRepository tagRepository;
     private final RepeatStateRepository repeatStateRepository;
 
-
-    public void saveStamp(StampRequest stampRequest) {
-        stampRepository.save(stampRequest.toEntity(globalService.myUserEntity()));
-    }
-
-    public List<StampResponse> getStampList() {
-        UserDetails userDetails = globalService.extractFromSecurityContext();
-        return stampRepository.findByUserID(UUID.fromString(userDetails.getUsername())).orElse(null);
-    }
-
+    /**
+     * 스케쥴 업데이트
+     *
+     * @param scheduleRequest 업데이트할 스케쥴 정보
+     */
     @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
+        // 반복일정일 경우 -> 수정된 날짜만 미포함 + 해당 날짜에 새로운 스케쥴 생성
+        // 그냥 일정일 경우 -> 날짜만 변경
+
+
         UserScheduleEntity userSchedule = userScheduleRepository
                 .findById(new UserScheduleEntityId(scheduleRequest.getId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
-        //변경 감지를 통한 자동 업데이트
-        //userSchedule.updateScheduleDetails(scheduleRequest);
     }
 
+    /**
+     * 스케쥴 삭제
+     *
+     * @param scheduleID 삭제할 스케쥴 아이디
+     */
     public void deleteSchedule(UUID scheduleID) {
         userScheduleRepository.deleteById(new UserScheduleEntityId(scheduleID, globalService.myUserEntity()));
     }
 
+    /**
+     * 스케쥴 추가
+     *
+     * @param scheduleRequest 추가할 스케쥴 정보
+     */
     public void saveSchedule(ScheduleRequest scheduleRequest) {
         UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
         System.out.println(scheduleRequest.getExtendedProps().getRepeatState());
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 
+    /**
+     * 스케쥴 목록 조회
+     *
+     * @return 스케쥴 목록 반환
+     */
     public List<ScheduleResponse> getScheduleList() {
 
         //schedule
@@ -90,16 +101,32 @@ public class CalendarService {
         return scheduleResponses;
     }
 
+    /**
+     * 스케쥴 태그 목록 조회
+     *
+     * @return 스케쥴 태그 목록
+     */
     public List<TagResponse> getTagEntityList() {
         return tagRepository.findByUserId(globalService.myUserEntity().getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
     }
 
+    /**
+     * 태그 저장
+     *
+     * @param tagRequest 저장할 태그 정보
+     * @return 저장된 태그 반환
+     */
     public TagResponse saveTag(TagRequest tagRequest) {
         TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
         TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
         return tagResponse;
     }
 
+    /**
+     * 태그 삭제
+     *
+     * @param id 삭제할 태그 아이디
+     */
     public void deleteTag(UUID id) {
         tagRepository.deleteById(new TagId(id, globalService.myUserEntity()));
     }

@@ -32,6 +32,8 @@ public class RepeatStateRequest {
 
     private List<String> repeatWeek;
 
+    private List<String> noRepeatDates;
+
     public RepeatStateEntity toEntity(UserScheduleEntity userScheduleEntity) {
         return RepeatStateEntity
                 .builder()
@@ -46,6 +48,7 @@ public class RepeatStateRequest {
                 .repeatEnd(repeatEnd)
                 .repeatCount(repeatCount)
                 .repeatWeek(repeatWeek.toString())
+//                .noRepeatDates(noRepeatDates.toString())
                 .build();
     }
 }

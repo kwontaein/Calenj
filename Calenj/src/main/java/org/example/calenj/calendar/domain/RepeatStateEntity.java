@@ -50,4 +50,7 @@ public class RepeatStateEntity {
 
     @Column(name = "repeat_week")
     private String repeatWeek;
+
+    @Column(name = "no_repeat_dates")
+    private String noRepeatDates;
 }
