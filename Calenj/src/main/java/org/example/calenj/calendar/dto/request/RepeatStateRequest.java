@@ -7,10 +7,11 @@ import org.example.calenj.calendar.domain.UserScheduleEntity;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class RepeatStateRequest {
-    private UserScheduleEntity scheduleId;
+    private UUID scheduleId;
 
     private Timestamp startTime;
 

@@ -16,7 +16,6 @@ import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -38,14 +37,37 @@ public class CalendarService {
      *
      * @param scheduleRequest 업데이트할 스케쥴 정보
      */
-    @Transactional
     public void updateSchedule(ScheduleRequest scheduleRequest) {
         // 반복일정일 경우 -> 수정된 날짜만 미포함 + 해당 날짜에 새로운 스케쥴 생성
         // 그냥 일정일 경우 -> 날짜만 변경
+        System.out.println("scheduleRequest : " + scheduleRequest);
+        if (scheduleRequest.getExtendedProps().getRepeatState().isRepeat() == true) {
+            updateRepeatSchedule(scheduleRequest);
+        } else {
+            userScheduleRepository.updateDate(scheduleRequest.getId(), scheduleRequest.getStart(), scheduleRequest.getEnd());
+        }
+    }
 
+    /**
+     * 반복 일정 수정
+     *
+     * @param scheduleRequest 업데이트할 스케쥴 정보
+     */
+    public void updateRepeatSchedule(ScheduleRequest scheduleRequest) {
+        String exDates = repeatStateRepository.findByScheduleId(scheduleRequest.getId()).orElse(null);
+        List<String> dates = RepeatStateResponse.convertStringToArray(exDates);
 
-        UserScheduleEntity userSchedule = userScheduleRepository
-                .findById(new UserScheduleEntityId(scheduleRequest.getId(), globalService.myUserEntity())).orElseThrow(() -> new RuntimeException("오류"));
+        dates.add(scheduleRequest.getOldStart().toString());
+        repeatStateRepository.addExDate(dates.toString(), scheduleRequest.getId());
+
+        UserScheduleEntity userScheduleEntity = userScheduleRepository.getSchedule(scheduleRequest.getId()).orElse(null);
+
+        scheduleRequest.getExtendedProps().getRepeatState().setRepeat(false);
+        scheduleRequest.getExtendedProps().getRepeatState().setRepeatCount(1);
+        scheduleRequest.setId(null);
+        scheduleRequest.setTitle(userScheduleEntity.getUserScheduleTitle());
+
+        saveSchedule(scheduleRequest);
     }
 
     /**
@@ -64,7 +86,6 @@ public class CalendarService {
      */
     public void saveSchedule(ScheduleRequest scheduleRequest) {
         UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
-        System.out.println(scheduleRequest.getExtendedProps().getRepeatState());
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 

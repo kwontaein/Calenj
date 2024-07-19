@@ -7,7 +7,10 @@ import org.example.calenj.calendar.dto.response.ScheduleResponse;
 import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -44,7 +47,7 @@ public class CalendarController {
      *
      * @param scheduleRequest 수정할 스케쥴 정보
      */
-    @PutMapping("api/updateUserSchedule")
+    @PostMapping("api/updateUserSchedule")
     public void updateUserSchedule(@RequestBody ScheduleRequest scheduleRequest) {
         calendarService.updateSchedule(scheduleRequest);
     }
