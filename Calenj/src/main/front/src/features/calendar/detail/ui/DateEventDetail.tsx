@@ -21,6 +21,7 @@ import {shortAHMFormat2} from "../../../../shared/lib/dateFormat";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import styled from "styled-components";
+import {AddDateEvent} from "../../createEvent";
 
 interface EventDetailProps{
     eventDetail:EventClickArg,
@@ -33,9 +34,17 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
     const {repeatState,formState,content,todoList,tagKeys} = eventDetail.event._def.extendedProps
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const id = useId()
+    const [modify,setModify] = useState<boolean>(false);
 
+    useEffect(() => {
+        console.log(eventDetail.event)
+    }, []);
 
     return(
+        <>
+        {modify ? <AddDateEvent onClose={()=>setModify(false)}
+                                mode={'modify'}
+                                event={eventDetail.event}/> :
         <Modal_Background style={{backgroundColor:'rgba(0, 0, 0, 0)'}} ref={modalBackground} onClick={e => {
             if (e.target === modalBackground.current) {
                 close();
@@ -54,7 +63,7 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                 </EventTag_Container>
 
                 <EventButton_Container>
-                    <EventButtonIcon_Wrapper>
+                    <EventButtonIcon_Wrapper onClick={()=>setModify(true)}>
                         <i className="fi fi-sr-pencil"></i>
                     </EventButtonIcon_Wrapper>
                     <EventButtonIcon_Wrapper>
@@ -160,5 +169,7 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
         </DateEventDetail_Container>
 
         </Modal_Background>
+        }
+        </>
     )
 }

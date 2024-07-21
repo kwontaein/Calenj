@@ -1,7 +1,7 @@
 import React, {useRef, useState} from "react";
 import {DateSelectArg, EventApi, EventChangeArg} from "@fullcalendar/react";
 import {useCalendar} from "../model/useCalendar";
-import {Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
+import {DeleteList, Draggable_Container, GridCalendar_Container, StyledFullCalendar} from "./CalendarStyled";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -20,23 +20,34 @@ import {AddDateEvent} from "../../createEvent";
 import {ExternalEvents} from "../../stamp";
 import {AppState, CustomEvent} from "../model/types";
 import {DateEventDetail} from "../../detail";
-
+import {Toggle_Container, Toggle_Item} from "../../../../shared/ui/SharedStyled";
+import {DeleteModal} from "./DeleteModal";
 
 
 export const CalendarView: React.FC = () => {
     const {data} = useFetchDateEventTag();
-    const {currentEvents, handleEvents, handleEventClick, eventDetail ,setEventDetail, mutateAble} = useCalendar(data);
-    const [addEvent, setAddEvent] = useState<boolean>(false);
+    const {
+        currentEvents,
+        handleEvents,
+        handleEventClick,
+        eventDetail,
+        deleteEvent,
+        setEventDetail,
+        setDeleteEvent,
+        mutateAble,
+        isDrag,
+        dragStart,
+        dragStop,
+        handleMouseEnter,
+        handleMouseLeave
+    } = useCalendar(data);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
     const {calendarRef, handleNavLinkDayClick} = useCalendarController();
     const nodeRef = useRef(null);
     const [position, setPosition] = useState({x: 20, y: 20});
-    const [contentRef, contentSize] = useComponentSize()
+    const trashRef = useRef<HTMLDivElement>(null);
     const [dragAble, setDragAble] = useState<boolean>(false);
 
-    const onClose = () => {
-        setAddEvent(false)
-    }
 
     const handleStop = (e: DraggableEvent, data: DraggableData) => {
         const {x, y} = data;
@@ -55,7 +66,7 @@ export const CalendarView: React.FC = () => {
     });
 
     const onEventAdd = () => {
-        const newEvent: CustomEvent= {
+        const newEvent: CustomEvent = {
             id: Date.now(), // 고유 ID 생성을 위해 현재 시간의 타임스탬프 사용
             title: "New Event",
             color: "#02daff",
@@ -70,29 +81,32 @@ export const CalendarView: React.FC = () => {
 
     return (
         <>
-            {/*<Draggable nodeRef={nodeRef}*/}
-            {/*           defaultPosition={{x: 20, y: 20}}*/}
-            {/*           position={position}*/}
-            {/*           onStop={handleStop}*/}
-            {/*           disabled={dragAble}>*/}
-            {/*    <Draggable_Container ref={nodeRef}>*/}
-            {/*        <div style={{display: "flex", justifyContent: "space-between"}}>*/}
-            {/*            <div>수정</div>*/}
-            {/*            <Toggle_Container $isClick={dragAble}*/}
-            {/*                              onClick={() => {*/}
-            {/*                                  setDragAble((prevState) => !prevState)*/}
-            {/*                              }}>*/}
-            {/*                <Toggle_Item $toggleState={dragAble}/>*/}
-            {/*            </Toggle_Container>*/}
-            {/*        </div>*/}
-            {/*        <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>*/}
-            {/*    </Draggable_Container>*/}
-            {/*</Draggable>*/}
-
+            {/*<Draggable nodeRef={nodeRef}
+                       defaultPosition={{x: 20, y: 20}}
+                       position={position}
+                       onStop={handleStop}
+                       disabled={dragAble}>
+                <Draggable_Container ref={nodeRef}>
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div>수정</div>
+                        <Toggle_Container $isClick={dragAble}
+                                          onClick={() => {
+                                              setDragAble((prevState) => !prevState)
+                                          }}>
+                            <Toggle_Item $toggleState={dragAble}/>
+                        </Toggle_Container>
+                    </div>
+                    <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
+                </Draggable_Container>
+            </Draggable>*/}
+            {isDrag && <DeleteList ref={trashRef} onMouseEnter={handleMouseEnter}
+                                   onMouseLeave={handleMouseLeave}>휴지통</DeleteList>}
             {data &&
-                <GridCalendar_Container ref={contentRef}>
-                    {addEvent &&
-                        <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
+                <GridCalendar_Container>
+                    {selectInfo &&
+                        <AddDateEvent onClose={()=>setSelectInfo(null)}
+                                      event={selectInfo}
+                                      mode={'create'}/>
                     }
                     <StyledFullCalendar
                         ref={calendarRef}
@@ -112,9 +126,10 @@ export const CalendarView: React.FC = () => {
                         events={currentEvents}
                         dayMaxEventRows={2}
                         select={(selectInfo: DateSelectArg) => {
-                            setAddEvent(true)
                             setSelectInfo(selectInfo)
                         }}
+                        eventDragStart={dragStart}
+                        eventDragStop={dragStop}
                         eventChange={(arg: EventChangeArg) => handleEvents(arg)} //이벤트 변경 시 이벤트에 대한 상태
                         eventClick={handleEventClick}
                         eventContent={(eventInfo) => (
@@ -123,7 +138,8 @@ export const CalendarView: React.FC = () => {
                     />
                 </GridCalendar_Container>
             }
-            {eventDetail!==null && <DateEventDetail eventDetail={eventDetail} close={()=>setEventDetail(null)}/>}
+            {deleteEvent !== null && <DeleteModal deleteEvent={deleteEvent} close={() => setDeleteEvent(null)}/>}
+            {eventDetail !== null && <DateEventDetail eventDetail={eventDetail} close={() => setEventDetail(null)}/>}
         </>
     );
 };

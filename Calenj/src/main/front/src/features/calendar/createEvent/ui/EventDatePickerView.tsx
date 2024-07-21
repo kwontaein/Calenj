@@ -9,9 +9,6 @@ interface EventDateProps {
 export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,eventDispatch})=>{
     const {formState,startDate,endDate, startMonth,endMonth} = eventState
 
-    useEffect(() => {
-        console.log(startDate)
-    }, [startDate]);
     const endDateHandler = (date:Date) => {
             eventDispatch({type:'SET_END_DATE', payload:date})
     }
