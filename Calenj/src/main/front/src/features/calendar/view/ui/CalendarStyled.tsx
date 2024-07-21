@@ -61,4 +61,16 @@ export const StyledFullCalendar = styled(FullCalendar)`
 
 `;
 
+export const DeleteList = styled.div`
+    border-radius: 5px;
+    background-color: rgba(42, 42, 42, 0.9);
+    border: 2px solid #7c7c7c;
+    text-align: center;
+    cursor: pointer;
+    padding: 50px;
+    user-select: none;
+    position: fixed;
+    right: 0;
+    z-index: 3;
+`
 
