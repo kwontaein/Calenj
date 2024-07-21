@@ -1,6 +1,6 @@
 import {DatePicker_Container, DatePickerIcon_Container, EventDatePicker} from "./EventDatePickerStyled";
 import {ko} from "date-fns/locale/ko";
-import React from "react";
+import React, {useEffect} from "react";
 import {DateEventAction, DateEventState} from "../../../../entities/calendar";
 interface EventDateProps {
     eventState: DateEventState;
@@ -9,12 +9,11 @@ interface EventDateProps {
 export const EventDatePickerView : React.FC<EventDateProps> = ({eventState,eventDispatch})=>{
     const {formState,startDate,endDate, startMonth,endMonth} = eventState
 
+    useEffect(() => {
+        console.log(startDate)
+    }, [startDate]);
     const endDateHandler = (date:Date) => {
-        if(date<eventState.startDate){
-            window.alert('설정한 시작시간보다 큰시간으로 설정해주세요.')
-        }else{
             eventDispatch({type:'SET_END_DATE', payload:date})
-        }
     }
     const dayClassHandler = (date:Date) => {
         return (date.getDate() === endDate.getDate() && date.getMonth() === endDate.getMonth())

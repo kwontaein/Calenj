@@ -32,42 +32,11 @@ export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
     const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
-    const [chatUUID, setChatUUID] = useState<string>('');
-    const [position, setPosition] = useState<string>('older');
-    const {
-        containerRef,
-        messageRefs,
-        scrollToMessage
-    } = useMessageScroll(connectMessages, firstPage, lastPage)
+    const {containerRef, messageRefs, topRef, bottomRef} = useMessageScroll(connectMessages, firstPage, lastPage, fetchMoreMessages)
     
-    useEffect(() => {
-        if (chatUUID !== '') {
-            scrollToMessage(chatUUID, position === "newer");
-        }
-    }, [connectMessages, chatUUID])
 
-    const topRef = useIntersect((entry, observer) => {
-        if (!firstPage && connectMessages.length > 0) {
-            observer.unobserve(entry.target);
-            fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID) => {
-                if (!chatUUID) return;
-                setChatUUID(chatUUID);
-                setPosition("older");
-            });
-        }
-    });
 
-    const bottomRef = useIntersect((entry, observer) => {
-        if (!lastPage && connectMessages.length > 0) {
-            observer.unobserve(entry.target);
-            fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID) => {
-                if (!chatUUID) return;
-                setChatUUID(chatUUID);
-                setPosition("newer");
 
-            });
-        }
-    });
 
 
     const MessageBox = useMemo(() => {

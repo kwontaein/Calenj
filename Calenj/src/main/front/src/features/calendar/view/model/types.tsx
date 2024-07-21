@@ -1,4 +1,5 @@
 import {EventContentArg} from "@fullcalendar/react";
+import {RepeatState} from "../../../../entities/calendar";
 
 export interface CalendarEventProps{
     eventInfo: EventContentArg
@@ -26,4 +27,12 @@ export interface EventViewProps{
     width:number,
     todoList:string[],
     color:string,
+}
+
+export interface ReturnExtendedProps {
+    tagKeys: string[],
+    formState: string,
+    content: string,
+    todoList: string[],
+    repeatState: RepeatState,
 }

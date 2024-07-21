@@ -14,7 +14,8 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     const [currentEvents, setCurrentEvents] = useState<DateEvent[]>([]);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const userEventDateState = useFetchUserDateEvent()
-
+    const [eventDetail,setEventDetail] = useState<EventClickArg|null>(null)
+    const [mutateAble,setMutateAble] = useState<boolean>(true)
 
     //DB에서 받아온 데이터 세팅
     const setUserDateEvent = async () => {
@@ -34,8 +35,8 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                 id: event.id,
                 title: event.title,
                 start: new Date(event.start.toString()),
-                end:  new Date(event.end.toString()),
-                textColor: Brightness > 128 ?  '#000000' : '#ffffff',
+                end: new Date(event.end.toString()),
+                textColor: Brightness > 128 ? '#000000' : '#ffffff',
                 backgroundColor: color,
                 borderColor: color,
                 allDay: event.extendedProps.formState === "todo",
@@ -49,17 +50,18 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             }
             if (repeat) {
                 newEvent.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
-            }if(formState==="schedule"){
+                newEvent.exdate = event.extendedProps.repeatState.noRepeatDates;
+            }
+            if (formState === "schedule") {
                 newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
             }
 
             return newEvent;
-        }).filter((event)=>
-            event.extendedProps.tagKeys.some((tagId)=>
+        }).filter((event) =>
+            event.extendedProps.tagKeys.some((tagId) =>
                 dynamicEventTag[tagId].isClick
             )
         )
-        console.log(events)
 
         setCurrentEvents(events);
         // console.log(events)
@@ -70,6 +72,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     useEffect(() => {
         const eventTag = Object.keys(dynamicEventTag)
         if (data && userEventDateState.data && eventTag.length > 1) {
+            console.log(data)
             setUserDateEvent()
         }
     }, [data, userEventDateState.data, dynamicEventTag]);
@@ -77,21 +80,28 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
     //이벤트 변경시 api 처리
     const handleEvents = (event: EventChangeArg) => {
-        updateScheduleApi(event.event._def.publicId, event.event.start as Date, event.event.end as Date)
+        if(!mutateAble) return
+        setMutateAble(false)
+        updateScheduleApi(
+            event.event._def.publicId,
+            event.event.start as Date,
+            event.event.end as Date,
+            event.oldEvent.start as Date,
+            event.event.extendedProps).then(()=>{
+                userEventDateState.refetch().then(()=>setMutateAble(true))
+        })
     }
 
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-        if(clickInfo.event.allDay){
+        if(clickInfo.event._def.extendedProps.formState==='todo' && clickInfo.view.type !=="dayGridMonth"){
             return
         }
-        if (
-            window.confirm(`${clickInfo.event.title}`)
-        ) {
-            clickInfo.event.remove();
-        }
+        setEventDetail(clickInfo)
+        // clickInfo.event.remove();
+
     }, []);
 
 
-    return {currentEvents, handleEvents, handleEventClick}
+    return {currentEvents, handleEvents, handleEventClick, eventDetail, setEventDetail,mutateAble}
 }

@@ -14,18 +14,18 @@ import "@fullcalendar/list/main.css";
 import {useFetchDateEventTag} from "../../../../entities/reactQuery";
 import {CalendarEventView} from "./CalendarEventView";
 import {useComponentSize} from "../../../../shared/model";
-import {Toggle_Container, Toggle_Item} from "../../../../shared/ui/SharedStyled";
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
 import {useCalendarController} from "../model/useCalendarController";
 import {AddDateEvent} from "../../createEvent";
 import {ExternalEvents} from "../../stamp";
 import {AppState, CustomEvent} from "../model/types";
+import {DateEventDetail} from "../../detail";
 
 
 
 export const CalendarView: React.FC = () => {
     const {data} = useFetchDateEventTag();
-    const {currentEvents, handleEvents, handleEventClick} = useCalendar(data);
+    const {currentEvents, handleEvents, handleEventClick, eventDetail ,setEventDetail, mutateAble} = useCalendar(data);
     const [addEvent, setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
     const {calendarRef, handleNavLinkDayClick} = useCalendarController();
@@ -98,7 +98,7 @@ export const CalendarView: React.FC = () => {
                         ref={calendarRef}
                         plugins={[rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                         initialView="dayGridMonth"
-                        selectable={!addEvent}
+                        selectable={mutateAble}
                         editable={true}
                         locale="ko"
                         headerToolbar={{
@@ -123,6 +123,7 @@ export const CalendarView: React.FC = () => {
                     />
                 </GridCalendar_Container>
             }
+            {eventDetail!==null && <DateEventDetail eventDetail={eventDetail} close={()=>setEventDetail(null)}/>}
         </>
     );
 };

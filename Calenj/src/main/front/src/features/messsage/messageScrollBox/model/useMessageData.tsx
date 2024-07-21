@@ -83,7 +83,7 @@ export const useMessageData = (): useMessageData => {
         if (!isFetching) return
         setTimeout(() => {
             setIsFetching(false);
-        }, 1000)
+        }, 500)
     }, [connectMessages]);
 
     //데이터 => 추가 데이터 받기 및 가공

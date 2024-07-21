@@ -1,5 +1,5 @@
 import Select, {MultiValue, StylesConfig} from "react-select";
-import React from 'react';
+import React, {useState} from 'react';
 import chroma from 'chroma-js';
 import {BackGroundColor, TextColor, ThemeColor2} from "./SharedStyled";
 
@@ -15,6 +15,16 @@ export interface ColorOption {
     readonly isDisabled?: boolean;
 }
 export const  MultiSelector:React.FC<SelectorProps> = ({options,setValue}) =>{
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<ColorOption>>([]);
+
+    const selectHandler =(newValue: MultiValue<ColorOption>)=>{
+        if(newValue.length>2){
+            window.alert('최대 2개의 태그만 지정할 수 있습니다.')
+        }else{
+            setSelectedOptions(newValue)
+            setValue(newValue)
+        }
+    }
 
     const colourStyles: StylesConfig<ColorOption, true> = {
         control: (styles) => ({ ...styles, backgroundColor: ThemeColor2, border: `1px solid ${TextColor}77`, minHeight:'25px', height:'30px'}),
@@ -82,9 +92,10 @@ export const  MultiSelector:React.FC<SelectorProps> = ({options,setValue}) =>{
         <Select
             closeMenuOnSelect={false}
             isMulti
+            value={selectedOptions}
             options={options}
             styles={colourStyles}
-            onChange={(newValue: MultiValue<ColorOption>)=>{setValue(newValue)}}
+            onChange={selectHandler}
         />
     )
 }

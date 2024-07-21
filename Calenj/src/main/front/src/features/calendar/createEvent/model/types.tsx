@@ -9,6 +9,9 @@ export interface ReturnCalendar {
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick: (clickInfo: EventClickArg) => void,
     currentEvents: DateEvent[],
+    eventDetail: EventClickArg|null,
+    setEventDetail:  React.Dispatch<React.SetStateAction<EventClickArg|null>>
+    mutateAble:boolean
 }
 
 export interface TodoItem {
@@ -24,12 +27,6 @@ export interface ReturnTodo {
     contentRef: React.RefObject<HTMLInputElement>
 }
 
-export interface ReturnExtendedProps {
-    formState: string,
-    content: string,
-    todoList: TodoItem[],
-    repeatState: RepeatState,
-}
 
 export type RepeatOption = '일' | '주' | '달' | '년';
 
@@ -51,5 +48,6 @@ export interface DateEvent {
         todoList: string[],
         repeatState: RepeatState,
     }
+    exdate? :string[]
 }
 

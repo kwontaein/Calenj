@@ -222,14 +222,6 @@ export const Input = styled.input`
 `;
 
 
-export const Mini_Textarea = styled.textarea`
-    width: 200px;
-    height: 200px;
-    padding-top: 5px;
-    padding-left: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-`
 
 
 export const Button = styled.button`
@@ -291,15 +283,6 @@ export const ListView = styled.li`
     }
 `
 
-
-export const DEFAULT_HR = styled.hr`
-    position: relative;
-    outline: 0;
-    border: 0;
-    color: black;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0), #41454b, ${ThemeColor3});
-    height: .1em;
-`
 
 
 export const SignState_Button = styled.button`
@@ -396,3 +379,44 @@ const moveToggle = (toggle: boolean) => keyframes`
     }
 `;
 
+
+/** Option*/
+export const Option_Container= styled.div`
+    width: 110px;
+    height: auto;
+    background-color: ${ThemeColor3};
+    position: absolute;
+    margin-left: -80px;
+    border-radius: 4px;
+`
+
+
+export const OptionIcon_Wrapper = styled.div`
+    width: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-inline: 5px;
+`
+
+export const Option_Item = styled.div`
+    width: calc(100% - 18px);
+    height: 15px;
+    margin: 4px;
+    padding: 10px;
+    padding-inline: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    &:hover{
+        background-color: ${BackGroundColor};
+        color: ${PointColor2};
+        ${OptionIcon_Wrapper}{
+            background-color: ${BackGroundColor};
+            color: ${PointColor2};
+        }
+    }
+`

@@ -1,4 +1,4 @@
-import {useEffect, useReducer, useState} from "react";
+import {useEffect, useMemo, useReducer, useState} from "react";
 import {beforeCheckEvent} from "../utils/beforeCheckEvent";
 import chroma from "chroma-js";
 import {DateEvent, ReturnTodo, TodoItem} from "./types";
@@ -31,7 +31,6 @@ interface ReturnAddEvent{
 }
 
 export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):ReturnAddEvent =>{
-    const calendarApi = selectInfo?.view.calendar;
     const userEventDateState = useFetchUserDateEvent()
 
     function adjustDate(dateStr: string, allDay: boolean): Date {
@@ -42,8 +41,12 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
         return date;
     }
 
+
+
     const initStartDate = adjustDate(selectInfo.startStr ,selectInfo.allDay);
-    const initEndDate =adjustDate(selectInfo.endStr, selectInfo.allDay);
+    const initEndDate = adjustDate(selectInfo.endStr, selectInfo.allDay);
+
+
 
     const [eventState, eventDispatch] = useReducer(DateEventReducer, {
         ...initialEventDateState,
@@ -68,7 +71,7 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
         if (startDate > endDate) {
             eventDispatch({type: 'SET_END_DATE', payload: new Date(+startDate + 1800000)})
         }
-    }, [startDate]);
+    }, [startDate,endDate]);
 
     const postEvent = () => {
         const {repeat, startTime, endTime, repeatEnd, repeatDeadline} = repeatState
