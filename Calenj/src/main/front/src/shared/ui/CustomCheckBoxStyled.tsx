@@ -15,10 +15,10 @@ export const CustomCheckBox_Input = styled.input.attrs({ type: 'checkbox' })`
 
 export const CustomCheck_Icon = styled.span<CheckBoxProps>`
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     background-color: transparent;
-    border: 1px solid ${TextColor};
+    border: 1px solid  ${props=>props.$bgColor};
     box-sizing: border-box;
     position: relative;
     cursor: pointer;
@@ -27,8 +27,8 @@ export const CustomCheck_Icon = styled.span<CheckBoxProps>`
     ${CustomCheckBox_Input}:checked + &::before {
         content: '';
         display: block;
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         background: url(https://intranet.adef.co.kr/asset/images/ic_check.png) ${props=>props.$bgColor} no-repeat center;
         border: none;
     }
