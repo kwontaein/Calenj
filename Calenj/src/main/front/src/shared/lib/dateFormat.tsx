@@ -8,7 +8,9 @@ const oneDay = hour * 24 //하루
 export function AHMFormat(date: Date): string {
     return dayjs(date).locale('ko').format('YYYY년 MM월 DD일 A hh:mm')
 }
-
+export function shortAHMFormat2(date: Date): string{
+    return dayjs(date).locale('ko').format('MM월 DD일 (ddd)')
+}
 
 export function AHMFormatV2(date: Date): string {
     const now = new Date();

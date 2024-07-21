@@ -200,7 +200,10 @@ export const getDateEventTag = async (): Promise<EventTagDTO[] | null> => {
 export const getUserDateEvent = async (): Promise<UserDateEvent[] | null> => {
     try {
         return await axios.get("api/getUserDateEvent")
-            .then((res: AxiosResponse) => res.data)
+            .then((res: AxiosResponse) => {
+                console.log(res.data)
+                return res.data
+            })
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);

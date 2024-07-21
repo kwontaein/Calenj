@@ -3,7 +3,6 @@ import {PointColor, PointColor2} from "../../../../shared/ui/SharedStyled";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-
 export interface dynamicEventProps {
     [tagId: string]: {
         name: string,

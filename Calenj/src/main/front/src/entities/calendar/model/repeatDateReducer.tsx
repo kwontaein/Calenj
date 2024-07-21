@@ -1,5 +1,6 @@
 
 export interface RepeatState {
+    noRepeatDates:string[],
     startTime: Date,
     endTime: Date,
     repeat: boolean, //반복여부
@@ -28,6 +29,7 @@ export type RepeatAction =
 
 
 export const initialRepeatState: RepeatState = {
+    noRepeatDates:[],
     startTime: new Date(),
     endTime: new Date(),
     repeat: false,

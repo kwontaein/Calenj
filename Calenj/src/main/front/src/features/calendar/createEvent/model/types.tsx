@@ -9,6 +9,9 @@ export interface ReturnCalendar {
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick: (clickInfo: EventClickArg) => void,
     currentEvents: DateEvent[],
+    eventDetail: EventClickArg|null,
+    setEventDetail:  React.Dispatch<React.SetStateAction<EventClickArg|null>>
+    mutateAble:boolean
 }
 
 export interface TodoItem {
@@ -45,5 +48,6 @@ export interface DateEvent {
         todoList: string[],
         repeatState: RepeatState,
     }
+    exdate? :string[]
 }
 

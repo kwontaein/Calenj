@@ -61,6 +61,9 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
     const updateEndpoint = () => {
         debouncing_EndPoint();
     }
+    useEffect(() => {
+        console.log(firstPage, lastPage)
+    }, [firstPage, lastPage]);
 
 
     // 스크롤 => chatUUID로 div를 조회하고 높이설정 => 메시지 fetchMoreMessages 이후 세팅

@@ -76,7 +76,6 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
                             </DateEventTagContent>
                             <DateEventTagSelector_Container>
                                 <MultiSelector options={selectorOptionProps()} setValue={setTag}/>
-
                             </DateEventTagSelector_Container>
                         </DateEventTag_Container>
                         <Category_Container>
