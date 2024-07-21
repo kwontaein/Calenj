@@ -7,7 +7,7 @@ import {addRruleOptions} from "../utils/addRruleOptions";
 import {postDateEventApi} from "../api/postDateEventApi";
 
 import {useTodoList} from "./useTodoList";
-import {DateSelectArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi} from "@fullcalendar/react";
 import {useSelector} from "react-redux";
 import {UserDateEvent} from "../../../../entities/reactQuery";
 import {
@@ -30,9 +30,9 @@ interface ReturnAddEvent{
     postEvent:()=>void,
 }
 
-export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):ReturnAddEvent =>{
+export const useAddDateEvent = (onClose:()=>void, event:EventApi|DateSelectArg, mode:string ):ReturnAddEvent =>{
     const userEventDateState = useFetchUserDateEvent()
-
+    const modifyEvent = event as EventApi;
     function adjustDate(dateStr: string, allDay: boolean): Date {
         const date = new Date(dateStr);
         if (allDay) {
@@ -41,22 +41,22 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
         return date;
     }
 
-
-
-    const initStartDate = adjustDate(selectInfo.startStr ,selectInfo.allDay);
-    const initEndDate = adjustDate(selectInfo.endStr, selectInfo.allDay);
-
-
+    const initStartDate = adjustDate(event.startStr ,event.allDay);
+    const initEndDate = adjustDate(event.endStr, event.allDay);
 
     const [eventState, eventDispatch] = useReducer(DateEventReducer, {
         ...initialEventDateState,
         startDate: initStartDate,
         endDate: initEndDate,
-        formState: selectInfo?.allDay ? 'todo' : 'promise'
+        formState: mode==='create' ?  (event.allDay ? 'todo' : 'promise') : modifyEvent._def.extendedProps.formState,
+        backgroundColor : mode==='create' ? '' : modifyEvent.backgroundColor,
+        title: mode==='create' ? '': modifyEvent.title,
+        tagKeys: mode==='create' ? []: modifyEvent._def.extendedProps.tagKeys,
+        content: mode==='create' ? '' : modifyEvent._def.extendedProps.content
     });
-    const [repeatState, repeatDispatch] = useReducer(RepeatReducer, initialRepeatState);
+    const [repeatState, repeatDispatch] = useReducer(RepeatReducer, mode==='create' ? initialRepeatState : modifyEvent._def.extendedProps.repeatState);
     const {formState, startDate, endDate, title, content, backgroundColor, tagKeys} = eventState
-    const todoState = useTodoList();
+    const todoState = useTodoList(mode==='modify' ? modifyEvent._def.extendedProps.todoList:[]);
 
     const closeModal = () => {
         if (title === "" && content === "") {
@@ -74,55 +74,57 @@ export const useAddDateEvent = (onClose:()=>void, selectInfo:DateSelectArg):Retu
     }, [startDate,endDate]);
 
     const postEvent = () => {
-        const {repeat, startTime, endTime, repeatEnd, repeatDeadline} = repeatState
 
-        if(!beforeCheckEvent(repeatState, eventState, todoState.todoList)){
-            return
-        }
-        const [R, G, B]: number[] = chroma(backgroundColor).rgb();
-        const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
+            const {repeat, startTime, endTime, repeatEnd, repeatDeadline} = repeatState
 
-        const todo = todoState.todoList.map((item: TodoItem) => item.content);
-        const UUid = uuidv4();
-
-        const event: DateEvent = {
-            id: UUid,
-            title: title,
-            start: (formState==="schedule" && !repeat) ? new Date(startDate.setHours(startTime.getHours(),startTime.getMinutes())) : startDate,
-            end: (formState==="schedule" && !repeat) ? new Date(startDate.setHours(endTime.getHours(),endTime.getMinutes())) :endDate,
-            textColor: Brightness > 128 ? '#ffffff' : '#000000',
-            backgroundColor: backgroundColor,
-            borderColor: backgroundColor,
-            allDay: formState === "todo",
-            extendedProps: {
-                tagKeys: tagKeys,
-                formState: formState,
-                content: content,
-                todoList: todo,
-                repeatState: repeatState,
-            },
-        }
-        if (repeat) {
-            event.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
-            event.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
-            if(repeatDeadline ==="date"){
-                event.rrule.until = new Date(repeatEnd.setDate(repeatEnd.getDate()+1));
+            if (!beforeCheckEvent(repeatState, eventState, todoState.todoList)) {
+                return
             }
-        }
+            const [R, G, B]: number[] = chroma(backgroundColor).rgb();
+            const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
 
-        const saveEvent: UserDateEvent = {
-            id: UUid,
-            title: event.title,
-            start: event.start,
-            end: event.end,
-            allDay: event.allDay,
-            extendedProps: event.extendedProps,
-        }
-        postDateEventApi(saveEvent).then(()=>{
-            userEventDateState.refetch()
-        })
-        onClose()
+            const todo = todoState.todoList.map((item: TodoItem) => item.content);
+            const UUid = uuidv4();
+
+            const event: DateEvent = {
+                id: mode ==='create' ? UUid : modifyEvent.id,
+                title: title,
+                start: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(startTime.getHours(), startTime.getMinutes())) : startDate,
+                end: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(endTime.getHours(), endTime.getMinutes())) : endDate,
+                textColor: Brightness > 128 ? '#ffffff' : '#000000',
+                backgroundColor: backgroundColor,
+                borderColor: backgroundColor,
+                allDay: formState === "todo",
+                extendedProps: {
+                    tagKeys: tagKeys,
+                    formState: formState,
+                    content: content,
+                    todoList: todo,
+                    repeatState: repeatState,
+                },
+            }
+            if (repeat) {
+                event.duration = {milliseconds: endTime.getTime() - startTime.getTime()};
+                event.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
+                if (repeatDeadline === "date") {
+                    event.rrule.until = new Date(repeatEnd.setDate(repeatEnd.getDate() + 1));
+                }
+            }
+
+            const saveEvent: UserDateEvent = {
+                id: UUid,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                allDay: event.allDay,
+                extendedProps: event.extendedProps,
+            }
+            postDateEventApi(saveEvent).then(() => {
+                userEventDateState.refetch()
+            })
+            onClose()
     }
+
 
     return {repeatState, repeatDispatch, eventState, eventDispatch, todoState, closeModal, postEvent}
 }

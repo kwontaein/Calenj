@@ -41,18 +41,13 @@ export const CalendarView: React.FC = () => {
         handleMouseEnter,
         handleMouseLeave
     } = useCalendar(data);
-    const [addEvent, setAddEvent] = useState<boolean>(false);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
     const {calendarRef, handleNavLinkDayClick} = useCalendarController();
     const nodeRef = useRef(null);
     const [position, setPosition] = useState({x: 20, y: 20});
-    const [contentRef, contentSize] = useComponentSize()
     const trashRef = useRef<HTMLDivElement>(null);
     const [dragAble, setDragAble] = useState<boolean>(false);
 
-    const onClose = () => {
-        setAddEvent(false)
-    }
 
     const handleStop = (e: DraggableEvent, data: DraggableData) => {
         const {x, y} = data;
@@ -107,9 +102,11 @@ export const CalendarView: React.FC = () => {
             {isDrag && <DeleteList ref={trashRef} onMouseEnter={handleMouseEnter}
                                    onMouseLeave={handleMouseLeave}>휴지통</DeleteList>}
             {data &&
-                <GridCalendar_Container ref={contentRef}>
-                    {addEvent &&
-                        <AddDateEvent onClose={onClose} selectInfo={selectInfo as DateSelectArg}/>
+                <GridCalendar_Container>
+                    {selectInfo &&
+                        <AddDateEvent onClose={()=>setSelectInfo(null)}
+                                      event={selectInfo}
+                                      mode={'create'}/>
                     }
                     <StyledFullCalendar
                         ref={calendarRef}
@@ -129,7 +126,6 @@ export const CalendarView: React.FC = () => {
                         events={currentEvents}
                         dayMaxEventRows={2}
                         select={(selectInfo: DateSelectArg) => {
-                            setAddEvent(true)
                             setSelectInfo(selectInfo)
                         }}
                         eventDragStart={dragStart}

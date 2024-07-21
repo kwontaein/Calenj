@@ -19,7 +19,7 @@ import {
     ModalButton_Container,
 } from "./AddDateEventStyled";
 import '../../../../shared/ui/DatePicker.scss';
-import {DateSelectArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi} from "@fullcalendar/react";
 import {EventDatePickerView} from "./EventDatePickerView";
 import {AddTodoList} from './AddTodoList'
 import {RepeatEvent} from './RepeatEvent'
@@ -40,16 +40,17 @@ import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/query
 
 interface CalendarProps {
     onClose: () => void,
-    selectInfo : DateSelectArg
+    event: DateSelectArg | EventApi,
+    mode : string,
 }
 
-export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
+export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) => {
     const modalBackground = useRef<HTMLDivElement>(null);
     //eventState & repeatState
-    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,selectInfo)
+    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,event,mode)
     const {formState, title, content} = eventState
     const {selectorOptionProps, setTag} =useDateEventTag(eventDispatch)
-
+    const modifyEvent = event as EventApi;
 
     return createPortal(
         <Modal_Background ref={modalBackground} onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -59,7 +60,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
         }}>
             <Modal_Container style={{height: '530px'}}>
                 <ModalTopBar_Container>
-                    일정 추가
+                    {mode ==='create' ? '일정 추가': '일정 수정'}
                 </ModalTopBar_Container>
                 <ModalContent_Container>
                     <DateTopContent_Container>
@@ -67,6 +68,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
                             type: 'SET_TITLE',
                             payload: e.target.value
                         })}
+                                              value={eventState.title}
                                               type={"text"}
                                               placeholder={"제목 추가"}
                                               maxLength={30}/>
@@ -75,24 +77,24 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
                                 지정태그
                             </DateEventTagContent>
                             <DateEventTagSelector_Container>
-                                <MultiSelector options={selectorOptionProps()} setValue={setTag}/>
+                                <MultiSelector options={selectorOptionProps()} setValue={setTag} initSelected={eventState.tagKeys}/>
                             </DateEventTagSelector_Container>
                         </DateEventTag_Container>
                         <Category_Container>
-                            <Modal_Condition_Button $isAble={formState === "promise"} onClick={() => eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "promise"} onClick={() => mode==="creat" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "promise"
                             })}>
                                 약속일정
                             </Modal_Condition_Button>
-                            <Modal_Condition_Button $isAble={formState === "todo"} onClick={() => eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "todo"} onClick={() =>  mode==="creat" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "todo"
                             })}
                             style={{marginInline: '5px'}}>
                                 할 일
                             </Modal_Condition_Button>
-                            <Modal_Condition_Button $isAble={formState === "schedule"} onClick={() => eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "schedule"} onClick={() =>  mode==="creat" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "schedule"
                             })}>
@@ -152,7 +154,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose,selectInfo}) => {
                         <Modal_Condition_Button
                             $isAble={title !== "" && ((formState === "promise" && content !== "") || (formState === "todo" && todoState.todoList.length > 0) || formState === "schedule")}
                             onClick={postEvent}>
-                            생성
+                            {mode==='create' ? '생성' : '수정'}
                         </Modal_Condition_Button>
 
                     </ModalButton_Container>
