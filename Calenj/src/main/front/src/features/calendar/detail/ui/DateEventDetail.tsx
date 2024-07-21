@@ -1,4 +1,4 @@
-import {DateSelectArg, EventClickArg} from "@fullcalendar/react";
+import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
 import {Modal_Background, TextColor} from "../../../../shared/ui/SharedStyled";
 import {useEffect, useId, useReducer, useRef, useState} from "react";
 import {
@@ -24,27 +24,24 @@ import styled from "styled-components";
 import {AddDateEvent} from "../../createEvent";
 
 interface EventDetailProps{
-    eventDetail:EventClickArg,
+    eventDetail:EventApi,
     close:()=>void,
 }
 
 export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close})=>{
     const modalBackground = useRef<HTMLDivElement>(null);
     const week = ["일","월","화","수","목","금","토"];
-    const {repeatState,formState,content,todoList,tagKeys} = eventDetail.event._def.extendedProps
+    const {repeatState,formState,content,todoList,tagKeys} = eventDetail._def.extendedProps
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const id = useId()
     const [modify,setModify] = useState<boolean>(false);
 
-    useEffect(() => {
-        console.log(eventDetail.event)
-    }, []);
 
     return(
         <>
         {modify ? <AddDateEvent onClose={()=>setModify(false)}
                                 mode={'modify'}
-                                event={eventDetail.event}/> :
+                                event={eventDetail}/> :
         <Modal_Background style={{backgroundColor:'rgba(0, 0, 0, 0)'}} ref={modalBackground} onClick={e => {
             if (e.target === modalBackground.current) {
                 close();
@@ -77,7 +74,7 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
 
             <TitleContent_Container>
                 <TitleContent_Wrapper>
-                    {eventDetail.event.title}
+                    {eventDetail.title}
                 </TitleContent_Wrapper>
             </TitleContent_Container>
 
@@ -89,14 +86,14 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                         <i className="fi fi-rr-clock-three"></i>
                     </EventDetailIcon_Wrapper>
                     <EventTimeContent_Wrapper>
-                        {shortAHMFormat2(eventDetail.event.start as Date)}
-                        {(shortAHMFormat2(eventDetail.event.start as Date) === shortAHMFormat2(eventDetail.event.end as Date) || formState === 'todo') ? '': " ~ "+ shortAHMFormat2(eventDetail.event.end as Date)}
+                        {shortAHMFormat2(eventDetail.start as Date)}
+                        {(shortAHMFormat2(eventDetail.start as Date) === shortAHMFormat2(eventDetail.end as Date) || formState === 'todo') ? '': " ~ "+ shortAHMFormat2(eventDetail.end as Date)}
                     </EventTimeContent_Wrapper>
                 </DateTime_Container>
 
                 <EventTime_Container>
                     {formState === 'todo' ?
-                        "체크리스트" : `${AHMFormat(eventDetail.event.start as Date).slice(-8)} ~ ${AHMFormat(eventDetail.event.end as Date).slice(-8)}`
+                        "체크리스트" : `${AHMFormat(eventDetail.start as Date).slice(-8)} ~ ${AHMFormat(eventDetail.end as Date).slice(-8)}`
                     }
                 </EventTime_Container>
 

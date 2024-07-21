@@ -90,6 +90,14 @@ public class CalendarService {
      * @param scheduleRequest 추가할 스케쥴 정보
      */
     public void saveSchedule(ScheduleRequest scheduleRequest) {
+        UserScheduleEntity checkEntity = userScheduleRepository.getSchedule(scheduleRequest.getId()).orElse(null);
+        if (checkEntity != null) {
+            //이미 있는 정보일 경우 수정
+            //로직 수행
+            UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+            userScheduleRepository.save(userScheduleEntity);
+            return;
+        }
         UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }

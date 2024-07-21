@@ -25,7 +25,6 @@ export const  MultiSelector:React.FC<SelectorProps> = ({options,setValue,initSel
         if(newValue.length>2){
             window.alert('최대 2개의 태그만 지정할 수 있습니다.')
         }else{
-            console.log(newValue)
             setSelectedOptions(newValue)
             setValue(newValue)
         }
