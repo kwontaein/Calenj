@@ -92,6 +92,7 @@ public class CalendarService {
     public void saveSchedule(ScheduleRequest scheduleRequest) {
         UserScheduleEntity checkEntity = userScheduleRepository.getSchedule(scheduleRequest.getId()).orElse(null);
         if (checkEntity != null) {
+            //이미 있는 정보일 경우 수정
             //로직 수행
             UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
             userScheduleRepository.save(userScheduleEntity);
