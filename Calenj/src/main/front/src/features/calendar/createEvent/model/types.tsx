@@ -9,9 +9,16 @@ export interface ReturnCalendar {
     // handleDateSelect: (selectInfo: DateSelectArg) => void,
     handleEventClick: (clickInfo: EventClickArg) => void,
     currentEvents: DateEvent[],
-    eventDetail: EventClickArg|null,
-    setEventDetail:  React.Dispatch<React.SetStateAction<EventClickArg|null>>
-    mutateAble:boolean
+    eventDetail: EventClickArg | null,
+    deleteEvent: EventClickArg | null,
+    setEventDetail: React.Dispatch<React.SetStateAction<EventClickArg | null>>,
+    setDeleteEvent: React.Dispatch<React.SetStateAction<EventClickArg | null>>,
+    mutateAble: boolean,
+    isDrag: boolean,
+    dragStart: (clickInfo: EventClickArg) => void,
+    dragStop: (clickInfo: EventClickArg) => void,
+    handleMouseEnter: () => void,
+    handleMouseLeave: () => void,
 }
 
 export interface TodoItem {
@@ -36,7 +43,7 @@ export interface DateEvent {
     start: Date,
     end: Date,
     allDay: boolean
-    textColor:string,
+    textColor: string,
     backgroundColor: string,
     borderColor: string,
     duration?: { milliseconds: number },
@@ -48,6 +55,6 @@ export interface DateEvent {
         todoList: string[],
         repeatState: RepeatState,
     }
-    exdate? :string[]
+    exdate?: string[]
 }
 

@@ -2,7 +2,6 @@ package org.example.calenj.calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.domain.Ids.TagId;
-import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
@@ -69,7 +68,7 @@ public class CalendarService {
         if (scheduleRequest.getEnd() == null) {
             scheduleRequest.setEnd(scheduleRequest.getStart());
         }
-        
+
         scheduleRequest.setTitle(userScheduleEntity.getUserScheduleTitle());
 
         saveSchedule(scheduleRequest);
@@ -81,7 +80,8 @@ public class CalendarService {
      * @param scheduleID 삭제할 스케쥴 아이디
      */
     public void deleteSchedule(UUID scheduleID) {
-        userScheduleRepository.deleteById(new UserScheduleEntityId(scheduleID, globalService.myUserEntity()));
+        repeatStateRepository.deleteByScheduleId(scheduleID);
+        userScheduleRepository.deleteByScheduleId(scheduleID);
     }
 
     /**
