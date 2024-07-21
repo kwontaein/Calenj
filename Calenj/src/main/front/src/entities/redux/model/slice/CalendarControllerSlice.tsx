@@ -2,8 +2,8 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
 export interface GridOption {
-    readonly value: string;
-    readonly label: string;
+    value: string;
+    label: string;
 }
 
 interface CalendarState {

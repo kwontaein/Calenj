@@ -302,8 +302,7 @@ export const Modal_Background = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.3);
-`
+    background-color: rgba(0, 0, 0, 0.3);`
 
 export const Modal_Container = styled.div`
     background-color: ${ThemeColor3};
