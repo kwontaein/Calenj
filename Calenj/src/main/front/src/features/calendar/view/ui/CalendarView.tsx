@@ -30,6 +30,7 @@ export const CalendarView: React.FC = () => {
         currentEvents,
         handleEvents,
         handleEventClick,
+        handleEventsSet,
         eventDetail,
         deleteEvent,
         setEventDetail,
@@ -128,6 +129,7 @@ export const CalendarView: React.FC = () => {
                         select={(selectInfo: DateSelectArg) => {
                             setSelectInfo(selectInfo)
                         }}
+                        eventsSet={handleEventsSet}
                         eventDragStart={dragStart}
                         eventDragStop={dragStop}
                         eventChange={(arg: EventChangeArg) => handleEvents(arg)} //이벤트 변경 시 이벤트에 대한 상태

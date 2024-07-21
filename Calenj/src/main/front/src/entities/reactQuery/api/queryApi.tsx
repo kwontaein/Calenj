@@ -122,7 +122,6 @@ export const getVoteDetail = async (voteId: string): Promise<VoteDetail | null> 
 export const getFriendList = async (): Promise<FriendList[] | null> => {
     try {
         const response = await axios.get('/api/getFriendList');
-        console.log('친구 목록을 불러옵니다.');
         const data = response.data as FriendList[];
         return data.sort((a, b) => {
             return (Number(b.friendAddDate) - Number(a.friendAddDate));
@@ -143,7 +142,6 @@ export const getFriendList = async (): Promise<FriendList[] | null> => {
 export const getFriendResponse = async (): Promise<FriendEvent[] | null> => {
     try {
         const response = await axios.get('/api/requestedList');
-        console.log('친구요청 받은 목록을 불러옵니다.');
         const data = response.data as FriendEvent[];
         return data.sort((a, b) => {
             return (Number(b.createDate) - Number(a.createDate));
@@ -164,7 +162,6 @@ export const getFriendResponse = async (): Promise<FriendEvent[] | null> => {
 export const getFriendRequest = async (): Promise<FriendEvent[] | null> => {
     try {
         const response = await axios.get('/api/myRequestList');
-        console.log('친구 요청한 목록을 불러옵니다.');
         const data = response.data as FriendEvent[];
         return data.sort((a, b) => {
             return (Number(b.createDate) - Number(a.createDate));
@@ -201,7 +198,6 @@ export const getUserDateEvent = async (): Promise<UserDateEvent[] | null> => {
     try {
         return await axios.get("api/getUserDateEvent")
             .then((res: AxiosResponse) => {
-                console.log(res.data)
                 return res.data
             })
     } catch (error) {

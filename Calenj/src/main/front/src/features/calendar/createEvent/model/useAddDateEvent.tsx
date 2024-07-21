@@ -88,10 +88,10 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
         const UUid = uuidv4();
 
         const event: DateEvent = {
-            id: mode === 'create' ? UUid : modifyEvent.id,
+            id: UUid,
             title: title,
-            start: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(startTime.getHours(), startTime.getMinutes())) : startDate,
-            end: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(endTime.getHours(), endTime.getMinutes())) : endDate,
+            start: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(new Date(startTime).getHours(), new Date(startTime).getMinutes())) : startDate,
+            end: (formState === "schedule" && !repeat) ? new Date(startDate.setHours(new Date(endTime).getHours(), new Date(endTime).getMinutes())) : endDate,
             textColor: Brightness > 128 ? '#ffffff' : '#000000',
             backgroundColor: backgroundColor,
             borderColor: backgroundColor,
@@ -120,10 +120,17 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
             allDay: event.allDay,
             extendedProps: event.extendedProps,
         }
-        postDateEventApi(saveEvent, mode).then(() => {
-            userEventDateState.refetch()
+        postDateEventApi(saveEvent).then(() => {
+            if (mode === "create") {
+                window.alert('일정이 생성되었습니다.')
+            } else {
+                window.alert('일정이 수정되었습니다.')
+            }
+            userEventDateState.refetch().then(()=>{
+                onClose()
+            })
         })
-        onClose()
+
     }
 
 

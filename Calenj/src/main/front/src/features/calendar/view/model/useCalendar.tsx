@@ -14,7 +14,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     const [currentEvents, setCurrentEvents] = useState<DateEvent[]>([]);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const userEventDateState = useFetchUserDateEvent()
-    const [eventDetail, setEventDetail] = useState<EventClickArg | null>(null)
+    const [eventDetail, setEventDetail] = useState<EventApi | null>(null)
     const [mutateAble, setMutateAble] = useState<boolean>(true)
     const [isMouseOverTrash, setIsMouseOverTrash] = useState(false);
     const [isDrag, setIsDrag] = useState(false);
@@ -58,7 +58,6 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             if (formState === "schedule") {
                 newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
             }
-
             return newEvent;
         }).filter((event) =>
             event.extendedProps.tagKeys.some((tagId) =>
@@ -67,6 +66,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         )
 
         setCurrentEvents(events);
+
         // console.log(events)
     }
 
@@ -75,14 +75,13 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     useEffect(() => {
         const eventTag = Object.keys(dynamicEventTag)
         if (data && userEventDateState.data && eventTag.length > 1) {
-            console.log(data)
             setUserDateEvent()
         }
     }, [data, userEventDateState.data, dynamicEventTag]);
 
 
     //이벤트 변경시 api 처리
-    const handleEvents = (event: EventChangeArg) => {
+    const handleEvents =(event: EventChangeArg) => {
         if (!mutateAble) return
         setMutateAble(false)
         updateScheduleApi(
@@ -91,7 +90,18 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
             event.event.end as Date,
             event.oldEvent.start as Date,
             event.event.extendedProps).then(() => {
-            userEventDateState.refetch().then(() => setMutateAble(true))
+            userEventDateState.refetch().then(() => {
+                setMutateAble(true)
+            })
+        })
+    }
+
+    const handleEventsSet = (events:EventApi[])=>{
+        if(eventDetail===null) return
+        events.map((event)=>{
+            if(event.id===eventDetail.id){
+                setEventDetail(event)
+            }
         })
     }
 
@@ -100,25 +110,27 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         if (clickInfo.event._def.extendedProps.formState === 'todo' && clickInfo.view.type !== "dayGridMonth") {
             return
         }
-        setEventDetail(clickInfo)
+        setEventDetail(clickInfo.event)
         // clickInfo.event.remove();
 
     }, []);
 
+
+
+
+
+
     //드래그 중지 시 휴지통에 있다면 삭제
     const dragStart = (clickInfo: EventClickArg) => {
         setIsDrag(true);
-        console.log("드래그 시작! 휴지통 보이기")
     };
     //드래그 중지 시 휴지통에 있다면 삭제
     const dragStop = (clickInfo: EventClickArg) => {
         setIsDrag(false);
         if (isMouseOverTrash) {
             setTrashData(clickInfo)
-            console.log('일정 삭제!');
         }
     };
-
     //휴지통에 마우스 올라갔는지
     const handleMouseEnter = () => {
         setIsMouseOverTrash(true);
@@ -137,13 +149,13 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
         //모달 띄우고
         //정말로 삭제하시겠습니까 ? -> 예 선택시
         //api 호출 및 삭제
-        console.log(clickInfo.event.id);
     })
 
     return {
         currentEvents,
         handleEvents,
         handleEventClick,
+        handleEventsSet,
         eventDetail,
         deleteEvent,
         setEventDetail,
