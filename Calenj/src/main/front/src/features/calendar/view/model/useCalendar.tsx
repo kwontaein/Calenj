@@ -49,7 +49,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     content: content,
                     todoList: todoList,
                     repeatState: repeatState,
-                    friendList: friendList,
+                    friendList: friendList!==null? friendList.filter((id)=>id!=="") : [],
                 },
             }
             console.log(event.title,friendList)
