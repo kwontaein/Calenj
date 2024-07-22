@@ -167,6 +167,13 @@ export const AdditionalInfo_Container = styled.div`
     display: flex;
     align-items: center;
 `
+export const JoinFriendList_Container= styled.div`
+    height: 25px;
+    padding-block: 5px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+`
 export const EventTag_Container = styled.div`
     width: auto;
     height: auto;

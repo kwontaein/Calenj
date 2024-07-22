@@ -1,6 +1,6 @@
 import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
-import {Modal_Background, TextColor} from "../../../../shared/ui/SharedStyled";
-import {useEffect, useId, useReducer, useRef, useState} from "react";
+import {Modal_Background, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
+import React, {useEffect, useId, useReducer, useRef, useState} from "react";
 import {
     AdditionalInfo_Container,
     DateEventBottom_Container,
@@ -12,7 +12,7 @@ import {
     EventDetailContent_Wrapper,
     EventDetailIcon_Wrapper, EventOption_Container, EventTag_Container, EventTag_Wrapper,
     EventTime_Container,
-    EventTimeContent_Wrapper, PromiseContent_Container, RepeatEventContent_Wrapper,
+    EventTimeContent_Wrapper, JoinFriendList_Container, PromiseContent_Container, RepeatEventContent_Wrapper,
     TitleContent_Container,
     TitleContent_Wrapper, TodoListContent_Container, TodoListItem_Wrapper
 } from "./DateEventDetailStyled";
@@ -31,7 +31,7 @@ interface EventDetailProps{
 export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close})=>{
     const modalBackground = useRef<HTMLDivElement>(null);
     const week = ["일","월","화","수","목","금","토"];
-    const {repeatState,formState,content,todoList,tagKeys} = eventDetail._def.extendedProps
+    const {repeatState,formState,content,todoList,tagKeys,friendList} = eventDetail._def.extendedProps
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const id = useId()
     const [modify,setModify] = useState<boolean>(false);
@@ -139,7 +139,15 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                         {formState === "promise" &&
                             <div style={{width:'calc(100% - 10px)', marginRight:'10px' }}>
                                 <div style={{fontSize: '10px'}}>참여인원</div>
-                                <div style={{width:'100%',display:'flex', alignItems:"center", justifyContent:'center', fontSize:'13px', color:`${TextColor}77`}}>지정한 인원이 없습니다.</div>
+                                {friendList.length>0 ?
+                                    <JoinFriendList_Container>
+                                        {friendList.map((friendId:string)=>(
+                                            <ProfileContainer $userId={friendId} key={friendId} style={{width:'18px',height:'18px', minWidth:'unset'}}/>
+                                        ))}
+                                    </JoinFriendList_Container>
+                                    :
+                                    <div style={{width:'100%',display:'flex', alignItems:"center", justifyContent:'center', fontSize:'13px', color:`${TextColor}77`}}>지정한 인원이 없습니다.</div>
+                                }
                             </div>
                         }
                         {(formState ==="schedule" && repeatState.repeat) &&
