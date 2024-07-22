@@ -31,12 +31,12 @@ public class ScheduleResponse {
     }
 
     //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
-    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList) {
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList, String friendList) {
         this.id = scheduleId;
         this.title = title;
         this.start = start;
         this.end = end;
         this.allDay = allDay;
-        this.extendedProps = new ExtendedPropsResponse(tag, scheduleId, formState, content, todoList);  // 객체 초기화
+        this.extendedProps = new ExtendedPropsResponse(tag, scheduleId, formState, content, todoList, friendList);  // 객체 초기화
     }
 }

@@ -19,7 +19,7 @@ import java.util.UUID;
 public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity, UserScheduleEntityId> {
     @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
             "(Us.scheduleId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay" +
-            ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList)" +
+            ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
             " FROM User_Schedule Us WHERE Us.userId.userId = :userId")
     Optional<List<ScheduleResponse>> findListByUserId(@Param("userId") UUID userId);
 
