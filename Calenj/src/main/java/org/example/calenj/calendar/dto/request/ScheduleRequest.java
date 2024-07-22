@@ -37,6 +37,7 @@ public class ScheduleRequest {
                 .userScheduleFormState(extendedProps.getFormState())
                 .userScheduleContent(extendedProps.getContent())
                 .userScheduleTodoList(extendedProps.getTodoList().toString())
+                .userScheduleFriendList(extendedProps.getFriendList().toString())
                 .build();
     }
 
