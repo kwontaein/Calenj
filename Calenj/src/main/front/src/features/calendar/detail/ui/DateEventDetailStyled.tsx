@@ -72,7 +72,7 @@ export const EventButtonIcon_Wrapper = styled.div`
 export const EventDetailContent_Wrapper = styled.div<{$isRepeat:boolean}>`
     width: calc(100% - 20px);
     margin-top: ${props=> props.$isRepeat ? '15px' : '20px'};
-    height: calc(100% - ${props=> props.$isRepeat ? '70px' : '75px'});
+    height: auto;
     padding-inline: 10px;
 `
 export const EventTime_Container = styled.div`
@@ -161,11 +161,18 @@ export const TodoListItem_Wrapper = styled.div`
 
 export const AdditionalInfo_Container = styled.div`
     width: calc(100% - 50px);
-    height: 50px;
+    height: 70px;
     margin-left: 50px;
     overflow: hidden;
     display: flex;
     align-items: center;
+`
+export const JoinFriendList_Container= styled.div`
+    height: 25px;
+    padding-block: 5px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
 `
 export const EventTag_Container = styled.div`
     width: auto;

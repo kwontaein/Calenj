@@ -1,10 +1,8 @@
 import {Message} from "../../../../entities/reactQuery";
-import {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {endPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
-import axios from "axios";
+import {endPointMap, requestFile, RootState} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
-import {bool} from "yup";
 import {useIntersect} from "../../../../shared/model";
 
 interface ReturnScroll {
@@ -35,7 +33,6 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
     const [position, setPosition] = useState<string>('older');
 
 
-
     useEffect(() => {
         if (!containerRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = containerRef.current
@@ -55,7 +52,7 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
         return debounce(() => {
             endPointMap.set(stompParam, 0)
             dispatch(requestFile({target: 'groupMsg', param: stompParam, requestFile: "ENDPOINT", nowLine: 0}));
-        }, 1000);
+        }, 2000);
     }, [stompParam]);
 
     const updateEndpoint = () => {
@@ -70,14 +67,14 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
     const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
         const messageDiv = messageRefs.current[chatUUID];
         if (messageDiv && containerRef.current) {
-            const subScreenHeight = (clickState!=='' && mode ==='column') ? screenHeightSize : 0
+            const subScreenHeight = (clickState !== '' && mode === 'column') ? screenHeightSize : 0
             if (alignToBottom) { //아래로
-                containerRef.current.scrollTop = messageDiv.offsetTop - containerRef.current.clientHeight + messageDiv.clientHeight -subScreenHeight -20;
+                containerRef.current.scrollTop = messageDiv.offsetTop - containerRef.current.clientHeight + messageDiv.clientHeight - subScreenHeight - 20;
             } else { //위로
                 containerRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
             }
         }
-    }, [clickState,mode,stompParam,screenHeightSize]);
+    }, [clickState, mode, stompParam, screenHeightSize]);
 
 
     //스크롤 => 맨 밑으로 이동
@@ -204,16 +201,18 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
 
     const bottomRef = useIntersect((entry, observer) => {
         if (!lastPage && connectMessages.length > 0) {
+            console.log("실행")
             observer.unobserve(entry.target);
             fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID) => {
                 if (!chatUUID) return;
                 setChatUUID(chatUUID);
                 setPosition("newer");
-
             });
+        } else if (lastPage && endPointMap.get(stompParam) !== 0) {
+            updateEndpoint();
         }
     });
 
 
-    return {containerRef, messageRefs,topRef, bottomRef};
+    return {containerRef, messageRefs, topRef, bottomRef};
 }

@@ -15,6 +15,8 @@ public class ExtendedPropsRequest {
     //todoList 내용
     private List<String> todoList;
 
+    private List<String> friendList;
+
     private RepeatStateRequest repeatState;
 
 }

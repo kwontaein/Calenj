@@ -59,4 +59,7 @@ public class UserScheduleEntity {
     @Column(name = "user_schedule_todo_list")
     private String userScheduleTodoList;
 
+    //friendList
+    @Column(name = "user_schedule_friend_list")
+    private String userScheduleFriendList;
 }

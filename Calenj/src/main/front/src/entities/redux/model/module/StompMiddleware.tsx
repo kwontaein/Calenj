@@ -4,14 +4,12 @@ import {call, delay, fork, put, race, take} from 'redux-saga/effects';
 import {buffers, eventChannel} from 'redux-saga';
 import {
     Destination,
-    receivedStompMsg,
-    REQUEST_FILE,
+    receivedStompMsg, REQUEST_FILE,
     SEND_STOMP_MSG,
     SYNCHRONIZATION_STOMP,
     UPDATE_STOMP_STATE,
     updateLoading,
 } from "../slice/StompReducer"
-import {date} from "yup";
 
 
 type stateType = "ALARM" | "READ" | "SEND" | "ENDPOINT" | "ONLINE" | "OFFLINE";
@@ -34,7 +32,6 @@ export const ChatContentMap = new Map();
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {
-
     while (true) {
         const {payload} = yield take(SEND_STOMP_MSG)//액션을 기다린 후 dispatch 가 완료되면 실행
         const {param, target, message} = yield payload;
@@ -50,10 +47,25 @@ function* sendStomp(stompClient: CompatClient) {
             body: JSON.stringify(data),
         })
     }
-
 }
 
+function* endPointStomp(stompClient: CompatClient) {
+    while (true) {
+        const {payload} = yield take(REQUEST_FILE)//액션을 기다린 후 dispatch 가 완료되면 실행
+        const {param, target, message} = yield payload;
 
+        const data: StompData = {
+            param: `${param}`, //groupMsg,friendMsg
+            message: `${message}`,
+            state: "ENDPOINT", //0:endpoint 로드
+        }
+        const url = `/app/${target}`
+        stompClient.publish({
+            destination: `${url}`,
+            body: JSON.stringify(data),
+        })
+    }
+}
 
 function* sendPublish(destination: Destination, stompClient: CompatClient) {
     destination.map((sub: (string | number)[], index: number) => {
@@ -83,7 +95,6 @@ function* closeWebSocketSaga(channel: any) {
     }
 }
 
-
 //제너레이터를 활용한 비동기식 처리
 export function* initializeStompChannel(): any {
     const {payload} = yield take(SYNCHRONIZATION_STOMP)//액션을 기다린 후 dispatch 가 완료되면 실행
@@ -92,13 +103,13 @@ export function* initializeStompChannel(): any {
 
 
 function* startStomp(destination: Destination): any {
-
     //비동기식 함수를 호출하는 call 을 사용하여 stompClient 를받아옴
     //saga 의 call 을 쓰면 Promise 또는 Generator 함수만 받으며 Promise 시 res 반환 전까지 saga 실행중지
     const stompClient = yield call(createStompConnection) //Stomp 를 connect 하는 함수, 성공 시 다음 명령 실행
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga 의 이벤트를 발생하게 채널연결
     //함수 실행 후 백그라운드에도 유지
     yield fork(sendStomp, stompClient)
+    yield fork(endPointStomp, stompClient)
     yield fork(sendPublish, destination, stompClient)
     yield fork(closeWebSocketSaga, channel)
 
