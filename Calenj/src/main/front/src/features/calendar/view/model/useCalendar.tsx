@@ -49,9 +49,10 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     content: content,
                     todoList: todoList,
                     repeatState: repeatState,
-                    friendList:friendList,
+                    friendList: friendList,
                 },
             }
+            console.log(event.title,friendList)
             if (repeat) {
                 newEvent.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
                 newEvent.exdate = event.extendedProps.repeatState.noRepeatDates;

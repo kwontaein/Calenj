@@ -37,6 +37,9 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
     const [modify,setModify] = useState<boolean>(false);
 
 
+    useEffect(() => {
+        console.log(friendList)
+    }, []);
     return(
         <>
         {modify ? <AddDateEvent onClose={()=>setModify(false)}
@@ -80,7 +83,6 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
 
 
             <EventDetailContent_Wrapper $isRepeat={formState === 'schedule'}>
-
                 <DateTime_Container>
                     <EventDetailIcon_Wrapper>
                         <i className="fi fi-rr-clock-three"></i>
@@ -137,9 +139,9 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                 {formState!=="todo" && !(formState==='schedule' && !repeatState.repeat) &&
                     <AdditionalInfo_Container>
                         {formState === "promise" &&
-                            <div style={{width:'calc(100% - 10px)', marginRight:'10px' }}>
+                            <div style={{width:'calc(100% - 10px)', marginRight:'10px',  marginTop: '10px' }}>
                                 <div style={{fontSize: '10px'}}>참여인원</div>
-                                {friendList.length>0 ?
+                                {(friendList!==null && friendList.length>0) ?
                                     <JoinFriendList_Container>
                                         {friendList.map((friendId:string)=>(
                                             <ProfileContainer $userId={friendId} key={friendId} style={{width:'18px',height:'18px', minWidth:'unset'}}/>
