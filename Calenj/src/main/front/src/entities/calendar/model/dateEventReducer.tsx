@@ -11,6 +11,13 @@ export interface DateEventState {
     endMonth: number;
     backgroundColor:string,
     tagKeys : string[],
+    friendList:string[],
+}
+
+interface friendListMap {
+    [friendId:string]:{
+        name:string,
+    }
 }
 
 // Define actions
@@ -24,6 +31,7 @@ export type DateEventAction =
     | { type: 'SET_END_MONTH'; payload: number }
     | { type: 'SET_BG_COLOR'; payload:string}
     | { type: 'SET_TAG_KEYS'; payload: string[]}
+    | { type: 'SET_FRIEND_LIST'; payload:string[]}
     ;
 
 // Initial state
@@ -37,6 +45,7 @@ export const initialEventDateState: DateEventState = {
     endMonth: new Date().getMonth(),
     backgroundColor:'',
     tagKeys: [],
+    friendList:[],
 };
 
 // Reducer function
@@ -60,6 +69,8 @@ export const DateEventReducer = (state: DateEventState, action: DateEventAction)
             return { ...state, backgroundColor: action.payload };
         case 'SET_TAG_KEYS':
             return { ...state, tagKeys : action.payload };
+        case 'SET_FRIEND_LIST' :
+            return {...state, friendList: action.payload}
         default:
             return state;
     }

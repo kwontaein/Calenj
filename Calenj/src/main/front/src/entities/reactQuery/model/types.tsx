@@ -1,4 +1,5 @@
 import {RepeatState} from "../../calendar";
+import {Options} from "rrule";
 
 export interface GroupList_item {
     groupId: string;
@@ -122,8 +123,10 @@ export interface UserDateEvent {
         content: string,
         todoList: string[],
         repeatState: RepeatState,
+        friendList:string[],
     }
 }
+
 
 export interface UserInfo {
     nickname: string,

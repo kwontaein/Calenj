@@ -22,6 +22,7 @@ export const DeleteModal: React.FC<EventDetailProps> = ({deleteEvent, close}) =>
     const modalBackground = useRef<HTMLDivElement>(null);
     const userEventDateState = useFetchUserDateEvent()
 
+
     const sendDelete = () => {
         deleteScheduleApi(deleteEvent.event.id).then(() => {
             userEventDateState.refetch()

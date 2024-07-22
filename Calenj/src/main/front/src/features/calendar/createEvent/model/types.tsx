@@ -55,6 +55,7 @@ export interface DateEvent {
         content: string,
         todoList: string[],
         repeatState: RepeatState,
+        friendList:string[]
     }
     exdate?: string[]
 }
