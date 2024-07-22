@@ -20,23 +20,8 @@ interface EventDetailProps {
 
 export const DeleteModal: React.FC<EventDetailProps> = ({deleteEvent, close}) => {
     const modalBackground = useRef<HTMLDivElement>(null);
-    const [showOption, setShowOption] = useReducer((prev) => !prev, false)
-    const optionRef = useRef<HTMLDivElement>(null);
     const userEventDateState = useFetchUserDateEvent()
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (optionRef.current && !optionRef.current.contains(e.target as Node)) {
-                setShowOption();
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        if (!showOption) { //이벤트를 삭제하여 다른 곳을 클릭해도 안닫히도록 설정
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showOption, optionRef]);
+
 
     const sendDelete = () => {
         deleteScheduleApi(deleteEvent.event.id).then(() => {

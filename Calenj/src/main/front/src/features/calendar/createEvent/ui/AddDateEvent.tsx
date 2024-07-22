@@ -1,5 +1,5 @@
 
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {
     AddFriend_Button,
@@ -31,10 +31,11 @@ import {
     Modal_Background,
     Modal_Condition_Button,
     Modal_Container, ModalContent_Container,
-    ModalTopBar_Container
+    ModalTopBar_Container, PointColor
 } from "../../../../shared/ui/SharedStyled";
 import {MultiSelector} from "../../../../shared/ui/MultiSelector";
 import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
+import {EventFriendList} from "./EventFriendList";
 
 
 
@@ -47,10 +48,12 @@ interface CalendarProps {
 export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) => {
     const modalBackground = useRef<HTMLDivElement>(null);
     //eventState & repeatState
-    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,event,mode)
-    const {formState, title, content} = eventState
-    const {selectorOptionProps, setTag} =useDateEventTag(eventDispatch)
+    const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,event,mode);
+    const {formState, title, content} = eventState;
+    const {selectorOptionProps, setTag} = useDateEventTag(eventDispatch);
+    const [showFriendList, setShowFriendList] = useReducer((prev)=>!prev,false);
     const modifyEvent = event as EventApi;
+
 
     return createPortal(
         <Modal_Background ref={modalBackground} onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -58,6 +61,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) =
                 onClose();
             }
         }}>
+            {showFriendList && <EventFriendList onClose={setShowFriendList} eventState={eventState} eventDispatch={eventDispatch}/>}
             <Modal_Container style={{height: '530px'}}>
                 <ModalTopBar_Container>
                     {mode ==='create' ? '일정 추가': '일정 수정'}
@@ -81,20 +85,20 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) =
                             </DateEventTagSelector_Container>
                         </DateEventTag_Container>
                         <Category_Container>
-                            <Modal_Condition_Button $isAble={formState === "promise"} onClick={() => mode==="creat" && eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "promise"} onClick={() => mode==="create" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "promise"
                             })}>
                                 약속일정
                             </Modal_Condition_Button>
-                            <Modal_Condition_Button $isAble={formState === "todo"} onClick={() =>  mode==="creat" && eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "todo"} onClick={() =>  mode==="create" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "todo"
                             })}
                             style={{marginInline: '5px'}}>
                                 할 일
                             </Modal_Condition_Button>
-                            <Modal_Condition_Button $isAble={formState === "schedule"} onClick={() =>  mode==="creat" && eventDispatch({
+                            <Modal_Condition_Button $isAble={formState === "schedule"} onClick={() =>  mode==="create" && eventDispatch({
                                 type: 'SET_FORM_STATE',
                                 payload: "schedule"
                             })}>
@@ -141,7 +145,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) =
                             <AddFriendIcon_Container>
                                 <i className="fi fi-sr-user-add"></i>
                             </AddFriendIcon_Container>
-                            <AddFriend_Button>
+                            <AddFriend_Button onClick={setShowFriendList}>
                                 나의 친구
                             </AddFriend_Button>
                         </AddFriend_Container>
@@ -160,6 +164,7 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) =
                     </ModalButton_Container>
                 </ModalContent_Container>
             </Modal_Container>
+
         </Modal_Background>,
         document.body
     )
