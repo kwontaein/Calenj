@@ -121,6 +121,26 @@ export const GlobalStyle = createGlobalStyle`
     }
 `;
 
+export const ProfileContainer = styled.div<{ $userId:string }>`
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 3px;
+    border-radius: 50px;
+    background-color: #007bff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    font-size: 20px;
+    color: white;
+    font-weight: 550;
+    user-select: none;
+    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-size: cover;
+`
+
 export const CheckBox_Label = styled.label`
     margin-inline: 5px;
     height: 100%;
@@ -301,7 +321,7 @@ export const Modal_Background = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 9998;
     background-color: rgba(0, 0, 0, 0.3);`
 
 export const Modal_Container = styled.div`

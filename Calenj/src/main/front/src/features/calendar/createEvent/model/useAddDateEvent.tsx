@@ -53,10 +53,11 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
         backgroundColor: mode === 'create' ? '' : modifyEvent.backgroundColor,
         title: mode === 'create' ? '' : modifyEvent.title,
         tagKeys: mode === 'create' ? [] : modifyEvent._def.extendedProps.tagKeys,
-        content: mode === 'create' ? '' : modifyEvent._def.extendedProps.content
+        content: mode === 'create' ? '' : modifyEvent._def.extendedProps.content,
+        friendList: mode ==='create' ? [] : modifyEvent._def.extendedProps.frindList,
     });
     const [repeatState, repeatDispatch] = useReducer(RepeatReducer, mode === 'create' ? initialRepeatState : modifyEvent._def.extendedProps.repeatState);
-    const {formState, startDate, endDate, title, content, backgroundColor, tagKeys} = eventState
+    const {formState, startDate, endDate, title, content, backgroundColor, tagKeys,friendList} = eventState
     const todoState = useTodoList(mode === 'modify' ? modifyEvent._def.extendedProps.todoList : []);
 
     const closeModal = () => {
@@ -102,6 +103,7 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
                 content: content,
                 todoList: todo,
                 repeatState: repeatState,
+                friendList:friendList,
             },
         }
         if (repeat) {

@@ -18,10 +18,10 @@ import {
     DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
     MessageBoxContainer, MessageContainer,
     MessageContainer2, MessageContentContainer,
-    MessageContentContainer2, MessageGridView, MessageScroll_Container, NickNameContainer, ProfileContainer,
+    MessageContentContainer2, MessageGridView, MessageScroll_Container, NickNameContainer,
     ScrollableDiv
 } from "./MessageScrollBoxStyled";
-import {RowFlexBox} from "../../../../shared/ui/SharedStyled";
+import {ProfileContainer, RowFlexBox} from "../../../../shared/ui/SharedStyled";
 import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 import axios from "axios";
