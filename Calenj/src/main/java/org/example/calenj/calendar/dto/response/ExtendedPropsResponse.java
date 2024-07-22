@@ -13,22 +13,29 @@ public class ExtendedPropsResponse {
     //내용
     private String[] todoList;
 
+    private String[] friendList;
     //태그 정보
     private String[] tagKeys;
 
     private RepeatStateResponse repeatState;
 
-    public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList) {
+    public ExtendedPropsResponse(String tag, UUID scheduleId, String formState, String content, String todoList, String friendList) {
         this.tagKeys = convertStringToArray(tag);
         this.scheduleId = scheduleId;
         this.content = content;
         this.todoList = convertStringToArray(todoList);
+        this.friendList = convertStringToArray(friendList);
         this.formState = formState;
     }
 
     public static String[] convertStringToArray(String input) {
+        if (input == null) {
+            return null;
+        }
         input = input.trim(); // 공백 제거
         input = input.substring(1, input.length() - 1); // 대괄호 제거
         return input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
     }
+
+
 }
