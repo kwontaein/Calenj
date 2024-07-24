@@ -51,6 +51,9 @@ public class GroupScheduleService {
      * @param scheduleId 삭제할 일정 아이디
      */
     public void deleteSchedule(UUID scheduleId) {
+        //서브 전부 지우고
+        groupSubScheduleRepository.deleteByscheduleId(scheduleId);
+        //일정 삭제
         groupScheduleRepository.deleteById(scheduleId);
     }
 
