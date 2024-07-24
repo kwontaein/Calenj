@@ -56,7 +56,7 @@ public class GroupScheduleEntity {
     private int maxPeople;
 
     //일정 참여 인원 수
-    @Column(name = "group_schedule_max_people")
+    @Column(name = "group_schedule_attend_users")
     private String attendUsers;
 
 }

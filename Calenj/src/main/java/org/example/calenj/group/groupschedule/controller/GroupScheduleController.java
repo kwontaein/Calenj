@@ -65,7 +65,7 @@ public class GroupScheduleController {
      * @param groupSubScheduleRequest
      * @return
      */
-    @PostMapping("api/getGroupScheduleList")
+    @PostMapping("api/getSubScheduleList")
     public List<GroupSubScheduleResponse> getGroupScheduleList(@RequestBody GroupSubScheduleRequest groupSubScheduleRequest) {
         return groupScheduleService.getSubScheduleList(groupSubScheduleRequest.getScheduleId());
     }
