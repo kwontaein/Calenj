@@ -1,0 +1,1 @@
+export {initialGroupEventState, GroupEventReducer} from './model/groupEventReducer'

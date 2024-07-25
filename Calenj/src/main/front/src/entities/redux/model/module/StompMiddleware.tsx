@@ -29,6 +29,8 @@ export const BoardFilterMap = new Map();
 export const BoardSearchMap = new Map();
 export const BoardParamMap = new Map();
 export const ChatContentMap = new Map();
+export const EventStateMap = new Map();
+
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
 function* sendStomp(stompClient: CompatClient) {

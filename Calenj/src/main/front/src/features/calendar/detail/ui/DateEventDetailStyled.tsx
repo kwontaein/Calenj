@@ -160,7 +160,7 @@ export const TodoListItem_Wrapper = styled.div`
 
 
 export const AdditionalInfo_Container = styled.div`
-    width: calc(100% - 50px);
+    width: calc(100% - 60px);
     height: 70px;
     margin-left: 50px;
     overflow: hidden;

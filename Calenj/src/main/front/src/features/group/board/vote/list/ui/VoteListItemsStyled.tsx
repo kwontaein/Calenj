@@ -33,9 +33,9 @@ export const GroupVoteJoin_div = styled.div<GroupVoteListProps>`
 
 
 
-export const GroupVoterListTitle = styled.div<subScreenWidthProps>`
+export const GroupVoterListTitle = styled.div`
     width: 100%;
-    max-width: ${props=>props.$subScreenWidth-40}px;
+    max-width: calc(100% - 40px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

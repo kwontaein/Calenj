@@ -10,10 +10,9 @@ import {getNoticeDetailApi} from "../api/getNoticeDetailApi";
 
 interface NoticeListProps{
     noticeId:string,
-    subWidth:number,
 }
 
-export const NoticeDetailView:React.FC<NoticeListProps>=({noticeId, subWidth})=>{
+export const NoticeDetailView:React.FC<NoticeListProps>=({noticeId})=>{
     const [detail, setDetail] = useState<NoticeDetail | null>(null);
 
     useLayoutEffect(() => {
@@ -27,7 +26,7 @@ export const NoticeDetailView:React.FC<NoticeListProps>=({noticeId, subWidth})=>
         <NoticeDetailContainer>
             {detail &&
                 <FullScreen_div>
-                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher} subWidth={subWidth}/>
+                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher}/>
                      <NoticeDetailContent_Container>
                          {detail.noticeContent}
                      </NoticeDetailContent_Container>

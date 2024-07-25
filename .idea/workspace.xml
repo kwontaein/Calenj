@@ -4,8 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.22 일정 친구등록 #3">
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.25 일정 생성 ui제작">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/GroupScheduleSlice.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/ui/ScheduleDetail.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/ui/ScheduleDetailStyled.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useClickOutSideCheck.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/eventTag/model/useCreateEventTag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/eventTag/model/useCreateEventTag.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventListStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/date.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/date.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/option/ui/GroupEventOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/option/ui/GroupEventOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigateTopItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/GroupSubNavigateTopItems.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subNavItems/ui/SubNavigationButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useBoardState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/model/useBoardState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreenStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/GroupSubScreenStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/subScreenItems/ui/SubScreenOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/exMessageBox/Chat.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/exMessageBox/ChatMessage.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/exMessageBox/dummyData.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,11 +152,11 @@
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\board\notice\detail" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\shared\ui" />
+      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\group\event\list" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\messsage\messageScrollBox" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\public\dummy\messageScrollBox" />
       <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\public\dummy" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\entities\message\model" />
-      <recent name="C:\IntelliJProjectFork\Calenj\Calenj\src\main\front\src\features\user\userProtile" />
     </key>
   </component>
   <component name="RunManager">
@@ -204,22 +228,8 @@
       <workItem from="1721438826052" duration="22566000" />
       <workItem from="1721530318813" duration="10444000" />
       <workItem from="1721621073898" duration="10595000" />
-    </task>
-    <task id="LOCAL-00001" summary="02.06 git fork &amp; request pull">
-      <option name="closed" value="true" />
-      <created>1707212521666</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1707212521666</updated>
-    </task>
-    <task id="LOCAL-00002" summary="02.06 git fork &amp; request pull">
-      <option name="closed" value="true" />
-      <created>1707212825457</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1707212825457</updated>
+      <workItem from="1721705516202" duration="25228000" />
+      <workItem from="1721874178950" duration="23175000" />
     </task>
     <task id="LOCAL-00003" summary="02.06 npm 모듈 셋팅">
       <option name="closed" value="true" />
@@ -597,7 +607,23 @@
       <option name="project" value="LOCAL" />
       <updated>1721637242174</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="07.22 일정 친구등록 #4">
+      <option name="closed" value="true" />
+      <created>1721637369555</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1721637369556</updated>
+    </task>
+    <task id="LOCAL-00051" summary="07.25 일정 생성 ui제작">
+      <option name="closed" value="true" />
+      <created>1721877902637</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1721877902637</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -630,8 +656,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="06.25 친구요청 (완료)" />
-    <MESSAGE value="06.25 merge 전 commit" />
     <MESSAGE value="06.26 친구요청 정보조회" />
     <MESSAGE value="06.26 파일경로 리팩토링" />
     <MESSAGE value="06.26 파일경로 리팩토링 #2" />
@@ -655,14 +679,16 @@
     <MESSAGE value="07.21 일정 수정제작 완료" />
     <MESSAGE value="07.22 일정 친구등록" />
     <MESSAGE value="07.22 일정 친구등록 #3" />
-    <option name="LAST_COMMIT_MESSAGE" value="07.22 일정 친구등록 #3" />
+    <MESSAGE value="07.22 일정 친구등록 #4" />
+    <MESSAGE value="07.25 일정 생성 ui제작" />
+    <option name="LAST_COMMIT_MESSAGE" value="07.25 일정 생성 ui제작" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/eventTag/model/useCreateEventTag.tsx</url>
-          <line>8</line>
+          <line>9</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -678,6 +704,11 @@
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetaulStyled.tsx</url>
           <line>46</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomDatePickerStyled.tsx</url>
+          <line>27</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

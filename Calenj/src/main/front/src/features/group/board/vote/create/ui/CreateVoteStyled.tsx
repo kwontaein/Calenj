@@ -70,6 +70,7 @@ export const VoteTypeRadio_Label_Container = styled.div`
 `
 export const VoteTypeRadio_Label = styled.label`
     margin-right: 5px;
+    font-size: '13px'
 `
 
 export const VoteType_Radio = styled.input`

@@ -5,10 +5,11 @@ import {
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {SubNavProps} from '../model/types';
+import {useEffect} from "react";
 
 
 export const SubNavigationButton:React.FC<SubNavProps> = ({subItem,subItemsHandler}) =>{
-    const { clickState} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
+    const {clickState,param} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
     return(
         <SubNavigateItem_Container

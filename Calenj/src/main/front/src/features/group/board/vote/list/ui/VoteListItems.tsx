@@ -8,17 +8,16 @@ import {updateBoardParam} from "../../../../../../entities/redux/model/slice/Boa
 
 interface VoteItemProps {
     vote: VoteList;
-    subWidth: number;
     checkMyVoter: (countVoter: string[]) => boolean;
 }
 
-const VoteListItems: React.FC<VoteItemProps> = ({ vote, subWidth, checkMyVoter }) => {
+const VoteListItems: React.FC<VoteItemProps> = ({ vote, checkMyVoter }) => {
     const dispatch = useDispatch();
 
     return (
         <GroupVoteListView_Li key={vote.voteId} onClick={() => dispatch(updateBoardParam({voteParam:vote.voteId}))}>
             <div>
-                <GroupVoterListTitle $subScreenWidth={subWidth}>{vote.voteTitle}</GroupVoterListTitle>
+                <GroupVoterListTitle>{vote.voteTitle}</GroupVoterListTitle>
                 <RowFlexBox style={{ width: '100%' }}>
                     <GroupVoteJoin_div>{`${vote.countVoter.length}명 참여 `}</GroupVoteJoin_div>
                     <GroupVoteJoin_div style={{ marginInline: '5px' }}> · </GroupVoteJoin_div>

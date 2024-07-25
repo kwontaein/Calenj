@@ -15,12 +15,9 @@ import {useVoteList} from "../model/useVoteList";
 import {checkMyVoter} from "../model/checkMyVoter";
 
 
-interface SubScreenProps {
-    subWidth:number,
-}
 
 
-export const Vote: React.FC<SubScreenProps> = ({subWidth}) => {
+export const Vote: React.FC = () => {
     const [voteList,endVoteList] = useVoteList();
     const boardOption = useSelector((state:RootState) => state.boardOption)
     const { param } = useSelector((state:RootState) => state.subNavigation.group_subNavState)
@@ -46,14 +43,12 @@ export const Vote: React.FC<SubScreenProps> = ({subWidth}) => {
                                         <VoteListItems
                                             key={vote.voteId}
                                             vote={vote}
-                                            subWidth={subWidth}
                                             checkMyVoter={checkMyVoter}
                                         />
                                    : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
                                         <VoteListItems
                                             key={vote.voteId}
                                             vote={vote}
-                                            subWidth={subWidth}
                                             checkMyVoter={checkMyVoter}
                                         />
                                     )
@@ -73,14 +68,12 @@ export const Vote: React.FC<SubScreenProps> = ({subWidth}) => {
                                         <VoteListItems
                                             key={vote.voteId}
                                             vote={vote}
-                                            subWidth={subWidth}
                                             checkMyVoter={checkMyVoter}
                                         />
                                     : (vote.voteTitle.includes(boardOption.search_keyWord)) &&
                                         <VoteListItems
                                             key={vote.voteId}
                                             vote={vote}
-                                            subWidth={subWidth}
                                             checkMyVoter={checkMyVoter}
                                         />
                                     ))

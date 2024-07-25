@@ -1,7 +1,11 @@
-import {DatePicker_Container, DatePickerIcon_Container, EventDatePicker} from "./EventDatePickerStyled";
 import {ko} from "date-fns/locale/ko";
 import React, {useEffect} from "react";
 import {DateEventAction, DateEventState} from "../../../../entities/calendar";
+import {
+    DatePicker_Container,
+    DatePickerIcon_Container,
+    EventDatePicker
+} from "../../../../shared/ui/CustomDatePickerStyled";
 interface EventDateProps {
     eventState: DateEventState;
     eventDispatch: React.Dispatch<DateEventAction>;
