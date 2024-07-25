@@ -270,6 +270,7 @@ public class FileService {
                     .collect(Collectors.toList());
 
             Collections.reverse(previousContents);
+
             previousLines = previousContents.stream()
                     .limit(batchSize)
                     .collect(Collectors.toList());
