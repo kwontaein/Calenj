@@ -11,9 +11,6 @@ import {useEffect} from "react";
 export const SubNavigationButton:React.FC<SubNavProps> = ({subItem,subItemsHandler}) =>{
     const {clickState,param} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
-    useEffect(() => {
-        console.log(param)
-    }, []);
     return(
         <SubNavigateItem_Container
             $isClick={clickState===subItem}

@@ -18,14 +18,17 @@ export const GroupSubScreen_Container = styled.div<ScreenModeProps>`
 `
 
 export const GroupSubScreenTop_Container = styled.div`
-    width: auto;
+    width: calc(100% - 20px);
+    max-width: calc(100% - 20px);
     display: flex;
     height: 35px;
     align-items: center;
     padding-inline: 10px;
     justify-content: space-between;
+    border-bottom: 1px solid ${TextColor}77;
+    white-space: nowrap;
     overflow: hidden;
-`
+    text-overflow: ellipsis;`
 export const GroupSubScreenTopIcon_Container = styled.div<OptionClick>`
     display: flex;
     align-items: center;

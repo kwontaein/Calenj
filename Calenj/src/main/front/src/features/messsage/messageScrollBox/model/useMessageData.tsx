@@ -50,6 +50,8 @@ export const useMessageData = (): useMessageData => {
         }
     }, [stomp.receiveMessage.receivedUUID]);
 
+
+
     const connectMessages = useMemo(() => {
         if (messages.length === 0) return []
         if (messages[0].chatUUID === "시작라인") {

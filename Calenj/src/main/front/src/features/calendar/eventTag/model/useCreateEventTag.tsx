@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useReducer, useRef, useState} from "react";
 import {PointColor} from "../../../../shared/ui/SharedStyled";
 import {createEventTagApi} from "../api/createEventTagApi";
 import {AxiosResponse} from "axios";
@@ -6,6 +6,7 @@ import {createDateEventTag} from "../../../../entities/redux/model/slice/DateEve
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {EventTagDTO} from "../../../../entities/reactQuery";
+import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
 export interface ReturnNewEventTag{
     createTag: boolean,
     setCreateTag : React.Dispatch<React.SetStateAction<boolean>>,
@@ -21,33 +22,23 @@ export interface ReturnNewEventTag{
 }
 
 export const useCreateEventTag = ():ReturnNewEventTag =>{
-    const [createTag, setCreateTag] = useState<boolean>(false)
+    const [createTag, setCreateTag] = useReducer((prev)=>!prev,false)
     const createInputRef = useRef<HTMLInputElement>(null)
     const [newTagName, setNewTagName] = useState<string>('');
     const [colorPicker, setColorPicker] = useState<boolean>(false)
     const [newTagColor, setNewTagColor] = useState<string>(PointColor)
-    const colorPickerRef = useRef<HTMLDivElement>(null);
+    const colorPickerRef = useClickOutSideCheck(createTag,setCreateTag)
 
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (colorPickerRef.current && !colorPickerRef.current.contains(e.target as Node)) {
-                setColorPicker(false);
-            }
-        };
-        if (createTag && createInputRef.current) {
-            createInputRef.current.focus();
-        }
         setNewTagName('');
         setColorPicker(false);
         setNewTagColor(PointColor)
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        if (createTag && createInputRef.current) {
+            createInputRef.current.focus();
+        }
     }, [createTag]);
 
 
@@ -68,7 +59,7 @@ export const useCreateEventTag = ():ReturnNewEventTag =>{
                     defaultTag: res.data.defaultTag
                 }))
             });
-        setCreateTag(false)
+        setCreateTag()
     }
 
 

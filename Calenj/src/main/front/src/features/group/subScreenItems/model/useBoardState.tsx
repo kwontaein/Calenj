@@ -1,8 +1,9 @@
 import {MutableRefObject, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux";
+import {RootState, updateScheduleState} from "../../../../entities/redux";
 import {BoardParamMap, BoardSearchMap} from "../../../../entities/redux";
 import {updateBoardParam} from "../../../../entities/redux";
+import {EventStateMap} from "../../../../entities/redux/model/module/StompMiddleware";
 
 interface BoardStateProps{
     selectBox: MutableRefObject<HTMLDivElement|null>,
@@ -65,6 +66,10 @@ export const useBoardState = ():BoardStateProps =>{
         } else if (clickState === "투표") {
             dispatch(updateBoardParam({voteParam: ''}));
             BoardParamMap.delete(`${param}Vote`)
+        } else if (clickState === "그룹일정"){
+            const {mapModal} = EventStateMap.get(param);
+            dispatch(updateScheduleState({scheduleId:'',scheduleTitle:''}))
+            EventStateMap.set(param,{scheduleId:'', scheduleTitle:'',mapModal:mapModal})
         }
     }
 

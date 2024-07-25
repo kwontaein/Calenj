@@ -2,13 +2,11 @@ import {Option_Container, Option_Item, OptionIcon_Wrapper} from "../../../../../
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useReducer} from "react";
 import {CreateGroupEvent} from "../../create";
+import {RootState} from "../../../../../entities/redux";
 
 
 export const GroupEventOption :React.FC = () =>{
     const [createEventModal,setCreateEventModal] = useReducer((prev)=>!prev,false)
-    useEffect(() => {
-        console.log(createEventModal)
-    }, [createEventModal]);
 
     return(
         <Option_Container>

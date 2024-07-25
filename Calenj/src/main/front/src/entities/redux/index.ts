@@ -7,3 +7,4 @@ export {updateToken, updateCodeValid} from './model/slice/EmailValidationSlice';
 export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, endPointMap, toggleCurrentMap, ChatContentMap} from './model/module/StompMiddleware'
 export {type RootState} from './model/types'
 export {registerUserName} from './model/slice/UserNameRegisterSlice'
+export {updateScheduleState} from './model/slice/GroupScheduleSlice'

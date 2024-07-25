@@ -19,12 +19,12 @@ import {RootState} from "../../../../entities/redux";
 
 export const GroupSubScreen : React.FC = () =>{
     const {clickState, mode} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
-
+    const {scheduleTitle} = useSelector((state:RootState)=> state.groupSchedule)
 
     return(
             <GroupSubScreen_Container $mode={mode}>
                 <GroupSubScreenTop_Container>
-                    {clickState}
+                    {clickState!=="그룹일정" ? clickState : (scheduleTitle!=="" ? scheduleTitle: clickState)}
                     <SubScreenOption/>
                 </GroupSubScreenTop_Container>
                 <GroupSubScreenContent_Container>
