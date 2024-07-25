@@ -1,6 +1,13 @@
 import Select, { SingleValue, StylesConfig } from "react-select";
 import React, {useEffect, useState} from 'react';
-import {BackGroundColor, PointColor, PointColor2, TextColor, ThemeColor2} from "../../../../shared/ui/SharedStyled";
+import {
+    BackGroundColor,
+    PointColor,
+    PointColor2,
+    TextColor,
+    ThemeColor2,
+    ThemeColor3
+} from "../../../../shared/ui/SharedStyled";
 import chroma from "chroma-js";
 import {useDispatch, useSelector} from "react-redux";
 import {setCalendarForm} from "../../../../entities/redux/model/slice/CalendarControllerSlice";
@@ -47,16 +54,21 @@ export const CalendarFromSelector: React.FC = () => {
         dropdownIndicator: (styles) => ({ ...styles, fontSize: '8px', width: '26px', height: '30px', padding: '5px' }),
         menu: (styles) => ({
             ...styles,
-            backgroundColor: BackGroundColor,
+            backgroundColor: `${ThemeColor3}`,
             borderRadius: '4px',
-            width: '100px',
+            width: '80px',
             zIndex: 10000
         }),
         option: (styles, { isFocused, isSelected }) => ({
             ...styles,
-            backgroundColor: isSelected ? ThemeColor2 : isFocused ? BackGroundColor : BackGroundColor,
-            color: isSelected ? PointColor : TextColor,
+            height:'30px',
+            fontSize:'12px',
+            backgroundColor: isSelected ? PointColor : isFocused ? BackGroundColor : ThemeColor3,
+            color: isSelected ? TextColor : TextColor,
             cursor: 'default',
+            '&:active': {
+                backgroundColor: isSelected ? PointColor : isFocused ? BackGroundColor : ThemeColor3,
+            },
         }),
         singleValue: (styles) => ({
             ...styles,

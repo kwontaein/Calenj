@@ -1,8 +1,4 @@
 
-export interface ContentsCompositionProps{
-    subScreenWidth:number;
-}
-
 
 
 export interface GroupSubScreenProps{

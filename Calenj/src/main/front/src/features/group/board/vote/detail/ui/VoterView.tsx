@@ -1,6 +1,6 @@
 import {MyVoteIcon, ViewVoter_Container, VoteResult_Hr} from "./VoteDetailStyled";
 import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
-import React from "react";
+import React, {useEffect} from "react";
 import {VoteChoiceResponse} from "../../../../../../entities/reactQuery";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
@@ -12,6 +12,8 @@ interface VoterProps{
 export const VoterView:React.FC<VoterProps> = ({voted}) =>{
     const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
     const userId = localStorage.getItem('userId')
+
+
     return (
         <ViewVoter_Container>
             {voted.map((result,index)=>(

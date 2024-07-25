@@ -97,12 +97,12 @@ export const CreateVote: React.FC = () => {
                         <AddVoteList_Btn onClick={() => addList()} >추가</AddVoteList_Btn>
                     </ListInput_Container>
                     <VoteTypeRadio_Label_Container>
-                        <VoteTypeRadio_Label style={{fontSize: '13px'}}>
+                        <VoteTypeRadio_Label>
                             <VoteType_Radio type='radio' name='inputForm' value='TEXT'
                                 onClick={(e) => inputFormHandler(e)}
                                 defaultChecked/>텍스트
                         </VoteTypeRadio_Label>
-                        <VoteTypeRadio_Label style={{fontSize: '13px'}}>
+                        <VoteTypeRadio_Label>
                             <VoteType_Radio type='radio' name='inputForm' value='DATE'
                             onClick={(e) => inputFormHandler(e)}/>날짜
                         </VoteTypeRadio_Label>

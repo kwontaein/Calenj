@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import {TextColor} from "../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor} from "./SharedStyled";
 
 export const DatePicker_Container = styled.div`
     width: 100%;
@@ -34,4 +34,7 @@ export const EventDatePicker = styled(DatePicker)`
     &:hover{
         border: 1px solid ${TextColor};
     }
+    &:focus{
+        border: 1px solid ${PointColor};
+    } 
 `;

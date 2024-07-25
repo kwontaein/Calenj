@@ -136,7 +136,6 @@ export const RepeatNum_Input = styled.input<InputWidth>`
         border-radius: 4px;
         color : ${PointColor}
     }
-    
 `
 // Styled-components for the select box
 export const CustomSelect = styled.select`

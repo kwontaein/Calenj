@@ -23,27 +23,6 @@ export interface BoardOptionState{
     boardOption:BoardOptionProps,
 }
 
-export interface DispatchBoardOptionProps {
-    updateBoardSearch : (payload:{search_keyWord:string}) => void,
-    updateBoardFilter : (payload:{filterA:BoardFilter, filterB:BoardFilter}) => void,
-    updateClickState : (payload:{clickState:string}) => void,
-    updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) =>void,
-}
-
-export const mapDispatchToBoardOptionProps = (dispatch: Dispatch): DispatchBoardOptionProps => ({
-    updateBoardSearch : (payload:{search_keyWord:string}) => dispatch(updateBoardSearch(payload)),
-    updateBoardFilter : (payload:{filterA:BoardFilter, filterB:BoardFilter}) => dispatch(updateBoardFilter(payload)),
-    updateClickState : (payload:{clickState:string})  => dispatch(updateClickState(payload)),
-    updateBoardParam : (payload:{noticeParam? :string, voteParam?:string}) => dispatch(updateBoardParam(payload)),
-
-});
-
-export const mapStateToBoardOptionProps = (state: RootState): BoardOptionState => ({
-    boardOption: state.boardOption, // store에서 가져올 상태를 매핑
-});
-
-
-
 // 초기상태
 const initialState: BoardOptionProps ={
     search_keyWord:'',

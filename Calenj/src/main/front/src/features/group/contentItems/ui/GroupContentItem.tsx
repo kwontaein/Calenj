@@ -11,7 +11,6 @@ import { useDispatch, useSelector} from 'react-redux'
 import {MessageContainer} from "../../../../widgets/message";
 import {useScreenMode} from "../model/useScreenMode";
 import {useEffect} from "react";
-import {updateAppPosition} from "../../../../entities/redux";
 import {RootState} from "../../../../entities/redux";
 import {ControlMidLine} from "./ControlMidLine";
 
@@ -23,6 +22,7 @@ interface ContentCompositionProps{
 export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, contentSize}) =>{
     const group_subNavState = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const screenRowFlex = useScreenMode(param,contentSize,group_subNavState.showMemberList);
+
 
 
     return(
@@ -47,8 +47,7 @@ export const GroupContentItem : React.FC<ContentCompositionProps> = ({param, con
                                                                group_subNavState.screenWidthSize/contentSize.width * 100}>
 
                             {screenRowFlex && <ControlMidLine contentSize={contentSize}/>}
-                            <GroupSubScreen subScreenWidth={screenRowFlex ? group_subNavState.screenWidthSize :
-                                                (group_subNavState.showMemberList ? contentSize.width-GroupUserList_Container_width: contentSize.width)}/>
+                            <GroupSubScreen/>
                             {!screenRowFlex && <ControlMidLine contentSize={contentSize}/>}
                         </CustomScreen_SubContent_Container>}
                     </TransContentsScreen_div>

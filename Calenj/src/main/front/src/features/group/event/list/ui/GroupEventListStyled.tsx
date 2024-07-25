@@ -1,15 +1,7 @@
-/** NoticeList **/
 import styled from "styled-components";
-import {ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
-interface subScreenWidthProps{
-    $subScreenWidth: number;
-}
+import {TextColor2, ThemeColor3} from "../../../../../shared/ui/SharedStyled";
 
-export const GroupNoticeList_Container = styled.div`
-    width: 100%;
-    height: calc(100% - 5px);
-`
-export const GroupNoticeListView_Li = styled.li`
+export const GroupEventListView_Li = styled.li`
     width: calc(100% - 20px);
     list-style: none;
     padding-inline: 10px;
@@ -21,7 +13,7 @@ export const GroupNoticeListView_Li = styled.li`
     }
 `
 
-export const GroupNoticeListTitle = styled.div`
+export const GroupEventListTitle = styled.div`
     width:100%;
     max-width: calc(100% - 30px);
     white-space: nowrap;
@@ -29,4 +21,9 @@ export const GroupNoticeListTitle = styled.div`
     text-overflow: ellipsis;
 `
 
-
+export const MaxPeopleText_Container= styled.div`
+    color: ${TextColor2};
+    margin-top: 2px;
+    font-size: 12px;
+    align-items: center;
+`

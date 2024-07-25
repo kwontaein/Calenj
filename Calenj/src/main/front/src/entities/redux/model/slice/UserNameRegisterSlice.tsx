@@ -1,4 +1,3 @@
-import {dynamicEventProps} from "./DateEventTagSlice";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface MappingNameProps {
