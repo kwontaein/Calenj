@@ -3,7 +3,7 @@ import {PointColor, PointColor2} from "../../../../shared/ui/SharedStyled";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-export interface dynamicEventProps {
+interface DynamicEventProps {
     [tagId: string]: {
         name: string,
         color: string,
@@ -12,8 +12,8 @@ export interface dynamicEventProps {
     }
 }
 
-export interface DateEventTagProps {
-    dynamicEventTag: dynamicEventProps,
+interface DateEventTagProps {
+    dynamicEventTag: DynamicEventProps,
 }
 
 // 초기상태

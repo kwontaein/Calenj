@@ -15,8 +15,6 @@ import UserDataReducer from "../../entities/redux/model/slice/UserNameRegisterSl
 import friendViewReducer from "../../entities/redux/model/slice/FriendViewSlice";
 import onlineUserReducer from "../../entities/redux/model/slice/OnlineUserStorageSlice";
 import MessageInputSizeReducer from "../../entities/redux/model/slice/InputSizeSlice";
-
-// 루트 사가 생성
 function* rootSaga() {
     // all 함수는 여러 사가를 합쳐주는 역할을 한다.
     yield all([initializeStompChannel()]);

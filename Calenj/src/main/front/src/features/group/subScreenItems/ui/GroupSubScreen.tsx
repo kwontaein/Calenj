@@ -7,32 +7,35 @@ import {
 } from "./GroupSubScreenStyled";
 import {Vote} from "../../board/vote/list";
 import {Notice} from "../../board/notice/list";
-import {RootState} from "../../../../entities/redux";
 import {SubScreenOption} from "./SubScreenOption";
-import {ContentsCompositionProps} from "../model/types";
+import {GroupEventList} from "../../event/list/ui/GroupEventList";
 import {useEffect} from "react";
+import {RootState} from "../../../../entities/redux";
 
 
 
 
 
 
-export const GroupSubScreen : React.FC<ContentsCompositionProps> = ({subScreenWidth}) =>{
-    const {clickState, mode, showMemberList} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
+export const GroupSubScreen : React.FC = () =>{
+    const {clickState, mode} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
 
 
     return(
             <GroupSubScreen_Container $mode={mode}>
-            <GroupSubScreenTop_Container>
-                {clickState}
-                <SubScreenOption/>
-            </GroupSubScreenTop_Container>
-            <GroupSubScreenContent_Container>
-                {clickState === "투표" &&
-                    <Vote subWidth={subScreenWidth}/>}
-                {clickState === "공지" &&
-                    <Notice subWidth={subScreenWidth}/>}
-            </GroupSubScreenContent_Container>
-        </GroupSubScreen_Container>
+                <GroupSubScreenTop_Container>
+                    {clickState}
+                    <SubScreenOption/>
+                </GroupSubScreenTop_Container>
+                <GroupSubScreenContent_Container>
+                    {clickState === "투표" &&
+                        <Vote/>}
+                    {clickState === "공지" &&
+                        <Notice/>}
+                    {clickState ==="그룹일정" &&
+                        <GroupEventList/>
+                    }
+                </GroupSubScreenContent_Container>
+            </GroupSubScreen_Container>
     )
 }

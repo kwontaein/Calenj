@@ -12,17 +12,16 @@ interface Details{
     title: string;
     created:string;
     watcher:string[],
-    subWidth?:number,
 }
 
 
-export const DetailTop:React.FC<Details>=({state, title,created,watcher,subWidth})=>{
+export const DetailTop:React.FC<Details>=({state, title,created,watcher})=>{
     const dispatch = useDispatch()
     return(
         <BoardDetailTop_Container>
             <FullScreen_div>
                 <BoardDetailTop_title $state={state}>
-                    {(state==="notice"&& subWidth) && <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                    {(state==="notice") && <GroupNoticeListTitle>
                         {title}
                     </GroupNoticeListTitle>}
                     {(state==="vote") && title}

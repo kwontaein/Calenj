@@ -52,7 +52,6 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     friendList: friendList!==null? friendList.filter((id)=>id!=="") : [],
                 },
             }
-            console.log(event.title,friendList)
             if (repeat) {
                 newEvent.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
                 newEvent.exdate = event.extendedProps.repeatState.noRepeatDates;

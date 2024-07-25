@@ -21,9 +21,9 @@ export const GroupNoticeListView_Li = styled.li`
     }
 `
 
-export const GroupNoticeListTitle = styled.div<subScreenWidthProps>`
+export const GroupNoticeListTitle = styled.div`
     width:100%;
-    max-width: ${props=>props.$subScreenWidth-40}px;
+    max-width: calc(100% - 30px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

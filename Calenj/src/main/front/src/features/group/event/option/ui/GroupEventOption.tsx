@@ -1,15 +1,25 @@
 import {Option_Container, Option_Item, OptionIcon_Wrapper} from "../../../../../shared/ui/SharedStyled";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useReducer} from "react";
+import {CreateGroupEvent} from "../../create";
+
 
 export const GroupEventOption :React.FC = () =>{
+    const [createEventModal,setCreateEventModal] = useReducer((prev)=>!prev,false)
+    useEffect(() => {
+        console.log(createEventModal)
+    }, [createEventModal]);
+
     return(
         <Option_Container>
-            <Option_Item>
+            {createEventModal && <CreateGroupEvent onClose={setCreateEventModal}/>}
+            <Option_Item onClick={setCreateEventModal}>
                 <OptionIcon_Wrapper>
                     <i className="bi bi-plus-square"></i>
                 </OptionIcon_Wrapper>
                 생성하기
             </Option_Item>
-            <Option_Item>
+            <Option_Item onClick={()=>{}}>
                 <OptionIcon_Wrapper>
                     <i className="bi bi-pencil-square"></i>
                 </OptionIcon_Wrapper>

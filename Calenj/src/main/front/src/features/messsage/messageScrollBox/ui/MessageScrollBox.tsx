@@ -33,9 +33,6 @@ export const MessageScrollBox: React.FC = () => {
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
     const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
     const {containerRef, messageRefs, topRef, bottomRef} = useMessageScroll(connectMessages, firstPage, lastPage, fetchMoreMessages)
-    
-
-
 
 
 

@@ -439,3 +439,29 @@ export const Option_Item = styled.div`
         }
     }
 `
+
+/**radio*/
+export const Radio_Label = styled.label`
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+`
+
+export const InputType_Radio = styled.input.attrs({ type: 'radio' })`
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid ${ThemeColor3};
+    background-color: ${ThemeColor2};
+    margin-right: 5px;
+    /* 체크됐을 때의 색상 */
+    transition: background-color 0.3s ease;
+    &:checked {
+        background-color: ${PointColor}; /* 체크됐을 때의 배경색 */
+        border-color: ${TextColor}; /* 체크됐을 때의 테두리 색 */
+    }
+    &:focus {
+        box-shadow: none;
+    }
+`

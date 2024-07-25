@@ -1,8 +1,9 @@
 import {SubScreenSelectBox} from "./SubScreenSelectBox";
 import {GroupSubScreenTopIcon_Container, OptionIcon_Container} from "./GroupSubScreenStyled";
 import {useBoardState} from "../model/useBoardState";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
+import {useEffect} from "react";
 
 
 export const SubScreenOption : React.FC = () =>{

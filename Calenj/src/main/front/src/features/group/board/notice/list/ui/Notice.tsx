@@ -12,12 +12,11 @@ import {NoticeModal} from '../../create'
 import {RootState} from "../../../../../../entities/redux";
 import {useNoticeOption} from "../model/useNoticeOption";
 import {sortNotice} from "../lib/sortNotice";
-import {SubScreenProps} from "../model/types";
 
 
 
 
-export const Notice: React.FC<SubScreenProps> = ({subWidth}) => {
+export const Notice: React.FC = () => {
     const {clickState, noticeParam, search_keyWord} = useSelector((state:RootState)=>state.boardOption);
     const [checkNoticeParam,redirectDetail] =useNoticeOption()
     const {param} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
@@ -42,7 +41,7 @@ export const Notice: React.FC<SubScreenProps> = ({subWidth}) => {
                                                             onClick={() => {
                                                                 redirectDetail(notice.noticeId)
                                                             }}>
-                                        <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                        <GroupNoticeListTitle>
                                             {notice.noticeTitle}
                                         </GroupNoticeListTitle>
                                         <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
@@ -52,7 +51,7 @@ export const Notice: React.FC<SubScreenProps> = ({subWidth}) => {
                                                             onClick={() => {
                                                                 redirectDetail(notice.noticeId)
                                                             }}>
-                                        <GroupNoticeListTitle $subScreenWidth={subWidth}>
+                                        <GroupNoticeListTitle>
                                             {notice.noticeTitle}
                                         </GroupNoticeListTitle>
                                         <MiniText>{AHMFormat(changeDateForm(notice.noticeCreated))}</MiniText>
@@ -62,7 +61,7 @@ export const Notice: React.FC<SubScreenProps> = ({subWidth}) => {
                     }
                 </div>
                 :
-                <NoticeDetailView noticeId={noticeParam} subWidth={subWidth}/>
+                <NoticeDetailView noticeId={noticeParam}/>
             }
         </GroupNoticeList_Container>
     )
