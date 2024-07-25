@@ -44,7 +44,7 @@ export const CreateTagInput_Container = styled.input.attrs({ type: 'text' })`
     }
 `
 export const CreateTagText_Container = styled.div`
-    width: calc(100% - 164px);
+    width: 20px;
     background-color: transparent;
     color:${PointColor};
     font-weight: 550;
