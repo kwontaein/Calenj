@@ -47,6 +47,10 @@ public class GroupScheduleEntity {
     @Column(name = "group_schedule_create")
     private Timestamp groupScheduleCreate;
 
+    //일정 시작 날짜 및 시간
+    @Column(name = "group_schedule_start")
+    private Timestamp groupScheduleStart;
+
     //일정 공개 범위
     @Column(name = "group_schedule_privacy_relationship")
     private String privacy;

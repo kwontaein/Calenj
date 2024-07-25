@@ -52,4 +52,8 @@ public class GroupSubScheduleEntity {
     @Column(name = "group_schedule_join_user")
     private String joinUser;
 
+    //지도 좌표
+    @Column(name = "schedule_locate")
+    private String scheduleLocate;
+
 }
