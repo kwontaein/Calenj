@@ -22,7 +22,10 @@ public class FileController {
 
     @PostMapping("/api/getChattingFile")
     public List<MessageResponse> getChattingFile(@RequestBody ChatFileRequest chatFileRequest) {
-        return fileService.readGroupChattingFile(chatFileRequest);
+        if (chatFileRequest.getNewOrOld() == null) {
+            return fileService.readGroupChattingFile(chatFileRequest);
+        }
+        return fileService.readGroupChattingFileSlide(chatFileRequest);
     }
 
     @PostMapping("/api/ReloadChattingFile")

@@ -244,7 +244,7 @@ public class FileService {
      * @return 파일 내용
      */
     public List<MessageResponse> readGroupChattingFileSlide(ChatFileRequest chatFileRequest) {
-
+        String last = lastLine(chatFileRequest.getParam());
         List<String> lines = getFile(chatFileRequest.getParam());
         Collections.reverse(lines);
         int batchSize = 30;
@@ -278,19 +278,35 @@ public class FileService {
         }
 
         Collections.reverse(previousLines);
+        if (previousLines.contains(last)) {
+            previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
+        }
 
         List<MessageResponse> messageResponses = previousLines.stream()
                 .map(FileService::parseLineToChatMessage)
                 .collect(Collectors.toList());
 
         if (messageResponses.isEmpty()) {
-            System.out.println("값이 없다");
             return null;
         }
 
         return messageResponses;
     }
 
+    public String lastLine(String param) {
+        List<String> lines = getFile(param);
+        if (lines == null) {
+            return null;
+        }
+        Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+
+        List<String> previousLines = lines.stream()
+                .filter(createFilterCondition(param))
+                .map(stringTransformer)
+                .limit(1)
+                .collect(Collectors.toList());
+        return previousLines.get(0);
+    }
 
     /**
      * stream() 에서 해당 내용 만날 시 정지
