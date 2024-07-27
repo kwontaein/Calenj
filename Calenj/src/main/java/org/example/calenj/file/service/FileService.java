@@ -279,7 +279,7 @@ public class FileService {
 
         Collections.reverse(previousLines);
         if (previousLines.contains(last)) {
-            previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
+            // previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
         }
 
         List<MessageResponse> messageResponses = previousLines.stream()
