@@ -11,6 +11,7 @@ export {
     useFetchVoteDetail,
     useFetchDateEventTag,
     useFetchUserInfo,
+    useChatFileInfinite
 } from './model/queryModel'
 export {
     type GroupDetail,

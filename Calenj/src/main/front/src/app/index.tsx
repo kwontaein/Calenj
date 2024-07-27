@@ -13,6 +13,7 @@ import {useStomp} from "../features/websocket";
 import {RootState} from "../entities/redux";
 import {sagaRefresh} from "./hoc/store";
 import {UserProfileSetting} from "../features/user/userProtile/ui/UserProfileSetting";
+import {Test} from "../features/test/test";
 
 
 export const App: React.FC = () => {
@@ -41,6 +42,7 @@ export const App: React.FC = () => {
                         <Route path={"/image"} element={<ImageUploadView/>}/>
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                         <Route path={"/userSetting"} element={<UserProfileSetting/>}/>
+                        <Route path={"/Test"} element={<Test/>}/>
                     </Routes>
                 </BrowserRouter>
             }

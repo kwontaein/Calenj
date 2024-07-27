@@ -1,4 +1,4 @@
-import {Message} from "../../../../entities/reactQuery";
+import {Message, useChatFileInfinite} from "../../../../entities/reactQuery";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {endPointMap, requestFile, RootState} from "../../../../entities/redux";
@@ -8,11 +8,10 @@ import {useIntersect} from "../../../../shared/model";
 interface ReturnScroll {
     containerRef: React.MutableRefObject<HTMLDivElement | null>,
     messageRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null; }>,
-    topRef: React.RefObject<HTMLDivElement>,
-    bottomRef: React.RefObject<HTMLDivElement>,
+
 }
 
-export const useMessageScroll = (connectMessages: Message[], firstPage: boolean, lastPage: boolean, fetchMoreMessages: (position: 'older' | 'newer', chatUUID?: string) => Promise<string | void>,): ReturnScroll => {
+export const useMessageScroll = (connectMessages: Message[], chatUUID: string, position: string): ReturnScroll => {
 
     const dispatch = useDispatch();
     const stomp = useSelector((state: RootState) => state.stomp)
@@ -29,8 +28,7 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
     const containerRef = useRef<HTMLDivElement | null>(null);
     const messageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const isRender = useRef<boolean>();
-    const [chatUUID, setChatUUID] = useState<string>('');
-    const [position, setPosition] = useState<string>('older');
+
 
 
     useEffect(() => {
@@ -150,13 +148,13 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
 
 
     //데이터 => 아래로 버튼 클릭시 상호작용
-    const goBottom = async () => {
-        if (lastPage) { //마지막 페이지이고, 80개가 넘지 않으면 다시 불러올 필요 없음.
-            scrollToBottom();
-        } else {
-            // getInitialMessages();
-        }
-    }
+    // const goBottom = async () => {
+    //     if (lastPage) { //마지막 페이지이고, 80개가 넘지 않으면 다시 불러올 필요 없음.
+    //         scrollToBottom();
+    //     } else {
+    //         // getInitialMessages();
+    //     }
+    // }
 
     //메세지 추가 로딩
     useEffect(() => {
@@ -185,31 +183,7 @@ export const useMessageScroll = (connectMessages: Message[], firstPage: boolean,
         }
     }, [connectMessages, chatUUID])
 
-    const topRef = useIntersect((entry, observer) => {
-        if (!firstPage && connectMessages.length > 0) {
-            observer.unobserve(entry.target);
-            fetchMoreMessages('older', connectMessages[0]?.chatUUID).then((chatUUID) => {
-                if (!chatUUID) return;
-                setChatUUID(chatUUID);
-                setPosition("older");
-            });
-        }
-    });
-
-    const bottomRef = useIntersect((entry, observer) => {
-        if (!lastPage && connectMessages.length > 0) {
-            console.log("실행")
-            observer.unobserve(entry.target);
-            fetchMoreMessages('newer', connectMessages.at(-1)?.chatUUID).then((chatUUID) => {
-                if (!chatUUID) return;
-                setChatUUID(chatUUID);
-                setPosition("newer");
-            });
-        } else if (lastPage && endPointMap.get(stompParam) !== 0) {
-            updateEndpoint();
-        }
-    });
 
 
-    return {containerRef, messageRefs, topRef, bottomRef};
+    return {containerRef, messageRefs};
 }
