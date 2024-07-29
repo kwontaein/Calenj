@@ -1,9 +1,12 @@
-import React, {useState, useRef, DragEvent, useEffect, useCallback, MouseEventHandler} from "react";
-import {Circle, Line, StandHr, Structure_Container, TestContainer, TestDiv, TestProgress} from "./testStyled";
-import {ThemeColor2} from "../../shared/ui/SharedStyled";
-import userNameRegisterSlice from "../../entities/redux/model/slice/UserNameRegisterSlice";
+import React, {DragEvent, useRef, useState} from "react";
+import {
+    ScheduleDetailList_Circle,
+    ScheduleDetailList_Container,
+    ScheduleDetailList_Div, ScheduleDetailList_Line,
+    ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
+} from "./ScheduleDetailListStyled";
 
-export const Test: React.FC = () => {
+export const ScheduleDetailList : React.FC = () =>{
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
@@ -64,16 +67,16 @@ export const Test: React.FC = () => {
     }
 
     return (
-        <TestContainer>
+        <ScheduleDetailList_Container>
 
             {list.map((item, idx) => (
-                <TestProgress key={idx}>
-                    <Structure_Container>
-                        <Circle $isNow={true}/>
-                        <StandHr $isNow={true}/>
-                        <Line $isNow={true}/>
-                    </Structure_Container>
-                    <TestDiv
+                <ScheduleDetailList_Progress key={idx}>
+                    <ScheduleDetailList_Structure_Container>
+                        <ScheduleDetailList_Circle $isNow={true}/>
+                        <ScheduleDetailList_StandHr $isNow={true}/>
+                        <ScheduleDetailList_Line $isNow={true}/>
+                    </ScheduleDetailList_Structure_Container>
+                    <ScheduleDetailList_Div
                         onDrag={dragMousePosition}
                         draggable
                         onDragStart={(e) => dragStart(e, idx)}
@@ -83,18 +86,18 @@ export const Test: React.FC = () => {
                         $isDrop={dragging && dragItem.current === idx}
                     >
                         {item}
-                    </TestDiv>
-                </TestProgress>
+                    </ScheduleDetailList_Div>
+                </ScheduleDetailList_Progress>
             ))}
             {(dragging&&mousePosition) &&
-                <TestDiv $isDrop={false}
+                <ScheduleDetailList_Div $isDrop={false}
                          style={{position:'fixed',
                              left:mousePosition.x,
                              top:mousePosition.y,
                              pointerEvents:'none',
                              opacity:'0.9'}}>
                     {list[dragItem.current||0]}
-                </TestDiv>}
-        </TestContainer>
+                </ScheduleDetailList_Div>}
+        </ScheduleDetailList_Container>
     );
-};
+}

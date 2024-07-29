@@ -1,5 +1,4 @@
 import {useEffect, useReducer, useRef} from "react";
-import {groupEventData} from "../../list/ui/date";
 import {
     MapIcon_Container,
     MemberMoreView_Text,
@@ -14,13 +13,14 @@ import {
     ScheduleStartDate_Container,
     ScheduleTop_Container
 } from "./ScheduleDetailStyled";
-import {AHMFormat} from "../../../../../shared/lib";
+import {AHMFormat} from "../../../../../../shared/lib";
+import {groupEventData} from "../../../list/ui/date";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../entities/redux";
-import {updateMapModal} from "../../../../../entities/redux/model/slice/GroupScheduleSlice";
-import {EventStateMap} from "../../../../../entities/redux/model/module/StompMiddleware";
-import {MiniText} from "../../../../../shared/ui/SharedStyled";
-import {useClickOutSideCheck} from "../../../../../shared/model/useClickOutSideCheck";
+import {updateMapModal} from "../../../../../../entities/redux/model/slice/GroupScheduleSlice";
+import {RootState} from "../../../../../../entities/redux";
+import {useClickOutSideCheck} from "../../../../../../shared/model/useClickOutSideCheck";
+import {EventStateMap} from "../../../../../../entities/redux/model/module/StompMiddleware";
+import {ScheduleDetailList} from "../../list";
 
 
 export const ScheduleDetail:React.FC = () =>{
@@ -87,6 +87,7 @@ export const ScheduleDetail:React.FC = () =>{
                     세부일정 추가
                 </Schedule_Button>
             </ScheduleButton_Container>
+            <ScheduleDetailList/>
 
         </ScheduleDetail_Container>
     )
