@@ -22,14 +22,6 @@ public class ScheduleResponse {
     //추가정보
     private ExtendedPropsResponse extendedProps;
 
-    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay) {
-        this.id = scheduleId;
-        this.title = title;
-        this.start = start;
-        this.end = end;
-        this.allDay = allDay;
-    }
-
     //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
     public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList, String friendList) {
         this.id = scheduleId;

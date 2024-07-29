@@ -71,8 +71,8 @@ public class RepeatStateResponse {
         String[] stringArray = input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
         List<String> StringArray = new ArrayList<>(stringArray.length); // boolean 배열 초기화
 
-        for (int i = 0; i < stringArray.length; i++) {
-            StringArray.add(stringArray[i].trim()); // 문자열을 boolean 값으로 변환
+        for (String s : stringArray) {
+            StringArray.add(s.trim()); // 문자열을 boolean 값으로 변환
         }
 
         return StringArray; // boolean 배열 반환

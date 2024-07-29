@@ -40,7 +40,7 @@ public class CalendarService {
         // 반복일정일 경우 -> 수정된 날짜만 미포함 + 해당 날짜에 새로운 스케쥴 생성
         // 그냥 일정일 경우 -> 날짜만 변경
         System.out.println("scheduleRequest : " + scheduleRequest);
-        if (scheduleRequest.getExtendedProps().getRepeatState().isRepeat() == true) {
+        if (scheduleRequest.getExtendedProps().getRepeatState().isRepeat()) {
             updateRepeatSchedule(scheduleRequest);
         } else {
             userScheduleRepository.updateDate(scheduleRequest.getId(), scheduleRequest.getStart(), scheduleRequest.getEnd());
@@ -69,7 +69,7 @@ public class CalendarService {
             scheduleRequest.setEnd(scheduleRequest.getStart());
         }
 
-        scheduleRequest.setTitle(userScheduleEntity.getUserScheduleTitle());
+        scheduleRequest.setTitle(userScheduleEntity != null ? userScheduleEntity.getUserScheduleTitle() : null);
 
         saveSchedule(scheduleRequest);
     }

@@ -4,14 +4,14 @@ import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../..
 export const ScheduleDetailList_Container = styled.div`
     width: 100%;
 `
-export const ScheduleDetailList_Div = styled.div<{$isDrop :boolean}>`
+export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
     text-align: center;
     font-size: 40px;
     width: calc(100% - 50px);
     border-radius: 5px;
-    color : ${props=> props.$isDrop ? `${ThemeColor3}` : TextColor};
-    border: 1px ${props=> props.$isDrop ?`dashed ${TextColor}`:`solid ${TextColor}`};
-    background-color: ${props=> props.$isDrop ?`${ThemeColor3}` :ThemeColor2};
+    color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+    border: 1px ${props => props.$isDrop ? `dashed ${TextColor}` : `solid ${TextColor}`};
+    background-color: ${props => props.$isDrop ? `${ThemeColor3}` : ThemeColor2};
     white-space: pre-wrap;
     position: relative;
 `
@@ -26,14 +26,15 @@ export const ScheduleDetailList_Structure_Container = styled.div`
 `
 
 export const ScheduleDetailList_StandHr = styled.hr<{ $isNow: boolean }>`
-    min-height: 110px;
-    border: 1px solid ${props => props.$isNow ? PointColor : TextColor};
+    min-height: 40px;
+    border: none;
+    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
     margin: 0 0 0 9px;
 `
 
 export const ScheduleDetailList_Line = styled.div<{ $isNow: boolean }>`
     height: 2px;
-    width: 40px;
+    width: 20px;
     background-color: ${props => props.$isNow ? PointColor : TextColor};
 `
 
@@ -43,5 +44,6 @@ export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
     border: 2px solid white;
     background-color: ${props => props.$isNow ? PointColor : TextColor};
     border-radius: 50%;
-    position: absolute;
+    right: 0;
+    position: relative;
 `

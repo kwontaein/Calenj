@@ -5,14 +5,12 @@ import {
     ScheduleDetailList_Div, ScheduleDetailList_Line,
     ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
 } from "./ScheduleDetailListStyled";
-import {useComponentSize} from "../../../../../../shared/model";
 
-export const ScheduleDetailList : React.FC = () =>{
+export const ScheduleDetailList: React.FC = () => {
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
-    const [listRef,listSize] = useComponentSize()
     const [list, setList] = useState<string[]>([
         "Item 1",
         "Item 2",
@@ -27,11 +25,11 @@ export const ScheduleDetailList : React.FC = () =>{
     const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setDragImage(new Image(), 0, 0); // Hide the default drag image
-        const { top, left } = e.currentTarget.getBoundingClientRect();
-        setInitialDragPosition({ x: e.pageX - left, y: e.pageY - top});
+        const {top, left} = e.currentTarget.getBoundingClientRect();
+        setInitialDragPosition({x: e.pageX - left, y: e.pageY - top});
 
         setDragging(true);
-        dragItem.current=position;
+        dragItem.current = position;
     };
 
 
@@ -74,12 +72,14 @@ export const ScheduleDetailList : React.FC = () =>{
             {list.map((item, idx) => (
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>
-                        <ScheduleDetailList_Circle $isNow={true}/>
-                        <ScheduleDetailList_StandHr $isNow={true}/>
+                        <div>
+                            <ScheduleDetailList_StandHr $isNow={true}/>
+                            <ScheduleDetailList_Circle $isNow={true}/>
+                            <ScheduleDetailList_StandHr $isNow={true}/>
+                        </div>
                         <ScheduleDetailList_Line $isNow={true}/>
                     </ScheduleDetailList_Structure_Container>
                     <ScheduleDetailList_Div
-                        ref={listRef}
                         onDrag={dragMousePosition}
                         draggable
                         onDragStart={(e) => dragStart(e, idx)}
@@ -92,16 +92,16 @@ export const ScheduleDetailList : React.FC = () =>{
                     </ScheduleDetailList_Div>
                 </ScheduleDetailList_Progress>
             ))}
-            {(dragging&&mousePosition) &&
+            {(dragging && mousePosition) &&
                 <ScheduleDetailList_Div $isDrop={false}
-                         style={{
-                             position:'fixed',
-                             width: `${listSize.width}`,
-                             left:mousePosition.x,
-                             top:mousePosition.y,
-                             pointerEvents:'none',
-                             opacity:'0.9'}}>
-                    {list[dragItem.current||0]}
+                                        style={{
+                                            position: 'fixed',
+                                            left: mousePosition.x,
+                                            top: mousePosition.y,
+                                            pointerEvents: 'none',
+                                            opacity: '0.9'
+                                        }}>
+                    {list[dragItem.current || 0]}
                 </ScheduleDetailList_Div>}
         </ScheduleDetailList_Container>
     );
