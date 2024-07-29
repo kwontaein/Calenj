@@ -31,8 +31,8 @@ import {useMessageScroll} from "../model/useMessageScroll";
 export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
-    const {connectMessages, firstPage, lastPage, fetchMoreMessages, compareDate} = useMessageData()
-    const {containerRef, messageRefs, topRef, bottomRef} = useMessageScroll(connectMessages, firstPage, lastPage, fetchMoreMessages)
+    const {messageList, chatUUID, position, topRef, bottomRef, hasNextPage, hasPreviousPage, compareDate} = useMessageData()
+    const {containerRef, messageRefs} = useMessageScroll(messageList,chatUUID, position)
 
 
 
@@ -40,22 +40,23 @@ export const MessageScrollBox: React.FC = () => {
 
         return (
             <ScrollableDiv ref={containerRef}>
-                {!firstPage && <div className="scrollTop" ref={topRef}></div>}
-                {connectMessages.length > 0 &&
-                    (connectMessages.map((message: Message, index: number) => (
+                {hasPreviousPage && <div className="scrollTop" ref={topRef}></div>}
+                {messageList.length > 0 &&
+                    (messageList.map((message: Message, index: number) => (
                         <div key={message.chatUUID}>
-                            {(index !== 0 && compareDate(connectMessages[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
+                            {(index !== 0 && compareDate(messageList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
                                 <HR_NewDate
-                                    data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>}
+                                    data-content={AHMFormat(changeDateForm(message.sendDate.slice(0, 16))).slice(0, 13)}></HR_NewDate>
+                            }
                             <MessageBoxContainer className={message.chatUUID}
                                                  key={message.chatUUID}
                                                  ref={(el) => messageRefs.current[message.chatUUID] = el}
-                                                 $sameUser={(index !== 0 && connectMessages[index - 1]?.userId === message.userId) &&
-                                                     dateOperation(connectMessages[index - 1].sendDate, message.sendDate)}>
+                                                 $sameUser={(index !== 0 && messageList[index - 1]?.userId === message.userId) &&
+                                                     dateOperation(messageList[index - 1].sendDate, message.sendDate)}>
                                 {message.chatUUID === '엔드포인트' ?
                                     <HR_ChatEndPoint data-content={"NEW"}></HR_ChatEndPoint> :
-                                    ((index && connectMessages[index - 1].userId === message.userId) &&
-                                    dateOperation(connectMessages[index - 1].sendDate, message.sendDate) ? (
+                                    ((index && messageList[index - 1].userId === message.userId) &&
+                                    dateOperation(messageList[index - 1].sendDate, message.sendDate) ? (
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
@@ -101,7 +102,7 @@ export const MessageScrollBox: React.FC = () => {
                         </div>)
                     ))}
 
-                <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>
+                {hasNextPage &&<div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>}
 
                 <button
                     style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
@@ -110,7 +111,7 @@ export const MessageScrollBox: React.FC = () => {
 
             </ScrollableDiv>
         );
-    }, [connectMessages]);
+    }, [messageList]);
 
 
     return (

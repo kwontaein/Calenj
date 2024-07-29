@@ -11,7 +11,7 @@ import {
     getVoteDetail,
     getFriendResponse,
     getFriendRequest,
-    getDateEventTag, getUserDateEvent, getUserInfo
+    getDateEventTag, getUserDateEvent, getUserInfo, getMessageData
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -135,30 +135,55 @@ export const useMutationCookie = (queryClient :QueryClient) =>
     },})
 
 
+let beforeUUID="";
 
+export const useChatFileInfinite = (param:string, userId:string) =>{
 
-export const useChatFileInfinite = (param:string, newMsgLength:number, fetchData :FetchData) =>
-    useInfiniteQuery({
-    queryKey: [QUERY_CHATTING_KEY, param],
-    queryFn: fetchData,
-    getNextPageParam: (lastPage:Message[], allPages:Message[][]) => {
-        //마지막 채팅문자열을 가져와 시작라인인지 체크
-        if(lastPage[lastPage.length-1]){
-            const containValue = lastPage[lastPage.length-1].chatUUID ==="시작라인";
-            if(containValue){
+    return useInfiniteQuery({
+        queryKey: [QUERY_CHATTING_KEY, param],
+        queryFn: ({pageParam})=>getMessageData(pageParam,param,userId),
+        getNextPageParam: (lastPage:Message[],allPages:Message[][], lastPageParam, allPageParams) => {
+
+            if(lastPageParam.chatUUID==="") {
+                beforeUUID = lastPage[lastPage.length-1].chatUUID;
                 return undefined;
-            }
-        }
-        //받아온 갯수 리턴
-        return allPages.reduce((prev, current) => prev.concat(current)).length + newMsgLength;
-    }, //data의 값을 받아 처리할 수 있음
-    initialPageParam:0,
-    // enabled: param === stomp.param,
-    staleTime: Infinity,
-    refetchInterval:false,
-    retry:3,
-});
+            }else {
+                return {position:"newer", chatUUID: lastPage[lastPage.length-1].chatUUID}
 
+            }
+        }, //data의 값을 받아 처리할 수 있음
+        getPreviousPageParam:(firstPage:Message[]) => {
+            return firstPage[0].chatUUID ==="시작라인" ? undefined :{position:'older' ,chatUUID:firstPage[0].chatUUID}
+        },
+        initialPageParam:{position:'',chatUUID:''},
+        staleTime: Infinity,
+        refetchInterval:false,
+        retry:3,
+    })
+};
+
+// export const useChatFileInfinite = (param:string, newMsgLength:number, fetchData :FetchData) =>
+//     useInfiniteQuery({
+//     queryKey: [QUERY_CHATTING_KEY, param],
+//     queryFn: fetchData,
+//     getNextPageParam: (lastPage:Message[], allPages:Message[][]) => {
+//         //마지막 채팅문자열을 가져와 시작라인인지 체크
+//         if(lastPage[lastPage.length-1]){
+//             const containValue = lastPage[lastPage.length-1].chatUUID ==="시작라인";
+//             if(containValue){
+//                 return undefined;
+//             }
+//         }
+//         //받아온 갯수 리턴
+//         return allPages.reduce((prev, current) => prev.concat(current)).length + newMsgLength;
+//     }, //data의 값을 받아 처리할 수 있음
+//     initialPageParam:0,
+//     // enabled: param === stomp.param,
+//     staleTime: Infinity,
+//     refetchInterval:false,
+//     retry:3,
+// });
+//
 
 
 export const useReceiveChatInfinite = (param:string, receiveNewChat:ReceivedData) =>

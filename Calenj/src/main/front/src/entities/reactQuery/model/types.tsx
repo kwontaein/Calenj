@@ -1,5 +1,6 @@
 import {RepeatState} from "../../calendar";
 import {Options} from "rrule";
+import {QueryFunction} from "@tanstack/react-query";
 
 export interface GroupList_item {
     groupId: string;
@@ -99,8 +100,12 @@ export interface Message {
     message: string,
 }
 
+// interface FetchDataParams {
+//     pageParam?: number;
+// }
 interface FetchDataParams {
-    pageParam?: number;
+    position:string,
+    chatUUID: string,
 }
 
 
@@ -138,5 +143,6 @@ export interface UserInfo {
     userId:string,
 }
 
-export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
+// export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
+export type FetchData = QueryFunction<Message[], string[], {position: string; chatUUID: string; }>
 export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message;
