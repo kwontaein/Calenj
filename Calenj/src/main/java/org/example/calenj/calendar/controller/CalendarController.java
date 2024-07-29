@@ -88,41 +88,10 @@ public class CalendarController {
      * 스케쥴 태그 삭제
      *
      * @param tagRequest 삭제할 태그 정보
-     * @return 삭제된 태그 반환
      */
     @PostMapping("api/deleteTag")
     public void deleteTag(@RequestBody TagRequest tagRequest) {
         calendarService.deleteTag(tagRequest.getId());
     }
-
-
-    //------------------------------------------------------
-
-    /**
-     * 그룹 스케쥴 저장
-     **/
-    public ResponseEntity<String> saveGroupSchedule() {
-        return ResponseEntity.ok("스케쥴 저장 성공");
-    }
-
-    /**
-     * 그룹 스케쥴 조회
-     **/
-    public ResponseEntity<String> selectGroupSchedule() {
-        return ResponseEntity.ok("스케쥴 저장 성공");
-    }
-
-    /**
-     * 그룹 스케쥴 업데이트
-     **/
-    public ResponseEntity<String> updateGroupSchedule() {
-        return ResponseEntity.ok("스케쥴 저장 성공");
-    }
-
-    /**
-     * 그룹 스케쥴 삭제
-     **/
-    public ResponseEntity<String> deleteGroupSchedule() {
-        return ResponseEntity.ok("스케쥴 저장 성공");
-    }
+    
 }
