@@ -9,15 +9,13 @@ import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.example.calenj.websocket.dto.response.MessageResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpSubscription;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -39,8 +37,7 @@ public class WebSocketService {
      * @param authentication 인증 정보 받기
      **/
     public UserEntity returnUserEntity(Authentication authentication) {
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(authentication.getName())).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다"));
-        return userEntity;
+        return userRepository.findByUserId(UUID.fromString(authentication.getName())).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다"));
     }
 
     /**
@@ -148,7 +145,7 @@ public class WebSocketService {
             response.setTarget(extractTopic(destination));
             response.setParam(extractUUID(destination));
             response.setState(ChatMessageRequest.fileType.ONLINE);
-            if (extractTopic(destination).equals("friendMsg")) {
+            if (Objects.equals(extractTopic(destination), "friendMsg")) {
                 friendList.addAll(userList);
             } else {
                 template.convertAndSendToUser(userId, destination, response);
@@ -226,7 +223,7 @@ public class WebSocketService {
      * url(웹소켓 구독 주소) 에서 UUID 추출하기
      *
      * @param url 웹소켓 구독 주소
-     * @return
+     * @return UUID
      */
     public static String extractUUID(String url) {
         Pattern pattern = Pattern.compile("([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$");
@@ -258,13 +255,16 @@ public class WebSocketService {
      **/
     public Set<String> getDestination(String userId) {
         SimpUser simpUser = simpUserRegistry.getUser(userId);
-        Set<String> destinations = simpUser.getSessions().stream()
+        if (simpUser == null) {
+            return null;
+        }
+        return simpUser.getSessions().stream()
                 .flatMap(simpSession ->
                         simpSession.getSubscriptions().stream()
-                                .map(simpSubscription -> simpSubscription.getDestination())
+                                .map(SimpSubscription::getDestination)
                 )
                 .collect(Collectors.toSet());
-        return destinations;
+
     }
 
     /**
@@ -274,14 +274,13 @@ public class WebSocketService {
      **/
     public Set<String> getUsers(String param) {
         Set<SimpUser> simpUsers = simpUserRegistry.getUsers();
-        Set<String> filteredUserNames = simpUsers.stream()
+        return simpUsers.stream()
                 .filter(simpUser -> simpUser.getSessions().stream()
                         .anyMatch(session -> session.getSubscriptions().stream()
                                 .anyMatch(subscription -> subscription.getDestination().contains(param)
                                 )))
                 .map(SimpUser::getName)
                 .collect(Collectors.toSet());
-        return filteredUserNames;
     }
 
 

@@ -43,7 +43,7 @@ export const useMessageData = (): useMessageData => {
 
     const messageList = useMemo(() => {
         if (data && !isFetching) {
-            const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message)=>message.chatUUID!=="시작라인")
+            const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message)=> (message.chatUUID!=="시작라인" && message.chatUUID!=="마지막라인"))
             return hasNextPage ? messages : [...messages, ...newMessages]
         }
         return [];

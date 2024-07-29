@@ -1,5 +1,5 @@
 //a116c767-b469-48b0-b134-4875a65e005a -> 간순대/ 5b9a14b0-deee-442f-aadf-ae309b153c27-> 김말이순대
-export const groupEventData :GroupSchedule[]=[
+export const groupEventData: GroupSchedule[] = [
     {
         groupScheduleId:'5b9a14b0-deee-442f-aadf-ae309b153c27',
         host:'5b9a14b0-deee-442f-aadf-ae309b153c27',
@@ -23,24 +23,24 @@ export const groupEventData :GroupSchedule[]=[
     }
 ]
 
-interface GroupSchedule{
-    groupScheduleId:string,
-    host:string,
-    manager:string[],
-    schedule_Group:string, //스케줄을 생성한 그룹
-    groupScheduleTitle:string,
-    groupScheduleCreate:Date,
-    privacy:string, //공개범위
-    maxPeople:number, //최대인원
-    attendUsers:string[],//참여자
-    schedule:SubSchedule[],
+interface GroupSchedule {
+    groupScheduleId: string,
+    host: string,
+    manager: string[],
+    schedule_Group: string, //스케줄을 생성한 그룹
+    groupScheduleTitle: string,
+    groupScheduleCreate: Date,
+    privacy: string, //공개범위
+    maxPeople: number, //최대인원
+    attendUsers: string[],//참여자
+    schedule: SubSchedule[],
 }
 
-interface SubSchedule{
-    index:number,
-    scheduleTitle:string,
-    scheduleContent:string,
+interface SubSchedule {
+    index: number,
+    scheduleTitle: string,
+    scheduleContent: string,
     scheduleCreate: Date,
-    scheduleDuration:number,
-    joinUser:string,
+    scheduleDuration: number,
+    joinUser: string,
 }

@@ -229,20 +229,12 @@ export const getUserInfo = async ():Promise<UserInfo|null> =>{
 export const getMessageData = async(pageParam = { position: "", chatUUID: "" },stompParam:string, userId:string) =>{
     const { position, chatUUID } = pageParam;
 
-    if(position===""){
-        return axios.post('/api/getChattingFile', {
-            param: stompParam,
-            userId: userId,
-        }).then((response)=> response.data);
-    }else{
-        return axios.post('/api/ReloadChattingFile', {
-            param: stompParam,
-            userId: userId,
-            chatId: chatUUID,
-            newOrOld: position
-        }).then((response) => {
-            return response.data
-        })
-    }
+    return axios.post('/api/getChattingFile', {
+        param: stompParam,
+        userId: userId,
+        chatId: chatUUID===""? null : chatUUID,
+        newOrOld: position===""? null : position
+    }).then((response)=> response.data);
+
 }
 

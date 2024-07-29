@@ -29,8 +29,8 @@ import java.util.stream.Stream;
 @Service
 public class FileService {
     private final String imageDir;
-    private GlobalService globalService;
-    private SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
+    private final GlobalService globalService;
+    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     public FileService(@Value("${image-dir}") String imageDir, GlobalService globalService, SimpMessagingTemplate template) {
         this.imageDir = imageDir;
@@ -77,7 +77,7 @@ public class FileService {
      */
     public void uploadImage(UUID uuid, MultipartFile file) {
         // 이미지 파일의 확장자 추출
-        final String extension = file.getContentType().split("/")[1];
+        final String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
         // 이미지 파일 이름을 고유한 이름으로 생성 (UUID와 확장자 조합)
 
         final String imageName = uuid + "." + extension;
@@ -158,8 +158,7 @@ public class FileService {
      * @param param 받아올 파일아이디
      **/
     public List<String> getFile(String param) {
-        String uuid = param;
-        String filePath = "C:\\chat\\chat" + uuid;
+        String filePath = "C:\\chat\\chat" + param;
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get(filePath), Charset.defaultCharset());
@@ -244,7 +243,7 @@ public class FileService {
      * @return 파일 내용
      */
     public List<MessageResponse> readGroupChattingFileSlide(ChatFileRequest chatFileRequest) {
-
+        String last = lastLine(chatFileRequest.getParam());
         List<String> lines = getFile(chatFileRequest.getParam());
         Collections.reverse(lines);
         int batchSize = 30;
@@ -278,19 +277,41 @@ public class FileService {
         }
 
         Collections.reverse(previousLines);
+        if (previousLines.contains(last)) {
+             previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
+        }
 
         List<MessageResponse> messageResponses = previousLines.stream()
                 .map(FileService::parseLineToChatMessage)
                 .collect(Collectors.toList());
 
         if (messageResponses.isEmpty()) {
-            System.out.println("값이 없다");
             return null;
         }
 
         return messageResponses;
     }
 
+    /**
+     * 마지막 라인인지 판별하기 위해 파일의 마지막 줄 읽어오기
+     *
+     * @param param 파일 아이디
+     * @return 마지막줄
+     */
+    public String lastLine(String param) {
+        List<String> lines = getFile(param);
+        if (lines == null) {
+            return null;
+        }
+        Collections.reverse(lines); // 파일 내용을 역순으로 정렬
+
+        List<String> previousLines = lines.stream()
+                .filter(createFilterCondition(param))
+                .map(stringTransformer)
+                .limit(1)
+                .toList();
+        return previousLines.get(0);
+    }
 
     /**
      * stream() 에서 해당 내용 만날 시 정지
@@ -313,8 +334,8 @@ public class FileService {
     /**
      * 파일에 저장된 모든 이미지 빼오기
      *
-     * @param param
-     * @return
+     * @param param 파일아이디
+     * @return 이미지 아이디 목록
      */
     public List<String> getAllImageById(String param) {
         List<String> lines = getFile(param);
