@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {EventStateMap} from "../../../../../entities/redux/model/module/StompMiddleware";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, updateScheduleState} from "../../../../../entities/redux";
-import {ScheduleDetail} from "../../detail";
+import {ScheduleDetail} from "../../detail/view";
 
 interface ScheduleInfo{
     scheduleId:string,

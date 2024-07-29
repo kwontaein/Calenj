@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, ThemeColor2} from "../../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, ThemeColor2} from "../../../../../../shared/ui/SharedStyled";
 
 export const ScheduleDetail_Container = styled.div`
     width: calc(100% - 20px);
