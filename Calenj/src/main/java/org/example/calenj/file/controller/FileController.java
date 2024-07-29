@@ -39,8 +39,7 @@ public class FileController {
     }
 
     @PostMapping("/api/imageUpload")
-    public ResponseEntity<String> profileUpdate(@RequestParam("groupId") String groupId, @RequestParam("files") MultipartFile[] files, @RequestParam(name = "param", required = false) String id) {
-        System.out.println(files.toString());
+    public ResponseEntity<String> profileUpdate(@RequestParam("groupId") String groupId, @RequestParam("files") MultipartFile[] files) {
         try {
             boolean success = fileService.saveMultiImage(files, groupId);
             if (success) {
