@@ -11,8 +11,11 @@ import {useEffect, useState} from "react";
 import { useMultiImageHandler} from "../../../../shared/model";
 import {MultiImageScreen} from "../../messageImageBox";
 
-export const MessageInput : React.FC = () =>{
-    const multiImageHandler = useMultiImageHandler();
+interface MessageBoxProps{
+    messageBoxRef : React.RefObject<HTMLDivElement>;
+}
+export const MessageInput : React.FC<MessageBoxProps> = ({messageBoxRef}) =>{
+    const multiImageHandler = useMultiImageHandler(messageBoxRef);
     const {chatRef, handleKeyPress, textAreaHandler} = useMessageInput(multiImageHandler)
     const {inputSize} = useSelector((state:RootState) => state.messageInputSize);
     const [isFocus, setIsFocus] = useState(false)

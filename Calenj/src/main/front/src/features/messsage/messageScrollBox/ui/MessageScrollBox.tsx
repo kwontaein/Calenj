@@ -104,10 +104,6 @@ export const MessageScrollBox: React.FC = () => {
 
                 {hasNextPage &&<div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>}
 
-                <button
-                    style={{position: 'fixed', bottom: '70px', right: '10px', backgroundColor: "grey"}}>
-                    <p>맨 아래로</p>
-                </button>
 
             </ScrollableDiv>
         );

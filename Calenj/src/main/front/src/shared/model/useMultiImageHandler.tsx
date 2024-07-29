@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../entities/redux";
 
 
-export const useMultiImageHandler = (): ReturnFileHandler => {
+export const useMultiImageHandler = (messageBoxRef?: React.RefObject<HTMLDivElement>|null): ReturnFileHandler => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<PreviewData[]>([]);
     const [dragOver, setDragOver] = useState(false);
@@ -69,9 +69,16 @@ export const useMultiImageHandler = (): ReturnFileHandler => {
 
     const handleDragOver = (event: DragEvent) => {
         event.preventDefault();
-        if (!dragOver) {
-            setDragOver(true);
+        if(messageBoxRef){
+            if (!dragOver && messageBoxRef.current?.contains(event.target as Node)) {
+                setDragOver(true);
+            }
+        }else {
+            if (!dragOver) {
+                setDragOver(true);
+            }
         }
+
     };
 
     const handleDragLeave = () => {
