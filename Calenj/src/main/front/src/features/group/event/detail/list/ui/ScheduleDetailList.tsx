@@ -5,12 +5,14 @@ import {
     ScheduleDetailList_Div, ScheduleDetailList_Line,
     ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
 } from "./ScheduleDetailListStyled";
+import {useComponentSize} from "../../../../../../shared/model";
 
 export const ScheduleDetailList : React.FC = () =>{
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
+    const [listRef,listSize] = useComponentSize()
     const [list, setList] = useState<string[]>([
         "Item 1",
         "Item 2",
@@ -77,6 +79,7 @@ export const ScheduleDetailList : React.FC = () =>{
                         <ScheduleDetailList_Line $isNow={true}/>
                     </ScheduleDetailList_Structure_Container>
                     <ScheduleDetailList_Div
+                        ref={listRef}
                         onDrag={dragMousePosition}
                         draggable
                         onDragStart={(e) => dragStart(e, idx)}
@@ -91,7 +94,9 @@ export const ScheduleDetailList : React.FC = () =>{
             ))}
             {(dragging&&mousePosition) &&
                 <ScheduleDetailList_Div $isDrop={false}
-                         style={{position:'fixed',
+                         style={{
+                             position:'fixed',
+                             width: `${listSize.width}`,
                              left:mousePosition.x,
                              top:mousePosition.y,
                              pointerEvents:'none',
