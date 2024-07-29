@@ -143,19 +143,18 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: ({pageParam})=>getMessageData(pageParam,param,userId),
         getNextPageParam: (lastPage:Message[],allPages:Message[][], lastPageParam, allPageParams) => {
-
-            if(lastPageParam.chatUUID==="") {
+            console.log(lastPage)
+            if(!lastPageParam.chatUUID) {
                 beforeUUID = lastPage[lastPage.length-1].chatUUID;
                 return undefined;
             }else {
-                return {position:"newer", chatUUID: lastPage[lastPage.length-1].chatUUID}
-
+                return lastPage[lastPage.length-1].chatUUID ==="마지막라인" ? undefined :{position:'newer' ,chatUUID:lastPage[lastPage.length-1].chatUUID}
             }
         }, //data의 값을 받아 처리할 수 있음
         getPreviousPageParam:(firstPage:Message[]) => {
             return firstPage[0].chatUUID ==="시작라인" ? undefined :{position:'older' ,chatUUID:firstPage[0].chatUUID}
         },
-        initialPageParam:{position:'',chatUUID:''},
+        initialPageParam:{position:"",chatUUID:""},
         staleTime: Infinity,
         refetchInterval:false,
         retry:3,

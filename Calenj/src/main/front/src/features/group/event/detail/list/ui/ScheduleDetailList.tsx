@@ -6,11 +6,12 @@ import {
     ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
 } from "./ScheduleDetailListStyled";
 
-export const ScheduleDetailList: React.FC = () => {
+export const ScheduleDetailList : React.FC = () =>{
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
+    const [ItemWidth,setItemWidth] = useState<number|null>(null);
     const [list, setList] = useState<string[]>([
         "Item 1",
         "Item 2",
@@ -27,7 +28,7 @@ export const ScheduleDetailList: React.FC = () => {
         e.dataTransfer.setDragImage(new Image(), 0, 0); // Hide the default drag image
         const {top, left} = e.currentTarget.getBoundingClientRect();
         setInitialDragPosition({x: e.pageX - left, y: e.pageY - top});
-
+        setItemWidth(e.currentTarget.clientWidth)
         setDragging(true);
         dragItem.current = position;
     };
@@ -94,14 +95,13 @@ export const ScheduleDetailList: React.FC = () => {
             ))}
             {(dragging && mousePosition) &&
                 <ScheduleDetailList_Div $isDrop={false}
-                                        style={{
-                                            position: 'fixed',
-                                            left: mousePosition.x,
-                                            top: mousePosition.y,
-                                            pointerEvents: 'none',
-                                            opacity: '0.9'
-                                        }}>
-                    {list[dragItem.current || 0]}
+                         style={{position:'fixed',
+                             width:`${ItemWidth}px`,
+                             left:mousePosition.x,
+                             top:mousePosition.y,
+                             pointerEvents:'none',
+                             opacity:'0.9'}}>
+                    {list[dragItem.current||0]}
                 </ScheduleDetailList_Div>}
         </ScheduleDetailList_Container>
     );

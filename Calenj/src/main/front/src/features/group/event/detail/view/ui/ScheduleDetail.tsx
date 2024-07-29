@@ -37,9 +37,6 @@ export const ScheduleDetail: React.FC = () => {
         dispatch(updateMapModal())
     }
 
-    useEffect(() => {
-        console.log(userNameRegister);
-    })
 
 
     return (
@@ -49,7 +46,9 @@ export const ScheduleDetail: React.FC = () => {
             </ScheduleStartDate_Container>
             <ScheduleMember_Container>
                 <span>참가인원 : </span>
-                <span style={{marginRight: '5px'}}>1</span>
+                <span
+                    style={{marginRight: '5px'}}>{groupScheduleState[0].manager.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
+                </span>
                 {groupScheduleState[0].manager.length > 2 &&
                     <div>
                         <MemberMoreView_Text
@@ -85,13 +84,12 @@ export const ScheduleDetail: React.FC = () => {
                     대충 지도
                 </ScheduleMap_Container>
             }
+            <ScheduleDetailList/>
             <ScheduleButton_Container style={{justifyContent: 'right'}}>
                 <Schedule_Button>
                     세부일정 추가
                 </Schedule_Button>
             </ScheduleButton_Container>
-            <ScheduleDetailList/>
-
         </ScheduleDetail_Container>
     )
 }
