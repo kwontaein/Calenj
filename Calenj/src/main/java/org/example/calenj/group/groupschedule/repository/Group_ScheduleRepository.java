@@ -14,9 +14,9 @@ import java.util.UUID;
 @Repository
 public interface Group_ScheduleRepository extends JpaRepository<GroupScheduleEntity, UUID> {
     @Query("select new org.example.calenj.group.groupschedule.dto.response.GroupScheduleResponse(" +
-            "Gs.groupScheduleId" +
-            ",Gs.groupScheduleTitle" +
-            ",Gs.groupScheduleCreate" +
+            "Gs.scheduleId" +
+            ",Gs.scheduleTitle" +
+            ",Gs.scheduleCreate" +
             ",Gs.managers" +
             ",Gs.privacy" +
             ",Gs.maxPeople," +

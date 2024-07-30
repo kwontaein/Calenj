@@ -18,13 +18,13 @@ public class GroupSubScheduleRequest {
 
     private UUID scheduleId;
 
-    private String scheduleTitle;
+    private String subScheduleTitle;
 
-    private Timestamp scheduleCreate;
+    private Timestamp subScheduleCreate;
 
-    private int scheduleDuration;
+    private int subScheduleDuration;
 
-    private String scheduleContent;
+    private String subScheduleContent;
 
     private int index;
 
@@ -32,12 +32,12 @@ public class GroupSubScheduleRequest {
 
     public GroupSubScheduleEntity toEntity(GroupScheduleEntity groupScheduleId) {
         return GroupSubScheduleEntity.builder()
-                .groupSubScheduleId(subScheduleId)
+                .subScheduleId(subScheduleId)
                 .groupScheduleId(groupScheduleId)
-                .scheduleTitle(scheduleTitle)
-                .scheduleCreate(scheduleCreate)
-                .scheduleDuration(scheduleDuration)
-                .scheduleContent(scheduleContent)
+                .subScheduleTitle(subScheduleTitle)
+                .subScheduleCreate(subScheduleCreate)
+                .subScheduleDuration(subScheduleDuration)
+                .subScheduleContent(subScheduleContent)
                 .index(index)
                 .joinUser(joinUser)
                 .build();

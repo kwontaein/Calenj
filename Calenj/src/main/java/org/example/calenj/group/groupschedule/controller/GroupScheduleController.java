@@ -47,7 +47,7 @@ public class GroupScheduleController {
      */
     @PostMapping("api/deleteGroupSchedule")
     public void deleteGroupSchedue(@RequestBody GroupScheduleRequest groupScheduleRequest) {
-        groupScheduleService.deleteSchedule(groupScheduleRequest.getGroupScheduleId());
+        groupScheduleService.deleteSchedule(groupScheduleRequest.getScheduleId());
     }
 
     /**

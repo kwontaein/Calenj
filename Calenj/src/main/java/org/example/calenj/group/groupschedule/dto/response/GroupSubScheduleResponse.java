@@ -15,11 +15,11 @@ public class GroupSubScheduleResponse {
 
     private String scheduleTitle;
 
-    private Timestamp scheduleCreate;
+    private Timestamp subScheduleCreate;
 
-    private int scheduleDuration;
+    private int subScheduleDuration;
 
-    private String scheduleContent;
+    private String subScheduleContent;
 
     private int index;
 

@@ -13,11 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupScheduleResponse {
-    public UUID groupScheduleId;
+    public UUID scheduleId;
     //일정 제목
-    public String groupScheduleTitle;
+    public String scheduleTitle;
     //일정 생성일
-    public Timestamp groupScheduleCreate;
+    public Timestamp scheduleCreate;
     //관리자들
     private List<String> managers;
     //일정 공개 범위
@@ -27,16 +27,16 @@ public class GroupScheduleResponse {
     //참여 유저
     private List<String> member;
 
-    public GroupScheduleResponse(UUID groupScheduleId,
-                                 String groupScheduleTitle,
-                                 Timestamp groupScheduleCreate,
+    public GroupScheduleResponse(UUID scheduleId,
+                                 String scheduleTitle,
+                                 Timestamp scheduleCreate,
                                  String managers,
                                  boolean privacy,
                                  int maxPeople,
                                  String member) {
-        this.groupScheduleId = groupScheduleId;
-        this.groupScheduleTitle = groupScheduleTitle;
-        this.groupScheduleCreate = groupScheduleCreate;
+        this.scheduleId = scheduleId;
+        this.scheduleTitle = scheduleTitle;
+        this.scheduleCreate = scheduleCreate;
         this.managers = convertStringToArray(managers);
         this.privacy = privacy;
         this.maxPeople = maxPeople;
