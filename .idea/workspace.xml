@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.29 스케줄 디테일 위치변경기능 추가">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/message/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/receiveNewChat.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.30 스크롤 문제 해결중">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/messageScrollBox/model/useMessageScroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/messageScrollBox/model/useMessageScroll.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/lib/fileFilter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/message/lib/fileFilter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/message/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/useChatFetching.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/message/model/useChatFetching.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/message/model/useRequestChatFile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/public/dummy/message/model/useRequestChatFile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/useMessageInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageInputBox/model/useMessageInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,15 +210,7 @@
       <workItem from="1721981332493" duration="6562000" />
       <workItem from="1722087831173" duration="439000" />
       <workItem from="1722219124486" duration="21753000" />
-      <workItem from="1722309994983" duration="5938000" />
-    </task>
-    <task id="LOCAL-00007" summary="06.01 오타수정">
-      <option name="closed" value="true" />
-      <created>1717233361558</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1717233361558</updated>
+      <workItem from="1722309994983" duration="8897000" />
     </task>
     <task id="LOCAL-00008" summary="06.03 이메일 인증(완료)">
       <option name="closed" value="true" />
@@ -618,7 +596,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722246212558</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="07.30 스크롤 문제 해결중">
+      <option name="closed" value="true" />
+      <created>1722316060018</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1722316060019</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -651,7 +637,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="06.26 파일경로 리팩토링" />
     <MESSAGE value="06.26 파일경로 리팩토링 #2" />
     <MESSAGE value="06.26 파일경로 리팩토링 #3" />
     <MESSAGE value="06.26 파일경로 리팩토링 #4" />
@@ -676,7 +661,8 @@
     <MESSAGE value="07.22 일정 친구등록 #4" />
     <MESSAGE value="07.25 일정 생성 ui제작" />
     <MESSAGE value="07.29 스케줄 디테일 위치변경기능 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="07.29 스케줄 디테일 위치변경기능 추가" />
+    <MESSAGE value="07.30 스크롤 문제 해결중" />
+    <option name="LAST_COMMIT_MESSAGE" value="07.30 스크롤 문제 해결중" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

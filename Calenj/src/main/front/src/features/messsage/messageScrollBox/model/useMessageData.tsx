@@ -31,7 +31,7 @@ export const useMessageData = (): useMessageData => {
 
     const stomp = useSelector((state: RootState) => state.stomp)
     const stompParam = useSelector((state: RootState) => state.stomp.param)
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId")||'';
 
     //메세지목록
     //웹소켓 메시지 목록
@@ -39,7 +39,7 @@ export const useMessageData = (): useMessageData => {
     const [position, setPosition] = useState<string>('older');
     const queryClient = useQueryClient();
     const [prevMessage,setPrevMessage] = useState<Message[]>([])
-    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage} = useChatFileInfinite(stompParam,userId||'')
+    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage} = useChatFileInfinite(stompParam,userId)
     //새로운 메시지
     const receivedNewMessage = useReceivedMessage();
     const receivedMessages =useReceiveChatInfinite(stompParam,receivedNewMessage)
