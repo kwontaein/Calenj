@@ -3,9 +3,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {endPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
-import {InfiniteData, useQueryClient} from "@tanstack/react-query";
-import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
-import {useReceivedMessage} from "../../../../entities/message";
 
 interface ReturnScroll {
     scrollRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -50,9 +47,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
     useEffect(() => {
         return () => {
-            if(beforeScrollTop.current===undefined) return
+            if (beforeScrollTop.current === undefined) return
             //스크롤이 존재했는지 체크
-            scrollPointMap.set(stompParam,beforeScrollTop.current);
+            scrollPointMap.set(stompParam, beforeScrollTop.current);
         }
     }, [stompParam]);
 
@@ -78,7 +75,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             } else { //위로
                 scrollRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
             }
-            scrollPointMap.set(stompParam,scrollRef.current.scrollTop)
+            scrollPointMap.set(stompParam, scrollRef.current.scrollTop)
 
         }
     }, [clickState, mode, stompParam, screenHeightSize]);
@@ -110,7 +107,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const updateScroll = () => {
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-        beforeScrollTop.current = scrollTop - (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
+        beforeScrollTop.current = scrollTop - (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0);
 
         if (endPointMap.get(stompParam) === 0) return;
 
@@ -134,11 +131,11 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (!scrollRef.current || connectMessages.length === 0) return
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
-        if(scrollPointMap.get(stompParam) === undefined){
-            if (endPointMap.get(stompParam) === 0){
+        if (scrollPointMap.get(stompParam) === undefined) {
+            if (endPointMap.get(stompParam) === 0) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 scrollPointMap.set(stompParam, scrollRef.current.scrollHeight)
-            }else {
+            } else {
                 const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
                 if (hasEndPoint) {
                     scrollToMessage("엔드포인트");
@@ -146,13 +143,13 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
                     scrollToBottom();
                 }
             }
-        }else {
-            scrollRef.current.scrollTop = (scrollPointMap.get(stompParam) + (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+        } else {
+            scrollRef.current.scrollTop = (scrollPointMap.get(stompParam) + (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
         }
 
         const {scrollHeight, clientHeight} = scrollRef.current;
         //메시지가 와있는데 스크롤이 없다면 앤드포인트 갱신
-        if(endPointMap.get(stompParam) !== 0 && scrollHeight === clientHeight){
+        if (endPointMap.get(stompParam) !== 0 && scrollHeight === clientHeight) {
             debouncing_EndPoint();
         }
 
@@ -216,7 +213,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
 
     useEffect(() => {
-        if (chatUUID === '')  return
+        if (chatUUID === '') return
         scrollToMessage(chatUUID, position === "newer");
     }, [connectMessages, chatUUID])
 

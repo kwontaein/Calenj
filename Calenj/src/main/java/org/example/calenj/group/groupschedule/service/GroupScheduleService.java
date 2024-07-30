@@ -1,6 +1,7 @@
 package org.example.calenj.group.groupschedule.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupschedule.domain.GroupScheduleEntity;
@@ -12,6 +13,9 @@ import org.example.calenj.group.groupschedule.repository.Group_ScheduleRepositor
 import org.example.calenj.group.groupschedule.repository.Group_Sub_Schedule_Repository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +25,7 @@ public class GroupScheduleService {
     private final Group_ScheduleRepository groupScheduleRepository;
     private final Group_Sub_Schedule_Repository groupSubScheduleRepository;
     private final GroupRepository groupRepository;
+    private final GlobalService globalService;
 
     /**
      * 그룹 일정 생성
@@ -28,8 +33,17 @@ public class GroupScheduleService {
      * @param groupScheduleRequest 그룹 일정 정보
      */
     public void createGroupSchedule(GroupScheduleRequest groupScheduleRequest) {
-        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getSchedule_Group()).orElse(null);
-        groupScheduleRepository.save(groupScheduleRequest.toEntity(group));
+        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getScheduleGroup()).orElse(null);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        String userName = globalService.extractFromSecurityContext().getUsername();
+        List<String> name = new ArrayList<>();
+        name.add(userName);
+        groupScheduleRequest.setManagers(name);
+        groupScheduleRequest.setGroupScheduleId(UUID.randomUUID());
+        GroupScheduleEntity groupScheduleEntity = groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime));
+        groupScheduleRepository.save(groupScheduleEntity);
     }
 
     /**

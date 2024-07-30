@@ -14,17 +14,19 @@ import {
     ScheduleTop_Container
 } from "./ScheduleDetailStyled";
 import {AHMFormat} from "../../../../../../shared/lib";
-import {groupEventData} from "../../../list/ui/date";
 import {useDispatch, useSelector} from "react-redux";
 import {updateMapModal} from "../../../../../../entities/redux/model/slice/GroupScheduleSlice";
 import {RootState} from "../../../../../../entities/redux";
 import {useClickOutSideCheck} from "../../../../../../shared/model/useClickOutSideCheck";
 import {EventStateMap} from "../../../../../../entities/redux/model/module/StompMiddleware";
 import {ScheduleDetailList} from "../../list";
+import {GroupSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
 
 
-export const ScheduleDetail: React.FC = () => {
-    const groupScheduleState = groupEventData;
+interface GroupScheduleProps{
+    scheduleDetail:GroupSchedule,
+}
+export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) => {
     const {scheduleId, mapModal, scheduleTitle} = useSelector((state: RootState) => state.groupSchedule)
     const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister)
@@ -38,24 +40,25 @@ export const ScheduleDetail: React.FC = () => {
     }
 
 
+    const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId);
 
     return (
         <ScheduleDetail_Container>
             <ScheduleStartDate_Container>
-                일정 시작 : {AHMFormat(groupScheduleState[0].groupScheduleCreate)}
+                일정 시작 : {AHMFormat(scheduleDetail.groupScheduleCreate)}
             </ScheduleStartDate_Container>
             <ScheduleMember_Container>
                 <span>참가인원 : </span>
                 <span
-                    style={{marginRight: '5px'}}>{groupScheduleState[0].manager.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
+                    style={{marginRight: '5px'}}>{scheduleDetail.manager.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
                 </span>
-                {groupScheduleState[0].manager.length > 2 &&
+                {scheduleDetail.manager.length > 2 &&
                     <div>
                         <MemberMoreView_Text
-                            onClick={setShowMember}>외 {groupScheduleState[0].manager.length - 2}명</MemberMoreView_Text>
+                            onClick={setShowMember}>외 {scheduleDetail.manager.length - 2}명</MemberMoreView_Text>
                         {showMember &&
                             <ScheduleMember_Viewer_Container ref={showMemberRef}>
-                                {groupScheduleState[0].manager.map((userKey) => (
+                                {scheduleDetail.manager.map((userKey) => (
                                     <ScheduleMemberItem_Container key={userKey}>
                                         <ScheduleMemberProfile_Container $userId={userKey}/>
                                         <ScheduleMemberName_Container>

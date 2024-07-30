@@ -20,7 +20,8 @@ interface EventDetailProps {
 
 export const DeleteModal: React.FC<EventDetailProps> = ({deleteEvent, close}) => {
     const modalBackground = useRef<HTMLDivElement>(null);
-    const userEventDateState = useFetchUserDateEvent()
+    const userId = localStorage.getItem('userId')||''
+    const userEventDateState = useFetchUserDateEvent(userId)
 
 
     const sendDelete = () => {

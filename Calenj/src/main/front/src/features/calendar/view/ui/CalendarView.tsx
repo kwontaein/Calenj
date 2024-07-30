@@ -17,15 +17,15 @@ import {useComponentSize} from "../../../../shared/model";
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
 import {useCalendarController} from "../model/useCalendarController";
 import {AddDateEvent} from "../../createEvent";
-import {ExternalEvents} from "../../stamp";
 import {AppState, CustomEvent} from "../model/types";
 import {DateEventDetail} from "../../detail";
-import {Toggle_Container, Toggle_Item} from "../../../../shared/ui/SharedStyled";
 import {DeleteModal} from "./DeleteModal";
 
 
 export const CalendarView: React.FC = () => {
-    const {data} = useFetchDateEventTag();
+    const userId = localStorage.getItem('userId')||''
+
+    const {data} = useFetchDateEventTag(userId);
     const {
         currentEvents,
         handleEvents,

@@ -1,1 +1,1 @@
-export {useReceivedMessage} from './model/useReceivedMessage'
+export {receivedMessage} from "./model/receivedMessage"

@@ -31,7 +31,8 @@ interface ReturnAddEvent {
 }
 
 export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelectArg, mode: string): ReturnAddEvent => {
-    const userEventDateState = useFetchUserDateEvent()
+    const userId = localStorage.getItem('userId')||''
+    const userEventDateState = useFetchUserDateEvent(userId)
     const modifyEvent = event as EventApi;
 
     function adjustDate(dateStr: string, allDay: boolean): Date {

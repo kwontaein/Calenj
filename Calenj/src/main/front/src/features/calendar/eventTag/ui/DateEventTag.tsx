@@ -30,8 +30,8 @@ export const DateEventTag: React.FC = () => {
     const tagItemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const useCreateTag = useCreateEventTag();
-
-    const dateEventTagState = useFetchDateEventTag();
+    const userId = localStorage.getItem('userId')||''
+    const dateEventTagState = useFetchDateEventTag(userId);
 
     const dispatch = useDispatch()
     const updateEventTag = (id: string) => {

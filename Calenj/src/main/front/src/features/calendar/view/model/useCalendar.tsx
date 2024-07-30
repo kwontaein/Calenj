@@ -13,7 +13,9 @@ import {updateScheduleApi} from "../api/updateScheduleApi";
 export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalendar => {
     const [currentEvents, setCurrentEvents] = useState<DateEvent[]>([]);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
-    const userEventDateState = useFetchUserDateEvent()
+    const userId = localStorage.getItem('userId')||''
+
+    const userEventDateState = useFetchUserDateEvent(userId)
     const [eventDetail, setEventDetail] = useState<EventApi | null>(null)
     const [mutateAble, setMutateAble] = useState<boolean>(true)
     const [isMouseOverTrash, setIsMouseOverTrash] = useState(false);

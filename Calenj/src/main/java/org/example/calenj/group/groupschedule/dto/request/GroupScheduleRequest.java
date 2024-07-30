@@ -16,27 +16,30 @@ import java.util.UUID;
 public class GroupScheduleRequest {
     public UUID groupScheduleId;
     //일정을 만든 그룹
-    public UUID schedule_Group;
+    public UUID scheduleGroup;
     //일정 제목
     public String groupScheduleTitle;
     //일정 생성일
     public Timestamp groupScheduleCreate;
+    //일정 생성일
+    public Timestamp startDate;
     //관리자들
-    private String managers;
+    private List<String> managers;
     //일정 공개 범위
-    private String privacy;
+    private boolean privacy;
     //일정 참여 인원 수
     private int maxPeople;
     //서브 일정 목록
     public List<GroupSubScheduleRequest> groupSubSchedules;
 
-    public GroupScheduleEntity toEntity(GroupEntity group) {
+    public GroupScheduleEntity toEntity(GroupEntity group, Timestamp time) {
         return GroupScheduleEntity
                 .builder()
                 .schedule_Group(group)
                 .groupScheduleTitle(groupScheduleTitle)
-                .groupScheduleCreate(groupScheduleCreate)
-                .managers(managers)
+                .groupScheduleCreate(time)
+                .groupScheduleStart(startDate)
+                .managers(managers.toString())
                 .privacy(privacy)
                 .maxPeople(maxPeople)
                 .build();
