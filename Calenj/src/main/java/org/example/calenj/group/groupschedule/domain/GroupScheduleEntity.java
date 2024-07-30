@@ -53,7 +53,7 @@ public class GroupScheduleEntity {
 
     //일정 공개 범위
     @Column(name = "group_schedule_privacy_relationship")
-    private String privacy;
+    private boolean privacy;
 
     //일정 참여 인원 수
     @Column(name = "group_schedule_max_people")
