@@ -179,7 +179,6 @@ export const getFriendRequest = async (): Promise<FriendEvent[] | null> => {
 }
 
 
-
 export const getDateEventTag = async (): Promise<EventTagDTO[] | null> => {
     try {
         return await axios.get('api/getEventTag').then((res: AxiosResponse<EventTagDTO[]>) => res.data)
@@ -211,11 +210,11 @@ export const getUserDateEvent = async (): Promise<UserDateEvent[] | null> => {
     }
 }
 
-export const getUserInfo = async ():Promise<UserInfo|null> =>{
-    try{
+export const getUserInfo = async (): Promise<UserInfo | null> => {
+    try {
         return await axios.get("api/getUserInfo")
-            .then((res :AxiosResponse)=> res.data)
-    }catch (error){
+            .then((res: AxiosResponse) => res.data)
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {
@@ -226,11 +225,14 @@ export const getUserInfo = async ():Promise<UserInfo|null> =>{
     }
 }
 
-export const getGroupScheduleList = async (groupId:string):Promise<GroupSchedule[]| null> =>{
-    try{
-        return await axios.post("api/getGroupScheduleList",groupId)
-            .then((res:AxiosResponse)=>res.data)
-    }catch (error) {
+export const getGroupScheduleList = async (groupId: string): Promise<GroupSchedule[] | null> => {
+    try {
+        return await axios.post("api/getGroupScheduleList", {groupId})
+            .then((res: AxiosResponse) => {
+                console.log(res.data)
+                return res.data
+            })
+    } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {
@@ -242,7 +244,7 @@ export const getGroupScheduleList = async (groupId:string):Promise<GroupSchedule
 }
 
 
-export const getSubScheduleList = async (scheduleId:string):Promise<SubSchedule[]|null> => {
+export const getSubScheduleList = async (scheduleId: string): Promise<SubSchedule[] | null> => {
     try {
         return await axios.post("api/getSubScheduleList", scheduleId)
             .then((res: AxiosResponse) => res.data)
@@ -257,15 +259,15 @@ export const getSubScheduleList = async (scheduleId:string):Promise<SubSchedule[
     }
 }
 
-export const getMessageData = async(pageParam = { position: "", chatUUID: "" },stompParam:string, userId:string) =>{
-    const { position, chatUUID } = pageParam;
+export const getMessageData = async (pageParam = {position: "", chatUUID: ""}, stompParam: string, userId: string) => {
+    const {position, chatUUID} = pageParam;
 
     return axios.post('/api/getChattingFile', {
         param: stompParam,
         userId: userId,
-        chatId: chatUUID===""? null : chatUUID,
-        newOrOld: position===""? null : position
-    }).then((response)=> response.data);
+        chatId: chatUUID === "" ? null : chatUUID,
+        newOrOld: position === "" ? null : position
+    }).then((response) => response.data);
 
 }
 

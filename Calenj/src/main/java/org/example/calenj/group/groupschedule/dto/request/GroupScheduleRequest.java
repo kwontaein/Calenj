@@ -16,7 +16,7 @@ import java.util.UUID;
 public class GroupScheduleRequest {
     public UUID groupScheduleId;
     //일정을 만든 그룹
-    public UUID scheduleGroup;
+    public UUID groupId;
     //일정 제목
     public String groupScheduleTitle;
     //일정 생성일
@@ -29,6 +29,8 @@ public class GroupScheduleRequest {
     private boolean privacy;
     //일정 참여 인원 수
     private int maxPeople;
+    //참여 유저
+    private List<String> member;
     //서브 일정 목록
     public List<GroupSubScheduleRequest> groupSubSchedules;
 
@@ -42,6 +44,7 @@ public class GroupScheduleRequest {
                 .managers(managers.toString())
                 .privacy(privacy)
                 .maxPeople(maxPeople)
+                .member(member.toString())
                 .build();
     }
 }

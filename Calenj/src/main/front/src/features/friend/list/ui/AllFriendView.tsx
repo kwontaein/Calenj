@@ -11,26 +11,27 @@ import {FriendEvent, FriendList, useFetchFriendList} from "../../../../entities/
 import {useEffect} from "react";
 
 export const AllFriendView: React.FC = () => {
-    const friendListState = useFetchFriendList();
+    const userId = localStorage.getItem('userId') || ''
+    const friendListState = useFetchFriendList(userId);
 
     return (
         <FriendList_Container>
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <FriendListUL>
-                    {friendListState.data.map((friend:FriendList) => (
-                    <div key={friend.chattingRoomId}>
-                        <FriendListView>
-                            <Friend_ProfilePlace>
-                                <Friend_ImagePlace/>
-                                <Friend_TextPlace>
-                                    <Friend_NamePlace><b>{friend.nickName}</b></Friend_NamePlace>
-                                </Friend_TextPlace>
-                            </Friend_ProfilePlace>
-                        </FriendListView>
-                        <Friend_Hr/>
-                    </div>
-                ))}
+                    {friendListState.data.map((friend: FriendList) => (
+                        <div key={friend.chattingRoomId}>
+                            <FriendListView>
+                                <Friend_ProfilePlace>
+                                    <Friend_ImagePlace/>
+                                    <Friend_TextPlace>
+                                        <Friend_NamePlace><b>{friend.nickName}</b></Friend_NamePlace>
+                                    </Friend_TextPlace>
+                                </Friend_ProfilePlace>
+                            </FriendListView>
+                            <Friend_Hr/>
+                        </div>
+                    ))}
                 </FriendListUL>
             )}
         </FriendList_Container>

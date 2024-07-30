@@ -1,7 +1,7 @@
 import {AHMFormat} from "../../../../../shared/lib";
 import {MiniText} from "../../../../../shared/ui/SharedStyled";
 import {GroupEventListTitle, GroupEventListView_Li, MaxPeopleText_Container} from "./GroupEventListStyled";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {EventStateMap} from "../../../../../entities/redux/model/module/StompMiddleware";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, updateScheduleState} from "../../../../../entities/redux";
@@ -16,27 +16,28 @@ interface ScheduleInfo{
 
 export const GroupEventList:React.FC =()=>{
     const groupId = useSelector((state:RootState)=> state.subNavigation.group_subNavState.param)
-    const groupScheduleList =useFetchGroupScheduleList(groupId)
     const disptach = useDispatch()
     const {scheduleId} = useSelector((state:RootState)=>state.groupSchedule)
-    const [scheduleDetail,setScheduleDetail] = useState<GroupSchedule>();
+    const [scheduleDetail,setScheduleDetail] = useState<GroupSchedule|null>(null);
+    const groupScheduleList =useFetchGroupScheduleList(groupId)
 
     useEffect(() => {
+        if(!groupScheduleList.data) return
         const eventState:ScheduleInfo = EventStateMap.get(groupId)
         if(!eventState){
             EventStateMap.set(groupId, {scheduleId: '', scheduleTitle:'', mapModal:true})
             disptach(updateScheduleState({scheduleId:'',scheduleTitle:'', mapModal:true}))
         }else{
+            const scheduleDetail = groupScheduleList.data.filter((schedule)=> schedule.scheduleId === scheduleId)
+            console.log(scheduleDetail)
             disptach(updateScheduleState(eventState))
         }
-    }, []);
+    }, [groupScheduleList.data,scheduleId]);
 
-    const eventDetailHandler = (groupEvent:GroupSchedule)=>{
-        const {groupId, groupScheduleTitle,scheduleId} = groupEvent;
-        const {mapModal} = EventStateMap.get(groupEvent.groupId);
-        EventStateMap.set(groupId, {scheduleId,scheduleTitle:groupScheduleTitle,mapModal})
-        disptach(updateScheduleState({scheduleId,scheduleTitle:groupScheduleTitle,mapModal}))
-        setScheduleDetail(groupEvent)
+    const eventDetailHandler = (scheduleId:string, scheduleTitle:string)=>{
+        const {mapModal} = EventStateMap.get(groupId);
+        disptach(updateScheduleState({scheduleId,scheduleTitle, mapModal}))
+        EventStateMap.set(groupId, {scheduleId,scheduleTitle,mapModal})
     }
 
     return(
@@ -47,7 +48,7 @@ export const GroupEventList:React.FC =()=>{
             <>
                 {groupScheduleList.data &&
                     groupScheduleList.data.map((groupEvent:GroupSchedule)=>(
-                    <GroupEventListView_Li key={groupEvent.scheduleId} onClick={()=>eventDetailHandler(groupEvent)}>
+                    <GroupEventListView_Li key={groupEvent.scheduleId} onClick={()=>eventDetailHandler(groupEvent.scheduleId, groupEvent.groupScheduleTitle)}>
                         <GroupEventListTitle>{groupEvent.groupScheduleTitle}</GroupEventListTitle>
                         <MaxPeopleText_Container>{groupEvent.maxPeople>0 ?`인원 제한 : ${groupEvent.maxPeople}명`:"인원제한 : 없음"}</MaxPeopleText_Container>
                         <MiniText>{`일정 생성일 : ${AHMFormat(groupEvent.groupScheduleCreate)}`}</MiniText>

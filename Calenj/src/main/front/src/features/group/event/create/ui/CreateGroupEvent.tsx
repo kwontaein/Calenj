@@ -16,6 +16,7 @@ import {
 import {GroupEventReducer, initialGroupEventState} from "../../../../../entities/group";
 import {createGroupScheduleApi} from "../api/createGroupScheduleApi";
 import {RootState} from "../../../../../entities/redux";
+import {useFetchGroupScheduleList} from "../../../../../entities/reactQuery";
 
 export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
     const [groupEventState, dispatchGroupEvent] = useReducer(GroupEventReducer, initialGroupEventState);
@@ -24,6 +25,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
     const modalBackground = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const {param} = useSelector((state:RootState)=> state.subNavigation.group_subNavState)
+    const groupScheduleList =useFetchGroupScheduleList(param)
 
     useEffect(() => {
         if(!inputRef.current) return
@@ -40,6 +42,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
         }
         createGroupScheduleApi(param,groupScheduleTitle,startDate,privacy, isLimit? maxPeople:0).then(()=>{
             window.alert(`${groupScheduleTitle} 이름으로 일정을 생성하였습니다.`)
+            groupScheduleList.refetch()
             onClose()
         }).catch()
     }

@@ -104,7 +104,7 @@ export interface Message {
 //     pageParam?: number;
 // }
 interface FetchDataParams {
-    position:string,
+    position: string,
     chatUUID: string,
 }
 
@@ -128,7 +128,7 @@ export interface UserDateEvent {
         content: string,
         todoList: string[],
         repeatState: RepeatState,
-        friendList:string[],
+        friendList: string[],
     }
 }
 
@@ -140,7 +140,7 @@ export interface UserInfo {
     userPhone: string,
     userJoinDate: string,
     userUsedName: string,
-    userId:string,
+    userId: string,
 }
 
 export interface GroupSchedule {
@@ -150,16 +150,16 @@ export interface GroupSchedule {
     manager: string[],
     groupScheduleTitle: string,
     groupScheduleCreate: Date,
-    startDate:Date,
+    startDate: Date,
     privacy: string, //공개범위
     maxPeople: number, //최대인원
-    attendUsers: string[],//참여자
+    member: string[],//참여자
     schedule: SubSchedule[],
 }
 
 export interface SubSchedule {
     index: number,
-    subScheduleId:string,
+    subScheduleId: string,
     scheduleTitle: string,
     scheduleContent: string,
     scheduleCreate: Date,
@@ -169,5 +169,5 @@ export interface SubSchedule {
 
 
 // export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
-export type FetchData = QueryFunction<Message[], string[], {position: string; chatUUID: string; }>
+export type FetchData = QueryFunction<Message[], string[], { position: string; chatUUID: string; }>
 export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message;
