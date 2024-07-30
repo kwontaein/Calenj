@@ -1,15 +1,16 @@
 import {changeDateForm} from "../../../../shared/lib";
-import { useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {Message, QUERY_CHATTING_KEY, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
-import { useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState, scrollPointMap} from "../../../../entities/redux";
 import {useIntersect} from "../../../../shared/model";
 import {
     InfiniteData,
-     useQueryClient
+    useQueryClient
 } from "@tanstack/react-query";
 import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
-import {useReceivedMessage} from "../../../../entities/message";
+import {receivedMessage} from "../../../../entities/message";
+
 
 interface useMessageData {
     messageList: Message[],
@@ -33,10 +34,18 @@ export const useMessageData = (): useMessageData => {
     const [chatUUID, setChatUUID] = useState<string>('');
     const [position, setPosition] = useState<string>('older');
     const queryClient = useQueryClient();
-    const [prevMessage,setPrevMessage] = useState<Message[]>([])
-    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage, refetch} = useChatFileInfinite(stompParam,userId||'')
+    const [prevMessage, setPrevMessage] = useState<Message[]>([])
+    const {
+        data,
+        isFetching,
+        hasNextPage,
+        hasPreviousPage,
+        fetchNextPage,
+        fetchPreviousPage,
+        refetch
+    } = useChatFileInfinite(stompParam, userId || '')
     //새로운 메시지
-    const receivedNewMessage = useReceivedMessage();
+    const receivedNewMessage = receivedMessage();
     const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -73,9 +82,6 @@ export const useMessageData = (): useMessageData => {
     }, [data, newMessageList, isFetching])
 
 
-
-
-
     const topRef = useIntersect((entry, observer) => {
         if (!isInitialLoad && hasPreviousPage && messageList.length > 0) {
             observer.unobserve(entry.target);
@@ -104,10 +110,10 @@ export const useMessageData = (): useMessageData => {
                     pageParams: data?.pageParams.slice(1, 4)
                 }));
             }
-            fetchNextPage().then().then(({data})=>{
-                if(data && receivedMessages.data){
+            fetchNextPage().then().then(({data}) => {
+                if (data && receivedMessages.data) {
                     const lastPage = data.pages.at(-1) as Message[];
-                    removeDuplicate(lastPage,receivedMessages.data.pages)
+                    removeDuplicate(lastPage, receivedMessages.data.pages)
                 }
             })
         }
@@ -115,19 +121,19 @@ export const useMessageData = (): useMessageData => {
 
     useEffect(() => {
         const {param, state} = stomp.receiveMessage
-        if (stompParam !== param || state !== 'SEND'||isInitialLoad) return
+        if (stompParam !== param || state !== 'SEND' || isInitialLoad) return
         const sendUser = stomp.receiveMessage.userId
         if (userId === sendUser) {
-            if (!receivedMessages.data||!data) return
+            if (!receivedMessages.data || !data) return
             //page의 길이가 4가 넘어가면 마지막 메시지가 page내에 존재하지 않으니 refetch를 해준다.
-            if(data.pages.length<4) return
+            if (data.pages.length < 4) return
             queryClient.setQueryData([QUERY_CHATTING_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                 pages: data?.pages.slice(0, 1),
-                pageParams: [{position:"", chatUUID:""}]
+                pageParams: [{position: "", chatUUID: ""}]
             }));
             scrollPointMap.delete(stompParam);
 
-            refetch({}).then(()=>{
+            refetch({}).then(() => {
                 queryClient.setQueryData([QUERY_NEW_CHAT_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                     pages: data?.pages.slice(0, 1),
                     pageParams: data?.pageParams.slice(0, 1)

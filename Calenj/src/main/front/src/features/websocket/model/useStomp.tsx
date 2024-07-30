@@ -21,22 +21,22 @@ import {
 } from "../../../entities/redux/model/slice/OnlineUserStorageSlice";
 import {useQueryClient} from "@tanstack/react-query";
 import {useReceiveChatInfinite} from "../../../entities/reactQuery/model/queryModel";
-import {useReceivedMessage} from "../../../entities/message";
+import {receivedMessage} from "../../../entities/message";
 
 export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => {
     const dispatch = useDispatch()
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const queryClient = useQueryClient();
     const [userId, setUserId] = useState<string>();
-    const receivedNewMessage = useReceivedMessage();
-    const{fetchNextPage} =useReceiveChatInfinite(stomp.receiveMessage.param,receivedNewMessage)
+    const receivedNewMessage = receivedMessage();
+    const {fetchNextPage} = useReceiveChatInfinite(stomp.receiveMessage.param, receivedNewMessage)
 
     useEffect(() => {
         if (!userId) return
         const {param, state, target, onlineUserList, message} = stomp.receiveMessage
 
         //온라인 리스트 처리
-        if (message !== null){
+        if (message !== null) {
             if (target === "friendMsg") { //내 id는 필수로 들어가기 때문
                 if (state === 'ONLINE') {
                     const friendIdList = onlineUserList.filter((friendId) => friendId != userId) // 내 id 제거
@@ -66,7 +66,7 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
     }, [stomp]);
 
     useEffect(() => {
-        if(stomp.receiveMessage.state==="SEND"){
+        if (stomp.receiveMessage.state === "SEND") {
             fetchNextPage()
         }
     }, [stomp.receiveMessage.receivedUUID]);
