@@ -7,6 +7,7 @@ export const groupEventData: GroupSchedule[] = [
         schedule_Group:"3812acf0-df0b-4786-a77d-88583979fb82", //스케줄을 생성한 그룹
         groupScheduleTitle:"김말이 순대의 일정",
         groupScheduleCreate: new Date(),
+        startDate: new Date(),
         privacy:"all", //공개범위
         maxPeople:0, //최대인원
         attendUsers:["5b9a14b0-deee-442f-aadf-ae309b153c27","a116c767-b469-48b0-b134-4875a65e005a"],//참여자
@@ -22,6 +23,7 @@ export const groupEventData: GroupSchedule[] = [
         ]
     }
 ]
+//그룹아이디, 일정제목, 공개범위, 참여인원, 시작날짜
 
 interface GroupSchedule {
     groupScheduleId: string,
@@ -30,6 +32,7 @@ interface GroupSchedule {
     schedule_Group: string, //스케줄을 생성한 그룹
     groupScheduleTitle: string,
     groupScheduleCreate: Date,
+    startDate:Date,
     privacy: string, //공개범위
     maxPeople: number, //최대인원
     attendUsers: string[],//참여자
