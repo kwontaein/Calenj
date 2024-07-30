@@ -14,10 +14,11 @@ import {
     Radio_Label
 } from "../../../../../shared/ui/SharedStyled";
 import {GroupEventReducer, initialGroupEventState} from "../../../../../entities/group";
+import {createGroupScheduleApi} from "../api/createGroupScheduleApi";
 
 export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
     const [groupEventState, dispatchGroupEvent] = useReducer(GroupEventReducer, initialGroupEventState);
-    const {startDate, title, scopeType, isLimit, limitNum} = groupEventState
+    const {startDate, groupScheduleTitle, privacy, isLimit, maxPeople} = groupEventState
     const [month,setMonth] = useState<number>(startDate.getMonth())
     const modalBackground = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -27,9 +28,20 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
         inputRef.current.focus()
     }, [inputRef,isLimit]);
 
+    const createGroupSchedule = () =>{
+        if(groupScheduleTitle==""){
+            window.alert('제목을 입력해주세요')
+            return
+        }else if(isLimit && !maxPeople){
+            window.alert('인원제한을 정확히 설정해주세요')
+            return
+        }
+        createGroupScheduleApi(groupScheduleTitle,startDate,privacy, isLimit? maxPeople:0)
+    }
+
     return(
         <Modal_Background ref={modalBackground} onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if (e.target === modalBackground.current && title === "") {
+            if (e.target === modalBackground.current && groupScheduleTitle === "") {
                 onClose();
             }
         }}>
@@ -42,7 +54,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                     <GroupEventItem_Title>
                         일정 제목 :
                     </GroupEventItem_Title>
-                    <GroupEventTitle_Input value={title} onChange={(e)=>dispatchGroupEvent({type:'SET_TITLE',payload : e.target.value})} placeholder={'제목을 입력해주세요'}/>
+                    <GroupEventTitle_Input value={groupScheduleTitle} onChange={(e)=>dispatchGroupEvent({type:'SET_TITLE',payload : e.target.value})} placeholder={'제목을 입력해주세요'}/>
                 </GroupEvent_RowBox>
                 <GroupEvent_RowBox>
                     <GroupEventItem_Title>
@@ -55,6 +67,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                         selected={startDate}
                         onChange={(date:Date) => dispatchGroupEvent({type:'SET_START_DATE', payload: date})}
                         locale={ko}
+                        minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
                         popperPlacement="right-start"
                         timeClassName={()=>"date-picker-time"}
                         onMonthChange={(date:Date)=>setMonth(date.getMonth())}
@@ -74,16 +87,14 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                     </GroupEventItem_Title>
                     <Radio_Label>
                         <InputType_Radio name='inputForm'
-                                         value='all'
-                                         defaultChecked={scopeType==='all'}
-                                         onChange={(e)=>dispatchGroupEvent({type:'SET_SCOPE_TYPE', payload:e.currentTarget.value})}/>
+                                         defaultChecked={!privacy}
+                                         onChange={(e)=>dispatchGroupEvent({type:'SET_PRIVACY', payload:true})}/>
                         <span style={{fontSize: '11px'}}>전체</span>
                     </Radio_Label>
                     <Radio_Label>
                         <InputType_Radio name='inputForm'
-                                         value='part'
-                                         defaultChecked={scopeType === 'part'}
-                                         onChange={(e)=>dispatchGroupEvent({type:'SET_SCOPE_TYPE', payload:e.currentTarget.value})}/>
+                                         defaultChecked={privacy}
+                                         onChange={(e)=>dispatchGroupEvent({type:'SET_PRIVACY', payload:false})}/>
                         <span style={{fontSize: '11px'}}>참가자</span>
                     </Radio_Label>
                 </GroupEvent_RowBox>
@@ -106,10 +117,10 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                     {isLimit &&
                         <>
                         <LimitNum_Input ref={inputRef}
-                                        $numLength={(limitNum+"").split("").length}
-                                        defaultValue={limitNum}
+                                        $numLength={(maxPeople+"").split("").length}
+                                        defaultValue={maxPeople}
                                         maxLength={3}
-                                        onChange={(e)=> dispatchGroupEvent({type:'SET_LIMIT_NUM', payload: +e.target.value})}/>
+                                        onChange={(e)=> dispatchGroupEvent({type:'SET_MAX_PEOPLE', payload: +e.target.value})}/>
                         <span style={{fontSize:'12px'}}>
                             명 제한
                         </span>
@@ -120,7 +131,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                     <Modal_Condition_Button style={{height:"100%", width:'50px', marginRight:'10px'}} onClick={onClose}>
                         취소
                     </Modal_Condition_Button>
-                    <Modal_Condition_Button $isAble={title!==''} style={{height:"100%", width:'50px'}}>
+                    <Modal_Condition_Button $isAble={groupScheduleTitle!==''} style={{height:"100%", width:'50px'}} onClick={createGroupSchedule}>
                         생성
                     </Modal_Condition_Button>
                 </GroupEvent_RowBox>

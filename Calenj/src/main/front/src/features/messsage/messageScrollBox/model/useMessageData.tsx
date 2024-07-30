@@ -119,7 +119,8 @@ export const useMessageData = (): useMessageData => {
         const sendUser = stomp.receiveMessage.userId
         if (userId === sendUser) {
             if (!receivedMessages.data||!data) return
-            console.log(isInitialLoad)
+            //page의 길이가 4가 넘어가면 마지막 메시지가 page내에 존재하지 않으니 refetch를 해준다.
+            if(data.pages.length<4) return
             queryClient.setQueryData([QUERY_CHATTING_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                 pages: data?.pages.slice(0, 1),
                 pageParams: [{position:"", chatUUID:""}]
