@@ -147,7 +147,7 @@ export interface GroupSchedule {
     groupId: string, //스케줄을 생성한 그룹
     scheduleId: string,
     host: string,
-    manager: string[],
+    managers: string[],
     scheduleTitle: string,
     scheduleCreate: Date,
     startDate: Date,

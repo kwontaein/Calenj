@@ -28,9 +28,13 @@ export const GroupEventList: React.FC = () => {
             EventStateMap.set(groupId, {scheduleId: '', scheduleTitle: '', mapModal: true})
             disptach(updateScheduleState({scheduleId: '', scheduleTitle: '', mapModal: true}))
         } else {
-            const scheduleDetail = groupScheduleList.data.filter((schedule) => schedule.scheduleId === scheduleId)
-            console.log(scheduleDetail)
-            disptach(updateScheduleState(eventState))
+            if(scheduleId!==""){
+                const scheduleDetail = groupScheduleList.data.filter((schedule) => schedule.scheduleId === scheduleId)[0]
+                setScheduleDetail(scheduleDetail)
+            }else{
+                disptach(updateScheduleState(eventState))
+                setScheduleDetail(null)
+            }
         }
     }, [groupScheduleList.data, scheduleId]);
 
