@@ -15,6 +15,7 @@ import {
 } from "../../../../../shared/ui/SharedStyled";
 import {GroupEventReducer, initialGroupEventState} from "../../../../../entities/group";
 import {createGroupScheduleApi} from "../api/createGroupScheduleApi";
+import {RootState} from "../../../../../entities/redux";
 
 export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
     const [groupEventState, dispatchGroupEvent] = useReducer(GroupEventReducer, initialGroupEventState);
@@ -22,6 +23,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
     const [month,setMonth] = useState<number>(startDate.getMonth())
     const modalBackground = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const {param} = useSelector((state:RootState)=> state.subNavigation.group_subNavState)
 
     useEffect(() => {
         if(!inputRef.current) return
@@ -36,7 +38,10 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
             window.alert('인원제한을 정확히 설정해주세요')
             return
         }
-        createGroupScheduleApi(groupScheduleTitle,startDate,privacy, isLimit? maxPeople:0)
+        createGroupScheduleApi(param,groupScheduleTitle,startDate,privacy, isLimit? maxPeople:0).then(()=>{
+            window.alert(`${groupScheduleTitle} 이름으로 일정을 생성하였습니다.`)
+            onClose()
+        }).catch()
     }
 
     return(
@@ -62,9 +67,12 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                     </GroupEventItem_Title>
                     <div style={{marginLeft: '-8px'}}>
                     <EventDatePicker
-                        dateFormat={'yy년 MM월 dd일 (EEE)'} // 날짜 형태
+                        dateFormat={'yy년 MM월 dd일 (EEE) HH시 mm분'} // 날짜 형태
                         shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
                         selected={startDate}
+                        showTimeSelect={true}
+                        timeFormat={"HH:mm"}
+                        timeIntervals={ 30}
                         onChange={(date:Date) => dispatchGroupEvent({type:'SET_START_DATE', payload: date})}
                         locale={ko}
                         minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // minDate 이전 날짜 선택 불가
@@ -78,6 +86,7 @@ export const CreateGroupEvent:React.FC<{onClose:()=>void}> = ({onClose}) =>{
                                     ? 'custom-day'
                                     : 'custom-day gray-day'
                         }
+                        $width={200}
                     />
                     </div>
                 </GroupEvent_RowBox>
