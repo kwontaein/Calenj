@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,16 +33,17 @@ public class GroupScheduleService {
      * @param groupScheduleRequest 그룹 일정 정보
      */
     public void createGroupSchedule(GroupScheduleRequest groupScheduleRequest) {
-        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getSchedule_Group()).orElse(null);
+        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getScheduleGroup()).orElse(null);
 
         LocalDateTime dateTime = LocalDateTime.now();
 
         String userName = globalService.extractFromSecurityContext().getUsername();
-        List<String> name = null;
+        List<String> name = new ArrayList<>();
         name.add(userName);
-
         groupScheduleRequest.setManagers(name);
-        groupScheduleRepository.save(groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime)));
+        groupScheduleRequest.setGroupScheduleId(UUID.randomUUID());
+        GroupScheduleEntity groupScheduleEntity = groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime));
+        groupScheduleRepository.save(groupScheduleEntity);
     }
 
     /**

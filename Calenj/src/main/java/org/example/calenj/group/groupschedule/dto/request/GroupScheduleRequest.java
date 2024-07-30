@@ -16,7 +16,7 @@ import java.util.UUID;
 public class GroupScheduleRequest {
     public UUID groupScheduleId;
     //일정을 만든 그룹
-    public UUID schedule_Group;
+    public UUID scheduleGroup;
     //일정 제목
     public String groupScheduleTitle;
     //일정 생성일
