@@ -34,7 +34,6 @@ import {
     ModalTopBar_Container, PointColor
 } from "../../../../shared/ui/SharedStyled";
 import {MultiSelector} from "../../../../shared/ui/MultiSelector";
-import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
 import {EventFriendList} from "./EventFriendList";
 
 
@@ -47,6 +46,7 @@ interface CalendarProps {
 
 export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) => {
     const modalBackground = useRef<HTMLDivElement>(null);
+
     //eventState & repeatState
     const {repeatState, repeatDispatch, eventState, eventDispatch, todoState, postEvent, closeModal} = useAddDateEvent(onClose,event,mode);
     const {formState, title, content} = eventState;

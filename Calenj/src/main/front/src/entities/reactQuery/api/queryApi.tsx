@@ -11,7 +11,7 @@ import {
     VoteDetail,
     VoteList,
     EventTagDTO,
-    UserDateEvent, UserInfo
+    UserDateEvent, UserInfo, GroupSchedule, SubSchedule
 } from "../model/types";
 
 //쿠키체크
@@ -226,6 +226,37 @@ export const getUserInfo = async ():Promise<UserInfo|null> =>{
     }
 }
 
+export const getGroupScheduleList = async (groupId:string):Promise<GroupSchedule[]| null> =>{
+    try{
+        return await axios.post("api/getGroupScheduleList",groupId)
+            .then((res:AxiosResponse)=>res.data)
+    }catch (error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
+
+
+export const getSubScheduleList = async (scheduleId:string):Promise<SubSchedule[]|null> => {
+    try {
+        return await axios.post("api/getSubScheduleList", scheduleId)
+            .then((res: AxiosResponse) => res.data)
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
+
 export const getMessageData = async(pageParam = { position: "", chatUUID: "" },stompParam:string, userId:string) =>{
     const { position, chatUUID } = pageParam;
 
@@ -237,4 +268,5 @@ export const getMessageData = async(pageParam = { position: "", chatUUID: "" },s
     }).then((response)=> response.data);
 
 }
+
 

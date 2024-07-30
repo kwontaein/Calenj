@@ -13,7 +13,8 @@ import {
 
 export const RequestFriendList : React.FC = () =>{
     const [modal, setModal] = useState<boolean>(false)
-    const requestFriendState = useFetchRequestFriendList();
+    const userId = localStorage.getItem('userId')||''
+    const requestFriendState = useFetchRequestFriendList(userId);
     const [eventKey,setEventKey] = useState<string>('')
 
     //모달 정보를 넘기기 위한 userKey 세팅

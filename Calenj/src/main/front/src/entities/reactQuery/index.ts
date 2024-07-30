@@ -11,7 +11,11 @@ export {
     useFetchVoteDetail,
     useFetchDateEventTag,
     useFetchUserInfo,
-    useChatFileInfinite
+    useChatFileInfinite,
+    useFetchUserDateEvent,
+    useFetchGroupScheduleList,
+    useReceiveChatInfinite,
+    useFetchGroupSubScheduleList
 } from './model/queryModel'
 export {
     type GroupDetail,
@@ -28,6 +32,8 @@ export {
     type EventTagDTO,
     type UserDateEvent,
     type UserInfo,
+    type GroupSchedule,
+    type SubSchedule,
 } from './model/types'
 
 export {
@@ -44,4 +50,7 @@ export {
     QUERY_NOTICE_LIST_KEY,
     QUERY_DATE_EVENT_TAG_KEY,
     QUERY_USER_INFO_KEY,
+    QUERY_GROUP_SCHEDULE_LIST,
+    QUERY_USER_DATE_EVENT_KEY,
+    QUERY_GROUP_SUB_SCHEDULE_LIST
 } from './model/queryModel'

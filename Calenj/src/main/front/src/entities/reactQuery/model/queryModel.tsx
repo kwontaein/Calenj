@@ -18,7 +18,7 @@ import {
     getVoteDetail,
     getFriendResponse,
     getFriendRequest,
-    getDateEventTag, getUserDateEvent, getUserInfo, getMessageData
+    getDateEventTag, getUserDateEvent, getUserInfo, getMessageData, getGroupScheduleList, getSubScheduleList
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -31,7 +31,7 @@ import {
     FetchData,
     ReceivedData,
     VoteDetail,
-    EventTagDTO, UserDateEvent, UserInfo
+    EventTagDTO, UserDateEvent, UserInfo, GroupSchedule, SubSchedule
 } from "./types";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
@@ -50,7 +50,8 @@ export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
 export const QUERY_DATE_EVENT_TAG_KEY: string ='QUERY_DATE_EVENT_TAG_KEY'
 export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
 export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
-
+export const QUERY_GROUP_SCHEDULE_LIST = "QUERY_GROUP_SCHEDULE_LIST"
+export const QUERY_GROUP_SUB_SCHEDULE_LIST = "QUERY_GROUP_SUB_SCHEDULE_LIST"
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -85,9 +86,9 @@ export const useFetchVoteList = (groupId:string) =>
         queryFn: () => getVoteList(groupId), //HTTP 요청함수 (Promise를 반환하는 함수)
     });
 
-export const useFetchFriendList= () =>
+export const useFetchFriendList= (userId:string) =>
 useQuery<FriendList[] | null, Error>({
-    queryKey: [QUERY_FRIEND_LIST_KEY],
+    queryKey: [QUERY_FRIEND_LIST_KEY,userId],
     queryFn: getFriendList,
 });
 
@@ -97,29 +98,29 @@ export const useFetchVoteDetail= (voteId:string) =>
         queryFn: () => getVoteDetail(voteId),
     });
 
-export const  useFetchResponseFriendList= () =>
+export const  useFetchResponseFriendList= (userId:string) =>
     useQuery<FriendEvent[] | null, Error>({
-        queryKey: [QUERY_RESPONSE_FRIEND_LIST],
+        queryKey: [QUERY_RESPONSE_FRIEND_LIST,userId],
         queryFn: getFriendResponse,
     });
 
 
-export const useFetchRequestFriendList = () =>
+export const useFetchRequestFriendList = (userId:string) =>
     useQuery<FriendEvent[] | null, Error>({
-        queryKey: [QUERY_REQUEST_FRIEND_LIST],
+        queryKey: [QUERY_REQUEST_FRIEND_LIST,userId],
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
         refetchInterval: false,
     })
 
-export const useFetchDateEventTag = () =>
+export const useFetchDateEventTag = (userId:string) =>
     useQuery<EventTagDTO[]|null, Error>({
-        queryKey: [QUERY_DATE_EVENT_TAG_KEY],
+        queryKey: [QUERY_DATE_EVENT_TAG_KEY,userId],
         queryFn:getDateEventTag,
     })
 
-export const useFetchUserDateEvent = ()=>
+export const useFetchUserDateEvent = (userId:string)=>
     useQuery<UserDateEvent[]|null,Error>({
-        queryKey: [QUERY_USER_DATE_EVENT_KEY],
+        queryKey: [QUERY_USER_DATE_EVENT_KEY,userId],
         queryFn:getUserDateEvent,
     })
 
@@ -129,6 +130,18 @@ export const useFetchUserInfo = (userId:string) =>
         queryFn:getUserInfo,
     })
 
+export const useFetchGroupScheduleList =(groupId:string)=>
+    useQuery<GroupSchedule[]|null,Error>({
+        queryKey:[QUERY_GROUP_SCHEDULE_LIST,groupId],
+        queryFn:()=>getGroupScheduleList(groupId),
+    })
+
+
+export const useFetchGroupSubScheduleList = (scheduleId:string)=>
+    useQuery<SubSchedule[]|null,Error>({
+        queryKey:[QUERY_GROUP_SUB_SCHEDULE_LIST, scheduleId],
+        queryFn :()=>getSubScheduleList(scheduleId),
+    })
 /**수정관련 */
 
 
@@ -142,7 +155,7 @@ export const useMutationCookie = (queryClient :QueryClient) =>
     },})
 
 
-let beforeUUID="";
+
 
 export const useChatFileInfinite = (param:string, userId:string) =>{
 
@@ -151,7 +164,6 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         queryFn: ({pageParam})=>getMessageData(pageParam,param,userId),
         getNextPageParam: (lastPage:Message[],allPages:Message[][], lastPageParam, allPageParams) => {
             if(!lastPageParam.chatUUID) {
-                beforeUUID = lastPage[lastPage.length-1].chatUUID;
                 return undefined;
             }else {
                 return lastPage[lastPage.length-1].chatUUID ==="마지막라인" ? undefined :{position:'newer' ,chatUUID:lastPage[lastPage.length-1].chatUUID}

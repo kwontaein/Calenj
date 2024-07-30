@@ -7,19 +7,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {updateViewState} from "../../../../entities/redux/model/slice/FriendViewSlice";
 import {
-    QUERY_FRIEND_LIST_KEY,
-    QUERY_REQUEST_FRIEND_LIST, QUERY_RESPONSE_FRIEND_LIST,
-    useFetchRequestFriendList, useFetchResponseFriendList
+     useFetchResponseFriendList
 } from "../../../../entities/reactQuery";
-import {useEffect} from "react";
-import {useQueryClient} from "@tanstack/react-query";
 
 export const FriendEventBarSelector: React.FC = () => {
     const viewState = useSelector((state:RootState) => state.friendViewState.viewState);
     const dispatch = useDispatch();
-
-    const responseFriendState = useFetchResponseFriendList();
-    const requestFriendState = useFetchRequestFriendList();
+    const userId =localStorage.getItem('userId')||'';
+    const responseFriendState = useFetchResponseFriendList(userId);
 
 
 
