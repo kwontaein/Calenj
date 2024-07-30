@@ -143,6 +143,8 @@ export interface UserInfo {
     userId:string,
 }
 
+
+
 // export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
 export type FetchData = QueryFunction<Message[], string[], {position: string; chatUUID: string; }>
 export type ReceivedData = ({pageParam}: { pageParam?: number | undefined }) => Message;

@@ -6,7 +6,7 @@ import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
 import {useIntersect} from "../../../../shared/model";
 
 interface ReturnScroll {
-    containerRef: React.MutableRefObject<HTMLDivElement | null>,
+    scrollRef: React.MutableRefObject<HTMLDivElement | null>,
     messageRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null; }>,
 
 }
@@ -15,33 +15,55 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
     const dispatch = useDispatch();
     const stomp = useSelector((state: RootState) => state.stomp)
-    const {
-        screenHeightSize,
-        mode,
-        clickState
-    } = useSelector((state: RootState) => state.subNavigation.group_subNavState)
+    const {screenHeightSize, mode, clickState} = useSelector((state: RootState) => state.subNavigation.group_subNavState)
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const stompParam = useSelector((state: RootState) => state.stomp.param)
     const beforeInputSize = useRef(inputSize);
     const userId = localStorage.getItem("userId");
     //높이 관련
-    const containerRef = useRef<HTMLDivElement | null>(null);
+    const scrollRef = useRef<HTMLDivElement | null>(null);
     const messageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const isRender = useRef<boolean>();
 
-
-
     useEffect(() => {
-        if (!containerRef.current) return
-        const {scrollTop, scrollHeight, clientHeight} = containerRef.current
+        if (!scrollRef.current) return
+        const {scrollTop, scrollHeight, clientHeight} = scrollRef.current
         if (clientHeight + scrollTop === scrollHeight) { //맨아래에 위치해 있으면 위치조정 필요 X
             beforeInputSize.current = inputSize;//return 전 input 사이즈 저장
             return
         }
-        containerRef.current.scrollTop -= (beforeInputSize.current - inputSize)
+        scrollRef.current.scrollTop -= (beforeInputSize.current - inputSize)
         beforeInputSize.current = inputSize;
 
     }, [inputSize]);
+
+
+    useEffect(() => {
+        if (!scrollRef.current || connectMessages.length === 0 || mode !== "column") return;
+        const {scrollTop, scrollHeight, clientHeight} = scrollRef.current
+        if (scrollTop + clientHeight === scrollHeight) return
+        if (clickState === '' && scrollHeight < scrollTop + screenHeightSize) {
+            scrollRef.current.scrollTop -= Math.round(screenHeightSize)
+        } else {
+            scrollRef.current.scrollTop += Math.round(screenHeightSize);
+        }
+    }, [clickState]);
+
+    // 스크롤 => chatUUID로 div를 조회하고 높이설정 => 메시지 fetchMoreMessages 이후 세팅
+    const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
+        const messageDiv = messageRefs.current[chatUUID];
+        if (messageDiv && scrollRef.current) {
+            const subScreenHeight = (clickState !== '' && mode === 'column') ? screenHeightSize : 0
+            if (alignToBottom) { //아래로
+                scrollRef.current.scrollTop = messageDiv.offsetTop - scrollRef.current.clientHeight + messageDiv.clientHeight - subScreenHeight - 20;
+            } else { //위로
+                scrollRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
+            }
+        }
+    }, [clickState, mode, stompParam, screenHeightSize]);
+
+
+
 
     const [showDown, setShowDown] = useState<boolean>(true);
 
@@ -53,49 +75,25 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         }, 2000);
     }, [stompParam]);
 
-    const updateEndpoint = () => {
-        debouncing_EndPoint();
-    }
-
-
-    // 스크롤 => chatUUID로 div를 조회하고 높이설정 => 메시지 fetchMoreMessages 이후 세팅
-    const scrollToMessage = useCallback((chatUUID: string, alignToBottom: boolean = false) => {
-        const messageDiv = messageRefs.current[chatUUID];
-        if (messageDiv && containerRef.current) {
-            const subScreenHeight = (clickState !== '' && mode === 'column') ? screenHeightSize : 0
-            if (alignToBottom) { //아래로
-                containerRef.current.scrollTop = messageDiv.offsetTop - containerRef.current.clientHeight + messageDiv.clientHeight - subScreenHeight - 20;
-            } else { //위로
-                containerRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
-            }
-        }
-    }, [clickState, mode, stompParam, screenHeightSize]);
 
 
     //스크롤 => 맨 밑으로 이동
-    const scrollToBottom = useCallback(() => {
-        if (containerRef.current) {
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
-            updateEndpoint()
-        }
-    }, []);
+    const scrollToBottom = () => {
+        debouncing_EndPoint()
+        setTimeout(() => {
+            if (scrollRef.current) {
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+            }
+        }, 50)
+    };
 
 
-    useEffect(() => {
-        if (!containerRef.current || connectMessages.length === 0 || mode !== "column") return;
-        const {scrollTop, scrollHeight, clientHeight} = containerRef.current
-        if (scrollTop + clientHeight === scrollHeight) return
-        if (clickState === '' && scrollHeight < scrollTop + screenHeightSize) {
-            containerRef.current.scrollTop -= Math.round(screenHeightSize)
-        } else {
-            containerRef.current.scrollTop += Math.round(screenHeightSize);
-        }
-    }, [clickState]);
 
 
     const updateScroll = () => {
-        if (!containerRef.current) return
-        const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
+        if (!scrollRef.current) return
+        const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
+        console.log(endPointMap.get(stompParam) === 0)
         if (endPointMap.get(stompParam) === 0) return;
 
         //스크롤에 따른 표시
@@ -103,7 +101,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             scrollToBottom();
         }
     }
-
 
     const updateScroll_throttling = useMemo(() => {
         return throttleByAnimationFrame(() => {
@@ -115,8 +112,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const addScrollEvent = () => {
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
         //로딩된 이후엔 스크롤을 안 내려야함
-        if (!containerRef.current || connectMessages.length === 0) return
-        containerRef.current.addEventListener('scroll', updateScroll_throttling);
+        if (!scrollRef.current || connectMessages.length === 0) return
+        scrollRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
         if (!isRender.current) { //첫 랜더링에만 적용
             const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
@@ -133,8 +130,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
     useEffect(() => {
         const {param, state} = stomp.receiveMessage
-        if (stompParam !== param || state !== 'SEND' || connectMessages.length === 0 || !containerRef.current) return
-        const {scrollTop, scrollHeight, clientHeight} = containerRef.current;
+        if (stompParam !== param || state !== 'SEND' || connectMessages.length === 0 || !scrollRef.current) return
+        const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         const sendUser = stomp.receiveMessage.userId
         if (userId === sendUser) {
             return
@@ -170,8 +167,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         }
         addScrollEvent()
         return () => {
-            if (containerRef.current) {
-                containerRef.current.removeEventListener('scroll', updateScroll_throttling);
+            if (scrollRef.current) {
+                console.log('이벤트 삭제')
+                scrollRef.current.removeEventListener('scroll', updateScroll_throttling);
             }
         };
     }, [connectMessages]);
@@ -181,9 +179,10 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (chatUUID !== '') {
             scrollToMessage(chatUUID, position === "newer");
         }
+
     }, [connectMessages, chatUUID])
 
 
 
-    return {containerRef, messageRefs};
+    return {scrollRef, messageRefs};
 }

@@ -1,5 +1,12 @@
 // //v5이후로 인자를 객체 형태로 전달해야함
-import {QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {
+    keepPreviousData,
+    QueryClient,
+    useInfiniteQuery,
+    useMutation,
+    useQuery,
+    useQueryClient
+} from "@tanstack/react-query";
 import {
     checkCookie,
     logout,
@@ -143,7 +150,6 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         queryKey: [QUERY_CHATTING_KEY, param],
         queryFn: ({pageParam})=>getMessageData(pageParam,param,userId),
         getNextPageParam: (lastPage:Message[],allPages:Message[][], lastPageParam, allPageParams) => {
-            console.log(lastPage)
             if(!lastPageParam.chatUUID) {
                 beforeUUID = lastPage[lastPage.length-1].chatUUID;
                 return undefined;
@@ -158,6 +164,8 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         staleTime: Infinity,
         refetchInterval:false,
         retry:3,
+
+
     })
 };
 
@@ -193,7 +201,6 @@ export const useReceiveChatInfinite = (param:string, receiveNewChat:ReceivedData
         return allPageParams.length;
     }, //data의 값을 받아 처리할 수 있음
     initialPageParam: 0,
-    // enabled: param === stomp.param,
     refetchInterval:false,
     staleTime: Infinity,
     });

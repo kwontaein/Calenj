@@ -32,14 +32,14 @@ export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
     const {messageList, chatUUID, position, topRef, bottomRef, hasNextPage, hasPreviousPage, compareDate} = useMessageData()
-    const {containerRef, messageRefs} = useMessageScroll(messageList,chatUUID, position)
+    const {scrollRef, messageRefs} = useMessageScroll(messageList,chatUUID, position)
 
 
 
     const MessageBox = useMemo(() => {
 
         return (
-            <ScrollableDiv ref={containerRef}>
+            <ScrollableDiv ref={scrollRef}>
                 {hasPreviousPage && <div className="scrollTop" ref={topRef}></div>}
                 {messageList.length > 0 &&
                     (messageList.map((message: Message, index: number) => (
