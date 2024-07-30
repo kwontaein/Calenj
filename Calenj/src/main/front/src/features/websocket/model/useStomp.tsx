@@ -20,12 +20,16 @@ import {
     updateFriendOnline, updateGroupOnlineUserList,
 } from "../../../entities/redux/model/slice/OnlineUserStorageSlice";
 import {useQueryClient} from "@tanstack/react-query";
+import {useReceiveChatInfinite} from "../../../entities/reactQuery/model/queryModel";
+import {useReceivedMessage} from "../../../entities/message";
 
 export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => {
     const dispatch = useDispatch()
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const queryClient = useQueryClient();
     const [userId, setUserId] = useState<string>();
+    const receivedNewMessage = useReceivedMessage();
+    const{fetchNextPage} =useReceiveChatInfinite(stomp.receiveMessage.param,receivedNewMessage)
 
     useEffect(() => {
         if (!userId) return
@@ -60,6 +64,12 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
         }
 
     }, [stomp]);
+
+    useEffect(() => {
+        if(stomp.receiveMessage.state==="SEND"){
+            fetchNextPage()
+        }
+    }, [stomp.receiveMessage.receivedUUID]);
 
 
     return (cookie: boolean) => {
