@@ -33,7 +33,7 @@ public class GroupSubScheduleRequest {
     public GroupSubScheduleEntity toEntity(GroupScheduleEntity groupScheduleId) {
         return GroupSubScheduleEntity.builder()
                 .subScheduleId(subScheduleId)
-                .groupScheduleId(groupScheduleId)
+                .scheduleId(groupScheduleId)
                 .subScheduleTitle(subScheduleTitle)
                 .subScheduleCreate(subScheduleCreate)
                 .subScheduleDuration(subScheduleDuration)

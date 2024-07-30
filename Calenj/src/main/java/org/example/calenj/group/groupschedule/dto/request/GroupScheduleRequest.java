@@ -38,9 +38,9 @@ public class GroupScheduleRequest {
         return GroupScheduleEntity
                 .builder()
                 .schedule_Group(group)
-                .groupScheduleTitle(scheduleTitle)
-                .groupScheduleCreate(time)
-                .groupScheduleStart(startDate)
+                .scheduleTitle(scheduleTitle)
+                .scheduleCreate(time)
+                .scheduleStart(startDate)
                 .managers(managers.toString())
                 .privacy(privacy)
                 .maxPeople(maxPeople)

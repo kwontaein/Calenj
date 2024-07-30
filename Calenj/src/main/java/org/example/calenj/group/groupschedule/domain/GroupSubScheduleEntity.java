@@ -25,8 +25,8 @@ public class GroupSubScheduleEntity {
     private UUID subScheduleId;
 
     @ManyToOne
-    @JoinColumn(name = "group_schedule_id", referencedColumnName = "group_schedule_id", columnDefinition = "BINARY(16)")
-    private GroupScheduleEntity groupScheduleId;
+    @JoinColumn(name = "scheduleId", referencedColumnName = "schedule_id", columnDefinition = "BINARY(16)")
+    private GroupScheduleEntity scheduleId;
 
     //서브 일정 제목
     @Column(name = "sub_schedule_title")

@@ -23,9 +23,10 @@ import {ScheduleDetailList} from "../../list";
 import {GroupSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
 
 
-interface GroupScheduleProps{
-    scheduleDetail:GroupSchedule,
+interface GroupScheduleProps {
+    scheduleDetail: GroupSchedule,
 }
+
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) => {
     const {scheduleId, mapModal, scheduleTitle} = useSelector((state: RootState) => state.groupSchedule)
     const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
@@ -45,7 +46,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
     return (
         <ScheduleDetail_Container>
             <ScheduleStartDate_Container>
-                일정 시작 : {AHMFormat(scheduleDetail.groupScheduleCreate)}
+                일정 시작 : {AHMFormat(scheduleDetail.scheduleCreate)}
             </ScheduleStartDate_Container>
             <ScheduleMember_Container>
                 <span>참가인원 : </span>
