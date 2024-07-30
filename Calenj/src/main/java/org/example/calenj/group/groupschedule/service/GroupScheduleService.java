@@ -33,7 +33,7 @@ public class GroupScheduleService {
      * @param groupScheduleRequest 그룹 일정 정보
      */
     public void createGroupSchedule(GroupScheduleRequest groupScheduleRequest) {
-        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getScheduleGroup()).orElse(null);
+        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getGroupId()).orElse(null);
 
         LocalDateTime dateTime = LocalDateTime.now();
 

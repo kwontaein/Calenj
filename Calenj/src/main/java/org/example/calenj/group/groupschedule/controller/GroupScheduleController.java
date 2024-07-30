@@ -36,7 +36,7 @@ public class GroupScheduleController {
      */
     @PostMapping("api/getGroupScheduleList")
     public List<GroupScheduleResponse> getGroupScheduleList(@RequestBody GroupScheduleRequest groupScheduleRequest) {
-        return groupScheduleService.getGroupScheduleList(groupScheduleRequest.getScheduleGroup());
+        return groupScheduleService.getGroupScheduleList(groupScheduleRequest.getGroupId());
     }
 
     /**
