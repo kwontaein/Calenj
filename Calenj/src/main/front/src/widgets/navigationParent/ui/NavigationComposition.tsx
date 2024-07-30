@@ -15,8 +15,8 @@ import {registerUserName, RootState} from "../../../entities/redux";
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo,updateNavigation})=>{
 
-    const userId = localStorage.getItem('userId')
-    const userInfo = useFetchUserInfo(userId||''); //사용자정보 저장
+    const userId = localStorage.getItem('userId')||'';
+    const userInfo = useFetchUserInfo(userId); //사용자정보 저장
 
     useEffect(() => {
     }, [userInfo.isLoading]);

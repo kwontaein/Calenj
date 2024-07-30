@@ -16,9 +16,9 @@ import {
 export const ResponseFriendList: React.FC = () => {
     const [modal, setModal] = useState<boolean>(false)
     const [eventKey,setEventKey] = useState<string>('')
-
+    const userId =localStorage.getItem('userId')||'';
     //그룹 목록 불러오기
-    const responseFriendState = useFetchResponseFriendList();
+    const responseFriendState = useFetchResponseFriendList(userId);
     const showResponseInfo = (userId:string) =>{
         setEventKey(userId)
         setModal(true)

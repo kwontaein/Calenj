@@ -21,6 +21,6 @@ public interface Group_ScheduleRepository extends JpaRepository<GroupScheduleEnt
             ",Gs.privacy" +
             ",Gs.maxPeople," +
             "Gs.attendUsers)" +
-            " from Group_Schedule Gs where Gs.schedule_Group.groupId =: groupId")
+            " from group_schedule Gs where Gs.schedule_Group.groupId =: groupId")
     Optional<List<GroupScheduleResponse>> findByGroupId(@Param("groupId") UUID groupId);
 }
