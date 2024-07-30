@@ -1,4 +1,4 @@
-import {PointColor2, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor2, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import styled from "styled-components";
 
 export const MessageSend_Textarea = styled.textarea`
@@ -29,7 +29,7 @@ export const MessageIcon_Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${TextColor2};
+    color: ${TextColor}77;
 
     &:hover {
         color: ${TextColor};
@@ -40,7 +40,7 @@ export const MessageIcon_Container = styled.div`
 
 export const Message_Box_Container = styled.div<{ $isFocus: boolean }>`
     width: calc(100% - 24px);
-    border: 1px solid ${props => props.$isFocus ? TextColor : TextColor2};
+    border: 1px solid ${props => props.$isFocus ? TextColor : `${TextColor}77`};
     height: calc(100% - 20px);
     margin-inline: 12px;
     border-radius: 5px;

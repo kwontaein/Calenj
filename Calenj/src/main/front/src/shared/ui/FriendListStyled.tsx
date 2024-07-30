@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import exp from "node:constants";
-import {PointColor2, TextColor2, ThemeColor2, ThemeColor3} from "./SharedStyled";
+import {PointColor2, TextColor, ThemeColor2, ThemeColor3} from "./SharedStyled";
 
 
 export const FriendList_Container = styled.div`
@@ -66,7 +66,7 @@ export const Friend_ResponseBtn = styled.div`
 `
 
 export const Friend_Hr = styled.hr`
-    background-color: ${TextColor2}77;
+    background-color: ${TextColor}77;
     border: 0;
     height: 1px;
     margin: 0;

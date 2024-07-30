@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import {PointColor, TextColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
-interface subScreenWidthProps{
+interface subScreenWidthProps {
     $subScreenWidth: number;
 }
 
-interface GroupVoteListProps{
-    $join?:boolean;
+interface GroupVoteListProps {
+    $join?: boolean;
 }
 
 export const GroupVoteListView_Li = styled.li`
@@ -18,6 +18,7 @@ export const GroupVoteListView_Li = styled.li`
     padding-inline: 10px;
     padding-block: 5px;
     margin-block: 2px;
+
     &:hover {
         background-color: ${ThemeColor3};
     }
@@ -25,12 +26,11 @@ export const GroupVoteListView_Li = styled.li`
 
 
 export const GroupVoteJoin_div = styled.div<GroupVoteListProps>`
-    color: ${props=> props.$join ?  PointColor: `${TextColor2}77`};
+    color: ${props => props.$join ? PointColor : `${TextColor}77`};
     margin-top: 5px;
     font-size: 12px;
     align-items: center;
 `
-
 
 
 export const GroupVoterListTitle = styled.div`

@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import {PointColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 const userProfileSize = 100;
 
-export const RequestFriendView_Container = styled.div<{$myRequest:boolean}>`
+export const RequestFriendView_Container = styled.div<{ $myRequest: boolean }>`
     width: calc(100% - 20px);
-    height: ${props => props.$myRequest ? '350px':'250px'};
+    height: ${props => props.$myRequest ? '350px' : '250px'};
     background-color: ${ThemeColor3};
     border-radius: 10px;
     padding: 10px;
@@ -16,7 +16,7 @@ export const SpeechBox_Container = styled.div`
     height: 40px;
     margin-bottom: 15px;
     max-width: calc(100% - 150px);
-    margin-left: ${userProfileSize+35}px;
+    margin-left: ${userProfileSize + 35}px;
     display: flex;
     flex-direction: row;
 `
@@ -43,7 +43,7 @@ export const SpeechTail = styled.div`
 
 export const UserProfile_Container = styled.div`
     width: 100%;
-    height: ${userProfileSize-30}px;
+    height: ${userProfileSize - 30}px;
     display: flex;
     flex-direction: row;
 `
@@ -56,11 +56,11 @@ export const UserProfile = styled.div`
     border: 8px solid ${ThemeColor2};
     background-color: ${TextColor};
     margin-left: 10px;
-    margin-top: -${userProfileSize-40}px;
+    margin-top: -${userProfileSize - 40}px;
 `
 
 export const UserName_Container = styled.div`
-    width:calc(100% - ${userProfileSize +16 +40}px);
+    width: calc(100% - ${userProfileSize + 16 + 40}px);
     margin-left: 10px;
 `
 
@@ -79,15 +79,16 @@ export const UserId = styled.div`
 export const FriendDetail_Close_Button = styled.div`
     width: auto;
     height: 15px;
-    &:hover{
-        color: ${TextColor2};
+
+    &:hover {
+        color: ${TextColor}77;
     }
 `
 
 export const Content_Container = styled.div`
     width: calc(100% - 20px);
-    height: calc(100% - ${userProfileSize-30}px);
-    margin-inline:10px;
+    height: calc(100% - ${userProfileSize - 30}px);
+    margin-inline: 10px;
 `
 
 export const UserInfoViewSelect_Container = styled.div`
@@ -96,7 +97,7 @@ export const UserInfoViewSelect_Container = styled.div`
     border-bottom: 2px solid ${TextColor}77;
 `
 
-export const UserInfoView_Button = styled.button<{$isFocus:boolean}>`
+export const UserInfoView_Button = styled.button<{ $isFocus: boolean }>`
     background-color: transparent;
     margin-top: 1px;
     height: 100%;
@@ -105,11 +106,12 @@ export const UserInfoView_Button = styled.button<{$isFocus:boolean}>`
     ${props => props.$isFocus && `border-bottom: 2px solid ${TextColor};`}
     border-radius: 0;
     transition: border-bottom-color 0.3 ease;
-    &:hover{
+
+    &:hover {
         background-color: transparent;
     }
 `
-export const UserInfo_Container= styled.div`
+export const UserInfo_Container = styled.div`
     width: 100%;
     height: 95px;
     margin-block: 5px;
@@ -142,7 +144,7 @@ export const UserInfoContent_Container = styled.div`
 export const EmptyData_Content = styled.div`
     width: 100%;
     height: 100%;
-    color:${TextColor}77;
+    color: ${TextColor}77;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,13 +152,15 @@ export const EmptyData_Content = styled.div`
 `
 
 export const ListItem_Container = styled.div`
-    height : 40px;
+    height: 40px;
     width: 100%;
     display: flex;
     flex-direction: row;
-    &:hover{
-        background-color: rgb(0,0,0,0.3);
+
+    &:hover {
+        background-color: rgb(0, 0, 0, 0.3);
     }
+
     align-items: center;
     border-radius: 2px;
 `

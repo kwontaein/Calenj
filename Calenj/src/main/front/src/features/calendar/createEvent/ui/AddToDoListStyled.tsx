@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, PointColor, TextColor, TextColor2, ThemeColor2} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, ThemeColor2} from "../../../../shared/ui/SharedStyled";
 
 export const AddToDoList_Container = styled.div`
     margin-left: 10px;
@@ -8,7 +8,7 @@ export const AddToDoList_Container = styled.div`
 `
 export const ListInput_Container = styled.div`
     width: 100%;
-    height :30px;
+    height: 30px;
     display: flex;
     flex-direction: row;
 `
@@ -42,8 +42,9 @@ export const AddVoteList_Btn = styled.button`
     font-size: 12px;
     font-weight: 550;
     background-color: ${BackGroundColor};
-    &:hover{
-        background-color: rgb(0,0,0,0.3);
+
+    &:hover {
+        background-color: rgb(0, 0, 0, 0.3);
     }
 `
 
@@ -58,12 +59,11 @@ export const TodoListEmptyText = styled.div`
     width: 100%;
     margin-left: -20px;
     height: 100%;
-    color: ${TextColor2};
+    color: ${TextColor}77;
     display: flex;
     align-items: center;
     justify-content: center;
 `
-
 
 
 export const TodoListItem_Container = styled.div`
@@ -74,7 +74,7 @@ export const TodoListItem_Container = styled.div`
     margin-block: 5px;
     justify-content: space-between;
     border-radius: 2px;
-    border: 1px solid ${TextColor2}77;
+    border: 1px solid ${TextColor}77;
     align-items: center;
 
 `

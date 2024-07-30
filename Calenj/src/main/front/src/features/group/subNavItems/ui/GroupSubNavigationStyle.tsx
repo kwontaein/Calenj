@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import {BackGroundColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_height: number = 32;
 export const SubNavigate_padding: number = 14;
-export const SubNavigate_paddingBlock : number =10;
+export const SubNavigate_paddingBlock: number = 10;
 export const subNavigateBorder = 1.2;
 export const SubNavigationItem_height: number = 30;
 export const SubNavigationItem_margin: number = 5;
@@ -27,9 +27,9 @@ export const SubNavigateTopBar_Container = styled.div<SubNavigationClickProps>`
     padding: ${SubNavigate_padding}px;
     padding-block: ${SubNavigate_paddingBlock}px;
     border-bottom: ${subNavigateBorder}px ${BackGroundColor} solid;
-    background-color:  ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemeColor3 };
+    background-color: ${props => props.$isClick ? 'rgba(255, 255, 255, 0.1)' : ThemeColor3};
     border-radius: 10px 0 0 0;
-   
+
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
@@ -79,7 +79,7 @@ export const SubNavigateItem_Content = styled.div`
     font-size: 16px;
     align-content: center;
     margin-left: 10px;
-    color: ${TextColor2};
+    color: ${TextColor}77;
 `
 
 export const SubNavigateItem_Icon = styled.div`
@@ -89,7 +89,7 @@ export const SubNavigateItem_Icon = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 15px;
-    color: ${TextColor2};
+    color: ${TextColor}77;
 `
 
 export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
@@ -106,11 +106,11 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
     background-color: ${props => props.$isClick ? BackGroundColor : ''};
 
     ${SubNavigateItem_Icon} {
-        color: ${props => props.$isClick ? TextColor : TextColor2};
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
 
     ${SubNavigateItem_Content} {
-        color: ${props => props.$isClick ? TextColor : TextColor2};
+        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     }
 
     transition: background-color 0.3s ease, color 0.3s ease;

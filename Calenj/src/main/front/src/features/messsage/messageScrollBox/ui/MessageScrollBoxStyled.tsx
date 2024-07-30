@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import {PointColor2, TextColor2, ThemeColor2} from "../../../../shared/ui/SharedStyled";
+import {PointColor2, TextColor, ThemeColor2} from "../../../../shared/ui/SharedStyled";
 
 interface CheckBeforeSender {
     $sameUser: boolean,
 }
 
-interface UserProfile{
+interface UserProfile {
     $userId: string | undefined
 }
 
@@ -14,10 +14,10 @@ export const ScrollMarginInline = 10;
 export const MessageSend_Container_height = 60;
 
 
-export const MessageScroll_Container = styled.div<{$inputSize:number}>`
+export const MessageScroll_Container = styled.div<{ $inputSize: number }>`
     width: 100%;
-    height: calc(100% - ${props=> props.$inputSize}px);
-    
+    height: calc(100% - ${props => props.$inputSize}px);
+
 `
 /** 채팅창 Container-스크롤 박스 */
 export const ScrollableDiv = styled.div`
@@ -35,7 +35,6 @@ export const MessageBoxContainer = styled.div<CheckBeforeSender>`
     padding-bottom: 0;
     user-select: text;
 `
-
 
 
 export const NickNameContainer = styled.div`
@@ -115,7 +114,7 @@ export const ImageWrapper = styled.div`
     max-height: inherit;
     border-radius: 2px;
 `
-export const ImageContent = styled.div<{$image:string}>`
+export const ImageContent = styled.div<{ $image: string }>`
     width: 100%;
     height: 100%;
     margin: 0;
@@ -126,10 +125,9 @@ export const ImageContent = styled.div<{$image:string}>`
     font-family: inherit;
     font-size: 100%;
     vertical-align: baseline;
-    background-image: ${props => props.$image? `url("/image/savedImage/${props.$image.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$image ? `url("/image/savedImage/${props.$image.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: cover;
 `
-
 
 
 //채팅 endPoint선
@@ -161,7 +159,7 @@ export const HR_ChatEndPoint = styled.hr`
         border-radius: 10px;
         font-size: 12px;
         font-family: sans-serif;
-        background-color:${ThemeColor2};
+        background-color: ${ThemeColor2};
     }
 `
 
@@ -176,7 +174,7 @@ export const HR_NewDate = styled.hr`
 
     &:before {
         content: '';
-        background: ${TextColor2}77;
+        background: ${TextColor}77;
         position: absolute;
         left: 0;
         top: 50%;
@@ -189,14 +187,14 @@ export const HR_NewDate = styled.hr`
         position: relative;
         display: inline-block;
         padding: 0 .3em;
-        color: ${TextColor2};
+        color: ${TextColor}77;
         border-radius: 10px;
         font-size: 12px;
         font-family: sans-serif;
-        background-color:${ThemeColor2};
+        background-color: ${ThemeColor2};
     }
 `
 
 export const WaitingBlock_Container = styled.div`
-    
+
 `

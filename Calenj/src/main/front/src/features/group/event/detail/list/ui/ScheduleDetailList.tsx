@@ -1,35 +1,45 @@
-import React, {DragEvent, useRef, useState} from "react";
+import React, {DragEvent, useEffect, useRef, useState} from "react";
 import {
+    JoinUser,
+    ScheduleDetailAdd_BlankHr,
+    ScheduleDetailAdd_Circle,
+    ScheduleDetailAdd_Div,
+    ScheduleDetailAdd_Line,
+    ScheduleDetailAdd_Progress,
+    ScheduleDetailAdd_StandHr,
+    ScheduleDetailAdd_Structure_Container,
     ScheduleDetailList_Circle,
     ScheduleDetailList_Container,
-    ScheduleDetailList_Div, ScheduleDetailList_Line,
-    ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
+    ScheduleDetailList_Div,
+    ScheduleDetailList_Line,
+    ScheduleDetailList_Progress,
+    ScheduleDetailList_StandHr,
+    ScheduleDetailList_Structure_Container,
+    Sub_Schedule_Bottom, Sub_Schedule_Middle,
+    Sub_Schedule_Top,
+    SubSchedule_Delete,
+    SubScheduleContent, SubScheduleDuration,
+    SubScheduleTitle, UserProfile
 } from "./ScheduleDetailListStyled";
 import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
-import {useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
+import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../../entities/redux";
+import {RootState, updateScheduleState} from "../../../../../../entities/redux";
+import {EventStateMap} from "../../../../../../entities/redux/model/module/StompMiddleware";
 
-export const ScheduleDetailList : React.FC = () =>{
+export const ScheduleDetailList: React.FC = () => {
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
-    const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
-    const [ItemWidth,setItemWidth] = useState<number|null>(null);
-    
+    const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
+    const [ItemWidth, setItemWidth] = useState<number | null>(null);
+
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
 
-
-    const [list, setList] = useState<string[]>([
-        "Item 1",
-        "Item 2",
-        "Item 3",
-        "Item 4",
-        "Item 5",
-        "Item 6"
-    ]);
+    const [list, setList] = useState<string[]>(["아이테"]);
     const [dragging, setDragging] = useState<boolean>(false);
+
 
     // 드래그 시작될 때 실행
     const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
@@ -98,25 +108,45 @@ export const ScheduleDetailList : React.FC = () =>{
                         onDragOver={(e) => e.preventDefault()}
                         $isDrop={dragging && dragItem.current === idx}
                     >
-                        {item}
+                        <Sub_Schedule_Top>
+                            <SubScheduleTitle>제목</SubScheduleTitle>
+                            <SubSchedule_Delete>id로 수정</SubSchedule_Delete>
+                        </Sub_Schedule_Top>
+                        <SubScheduleDuration>● 07 : 00</SubScheduleDuration>
+                        <SubScheduleContent>subScheduleContent</SubScheduleContent>
+                        <JoinUser>
+                            <UserProfile $userId={"2c7f2d75-6dcd-4802-929d-174cb65dce22"}></UserProfile>
+                            <UserProfile $userId={"2c7f2d75-6dcd-4802-929d-174cb65dce22"}></UserProfile>
+                            <UserProfile $userId={"none"}></UserProfile>
+                        </JoinUser>
                     </ScheduleDetailList_Div>
                 </ScheduleDetailList_Progress>
             ))}
             {(dragging && mousePosition) &&
                 <ScheduleDetailList_Div $isDrop={false}
-                         style={{position:'fixed',
-                             width:`${ItemWidth}px`,
-                             left:mousePosition.x,
-                             top:mousePosition.y,
-                             pointerEvents:'none',
-                             opacity:'0.9'}}>
-                    {list[dragItem.current||0]}
+                                        style={{
+                                            position: 'fixed',
+                                            width: `${ItemWidth}px`,
+                                            left: mousePosition.x,
+                                            top: mousePosition.y,
+                                            pointerEvents: 'none',
+                                            opacity: '0.9'
+                                        }}>
+                    {list[dragItem.current || 0]}
                 </ScheduleDetailList_Div>}
-            <ScheduleButton_Container style={{justifyContent: 'right'}}>
-                <Schedule_Button>
-                    세부일정 추가
-                </Schedule_Button>
-            </ScheduleButton_Container>
+            <ScheduleDetailAdd_Progress>
+                <ScheduleDetailAdd_Structure_Container>
+                    <div>
+                        <ScheduleDetailAdd_StandHr/>
+                        <ScheduleDetailAdd_Circle/>
+                        <ScheduleDetailAdd_BlankHr/>
+                    </div>
+                    <ScheduleDetailAdd_Line/>
+                </ScheduleDetailAdd_Structure_Container>
+                <ScheduleDetailAdd_Div>
+                    +
+                </ScheduleDetailAdd_Div>
+            </ScheduleDetailAdd_Progress>
         </ScheduleDetailList_Container>
     );
 }

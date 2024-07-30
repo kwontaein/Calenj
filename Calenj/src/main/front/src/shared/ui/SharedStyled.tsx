@@ -12,28 +12,46 @@ interface ClickAbleProps {
 
 
 /**
- * SubNavColor, button색
- * @param ThemeColor3
+ * 테마 1
+ * 세미블랙
  */
 export const ThemeColor3 = "#2B2E33";//SubNav 222831
-/**EventNavColor
- *  @param ThemaColor2
- */
 export const ThemeColor2 = "#373B42"; //채팅 및 EventNav 31363F
-
 export const SubScreenColor = "rgb(51,55,62)" //subScreen
-
 export const BackGroundColor = "#212227";
-
 export const TextColor = "#EEEEEE";
-export const TextColor2 = "#c2c2c2";
 export const PointColor = "#0070E8";
 export const PointColor2 = "#FFD369"
+
+/**
+ * 테마 2
+ * 하늘하늘
+ */
+/*export const ThemeColor2 = "#d1fff8"; //채팅 및 EventNav 31363F
+export const SubScreenColor = "#BDCDD6" //subScreen
+export const ThemeColor3 = "#93BFCF";//SubNav 222831
+export const BackGroundColor = "#6096B4";
+export const TextColor = "#2f2929";
+export const PointColor = "#f3d57f";
+export const PointColor2 = "#7a6802"*/
+
+/**
+ * 테마 3
+ * 화이트
+ */
+/*export const ThemeColor2 = "#fdfdfd"; //채팅 및 EventNav 31363F
+export const SubScreenColor = "#e9ebed" //subScreen
+export const ThemeColor3 = "#f0f1f3";//SubNav 222831
+export const BackGroundColor = "#e1e3e6";
+export const TextColor = "#2f2929";
+export const PointColor = "#8e929a";
+export const PointColor2 = "#e56752"*/
+
 
 export const GlobalStyle = createGlobalStyle`
 
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
- 
+
     body {
         background-color: ${BackGroundColor}; /* 전체 페이지 배경색 */
         margin: 0;
@@ -115,13 +133,13 @@ export const GlobalStyle = createGlobalStyle`
             border: 2px solid ${PointColor};
         }
     }
-    
-    textarea{
+
+    textarea {
         font-family: "Noto Sans KR", sans-serif;
     }
 `;
 
-export const ProfileContainer = styled.div<{ $userId:string }>`
+export const ProfileContainer = styled.div<{ $userId: string }>`
     width: 40px;
     height: 40px;
     min-width: 40px;
@@ -137,7 +155,7 @@ export const ProfileContainer = styled.div<{ $userId:string }>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: cover;
 `
 
@@ -175,7 +193,7 @@ export const FullScreen_div = styled.div`
     height: 100%;
 `
 export const MiniText = styled.div`
-    color: ${TextColor2}77;
+    color: ${TextColor}77;
     margin-top: 5px;
     font-size: 12px;
     align-items: center;
@@ -242,8 +260,6 @@ export const Input = styled.input`
 `;
 
 
-
-
 export const Button = styled.button`
     padding: 10px 20px;
     margin: 10px;
@@ -302,7 +318,6 @@ export const ListView = styled.li`
         background-color: ${ThemeColor2};
     }
 `
-
 
 
 export const SignState_Button = styled.button`
@@ -373,7 +388,7 @@ export const Toggle_Container = styled.div<ToggleProps>`
     height: 18px;
     padding-inline: 1px;
     background-color: ${props => props.$isClick ? PointColor : ThemeColor2};
-    border: 1px solid ${TextColor2};
+    border: 1px solid ${TextColor}77;
     border-radius: 50px;
     display: flex;
     justify-content: center;`
@@ -400,7 +415,7 @@ const moveToggle = (toggle: boolean) => keyframes`
 
 
 /** Option*/
-export const Option_Container= styled.div`
+export const Option_Container = styled.div`
     width: 110px;
     height: auto;
     background-color: ${ThemeColor3};
@@ -430,10 +445,12 @@ export const Option_Item = styled.div`
     display: flex;
     align-items: center;
     border-radius: 4px;
-    &:hover{
+
+    &:hover {
         background-color: ${BackGroundColor};
         color: ${PointColor2};
-        ${OptionIcon_Wrapper}{
+
+        ${OptionIcon_Wrapper} {
             background-color: ${BackGroundColor};
             color: ${PointColor2};
         }
@@ -447,7 +464,7 @@ export const Radio_Label = styled.label`
     align-items: center;
 `
 
-export const InputType_Radio = styled.input.attrs({ type: 'radio' })`
+export const InputType_Radio = styled.input.attrs({type: 'radio'})`
     appearance: none; /* 기본 브라우저 스타일 제거 */
     width: 12px;
     height: 12px;
@@ -457,10 +474,12 @@ export const InputType_Radio = styled.input.attrs({ type: 'radio' })`
     margin-right: 5px;
     /* 체크됐을 때의 색상 */
     transition: background-color 0.3s ease;
+
     &:checked {
         background-color: ${PointColor}; /* 체크됐을 때의 배경색 */
         border-color: ${TextColor}; /* 체크됐을 때의 테두리 색 */
     }
+
     &:focus {
         box-shadow: none;
     }

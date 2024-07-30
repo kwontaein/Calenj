@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 
 export const Controller_Container = styled.div`
     width: auto;
@@ -15,10 +15,12 @@ export const Controller_Button = styled.button`
     border-radius: 0;
     justify-content: center;
     align-items: center;
-    background-color : ${ThemeColor3};
-    color:${TextColor2};
+    background-color: ${ThemeColor3};
+    color: ${TextColor}77;
     font-weight: 550;
-     &:hover{background-color : ${ThemeColor3}77;
-     }
-    
+
+    &:hover {
+        background-color: ${ThemeColor3}77;
+    }
+
 `
