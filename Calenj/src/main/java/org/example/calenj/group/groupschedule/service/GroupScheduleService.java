@@ -38,10 +38,25 @@ public class GroupScheduleService {
         LocalDateTime dateTime = LocalDateTime.now();
 
         String userName = globalService.extractFromSecurityContext().getUsername();
+
+        //매니저에 나 추가
         List<String> name = new ArrayList<>();
         name.add(userName);
+
         groupScheduleRequest.setManagers(name);
         groupScheduleRequest.setGroupScheduleId(UUID.randomUUID());
+
+        //참여 유저 받아서 내이름 추가 후 저장
+        List<String> user;
+
+        if (groupScheduleRequest.getMember() == null) {
+            user = new ArrayList<>();
+        } else {
+            user = groupScheduleRequest.getMember();
+        }
+        user.add(userName);
+        groupScheduleRequest.setMember(user);
+
         GroupScheduleEntity groupScheduleEntity = groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime));
         groupScheduleRepository.save(groupScheduleEntity);
     }

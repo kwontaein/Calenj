@@ -29,6 +29,8 @@ public class GroupScheduleRequest {
     private boolean privacy;
     //일정 참여 인원 수
     private int maxPeople;
+    //참여 유저
+    private List<String> member;
     //서브 일정 목록
     public List<GroupSubScheduleRequest> groupSubSchedules;
 
@@ -42,6 +44,7 @@ public class GroupScheduleRequest {
                 .managers(managers.toString())
                 .privacy(privacy)
                 .maxPeople(maxPeople)
+                .member(member.toString())
                 .build();
     }
 }

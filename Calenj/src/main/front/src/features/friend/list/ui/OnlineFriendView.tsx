@@ -12,9 +12,8 @@ import {RootState} from "../../../../entities/redux";
 import {useEffect} from "react";
 
 export const OnlineFriendView: React.FC = () => {
-
-    const friendListState = useFetchFriendList();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId') || ''
+    const friendListState = useFetchFriendList(userId);
     const {userList} = useSelector((state: RootState) => state.onlineStorage.friend)[userId || ''];
     console.log(userList)
 
