@@ -1,20 +1,15 @@
 import {changeDateForm} from "../../../../shared/lib";
-import axios from "axios";
-import {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { useEffect, useMemo, useRef, useState} from "react";
 import {Message, QUERY_CHATTING_KEY, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
-import {connect, useSelector} from "react-redux";
-import {endPointMap, RootState} from "../../../../entities/redux";
+import { useSelector} from "react-redux";
+import {RootState, scrollPointMap} from "../../../../entities/redux";
 import {useIntersect} from "../../../../shared/model";
-import {FetchData} from "../../../../entities/reactQuery/model/types";
 import {
-    FetchPreviousPageOptions,
     InfiniteData,
-    InfiniteQueryObserverResult,
-    useInfiniteQuery, useQueryClient
+     useQueryClient
 } from "@tanstack/react-query";
-import {all} from "@redux-saga/core/effects";
-import {useReceivedMessage} from "../../../../entities/message";
 import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
+import {useReceivedMessage} from "../../../../entities/message";
 
 interface useMessageData {
     messageList: Message[],
@@ -39,7 +34,7 @@ export const useMessageData = (): useMessageData => {
     const [position, setPosition] = useState<string>('older');
     const queryClient = useQueryClient();
     const [prevMessage,setPrevMessage] = useState<Message[]>([])
-    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage} = useChatFileInfinite(stompParam,userId||'')
+    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage, refetch} = useChatFileInfinite(stompParam,userId||'')
     //새로운 메시지
     const receivedNewMessage = useReceivedMessage();
     const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
@@ -117,6 +112,30 @@ export const useMessageData = (): useMessageData => {
             })
         }
     });
+
+    useEffect(() => {
+        const {param, state} = stomp.receiveMessage
+        if (stompParam !== param || state !== 'SEND'||isInitialLoad) return
+        const sendUser = stomp.receiveMessage.userId
+        if (userId === sendUser) {
+            if (!receivedMessages.data||!data) return
+            console.log(isInitialLoad)
+            queryClient.setQueryData([QUERY_CHATTING_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                pages: data?.pages.slice(0, 1),
+                pageParams: [{position:"", chatUUID:""}]
+            }));
+            scrollPointMap.delete(stompParam);
+
+            refetch({}).then(()=>{
+                queryClient.setQueryData([QUERY_NEW_CHAT_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                    pages: data?.pages.slice(0, 1),
+                    pageParams: data?.pageParams.slice(0, 1)
+                }));
+            })
+            return
+        }
+
+    }, [stomp.receiveMessage.receivedUUID])
 
     useEffect(() => {
         const timer = setTimeout(() => {

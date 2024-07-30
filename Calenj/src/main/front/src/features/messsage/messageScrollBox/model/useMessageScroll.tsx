@@ -1,7 +1,7 @@
 import {Message, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {endPointMap, requestFile, RootState} from "../../../../entities/redux";
+import {endPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
 import {InfiniteData, useQueryClient} from "@tanstack/react-query";
 import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
@@ -31,11 +31,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const messageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const isRender = useRef<boolean>();
     const [isReceive, setIsReceive] = useState<boolean>(false);
-    const {refetch} = useChatFileInfinite(stompParam, userId || '')
+    const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
 
-    const receivedNewMessage = useReceivedMessage();
-    const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
-    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (!scrollRef.current) return
@@ -46,8 +43,18 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         }
         scrollRef.current.scrollTop -= (beforeInputSize.current - inputSize)
         beforeInputSize.current = inputSize;
+        beforeScrollTop.current = scrollRef.current?.scrollTop;
 
     }, [inputSize]);
+
+
+    useEffect(() => {
+        return () => {
+            if(beforeScrollTop.current===undefined) return
+            //스크롤이 존재했는지 체크
+            scrollPointMap.set(stompParam,beforeScrollTop.current);
+        }
+    }, [stompParam]);
 
 
     useEffect(() => {
@@ -71,6 +78,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             } else { //위로
                 scrollRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
             }
+            scrollPointMap.set(stompParam,scrollRef.current.scrollTop)
+
         }
     }, [clickState, mode, stompParam, screenHeightSize]);
 
@@ -92,6 +101,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         setTimeout(() => {
             if (scrollRef.current) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+                beforeScrollTop.current = scrollRef.current.scrollTop
             }
         }, 50)
     };
@@ -100,6 +110,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const updateScroll = () => {
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
+        beforeScrollTop.current = scrollTop - (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0);
 
         if (endPointMap.get(stompParam) === 0) return;
 
@@ -123,14 +134,26 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (!scrollRef.current || connectMessages.length === 0) return
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
-        if (!isRender.current) { //첫 랜더링에만 적용
-            const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
-            if (hasEndPoint) {
-                scrollToMessage("엔드포인트");
-            } else {
-                scrollToBottom();
+        if(scrollPointMap.get(stompParam) === undefined){
+            if (endPointMap.get(stompParam) === 0){
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                scrollPointMap.set(stompParam, scrollRef.current.scrollHeight)
+            }else {
+                const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
+                if (hasEndPoint) {
+                    scrollToMessage("엔드포인트");
+                } else {
+                    scrollToBottom();
+                }
             }
-            isRender.current = true;
+        }else {
+            scrollRef.current.scrollTop = (scrollPointMap.get(stompParam) + (clickState!=="" && mode==="column"? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+        }
+
+        const {scrollHeight, clientHeight} = scrollRef.current;
+        //메시지가 와있는데 스크롤이 없다면 앤드포인트 갱신
+        if(endPointMap.get(stompParam) !== 0 && scrollHeight === clientHeight){
+            debouncing_EndPoint();
         }
 
     }
@@ -144,19 +167,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         const sendUser = stomp.receiveMessage.userId
 
         if (userId === sendUser) {
-            if (receivedMessages.data) return
-
-            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                pages: data?.pages.slice(0, 1),
-                pageParams: data?.pageParams.slice(0, 1)
-            }));
-
-            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
-                pages: data?.pages.slice(0, 1),
-                pageParams: [{position: null, chatUUID: null}]
-            }));
-
-            refetch()
             return
         }
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
@@ -206,10 +216,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
 
     useEffect(() => {
-        if (chatUUID !== '') {
-            scrollToMessage(chatUUID, position === "newer");
-        }
-
+        if (chatUUID === '')  return
+        scrollToMessage(chatUUID, position === "newer");
     }, [connectMessages, chatUUID])
 
     return {scrollRef, messageRefs};
