@@ -147,23 +147,22 @@ export interface GroupSchedule {
     groupId: string, //스케줄을 생성한 그룹
     scheduleId: string,
     host: string,
-    manager: string[],
-    groupScheduleTitle: string,
-    groupScheduleCreate: Date,
+    managers: string[],
+    scheduleTitle: string,
+    scheduleCreate: Date,
     startDate: Date,
     privacy: string, //공개범위
     maxPeople: number, //최대인원
     member: string[],//참여자
-    schedule: SubSchedule[],
 }
 
 export interface SubSchedule {
     index: number,
-    subScheduleId: string,
-    scheduleTitle: string,
-    scheduleContent: string,
-    scheduleCreate: Date,
-    scheduleDuration: number,
+    subSubScheduleId: string,
+    subScheduleTitle: string,
+    subScheduleContent: string,
+    subScheduleCreate: Date,
+    subScheduleDuration: number,
     joinUser: string,
 }
 

@@ -16,19 +16,19 @@ import java.util.UUID;
 @Repository
 public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubScheduleEntity, UUID> {
     @Query("select new org.example.calenj.group.groupschedule.dto.response.GroupSubScheduleResponse(" +
-            "gss.groupSubScheduleId" +
-            ",gss.scheduleTitle" +
-            ",gss.scheduleCreate" +
-            ",gss.scheduleDuration" +
-            ",gss.scheduleContent" +
+            "gss.subScheduleId" +
+            ",gss.subScheduleTitle" +
+            ",gss.subScheduleCreate" +
+            ",gss.subScheduleDuration" +
+            ",gss.subScheduleContent" +
             ",gss.index" +
             ",gss.joinUser) " +
             "from group_sub_schedule gss " +
-            "where gss.groupScheduleId.groupScheduleId =: scheduleId")
+            "where gss.scheduleId.scheduleId =: scheduleId")
     Optional<List<GroupSubScheduleResponse>> findByScheduleId(UUID scheduleId);
 
     @Modifying(clearAutomatically = true)
     @Transactional
-    @Query("delete from group_sub_schedule gss where gss.groupScheduleId.groupScheduleId =: scheduleId")
+    @Query("delete from group_sub_schedule gss where gss.scheduleId.scheduleId =: scheduleId")
     void deleteByscheduleId(@Param("scheduleId") UUID scheduleId);
 }

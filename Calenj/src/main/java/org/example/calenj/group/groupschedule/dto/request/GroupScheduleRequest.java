@@ -14,13 +14,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupScheduleRequest {
-    public UUID groupScheduleId;
+    public UUID scheduleId;
     //일정을 만든 그룹
     public UUID groupId;
     //일정 제목
-    public String groupScheduleTitle;
+    public String scheduleTitle;
     //일정 생성일
-    public Timestamp groupScheduleCreate;
+    public Timestamp scheduleCreate;
     //일정 생성일
     public Timestamp startDate;
     //관리자들
@@ -38,9 +38,9 @@ public class GroupScheduleRequest {
         return GroupScheduleEntity
                 .builder()
                 .schedule_Group(group)
-                .groupScheduleTitle(groupScheduleTitle)
-                .groupScheduleCreate(time)
-                .groupScheduleStart(startDate)
+                .scheduleTitle(scheduleTitle)
+                .scheduleCreate(time)
+                .scheduleStart(startDate)
                 .managers(managers.toString())
                 .privacy(privacy)
                 .maxPeople(maxPeople)

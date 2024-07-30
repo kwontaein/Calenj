@@ -5,6 +5,10 @@ import {
     ScheduleDetailList_Div, ScheduleDetailList_Line,
     ScheduleDetailList_Progress, ScheduleDetailList_StandHr, ScheduleDetailList_Structure_Container
 } from "./ScheduleDetailListStyled";
+import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
+import {useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../../entities/redux";
 
 export const ScheduleDetailList : React.FC = () =>{
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
@@ -12,6 +16,11 @@ export const ScheduleDetailList : React.FC = () =>{
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
     const [ItemWidth,setItemWidth] = useState<number|null>(null);
+    
+    const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
+    const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
+
+
     const [list, setList] = useState<string[]>([
         "Item 1",
         "Item 2",
@@ -103,6 +112,11 @@ export const ScheduleDetailList : React.FC = () =>{
                              opacity:'0.9'}}>
                     {list[dragItem.current||0]}
                 </ScheduleDetailList_Div>}
+            <ScheduleButton_Container style={{justifyContent: 'right'}}>
+                <Schedule_Button>
+                    세부일정 추가
+                </Schedule_Button>
+            </ScheduleButton_Container>
         </ScheduleDetailList_Container>
     );
 }

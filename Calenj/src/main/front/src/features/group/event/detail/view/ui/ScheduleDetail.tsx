@@ -23,9 +23,10 @@ import {ScheduleDetailList} from "../../list";
 import {GroupSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
 
 
-interface GroupScheduleProps{
-    scheduleDetail:GroupSchedule,
+interface GroupScheduleProps {
+    scheduleDetail: GroupSchedule,
 }
+
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) => {
     const {scheduleId, mapModal, scheduleTitle} = useSelector((state: RootState) => state.groupSchedule)
     const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
@@ -40,25 +41,24 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
     }
 
 
-    const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId);
 
     return (
         <ScheduleDetail_Container>
             <ScheduleStartDate_Container>
-                일정 시작 : {AHMFormat(scheduleDetail.groupScheduleCreate)}
+                일정 시작 : {AHMFormat(scheduleDetail.scheduleCreate)}
             </ScheduleStartDate_Container>
             <ScheduleMember_Container>
                 <span>참가인원 : </span>
                 <span
-                    style={{marginRight: '5px'}}>{scheduleDetail.manager.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
+                    style={{marginRight: '5px'}}>{scheduleDetail.managers.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
                 </span>
-                {scheduleDetail.manager.length > 2 &&
+                {scheduleDetail.managers.length > 2 &&
                     <div>
                         <MemberMoreView_Text
-                            onClick={setShowMember}>외 {scheduleDetail.manager.length - 2}명</MemberMoreView_Text>
+                            onClick={setShowMember}>외 {scheduleDetail.managers.length - 2}명</MemberMoreView_Text>
                         {showMember &&
                             <ScheduleMember_Viewer_Container ref={showMemberRef}>
-                                {scheduleDetail.manager.map((userKey) => (
+                                {scheduleDetail.managers.map((userKey) => (
                                     <ScheduleMemberItem_Container key={userKey}>
                                         <ScheduleMemberProfile_Container $userId={userKey}/>
                                         <ScheduleMemberName_Container>
@@ -88,11 +88,6 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                 </ScheduleMap_Container>
             }
             <ScheduleDetailList/>
-            <ScheduleButton_Container style={{justifyContent: 'right'}}>
-                <Schedule_Button>
-                    세부일정 추가
-                </Schedule_Button>
-            </ScheduleButton_Container>
         </ScheduleDetail_Container>
     )
 }

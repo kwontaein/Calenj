@@ -1,12 +1,11 @@
+type eventState = 'create' | 'modify' | '';
 
-type eventState = 'create'|'modify'|'';
-
-interface groupEventSate{
-    groupScheduleTitle:string,
-    startDate:Date,
+interface groupEventSate {
+    scheduleTitle: string,
+    startDate: Date,
     privacy: boolean,
-    isLimit:boolean,
-    maxPeople:number,
+    isLimit: boolean,
+    maxPeople: number,
 }
 
 
@@ -19,26 +18,26 @@ export type GroupEventAction =
     ;
 
 export const initialGroupEventState: groupEventSate = {
-    groupScheduleTitle:'',
+    scheduleTitle: '',
     startDate: new Date,
     privacy: false,
-    isLimit:false,
-    maxPeople:1,
+    isLimit: false,
+    maxPeople: 1,
 };
 
 
 export const GroupEventReducer = (state: groupEventSate, action: GroupEventAction): groupEventSate => {
     switch (action.type) {
         case 'SET_TITLE':
-            return { ...state, groupScheduleTitle: action.payload };
+            return {...state, scheduleTitle: action.payload};
         case 'SET_START_DATE':
-            return { ...state, startDate: action.payload };
+            return {...state, startDate: action.payload};
         case 'SET_PRIVACY':
-            return { ...state, privacy: action.payload };
+            return {...state, privacy: action.payload};
         case 'SET_IS_LIMIT':
-            return { ...state, isLimit: action.payload };
+            return {...state, isLimit: action.payload};
         case 'SET_MAX_PEOPLE':
-            return { ...state, maxPeople: action.payload };
+            return {...state, maxPeople: action.payload};
         default:
             return state;
     }

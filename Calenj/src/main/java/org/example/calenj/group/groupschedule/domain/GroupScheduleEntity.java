@@ -23,8 +23,8 @@ public class GroupScheduleEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "group_schedule_id", columnDefinition = "BINARY(16)")
-    private UUID groupScheduleId;
+    @Column(nullable = false, unique = true, name = "schedule_id", columnDefinition = "BINARY(16)")
+    private UUID scheduleId;
 
     //일정 생성자(관리자
     @ManyToOne
@@ -40,16 +40,16 @@ public class GroupScheduleEntity {
     private GroupEntity schedule_Group;
 
     //일정 제목
-    @Column(name = "group_schedule_title")
-    private String groupScheduleTitle;
+    @Column(name = "schedule_title")
+    private String scheduleTitle;
 
     //일정 생성일
-    @Column(name = "group_schedule_create")
-    private Timestamp groupScheduleCreate;
+    @Column(name = "schedule_create")
+    private Timestamp scheduleCreate;
 
     //일정 시작 날짜 및 시간
-    @Column(name = "group_schedule_start")
-    private Timestamp groupScheduleStart;
+    @Column(name = "schedule_start")
+    private Timestamp scheduleStart;
 
     //일정 공개 범위
     @Column(name = "group_schedule_privacy_relationship")

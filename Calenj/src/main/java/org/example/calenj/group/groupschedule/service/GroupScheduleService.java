@@ -44,7 +44,7 @@ public class GroupScheduleService {
         name.add(userName);
 
         groupScheduleRequest.setManagers(name);
-        groupScheduleRequest.setGroupScheduleId(UUID.randomUUID());
+        groupScheduleRequest.setScheduleId(UUID.randomUUID());
 
         //참여 유저 받아서 내이름 추가 후 저장
         List<String> user;
@@ -67,7 +67,7 @@ public class GroupScheduleService {
      * @param groupScheduleRequest
      */
     public void updateSubSchedule(GroupScheduleRequest groupScheduleRequest) {
-        GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getGroupScheduleId()).orElse(null);
+        GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
 
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));

@@ -21,39 +21,39 @@ public class GroupSubScheduleEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, name = "group_sub_schedule_id", columnDefinition = "BINARY(16)")
-    private UUID groupSubScheduleId;
+    @Column(nullable = false, unique = true, name = "sub_schedule_id", columnDefinition = "BINARY(16)")
+    private UUID subScheduleId;
 
     @ManyToOne
-    @JoinColumn(name = "group_schedule_id", referencedColumnName = "group_schedule_id", columnDefinition = "BINARY(16)")
-    private GroupScheduleEntity groupScheduleId;
+    @JoinColumn(name = "scheduleId", referencedColumnName = "schedule_id", columnDefinition = "BINARY(16)")
+    private GroupScheduleEntity scheduleId;
 
     //서브 일정 제목
-    @Column(name = "group_schedule_title")
-    private String scheduleTitle;
+    @Column(name = "sub_schedule_title")
+    private String subScheduleTitle;
 
     //서브 일정 생성일
-    @Column(name = "group_schedule_create")
-    private Timestamp scheduleCreate;
+    @Column(name = "sub_schedule_create")
+    private Timestamp subScheduleCreate;
 
     //서브 일정 종료시간
-    @Column(name = "group_schedule_duration")
-    private int scheduleDuration;
+    @Column(name = "sub_schedule_duration")
+    private int subScheduleDuration;
 
     //서브 일정 내용
-    @Column(name = "group_schedule_content")
-    private String scheduleContent;
+    @Column(name = "sub_schedule_content")
+    private String subScheduleContent;
 
     //서브 일정 인덱스
-    @Column(name = "group_schedule_index")
+    @Column(name = "sub_schedule_index")
     private int index;
 
     //서브 일정 참여 인원
-    @Column(name = "group_schedule_join_user")
+    @Column(name = "sub_schedule_join_user")
     private String joinUser;
 
     //지도 좌표
-    @Column(name = "schedule_locate")
-    private String scheduleLocate;
+    @Column(name = "sub_schedule_locate")
+    private String subScheduleLocate;
 
 }
