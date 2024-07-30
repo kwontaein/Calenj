@@ -12,7 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity(name = "Group_Schedule")
+@Entity(name = "group_schedule")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor //전체 필드에 대한 생성자를 생성하여 @Builder 를 사용
