@@ -1,1 +1,1 @@
-export {useReceivedMessage} from './model/receiveNewChat'
+export {useReceivedMessage} from './model/useReceivedMessage'

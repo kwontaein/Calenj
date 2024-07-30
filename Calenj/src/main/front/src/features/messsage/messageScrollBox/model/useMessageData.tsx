@@ -1,29 +1,24 @@
 import {changeDateForm} from "../../../../shared/lib";
-import axios from "axios";
-import {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { useEffect, useMemo, useRef, useState} from "react";
 import {Message, QUERY_CHATTING_KEY, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
-import {connect, useSelector} from "react-redux";
-import {endPointMap, RootState} from "../../../../entities/redux";
+import { useSelector} from "react-redux";
+import {RootState, scrollPointMap} from "../../../../entities/redux";
 import {useIntersect} from "../../../../shared/model";
-import {FetchData} from "../../../../entities/reactQuery/model/types";
 import {
-    FetchPreviousPageOptions,
     InfiniteData,
-    InfiniteQueryObserverResult,
-    useInfiniteQuery, useQueryClient
+     useQueryClient
 } from "@tanstack/react-query";
-import {all} from "@redux-saga/core/effects";
-import {useReceivedMessage} from "../../../../entities/message";
 import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
+import {useReceivedMessage} from "../../../../entities/message";
 
 interface useMessageData {
     messageList: Message[],
-    chatUUID:string,
-    position:string,
+    chatUUID: string,
+    position: string,
     topRef: React.RefObject<HTMLDivElement>,
     bottomRef: React.RefObject<HTMLDivElement>,
-    hasNextPage:boolean,
-    hasPreviousPage:boolean
+    hasNextPage: boolean,
+    hasPreviousPage: boolean
     compareDate: (date1: string, date2: string) => boolean,
 }
 
@@ -39,37 +34,38 @@ export const useMessageData = (): useMessageData => {
     const [position, setPosition] = useState<string>('older');
     const queryClient = useQueryClient();
     const [prevMessage,setPrevMessage] = useState<Message[]>([])
-    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage} = useChatFileInfinite(stompParam,userId||'')
+    const {data, isFetching, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage, refetch} = useChatFileInfinite(stompParam,userId||'')
     //새로운 메시지
     const receivedNewMessage = useReceivedMessage();
-    const receivedMessages =useReceiveChatInfinite(stompParam,receivedNewMessage)
+    const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-    const removeDuplicate = (messageList: Message[],newMessageList:Message[]): void => {
+    const removeDuplicate = (messageList: Message[], newMessageList: Message[]): void => {
         const existingIds = new Set(messageList.map(message => message.chatUUID));
         // newMessageList에서 중복된 메시지를 필터링
         const removeDuplicatesList = newMessageList.filter(message => !existingIds.has(message.chatUUID));
         if (newMessageList.length !== removeDuplicatesList.length) {
             queryClient.setQueryData([QUERY_NEW_CHAT_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                 pages: removeDuplicatesList,
-                pageParams: receivedMessages.data?.pageParams.slice(0,removeDuplicatesList.length)
+                pageParams: receivedMessages.data?.pageParams.slice(0, removeDuplicatesList.length)
             }));
         }
     }
 
-    const newMessageList = useMemo(()=>{
-        if(receivedMessages.data){
-            return receivedMessages.data.pages.filter((message)=>message.chatUUID!=="시작라인")
+    const newMessageList = useMemo(() => {
+        if (receivedMessages.data) {
+            return receivedMessages.data.pages.filter((message) => message.chatUUID !== "시작라인")
         }
         return []
-    },[receivedMessages.data])
+    }, [receivedMessages.data])
 
     const messageList = useMemo(() => {
         if (data) {
-            if(!isFetching){
-                const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message)=> (message.chatUUID!=="시작라인" && message.chatUUID!=="마지막라인"))
+            if (!isFetching) {
+                const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message) => (message.chatUUID !== "시작라인" && message.chatUUID !== "마지막라인"))
                 setPrevMessage(messages)
                 return hasNextPage ? messages : [...messages, ...newMessageList]
-            }else{
+            } else {
                 return prevMessage
             }
         }
@@ -81,18 +77,18 @@ export const useMessageData = (): useMessageData => {
 
 
     const topRef = useIntersect((entry, observer) => {
-        if (hasPreviousPage && messageList.length > 0) {
+        if (!isInitialLoad && hasPreviousPage && messageList.length > 0) {
             observer.unobserve(entry.target);
-            setPosition("older")
-            setChatUUID(messageList[0].chatUUID)
-            if(!data) return
-            if(data.pages.length>3) {
+            setPosition("older");
+            setChatUUID(messageList[0].chatUUID);
+            if (!data) return;
+            if (data.pages.length > 3) {
                 queryClient.setQueryData([QUERY_CHATTING_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
                     pages: data?.pages.slice(0, 3),
                     pageParams: data?.pageParams.slice(0, 3)
                 }));
             }
-            fetchPreviousPage()
+            fetchPreviousPage();
         }
     });
 
@@ -117,6 +113,37 @@ export const useMessageData = (): useMessageData => {
         }
     });
 
+    useEffect(() => {
+        const {param, state} = stomp.receiveMessage
+        if (stompParam !== param || state !== 'SEND'||isInitialLoad) return
+        const sendUser = stomp.receiveMessage.userId
+        if (userId === sendUser) {
+            if (!receivedMessages.data||!data) return
+            console.log(isInitialLoad)
+            queryClient.setQueryData([QUERY_CHATTING_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                pages: data?.pages.slice(0, 1),
+                pageParams: [{position:"", chatUUID:""}]
+            }));
+            scrollPointMap.delete(stompParam);
+
+            refetch({}).then(()=>{
+                queryClient.setQueryData([QUERY_NEW_CHAT_KEY, stompParam], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                    pages: data?.pages.slice(0, 1),
+                    pageParams: data?.pageParams.slice(0, 1)
+                }));
+            })
+            return
+        }
+
+    }, [stomp.receiveMessage.receivedUUID])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsInitialLoad(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
     const compareDate = (date1: string, date2: string): boolean => {
