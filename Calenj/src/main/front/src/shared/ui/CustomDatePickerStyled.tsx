@@ -20,8 +20,8 @@ export const DatePickerIcon_Container= styled.div`
     font-size: 20px;
 `
 
-export const EventDatePicker = styled(DatePicker)`
-    width: 130px;
+export const EventDatePicker = styled(DatePicker)<{$width?:number}>`
+    width: ${props=>props.$width ? props.$width:'130px'};
     height : 25px;
     margin-inline: 8px;
     border-radius: 5px;
