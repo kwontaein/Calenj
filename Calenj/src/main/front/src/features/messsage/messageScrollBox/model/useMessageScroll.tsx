@@ -1,9 +1,11 @@
-import {Message, useChatFileInfinite} from "../../../../entities/reactQuery";
+import {Message, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {endPointMap, requestFile, RootState} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
-import {useIntersect} from "../../../../shared/model";
+import {InfiniteData, useQueryClient} from "@tanstack/react-query";
+import {useReceiveChatInfinite} from "../../../../entities/reactQuery/model/queryModel";
+import {useReceivedMessage} from "../../../../entities/message";
 
 interface ReturnScroll {
     scrollRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -15,7 +17,11 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
     const dispatch = useDispatch();
     const stomp = useSelector((state: RootState) => state.stomp)
-    const {screenHeightSize, mode, clickState} = useSelector((state: RootState) => state.subNavigation.group_subNavState)
+    const {
+        screenHeightSize,
+        mode,
+        clickState
+    } = useSelector((state: RootState) => state.subNavigation.group_subNavState)
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const stompParam = useSelector((state: RootState) => state.stomp.param)
     const beforeInputSize = useRef(inputSize);
@@ -24,6 +30,12 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const messageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const isRender = useRef<boolean>();
+    const [isReceive, setIsReceive] = useState<boolean>(false);
+    const {refetch} = useChatFileInfinite(stompParam, userId || '')
+
+    const receivedNewMessage = useReceivedMessage();
+    const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (!scrollRef.current) return
@@ -63,8 +75,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     }, [clickState, mode, stompParam, screenHeightSize]);
 
 
-
-
     const [showDown, setShowDown] = useState<boolean>(true);
 
     //컴포넌트 랜더링과 상관없이 인스턴스를 유지하게 memo
@@ -74,7 +84,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             dispatch(requestFile({target: 'groupMsg', param: stompParam, requestFile: "ENDPOINT", nowLine: 0}));
         }, 2000);
     }, [stompParam]);
-
 
 
     //스크롤 => 맨 밑으로 이동
@@ -88,16 +97,15 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     };
 
 
-
-
     const updateScroll = () => {
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-        console.log(endPointMap.get(stompParam) === 0)
+
         if (endPointMap.get(stompParam) === 0) return;
 
         //스크롤에 따른 표시
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
+            console.log("맨아래로")
             scrollToBottom();
         }
     }
@@ -131,9 +139,24 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     useEffect(() => {
         const {param, state} = stomp.receiveMessage
         if (stompParam !== param || state !== 'SEND' || connectMessages.length === 0 || !scrollRef.current) return
+        setIsReceive(true);
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         const sendUser = stomp.receiveMessage.userId
+
         if (userId === sendUser) {
+            if (receivedMessages.data) return
+
+            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                pages: data?.pages.slice(0, 1),
+                pageParams: data?.pageParams.slice(0, 1)
+            }));
+
+            queryClient.setQueryData([QUERY_NEW_CHAT_KEY, param], (data: InfiniteData<(Message | null)[], unknown> | undefined) => ({
+                pages: data?.pages.slice(0, 1),
+                pageParams: [{position: null, chatUUID: null}]
+            }));
+
+            refetch()
             return
         }
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
@@ -160,15 +183,22 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             isRender.current = false;
             return
         }
+
         const sendUser = stomp.receiveMessage.userId
         const state = stomp.receiveMessage.state
-        if (userId === sendUser && state === 'SEND') {
+
+        if (userId === sendUser && state === 'SEND' && isReceive) {
+            if (scrollRef.current) {
+                scrollRef.current.removeEventListener('scroll', updateScroll_throttling);
+            }
             scrollToBottom();
+            setIsReceive(false);
+        } else {
+            addScrollEvent();
         }
-        addScrollEvent()
+
         return () => {
             if (scrollRef.current) {
-                console.log('이벤트 삭제')
                 scrollRef.current.removeEventListener('scroll', updateScroll_throttling);
             }
         };
@@ -181,8 +211,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         }
 
     }, [connectMessages, chatUUID])
-
-
 
     return {scrollRef, messageRefs};
 }
