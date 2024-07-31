@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, TextColor} from "../../../../shared/ui/SharedStyled";
-
+import {PointColor, SubScreenColor, TextColor} from "../../../../shared/ui/SharedStyled";
 
 
 export const SelectorText_Continer = styled.div`
@@ -8,7 +7,7 @@ export const SelectorText_Continer = styled.div`
     width: 85%;
     align-content: center;
     margin-left: 5px;
-    color:${PointColor};
+    color: ${PointColor};
 `
 
 export const SelectorIcon_Container = styled.div`
@@ -16,13 +15,13 @@ export const SelectorIcon_Container = styled.div`
     width: 15%;
     align-content: center;
     text-align: center;
-        color:${PointColor};
-        margin-top: 2px;
+    color: ${PointColor};
+    margin-top: 2px;
 `
 
 export const SelectItem_Container = styled.div`
     width: 196px;
-    background-color: black;
+    background-color: ${TextColor}77;
     position: fixed;
     top: 71px;
     left: 82px; //SideNavigation width 72px + subNavigation padding: 10px
@@ -40,14 +39,17 @@ export const Btn_ItemSelector = styled.div`
     flex-direction: row;
     border-radius: 2px;
     transition: background-color 0.3s ease, color 0.3s ease;
-    &:hover{
+
+    &:hover {
         background-color: ${PointColor};
         font-weight: 0;
-            ${SelectorIcon_Container}{
-                    color:${TextColor};
-            }
-            ${SelectorText_Continer}{
-                    color: ${TextColor};
-            }
+
+        ${SelectorIcon_Container} {
+            color: ${TextColor};
+        }
+
+        ${SelectorText_Continer} {
+            color: ${TextColor};
+        }
     }
 `

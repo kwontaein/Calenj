@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
-import {BackGroundColor, PointColor, TextColor} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, TextColor, ThemeColor2} from "../../../../shared/ui/SharedStyled";
 
 
 export const GridCalendar_Container = styled.div`
@@ -8,6 +8,7 @@ export const GridCalendar_Container = styled.div`
     height: 100%;
     position: relative;
     z-index: 0;
+    background-color: ${ThemeColor2};
 
     .fc-popover {
         background: ${BackGroundColor};

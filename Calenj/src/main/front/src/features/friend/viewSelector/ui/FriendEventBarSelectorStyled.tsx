@@ -3,7 +3,7 @@ import {
     PointColor,
     PointColor2,
     TextColor,
-    TextColor2,
+
     ThemeColor2,
     ThemeColor3
 } from "../../../../shared/ui/SharedStyled";
@@ -30,7 +30,7 @@ export const FriendSelectButton_Container = styled.div`
     justify-content: space-between;
     padding: 0 5px;
 `
-export const FriendSelectButton = styled.div<{$isAble:boolean}>`
+export const FriendSelectButton = styled.div<{ $isAble: boolean }>`
     height: 100%;
     font-size: 13px;
     display: flex;
@@ -38,10 +38,10 @@ export const FriendSelectButton = styled.div<{$isAble:boolean}>`
     padding: 0 14px;
     border-radius: 5px;
     margin-inline: 2px;
+
     ${props => props.$isAble && `background-color : ${ThemeColor3};`}
-    
     &:hover {
-        background-color: ${ThemeColor3}77 ;
+        background-color: ${ThemeColor3}77;
     }
 `
 

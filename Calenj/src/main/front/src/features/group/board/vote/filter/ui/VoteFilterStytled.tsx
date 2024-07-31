@@ -1,36 +1,36 @@
-import styled, { keyframes, css  } from 'styled-components';
-import {PointColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import styled, {keyframes, css} from 'styled-components';
+import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 
-interface FilterClickProps{
-    $isClick?:boolean,
-    $toggleState?:boolean,
+interface FilterClickProps {
+    $isClick?: boolean,
+    $toggleState?: boolean,
 }
 
 
-const changeAnimationAfter = (option:string) => keyframes`
-    from{
-        ${option ==="filter" && 'font-size: 14px'};
-        ${option ==="search" && 'font-size: 13px'};
+const changeAnimationAfter = (option: string) => keyframes`
+    from {
+        ${option === "filter" && 'font-size: 14px'};
+        ${option === "search" && 'font-size: 13px'};
     }
-    to{
+    to {
         opacity: 1;
-        ${option ==="filter" && 'font-size: 14px'};
-        ${option ==="search" && 'font-size: 13px'};
+        ${option === "filter" && 'font-size: 14px'};
+        ${option === "search" && 'font-size: 13px'};
         color: ${TextColor};
     }
 `
 
 
 export const SubScreenFilter_Container = styled.div`
-    width: calc(100% - 8px);//오른쪽 padding이 없으니 빼줘야함
+    width: calc(100% - 8px); //오른쪽 padding이 없으니 빼줘야함
     color: transparent;
     font-size: 0;
     margin-top: 5px;
     display: flex;
     flex-direction: column;
     opacity: 0;
-    animation : ${changeAnimationAfter('filter')} 0.2s linear 0.4s forwards;
+    animation: ${changeAnimationAfter('filter')} 0.2s linear 0.4s forwards;
 `
 
 
@@ -56,7 +56,8 @@ export const SubScreenFilter_Btn = styled.button`
     width: 30%;
     height: 25px;
     border-radius: 5px;
-    &:hover{
+
+    &:hover {
         background-color: ${ThemeColor2};
     }
 `
@@ -68,21 +69,21 @@ export const FilterContent_Container = styled.div<FilterClickProps>`
     display: flex;
     align-items: center;
     border-radius: 10px;
-    color: ${TextColor2}77;
-    ${props=> props.$isClick &&
-    `color: ${TextColor};`
-}
+    color: ${TextColor}77;
+    ${props => props.$isClick &&
+            `color: ${TextColor};`
+    }
 `
 
 /**ToggleBox*/
 
-const moveToggle = (toggle:boolean) => keyframes`
+const moveToggle = (toggle: boolean) => keyframes`
     from {
 
     }
-    to{
-         ${!toggle && `transform: translateX(-60%)`};
-         ${toggle && `transform: translateX(60%)`};
+    to {
+        ${!toggle && `transform: translateX(-60%)`};
+        ${toggle && `transform: translateX(60%)`};
     }
 `;
 export const FilterToggle_Container = styled.div<FilterClickProps>`
@@ -90,7 +91,7 @@ export const FilterToggle_Container = styled.div<FilterClickProps>`
     width: 20%;
     height: 18px;
     padding-inline: 1px;
-    border:1px solid  ${props => props.$isClick ? TextColor2 : ThemeColor3};
+    border: 1px solid ${props => props.$isClick ? `${TextColor}77` : ThemeColor3};
     border-radius: 50px;
     display: flex;
     justify-content: center;
@@ -100,7 +101,7 @@ export const FilterToggleItem = styled.div<FilterClickProps>`
     height: 18px;
     border-radius: 50%;
     background-color: ${props => props.$isClick ? PointColor : ThemeColor3};
-    ${props => props.$toggleState!==undefined && css
-    `animation : ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
-}
+    ${props => props.$toggleState !== undefined && css
+            `animation: ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
+    }
 `

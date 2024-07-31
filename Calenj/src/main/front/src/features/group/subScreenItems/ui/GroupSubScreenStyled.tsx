@@ -1,19 +1,19 @@
 import styled from 'styled-components';
-import { SubScreenColor, TextColor, TextColor2} from "../../../../shared/ui/SharedStyled";
+import {SubScreenColor, TextColor} from "../../../../shared/ui/SharedStyled";
 import {MiddleLine_Size} from "../../contentItems/ui/ControlMidLineStyled";
 
 
-
-interface OptionClick{
-    $isClick:boolean;
+interface OptionClick {
+    $isClick: boolean;
 }
 
-interface ScreenModeProps{
-    $mode:string;
+interface ScreenModeProps {
+    $mode: string;
 }
+
 export const GroupSubScreen_Container = styled.div<ScreenModeProps>`
-    width: ${props=>props.$mode ==="row"? `calc(100% - ${MiddleLine_Size}px)` : "100%"}; //middleLine을 제외한 크기
-    height: ${props=>props.$mode ==="column"? `calc(100% - ${MiddleLine_Size}px)` : "100%"};
+    width: ${props => props.$mode === "row" ? `calc(100% - ${MiddleLine_Size}px)` : "100%"}; //middleLine을 제외한 크기
+    height: ${props => props.$mode === "column" ? `calc(100% - ${MiddleLine_Size}px)` : "100%"};
     background-color: ${SubScreenColor};
 `
 
@@ -32,13 +32,14 @@ export const GroupSubScreenTop_Container = styled.div`
 export const GroupSubScreenTopIcon_Container = styled.div<OptionClick>`
     display: flex;
     align-items: center;
-    color:${props => props.$isClick ? TextColor:TextColor2};
+    color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
     margin-right: 10px;
-    &:hover{
+
+    &:hover {
         color: ${TextColor}77;
     }
 `
-export const GroupSubScreenContent_Container =styled.div`
+export const GroupSubScreenContent_Container = styled.div`
     width: calc(100% - 10px);
     height: calc(100% - 40px);
     margin-inline: 5px;
@@ -47,8 +48,9 @@ export const GroupSubScreenContent_Container =styled.div`
 `
 
 export const OptionIcon_Container = styled.div`
-    color:${TextColor};
-    &:hover{
+    color: ${TextColor};
+
+    &:hover {
         color: ${TextColor}77;
     }
 `

@@ -3,7 +3,7 @@ import {
     PointColor,
     PointColor2,
     TextColor,
-    TextColor2,
+
     ThemeColor2,
     ThemeColor3
 } from "../../../../shared/ui/SharedStyled";
@@ -25,7 +25,6 @@ const shake = keyframes`
         transform: translateX(0);
     }
 `;
-
 
 
 export const FriendEventBarItems_Container = styled.div`
@@ -52,6 +51,7 @@ export const AddFriendInput = styled.input`
     width: 150px;
     height: 100%;
     color: ${TextColor};
+
     &:focus {
         outline: none;
         border: none;
@@ -65,7 +65,8 @@ export const AddFriendButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    &:hover{
+
+    &:hover {
         background-color: ${PointColor}77;
     }
 `

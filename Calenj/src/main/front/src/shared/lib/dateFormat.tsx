@@ -30,6 +30,10 @@ export function shortAHMFormat(date: Date): string {
     return dayjs(date).locale('ko').format('A hh:mm')
 }
 
+export function shortAHMTimeFormat(date :Date) : string{
+    return dayjs(date).locale('ko').format('A hh시 mm분')
+}
+
 
 export const createTimePassed = (date: string): string => {
     const now = new Date();

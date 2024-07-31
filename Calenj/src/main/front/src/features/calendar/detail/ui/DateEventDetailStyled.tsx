@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BackGroundColor, TextColor, TextColor2, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
 import chroma from "chroma-js";
 
 const bottomSize = 40;
@@ -10,13 +10,11 @@ export const DateEventDetail_Container = styled.div`
     background-color: ${ThemeColor3};
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 
-            0 24px 38px 3px rgba(0,0,0,.14),
-            0 9px 46px 8px rgba(0,0,0,.12),
-            0 11px 15px -7px rgba(0,0,0,.2);
+    box-shadow: 0 24px 38px 3px rgba(0, 0, 0, .14),
+    0 9px 46px 8px rgba(0, 0, 0, .12),
+    0 11px 15px -7px rgba(0, 0, 0, .2);
     transition: opacity .2s ease-in-out;
 `
-
 
 
 export const TitleContent_Container = styled.div`
@@ -42,7 +40,7 @@ export const TitleContent_Wrapper = styled.div`
 export const EventOption_Container = styled.div`
     width: calc(100% - 20px);
     padding-inline: 10px;
-    padding-top:10px;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -64,14 +62,15 @@ export const EventButtonIcon_Wrapper = styled.div`
     align-items: center;
     margin-inline: 2px;
     border-radius: 50%;
-    &:hover{
+
+    &:hover {
         color: ${TextColor}77;
     }
 `
 
-export const EventDetailContent_Wrapper = styled.div<{$isRepeat:boolean}>`
+export const EventDetailContent_Wrapper = styled.div<{ $isRepeat: boolean }>`
     width: calc(100% - 20px);
-    margin-top: ${props=> props.$isRepeat ? '15px' : '20px'};
+    margin-top: ${props => props.$isRepeat ? '15px' : '20px'};
     height: auto;
     padding-inline: 10px;
 `
@@ -98,12 +97,11 @@ export const EventDetailIcon_Wrapper = styled.div`
     align-items: center;
 `
 
-export const EventTimeContent_Wrapper= styled.div`
+export const EventTimeContent_Wrapper = styled.div`
     width: calc(100% - 30px);
     height: 100%;
     font-size: 20px;
 `
-
 
 
 export const DateEventBottom_Container = styled.div`
@@ -133,7 +131,7 @@ export const RepeatEventContent_Wrapper = styled.div`
     font-size: 16px;
 `
 
-export const PromiseContent_Container =styled.div`
+export const PromiseContent_Container = styled.div`
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
@@ -143,7 +141,7 @@ export const PromiseContent_Container =styled.div`
     border-radius: 5px;
     overflow: auto;
 `
-export const TodoListContent_Container =styled.div`
+export const TodoListContent_Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 5px;
@@ -167,7 +165,7 @@ export const AdditionalInfo_Container = styled.div`
     display: flex;
     align-items: center;
 `
-export const JoinFriendList_Container= styled.div`
+export const JoinFriendList_Container = styled.div`
     height: 25px;
     padding-block: 5px;
     display: flex;
@@ -182,7 +180,7 @@ export const EventTag_Container = styled.div`
     flex-direction: row;
     align-items: center;
 `
-export const EventTag_Wrapper = styled.div<{$color:string}>`
+export const EventTag_Wrapper = styled.div<{ $color: string }>`
     min-width: 30px;
     width: fit-content;
     height: 16px;
@@ -194,5 +192,5 @@ export const EventTag_Wrapper = styled.div<{$color:string}>`
     align-items: center;
     justify-content: center;
     margin-inline: 4px;
-    background-color: ${props=> chroma(props.$color).alpha(0.5).css()};
+    background-color: ${props => chroma(props.$color).alpha(0.5).css()};
 `

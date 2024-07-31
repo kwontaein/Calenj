@@ -1,5 +1,5 @@
 // import styled from 'styled-components'
-// import {PointColor2, TextColor2, ThemeColor2} from "../../../../src/shared/ui/SharedStyled";
+// import {PointColor2,  ThemeColor2} from "../../../../src/shared/ui/SharedStyled";
 //
 // interface CheckBeforeSender {
 //     $sameUser: boolean,

@@ -1,49 +1,121 @@
 import styled from "styled-components";
-import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, PointColor2, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
 
 export const ScheduleDetailList_Container = styled.div`
     width: 100%;
 `
+
+export const ScheduleDetail_Wrapper = styled.div`
+    width: calc(100% - 30px);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+`
+
+export const ScheduleDetailList_Progress = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: 'stretch';
+`
+export const ScheduleDetailList_Structure_Container = styled.div`
+    width: 30px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    flex:1;
+`
+
+export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean }>`
+    width: 50%;
+    height: calc(40% + 27px);
+    box-sizing: border-box;
+    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    border-bottom: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    margin-bottom: -7px;
+    position: relative;
+`
+export const ScheduleDetailList_BottomLine_Container = styled.div<{ $isNow: boolean }>`
+    width: 50%;
+    height: calc(60% - 27px);
+    box-sizing: border-box;
+    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    position: relative;
+`
+
+export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
+    height: 12px;
+    width: 12px;
+    border: 2px solid ${TextColor};
+    background-color: ${props => props.$isNow ? PointColor : TextColor};
+    border-radius: 50%;
+    margin-right: 6px;
+    position: relative;
+`
+export const MapInterval_Container = styled.div`
+    height: 30px;
+    width: 100%;
+`
+
+
+export const ScheduleDetail_Wrapper_Container = styled.div`
+    width: calc(100% - 20px);
+    padding-inline: 10px;
+    font-size: 18px;
+    margin-block: 2px;
+    display: flex;
+    flex-direction: row;
+    color:inherit;
+    background-color: inherit;
+`
+export const ScheduleDetail_ContentTitle_Container = styled.div`
+    width: auto;
+    padding-inline: 5px;
+    color:inherit;
+    background-color: inherit;
+`
+
+export const ScheduleDetail_Content_Container = styled.div`
+    width: auto;
+    color:inherit;
+    background-color: inherit;
+`
+
+export const SubSchedule_Title_Container = styled.div`
+    width: 100%;
+    font-size: 20px;
+    height: 30px;
+    color:inherit;
+    background-color: inherit;
+`
+export const SubSchedule_Content_Container= styled.div`
+    width: calc(100% - 20px);
+    background-color: ${ThemeColor3};
+    border-radius: 5px;
+    padding : 10px;
+    display: flex;
+    justify-content: left;
+    min-height: 20px;
+`
+
+
+
 export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
+    height: auto;
     text-align: center;
     font-size: 40px;
-    width: calc(100% - 50px);
+    width: 100%;
     border-radius: 5px;
+    box-sizing: border-box;
     color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
     border: 1px ${props => props.$isDrop ? `dashed ${TextColor}` : `solid ${TextColor}`};
     background-color: ${props => props.$isDrop ? `${ThemeColor3}` : ThemeColor2};
     white-space: pre-wrap;
     position: relative;
-`
-
-export const ScheduleDetailList_Progress = styled.div`
-    display: flex;
-    align-items: center;
-`
-export const ScheduleDetailList_Structure_Container = styled.div`
-    display: flex;
-    align-items: center;
-`
-
-export const ScheduleDetailList_StandHr = styled.hr<{ $isNow: boolean }>`
-    min-height: 40px;
-    border: none;
-    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
-    margin: 0 0 0 9px;
-`
-
-export const ScheduleDetailList_Line = styled.div<{ $isNow: boolean }>`
-    height: 2px;
-    width: 20px;
-    background-color: ${props => props.$isNow ? PointColor : TextColor};
-`
-
-export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
-    height: 16px;
-    width: 16px;
-    border: 2px solid white;
-    background-color: ${props => props.$isNow ? PointColor : TextColor};
-    border-radius: 50%;
-    right: 0;
-    position: relative;
+    padding-block: 10px;
+    ${SubSchedule_Content_Container}{
+        color :${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+    }
 `
