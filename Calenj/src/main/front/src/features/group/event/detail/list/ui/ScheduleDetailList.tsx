@@ -1,128 +1,141 @@
 import React, {DragEvent, useEffect, useRef, useState} from "react";
 import {
-    JoinUser,
-    ScheduleDetailAdd_BlankHr,
-    ScheduleDetailAdd_Circle,
-    ScheduleDetailAdd_Div,
-    ScheduleDetailAdd_Line,
-    ScheduleDetailAdd_Progress,
-    ScheduleDetailAdd_StandHr,
-    ScheduleDetailAdd_Structure_Container,
+    MapInterval_Container,
+    ScheduleDetail_Content_Container,
+    ScheduleDetail_ContentTitle_Container,
+    ScheduleDetail_Wrapper,
+    ScheduleDetail_Wrapper_Container,
+    ScheduleDetailList_BottomLine_Container,
     ScheduleDetailList_Circle,
     ScheduleDetailList_Container,
     ScheduleDetailList_Div,
-    ScheduleDetailList_Line,
     ScheduleDetailList_Progress,
-    ScheduleDetailList_StandHr,
     ScheduleDetailList_Structure_Container,
-    Sub_Schedule_Bottom, Sub_Schedule_Middle,
-    Sub_Schedule_Top,
-    SubSchedule_Delete,
-    SubScheduleContent, SubScheduleDuration,
-    SubScheduleTitle, UserProfile
+    ScheduleDetailList_TopLine_Container, SubSchedule_Content_Container,
+    SubSchedule_Title_Container,
 } from "./ScheduleDetailListStyled";
 import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
 import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
 import {useSelector} from "react-redux";
-import {RootState, updateScheduleState} from "../../../../../../entities/redux";
-import {EventStateMap} from "../../../../../../entities/redux/model/module/StompMiddleware";
+import {RootState} from "../../../../../../entities/redux";
+import {useListDrag} from "../model/useListDrag";
+import {PointColor2} from "../../../../../../shared/ui/SharedStyled";
+import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 
-export const ScheduleDetailList: React.FC = () => {
-    const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
-    const dragOverItem = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
-    const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
-    const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
-    const [ItemWidth, setItemWidth] = useState<number | null>(null);
+export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
 
+    useEffect(() => {
+        console.log('시작 시간 :', startTime)
+    }, []);
+    const initSchedule =[
+        {
+            index: 0,
+            subSubScheduleId: "0",
+            subScheduleTitle: "타임스퀘어",
+            subScheduleContent: "가기",
+            subScheduleCreate: new Date,
+            subScheduleDuration: 60,
+            joinUser: ["간순대","김말이순대"],
+        },
+        {
+            index: 1,
+            subSubScheduleId: "1",
+            subScheduleTitle: "소사역 스벅",
+            subScheduleContent: "가서 놀고 먹기",
+            subScheduleCreate: new Date,
+            subScheduleDuration: 60,
+            joinUser: ["간순대","김말이순대"],
+        },
+        {
+            index: 2,
+            subSubScheduleId: "2",
+            subScheduleTitle: "집",
+            subScheduleContent: "가기",
+            subScheduleCreate: new Date,
+            subScheduleDuration: 60,
+            joinUser: ["간순대","김말이순대"],
+        }
+    ]
+    const {dragEnter, dragMousePosition, drop, dragStart,addSubSchedule, mousePosition, ItemWidth, scheduleData, dragIndex,scheduleTime}=useListDrag(initSchedule, startTime)
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
 
-    const [list, setList] = useState<string[]>(["아이테"]);
-    const [dragging, setDragging] = useState<boolean>(false);
-
-
-    // 드래그 시작될 때 실행
-    const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
-        e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setDragImage(new Image(), 0, 0); // Hide the default drag image
-        const {top, left} = e.currentTarget.getBoundingClientRect();
-        setInitialDragPosition({x: e.pageX - left, y: e.pageY - top});
-        setItemWidth(e.currentTarget.clientWidth)
-        setDragging(true);
-        dragItem.current = position;
-    };
-
-
-    // 드래그 중인 대상이 위로 포개졌을 때
-    const dragEnter = (e: DragEvent<HTMLDivElement>, position: number) => {
-        dragOverItem.current = position;
-        const newList = [...list];
-        const dragItemValue = newList[dragItem.current!];
-
-        // 드래그한 요소를 제거
-        newList.splice(dragItem.current!, 1);
-        // 드롭 위치에 요소를 추가하고 나머지를 뒤로 밀기
-        newList.splice(dragOverItem.current, 0, dragItemValue);
-        setList(newList);
-        dragItem.current = dragOverItem.current;
-    };
-
-    // 드랍 (커서 뗐을 때)
-    const drop = () => {
-        setDragging(false);
-        dragItem.current = null;
-        dragOverItem.current = null;
-        setMousePosition(null)
-        setInitialDragPosition(null)
-    };
-
-    const dragMousePosition = (e: DragEvent<HTMLDivElement>) => {
-        if (initialDragPosition) {
-            // console.log(e.pageX, e.pageY)
-            setMousePosition({
-                x: e.pageX - initialDragPosition.x,
-                y: e.pageY - initialDragPosition.y
-            })
-        }
-    }
 
     return (
         <ScheduleDetailList_Container>
 
-            {list.map((item, idx) => (
+            {scheduleData.map((schedule, idx) => (
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>
-                        <div>
-                            <ScheduleDetailList_StandHr $isNow={true}/>
-                            <ScheduleDetailList_Circle $isNow={true}/>
-                            <ScheduleDetailList_StandHr $isNow={true}/>
-                        </div>
-                        <ScheduleDetailList_Line $isNow={true}/>
+                        <ScheduleDetailList_TopLine_Container $isNow={true}/>
+                        <ScheduleDetailList_Circle $isNow={true}/>
+                        <ScheduleDetailList_BottomLine_Container $isNow={true}/>
                     </ScheduleDetailList_Structure_Container>
-                    <ScheduleDetailList_Div
-                        onDrag={dragMousePosition}
-                        draggable
-                        onDragStart={(e) => dragStart(e, idx)}
-                        onDragEnter={(e) => dragEnter(e, idx)}
-                        onDragEnd={drop}
-                        onDragOver={(e) => e.preventDefault()}
-                        $isDrop={dragging && dragItem.current === idx}
-                    >
-                        <Sub_Schedule_Top>
-                            <SubScheduleTitle>제목</SubScheduleTitle>
-                            <SubSchedule_Delete>id로 수정</SubSchedule_Delete>
-                        </Sub_Schedule_Top>
-                        <SubScheduleDuration>● 07 : 00</SubScheduleDuration>
-                        <SubScheduleContent>subScheduleContent</SubScheduleContent>
-                        <JoinUser>
-                            <UserProfile $userId={"2c7f2d75-6dcd-4802-929d-174cb65dce22"}></UserProfile>
-                            <UserProfile $userId={"2c7f2d75-6dcd-4802-929d-174cb65dce22"}></UserProfile>
-                            <UserProfile $userId={"none"}></UserProfile>
-                        </JoinUser>
-                    </ScheduleDetailList_Div>
+
+                    <ScheduleDetail_Wrapper>
+                        <MapInterval_Container>
+
+                        </MapInterval_Container>
+                        <ScheduleDetailList_Div
+                            onDrag={dragMousePosition}
+                            draggable
+                            onDragStart={(e) => dragStart(e, idx)}
+                            onDragEnter={(e) => dragEnter(e, idx)}
+                            onDragEnd={drop}
+                            onDragOver={(e) => e.preventDefault()}
+                            $isDrop={dragIndex.current === idx}
+                        >
+                            <SubSchedule_Title_Container>
+                                {schedule.subScheduleTitle}
+                            </SubSchedule_Title_Container>
+                            <ScheduleDetail_Wrapper_Container>
+                                <ScheduleDetail_ContentTitle_Container>
+                                    {dragIndex.current !== idx &&  <i className="bi bi-geo-alt-fill" style={{color:PointColor2, marginRight:'5px'}}></i>}
+                                    위치 :
+                                </ScheduleDetail_ContentTitle_Container>
+                                <ScheduleDetail_Content_Container>
+
+                                </ScheduleDetail_Content_Container>
+                            </ScheduleDetail_Wrapper_Container>
+                            <ScheduleDetail_Wrapper_Container>
+                                <ScheduleDetail_ContentTitle_Container>
+                                    일정날짜 :
+                                </ScheduleDetail_ContentTitle_Container>
+                                <ScheduleDetail_Content_Container>
+                                    {shortAHMFormat2(scheduleTime[idx])}
+                                </ScheduleDetail_Content_Container>
+                            </ScheduleDetail_Wrapper_Container>
+                            <ScheduleDetail_Wrapper_Container>
+                                <ScheduleDetail_ContentTitle_Container>
+                                    일정시간 :
+                                </ScheduleDetail_ContentTitle_Container>
+                                <ScheduleDetail_Content_Container>
+                                    {idx===0? shortAHMTimeFormat(startTime): shortAHMTimeFormat(scheduleTime[idx-1])}
+                                    {' ~ '}
+                                    {shortAHMTimeFormat(scheduleTime[idx])}
+                                </ScheduleDetail_Content_Container>
+                            </ScheduleDetail_Wrapper_Container>
+                            <ScheduleDetail_Wrapper_Container>
+                                <ScheduleDetail_ContentTitle_Container>
+                                    예상 소요시간 :
+                                </ScheduleDetail_ContentTitle_Container>
+                                <ScheduleDetail_Content_Container>
+                                    {schedule.subScheduleDuration}분
+                                </ScheduleDetail_Content_Container>
+                            </ScheduleDetail_Wrapper_Container>
+
+                            <ScheduleDetail_Wrapper_Container>
+                                <SubSchedule_Content_Container>
+                                    {schedule.subScheduleContent}
+                                </SubSchedule_Content_Container>
+                            </ScheduleDetail_Wrapper_Container>
+                        </ScheduleDetailList_Div>
+                    </ScheduleDetail_Wrapper>
+
                 </ScheduleDetailList_Progress>
             ))}
-            {(dragging && mousePosition) &&
+            {(mousePosition && dragIndex.current!==null )&&
+
                 <ScheduleDetailList_Div $isDrop={false}
                                         style={{
                                             position: 'fixed',
@@ -132,21 +145,57 @@ export const ScheduleDetailList: React.FC = () => {
                                             pointerEvents: 'none',
                                             opacity: '0.9'
                                         }}>
-                    {list[dragItem.current || 0]}
+                    <SubSchedule_Title_Container>
+                        {scheduleData[dragIndex.current].subScheduleTitle}
+                    </SubSchedule_Title_Container>
+                    <ScheduleDetail_Wrapper_Container>
+                        <ScheduleDetail_ContentTitle_Container>
+                            <i className="bi bi-geo-alt-fill" style={{color:PointColor2, marginRight:'5px'}}></i>
+                            위치 :
+                        </ScheduleDetail_ContentTitle_Container>
+                        <ScheduleDetail_Content_Container>
+
+                        </ScheduleDetail_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>
+                        <ScheduleDetail_ContentTitle_Container>
+                            일정날짜 :
+                        </ScheduleDetail_ContentTitle_Container>
+                        <ScheduleDetail_Content_Container>
+                            {shortAHMFormat2(scheduleTime[dragIndex.current])}
+                        </ScheduleDetail_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>
+                        <ScheduleDetail_ContentTitle_Container>
+                            일정시간 :
+                        </ScheduleDetail_ContentTitle_Container>
+                        <ScheduleDetail_Content_Container>
+                            {dragIndex.current===0? shortAHMTimeFormat(startTime): shortAHMTimeFormat(scheduleTime[dragIndex.current-1])}
+                            {' ~ '}
+                            {shortAHMTimeFormat(scheduleTime[dragIndex.current])}
+                        </ScheduleDetail_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>
+                        <ScheduleDetail_ContentTitle_Container>
+                            예상 소요시간 :
+                        </ScheduleDetail_ContentTitle_Container>
+                        <ScheduleDetail_Content_Container>
+                            {scheduleData[dragIndex.current].subScheduleDuration}분
+                        </ScheduleDetail_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
+
+                    <ScheduleDetail_Wrapper_Container>
+                        <SubSchedule_Content_Container>
+                            {scheduleData[dragIndex.current].subScheduleContent}
+                        </SubSchedule_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}
-            <ScheduleDetailAdd_Progress>
-                <ScheduleDetailAdd_Structure_Container>
-                    <div>
-                        <ScheduleDetailAdd_StandHr/>
-                        <ScheduleDetailAdd_Circle/>
-                        <ScheduleDetailAdd_BlankHr/>
-                    </div>
-                    <ScheduleDetailAdd_Line/>
-                </ScheduleDetailAdd_Structure_Container>
-                <ScheduleDetailAdd_Div>
-                    +
-                </ScheduleDetailAdd_Div>
-            </ScheduleDetailAdd_Progress>
+
+            <ScheduleButton_Container style={{justifyContent: 'right'}}>
+                <Schedule_Button onClick={addSubSchedule}>
+                    세부일정 추가
+                </Schedule_Button>
+            </ScheduleButton_Container>
         </ScheduleDetailList_Container>
     );
 }

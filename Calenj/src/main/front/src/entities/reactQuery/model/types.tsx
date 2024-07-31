@@ -163,7 +163,7 @@ export interface SubSchedule {
     subScheduleContent: string,
     subScheduleCreate: Date,
     subScheduleDuration: number,
-    joinUser: string,
+    joinUser: string[],
 }
 
 

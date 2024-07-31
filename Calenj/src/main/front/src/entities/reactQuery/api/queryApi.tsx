@@ -228,10 +228,7 @@ export const getUserInfo = async (): Promise<UserInfo | null> => {
 export const getGroupScheduleList = async (groupId: string): Promise<GroupSchedule[] | null> => {
     try {
         return await axios.post("api/getGroupScheduleList", {groupId})
-            .then((res: AxiosResponse) => {
-                console.log(res.data)
-                return res.data
-            })
+            .then((res: AxiosResponse) => res.data)
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log(axiosError);

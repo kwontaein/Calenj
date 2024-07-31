@@ -27,25 +27,25 @@ export const PointColor2 = "#FFD369"
  * 테마 2
  * 하늘하늘
  */
-/*export const ThemeColor2 = "#d1fff8"; //채팅 및 EventNav 31363F
-export const SubScreenColor = "#BDCDD6" //subScreen
-export const ThemeColor3 = "#93BFCF";//SubNav 222831
-export const BackGroundColor = "#6096B4";
-export const TextColor = "#2f2929";
-export const PointColor = "#f3d57f";
-export const PointColor2 = "#7a6802"*/
+// export const ThemeColor2 = "#d1fff8"; //채팅 및 EventNav 31363F
+// export const SubScreenColor = "#BDCDD6" //subScreen
+// export const ThemeColor3 = "#93BFCF";//SubNav 222831
+// export const BackGroundColor = "#6096B4";
+// export const TextColor = "#2f2929";
+// export const PointColor = "#f3d57f";
+// export const PointColor2 = "#7a6802"
 
 /**
  * 테마 3
  * 화이트
  */
-/*export const ThemeColor2 = "#fdfdfd"; //채팅 및 EventNav 31363F
-export const SubScreenColor = "#e9ebed" //subScreen
-export const ThemeColor3 = "#f0f1f3";//SubNav 222831
-export const BackGroundColor = "#e1e3e6";
-export const TextColor = "#2f2929";
-export const PointColor = "#8e929a";
-export const PointColor2 = "#e56752"*/
+// export const ThemeColor2 = "#fdfdfd"; //채팅 및 EventNav 31363F
+// export const SubScreenColor = "#e9ebed" //subScreen
+// export const ThemeColor3 = "#f0f1f3";//SubNav 222831
+// export const BackGroundColor = "#e1e3e6";
+// export const TextColor = "#2f2929";
+// export const PointColor = "#8e929a";
+// export const PointColor2 = "#e56752"
 
 
 export const GlobalStyle = createGlobalStyle`

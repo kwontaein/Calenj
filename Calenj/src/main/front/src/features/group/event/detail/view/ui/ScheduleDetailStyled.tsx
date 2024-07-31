@@ -11,7 +11,7 @@ export const ScheduleDetail_Container = styled.div`
 export const ScheduleMap_Container = styled.div`
     width: 100%;
     height: 250px;
-    margin-block: 5px;
+    margin-top: 5px;
     background-color: #aba8b9;
 `
 export const ScheduleButton_Container = styled.div`

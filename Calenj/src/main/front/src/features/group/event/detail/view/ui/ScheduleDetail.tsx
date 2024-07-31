@@ -41,11 +41,10 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
     }
 
 
-
     return (
         <ScheduleDetail_Container>
             <ScheduleStartDate_Container>
-                일정 시작 : {AHMFormat(scheduleDetail.scheduleCreate)}
+                일정 시작 : {AHMFormat(scheduleDetail.startDate)}
             </ScheduleStartDate_Container>
             <ScheduleMember_Container>
                 <span>참가인원 : </span>
@@ -87,7 +86,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                     대충 지도
                 </ScheduleMap_Container>
             }
-            <ScheduleDetailList/>
+            <ScheduleDetailList startTime={scheduleDetail.scheduleCreate}/>
         </ScheduleDetail_Container>
     )
 }
