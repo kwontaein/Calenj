@@ -422,6 +422,7 @@ export const Option_Container = styled.div`
     position: absolute;
     margin-left: -80px;
     border-radius: 4px;
+    z-index: 2;
 `
 
 
@@ -433,9 +434,10 @@ export const OptionIcon_Wrapper = styled.div`
     justify-content: center;
     font-size: 13px;
     margin-inline: 5px;
+    color: inherit;
 `
 
-export const Option_Item = styled.div`
+export const Option_Item = styled.div<{$isClick?:boolean}>`
     width: calc(100% - 18px);
     height: 15px;
     margin: 4px;
@@ -445,15 +447,12 @@ export const Option_Item = styled.div`
     display: flex;
     align-items: center;
     border-radius: 4px;
-
+    color: ${props=>props.$isClick ? PointColor2 :TextColor};
+    transition: background-color 0.5s ease;
     &:hover {
         background-color: ${BackGroundColor};
         color: ${PointColor2};
-
-        ${OptionIcon_Wrapper} {
-            background-color: ${BackGroundColor};
-            color: ${PointColor2};
-        }
+        
     }
 `
 

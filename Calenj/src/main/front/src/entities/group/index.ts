@@ -1,1 +1,2 @@
-export {initialGroupEventState, GroupEventReducer} from './model/groupEventReducer'
+export {initialGroupEventState, groupEventReducer, type groupEventSate} from './model/groupEventReducer'
+export{groupSubScheduleReducer, type GroupSubScheduleAction} from './model/groupSubScheduleReducer'

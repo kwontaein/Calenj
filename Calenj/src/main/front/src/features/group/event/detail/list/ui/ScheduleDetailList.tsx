@@ -1,5 +1,6 @@
-import React, {DragEvent, useEffect, useRef, useState} from "react";
+import React, {DragEvent, useEffect, useReducer, useRef, useState} from "react";
 import {
+    EditDuration_Input, EditSubSchedule_Content, EditSubSchedule_Title,
     MapInterval_Container,
     ScheduleDetail_Content_Container,
     ScheduleDetail_ContentTitle_Container,
@@ -12,7 +13,7 @@ import {
     ScheduleDetailList_Progress,
     ScheduleDetailList_Structure_Container,
     ScheduleDetailList_TopLine_Container, SubSchedule_Content_Container,
-    SubSchedule_Title_Container,
+    SubSchedule_Title_Container, SubSchedule_Title_Wrapper,
 } from "./ScheduleDetailListStyled";
 import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
 import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
@@ -21,8 +22,9 @@ import {RootState} from "../../../../../../entities/redux";
 import {useListDrag} from "../model/useListDrag";
 import {PointColor, PointColor2} from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
+import {groupSubScheduleReducer} from "../../../../../../entities/group";
 
-export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) => {
+export const ScheduleDetailList: React.FC<{ startTime: Date ,editMode:boolean}> = ({startTime,editMode}) => {
 
     const initSchedule = [
         {
@@ -53,6 +55,8 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
             joinUser: ["간순대", "김말이순대"],
         }
     ]
+    const [subScheduleEdit,disPatchSubSchedule] = useReducer(groupSubScheduleReducer, initSchedule)
+
     const {
         dragEnter,
         dragMousePosition,
@@ -61,18 +65,17 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
         addSubSchedule,
         mousePosition,
         ItemWidth,
-        scheduleData,
         dragIndex,
         scheduleTime
-    } = useListDrag(initSchedule, startTime)
+    } = useListDrag(subScheduleEdit, disPatchSubSchedule, startTime)
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
+
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
-    console.log(groupSubScheduleList.data)
 
     return (
         <ScheduleDetailList_Container>
 
-            {scheduleData.map((schedule, idx) => (
+            {subScheduleEdit.map((schedule, idx) => (
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>
                         <ScheduleDetailList_TopLine_Container $isNow={true}/>
@@ -87,14 +90,19 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                         <ScheduleDetailList_Div
                             onDrag={dragMousePosition}
                             draggable
-                            onDragStart={(e) => dragStart(e, idx)}
-                            onDragEnter={(e) => dragEnter(e, idx)}
+                            onDragStart={(e) => editMode && dragStart(e, idx)}
+                            onDragEnter={(e) => editMode && dragEnter(e, idx)}
                             onDragEnd={drop}
                             onDragOver={(e) => e.preventDefault()}
                             $isDrop={dragIndex.current === idx}
                         >
                             <SubSchedule_Title_Container>
-                                {schedule.subScheduleTitle}
+                                {editMode?
+                                    <EditSubSchedule_Title value={schedule.subScheduleTitle}
+                                                           disabled={dragIndex.current!==null}
+                                                           maxLength={10} placeholder={'제목을 입력해주세요'}
+                                                           onChange={(e)=>disPatchSubSchedule({type:'SET_TITLE', payload:{index:idx, title:e.target.value}})}/>
+                                    :<SubSchedule_Title_Wrapper>{schedule.subScheduleTitle}</SubSchedule_Title_Wrapper>}
                             </SubSchedule_Title_Container>
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
@@ -124,21 +132,25 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                                     {idx === 0 ? shortAHMTimeFormat(startTime) : shortAHMTimeFormat(scheduleTime[idx - 1])}
                                     {' ~ '}
                                     {shortAHMTimeFormat(scheduleTime[idx])}
+                                    ( {editMode ?
+                                    <EditDuration_Input max={9999}
+                                                        onChange={(e)=> e.target.value.length<4 && disPatchSubSchedule({type:"SET_DURATION", payload:{index:idx, duration:parseInt(e.target.value,10)}})}
+                                                        value={schedule.subScheduleDuration+""}
+                                                        $numLength={(schedule.subScheduleDuration+"").split('').length} />
+                                    : <span style={{marginInline:'3px'}}>{schedule.subScheduleDuration}</span>}분 )
                                 </ScheduleDetail_Content_Container>
                             </ScheduleDetail_Wrapper_Container>
                             <ScheduleDetail_Wrapper_Container>
-                                <ScheduleDetail_ContentTitle_Container>
-                                    예상 소요시간 :
-                                </ScheduleDetail_ContentTitle_Container>
-                                <ScheduleDetail_Content_Container>
-                                    {schedule.subScheduleDuration}분
-                                </ScheduleDetail_Content_Container>
-                            </ScheduleDetail_Wrapper_Container>
-
-                            <ScheduleDetail_Wrapper_Container>
-                                <SubSchedule_Content_Container>
-                                    {schedule.subScheduleContent}
-                                </SubSchedule_Content_Container>
+                                {editMode?
+                                    <EditSubSchedule_Content rows={1}
+                                                             placeholder={'내용을 입력해주세요'}
+                                                             value={schedule.subScheduleContent}
+                                                             disabled={dragIndex.current!==null}
+                                                             onChange={(e)=>disPatchSubSchedule({type:'SET_CONTENT', payload:{index:idx, content:e.target.value}})}/> :
+                                    <SubSchedule_Content_Container>
+                                        {schedule.subScheduleContent}
+                                    </SubSchedule_Content_Container>
+                                }
                             </ScheduleDetail_Wrapper_Container>
                         </ScheduleDetailList_Div>
                     </ScheduleDetail_Wrapper>
@@ -157,7 +169,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                                             opacity: '0.9'
                                         }}>
                     <SubSchedule_Title_Container>
-                        {scheduleData[dragIndex.current].subScheduleTitle}
+                        {subScheduleEdit[dragIndex.current].subScheduleTitle}
                     </SubSchedule_Title_Container>
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
@@ -176,7 +188,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                             {shortAHMFormat2(scheduleTime[dragIndex.current])}
                         </ScheduleDetail_Content_Container>
                     </ScheduleDetail_Wrapper_Container>
-                    <ScheduleDetail_Wrapper_Container>sc
+                    <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
                             일정시간 :
                         </ScheduleDetail_ContentTitle_Container>
@@ -184,20 +196,13 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                             {dragIndex.current === 0 ? shortAHMTimeFormat(startTime) : shortAHMTimeFormat(scheduleTime[dragIndex.current - 1])}
                             {' ~ '}
                             {shortAHMTimeFormat(scheduleTime[dragIndex.current])}
-                        </ScheduleDetail_Content_Container>
-                    </ScheduleDetail_Wrapper_Container>
-                    <ScheduleDetail_Wrapper_Container>
-                        <ScheduleDetail_ContentTitle_Container>
-                            예상 소요시간 :
-                        </ScheduleDetail_ContentTitle_Container>
-                        <ScheduleDetail_Content_Container>
-                            {scheduleData[dragIndex.current].subScheduleDuration}분
+                            ( {subScheduleEdit[dragIndex.current].subScheduleDuration}분 )
                         </ScheduleDetail_Content_Container>
                     </ScheduleDetail_Wrapper_Container>
 
                     <ScheduleDetail_Wrapper_Container>
                         <SubSchedule_Content_Container>
-                            {scheduleData[dragIndex.current].subScheduleContent}
+                            {subScheduleEdit[dragIndex.current].subScheduleContent}
                         </SubSchedule_Content_Container>
                     </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}

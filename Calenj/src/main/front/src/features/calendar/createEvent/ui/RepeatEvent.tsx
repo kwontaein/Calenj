@@ -247,13 +247,15 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, repeatState, 
                             {repeatState.repeatDeadline === "count" &&
                                 <>
                                     <RepeatNum_Input type={"number"}
+                                                     max={9999}
                                                      $numLength={(repeatState.repeatCount + "").split("").length}
                                                      readOnly={!repeatState.repeat}
                                                      defaultValue={repeatState.repeatCount}
-                                                     onChange={(e: ChangeEvent<HTMLInputElement>) => repeatDispatch({
-                                                         type: 'SET_REPEAT_COUNT',
-                                                         payload: +e.target.value
-                                                     })}/>
+                                                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                                         repeatDispatch({
+                                                             type: 'SET_REPEAT_COUNT',
+                                                             payload: parseInt(e.target.value,10)
+                                                         })}/>
                                     번만 반복
                                 </>
                             }

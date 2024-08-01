@@ -151,7 +151,7 @@ export interface GroupSchedule {
     scheduleTitle: string,
     scheduleCreate: Date,
     startDate: Date,
-    privacy: string, //공개범위
+    privacy: boolean, //공개범위
     maxPeople: number, //최대인원
     member: string[],//참여자
 }

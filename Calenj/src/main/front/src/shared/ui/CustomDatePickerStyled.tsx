@@ -20,15 +20,16 @@ export const DatePickerIcon_Container= styled.div`
     font-size: 20px;
 `
 
-export const EventDatePicker = styled(DatePicker)<{$width?:number}>`
-    width: ${props=>props.$width ? props.$width:'130px'};
-    height : 25px;
-    margin-inline: 8px;
+export const EventDatePicker = styled(DatePicker)<{$width?:number,$height?:number, $fontSize?:number, $marginInline?:number}>`
+    width: ${props=>props.$width ? `${props.$width}px`:'130px'};
+    height :${props=>props.$height ? `${props.$height}px`:'27px'};
+    box-sizing: border-box;
+    margin-inline: ${props=>props.$marginInline!==null ? `${props.$marginInline}px` :'8px'};
     border-radius: 5px;
     border: 1px solid transparent;
     background-color: transparent;
     color:${TextColor};
-    font-size: 14px;
+    font-size: ${props=>props.$width ? `${props.$fontSize}px`:'14px'};
     display: flex;
     cursor: pointer;
     &:hover{
