@@ -18,6 +18,8 @@ public class GroupScheduleResponse {
     public String scheduleTitle;
     //일정 생성일
     public Timestamp scheduleCreate;
+    //일정 생성일
+    public Timestamp startDate;
     //관리자들
     private List<String> managers;
     //일정 공개 범위
@@ -30,6 +32,7 @@ public class GroupScheduleResponse {
     public GroupScheduleResponse(UUID scheduleId,
                                  String scheduleTitle,
                                  Timestamp scheduleCreate,
+                                 Timestamp startDate,
                                  String managers,
                                  boolean privacy,
                                  int maxPeople,
@@ -37,6 +40,7 @@ public class GroupScheduleResponse {
         this.scheduleId = scheduleId;
         this.scheduleTitle = scheduleTitle;
         this.scheduleCreate = scheduleCreate;
+        this.startDate = startDate;
         this.managers = convertStringToArray(managers);
         this.privacy = privacy;
         this.maxPeople = maxPeople;

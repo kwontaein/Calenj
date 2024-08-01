@@ -86,7 +86,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                     대충 지도
                 </ScheduleMap_Container>
             }
-            <ScheduleDetailList startTime={scheduleDetail.scheduleCreate}/>
+            <ScheduleDetailList startTime={scheduleDetail.startDate}/>
         </ScheduleDetail_Container>
     )
 }

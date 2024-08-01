@@ -22,16 +22,17 @@ export const GroupEventList: React.FC = () => {
     const groupScheduleList = useFetchGroupScheduleList(groupId)
 
     useEffect(() => {
+        console.log(groupScheduleList.data)
         if (!groupScheduleList.data) return
         const eventState: ScheduleInfo = EventStateMap.get(groupId)
         if (!eventState) {
             EventStateMap.set(groupId, {scheduleId: '', scheduleTitle: '', mapModal: true})
             disptach(updateScheduleState({scheduleId: '', scheduleTitle: '', mapModal: true}))
         } else {
-            if(scheduleId!==""){
+            if (scheduleId !== "") {
                 const scheduleDetail = groupScheduleList.data.filter((schedule) => schedule.scheduleId === scheduleId)[0]
                 setScheduleDetail(scheduleDetail)
-            }else{
+            } else {
                 disptach(updateScheduleState(eventState))
                 setScheduleDetail(null)
             }
