@@ -6,7 +6,7 @@ export const ScheduleDetailList_Container = styled.div`
 `
 
 export const ScheduleDetail_Wrapper = styled.div`
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -21,7 +21,7 @@ export const ScheduleDetailList_Progress = styled.div`
     align-items: 'stretch';
 `
 export const ScheduleDetailList_Structure_Container = styled.div`
-    width: 30px;
+    width: 60px;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
@@ -51,7 +51,7 @@ export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
     border: 2px solid ${TextColor};
     background-color: ${props => props.$isNow ? PointColor : TextColor};
     border-radius: 50%;
-    margin-right: 6px;
+    margin-right: 20px;
     position: relative;
 `
 export const MapInterval_Container = styled.div`
@@ -63,7 +63,7 @@ export const MapInterval_Container = styled.div`
 export const ScheduleDetail_Wrapper_Container = styled.div`
     width: calc(100% - 20px);
     padding-inline: 10px;
-    font-size: 18px;
+    font-size: 15px;
     margin-block: 2px;
     display: flex;
     flex-direction: row;
@@ -75,18 +75,23 @@ export const ScheduleDetail_ContentTitle_Container = styled.div`
     padding-inline: 5px;
     color:inherit;
     background-color: inherit;
+    font-size: 14px;
 `
 
 export const ScheduleDetail_Content_Container = styled.div`
     width: auto;
     color:inherit;
     background-color: inherit;
+    font-size: 14px;
 `
 
 export const SubSchedule_Title_Container = styled.div`
-    width: 100%;
-    font-size: 20px;
+    width: calc(100% - 20px);
+    font-size: 16px;
+    padding-inline: 10px;
     height: 30px;
+    display: flex;
+    justify-content: left;
     color:inherit;
     background-color: inherit;
 `

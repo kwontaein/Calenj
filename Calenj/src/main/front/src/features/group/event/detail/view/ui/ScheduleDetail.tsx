@@ -41,6 +41,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
     }
 
 
+
     return (
         <ScheduleDetail_Container>
             <ScheduleStartDate_Container>

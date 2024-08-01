@@ -19,14 +19,11 @@ import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entit
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
 import {useListDrag} from "../model/useListDrag";
-import {PointColor2} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, PointColor2} from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 
 export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) => {
 
-    useEffect(() => {
-        console.log('시작 시간 :', startTime)
-    }, []);
     const initSchedule = [
         {
             index: 0,
@@ -102,7 +99,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
                                     {dragIndex.current !== idx && <i className="bi bi-geo-alt-fill" style={{
-                                        color: PointColor2,
+                                        color: PointColor,
                                         marginRight: '5px'
                                     }}></i>}
                                     위치 :
@@ -164,7 +161,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                     </SubSchedule_Title_Container>
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
-                            <i className="bi bi-geo-alt-fill" style={{color: PointColor2, marginRight: '5px'}}></i>
+                            <i className="bi bi-geo-alt-fill" style={{color: PointColor, marginRight: '5px'}}></i>
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
                         <ScheduleDetail_Content_Container>
@@ -179,7 +176,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                             {shortAHMFormat2(scheduleTime[dragIndex.current])}
                         </ScheduleDetail_Content_Container>
                     </ScheduleDetail_Wrapper_Container>
-                    <ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>sc
                         <ScheduleDetail_ContentTitle_Container>
                             일정시간 :
                         </ScheduleDetail_ContentTitle_Container>
