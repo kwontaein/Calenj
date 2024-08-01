@@ -12,7 +12,7 @@ import {
     ScheduleDetailList_Progress,
     ScheduleDetailList_Structure_Container,
     ScheduleDetailList_TopLine_Container, SubSchedule_Content_Container,
-    SubSchedule_Title_Container,
+    SubSchedule_Title_Container, Trash_Body, Trash_Container, Trash_Top, TrashIconBottom, TrashIconTop,
 } from "./ScheduleDetailListStyled";
 import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
 import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
@@ -77,7 +77,8 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                     <ScheduleDetailList_Structure_Container>
                         <ScheduleDetailList_TopLine_Container $isNow={true}/>
                         <ScheduleDetailList_Circle $isNow={true}/>
-                        <ScheduleDetailList_BottomLine_Container $isNow={true}/>
+                        {idx !== scheduleData.length - 1 &&
+                            <ScheduleDetailList_BottomLine_Container $isNow={true}/>}
                     </ScheduleDetailList_Structure_Container>
 
                     <ScheduleDetail_Wrapper>
@@ -202,10 +203,23 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                     </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}
 
-            <ScheduleButton_Container style={{justifyContent: 'right'}}>
-                <Schedule_Button onClick={addSubSchedule}>
-                    세부일정 추가
-                </Schedule_Button>
+            <ScheduleButton_Container>
+                <div style={{marginLeft: "60px"}}>
+                    <Schedule_Button onClick={addSubSchedule}>
+                        세부일정 추가
+                    </Schedule_Button>
+                    <Schedule_Button onClick={addSubSchedule}>
+                        수정하기
+                    </Schedule_Button>
+                </div>
+                <Trash_Container>
+                    <Trash_Top $isDrag={dragIndex.current === null}>
+                        <TrashIconTop className="bi bi-trash-fill"></TrashIconTop>
+                    </Trash_Top>
+                    <Trash_Body>
+                        <TrashIconBottom className="bi bi-trash-fill"></TrashIconBottom>
+                    </Trash_Body>
+                </Trash_Container>
             </ScheduleButton_Container>
         </ScheduleDetailList_Container>
     );
