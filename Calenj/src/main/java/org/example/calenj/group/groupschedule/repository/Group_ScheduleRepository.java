@@ -17,6 +17,7 @@ public interface Group_ScheduleRepository extends JpaRepository<GroupScheduleEnt
             "Gs.scheduleId" +
             ",Gs.scheduleTitle" +
             ",Gs.scheduleCreate" +
+            ",Gs.scheduleStart" +
             ",Gs.managers" +
             ",Gs.privacy" +
             ",Gs.maxPeople," +

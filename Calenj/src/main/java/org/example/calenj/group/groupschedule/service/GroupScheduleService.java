@@ -81,7 +81,7 @@ public class GroupScheduleService {
      */
     public void deleteSchedule(UUID scheduleId) {
         //서브 전부 지우고
-        groupSubScheduleRepository.deleteByscheduleId(scheduleId);
+        groupSubScheduleRepository.deleteByScheduleId(scheduleId);
         //일정 삭제
         groupScheduleRepository.deleteById(scheduleId);
     }
@@ -112,6 +112,7 @@ public class GroupScheduleService {
      * @return
      */
     public List<GroupSubScheduleResponse> getSubScheduleList(UUID scheduleId) {
+        System.out.println("scheduleId : " + scheduleId);
         return groupSubScheduleRepository.findByScheduleId(scheduleId).orElse(null);
     }
 

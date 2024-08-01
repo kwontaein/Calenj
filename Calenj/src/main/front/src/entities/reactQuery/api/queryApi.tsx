@@ -243,7 +243,7 @@ export const getGroupScheduleList = async (groupId: string): Promise<GroupSchedu
 
 export const getSubScheduleList = async (scheduleId: string): Promise<SubSchedule[] | null> => {
     try {
-        return await axios.post("api/getSubScheduleList", scheduleId)
+        return await axios.post("api/getSubScheduleList", {scheduleId})
             .then((res: AxiosResponse) => res.data)
     } catch (error) {
         const axiosError = error as AxiosError;

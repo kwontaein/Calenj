@@ -24,11 +24,11 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
             ",gss.index" +
             ",gss.joinUser) " +
             "from group_sub_schedule gss " +
-            "where gss.scheduleId.scheduleId =: scheduleId")
-    Optional<List<GroupSubScheduleResponse>> findByScheduleId(UUID scheduleId);
+            "where gss.scheduleId.scheduleId =:scheduleId")
+    Optional<List<GroupSubScheduleResponse>> findByScheduleId(@Param("scheduleId") UUID scheduleId);
 
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("delete from group_sub_schedule gss where gss.scheduleId.scheduleId =: scheduleId")
-    void deleteByscheduleId(@Param("scheduleId") UUID scheduleId);
+    void deleteByScheduleId(@Param("scheduleId") UUID scheduleId);
 }

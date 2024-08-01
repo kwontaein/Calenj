@@ -31,7 +31,7 @@ export function shortAHMFormat(date: Date): string {
 }
 
 export function shortAHMTimeFormat(date :Date) : string{
-    return dayjs(date).locale('ko').format('A hh시 mm분')
+    return dayjs(date).locale('ko').format('HH시 mm분')
 }
 
 

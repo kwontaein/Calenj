@@ -19,15 +19,12 @@ import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entit
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
 import {useListDrag} from "../model/useListDrag";
-import {PointColor2} from "../../../../../../shared/ui/SharedStyled";
+import {PointColor, PointColor2} from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 
-export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
+export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) => {
 
-    useEffect(() => {
-        console.log('시작 시간 :', startTime)
-    }, []);
-    const initSchedule =[
+    const initSchedule = [
         {
             index: 0,
             subSubScheduleId: "0",
@@ -35,7 +32,7 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
             subScheduleContent: "가기",
             subScheduleCreate: new Date,
             subScheduleDuration: 60,
-            joinUser: ["간순대","김말이순대"],
+            joinUser: ["간순대", "김말이순대"],
         },
         {
             index: 1,
@@ -44,7 +41,7 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
             subScheduleContent: "가서 놀고 먹기",
             subScheduleCreate: new Date,
             subScheduleDuration: 60,
-            joinUser: ["간순대","김말이순대"],
+            joinUser: ["간순대", "김말이순대"],
         },
         {
             index: 2,
@@ -53,13 +50,24 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
             subScheduleContent: "가기",
             subScheduleCreate: new Date,
             subScheduleDuration: 60,
-            joinUser: ["간순대","김말이순대"],
+            joinUser: ["간순대", "김말이순대"],
         }
     ]
-    const {dragEnter, dragMousePosition, drop, dragStart,addSubSchedule, mousePosition, ItemWidth, scheduleData, dragIndex,scheduleTime}=useListDrag(initSchedule, startTime)
+    const {
+        dragEnter,
+        dragMousePosition,
+        drop,
+        dragStart,
+        addSubSchedule,
+        mousePosition,
+        ItemWidth,
+        scheduleData,
+        dragIndex,
+        scheduleTime
+    } = useListDrag(initSchedule, startTime)
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
-
+    console.log(groupSubScheduleList.data)
 
     return (
         <ScheduleDetailList_Container>
@@ -90,7 +98,10 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
                             </SubSchedule_Title_Container>
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
-                                    {dragIndex.current !== idx &&  <i className="bi bi-geo-alt-fill" style={{color:PointColor2, marginRight:'5px'}}></i>}
+                                    {dragIndex.current !== idx && <i className="bi bi-geo-alt-fill" style={{
+                                        color: PointColor,
+                                        marginRight: '5px'
+                                    }}></i>}
                                     위치 :
                                 </ScheduleDetail_ContentTitle_Container>
                                 <ScheduleDetail_Content_Container>
@@ -110,7 +121,7 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
                                     일정시간 :
                                 </ScheduleDetail_ContentTitle_Container>
                                 <ScheduleDetail_Content_Container>
-                                    {idx===0? shortAHMTimeFormat(startTime): shortAHMTimeFormat(scheduleTime[idx-1])}
+                                    {idx === 0 ? shortAHMTimeFormat(startTime) : shortAHMTimeFormat(scheduleTime[idx - 1])}
                                     {' ~ '}
                                     {shortAHMTimeFormat(scheduleTime[idx])}
                                 </ScheduleDetail_Content_Container>
@@ -134,7 +145,7 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
 
                 </ScheduleDetailList_Progress>
             ))}
-            {(mousePosition && dragIndex.current!==null )&&
+            {(mousePosition && dragIndex.current !== null) &&
 
                 <ScheduleDetailList_Div $isDrop={false}
                                         style={{
@@ -150,7 +161,7 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
                     </SubSchedule_Title_Container>
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
-                            <i className="bi bi-geo-alt-fill" style={{color:PointColor2, marginRight:'5px'}}></i>
+                            <i className="bi bi-geo-alt-fill" style={{color: PointColor, marginRight: '5px'}}></i>
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
                         <ScheduleDetail_Content_Container>
@@ -165,12 +176,12 @@ export const ScheduleDetailList : React.FC<{startTime:Date}> = ({startTime}) =>{
                             {shortAHMFormat2(scheduleTime[dragIndex.current])}
                         </ScheduleDetail_Content_Container>
                     </ScheduleDetail_Wrapper_Container>
-                    <ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>sc
                         <ScheduleDetail_ContentTitle_Container>
                             일정시간 :
                         </ScheduleDetail_ContentTitle_Container>
                         <ScheduleDetail_Content_Container>
-                            {dragIndex.current===0? shortAHMTimeFormat(startTime): shortAHMTimeFormat(scheduleTime[dragIndex.current-1])}
+                            {dragIndex.current === 0 ? shortAHMTimeFormat(startTime) : shortAHMTimeFormat(scheduleTime[dragIndex.current - 1])}
                             {' ~ '}
                             {shortAHMTimeFormat(scheduleTime[dragIndex.current])}
                         </ScheduleDetail_Content_Container>
