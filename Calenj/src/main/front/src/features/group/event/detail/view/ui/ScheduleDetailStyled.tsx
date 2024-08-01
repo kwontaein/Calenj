@@ -45,8 +45,10 @@ export const ScheduleTop_Container = styled.div`
 
 export const ScheduleStartDate_Container = styled.div`
     width: 100%;
-    height: 20px;
-    font-size: 12px;
+    height: 25px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
 `
 
 export const Schedule_Button = styled.button`
@@ -66,9 +68,20 @@ export const ScheduleMember_Container = styled.div`
     flex-direction: row;
     margin-top: 5px;
     font-size: 12px;
-    color: ${TextColor}77;
+    color: ${TextColor};
+`
+export const SchedulePrivacy_Container = styled.div`
+    width: 100%;
+    height: 15px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+    font-size: 12px;
+    color: ${TextColor};
 
 `
+
+
 
 export const MemberMoreView_Text = styled.div`
     font-size: 12px;
@@ -119,4 +132,13 @@ export const ScheduleMemberName_Container = styled.div`
     white-space: nowrap;
     overflow: hidden;
     font-size: 12px;
+`
+
+
+export const ScheduleDotsIcon_Container = styled.div`
+    color: ${TextColor};
+    transition: color ease-in;
+    &:hover{
+        color: ${TextColor}77;
+    }    
 `

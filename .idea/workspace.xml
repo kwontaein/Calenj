@@ -4,12 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="07.30 그룹일정 생성api 추가">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.01 그룹일정 수정">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/model/groupSubScheduleReducer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/model/useGroupScheduleEdit.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/model/groupEventReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/model/groupEventReducer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RepeatEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/ui/RepeatEvent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/create/ui/CreateGroupEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/create/ui/CreateGroupEvent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/model/useListDrag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/model/useListDrag.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/ui/ScheduleDetailList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/ui/ScheduleDetailList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/ui/ScheduleDetailListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/list/ui/ScheduleDetailListStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/ui/ScheduleDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/ui/ScheduleDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/ui/ScheduleDetailStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/ui/ScheduleDetailStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/list/ui/GroupEventList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useClickOutSideCheck.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/model/useClickOutSideCheck.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomDatePickerStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomDatePickerStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,14 +228,6 @@
       <workItem from="1722219124486" duration="21753000" />
       <workItem from="1722309994983" duration="8897000" />
       <workItem from="1722402840276" duration="17041000" />
-    </task>
-    <task id="LOCAL-00010" summary="06.06 캘린더 등록모달 제작">
-      <option name="closed" value="true" />
-      <created>1717662332331</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1717662332331</updated>
     </task>
     <task id="LOCAL-00011" summary="06.10 rrule라이브러리 사용">
       <option name="closed" value="true" />
@@ -608,7 +613,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722325627616</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="08.01 그룹일정 수정">
+      <option name="closed" value="true" />
+      <created>1722496032133</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1722496032134</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -641,7 +654,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="06.26 파일경로 리팩토링 #4" />
     <MESSAGE value="06.27 유저 친구수락 제작완료" />
     <MESSAGE value="06.28 온라인유저 상태저장" />
     <MESSAGE value="07.08 채팅 input area로 변경" />
@@ -666,7 +678,8 @@
     <MESSAGE value="07.30 스크롤 문제 해결중" />
     <MESSAGE value="07.30 스크롤 문제해결중 #3" />
     <MESSAGE value="07.30 그룹일정 생성api 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="07.30 그룹일정 생성api 추가" />
+    <MESSAGE value="08.01 그룹일정 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="08.01 그룹일정 수정" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -682,13 +695,25 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/lib/dateFormat.tsx</url>
-          <line>29</line>
+          <line>33</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/CustomDatePickerStyled.tsx</url>
-          <line>27</line>
+          <line>28</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/features/group/event/detail/view/ui/ScheduleDetail.tsx</url>
+          <line>48</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/entities/group/model/groupSubScheduleReducer.tsx</url>
+          <line>17</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

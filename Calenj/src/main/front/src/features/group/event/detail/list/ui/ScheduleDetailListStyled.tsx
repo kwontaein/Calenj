@@ -95,6 +95,26 @@ export const SubSchedule_Title_Container = styled.div`
     color:inherit;
     background-color: inherit;
 `
+export const SubSchedule_Title_Wrapper = styled.div`
+    font-size: 15px;
+    width: calc(100% - 4px);
+    background-color: inherit;
+    border: 2px solid transparent;
+    color:inherit;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-inline: 2px;
+`
+export const EditSubSchedule_Title = styled.input.attrs({ type: 'text' })`
+    font-size: 15px;
+    width: 100%;
+    background-color: inherit;
+    border: 2px solid transparent;
+    color:inherit;
+    box-sizing: border-box;
+`
 export const SubSchedule_Content_Container= styled.div`
     width: calc(100% - 20px);
     background-color: ${ThemeColor3};
@@ -103,6 +123,23 @@ export const SubSchedule_Content_Container= styled.div`
     display: flex;
     justify-content: left;
     min-height: 20px;
+    margin-top: 5px;
+`
+export const EditSubSchedule_Content =styled.textarea`
+    width: 100%;
+    font-size: 15px;
+    background-color: ${ThemeColor3};
+    border-radius: 5px;
+    padding : 10px;
+    display: flex;
+    justify-content: left;
+    min-height: 20px;
+    margin-top: 5px;
+    appearance: none;
+    resize: none;
+    box-sizing: border-box;
+    border: none;
+    color: inherit;
 `
 
 
@@ -122,5 +159,33 @@ export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
     padding-block: 10px;
     ${SubSchedule_Content_Container}{
         color :${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+    }
+`
+
+export const EditDuration_Input =  styled.input.attrs({ type: 'number' })<{$numLength:number}>`
+    height: 15px;
+    width: ${props=>(props.$numLength * 8)+7}px;
+    margin-top: 1px;
+    background-color: transparent;
+    color: inherit;
+    border: 1px solid transparent;
+    font-size: 15px;
+    text-align: right;
+    box-sizing: border-box;
+    &[type="number"] {
+        -moz-appearance: textfield;
+    }
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &:hover {
+        border: 1px solid ${TextColor};
+        border-radius: 4px;
+    }
+    &:focus {
+        border: 1px solid ${PointColor};
+        outline: none;
     }
 `
