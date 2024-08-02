@@ -125,6 +125,17 @@ export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
         color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
     }
 `
+
+
+export const SubScheduleButton_Container = styled.div`
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+`
+
 // 애니메이션 정의
 const tiltAndMoveUpAnimation = keyframes`
     0% {

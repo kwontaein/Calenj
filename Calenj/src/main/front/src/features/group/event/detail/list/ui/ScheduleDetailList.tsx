@@ -11,8 +11,15 @@ import {
     ScheduleDetailList_Div,
     ScheduleDetailList_Progress,
     ScheduleDetailList_Structure_Container,
-    ScheduleDetailList_TopLine_Container, SubSchedule_Content_Container,
-    SubSchedule_Title_Container, Trash_Body, Trash_Container, Trash_Top, TrashIconBottom, TrashIconTop,
+    ScheduleDetailList_TopLine_Container,
+    SubSchedule_Content_Container,
+    SubSchedule_Title_Container,
+    SubScheduleButton_Container,
+    Trash_Body,
+    Trash_Container,
+    Trash_Top,
+    TrashIconBottom,
+    TrashIconTop,
 } from "./ScheduleDetailListStyled";
 import {Schedule_Button, ScheduleButton_Container} from "../../view/ui/ScheduleDetailStyled";
 import {SubSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
@@ -203,7 +210,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                     </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}
 
-            <ScheduleButton_Container>
+            <SubScheduleButton_Container>
                 <div style={{marginLeft: "60px"}}>
                     <Schedule_Button onClick={addSubSchedule}>
                         세부일정 추가
@@ -220,7 +227,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                         <TrashIconBottom className="bi bi-trash-fill"></TrashIconBottom>
                     </Trash_Body>
                 </Trash_Container>
-            </ScheduleButton_Container>
+            </SubScheduleButton_Container>
         </ScheduleDetailList_Container>
     );
 }
