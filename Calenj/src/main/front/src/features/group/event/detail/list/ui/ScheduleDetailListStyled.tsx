@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled, {css, keyframes} from "styled-components";
 import {PointColor, PointColor2, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import {boolean} from "yup";
 
 export const ScheduleDetailList_Container = styled.div`
     width: 100%;
@@ -33,8 +34,8 @@ export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean
     width: 50%;
     height: calc(40% + 27px);
     box-sizing: border-box;
-    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
-    border-bottom: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
+    border-bottom: 2px solid ${props => props.$isNow ? PointColor : TextColor};
     margin-bottom: -7px;
     position: relative;
 `
@@ -42,7 +43,7 @@ export const ScheduleDetailList_BottomLine_Container = styled.div<{ $isNow: bool
     width: 50%;
     height: calc(60% - 27px);
     box-sizing: border-box;
-    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
     position: relative;
 `
 
@@ -68,20 +69,20 @@ export const ScheduleDetail_Wrapper_Container = styled.div`
     margin-block: 2px;
     display: flex;
     flex-direction: row;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
 `
 export const ScheduleDetail_ContentTitle_Container = styled.div`
     width: auto;
     padding-inline: 5px;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
     font-size: 14px;
 `
 
 export const ScheduleDetail_Content_Container = styled.div`
     width: auto;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
     font-size: 14px;
 `
@@ -93,7 +94,7 @@ export const SubSchedule_Title_Container = styled.div`
     height: 30px;
     display: flex;
     justify-content: left;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
 `
 export const SubSchedule_Title_Wrapper = styled.div`
@@ -120,7 +121,7 @@ export const SubSchedule_Content_Container= styled.div`
     width: calc(100% - 20px);
     background-color: ${ThemeColor3};
     border-radius: 5px;
-    padding : 10px;
+    padding: 10px;
     display: flex;
     justify-content: left;
     min-height: 20px;
@@ -158,35 +159,66 @@ export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
     white-space: pre-wrap;
     position: relative;
     padding-block: 10px;
-    ${SubSchedule_Content_Container}{
-        color :${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+
+    ${SubSchedule_Content_Container} {
+        color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
     }
 `
 
-export const EditDuration_Input =  styled.input.attrs({ type: 'number' })<{$numLength:number}>`
-    height: 15px;
-    width: ${props=>(props.$numLength * 8)+7}px;
-    margin-top: 1px;
-    background-color: transparent;
-    color: inherit;
-    border: 1px solid transparent;
-    font-size: 15px;
-    text-align: right;
-    box-sizing: border-box;
-    &[type="number"] {
-        -moz-appearance: textfield;
-    }
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    &:hover {
-        border: 1px solid ${TextColor};
-        border-radius: 4px;
-    }
-    &:focus {
-        border: 1px solid ${PointColor};
-        outline: none;
-    }
+
+export const SubScheduleButton_Container = styled.div`
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `
+
+// 애니메이션 정의
+const tiltAndMoveUpAnimation = keyframes`
+    0% {
+        transform: rotate(0deg) translateY(0);
+    }
+    50% {
+        transform: rotate(20deg) translateY(-5px) translateX(3px);
+    }
+    100% {
+        transform: rotate(0deg) translateY(0);
+    }
+`;
+export const Trash_Top = styled.div <{ $isDrag: boolean }>`
+    position: relative;
+    height: 40%;
+    overflow: hidden;
+    ${({$isDrag}) =>
+            !$isDrag &&
+            css`
+                animation: ${tiltAndMoveUpAnimation} 3s infinite;
+            `}
+`;
+
+export const Trash_Body = styled.div`
+
+    position: relative;
+    height: 60%;
+    overflow: hidden;
+`;
+
+export const Trash_Container = styled.div`
+    position: relative;
+    width: 23px;
+    height: 46px;
+`;
+
+export const TrashIconTop = styled.i`
+    position: absolute;
+    font-size: 23px;
+    top: 40%;
+`;
+
+export const TrashIconBottom = styled.i`
+    position: absolute;
+    top: -40%;
+    font-size: 23px;
+`;
