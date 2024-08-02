@@ -5,7 +5,6 @@ export const ScheduleDetail_Container = styled.div`
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
-    overflow-y: auto;
 `
 
 export const ScheduleMap_Container = styled.div`

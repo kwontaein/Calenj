@@ -84,7 +84,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                                     ? 'custom-day'
                                     : 'custom-day gray-day'
                         }
-                        $width={240}
+                        $width={230}
                         $height={20}
                         $fontSize={15}
                         $marginInline={0}

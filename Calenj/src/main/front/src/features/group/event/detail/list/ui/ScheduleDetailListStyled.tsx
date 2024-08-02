@@ -3,6 +3,7 @@ import {PointColor, PointColor2, TextColor, ThemeColor2, ThemeColor3} from "../.
 
 export const ScheduleDetailList_Container = styled.div`
     width: 100%;
+    overflow-y: auto;
 `
 
 export const ScheduleDetail_Wrapper = styled.div`
