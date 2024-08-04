@@ -4,25 +4,26 @@ import {v4 as uuidv4} from "uuid";
 import {shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 
 
-interface ReturnListDrag{
-    dragStart : (e: DragEvent<HTMLDivElement>, position: number)=>void,
-    dragEnter : (e: DragEvent<HTMLDivElement>, position: number) => void,
-    drop: ()=>void,
-    dragMousePosition : (e: DragEvent<HTMLDivElement>) => void,
-    mousePosition: {x: number, y: number} | null,
-    ItemWidth:number|null,
-    scheduleData:SubSchedule[],
+interface ReturnListDrag {
+    dragStart: (e: DragEvent<HTMLDivElement>, position: number) => void,
+    dragEnter: (e: DragEvent<HTMLDivElement>, position: number) => void,
+    drop: () => void,
+    dragMousePosition: (e: DragEvent<HTMLDivElement>) => void,
+    mousePosition: { x: number, y: number } | null,
+    ItemWidth: number | null,
+    scheduleData: SubSchedule[],
     dragIndex: React.MutableRefObject<number | null>,
-    addSubSchedule: ()=>void,
-    scheduleTime:Date[]
+    addSubSchedule: () => void,
+    scheduleTime: Date[]
 }
-export const useListDrag = (initScheduleList :SubSchedule[], startTime:Date):ReturnListDrag =>{
+
+export const useListDrag = (initScheduleList: SubSchedule[], startTime: Date): ReturnListDrag => {
     const dragIndex = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverIndex = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
-    const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
-    const [ItemWidth,setItemWidth] = useState<number|null>(null);
-    const [scheduleData,setScheduleData] =useState<SubSchedule[]>(initScheduleList)
+    const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
+    const [ItemWidth, setItemWidth] = useState<number | null>(null);
+    const [scheduleData, setScheduleData] = useState<SubSchedule[]>(initScheduleList)
     const [scheduleTime, setScheduleTime] = useState<Date[]>([startTime])
     // 드래그 시작될 때 실행
     const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
@@ -69,8 +70,8 @@ export const useListDrag = (initScheduleList :SubSchedule[], startTime:Date):Ret
         }
     }
 
-    const addSubSchedule = ()=>{
-        setScheduleData((prev:SubSchedule[])=>{
+    const addSubSchedule = () => {
+        setScheduleData((prev: SubSchedule[]) => {
             const UUid = uuidv4();
             const newSchedule = {
                 index: prev.length,
@@ -81,7 +82,7 @@ export const useListDrag = (initScheduleList :SubSchedule[], startTime:Date):Ret
                 subScheduleDuration: 0,
                 joinUser: [],
             }
-            return [...prev,newSchedule]
+            return [...prev, newSchedule]
         })
     }
 
@@ -90,16 +91,26 @@ export const useListDrag = (initScheduleList :SubSchedule[], startTime:Date):Ret
         scheduleTimeOperation();
     }, [scheduleData]);
 
-    const scheduleTimeOperation = ()=>{
-        let timeResult:Date[]=[];
-        let time =new Date(startTime);
-        scheduleData.forEach((schedule)=>{
+    const scheduleTimeOperation = () => {
+        let timeResult: Date[] = [];
+        let time = new Date(startTime);
+        scheduleData.forEach((schedule) => {
             time.setMinutes(time.getMinutes() + schedule.subScheduleDuration)
             const cloneTime = new Date(time)
             timeResult.push(cloneTime)
         })
-        console.log(timeResult)
         setScheduleTime(timeResult)
     }
-    return {dragEnter, dragMousePosition, drop, dragStart,addSubSchedule, mousePosition, ItemWidth, scheduleData, dragIndex,scheduleTime}
+    return {
+        dragEnter,
+        dragMousePosition,
+        drop,
+        dragStart,
+        addSubSchedule,
+        mousePosition,
+        ItemWidth,
+        scheduleData,
+        dragIndex,
+        scheduleTime
+    }
 }

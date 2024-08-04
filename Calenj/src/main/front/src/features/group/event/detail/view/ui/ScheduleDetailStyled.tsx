@@ -51,7 +51,7 @@ export const ScheduleStartDate_Container = styled.div`
 
 export const Schedule_Button = styled.button`
     background-color: ${PointColor};
-
+    margin: 5px;
     transition: background-color 0.3s ease;
 
     &:hover {

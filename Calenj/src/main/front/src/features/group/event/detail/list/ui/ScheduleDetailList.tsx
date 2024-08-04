@@ -74,7 +74,16 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
     } = useListDrag(initSchedule, startTime)
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
-    console.log(groupSubScheduleList.data)
+    const trashRef = useRef<HTMLDivElement>(null);
+
+
+    useEffect(() => {
+        if (mousePosition && dragIndex.current !== null && trashRef.current) {
+            const trashRect = trashRef.current.getBoundingClientRect();
+            
+        }
+    }, [mousePosition]);
+
 
     return (
         <ScheduleDetailList_Container>
@@ -211,7 +220,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                 </ScheduleDetailList_Div>}
 
             <SubScheduleButton_Container>
-                <div style={{marginLeft: "60px"}}>
+                <div style={{marginLeft: "55px"}}>
                     <Schedule_Button onClick={addSubSchedule}>
                         세부일정 추가
                     </Schedule_Button>
@@ -219,7 +228,7 @@ export const ScheduleDetailList: React.FC<{ startTime: Date }> = ({startTime}) =
                         수정하기
                     </Schedule_Button>
                 </div>
-                <Trash_Container>
+                <Trash_Container ref={trashRef}>
                     <Trash_Top $isDrag={dragIndex.current === null}>
                         <TrashIconTop className="bi bi-trash-fill"></TrashIconTop>
                     </Trash_Top>
