@@ -1,12 +1,14 @@
-import styled from "styled-components";
 import {PointColor, PointColor2, TextColor, ThemeColor2, ThemeColor3} from "../../../../../../shared/ui/SharedStyled";
+import {boolean} from "yup";
+import styled from "styled-components";
 
 export const ScheduleDetailList_Container = styled.div`
     width: 100%;
+    height: auto;
 `
 
 export const ScheduleDetail_Wrapper = styled.div`
-    width: calc(100% - 60px);
+    width: calc(100% - 30px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -21,7 +23,7 @@ export const ScheduleDetailList_Progress = styled.div`
     align-items: 'stretch';
 `
 export const ScheduleDetailList_Structure_Container = styled.div`
-    width: 60px;
+    width: 30px;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
@@ -29,19 +31,19 @@ export const ScheduleDetailList_Structure_Container = styled.div`
 `
 
 export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean }>`
-    width: 50%;
+    width: 70%;
     height: calc(40% + 27px);
     box-sizing: border-box;
-    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
-    border-bottom: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
+    border-bottom: 2px solid ${props => props.$isNow ? PointColor : TextColor};
     margin-bottom: -7px;
     position: relative;
 `
 export const ScheduleDetailList_BottomLine_Container = styled.div<{ $isNow: boolean }>`
-    width: 50%;
+    width: 70%;
     height: calc(60% - 27px);
     box-sizing: border-box;
-    border-left: 2px solid ${props=> props.$isNow ? PointColor : TextColor};
+    border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
     position: relative;
 `
 
@@ -51,7 +53,7 @@ export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
     border: 2px solid ${TextColor};
     background-color: ${props => props.$isNow ? PointColor : TextColor};
     border-radius: 50%;
-    margin-right: 20px;
+    margin-right: 11px;
     position: relative;
 `
 export const MapInterval_Container = styled.div`
@@ -63,26 +65,25 @@ export const MapInterval_Container = styled.div`
 export const ScheduleDetail_Wrapper_Container = styled.div`
     width: calc(100% - 20px);
     padding-inline: 10px;
-    font-size: 15px;
     margin-block: 2px;
     display: flex;
     flex-direction: row;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
 `
 export const ScheduleDetail_ContentTitle_Container = styled.div`
-    width: auto;
+    width: 60px;
     padding-inline: 5px;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
-    font-size: 14px;
+    font-size: 13px;
 `
 
 export const ScheduleDetail_Content_Container = styled.div`
     width: auto;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
-    font-size: 14px;
+    font-size: 13px;
 `
 
 export const SubSchedule_Title_Container = styled.div`
@@ -92,7 +93,7 @@ export const SubSchedule_Title_Container = styled.div`
     height: 30px;
     display: flex;
     justify-content: left;
-    color:inherit;
+    color: inherit;
     background-color: inherit;
 `
 export const SubSchedule_Title_Wrapper = styled.div`
@@ -119,11 +120,14 @@ export const SubSchedule_Content_Container= styled.div`
     width: calc(100% - 20px);
     background-color: ${ThemeColor3};
     border-radius: 5px;
-    padding : 10px;
+    padding: 10px;
     display: flex;
-    justify-content: left;
+    text-align: left;
     min-height: 20px;
     margin-top: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    
 `
 export const EditSubSchedule_Content =styled.textarea`
     width: 100%;
@@ -144,7 +148,7 @@ export const EditSubSchedule_Content =styled.textarea`
 
 
 
-export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
+export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean, $isClick?:boolean }>`
     height: auto;
     text-align: center;
     font-size: 40px;
@@ -152,24 +156,25 @@ export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean }>`
     border-radius: 5px;
     box-sizing: border-box;
     color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
-    border: 1px ${props => props.$isDrop ? `dashed ${TextColor}` : `solid ${TextColor}`};
+    border: 1px ${props => props.$isDrop ? `dashed ${TextColor}` : props.$isClick ? `solid ${PointColor}` :`solid ${TextColor}`};
     background-color: ${props => props.$isDrop ? `${ThemeColor3}` : ThemeColor2};
     white-space: pre-wrap;
     position: relative;
     padding-block: 10px;
-    ${SubSchedule_Content_Container}{
-        color :${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+
+    ${SubSchedule_Content_Container} {
+        color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
     }
 `
 
 export const EditDuration_Input =  styled.input.attrs({ type: 'number' })<{$numLength:number}>`
     height: 15px;
-    width: ${props=>(props.$numLength * 8)+7}px;
+    width: ${props=>(props.$numLength * 8)+4}px;
     margin-top: 1px;
     background-color: transparent;
     color: inherit;
     border: 1px solid transparent;
-    font-size: 15px;
+    font-size: 13px;
     text-align: right;
     box-sizing: border-box;
     &[type="number"] {
