@@ -16,10 +16,11 @@ interface ScheduleInfo {
 
 export const GroupEventList: React.FC = () => {
     const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
+    const groupScheduleList = useFetchGroupScheduleList(groupId)
     const disptach = useDispatch()
     const {scheduleId} = useSelector((state: RootState) => state.groupSchedule)
     const [scheduleDetail, setScheduleDetail] = useState<GroupSchedule | null>(null);
-    const groupScheduleList = useFetchGroupScheduleList(groupId)
+
 
     useEffect(() => {
         if (!groupScheduleList.data) return

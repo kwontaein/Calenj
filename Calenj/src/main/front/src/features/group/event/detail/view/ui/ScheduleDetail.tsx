@@ -16,7 +16,11 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
 import {useClickOutSideCheck} from "../../../../../../shared/model/useClickOutSideCheck";
-import {GroupSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
+import {
+    GroupSchedule,
+    useFetchGroupScheduleList,
+    useFetchGroupSubScheduleList
+} from "../../../../../../entities/reactQuery";
 import {
     InputType_Radio,
     Option_Container,
@@ -39,6 +43,9 @@ interface GroupScheduleProps {
 }
 
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) => {
+    const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
+    const groupScheduleList = useFetchGroupScheduleList(groupId)
+
     const {scheduleId, mapModal} = useSelector((state: RootState) => state.groupSchedule)
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister)
 
@@ -52,26 +59,33 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
     const {editMode,setEditMode, groupSchedule,dispatchGroupSchedule, mapHandler} = useGroupScheduleEdit(scheduleDetail)
 
 
+
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
     const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, groupSubScheduleList.data||[])
     const useSubSchedule = useListDrag(subScheduleEdit, dispatchSubSchedule, groupSchedule.startDate)
 
+    useEffect(() => {
+        console.log(groupSubScheduleList.data)
+    }, [groupSubScheduleList.data]);
+
     const saveGroupSchedule = ()=>{
-        const postAble =subScheduleEdit.some((subSchedule)=> subSchedule.subScheduleTitle!=="")
+        const postAble =subScheduleEdit.every((subSchedule)=> subSchedule.subScheduleTitle!=="")
         if(postAble){
             const postScheduleData = {
                 ...scheduleDetail,
                 ...groupSchedule,
                 groupSubSchedules : subScheduleEdit
             }
-            console.log(postScheduleData)
             saveSubScheduleApi(postScheduleData)
-                .then(()=>{ window.alert('저장이 완료되었습니다')})
+                .then(()=>{
+                    window.alert('저장이 완료되었습니다')
+                    groupScheduleList.refetch()
+                    groupSubScheduleList.refetch()
+                })
                 .catch((err)=>{console.log('fxxk')})
         }else{
             window.alert('일정의 제목을 입력해주세요.')
         }
-
     }
 
 
