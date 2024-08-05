@@ -81,6 +81,8 @@ public class GroupScheduleService {
      * @param groupScheduleRequest
      */
     public void updateSubSchedule(GroupScheduleRequest groupScheduleRequest) {
+        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getGroupId()).orElse(null);
+        groupScheduleRepository.save(groupScheduleRequest.toEntity(group, null));
         GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
 
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
