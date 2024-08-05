@@ -16,7 +16,11 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
 import {useClickOutSideCheck} from "../../../../../../shared/model/useClickOutSideCheck";
-import {GroupSchedule, useFetchGroupSubScheduleList} from "../../../../../../entities/reactQuery";
+import {
+    GroupSchedule,
+    useFetchGroupScheduleList,
+    useFetchGroupSubScheduleList
+} from "../../../../../../entities/reactQuery";
 import {
     InputType_Radio,
     Option_Container,
@@ -31,6 +35,7 @@ import {AHMFormatV3} from "../../../../../../shared/lib/dateFormat";
 import {ScheduleDetailList} from "./ScheduleDetailList";
 import {groupSubScheduleReducer} from "../../../../../../entities/group";
 import {useListDrag} from "../model/useListDrag";
+import {saveSubScheduleApi} from "../api/saveSubScheduleApi";
 
 
 interface GroupScheduleProps {
@@ -38,49 +43,50 @@ interface GroupScheduleProps {
 }
 
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) => {
+    const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
+    const groupScheduleList = useFetchGroupScheduleList(groupId)
+
     const {scheduleId, mapModal} = useSelector((state: RootState) => state.groupSchedule)
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister)
+
     const [optionState, setOptionState] = useReducer((prev)=>!prev, false)
     const selectBox= useClickOutSideCheck(optionState, setOptionState)  // 스케줄 옵션관리
     const [showMember, setShowMember] = useReducer((prev) => !prev, false)
     const showMemberRef = useClickOutSideCheck(showMember, setShowMember) // 멤버 옵션관리
+
     const [month, setMonth] = useState<number>(new Date(scheduleDetail.startDate).getMonth())
     //수정관련
-    const {editMode,setEditMode, groupSchedule,dispatchGroupSchedule, mapHandler}=useGroupScheduleEdit(scheduleDetail)
+    const {editMode,setEditMode, groupSchedule,dispatchGroupSchedule, mapHandler} = useGroupScheduleEdit(scheduleDetail)
 
 
-    const initSchedule = [
-        {
-            index: 0,
-            subSubScheduleId: "0",
-            subScheduleTitle: "타임스퀘어",
-            subScheduleContent: "가기",
-            subScheduleCreate: new Date,
-            subScheduleDuration: 60,
-            joinUser: ["간순대", "김말이순대"],
-        },
-        {
-            index: 1,
-            subSubScheduleId: "1",
-            subScheduleTitle: "소사역 스벅",
-            subScheduleContent: "가서 놀고 먹기",
-            subScheduleCreate: new Date,
-            subScheduleDuration: 60,
-            joinUser: ["간순대", "김말이순대"],
-        },
-        {
-            index: 2,
-            subSubScheduleId: "2",
-            subScheduleTitle: "집",
-            subScheduleContent: "가기",
-            subScheduleCreate: new Date,
-            subScheduleDuration: 60,
-            joinUser: ["간순대", "김말이순대"],
-        }
-    ]
+
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
-    const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, initSchedule)
+    const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, groupSubScheduleList.data||[])
     const useSubSchedule = useListDrag(subScheduleEdit, dispatchSubSchedule, groupSchedule.startDate)
+
+    useEffect(() => {
+        console.log(groupSubScheduleList.data)
+    }, [groupSubScheduleList.data]);
+
+    const saveGroupSchedule = ()=>{
+        const postAble =subScheduleEdit.every((subSchedule)=> subSchedule.subScheduleTitle!=="")
+        if(postAble){
+            const postScheduleData = {
+                ...scheduleDetail,
+                ...groupSchedule,
+                groupSubSchedules : subScheduleEdit
+            }
+            saveSubScheduleApi(postScheduleData)
+                .then(()=>{
+                    window.alert('저장이 완료되었습니다')
+                    groupScheduleList.refetch()
+                    groupSubScheduleList.refetch()
+                })
+                .catch((err)=>{console.log('fxxk')})
+        }else{
+            window.alert('일정의 제목을 입력해주세요.')
+        }
+    }
 
 
     return (
@@ -159,7 +165,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                                                      defaultChecked={!groupSchedule.privacy}
                                                      onChange={() => dispatchGroupSchedule({
                                                          type: 'SET_PRIVACY',
-                                                         payload: true
+                                                         payload: false
                                                      })}/>
                                     <span style={{fontSize: '11px'}}>전체</span>
                                 </Radio_Label>
@@ -168,7 +174,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                                                      defaultChecked={groupSchedule.privacy}
                                                      onChange={() => dispatchGroupSchedule({
                                                          type: 'SET_PRIVACY',
-                                                         payload: false
+                                                         payload: true
                                                      })}/>
                                     <span style={{fontSize: '11px'}}>참가자</span>
                                 </Radio_Label>
@@ -228,7 +234,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
                     <Schedule_Button onClick={useSubSchedule.addSubSchedule}>
                         세부일정 추가
                     </Schedule_Button>
-                    <Schedule_Button>
+                    <Schedule_Button onClick={saveGroupSchedule}>
                         저장하기
                     </Schedule_Button>
                 </div>
