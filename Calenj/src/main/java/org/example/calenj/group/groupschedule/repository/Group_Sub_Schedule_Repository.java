@@ -24,7 +24,8 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
             ",gss.index" +
             ",gss.joinUser) " +
             "from group_sub_schedule gss " +
-            "where gss.scheduleId.scheduleId =:scheduleId")
+            "where gss.scheduleId.scheduleId =:scheduleId " +
+            "order by gss.index asc")
     Optional<List<GroupSubScheduleResponse>> findByScheduleId(@Param("scheduleId") UUID scheduleId);
 
     @Modifying(clearAutomatically = true)

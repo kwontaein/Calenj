@@ -91,7 +91,7 @@ public class UserService {
      * 유저정보 확인
      **/
     public UserResponse selectUserInfo() {
-        UserEntity user = globalService.myUserEntity();
+        UserEntity user = globalService.getUserEntity(null);
         return new UserResponse(user.getUserId(), user.getNickname(), user.getUserEmail(), user.getUserIntroduce(), user.getUserPhone(), user.getUserJoinDate(), user.getUserUsedName());
     }
 

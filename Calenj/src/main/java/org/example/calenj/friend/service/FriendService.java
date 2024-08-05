@@ -72,7 +72,7 @@ public class FriendService {
     public AddFriendResponse requestFriend(String friendUserName) {
 
         AddFriendResponse response = new AddFriendResponse();
-        UserEntity ownUser = globalService.myUserEntity();
+        UserEntity ownUser = globalService.getUserEntity(null);
 
         // 나에게 초대는 불가
         if (isAddingSelf(friendUserName, ownUser)) {
@@ -205,7 +205,7 @@ public class FriendService {
      * @param eventContent   이벤트 종류
      */
     public void saveFriend(String friendUsedName, String eventContent) {
-        UserEntity ownUser = globalService.myUserEntity();
+        UserEntity ownUser = globalService.getUserEntity(null);
         UserEntity friendUser = getUserEntityByUserName(friendUsedName);
 
         FriendEntity friendEntity = FriendEntity
@@ -234,7 +234,7 @@ public class FriendService {
 
         FriendEntity friendEntity = FriendEntity
                 .builder()
-                .ownUserId(globalService.myUserEntity())
+                .ownUserId(globalService.getUserEntity(null))
                 .friendUserId(friendUserId)
                 .nickName(friendUser.getNickname())
                 .createDate(String.valueOf(LocalDate.now()))
@@ -243,7 +243,7 @@ public class FriendService {
                 .build();
 
         friendRepository.save(friendEntity);
-        eventService.updateFriendRequest(friendUserId, EventEntity.statusType.ACCEPT);
+        eventService.updateEventState(friendUserId, EventEntity.statusType.ACCEPT, EventEntity.eventType.RequestFriend);
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
             String nowTime = globalService.nowTime();
@@ -274,7 +274,7 @@ public class FriendService {
             //요청한 유저 친구목록에서 삭제
             friendRepository.deleteByOwnUserId(friendUserId);
             //이벤트 상태 거절로 변경
-            eventService.updateEventState(friendUserId, EventEntity.statusType.REJECT);
+            eventService.updateEventState(friendUserId, EventEntity.statusType.REJECT, EventEntity.eventType.RequestFriend);
             webSocketService.userAlarm(friendUserId, "친구거절");
             return createErrorResponse("친구 요청을 거절했습니다.");
         } else {

@@ -2,6 +2,7 @@ package org.example.calenj.global.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
@@ -128,10 +129,24 @@ public class GlobalService {
      *
      * @return 내 정보
      */
-    public UserEntity myUserEntity() {
+    /*public UserEntity myUserEntity() {
         UUID myUserID = UUID.fromString(extractFromSecurityContext().getUsername());
         UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
         return userEntity;
     }
+*/
 
+    /**
+     * 유저 정보 조회
+     *
+     * @param userId 조회할 유저 아이디(null일 경우 내 아이디)
+     * @return 유저 정보
+     */
+    public UserEntity getUserEntity(@Nullable UUID userId) {
+        if (userId == null) {
+            userId = UUID.fromString(extractFromSecurityContext().getUsername());
+        }
+        UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
+        return userEntity;
+    }
 }
