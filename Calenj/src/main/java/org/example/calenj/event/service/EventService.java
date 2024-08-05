@@ -46,16 +46,6 @@ public class EventService {
     }
 
     /**
-     * 친구 요청 업데이트
-     *
-     * @param friendUserId 친구아이디
-     * @param statusType   상태
-     */
-    public void updateFriendRequest(UUID friendUserId, EventEntity.statusType statusType) {
-        eventRepository.updateEventFriendRequest(friendUserId, statusType);
-    }
-
-    /**
      * 이벤트 생성
      *
      * @param eventContent 이벤트 내용
@@ -64,6 +54,13 @@ public class EventService {
      * @param witchRequest 이벤트 종류
      */
     public void createEvent(String eventContent, UserEntity ownUser, UserEntity friendUser, String witchRequest) {
+        EventEntity.eventType type = switch (witchRequest) {
+            case "Friend Request" -> EventEntity.eventType.RequestFriend;
+            case "Invite Group" -> EventEntity.eventType.InviteGroup;
+            case "Join Schedule" -> EventEntity.eventType.JoinSchedule;
+            default -> EventEntity.eventType.Else;
+        };
+
         EventEntity eventEntity = EventEntity
                 .builder()
                 .eventContent(eventContent)
@@ -71,15 +68,22 @@ public class EventService {
                 .ownUserId(ownUser)
                 .eventUserId(friendUser.getUserId())
                 .eventPurpose(witchRequest)
-                .eventName(EventEntity.eventType.RequestFriend)
+                .eventName(type)
                 .eventStatus(EventEntity.statusType.WAITING)
                 .createDate(String.valueOf(LocalDate.now()))
                 .build();
         eventRepository.save(eventEntity);
     }
 
-    public void updateEventState(UUID friendUserId, EventEntity.statusType statusType) {
-        eventRepository.updateEventFriendRequest(friendUserId, statusType);
+    /**
+     * 이벤트 업데이트
+     *
+     * @param friendUserId 업데이트 유저 아이디
+     * @param statusType   업데이트 상태
+     * @param eventType    업데이트 이벤트 종류
+     */
+    public void updateEventState(UUID friendUserId, EventEntity.statusType statusType, EventEntity.eventType eventType) {
+        eventRepository.updateEvent(friendUserId, statusType, eventType);
     }
 
     public boolean checkIfDuplicatedEvent(UUID userId, UUID friendUserId) {

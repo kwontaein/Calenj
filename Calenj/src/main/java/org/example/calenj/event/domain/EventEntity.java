@@ -82,6 +82,7 @@ public class EventEntity {
     public enum eventType { //enum을 활용한 권한종류 설정
         RequestFriend("친구 요청"),
         InviteGroup("그룹 초대"),
+        JoinSchedule("일정 참여 요청"),
         Else("그 외 이벤트");
 
         private final String eventName;

@@ -129,7 +129,7 @@ public class GroupService {
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()
                 .role(GroupUserEntity.GroupRoleType.Member)
                 .group(groupEntity)
-                .user(globalService.myUserEntity())
+                .user(globalService.getUserEntity(null))
                 .build();
         group_userRepository.save(groupUserEntity);
     }
@@ -159,7 +159,7 @@ public class GroupService {
                 .builder()
                 .inviteCode(buf.toString())
                 .group(groupEntity)
-                .user(globalService.myUserEntity())
+                .user(globalService.getUserEntity(null))
                 .endDateTime(globalService.plusDate(now, inviteCodeRequest.getDuring()))
                 .build());
 

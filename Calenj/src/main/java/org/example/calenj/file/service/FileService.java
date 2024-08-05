@@ -123,7 +123,7 @@ public class FileService {
             UUID uuid = UUID.randomUUID();
             ChatMessageRequest chatMessageRequest = new ChatMessageRequest();
             chatMessageRequest.setState(ChatMessageRequest.fileType.SEND);
-            chatMessageRequest.setUserId(globalService.myUserEntity().getUserId());
+            chatMessageRequest.setUserId(globalService.getUserEntity(null).getUserId());
             chatMessageRequest.setSendDate(globalService.nowTime());
             chatMessageRequest.setMessage(imageIds.toString());
             chatMessageRequest.setParam(param);
@@ -278,7 +278,7 @@ public class FileService {
 
         Collections.reverse(previousLines);
         if (previousLines.contains(last)) {
-             previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
+            previousLines.add("마지막라인$" + "[" + globalService.nowTime() + "] $ lastPoint" + " $ lastPoint" + " $ " + "-----------------lastPoint-----------------");
         }
 
         List<MessageResponse> messageResponses = previousLines.stream()

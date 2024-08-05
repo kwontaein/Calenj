@@ -14,10 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<EventEntity, EventId> {
+
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE Events SET event_status =:isAccept WHERE own_user_id =:requestUserId", nativeQuery = true)
-    void updateEventFriendRequest(@Param("requestUserId") UUID requestUserId, @Param("isAccept") EventEntity.statusType isAccept);
+    @Query(value = "UPDATE Events e SET e.eventStatus =:isAccept WHERE e.ownUserId.userId =:requestUserId and e.eventName=:eventType", nativeQuery = true)
+    void updateEvent(@Param("requestUserId") UUID requestUserId, @Param("isAccept") EventEntity.statusType isAccept, @Param("eventType") EventEntity.eventType type);
 
     //모든 이벤트 리스트
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse" +

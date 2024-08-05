@@ -8,6 +8,7 @@ export type GroupSubScheduleAction =
     | { type: 'SET_SUB_SCHEDULE_LIST'; payload:SubSchedule[]}
     ;
 
+
 export const groupSubScheduleReducer = (state: SubSchedule[], action: GroupSubScheduleAction): SubSchedule[] => {
     switch (action.type) {
         case 'SET_INDEX':

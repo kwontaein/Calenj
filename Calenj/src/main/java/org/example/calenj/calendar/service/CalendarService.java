@@ -94,11 +94,11 @@ public class CalendarService {
         if (checkEntity != null) {
             //이미 있는 정보일 경우 수정
             //로직 수행
-            UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+            UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.getUserEntity(null));
             userScheduleRepository.save(userScheduleEntity);
             return;
         }
-        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.myUserEntity());
+        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(globalService.getUserEntity(null));
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 
@@ -110,7 +110,7 @@ public class CalendarService {
     public List<ScheduleResponse> getScheduleList() {
 
         //schedule
-        List<ScheduleResponse> scheduleResponses = userScheduleRepository.findListByUserId(globalService.myUserEntity().getUserId()).orElse(null);
+        List<ScheduleResponse> scheduleResponses = userScheduleRepository.findListByUserId(globalService.getUserEntity(null).getUserId()).orElse(null);
 
         if (scheduleResponses.isEmpty()) {
             return scheduleResponses; // 조기 반환을 통해 불필요한 연산 방지
@@ -141,7 +141,7 @@ public class CalendarService {
      * @return 스케쥴 태그 목록
      */
     public List<TagResponse> getTagEntityList() {
-        return tagRepository.findByUserId(globalService.myUserEntity().getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
+        return tagRepository.findByUserId(globalService.getUserEntity(null).getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
     }
 
     /**
@@ -151,7 +151,7 @@ public class CalendarService {
      * @return 저장된 태그 반환
      */
     public TagResponse saveTag(TagRequest tagRequest) {
-        TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.myUserEntity()));
+        TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.getUserEntity(null)));
         TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
         return tagResponse;
     }
@@ -162,7 +162,7 @@ public class CalendarService {
      * @param id 삭제할 태그 아이디
      */
     public void deleteTag(UUID id) {
-        tagRepository.deleteById(new TagId(id, globalService.myUserEntity()));
+        tagRepository.deleteById(new TagId(id, globalService.getUserEntity(null)));
     }
 }
 
