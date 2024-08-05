@@ -225,6 +225,6 @@ public class GroupScheduleService {
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
 
         return new ScheduleRequest(
-                response.getSubScheduleId(), response.getScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
+                response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
 }
