@@ -7,6 +7,7 @@ import org.example.calenj.group.groupschedule.domain.GroupScheduleEntity;
 import org.example.calenj.group.groupschedule.domain.GroupSubScheduleEntity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -28,7 +29,7 @@ public class GroupSubScheduleRequest {
 
     private int index;
 
-    private String joinUser;
+    private List<String> joinUser;
 
     public GroupSubScheduleEntity toEntity(GroupScheduleEntity groupScheduleId) {
         return GroupSubScheduleEntity.builder()
@@ -39,7 +40,7 @@ public class GroupSubScheduleRequest {
                 .subScheduleDuration(subScheduleDuration)
                 .subScheduleContent(subScheduleContent)
                 .index(index)
-                .joinUser(joinUser)
+                .joinUser(joinUser.toString())
                 .build();
     }
 }
