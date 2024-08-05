@@ -1,5 +1,6 @@
 import axios from "axios";
+import {GroupSchedule} from "../../../../../../entities/reactQuery";
 
-export const saveSubScheduleApi = ()=>{
-    return axios.post('api/createSubSchedule')
+export const saveSubScheduleApi = (postScheduleData:GroupSchedule)=>{
+    return axios.post('api/createSubSchedule', postScheduleData)
 }

@@ -48,7 +48,6 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
 
     // 드랍 (커서 뗐을 때)
     const drop = () => {
-        console.log(mousePosition)
         dispatchSubSchedule({type:"SET_INDEX"})
         dragIndex.current = null;
         dragOverIndex.current = null;
@@ -70,7 +69,7 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
 
         const UUid = uuidv4();
         const newSchedule = {
-            index: scheduleData.length,
+            index: scheduleData.length||0,
             subSubScheduleId: UUid,
             subScheduleTitle: "",
             subScheduleContent: "",
@@ -79,7 +78,6 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
             joinUser: [],
         }
         dispatchSubSchedule({type:"SET_SUB_SCHEDULE_LIST", payload:[...scheduleData, newSchedule]});
-
     }
 
     const deleteSubSchedule = useCallback(()=>{

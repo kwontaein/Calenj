@@ -82,7 +82,7 @@ public class GroupScheduleService {
      */
     public void updateSubSchedule(GroupScheduleRequest groupScheduleRequest) {
         GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
-
+        System.out.println("groupScheduleRequest : "+groupScheduleRequest);
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
         }
