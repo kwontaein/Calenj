@@ -79,7 +79,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({scheduleDetail}) =
         }
     ]
     const groupSubScheduleList = useFetchGroupSubScheduleList(scheduleId); //이 리스트로 넣으면 됨
-    const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, initSchedule)
+    const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, groupSubScheduleList.data||[])
     const useSubSchedule = useListDrag(subScheduleEdit, dispatchSubSchedule, groupSchedule.startDate)
 
 
