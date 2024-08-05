@@ -13,13 +13,13 @@ import {
     Modal_Condition_Button,
     Radio_Label
 } from "../../../../../shared/ui/SharedStyled";
-import {GroupEventReducer, initialGroupEventState} from "../../../../../entities/group";
+import {groupEventReducer, initialGroupEventState} from "../../../../../entities/group";
 import {createGroupScheduleApi} from "../api/createGroupScheduleApi";
 import {RootState} from "../../../../../entities/redux";
 import {useFetchGroupScheduleList} from "../../../../../entities/reactQuery";
 
 export const CreateGroupEvent: React.FC<{ onClose: () => void }> = ({onClose}) => {
-    const [groupEventState, dispatchGroupEvent] = useReducer(GroupEventReducer, initialGroupEventState);
+    const [groupEventState, dispatchGroupEvent] = useReducer(groupEventReducer, initialGroupEventState);
     const {startDate, scheduleTitle, privacy, isLimit, maxPeople} = groupEventState
     const [month, setMonth] = useState<number>(startDate.getMonth())
     const modalBackground = useRef<HTMLDivElement>(null);
@@ -147,10 +147,10 @@ export const CreateGroupEvent: React.FC<{ onClose: () => void }> = ({onClose}) =
                                                 $numLength={(maxPeople + "").split("").length}
                                                 defaultValue={maxPeople}
                                                 maxLength={3}
-                                                onChange={(e) => dispatchGroupEvent({
-                                                    type: 'SET_MAX_PEOPLE',
-                                                    payload: +e.target.value
-                                                })}/>
+                                                onChange={(e) => e.target.value.length<4 &&
+                                                    dispatchGroupEvent({
+                                                        type: 'SET_MAX_PEOPLE',
+                                                        payload: parseInt(e.target.value,10)})}/>
                                 <span style={{fontSize: '12px'}}>
                             명 제한
                         </span>

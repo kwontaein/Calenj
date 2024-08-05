@@ -1,6 +1,6 @@
 type eventState = 'create' | 'modify' | '';
 
-interface groupEventSate {
+export interface groupEventSate {
     scheduleTitle: string,
     startDate: Date,
     privacy: boolean,
@@ -26,7 +26,7 @@ export const initialGroupEventState: groupEventSate = {
 };
 
 
-export const GroupEventReducer = (state: groupEventSate, action: GroupEventAction): groupEventSate => {
+export const groupEventReducer = (state: groupEventSate, action: GroupEventAction): groupEventSate => {
     switch (action.type) {
         case 'SET_TITLE':
             return {...state, scheduleTitle: action.payload};
