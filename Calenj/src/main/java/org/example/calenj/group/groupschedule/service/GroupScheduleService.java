@@ -84,7 +84,7 @@ public class GroupScheduleService {
         GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getGroupId()).orElse(null);
         groupScheduleRepository.save(groupScheduleRequest.toEntity(group, null));
         GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
-        System.out.println("groupScheduleRequest : "+groupScheduleRequest);
+        System.out.println("groupScheduleRequest : " + groupScheduleRequest);
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
         }
@@ -225,6 +225,6 @@ public class GroupScheduleService {
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
 
         return new ScheduleRequest(
-                response.getSubScheduleId(), response.getScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
+                response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
 }

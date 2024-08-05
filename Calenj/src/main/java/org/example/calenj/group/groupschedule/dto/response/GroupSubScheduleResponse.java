@@ -13,7 +13,7 @@ import java.util.UUID;
 public class GroupSubScheduleResponse {
     private UUID subScheduleId;
 
-    private String scheduleTitle;
+    private String subScheduleTitle;
 
     private Timestamp subScheduleCreate;
 
@@ -27,7 +27,7 @@ public class GroupSubScheduleResponse {
 
     public GroupSubScheduleResponse(UUID subScheduleId, String scheduleTitle, Timestamp subScheduleCreate, int subScheduleDuration, String subScheduleContent, int index, String joinUser) {
         this.subScheduleId = subScheduleId;
-        this.scheduleTitle = scheduleTitle;
+        this.subScheduleTitle = scheduleTitle;
         this.subScheduleCreate = subScheduleCreate;
         this.subScheduleDuration = subScheduleDuration;
         this.subScheduleContent = subScheduleContent;
