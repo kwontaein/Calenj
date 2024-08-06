@@ -1,8 +1,8 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
 import {
     EditDuration_Input,
-    EditSubSchedule_Content, EditSubSchedule_Title,
-    MapInterval_Container,
+    EditSubSchedule_Content, EditSubSchedule_Title, MapIcon_Container,
+    MapInterval_Container, MapPositionText_Container,
     ScheduleDetail_Content_Container,
     ScheduleDetail_ContentTitle_Container,
     ScheduleDetail_Wrapper,
@@ -22,27 +22,58 @@ import {PointColor, TextColor} from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 import {GroupSubScheduleAction,} from "../../../../../../entities/group";
 import {ReturnListDrag} from "../model/types";
+import {ScheduleMap_Container} from "./ScheduleDetailStyled";
 
 interface ScheduleDetailProps{
-    subScheduleEdit :SubSchedule[],
-    dispatchSubSchedule:  React.Dispatch<GroupSubScheduleAction>,
-    useSubSchedule: ReturnListDrag,
+    useGroupSubSchedule: ReturnListDrag,
     editMode:boolean
     startDate:Date;
+    mapModal:boolean
 }
-export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedule,editMode, subScheduleEdit, dispatchSubSchedule, startDate}) => {
-    const {dragEnter, dragMousePosition, drop, dragStart,addSubSchedule, mousePosition, ItemWidth, dragIndex,scheduleTime} = useSubSchedule
+export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSchedule,editMode, startDate, mapModal}) => {
+    const { subScheduleEdit, dispatchSubSchedule, scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
     const textAreaRef = useRef<(HTMLTextAreaElement | null)[]>([]);
     const clickRef = useRef<HTMLDivElement|null>(null);
     const [clickState,setClickState] = useState<number|null>(null)
     const [nowTime, setNowTime] = useState<Date>(new Date())
+    const [mapIndex, setMapIndex] = useState<number|null>(null);
 
+    const mapElement = useRef<HTMLDivElement | null>(null);
+
+    //Map 세팅
+    useEffect(() => {
+        let initMap: naver.maps.Map | null = null;
+
+        if (mapModal) {
+            initMap = new naver.maps.Map("map", {
+                center: new naver.maps.LatLng(37.511337, 127.012084),
+                zoom: 15,
+                mapTypeControl: true,
+            });
+        }
+        const handleResize = () => {
+            if (!mapElement.current || !initMap) return;
+            const { clientWidth } = mapElement.current;
+            const size = new naver.maps.Size(clientWidth, 250);
+            initMap.setSize(size);
+        };
+
+        if (mapModal && initMap) {
+            window.addEventListener("resize", handleResize);
+        }
+        handleResize();
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [mapModal]);
+    //현재시간 갱신
     useEffect(() => {
         setInterval(()=>{
             setNowTime(new Date())
         },10000)
     }, []);
-
+    //textArea value, height 갱신
     const handleResizeHeight = (e:ChangeEvent<HTMLTextAreaElement>,idx:number) => {
         dispatchSubSchedule({
             type:'SET_CONTENT',
@@ -57,13 +88,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedul
             textArea.style.height = textArea.scrollHeight + "px";
         }
     };
-
-    const clickStateHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>,idx:number)=>{
-        clickRef.current = e.currentTarget as HTMLDivElement
-        setClickState(idx)
-
-    }
-
     useEffect(() => {
         if(!textAreaRef.current) return
         textAreaRef.current.map((textArea: HTMLTextAreaElement|null)=>{
@@ -74,16 +98,23 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedul
         })
     }, [editMode]);
 
+    //현재 클릭한 subSchedule 지정
+    const clickStateHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>,idx:number)=>{
+        clickRef.current = e.currentTarget as HTMLDivElement
+        setClickState(idx)
+    }
+
 
     return (
 
         <ScheduleDetailList_Container onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-
             if(!(clickRef.current && clickRef.current?.contains(e.target as Node)) ) {
                 clickRef.current=null
                 setClickState(null)
             }
         }}>
+            {mapModal && <ScheduleMap_Container id="map" ref={mapElement}/>}
+            {setMapIndex!==null && <></>}
             {subScheduleEdit.map((schedule, idx) => (
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>
@@ -122,15 +153,16 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedul
                             </SubSchedule_Title_Container>
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
-                                    {dragIndex.current !== idx && <i className="bi bi-geo-alt-fill" style={{
-                                        color: PointColor,
-                                        marginRight: '5px'
-                                    }}></i>}
-                                    위치 :
+                                    {dragIndex.current !== idx &&
+                                        <MapIcon_Container onClick={()=>setMapIndex(idx)}>
+                                            <i className="bi bi-geo-alt-fill"></i>
+                                        </MapIcon_Container>
+                                    }
+                                    위치  :
                                 </ScheduleDetail_ContentTitle_Container>
-                                <ScheduleDetail_Content_Container>
-
-                                </ScheduleDetail_Content_Container>
+                                <MapPositionText_Container $isDrag={dragIndex.current===idx} $isNull={true}>
+                                    아이콘을 눌러 위치를 지정해주세요
+                                </MapPositionText_Container>
                             </ScheduleDetail_Wrapper_Container>
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
@@ -176,7 +208,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedul
                 </ScheduleDetailList_Progress>
             ))}
             {(mousePosition && dragIndex.current !== null) &&
-
                 <ScheduleDetailList_Div $isDrop={false}
                                         style={{
                                             position: 'fixed',
@@ -199,9 +230,9 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useSubSchedul
                             <i className="bi bi-geo-alt-fill" style={{color: PointColor, marginRight: '5px'}}></i>
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
-                        <ScheduleDetail_Content_Container>
-
-                        </ScheduleDetail_Content_Container>
+                        <MapPositionText_Container $isDrag={false} $isNull={true}>
+                            아이콘을 눌러 위치를 지정해주세요
+                        </MapPositionText_Container>
                     </ScheduleDetail_Wrapper_Container>
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>

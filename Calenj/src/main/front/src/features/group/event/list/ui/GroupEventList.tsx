@@ -49,7 +49,7 @@ export const GroupEventList: React.FC = () => {
     return (
         <>
             {scheduleDetail ?
-                <ScheduleDetail scheduleDetail={scheduleDetail}/>
+                <ScheduleDetail originGroupSchedule={scheduleDetail}/>
                 :
                 <>
                     {groupScheduleList.data &&

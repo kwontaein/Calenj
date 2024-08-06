@@ -77,6 +77,8 @@ export const ScheduleDetail_ContentTitle_Container = styled.div`
     color: inherit;
     background-color: inherit;
     font-size: 13px;
+    display: flex;
+    flex-direction: row;
 `
 
 export const ScheduleDetail_Content_Container = styled.div`
@@ -144,6 +146,23 @@ export const EditSubSchedule_Content =styled.textarea`
     box-sizing: border-box;
     border: none;
     color: inherit;
+`
+
+export const MapPositionText_Container = styled.div<{$isDrag:boolean, $isNull:boolean}>`
+    width: auto;
+    color: ${props=> props.$isDrag ? 'inherit' : props.$isNull ? `${TextColor}77` : TextColor};
+    background-color: inherit;
+    font-size: 13px;
+`
+
+export const MapIcon_Container = styled.div`
+    color: ${PointColor};
+    margin-right: 5px;
+    align-items: center;
+    margin-top: -3px;
+    &:hover{
+        color:${PointColor}77;
+    }
 `
 
 

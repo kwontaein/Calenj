@@ -16,7 +16,9 @@ export const ScheduleMap_Container = styled.div`
     width: 100%;
     height: 250px;
     margin-top: 5px;
-    background-color: #aba8b9;
+    position: relative;
+    z-index: 0;
+    border-radius: 4px;
 `
 export const ScheduleButton_Container = styled.div`
     width: 100%;

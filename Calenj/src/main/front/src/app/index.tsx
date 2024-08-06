@@ -15,6 +15,11 @@ import {sagaRefresh} from "./hoc/store";
 import {UserProfileSetting} from "../features/user/userProtile/ui/UserProfileSetting";
 import {Test} from "../features/test/test";
 
+declare global {
+    interface Window {
+        naver: any;
+    }
+}
 
 export const App: React.FC = () => {
     const cookieState = useFetchCookie();
