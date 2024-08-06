@@ -98,6 +98,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule ,groupSchedule
             subScheduleContent: "",
             subScheduleCreate: new Date(),
             subScheduleDuration: 0,
+            location:"",
             joinUser: [],
         }
         dispatchSubSchedule({type:"SET_SUB_SCHEDULE_LIST", payload:[...subScheduleEdit, newSchedule]});
