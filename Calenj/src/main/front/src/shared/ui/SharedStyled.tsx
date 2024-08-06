@@ -127,7 +127,7 @@ export const GlobalStyle = createGlobalStyle`
         background-color: ${ThemeColor2};
         color: ${TextColor};
         font-family: "Noto Sans KR", sans-serif;
-
+        transition: border ease-in 0.3s;
         &:focus {
             outline: none;
             border: 2px solid ${PointColor};
