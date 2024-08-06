@@ -149,10 +149,14 @@ export const EditSubSchedule_Content =styled.textarea`
 `
 
 export const MapPositionText_Container = styled.div<{$isDrag:boolean, $isNull:boolean}>`
+    max-width: calc(100% - 70px);
     width: auto;
-    color: ${props=> props.$isDrag ? 'inherit' : props.$isNull ? `${TextColor}77` : TextColor};
+    color: ${props=> props.$isDrag ? 'inherit' : (props.$isNull ? `${TextColor}77` : TextColor)};
     background-color: inherit;
     font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 `
 
 export const MapIcon_Container = styled.div`

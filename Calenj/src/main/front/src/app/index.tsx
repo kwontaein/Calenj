@@ -13,7 +13,8 @@ import {useStomp} from "../features/websocket";
 import {RootState} from "../entities/redux";
 import {sagaRefresh} from "./hoc/store";
 import {UserProfileSetting} from "../features/user/userProtile/ui/UserProfileSetting";
-import {Test} from "../features/test/test";
+import {Test} from "../Test/test/test";
+import Direction5 from "../Test/direction5";
 
 declare global {
     interface Window {
@@ -48,6 +49,7 @@ export const App: React.FC = () => {
                         <Route path={"/images"} element={<ImagesUploadComponent/>}/>
                         <Route path={"/userSetting"} element={<UserProfileSetting/>}/>
                         <Route path={"/Test"} element={<Test/>}/>
+                        <Route path={"/direction5"} element={<Direction5/>}/>
                     </Routes>
                 </BrowserRouter>
             }
