@@ -6,6 +6,7 @@ import org.example.calenj.calendar.dto.request.TagRequest;
 import org.example.calenj.calendar.dto.response.ScheduleResponse;
 import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
+import org.example.calenj.naverApi.service.NaverService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CalendarController {
 
     private final CalendarService calendarService;
+    private final NaverService naverService;
 
     /**
      * 개인 스케쥴 저장
@@ -39,6 +41,7 @@ public class CalendarController {
      */
     @GetMapping("api/getUserDateEvent")
     public List<ScheduleResponse> selectUserSchedule() {
+        naverService.locationSearch("타임스퀘어");
         return calendarService.getScheduleList();
     }
 
@@ -93,5 +96,5 @@ public class CalendarController {
     public void deleteTag(@RequestBody TagRequest tagRequest) {
         calendarService.deleteTag(tagRequest.getId());
     }
-    
+
 }
