@@ -60,7 +60,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
     const [clickState, setClickState] = useState<number | null>(null)
     const [nowTime, setNowTime] = useState<Date>(new Date())
     const [mapIndex, setMapIndex] = useState<number | null>(null);
-    const [myLocation, setMyLocation] = useState<Locate | null>(null);
     const mapElement = useRef<HTMLDivElement | null>(null);
     const [mapCenter, setMapCenter] = useState<(string | null)[]>([])
 
@@ -93,18 +92,15 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
     }, [mapModal, mapElement.current?.clientWidth]);
 
     //내 위치 정보 받아오는 메소드
-    useEffect(() => {
+    const myLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                setMyLocation({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
+                map(position.coords.latitude.toString(), position.coords.longitude.toString());
             });
         } else {
             window.alert("현재위치를 알수 없습니다.");
         }
-    }, []);
+    };
 
     //지도 그리는 메소드
     const map = (x: string | null, y: string | null) => {
