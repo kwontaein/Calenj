@@ -23,6 +23,7 @@ import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/
 import {GroupSubScheduleAction,} from "../../../../../../entities/group";
 import {ReturnListDrag} from "../model/types";
 import {ScheduleMap_Container} from "./ScheduleDetailStyled";
+import {LocationSetModal} from "./LocationSetModal";
 
 interface ScheduleDetailProps{
     useGroupSubSchedule: ReturnListDrag,
@@ -66,7 +67,8 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [mapModal]);
+    }, [mapModal,mapElement.current?.clientWidth]);
+
     //현재시간 갱신
     useEffect(() => {
         setInterval(()=>{
@@ -108,13 +110,16 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
     return (
 
         <ScheduleDetailList_Container onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if(!(clickRef.current && clickRef.current?.contains(e.target as Node)) ) {
+            if(!(clickRef.current && clickRef.current?.contains(e.target as Node)) && mapIndex ===null ) {
                 clickRef.current=null
                 setClickState(null)
             }
         }}>
             {mapModal && <ScheduleMap_Container id="map" ref={mapElement}/>}
-            {setMapIndex!==null && <></>}
+            {mapIndex!==null && <LocationSetModal dispatchSubSchedule={dispatchSubSchedule}
+                                                  subScheduleIndex={mapIndex}
+                                                  onClose={()=>setMapIndex(null)}/>
+            }
             {subScheduleEdit.map((schedule, idx) => (
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>

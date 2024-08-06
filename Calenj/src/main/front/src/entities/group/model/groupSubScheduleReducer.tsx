@@ -5,6 +5,7 @@ export type GroupSubScheduleAction =
     | { type: 'SET_TITLE'; payload: {index:number, title: string}}
     | { type: 'SET_CONTENT'; payload: {index:number, content:string} }
     | { type: 'SET_DURATION'; payload: {index:number, duration: number} }
+    | { type: 'SET_LOCATION'; payload: {index:number, location: string} }
     | { type: 'SET_SUB_SCHEDULE_LIST'; payload:SubSchedule[]}
     ;
 
@@ -26,6 +27,10 @@ export const groupSubScheduleReducer = (state: SubSchedule[], action: GroupSubSc
         case 'SET_DURATION':
             return state.map((item, idx) =>
                 idx === action.payload.index ? { ...item, subScheduleDuration: action.payload.duration ||0 } : item
+            );
+        case 'SET_LOCATION':
+            return state.map((item, idx) =>
+                idx === action.payload.index ? { ...item, location: action.payload.location} : item
             );
         case 'SET_SUB_SCHEDULE_LIST':
             return action.payload
