@@ -74,7 +74,7 @@ public class GroupScheduleService {
         GroupScheduleEntity groupScheduleEntity = groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime));
         groupScheduleRepository.save(groupScheduleEntity);
     }
-    
+
 
     /**
      * 그룹 서브 일정 생성 및 업데이트
@@ -93,7 +93,9 @@ public class GroupScheduleService {
 
         System.out.println("groupScheduleRequest : " + groupScheduleRequest);
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
-            subIds.add(subSchedule.getSubScheduleId().toString());
+            if (subSchedule.getSubScheduleId() != null) {
+                subIds.add(subSchedule.getSubScheduleId().toString());
+            }
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
         }
 
