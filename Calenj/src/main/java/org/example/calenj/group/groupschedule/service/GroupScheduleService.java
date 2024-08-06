@@ -81,6 +81,8 @@ public class GroupScheduleService {
      * @param groupScheduleRequest
      */
     public void updateSubSchedule(GroupScheduleRequest groupScheduleRequest) {
+        GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getGroupId()).orElse(null);
+        groupScheduleRepository.save(groupScheduleRequest.toEntity(group, null));
         GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
         System.out.println("groupScheduleRequest : "+groupScheduleRequest);
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
@@ -223,6 +225,6 @@ public class GroupScheduleService {
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
 
         return new ScheduleRequest(
-                response.getSubScheduleId(), response.getScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
+                response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
 }
