@@ -1,20 +1,41 @@
-import {DragEvent, useCallback, useEffect, useRef, useState} from "react";
-import {SubSchedule} from "../../../../../../entities/reactQuery";
+import {DragEvent, useCallback, useEffect, useReducer, useRef, useState} from "react";
+import {
+    GroupSchedule,
+    SubSchedule,
+    useFetchGroupScheduleList,
+    useFetchGroupSubScheduleList
+} from "../../../../../../entities/reactQuery";
 import {v4 as uuidv4} from "uuid";
-import {GroupSubScheduleAction} from "../../../../../../entities/group";
+import {groupEventSate, GroupSubScheduleAction, groupSubScheduleReducer} from "../../../../../../entities/group";
 import {ReturnListDrag} from "./types";
 import {useConfirm} from "../../../../../../shared/model";
+import {saveSubScheduleApi} from "../api/saveSubScheduleApi";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../../entities/redux";
 
 
 
-export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: React.Dispatch<GroupSubScheduleAction> ,startTime:Date):ReturnListDrag =>{
+export const useSubSchedule = (originGroupSchedule: GroupSchedule ,groupScheduleEdit:groupEventSate, setEditMode: React.DispatchWithoutAction) =>{
     const dragIndex = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverIndex = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number }|null>(null);
     const [ItemWidth,setItemWidth] = useState<number|null>(null);
-    const [scheduleTime, setScheduleTime] = useState<Date[]>([startTime])
+    const [scheduleTime, setScheduleTime] = useState<Date[]>([groupScheduleEdit.startDate])
     const deleteRef = useRef<number|null>(null)
+
+    const groupId = useSelector((state: RootState) => state.subNavigation.group_subNavState.param)
+    const groupScheduleList = useFetchGroupScheduleList(groupId)
+
+
+    const groupSubScheduleList = useFetchGroupSubScheduleList(originGroupSchedule.scheduleId); //이 리스트로 넣으면 됨
+    const [subScheduleEdit,dispatchSubSchedule] = useReducer(groupSubScheduleReducer, [])
+
+    useEffect(()=>{
+        if(groupSubScheduleList.data){
+            dispatchSubSchedule({type:'SET_SUB_SCHEDULE_LIST', payload:groupSubScheduleList.data})
+        }
+    },[groupSubScheduleList.data])
 
     // 드래그 시작될 때 실행
     const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
@@ -34,7 +55,7 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
     // 드래그 중인 대상이 위로 포개졌을 때
     const dragEnter = (e: DragEvent<HTMLDivElement>, position: number) => {
         dragOverIndex.current = position;
-        const newList = [...scheduleData];
+        const newList = [...subScheduleEdit];
         const dragIndexValue = newList[dragIndex.current!];
 
         // 드래그한 요소를 제거
@@ -56,20 +77,22 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
     };
 
     const dragMousePosition = (e: DragEvent<HTMLDivElement>) => {
-        if (initialDragPosition) {
+        if (initialDragPosition === null)  return
             // console.log(e.pageX, e.pageY)
+        if((e.pageX - initialDragPosition.x)>0 && (e.pageY - initialDragPosition.y) >0){
             setMousePosition({
                 x: e.pageX - initialDragPosition.x,
                 y: e.pageY - initialDragPosition.y
             })
         }
+
     }
 
     const addSubSchedule = ()=>{
 
         const UUid = uuidv4();
         const newSchedule = {
-            index: scheduleData.length||0,
+            index: subScheduleEdit.length||0,
             subSubScheduleId: UUid,
             subScheduleTitle: "",
             subScheduleContent: "",
@@ -77,34 +100,58 @@ export const useListDrag = (scheduleData :SubSchedule[], dispatchSubSchedule: Re
             subScheduleDuration: 0,
             joinUser: [],
         }
-        dispatchSubSchedule({type:"SET_SUB_SCHEDULE_LIST", payload:[...scheduleData, newSchedule]});
+        dispatchSubSchedule({type:"SET_SUB_SCHEDULE_LIST", payload:[...subScheduleEdit, newSchedule]});
     }
 
     const deleteSubSchedule = useCallback(()=>{
         if(deleteRef.current===null) return
         const deleteSchedule = ()=>{
-            const newList = [...scheduleData];
+            const newList = [...subScheduleEdit];
             // 드래그한 요소를 제거
             newList.splice(dragIndex.current!, 1);
             dispatchSubSchedule({type:"SET_SUB_SCHEDULE_LIST", payload:newList});
-            deleteRef.current=null
         }
         useConfirm("정말로 해당 일정을 삭제하시겠습니까?" ,deleteSchedule,()=>{})
+        deleteRef.current=null
+
     },[deleteRef.current])
 
     useEffect(() => {
         scheduleTimeOperation();
-    }, [scheduleData,startTime]);
+    }, [subScheduleEdit,groupScheduleEdit.startDate]);
+
+
+    const saveGroupSchedule = ()=>{
+        const postAble =subScheduleEdit.every((subSchedule)=> subSchedule.subScheduleTitle!=="")
+        if(postAble){
+            const postScheduleData = {
+                ...originGroupSchedule,
+                ...groupScheduleEdit,
+                groupSubSchedules : subScheduleEdit
+            }
+            saveSubScheduleApi(postScheduleData)
+                .then(()=>{
+                    window.alert('저장이 완료되었습니다')
+                    groupScheduleList.refetch()
+                    groupSubScheduleList.refetch()
+                    setEditMode()
+                })
+                .catch((err)=>{console.log()})
+        }else{
+            window.alert('일정의 제목을 입력해주세요.')
+        }
+    }
+
 
     const scheduleTimeOperation = ()=>{
         let timeResult:Date[]=[];
-        let time =new Date(startTime);
-        scheduleData.forEach((schedule)=>{
+        let time =new Date(groupScheduleEdit.startDate);
+        subScheduleEdit.forEach((schedule)=>{
             time.setMinutes(time.getMinutes() + schedule.subScheduleDuration)
             const cloneTime = new Date(time)
             timeResult.push(cloneTime)
         })
         setScheduleTime(timeResult)
     }
-    return {dragEnter, dragMousePosition, drop, dragStart,addSubSchedule,deleteSubSchedule, mousePosition, ItemWidth, dragIndex,deleteRef,scheduleTime}
+    return {dragEnter, dragMousePosition, drop, dragStart, subScheduleEdit, dispatchSubSchedule,addSubSchedule,deleteSubSchedule,saveGroupSchedule, mousePosition, ItemWidth, dragIndex,deleteRef,scheduleTime}
 }
