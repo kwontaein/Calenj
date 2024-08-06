@@ -159,14 +159,14 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                             <ScheduleDetail_Wrapper_Container>
                                 <ScheduleDetail_ContentTitle_Container>
                                     {dragIndex.current !== idx &&
-                                        <MapIcon_Container onClick={()=>setMapIndex(idx)}>
+                                        <MapIcon_Container onClick={()=> editMode && setMapIndex(idx)}>
                                             <i className="bi bi-geo-alt-fill"></i>
                                         </MapIcon_Container>
                                     }
                                     위치  :
                                 </ScheduleDetail_ContentTitle_Container>
-                                <MapPositionText_Container $isDrag={dragIndex.current===idx} $isNull={true}>
-                                    아이콘을 눌러 위치를 지정해주세요
+                                <MapPositionText_Container $isDrag={dragIndex.current===idx} $isNull={schedule.location===null}>
+                                    {schedule.location ? schedule.location : (editMode?'아이콘을 눌러 위치를 지정해주세요':'위치를 설정하지 않았습니다.')}
                                 </MapPositionText_Container>
                             </ScheduleDetail_Wrapper_Container>
                             <ScheduleDetail_Wrapper_Container>
@@ -228,15 +228,14 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                 제목을 입력해주세요
                             </div>
                         }
-
                     </SubSchedule_Title_Container>
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
                             <i className="bi bi-geo-alt-fill" style={{color: PointColor, marginRight: '5px'}}></i>
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
-                        <MapPositionText_Container $isDrag={false} $isNull={true}>
-                            아이콘을 눌러 위치를 지정해주세요
+                        <MapPositionText_Container $isDrag={false} $isNull={subScheduleEdit[dragIndex.current].location===null}>
+                            {subScheduleEdit[dragIndex.current].location ? subScheduleEdit[dragIndex.current].location : (editMode?'아이콘을 눌러 위치를 지정해주세요':'위치를 설정하지 않았습니다.')}
                         </MapPositionText_Container>
                     </ScheduleDetail_Wrapper_Container>
                     <ScheduleDetail_Wrapper_Container>

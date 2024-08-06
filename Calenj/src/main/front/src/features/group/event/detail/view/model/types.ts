@@ -1,3 +1,4 @@
+
 import {DragEvent} from "react";
 import {groupEventSate, GroupSubScheduleAction} from "../../../../../../entities/group";
 import {GroupEventAction} from "../../../../../../entities/group/model/groupEventReducer";
@@ -27,3 +28,24 @@ export interface ReturnScheduleEdit{
     dispatchGroupSchedule:  React.Dispatch<GroupEventAction>,
     mapHandler: ()=>void,
 }
+
+
+export  interface NaverSearchResponse {
+    astBuildDate: string;
+    total: number;
+    start: number;
+    display: number;
+    items: LocalItem[];
+}
+export interface LocalItem {
+    title:string,
+    link:string,
+    category:string,
+    description:string,
+    telephone:string,
+    address:string,
+    roadAddress:string,
+    mapx:string,
+    mapy:string
+}
+

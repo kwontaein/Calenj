@@ -7,7 +7,6 @@ import {
 } from "../../../../../../entities/reactQuery";
 import {v4 as uuidv4} from "uuid";
 import {groupEventSate, GroupSubScheduleAction, groupSubScheduleReducer} from "../../../../../../entities/group";
-import {ReturnListDrag} from "./types";
 import {useConfirm} from "../../../../../../shared/model";
 import {saveSubScheduleApi} from "../api/saveSubScheduleApi";
 import {useSelector} from "react-redux";
@@ -33,6 +32,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule ,groupSchedule
 
     useEffect(()=>{
         if(groupSubScheduleList.data){
+            console.log(groupSubScheduleList.data)
             dispatchSubSchedule({type:'SET_SUB_SCHEDULE_LIST', payload:groupSubScheduleList.data})
         }
     },[groupSubScheduleList.data])
