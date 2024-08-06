@@ -33,4 +33,7 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
     @Transactional
     @Query("delete from group_sub_schedule gss where gss.scheduleId.scheduleId =: scheduleId")
     void deleteByScheduleId(@Param("scheduleId") UUID scheduleId);
+
+    @Query("select gss.subScheduleId from group_sub_schedule gss where gss.scheduleId.scheduleId =:scheduleId")
+    List<String> findSubIds(@Param("scheduleId") UUID scheduleId);
 }

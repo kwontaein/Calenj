@@ -74,6 +74,7 @@ public class GroupScheduleService {
         GroupScheduleEntity groupScheduleEntity = groupScheduleRequest.toEntity(group, Timestamp.valueOf(dateTime));
         groupScheduleRepository.save(groupScheduleEntity);
     }
+    
 
     /**
      * 그룹 서브 일정 생성 및 업데이트
@@ -81,13 +82,29 @@ public class GroupScheduleService {
      * @param groupScheduleRequest
      */
     public void updateSubSchedule(GroupScheduleRequest groupScheduleRequest) {
+
         GroupEntity group = groupRepository.findByGroupId(groupScheduleRequest.getGroupId()).orElse(null);
         groupScheduleRepository.save(groupScheduleRequest.toEntity(group, null));
+
         GroupScheduleEntity groupScheduleEntity = groupScheduleRepository.findById(groupScheduleRequest.getScheduleId()).orElse(null);
+
+        List<String> originId = groupSubScheduleRepository.findSubIds(groupScheduleRequest.getScheduleId());
+        List<String> subIds = new ArrayList<>();
+
         System.out.println("groupScheduleRequest : " + groupScheduleRequest);
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
+            subIds.add(subSchedule.getSubScheduleId().toString());
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
         }
+
+
+        // originId에는 포함되어 있지만 subIds에는 포함되어 있지 않은 ID를 삭제
+        for (String id : originId) {
+            if (!subIds.contains(id)) {
+                deleteSubSchedule(UUID.fromString(id));
+            }
+        }
+
         addCalendar(groupScheduleEntity);
     }
 
