@@ -1,11 +1,9 @@
 import React, {useEffect, useReducer, useRef, useState} from "react";
 import {
-    MapIcon_Container,
     MemberMoreView_Text,
     Schedule_Button,
     ScheduleButton_Container,
     ScheduleDetail_Container, ScheduleDetailScroll_Wrapper, ScheduleDotsIcon_Container,
-    ScheduleMap_Container,
     ScheduleMember_Container,
     ScheduleMember_Viewer_Container,
     ScheduleMemberItem_Container, ScheduleMemberName_Container,
@@ -44,7 +42,6 @@ interface GroupScheduleProps {
 }
 
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({originGroupSchedule}) => {
-    const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister)
 
     //옵션창 관련
@@ -177,21 +174,11 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({originGroupSchedul
                         </div>
                     }
                 </ScheduleMember_Container>
-                <ScheduleButton_Container>
-                    <MapIcon_Container onClick={mapHandler}>
-                        <div style={{fontSize: '13px', marginRight: '5px'}}>지도</div>
-                        {mapModal ?
-                            <i className="fi fi-br-angle-down" style={{marginTop: '3px'}}></i> :
-                            <i className="fi fi-br-angle-right" style={{marginTop: '3px'}}></i>
-                        }
-                    </MapIcon_Container>
-
-                </ScheduleButton_Container>
 
                 <ScheduleDetailList useGroupSubSchedule={useGroupSubSchedule}
                                     editMode={editMode}
                                     startDate={new Date(groupSchedule.startDate)}
-                                    mapModal={mapModal}/>
+                                    mapHandler={mapHandler}/>
             </ScheduleDetailScroll_Wrapper>
 
             {editMode &&

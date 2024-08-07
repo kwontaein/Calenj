@@ -41,7 +41,6 @@ public class CalendarController {
      */
     @GetMapping("api/getUserDateEvent")
     public List<ScheduleResponse> selectUserSchedule() {
-        naverService.locationSearch("타임스퀘어");
         return calendarService.getScheduleList();
     }
 

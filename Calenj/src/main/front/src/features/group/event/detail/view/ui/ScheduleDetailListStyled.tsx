@@ -169,6 +169,18 @@ export const MapIcon_Container = styled.div`
     }
 `
 
+export const MapToggle_Containper = styled.div`
+    width: 50px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+
+    &:hover {
+        color: ${TextColor}77;
+    }
+`
 
 
 export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean, $isClick?:boolean }>`
