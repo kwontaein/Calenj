@@ -2,7 +2,7 @@ import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react
 import {
     EditDuration_Input,
     EditSubSchedule_Content, EditSubSchedule_Title, MapIcon_Container,
-    MapInterval_Container, MapPositionText_Container,
+    MapInterval_Container, MapPositionText_Container, MapToggle_Containper,
     ScheduleDetail_Content_Container,
     ScheduleDetail_ContentTitle_Container,
     ScheduleDetail_Wrapper,
@@ -24,12 +24,15 @@ import {GroupSubScheduleAction,} from "../../../../../../entities/group";
 import {ReturnListDrag} from "../model/types";
 import {ScheduleMap_Container} from "./ScheduleDetailStyled";
 import {LocationSetModal} from "./LocationSetModal";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../../entities/redux";
+import {useSubScheduleMap} from "../model/useSubScheduleMap";
 
 interface ScheduleDetailProps {
     useGroupSubSchedule: ReturnListDrag,
     editMode: boolean
     startDate: Date;
-    mapModal: boolean
+    mapHandler:()=>void;
 }
 
 interface Locate {
@@ -37,124 +40,19 @@ interface Locate {
     longitude: number
 }
 
-export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
-                                                                      useGroupSubSchedule,
-                                                                      editMode,
-                                                                      startDate,
-                                                                      mapModal
-                                                                  }) => {
-    const {
-        subScheduleEdit,
-        dispatchSubSchedule,
-        scheduleTime,
-        dragEnter,
-        dragMousePosition,
-        drop,
-        dragStart,
-        mousePosition,
-        ItemWidth,
-        dragIndex
-    } = useGroupSubSchedule
+export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSchedule, editMode, startDate,mapHandler}) => {
+
+    const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
+    const {subScheduleEdit, dispatchSubSchedule, scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
     const textAreaRef = useRef<(HTMLTextAreaElement | null)[]>([]);
     const clickRef = useRef<HTMLDivElement | null>(null);
     const [clickState, setClickState] = useState<number | null>(null)
     const [nowTime, setNowTime] = useState<Date>(new Date())
-    const [mapIndex, setMapIndex] = useState<number | null>(null);
-    const mapElement = useRef<HTMLDivElement | null>(null);
-    const [mapCenter, setMapCenter] = useState<(string | null)[]>([])
-
-    const createMarkerList: naver.maps.Marker[] = [];
-
-    let initMap: naver.maps.Map | undefined = undefined;
-    //Map 세팅
-    useEffect(() => {
-        if (mapModal) {
-            subScheduleEdit.forEach((schedule) => {
-                geoCode(schedule.location, schedule.index);
-            });
-        }
-
-        const handleResize = () => {
-            if (!mapElement.current || !initMap) return;
-            const {clientWidth} = mapElement.current;
-            const size = new naver.maps.Size(clientWidth, 250);
-            initMap.setSize(size);
-        };
-
-        if (mapModal && initMap) {
-            window.addEventListener("resize", handleResize);
-        }
-        handleResize();
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [mapModal, mapElement.current?.clientWidth]);
-
-    //내 위치 정보 받아오는 메소드
-    const myLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                map(position.coords.latitude.toString(), position.coords.longitude.toString());
-            });
-        } else {
-            window.alert("현재위치를 알수 없습니다.");
-        }
-    };
-
+    const [mapIndex, setMapIndex] = useState<number | null>(null); //위치 설정을 위한 index전달
+    const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
-    const map = (x: string | null, y: string | null) => {
-        console.log("지도 그리기", x, y)
-        if (x === null || y === null) {
-            return;
-        } else {
-            initMap = new naver.maps.Map("map", {
-                center: new naver.maps.LatLng(parseFloat(y), parseFloat(x)),
-                zoom: 15,
-                mapTypeControl: true,
-            });
-        }
-    }
-    //마커 추가하는 메소드
-    const addMaker = (x: string, y: string, index: number) => {
 
-        const marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(parseFloat(y), parseFloat(x)),
-            map: initMap
-        });
-
-        createMarkerList.push(marker);
-
-        // Marker 클릭 시 지도 초기화
-        naver.maps.Event.addListener(marker, 'click', () => {
-            markerClickHandler(index)
-        });
-    }
-
-    //마커를 클릭했을 때 실행할 이벤트 핸들러
-    const markerClickHandler = (id: number) => {
-        /*initMap?.setCenter(new naver.maps.LatLng(parseFloat(y), parseFloat(x)));
-        initMap?.setZoom(16);*/
-    };
-
-    //도로명주소 -> 위도경도 후 지도그리고 마커 찍기
-    const geoCode = (roadLocation: string, index: number) => {
-        naver.maps.Service.geocode({query: roadLocation}, (status, response) => {
-            if (status === naver.maps.Service.Status.ERROR) {
-                alert('Something wrong!');
-                return;
-            }
-            const locateX = response.v2.addresses[0].x;
-            const locateY = response.v2.addresses[0].y;
-            if (index === 0) {
-                map(locateX, locateY);
-            }
-            console.log(locateX, locateY);
-            addMaker(locateX, locateY, index);
-        });
-    };
-
-
+    
     //현재시간 갱신
     useEffect(() => {
         setInterval(() => {
@@ -186,7 +84,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
             }
         })
     }, [editMode]);
-
     //현재 클릭한 subSchedule 지정
     const clickStateHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, idx: number) => {
         clickRef.current = e.currentTarget as HTMLDivElement
@@ -201,6 +98,13 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
                 setClickState(null)
             }
         }}>
+            <MapToggle_Containper onClick={mapHandler}>
+                <div style={{fontSize: '13px', marginRight: '5px'}}>지도</div>
+                {mapModal ?
+                    <i className="fi fi-br-angle-down" style={{marginTop: '3px'}}></i> :
+                    <i className="fi fi-br-angle-right" style={{marginTop: '3px'}}></i>
+                }
+            </MapToggle_Containper>
             {mapModal &&
                 <ScheduleMap_Container id="map" ref={mapElement}/>}
             {mapIndex !== null &&
@@ -241,7 +145,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
                                 {editMode ?
                                     <EditSubSchedule_Title value={schedule.subScheduleTitle}
                                                            disabled={dragIndex.current !== null}
-                                                           maxLength={10}
+                                                           maxLength={20}
                                                            placeholder={dragIndex.current === idx ? '' : '제목을 입력해주세요'}
                                                            onChange={(e) => dispatchSubSchedule({
                                                                type: 'SET_TITLE',
@@ -260,7 +164,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
                                     위치 :
                                 </ScheduleDetail_ContentTitle_Container>
                                 <MapPositionText_Container $isDrag={dragIndex.current === idx}
-                                                           $isNull={schedule.location === null}>
+                                                           $isNull={schedule.location === ''}>
                                     {schedule.location ? schedule.location : (editMode ? '아이콘을 눌러 위치를 지정해주세요' : '위치를 설정하지 않았습니다.')}
                                 </MapPositionText_Container>
                             </ScheduleDetail_Wrapper_Container>
@@ -336,7 +240,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
                         <MapPositionText_Container $isDrag={false}
-                                                   $isNull={subScheduleEdit[dragIndex.current].location === null}>
+                                                   $isNull={subScheduleEdit[dragIndex.current].location === ''}>
                             {subScheduleEdit[dragIndex.current].location ? subScheduleEdit[dragIndex.current].location : (editMode ? '아이콘을 눌러 위치를 지정해주세요' : '위치를 설정하지 않았습니다.')}
                         </MapPositionText_Container>
                     </ScheduleDetail_Wrapper_Container>

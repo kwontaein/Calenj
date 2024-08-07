@@ -10,11 +10,11 @@ export const useLoginHandler = ():[(key: string, event: string)=> void ,data:Log
         userPassword: '',
     });
 
-    const signHandeler = (key: string, event: string): void => {
+    const signHandler = (key: string, event: string): void => {
         setData((prevState: LoginData) => {
             return {...prevState, [key]: event}
         })
     };
 
-    return [signHandeler, data];
+    return [signHandler, data];
 }
