@@ -143,11 +143,12 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
     const handleMouseLeave = () => {
         setTimeout(() => {
             setIsMouseOverTrash(false);
-        }, 500)
+        }, 200)
     };
 
     //삭제 실행
     const setTrashData = ((clickInfo: EventClickArg) => {
+        if(dynamicEventTag[clickInfo.event._def.extendedProps.tagKeys[0]].name==="그룹 일정") return
         setDeleteEvent(clickInfo);
         //모달 띄우고
         //정말로 삭제하시겠습니까 ? -> 예 선택시

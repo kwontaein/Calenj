@@ -99,7 +99,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
             subScheduleTitle: "",
             subScheduleContent: "",
             subScheduleCreate: new Date(),
-            subScheduleDuration: 0,
+            subScheduleDuration: 1,
             location: "",
             positionX: "",
             positionY: "",
@@ -129,8 +129,9 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
 
     const saveGroupSchedule = () => {
-        const postAble = subScheduleEdit.every((subSchedule) => subSchedule.subScheduleTitle !== "")
-        if (postAble) {
+        const titleCheck = subScheduleEdit.every((subSchedule) => subSchedule.subScheduleTitle !== "")
+        const durationCheck = subScheduleEdit.every((subSchedule) => subSchedule.subScheduleDuration>0)
+        if (titleCheck && durationCheck) {
             const postScheduleData = {
                 ...originGroupSchedule,
                 ...groupScheduleEdit,
@@ -146,8 +147,10 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
                 .catch((err) => {
                     console.log()
                 })
-        } else {
+        } else if(!titleCheck){
             window.alert('일정의 제목을 입력해주세요.')
+        } else{
+            window.alert('일정시간을 1분이상으로 설정해주세요.')
         }
     }
 

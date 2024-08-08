@@ -63,7 +63,13 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                 </EventTag_Container>
 
                 <EventButton_Container>
-                    <EventButtonIcon_Wrapper onClick={()=>setModify(true)}>
+                    <EventButtonIcon_Wrapper onClick={()=>{
+                        if(dynamicEventTag[tagKeys[0]].name!=="그룹 일정") {
+                            setModify(true)
+                        }else {
+                            window.alert('그룹일정은 개인일정에서 수정할 수 없습니다.')
+                        }
+                    }}>
                         <i className="fi fi-sr-pencil"></i>
                     </EventButtonIcon_Wrapper>
                     <EventButtonIcon_Wrapper>

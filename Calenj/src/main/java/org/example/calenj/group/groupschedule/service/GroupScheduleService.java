@@ -216,7 +216,7 @@ public class GroupScheduleService {
 
         for (GroupSubScheduleResponse response : responses) {
             // 새로운 Timestamp 객체 생성
-            Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 3600000L));
+            Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 1000*60L));
             //해당 아이디가 아닐 경우 skip
             if (!subScheduleId.equals(response.getSubScheduleId())) {
                 plusTime += response.getSubScheduleDuration();
@@ -264,7 +264,7 @@ public class GroupScheduleService {
                 tagKey, "promise", response.getSubScheduleContent(), new ArrayList<>(), new ArrayList<>(), repeatStateRequest);
 
         System.out.println("newTime : " + response.getSubScheduleDuration());
-        Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
+        Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 1000*60L));
         System.out.println("newEnd : " + newEnd);
         return new ScheduleRequest(
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);

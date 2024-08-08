@@ -30,12 +30,12 @@ export const ScheduleDetailList_Structure_Container = styled.div`
     flex:1;
 `
 
-export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean }>`
+export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean, $isClick:boolean}>`
     width: 70%;
     height: calc(40% + 27px);
     box-sizing: border-box;
     border-left: 2px solid ${props => props.$isNow ? PointColor : TextColor};
-    border-bottom: 2px solid ${props => props.$isNow ? PointColor : TextColor};
+    border-bottom: 2px solid ${props =>  props.$isClick? PointColor: props.$isNow ? PointColor : TextColor};
     margin-bottom: -7px;
     position: relative;
 `
@@ -47,11 +47,11 @@ export const ScheduleDetailList_BottomLine_Container = styled.div<{ $isNow: bool
     position: relative;
 `
 
-export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean }>`
+export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean, $isClick:boolean }>`
     height: 12px;
     width: 12px;
     border: 2px solid ${TextColor};
-    background-color: ${props => props.$isNow ? PointColor : TextColor};
+    background-color: ${props => props.$isClick? PointColor: (props.$isNow ? PointColor : TextColor)};
     border-radius: 50%;
     margin-right: 11px;
     position: relative;

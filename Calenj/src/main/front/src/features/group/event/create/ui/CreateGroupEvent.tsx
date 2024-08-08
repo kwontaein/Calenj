@@ -144,8 +144,8 @@ export const CreateGroupEvent: React.FC<{ onClose: () => void }> = ({onClose}) =
                         {isLimit &&
                             <>
                                 <LimitNum_Input ref={inputRef}
-                                                $numLength={(maxPeople + "").split("").length}
-                                                defaultValue={maxPeople}
+                                                $numLength={((maxPeople||0) + "").split("").length}
+                                                defaultValue={0}
                                                 maxLength={3}
                                                 onChange={(e) => e.target.value.length<4 &&
                                                     dispatchGroupEvent({
