@@ -34,7 +34,7 @@ import {
 } from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 import {GroupSubScheduleAction,} from "../../../../../../entities/group";
-import {ReturnListDrag} from "../model/types";
+import { ReturnSubSchedule} from "../model/types";
 import {ScheduleMap_Container} from "./ScheduleDetailStyled";
 import {LocationSetModal} from "./LocationSetModal";
 import {useSelector} from "react-redux";
@@ -42,7 +42,7 @@ import {RootState} from "../../../../../../entities/redux";
 import {useSubScheduleMap} from "../model/useSubScheduleMap";
 
 interface ScheduleDetailProps {
-    useGroupSubSchedule: ReturnListDrag,
+    useGroupSubSchedule: ReturnSubSchedule,
     editMode: boolean
     startDate: Date;
     mapHandler:()=>void;
@@ -56,7 +56,7 @@ interface Locate {
 export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSchedule, editMode, startDate,mapHandler}) => {
 
     const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
-    const {subScheduleEdit, dispatchSubSchedule, scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
+    const {subScheduleEdit, dispatchSubSchedule, joinSubSchedule,  scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
     const textAreaRef = useRef<(HTMLTextAreaElement | null)[]>([]);
     const clickRef = useRef<HTMLDivElement | null>(null);
     const [clickState, setClickState] = useState<number | null>(null)
@@ -138,8 +138,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                     </ScheduleDetailList_Structure_Container>
 
                     <ScheduleDetail_Wrapper>
-                        <MapInterval_Container>
-                        </MapInterval_Container>
+                        <MapInterval_Container/>
                         <ScheduleDetailList_Div
                             onClick={(e) => clickStateHandler(e, idx)}
                             onDrag={dragMousePosition}
@@ -241,14 +240,16 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                                 :
                                                 schedule.joinUser.map((userId, idx) => (
                                                     idx < 4 &&
-                                                    <ProfileContainer style={{width:'20px', height:'20px'}} $userId={userId}/>
+                                                    <ProfileContainer style={{width:'20px', height:'20px', minWidth:'unset'}} $userId={userId}/>
                                                 ))
                                             }
                                         </SubScheduleJoinUser_Wrapper>
                                     </SubScheduleJoinUser_Container>
                                     {dragIndex.current!==idx &&
-                                        <Modal_Condition_Button $isAble={true} style={{width:'60px', fontSize:'12px'}}>
-                                            참가하기
+                                        <Modal_Condition_Button $isAble={true}
+                                                                style={{width:'60px', fontSize:'12px'}}
+                                                                onClick={()=>joinSubSchedule(schedule.subScheduleId, idx)}>
+                                            {schedule.joinUser.some((id)=> id===localStorage.getItem('userId')) ? '나가기' : '참여하기'}
                                         </Modal_Condition_Button>
                                     }
                                 </SubScheduleOption_Container>
@@ -343,7 +344,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                             </SubScheduleJoinUser_Container>
 
                             <Modal_Condition_Button $isAble={true} style={{width:'60px', fontSize:'12px'}}>
-                                참가하기
+                                {subScheduleEdit[dragIndex.current].joinUser.some((id)=> id===localStorage.getItem('userId')) ? '나가기' : '참여하기'}
                             </Modal_Condition_Button>
 
                         </SubScheduleOption_Container>

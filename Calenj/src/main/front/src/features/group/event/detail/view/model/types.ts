@@ -4,7 +4,7 @@ import {groupEventSate, GroupSubScheduleAction} from "../../../../../../entities
 import {GroupEventAction} from "../../../../../../entities/group/model/groupEventReducer";
 import {SubSchedule} from "../../../../../../entities/reactQuery";
 
-export interface ReturnListDrag{
+export interface ReturnSubSchedule{
     subScheduleEdit: SubSchedule[],
     dispatchSubSchedule: React.Dispatch<GroupSubScheduleAction>
     dragStart : (e: DragEvent<HTMLDivElement>, position: number)=>void,
@@ -18,6 +18,7 @@ export interface ReturnListDrag{
     addSubSchedule: ()=>void,
     deleteSubSchedule: ()=>void,
     saveGroupSchedule: ()=>void,
+    joinSubSchedule:(subScheduleId:string, index:number)=>void,
     scheduleTime:Date[]
 }
 
