@@ -32,7 +32,7 @@ interface ScheduleDetailProps {
     useGroupSubSchedule: ReturnListDrag,
     editMode: boolean
     startDate: Date;
-    mapHandler:()=>void;
+    mapHandler: () => void;
 }
 
 interface Locate {
@@ -40,19 +40,35 @@ interface Locate {
     longitude: number
 }
 
-export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSchedule, editMode, startDate,mapHandler}) => {
+export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({
+                                                                      useGroupSubSchedule,
+                                                                      editMode,
+                                                                      startDate,
+                                                                      mapHandler
+                                                                  }) => {
 
-    const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
-    const {subScheduleEdit, dispatchSubSchedule, scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
+    const {mapModal} = useSelector((state: RootState) => state.groupSchedule)
+    const {
+        subScheduleEdit,
+        dispatchSubSchedule,
+        scheduleTime,
+        dragEnter,
+        dragMousePosition,
+        drop,
+        dragStart,
+        mousePosition,
+        ItemWidth,
+        dragIndex
+    } = useGroupSubSchedule
     const textAreaRef = useRef<(HTMLTextAreaElement | null)[]>([]);
     const clickRef = useRef<HTMLDivElement | null>(null);
     const [clickState, setClickState] = useState<number | null>(null)
     const [nowTime, setNowTime] = useState<Date>(new Date())
     const [mapIndex, setMapIndex] = useState<number | null>(null); //위치 설정을 위한 index전달
-    const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
+    const mapElement = useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
 
-    
+
     //현재시간 갱신
     useEffect(() => {
         setInterval(() => {
@@ -213,8 +229,11 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                 }
                             </ScheduleDetail_Wrapper_Container>
                         </ScheduleDetailList_Div>
+                        {idx !== subScheduleEdit.length - 1 &&
+                            <div>
+                                <i className="bi bi-car-front-fill"></i> : {schedule.duration}
+                            </div>}
                     </ScheduleDetail_Wrapper>
-
                 </ScheduleDetailList_Progress>
             ))}
             {(mousePosition && dragIndex.current !== null) &&
