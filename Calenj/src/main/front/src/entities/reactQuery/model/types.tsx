@@ -159,7 +159,7 @@ export interface GroupSchedule {
 
 export interface SubSchedule {
     index: number,
-    subSubScheduleId: string,
+    subScheduleId: string,
     subScheduleTitle: string,
     subScheduleContent: string,
     subScheduleCreate: Date,

@@ -52,7 +52,6 @@ export const AddDateEvent: React.FC<CalendarProps> = ({onClose, event, mode }) =
     const {formState, title, content} = eventState;
     const {selectorOptionProps, setTag} = useDateEventTag(eventDispatch);
     const [showFriendList, setShowFriendList] = useReducer((prev)=>!prev,false);
-    const modifyEvent = event as EventApi;
 
 
     return createPortal(

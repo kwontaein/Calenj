@@ -3,7 +3,7 @@ import {
     GroupSchedule,
     SubSchedule,
     useFetchGroupScheduleList,
-    useFetchGroupSubScheduleList
+    useFetchGroupSubScheduleList, useFetchUserDateEvent
 } from "../../../../../../entities/reactQuery";
 import {v4 as uuidv4} from "uuid";
 import {groupEventSate, GroupSubScheduleAction, groupSubScheduleReducer} from "../../../../../../entities/group";
@@ -11,9 +11,11 @@ import {useConfirm} from "../../../../../../shared/model";
 import {saveSubScheduleApi} from "../api/saveSubScheduleApi";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
+import {joinSubScheduleApi} from "../api/joinSubScheduleApi";
+import {ReturnSubSchedule} from "./types";
 
 
-export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupScheduleEdit: groupEventSate, setEditMode: React.DispatchWithoutAction) => {
+export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupScheduleEdit: groupEventSate, setEditMode: React.DispatchWithoutAction):ReturnSubSchedule => {
     const dragIndex = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const dragOverIndex = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
@@ -28,6 +30,9 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
     const groupSubScheduleList = useFetchGroupSubScheduleList(originGroupSchedule.scheduleId); //이 리스트로 넣으면 됨
     const [subScheduleEdit, dispatchSubSchedule] = useReducer(groupSubScheduleReducer, [])
+
+    const userId = localStorage.getItem('userId')||''
+    const userEventDateState = useFetchUserDateEvent(userId)
 
     useEffect(() => {
         if (groupSubScheduleList.data) {
@@ -90,7 +95,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         const UUid = uuidv4();
         const newSchedule = {
             index: subScheduleEdit.length || 0,
-            subSubScheduleId: UUid,
+            subScheduleId: UUid,
             subScheduleTitle: "",
             subScheduleContent: "",
             subScheduleCreate: new Date(),
@@ -157,6 +162,20 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         })
         setScheduleTime(timeResult)
     }
+
+    const joinSubSchedule = (subScheduleId:string,index:number)=>{
+        const postJoin = ()=>{
+            joinSubScheduleApi(subScheduleId).then((res) => {
+                window.alert(res)
+                groupSubScheduleList.refetch()
+                userEventDateState.refetch()
+            })
+        }
+        const isExit = subScheduleEdit[index].joinUser.some((id)=> id===localStorage.getItem('userId'))
+            useConfirm(isExit ? '해당 일정에 나가겠습니까?':'해당 일정에 참여하시겠습니까?',postJoin,()=>{})
+
+    }
+
     return {
         dragEnter,
         dragMousePosition,
@@ -167,6 +186,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         addSubSchedule,
         deleteSubSchedule,
         saveGroupSchedule,
+        joinSubSchedule,
         mousePosition,
         ItemWidth,
         dragIndex,
