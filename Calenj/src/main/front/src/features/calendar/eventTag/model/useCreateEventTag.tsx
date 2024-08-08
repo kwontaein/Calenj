@@ -9,7 +9,7 @@ import {EventTagDTO} from "../../../../entities/reactQuery";
 import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
 export interface ReturnNewEventTag{
     createTag: boolean,
-    setCreateTag : React.Dispatch<React.SetStateAction<boolean>>,
+    setCreateTag :  React.DispatchWithoutAction,
     createInputRef: React.RefObject<HTMLInputElement>,
     newTagName: string,
     setNewTagName: React.Dispatch<React.SetStateAction<string>>,
@@ -27,7 +27,7 @@ export const useCreateEventTag = ():ReturnNewEventTag =>{
     const [newTagName, setNewTagName] = useState<string>('');
     const [colorPicker, setColorPicker] = useState<boolean>(false)
     const [newTagColor, setNewTagColor] = useState<string>(PointColor)
-    const colorPickerRef = useClickOutSideCheck(createTag,setCreateTag)
+    const colorPickerRef = useClickOutSideCheck(colorPicker,()=>setColorPicker(false))
 
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const dispatch = useDispatch()
@@ -41,6 +41,9 @@ export const useCreateEventTag = ():ReturnNewEventTag =>{
         }
     }, [createTag]);
 
+    useEffect(() => {
+        console.log(createTag)
+    }, [createTag]);
 
     const createNewTag = () => {
         if (newTagName === "") return
