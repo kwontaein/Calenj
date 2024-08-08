@@ -2,6 +2,7 @@ package org.example.calenj.calendar.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.user.domain.UserEntity;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ScheduleRequest {
 
     private UUID id;
