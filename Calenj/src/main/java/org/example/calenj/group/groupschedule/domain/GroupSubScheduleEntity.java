@@ -56,4 +56,15 @@ public class GroupSubScheduleEntity {
     @Column(name = "sub_schedule_locate")
     private String subScheduleLocate;
 
+    //x좌표
+    @Column(name = "positionX")
+    private String positionX;
+
+    //y좌표
+    @Column(name = "positionY")
+    private String positionY;
+
+    //y좌표
+    @Column(name = "duration")
+    private String duration;
 }

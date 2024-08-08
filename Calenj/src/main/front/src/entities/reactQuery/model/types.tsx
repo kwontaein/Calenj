@@ -154,7 +154,7 @@ export interface GroupSchedule {
     privacy: boolean, //공개범위
     maxPeople: number, //최대인원
     member: string[],//참여자
-    groupSubSchedules?:SubSchedule[]
+    groupSubSchedules?: SubSchedule[]
 }
 
 export interface SubSchedule {
@@ -165,6 +165,9 @@ export interface SubSchedule {
     subScheduleCreate: Date,
     subScheduleDuration: number,
     location: string,
+    positionX: string,
+    positionY: string,
+    duration: string,
     joinUser: string[],
 }
 

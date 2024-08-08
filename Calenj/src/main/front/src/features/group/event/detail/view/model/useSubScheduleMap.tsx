@@ -4,17 +4,17 @@ import {RootState} from "../../../../../../entities/redux";
 import {SubSchedule} from "../../../../../../entities/reactQuery";
 
 
-export const useSubScheduleMap = (subScheduleEdit:SubSchedule[],clickState:number|null ) : React.MutableRefObject<HTMLDivElement | null>=>{
+export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: number | null): React.MutableRefObject<HTMLDivElement | null> => {
     let initMap: naver.maps.Map | undefined = undefined;
-    const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
+    const {mapModal} = useSelector((state: RootState) => state.groupSchedule)
     const mapElement = useRef<HTMLDivElement | null>(null);
 
 
     //Map 세팅
     useEffect(() => {
-        if (mapModal && subScheduleEdit.length>0) {
+        if (mapModal && subScheduleEdit.length > 0) {
             const subSchedule = subScheduleEdit[0]
-            geoCode(subSchedule.location);
+            geoCode(subSchedule.location)
         }
         const handleResize = () => {
             if (!mapElement.current || !initMap) return;
@@ -45,8 +45,7 @@ export const useSubScheduleMap = (subScheduleEdit:SubSchedule[],clickState:numbe
     };
 
     const drawMap = (x: string | null, y: string | null) => {
-        console.log("지도 그리기", x, y)
-        if (!x || !y)return
+        if (!x || !y) return
         initMap = new naver.maps.Map("map", {
             center: new naver.maps.LatLng(parseFloat(y), parseFloat(x)),
             zoom: 15,
@@ -81,14 +80,19 @@ export const useSubScheduleMap = (subScheduleEdit:SubSchedule[],clickState:numbe
             const locateX = response.v2.addresses[0].x;
             const locateY = response.v2.addresses[0].y;
 
+            if (clickState !== null) {
+                subScheduleEdit[clickState].positionX = locateX;
+                subScheduleEdit[clickState].positionY = locateY;
+            }
+
             drawMap(locateX, locateY);
             addMaker(locateX, locateY);
         });
     };
 
     useEffect(() => {
-        if(clickState===null) return
-        if(subScheduleEdit[clickState].location){
+        if (clickState === null) return
+        if (subScheduleEdit[clickState].location) {
             const subSchedule = subScheduleEdit[clickState]
             geoCode(subSchedule.location)
         }

@@ -11,12 +11,15 @@ import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupschedule.domain.GroupScheduleEntity;
+import org.example.calenj.group.groupschedule.domain.GroupSubScheduleEntity;
 import org.example.calenj.group.groupschedule.dto.request.GroupScheduleRequest;
 import org.example.calenj.group.groupschedule.dto.request.GroupSubScheduleRequest;
 import org.example.calenj.group.groupschedule.dto.response.GroupScheduleResponse;
 import org.example.calenj.group.groupschedule.dto.response.GroupSubScheduleResponse;
 import org.example.calenj.group.groupschedule.repository.Group_ScheduleRepository;
 import org.example.calenj.group.groupschedule.repository.Group_Sub_Schedule_Repository;
+import org.example.calenj.naverApi.dto.response.NaverMapResponse;
+import org.example.calenj.naverApi.service.NaverService;
 import org.example.calenj.user.domain.UserEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class GroupScheduleService {
     private final GlobalService globalService;
     private final EventService eventService;
     private final CalendarService calendarService;
+    private final NaverService naverService;
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
@@ -91,14 +95,26 @@ public class GroupScheduleService {
         List<String> originId = groupSubScheduleRepository.findSubIds(groupScheduleRequest.getScheduleId());
         List<String> subIds = new ArrayList<>();
 
-        System.out.println("groupScheduleRequest : " + groupScheduleRequest);
+        int lastIndex = groupScheduleRequest.getGroupSubSchedules().size() - 1;
+
         for (GroupSubScheduleRequest subSchedule : groupScheduleRequest.getGroupSubSchedules()) {
+            //서브 스케쥴 아이디 목록 생성
             if (subSchedule.getSubScheduleId() != null) {
                 subIds.add(subSchedule.getSubScheduleId().toString());
             }
+
+            if (subSchedule.getIndex() != lastIndex) {
+                GroupSubScheduleRequest subSchedule2 = groupScheduleRequest.getGroupSubSchedules().get(subSchedule.getIndex() + 1);
+                String locate1 = subSchedule.getPositionX() + "," + subSchedule.getPositionY();
+                String locate2 = subSchedule2.getPositionX() + "," + subSchedule2.getPositionY();
+
+                NaverMapResponse response = naverService.direction(locate1, locate2);
+                int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration() / 60000;
+                subSchedule.setDuration(duration + "분");
+            }
+
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
         }
-
 
         // originId에는 포함되어 있지만 subIds에는 포함되어 있지 않은 ID를 삭제
         for (String id : originId) {
@@ -106,8 +122,6 @@ public class GroupScheduleService {
                 deleteSubSchedule(UUID.fromString(id));
             }
         }
-
-        addCalendar(groupScheduleEntity);
     }
 
     /**
@@ -148,8 +162,8 @@ public class GroupScheduleService {
      * @return
      */
     public List<GroupSubScheduleResponse> getSubScheduleList(UUID scheduleId) {
-        System.out.println("scheduleId : " + scheduleId);
-        return groupSubScheduleRepository.findByScheduleId(scheduleId).orElse(null);
+        List<GroupSubScheduleResponse> groupSubScheduleResponses = groupSubScheduleRepository.findByScheduleId(scheduleId).orElse(null);
+        return groupSubScheduleResponses;
     }
 
     /**
@@ -190,7 +204,7 @@ public class GroupScheduleService {
      *
      * @param groupScheduleEntity
      */
-    public void addCalendar(GroupScheduleEntity groupScheduleEntity) {
+    public void addCalendar(GroupScheduleEntity groupScheduleEntity, UUID subScheduleId) {
         // 시간정보 얻기
         Timestamp start = groupScheduleEntity.getScheduleStart();
         // 서브목록 가져오기
@@ -200,12 +214,13 @@ public class GroupScheduleService {
         int plusTime = 0;
 
         for (GroupSubScheduleResponse response : responses) {
-            //내이름 포함 x -> 스킵
-            if (!response.getJoinUser().contains(globalService.extractFromSecurityContext().getUsername())) {
-                continue;
-            }
             // 새로운 Timestamp 객체 생성
             Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 3600000L));
+            //해당 아이디가 아닐 경우 skip
+            if (!subScheduleId.equals(response.getSubScheduleId())) {
+                plusTime += response.getSubScheduleDuration();
+                continue;
+            }
             // ScheduleRequest 객체 생성 및 저장
             calendarService.saveSchedule(createScheduleRequest(response, newStart, tagKey));
             plusTime += response.getSubScheduleDuration();
@@ -245,5 +260,24 @@ public class GroupScheduleService {
 
         return new ScheduleRequest(
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
+    }
+
+    public void joinSubSchedule(UUID subScheduleId) {
+        GroupSubScheduleEntity groupSubScheduleEntity = groupSubScheduleRepository.findById(subScheduleId).orElse(null);
+        String myUserName = globalService.extractFromSecurityContext().getUsername();
+
+        String members = groupSubScheduleEntity.getJoinUser();
+        List<String> newList = GroupSubScheduleResponse.convertStringToArray(members);
+
+        if (newList.contains(myUserName)) {
+            newList.remove(myUserName);
+        } else {
+            newList.add(myUserName);
+        }
+
+        //서브 일정에 유저 추가
+        groupSubScheduleRepository.updateJoinUser(subScheduleId, newList.toString());
+
+        addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
     }
 }
