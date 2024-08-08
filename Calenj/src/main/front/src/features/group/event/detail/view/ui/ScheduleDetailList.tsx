@@ -1,8 +1,12 @@
 import React, {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
 import {
     EditDuration_Input,
-    EditSubSchedule_Content, EditSubSchedule_Title, MapIcon_Container,
-    MapInterval_Container, MapPositionText_Container, MapToggle_Containper,
+    EditSubSchedule_Content,
+    EditSubSchedule_Title,
+    MapIcon_Container,
+    MapInterval_Container,
+    MapPositionText_Container,
+    MapToggle_Containper,
     ScheduleDetail_Content_Container,
     ScheduleDetail_ContentTitle_Container,
     ScheduleDetail_Wrapper,
@@ -15,10 +19,19 @@ import {
     ScheduleDetailList_Structure_Container,
     ScheduleDetailList_TopLine_Container,
     SubSchedule_Content_Container,
-    SubSchedule_Title_Container, SubSchedule_Title_Wrapper,
+    SubSchedule_Title_Container,
+    SubSchedule_Title_Wrapper,
+    SubScheduleIcon_Wrapper,
+    SubScheduleJoinUser_Container, SubScheduleJoinUser_Empty, SubScheduleJoinUser_Wrapper,
+    SubScheduleOption_Container,
 } from "./ScheduleDetailListStyled";
 import {SubSchedule} from "../../../../../../entities/reactQuery";
-import {PointColor, TextColor} from "../../../../../../shared/ui/SharedStyled";
+import {
+    Modal_Condition_Button,
+    PointColor,
+    ProfileContainer,
+    TextColor
+} from "../../../../../../shared/ui/SharedStyled";
 import {shortAHMFormat2, shortAHMTimeFormat} from "../../../../../../shared/lib/dateFormat";
 import {GroupSubScheduleAction,} from "../../../../../../entities/group";
 import {ReturnListDrag} from "../model/types";
@@ -52,7 +65,8 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
     const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
 
-    
+    const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
+
     //현재시간 갱신
     useEffect(() => {
         setInterval(() => {
@@ -83,7 +97,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                 textArea.style.height = textArea.scrollHeight + "px";
             }
         })
-    }, [editMode]);
+    }, [editMode,subScheduleEdit]);
     //현재 클릭한 subSchedule 지정
     const clickStateHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, idx: number) => {
         clickRef.current = e.currentTarget as HTMLDivElement
@@ -139,8 +153,8 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                             onDragEnd={drop}
                             onDragOver={(e) => e.preventDefault()}
                             $isDrop={dragIndex.current === idx}
-                            $isClick={clickState !== null && idx === clickState}
-                        >
+                            $isClick={clickState !== null && idx === clickState}>
+
                             <SubSchedule_Title_Container>
                                 {editMode ?
                                     <EditSubSchedule_Title value={schedule.subScheduleTitle}
@@ -212,6 +226,33 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                     </SubSchedule_Content_Container>
                                 }
                             </ScheduleDetail_Wrapper_Container>
+                            <ScheduleDetail_Wrapper_Container>
+                                <SubScheduleOption_Container style={{marginTop:'5px'}}>
+                                    <SubScheduleJoinUser_Container>
+                                        <ScheduleDetail_ContentTitle_Container style={{height:'100%'}}>
+                                            참가인원 :
+                                        </ScheduleDetail_ContentTitle_Container>
+                                        <SubScheduleJoinUser_Wrapper>
+                                            {dragIndex.current !== idx &&
+                                                !schedule.joinUser.length ?
+                                                    <SubScheduleJoinUser_Empty>
+                                                        참여중인 인원이 없습니다.
+                                                    </SubScheduleJoinUser_Empty>
+                                                :
+                                                schedule.joinUser.map((userId, idx) => (
+                                                    idx < 4 &&
+                                                    <ProfileContainer style={{width:'20px', height:'20px'}} $userId={userId}/>
+                                                ))
+                                            }
+                                        </SubScheduleJoinUser_Wrapper>
+                                    </SubScheduleJoinUser_Container>
+                                    {dragIndex.current!==idx &&
+                                        <Modal_Condition_Button $isAble={true} style={{width:'60px', fontSize:'12px'}}>
+                                            참가하기
+                                        </Modal_Condition_Button>
+                                    }
+                                </SubScheduleOption_Container>
+                            </ScheduleDetail_Wrapper_Container>
                         </ScheduleDetailList_Div>
                     </ScheduleDetail_Wrapper>
 
@@ -227,16 +268,25 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                             pointerEvents: 'none',
                                             opacity: '0.9'
                                         }}>
+
                     <SubSchedule_Title_Container>
-                        {subScheduleEdit[dragIndex.current].subScheduleTitle ||
-                            <div style={{color: `${TextColor}77`}}>
-                                제목을 입력해주세요
-                            </div>
-                        }
+                        {editMode ?
+                            <EditSubSchedule_Title value={subScheduleEdit[dragIndex.current].subScheduleTitle}
+                                                   disabled={true}
+                                                   maxLength={20}
+                                                   placeholder={'제목을 입력해주세요'}
+                                                  />
+                            :
+                            <SubSchedule_Title_Wrapper>
+                                {subScheduleEdit[dragIndex.current].subScheduleTitle}
+                            </SubSchedule_Title_Wrapper>}
                     </SubSchedule_Title_Container>
+
                     <ScheduleDetail_Wrapper_Container>
                         <ScheduleDetail_ContentTitle_Container>
-                            <i className="bi bi-geo-alt-fill" style={{color: PointColor, marginRight: '5px'}}></i>
+                            <MapIcon_Container>
+                                <i className="bi bi-geo-alt-fill"></i>
+                            </MapIcon_Container>
                             위치 :
                         </ScheduleDetail_ContentTitle_Container>
                         <MapPositionText_Container $isDrag={false}
@@ -271,6 +321,32 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                     내용을 입력해주세요
                                 </div>}
                         </SubSchedule_Content_Container>
+                    </ScheduleDetail_Wrapper_Container>
+                    <ScheduleDetail_Wrapper_Container>
+                        <SubScheduleOption_Container style={{marginTop:'5px'}}>
+                            <SubScheduleJoinUser_Container>
+                                <ScheduleDetail_ContentTitle_Container style={{height:'100%'}}>
+                                    참가인원 :
+                                </ScheduleDetail_ContentTitle_Container>
+                                <SubScheduleJoinUser_Wrapper>
+                                    {!subScheduleEdit[dragIndex.current].joinUser.length ?
+                                        <SubScheduleJoinUser_Empty>
+                                            참여중인 인원이 없습니다.
+                                        </SubScheduleJoinUser_Empty>
+                                        :
+                                        subScheduleEdit[dragIndex.current].joinUser.map((userId, idx) => (
+                                            idx < 4 &&
+                                            <ProfileContainer style={{width:'20px', height:'20px'}} $userId={userId}/>
+                                        ))
+                                    }
+                                </SubScheduleJoinUser_Wrapper>
+                            </SubScheduleJoinUser_Container>
+
+                            <Modal_Condition_Button $isAble={true} style={{width:'60px', fontSize:'12px'}}>
+                                참가하기
+                            </Modal_Condition_Button>
+
+                        </SubScheduleOption_Container>
                     </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}
 

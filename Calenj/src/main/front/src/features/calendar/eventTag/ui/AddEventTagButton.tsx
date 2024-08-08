@@ -12,7 +12,7 @@ export const AddEventTagButton:React.FC<EventTagProps> = ({useCreateTag}) =>{
             <CreateButton_Container>
                 <Modal_Condition_Button
                     style={{width: 'calc(50% - 10px)', height: "30px", marginLeft: '6px'}}
-                    onClick={() => useCreateTag.setCreateTag(false)}>
+                    onClick={() => useCreateTag.setCreateTag()}>
                     취소
                 </Modal_Condition_Button>
                 <Modal_Condition_Button $isAble={useCreateTag.newTagName !== ""}
@@ -26,7 +26,7 @@ export const AddEventTagButton:React.FC<EventTagProps> = ({useCreateTag}) =>{
                 </Modal_Condition_Button>
             </CreateButton_Container>
             :
-            <AddTag_Button onClick={() => useCreateTag.setCreateTag(prev => !prev)}>
+            <AddTag_Button onClick={() => useCreateTag.setCreateTag()}>
                 태그 추가하기
             </AddTag_Button>
             }

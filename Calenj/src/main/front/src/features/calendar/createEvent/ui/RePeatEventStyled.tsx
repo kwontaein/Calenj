@@ -69,7 +69,7 @@ export const RepeatContent_Container = styled.div`
 `
 export const RepeatButton_Container = styled.div`
     width: 100%;
-    height: 30px;
+    height: 35px;
     display: flex;
     flex-direction: row;
 `

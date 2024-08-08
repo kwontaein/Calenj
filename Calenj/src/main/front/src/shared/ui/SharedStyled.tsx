@@ -364,7 +364,7 @@ export const ModalContent_Container = styled.div`
 
 export const Modal_Condition_Button = styled.button<ClickAbleProps>`
     width: 70px;
-    height: 40px;
+    height: 100%;
     border-radius: 5px;
     display: flex;
     justify-content: center;
