@@ -262,17 +262,21 @@ public class GroupScheduleService {
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
 
-    public void joinSubSchedule(UUID subScheduleId) {
+    public String joinSubSchedule(UUID subScheduleId) {
         GroupSubScheduleEntity groupSubScheduleEntity = groupSubScheduleRepository.findById(subScheduleId).orElse(null);
         String myUserName = globalService.extractFromSecurityContext().getUsername();
+
+        String response;
 
         String members = groupSubScheduleEntity.getJoinUser();
         List<String> newList = GroupSubScheduleResponse.convertStringToArray(members);
 
         if (newList.contains(myUserName)) {
             newList.remove(myUserName);
+            response = "해당 일정에 참여하였습니다.";
         } else {
             newList.add(myUserName);
+            response = "해당 일정에 참여를 취소했습니다.";
         }
 
         //서브 일정에 유저 추가

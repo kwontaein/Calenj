@@ -87,7 +87,7 @@ public class GroupScheduleController {
      * @param groupSubScheduleRequest
      */
     @PostMapping("api/joinSubSchedule")
-    public void joinSubSchedule(@RequestBody GroupSubScheduleRequest groupSubScheduleRequest) {
-        groupScheduleService.joinSubSchedule(groupSubScheduleRequest.getSubScheduleId());
+    public String joinSubSchedule(@RequestBody GroupSubScheduleRequest groupSubScheduleRequest) {
+        return groupScheduleService.joinSubSchedule(groupSubScheduleRequest.getSubScheduleId());
     }
 }
