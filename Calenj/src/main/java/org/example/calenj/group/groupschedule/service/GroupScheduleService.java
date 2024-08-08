@@ -283,5 +283,6 @@ public class GroupScheduleService {
         groupSubScheduleRepository.updateJoinUser(subScheduleId, newList.toString());
 
         addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
+        return response;
     }
 }
