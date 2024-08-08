@@ -79,13 +79,36 @@ export const ScheduleDetail_ContentTitle_Container = styled.div`
     font-size: 13px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 `
 
 export const ScheduleDetail_Content_Container = styled.div`
     width: auto;
     color: inherit;
     background-color: inherit;
+    display: flex;
+    align-items: center;
     font-size: 13px;
+`
+
+export const SubScheduleJoinUser_Wrapper = styled.div`
+    width: calc(100% - 70px);
+    font-size: inherit;
+    padding-right: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+`
+
+export const SubScheduleJoinUser_Empty = styled.div`
+    width: 100%;
+    color: ${TextColor}77;
+    display: flex;
+    justify-content: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 12px;
 `
 
 export const SubSchedule_Title_Container = styled.div`
@@ -118,6 +141,35 @@ export const EditSubSchedule_Title = styled.input.attrs({ type: 'text' })`
     color:inherit;
     box-sizing: border-box;
 `
+
+export const SubScheduleOption_Container = styled.div`
+    width :100%;
+    height :100%;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color:inherit;
+`
+export const SubScheduleIcon_Wrapper = styled.div`
+    width :25px;
+    height :100%;
+    &:hover{
+        color:${TextColor}77;
+    }
+`
+
+export const SubScheduleJoinUser_Container =styled.div`
+    width:calc(100% - 60px);
+    display: flex;
+    justify-content: left;
+    font-size: 12px;
+    align-items: center;
+    text-align: center;
+    color: inherit;
+`
+
+
+
 export const SubSchedule_Content_Container= styled.div`
     width: calc(100% - 20px);
     background-color: ${ThemeColor3};

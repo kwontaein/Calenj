@@ -11,7 +11,6 @@ import {
 import {ColorPicker_Container} from "./DateEventTagStyled";
 
 export const CreateEventTag:React.FC<EventTagProps> = ({useCreateTag})=>{
-
     return(
         <CreateTag_Container>
             <CreateTag_Content ref={useCreateTag.colorPickerRef}>

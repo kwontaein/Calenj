@@ -45,6 +45,7 @@ export const DateEventTitle_Input = styled.input`
 
 export const Category_Container = styled.div`
     margin-top: 20px;
+    height : 40px;
     display: flex;
     flex-direction: row;
 `
