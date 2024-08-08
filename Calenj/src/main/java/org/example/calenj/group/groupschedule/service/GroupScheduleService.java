@@ -251,7 +251,7 @@ public class GroupScheduleService {
      */
     private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<String> tagKey) {
         List<String> repeatWeek = new ArrayList<String>(7);
-        for(int i=0; i<repeatWeek.size(); i++){
+        for (int i = 0; i < repeatWeek.size(); i++) {
             repeatWeek.add("false");
         }
 
@@ -259,7 +259,7 @@ public class GroupScheduleService {
                 response.getSubScheduleId(), null, null, false, 1, null, null, null, null, 1, repeatWeek, null);
 
         ExtendedPropsRequest extendedPropsRequest = new ExtendedPropsRequest(
-                tagKey, "schedule", response.getSubScheduleContent(), new ArrayList<>(),  new ArrayList<>(), repeatStateRequest);
+                tagKey, "promise", response.getSubScheduleContent(), new ArrayList<>(), new ArrayList<>(), repeatStateRequest);
 
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
 
