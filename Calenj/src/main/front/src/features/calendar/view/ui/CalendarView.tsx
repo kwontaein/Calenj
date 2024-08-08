@@ -20,6 +20,8 @@ import {AddDateEvent} from "../../createEvent";
 import {AppState, CustomEvent} from "../model/types";
 import {DateEventDetail} from "../../detail";
 import {DeleteModal} from "./DeleteModal";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
 
 
 export const CalendarView: React.FC = () => {
@@ -44,62 +46,14 @@ export const CalendarView: React.FC = () => {
     } = useCalendar(data);
     const [selectInfo, setSelectInfo] = useState<DateSelectArg | null>(null);
     const {calendarRef, handleNavLinkDayClick} = useCalendarController();
-    const nodeRef = useRef(null);
-    const [position, setPosition] = useState({x: 20, y: 20});
+
     const trashRef = useRef<HTMLDivElement>(null);
-    const [dragAble, setDragAble] = useState<boolean>(false);
+    const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
 
 
-    const handleStop = (e: DraggableEvent, data: DraggableData) => {
-        const {x, y} = data;
-        setPosition({x, y});
-    };
-
-    const [state, setState] = useState<AppState>({
-        weekendsVisible: true,
-        externalEvents: [
-            {id: 34432, title: "Art 1", color: "#0097a7", custom: "커스텀 내용"},
-            {id: 323232, title: "Art 2", color: "#f44336"},
-            {id: 1111, title: "Art 3", color: "#f57f17"},
-            {id: 432432, title: "Art 4", color: "#90a4ae"}
-        ],
-        calendarEvents: []
-    });
-
-    const onEventAdd = () => {
-        const newEvent: CustomEvent = {
-            id: Date.now(), // 고유 ID 생성을 위해 현재 시간의 타임스탬프 사용
-            title: "New Event",
-            color: "#02daff",
-            custom: "custom details"
-        };
-
-        setState(prevState => ({
-            ...prevState,
-            externalEvents: [...prevState.externalEvents, newEvent]
-        }));
-    };
 
     return (
         <>
-            {/*<Draggable nodeRef={nodeRef}
-                       defaultPosition={{x: 20, y: 20}}
-                       position={position}
-                       onStop={handleStop}
-                       disabled={dragAble}>
-                <Draggable_Container ref={nodeRef}>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <div>수정</div>
-                        <Toggle_Container $isClick={dragAble}
-                                          onClick={() => {
-                                              setDragAble((prevState) => !prevState)
-                                          }}>
-                            <Toggle_Item $toggleState={dragAble}/>
-                        </Toggle_Container>
-                    </div>
-                    <ExternalEvents isAble={dragAble} events={state.externalEvents} onEventAdd={onEventAdd}/>
-                </Draggable_Container>
-            </Draggable>*/}
             {isDrag && <DeleteList ref={trashRef} onMouseEnter={handleMouseEnter}
                                    onMouseLeave={handleMouseLeave}>휴지통</DeleteList>}
             {data &&
@@ -137,6 +91,11 @@ export const CalendarView: React.FC = () => {
                         eventContent={(eventInfo) => (
                             <CalendarEventView eventInfo={eventInfo}/>
                         )}
+                        eventAllow={(dropInfo, draggedEvent) => {
+                            // 이벤트 ID 또는 다른 조건으로 특정 이벤트를 고정
+                            console.log(draggedEvent)
+                            return dynamicEventTag[draggedEvent?._def.extendedProps.tagKeys[0]].name !== '그룹 일정'; // id가 '2'인 이벤트는 수정 불가
+                        }}
                     />
                 </GridCalendar_Container>
             }

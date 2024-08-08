@@ -2,6 +2,7 @@ package org.example.calenj.calendar.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.calenj.calendar.domain.RepeatStateEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class RepeatStateRequest {
     private UUID scheduleId;

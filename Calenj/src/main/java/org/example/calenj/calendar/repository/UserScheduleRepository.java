@@ -33,6 +33,6 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query("delete from User_Schedule Us where Us.scheduleId =:scheduleID")
-    void deleteByScheduleId(@Param("scheduleID") UUID scheduleID);
+    @Query("delete from User_Schedule Us where Us.scheduleId =:scheduleID and Us.userId.userId =:userId")
+    void deleteByScheduleId(@Param("scheduleID") UUID scheduleID, @Param("userId") UUID userId);
 }

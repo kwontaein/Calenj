@@ -44,8 +44,7 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
         }
     };
 
-    const drawMap = (x: string | null, y: string | null) => {
-        if (!x || !y) return
+    const drawMap = (x: string , y: string ) => {
         initMap = new naver.maps.Map("map", {
             center: new naver.maps.LatLng(parseFloat(y), parseFloat(x)),
             zoom: 15,
@@ -84,14 +83,16 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
                 subScheduleEdit[clickState].positionX = locateX;
                 subScheduleEdit[clickState].positionY = locateY;
             }
-
-            drawMap(locateX, locateY);
-            addMaker(locateX, locateY);
+            console.log(locateX, locateY)
+            if(typeof locateY ==="string" && typeof locateX ==="string"){
+                drawMap(locateX, locateY);
+                addMaker(locateX, locateY);
+            }
         });
     };
 
     useEffect(() => {
-        if (clickState === null) return
+        if (clickState === null || !mapModal) return
         if (subScheduleEdit[clickState].location) {
             const subSchedule = subScheduleEdit[clickState]
             geoCode(subSchedule.location)

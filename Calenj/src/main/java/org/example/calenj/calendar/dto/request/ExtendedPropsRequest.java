@@ -2,11 +2,13 @@ package org.example.calenj.calendar.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ExtendedPropsRequest {
 
     private List<String> tagKeys;

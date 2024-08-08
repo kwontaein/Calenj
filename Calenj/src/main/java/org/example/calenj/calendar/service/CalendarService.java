@@ -80,9 +80,11 @@ public class CalendarService {
      * @param scheduleID 삭제할 스케쥴 아이디
      */
     public void deleteSchedule(UUID scheduleID) {
-        repeatStateRepository.deleteByScheduleId(scheduleID);
-        userScheduleRepository.deleteByScheduleId(scheduleID);
+        UUID myUserName = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        repeatStateRepository.deleteByScheduleId(scheduleID, myUserName);
+        userScheduleRepository.deleteByScheduleId(scheduleID, myUserName);
     }
+
 
     /**
      * 스케쥴 추가
@@ -90,7 +92,6 @@ public class CalendarService {
      * @param scheduleRequest 추가할 스케쥴 정보
      */
     public void saveSchedule(ScheduleRequest scheduleRequest) {
-        System.out.println("scheduleRequest : "+scheduleRequest);
         UserScheduleEntity checkEntity = userScheduleRepository.getSchedule(scheduleRequest.getId()).orElse(null);
         if (checkEntity != null) {
             //이미 있는 정보일 경우 수정

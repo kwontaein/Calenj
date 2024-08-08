@@ -130,9 +130,11 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                 <ScheduleDetailList_Progress key={idx}>
                     <ScheduleDetailList_Structure_Container>
                         <ScheduleDetailList_TopLine_Container
-                            $isNow={idx === 0 ? startDate <= nowTime : scheduleTime[idx - 1] <= nowTime}/>
+                            $isNow={idx === 0 ? startDate <= nowTime : scheduleTime[idx - 1] <= nowTime}
+                            $isClick={idx === clickState}/>
                         <ScheduleDetailList_Circle
-                            $isNow={idx === 0 ? startDate <= nowTime : scheduleTime[idx - 1] <= nowTime}/>
+                            $isNow={idx === 0 ? startDate <= nowTime : scheduleTime[idx - 1] <= nowTime}
+                            $isClick={idx === clickState}/>
                         {idx !== subScheduleEdit.length - 1 &&
                             <ScheduleDetailList_BottomLine_Container $isNow={scheduleTime[idx] <= nowTime}/>}
                     </ScheduleDetailList_Structure_Container>
@@ -200,7 +202,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                     ({editMode ?
                                     <EditDuration_Input max={9999}
                                                         disabled={dragIndex.current !== null}
-                                                        onChange={(e) => e.target.value.length < 4 && dispatchSubSchedule({
+                                                        onChange={(e) =>( e.target.value.length < 4) && dispatchSubSchedule({
                                                             type: "SET_DURATION",
                                                             payload: {
                                                                 index: idx,
@@ -240,12 +242,12 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                                 :
                                                 schedule.joinUser.map((userId, idx) => (
                                                     idx < 4 &&
-                                                    <ProfileContainer style={{width:'20px', height:'20px', minWidth:'unset'}} $userId={userId}/>
+                                                    <ProfileContainer style={{width:'20px', height:'20px', minWidth:'unset'}} $userId={userId} key={userId}/>
                                                 ))
                                             }
                                         </SubScheduleJoinUser_Wrapper>
                                     </SubScheduleJoinUser_Container>
-                                    {dragIndex.current!==idx &&
+                                    {!editMode &&
                                         <Modal_Condition_Button $isAble={true}
                                                                 style={{width:'60px', fontSize:'12px'}}
                                                                 onClick={()=>joinSubSchedule(schedule.subScheduleId, idx)}>
@@ -342,11 +344,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                     }
                                 </SubScheduleJoinUser_Wrapper>
                             </SubScheduleJoinUser_Container>
-
-                            <Modal_Condition_Button $isAble={true} style={{width:'60px', fontSize:'12px'}}>
-                                {subScheduleEdit[dragIndex.current].joinUser.some((id)=> id===localStorage.getItem('userId')) ? '나가기' : '참여하기'}
-                            </Modal_Condition_Button>
-
                         </SubScheduleOption_Container>
                     </ScheduleDetail_Wrapper_Container>
                 </ScheduleDetailList_Div>}
