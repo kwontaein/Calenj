@@ -234,7 +234,7 @@ public class GroupScheduleService {
      */
     private List<String> extractTagKey() {
         return calendarService.getTagEntityList().stream()
-                .filter(tag -> "group".equals(tag.getName()))
+                .filter(tag -> "그룹 일정".equals(tag.getName()))
                 .map(tag -> tag.getId().toString())
                 .findFirst()
                 .map(Collections::singletonList)
@@ -250,11 +250,16 @@ public class GroupScheduleService {
      * @return
      */
     private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<String> tagKey) {
+        List<String> repeatWeek = new ArrayList<String>(7);
+        for(int i=0; i<repeatWeek.size(); i++){
+            repeatWeek.add("false");
+        }
+
         RepeatStateRequest repeatStateRequest = new RepeatStateRequest(
-                response.getSubScheduleId(), null, null, false, 1, null, null, null, null, 1, null, null);
+                response.getSubScheduleId(), null, null, false, 1, null, null, null, null, 1, repeatWeek, null);
 
         ExtendedPropsRequest extendedPropsRequest = new ExtendedPropsRequest(
-                tagKey, "schedule", response.getSubScheduleContent(), null, null, repeatStateRequest);
+                tagKey, "schedule", response.getSubScheduleContent(), new ArrayList<>(),  new ArrayList<>(), repeatStateRequest);
 
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
 
@@ -262,22 +267,28 @@ public class GroupScheduleService {
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
 
-    public void joinSubSchedule(UUID subScheduleId) {
+    public String joinSubSchedule(UUID subScheduleId) {
         GroupSubScheduleEntity groupSubScheduleEntity = groupSubScheduleRepository.findById(subScheduleId).orElse(null);
         String myUserName = globalService.extractFromSecurityContext().getUsername();
+
+        String response;
 
         String members = groupSubScheduleEntity.getJoinUser();
         List<String> newList = GroupSubScheduleResponse.convertStringToArray(members);
 
         if (newList.contains(myUserName)) {
             newList.remove(myUserName);
+            response = "해당 일정에 참여를 취소했습니다.";
+            calendarService.deleteSchedule(subScheduleId);
         } else {
             newList.add(myUserName);
+            response = "해당 일정에 참여하였습니다.";
+            addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
         }
 
         //서브 일정에 유저 추가
         groupSubScheduleRepository.updateJoinUser(subScheduleId, newList.toString());
 
-        addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
+        return response;
     }
 }
