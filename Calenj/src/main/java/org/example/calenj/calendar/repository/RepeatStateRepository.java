@@ -32,6 +32,6 @@ public interface RepeatStateRepository extends JpaRepository<RepeatStateEntity, 
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("delete from Schedule_Repeat_State Rs where Rs.scheduleId.scheduleId =:scheduleId")
-    void deleteByScheduleId(@Param("scheduleId") UUID scheduleID);
+    @Query("delete from Schedule_Repeat_State Rs where Rs.scheduleId.scheduleId =:scheduleId and Rs.scheduleId.userId.userId=:userId")
+    void deleteByScheduleId(@Param("scheduleId") UUID scheduleID, @Param("userId") UUID userId);
 }

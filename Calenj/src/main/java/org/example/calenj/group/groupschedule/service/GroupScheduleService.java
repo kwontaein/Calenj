@@ -108,6 +108,7 @@ public class GroupScheduleService {
                 String locate1 = subSchedule.getPositionX() + "," + subSchedule.getPositionY();
                 String locate2 = subSchedule2.getPositionX() + "," + subSchedule2.getPositionY();
 
+                System.out.println(locate1 + " / " + locate2);
                 NaverMapResponse response = naverService.direction(locate1, locate2);
                 int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration() / 60000;
                 subSchedule.setDuration(duration + "분");
@@ -250,6 +251,7 @@ public class GroupScheduleService {
      * @return
      */
     private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<String> tagKey) {
+
         List<String> repeatWeek = new ArrayList<String>(7);
         for (int i = 0; i < repeatWeek.size(); i++) {
             repeatWeek.add("false");
@@ -261,8 +263,9 @@ public class GroupScheduleService {
         ExtendedPropsRequest extendedPropsRequest = new ExtendedPropsRequest(
                 tagKey, "promise", response.getSubScheduleContent(), new ArrayList<>(), new ArrayList<>(), repeatStateRequest);
 
+        System.out.println("newTime : " + response.getSubScheduleDuration());
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 3600000L));
-
+        System.out.println("newEnd : " + newEnd);
         return new ScheduleRequest(
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }

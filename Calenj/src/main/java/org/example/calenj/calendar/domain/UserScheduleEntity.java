@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.user.domain.UserEntity;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -19,8 +18,6 @@ import java.util.UUID;
 public class UserScheduleEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "schedule_id", columnDefinition = "BINARY(16)")
     private UUID scheduleId;
 
