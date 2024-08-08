@@ -80,4 +80,14 @@ public class GroupScheduleController {
     public void deleteSubSchedue(@RequestBody GroupSubScheduleRequest groupSubScheduleRequest) {
         groupScheduleService.deleteSubSchedule(groupSubScheduleRequest.getSubScheduleId());
     }
+
+    /**
+     * 서브 스케쥴 참여
+     *
+     * @param groupSubScheduleRequest
+     */
+    @PostMapping("api/joinSubSchedule")
+    public String joinSubSchedule(@RequestBody GroupSubScheduleRequest groupSubScheduleRequest) {
+        return groupScheduleService.joinSubSchedule(groupSubScheduleRequest.getSubScheduleId());
+    }
 }

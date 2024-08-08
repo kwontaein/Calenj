@@ -154,17 +154,20 @@ export interface GroupSchedule {
     privacy: boolean, //공개범위
     maxPeople: number, //최대인원
     member: string[],//참여자
-    groupSubSchedules?:SubSchedule[]
+    groupSubSchedules?: SubSchedule[]
 }
 
 export interface SubSchedule {
     index: number,
-    subSubScheduleId: string,
+    subScheduleId: string,
     subScheduleTitle: string,
     subScheduleContent: string,
     subScheduleCreate: Date,
     subScheduleDuration: number,
     location: string,
+    positionX: string,
+    positionY: string,
+    duration: string,
     joinUser: string[],
 }
 

@@ -26,8 +26,14 @@ public class GroupSubScheduleResponse {
     private List<String> joinUser;
     //위치정보
     private String location;
+    //위치정보 x
+    private String positionX;
+    //위치정보 y
+    private String positionY;
+    //걸리는 시간
+    private String duration;
 
-    public GroupSubScheduleResponse(UUID subScheduleId, String scheduleTitle, Timestamp subScheduleCreate, int subScheduleDuration, String subScheduleContent, int index, String joinUser, String location) {
+    public GroupSubScheduleResponse(UUID subScheduleId, String scheduleTitle, Timestamp subScheduleCreate, int subScheduleDuration, String subScheduleContent, int index, String joinUser, String location, String positionX, String positionY, String duration) {
         this.subScheduleId = subScheduleId;
         this.subScheduleTitle = scheduleTitle;
         this.subScheduleCreate = subScheduleCreate;
@@ -36,6 +42,9 @@ public class GroupSubScheduleResponse {
         this.index = index;
         this.joinUser = convertStringToArray(joinUser);
         this.location = location;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.duration = duration;
     }
 
     public static List<String> convertStringToArray(String input) {

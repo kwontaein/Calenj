@@ -31,6 +31,7 @@ public class NaverService {
     private String searchClientSecret;
 
     public NaverMapResponse direction(String start, String goal) {
+
         String option = "trafast";
 
         HttpClient httpClient = HttpClient.create().secure(t -> {
@@ -57,7 +58,7 @@ public class NaverService {
                 .bodyToMono(NaverMapResponse.class) // 응답 값을 하나만,
                 .block();                  // 동기로 받으려 한다.
 
-        System.out.println(" responses : " + responses);
+        System.out.println("responses : " + responses);
         return responses;
     }
 

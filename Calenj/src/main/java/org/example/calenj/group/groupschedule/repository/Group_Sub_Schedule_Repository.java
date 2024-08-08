@@ -23,7 +23,10 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
             ",gss.subScheduleContent" +
             ",gss.index" +
             ",gss.joinUser" +
-            ",gss.subScheduleLocate) " +
+            ",gss.subScheduleLocate" +
+            ",gss.positionX" +
+            ",gss.positionY" +
+            ",gss.duration) " +
             "from group_sub_schedule gss " +
             "where gss.scheduleId.scheduleId =:scheduleId " +
             "order by gss.index asc")
@@ -31,9 +34,14 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
 
     @Modifying(clearAutomatically = true)
     @Transactional
-    @Query("delete from group_sub_schedule gss where gss.scheduleId.scheduleId =: scheduleId")
+    @Query("delete from group_sub_schedule gss where gss.scheduleId.scheduleId =:scheduleId")
     void deleteByScheduleId(@Param("scheduleId") UUID scheduleId);
 
     @Query("select gss.subScheduleId from group_sub_schedule gss where gss.scheduleId.scheduleId =:scheduleId")
     List<String> findSubIds(@Param("scheduleId") UUID scheduleId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update group_sub_schedule gss set gss.joinUser =:joinUser where gss.subScheduleId =:subScheduleId")
+    void updateJoinUser(@Param("subScheduleId") UUID subScheduleId, @Param("joinUser") String joinUser);
 }

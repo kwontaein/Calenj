@@ -32,6 +32,11 @@ public class GroupSubScheduleRequest {
     private List<String> joinUser;
     //위치정보
     private String location;
+    //위치정보 x
+    private String positionX;
+    //위치정보 y
+    private String positionY;
+    private String duration;
 
     public GroupSubScheduleEntity toEntity(GroupScheduleEntity groupScheduleId) {
         return GroupSubScheduleEntity.builder()
@@ -44,6 +49,9 @@ public class GroupSubScheduleRequest {
                 .index(index)
                 .joinUser(joinUser.toString())
                 .subScheduleLocate(location)
+                .positionX(positionX)
+                .positionY(positionY)
+                .duration(duration)
                 .build();
     }
 }
