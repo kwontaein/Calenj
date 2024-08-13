@@ -86,11 +86,10 @@ public class FriendService {
         // 친구 유저 정보가 존재하는지 확인
         FriendResponse f = new FriendResponse();
 
-        System.out.println(friendUserName);
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
 
         if (friendUser != null) {
-            f = friendRepository.findFriendById(friendUser.getUserId()).orElse(null);
+            f = friendRepository.findFriendById(friendUser.getUserId(), ownUser.getUserId()).orElse(null);
         }
 
         if (friendUser == null || (f != null && f.getStatus() == FriendEntity.statusType.BAN)) {
@@ -134,7 +133,7 @@ public class FriendService {
         return false;
     }
 
-    /**
+    /*
      * 검사요소 통과 못할시 에러로 반환
      *
      * @param message 에러 메세지
@@ -163,7 +162,7 @@ public class FriendService {
      * @return 성공 / 실패시 응답 작성
      */
     private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser) {
-        if (friendRepository.findFriendById(friendUser.getUserId()).orElse(null) != null) {
+        if (friendRepository.findFriendById(friendUser.getUserId(), ownUser.getUserId()).orElse(null) != null) {
             return repositorySetting(friendUser.getUserId());
         } else {
             return onlyOne(ownUser, friendUser.getUserId());
@@ -191,7 +190,7 @@ public class FriendService {
         if (!eventService.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
             return createSuccessResponse("친구 정보 조회에 성공했습니다.", friendUserId);
         }
-        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
+        FriendResponse friendResponse = friendRepository.findFriendById(ownUser.getUserId(), friendUserId).orElse(null);
         if (friendResponse != null && friendResponse.getStatus() == FriendEntity.statusType.BAN) {
             return createErrorResponse("차단을 해제하고 요청해주세요");
         }
@@ -244,8 +243,9 @@ public class FriendService {
      * @param friendUserId 수락할 친구 아이디
      */
     public void acceptFriend(UUID friendUserId) {
+        UUID myUserName = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         UserEntity friendUser = getUserEntityById(friendUserId);
-        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId, myUserName).orElse(null);
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 
         FriendEntity friendEntity = FriendEntity
@@ -265,10 +265,10 @@ public class FriendService {
             String Title = "시작라인$어서오세요 $ $ $ $\n";
             stream.write(Title.getBytes(StandardCharsets.UTF_8));
 
-            UserChatRequest request = new UserChatRequest(UUID.randomUUID(), UUID.fromString(globalService.extractFromSecurityContext().getUsername()), friendUserId, friendEntity.getChattingRoomId(), false);
+            UserChatRequest request = new UserChatRequest(UUID.randomUUID(), myUserName, friendUserId, friendEntity.getChattingRoomId(), false);
             userService.updateChatIsOpen(request);
 
-            request = new UserChatRequest(UUID.randomUUID(), friendUserId, UUID.fromString(globalService.extractFromSecurityContext().getUsername()), friendEntity.getChattingRoomId(), false);
+            request = new UserChatRequest(UUID.randomUUID(), friendUserId, myUserName, friendEntity.getChattingRoomId(), false);
             userService.updateChatIsOpen(request);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -283,12 +283,12 @@ public class FriendService {
      */
     public AddFriendResponse responseFriend(UUID friendUserId, String isAccept) {
 
+        UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         //요청 정보가 없다면 오류 반환
-        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId, myId).orElse(null);
         if (friendResponse == null) {
             return createErrorResponse("올바르지 않은 요청입니다.");
         }
-        UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         //거절이라면
         if (isAccept.equals("REJECT")) {
             //요청한 유저 친구목록에서 삭제
@@ -308,7 +308,7 @@ public class FriendService {
         UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         //상대한테서 내 정보 삭제
         friendRepository.deleteByOwnUserId(UUID.fromString(request.getFriendUserId()), myId);
-        System.out.println(request.isBan());
+        userService.deleteChat(myId, request.getFriendUserId());
         if (request.isBan()) {//차단이면 친구 삭제는 하지 않고 상태만 차단으로 변경 -> 재 친구 요청 불가
             friendRepository.updateStatus(myId, FriendEntity.statusType.BAN);
         } else {//차단 아니고 삭제면 그냥 삭제

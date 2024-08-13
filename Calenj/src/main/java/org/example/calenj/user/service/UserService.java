@@ -269,4 +269,9 @@ public class UserService {
         String myUserId = globalService.extractFromSecurityContext().getUsername();
         userChatRepository.findChatList(UUID.fromString(myUserId));
     }
+
+    public void deleteChat(UUID myId, String friendUserId) {
+        userChatRepository.deleteList(myId, UUID.fromString(friendUserId));
+        userChatRepository.deleteList(UUID.fromString(friendUserId), myId);
+    }
 }
