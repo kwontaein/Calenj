@@ -47,6 +47,21 @@ public class FriendController {
         return friendService.responseFriend(UUID.fromString(request.getFriendUserId()), request.getIsAccept());
     }
 
+    /**
+     * 친구 삭제 + 차단
+     *
+     * @param request
+     */
+    @PostMapping("/api/deleteFriend")
+    public void deleteFriend(@RequestBody FriendRequest request) {
+        friendService.deleteFriend(request);
+    }
+
+
+    @GetMapping("/api/getBanList")
+    public List<FriendResponse> getBanList() {
+        return friendService.banList();
+    }
 
     /**
      * 요청 정보 저장

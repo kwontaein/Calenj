@@ -108,15 +108,17 @@ public class WebSocketService {
         UserEntity userEntity = returnUserEntity(authentication);
         String userId = String.valueOf(userEntity.getUserId());
 
-        if (request.getMessage() == null) {
+        if (request.getState() == null) {
             return;
         }
 
         if (request.getState() == ChatMessageRequest.fileType.ONLINE) {
+            System.out.println("실행 온라인");
             //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
             sendOnlineStateFirstTime(userId, filterNullFields(request));
             sendOnlineState(userId, filterNullFields(request));
         } else if (request.getState() == ChatMessageRequest.fileType.OFFLINE) {
+            System.out.println("실행 오프라인");
             //끊을 시 -> 오프라인이라고만 알리기
             sendOnlineState(userId, filterNullFields(request));
         }

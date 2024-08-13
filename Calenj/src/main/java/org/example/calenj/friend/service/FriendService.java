@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.event.domain.EventEntity;
 import org.example.calenj.event.service.EventService;
 import org.example.calenj.friend.domain.FriendEntity;
+import org.example.calenj.friend.dto.request.FriendRequest;
 import org.example.calenj.friend.dto.response.AddFriendResponse;
 import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
@@ -26,7 +27,6 @@ public class FriendService {
     private final GlobalService globalService;
     private final EventService eventService;
     private final FriendRepository friendRepository;
-    //private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final WebSocketService webSocketService;
 
@@ -71,7 +71,6 @@ public class FriendService {
      */
     public AddFriendResponse requestFriend(String friendUserName) {
 
-        AddFriendResponse response = new AddFriendResponse();
         UserEntity ownUser = globalService.getUserEntity(null);
 
         // 나에게 초대는 불가
@@ -81,7 +80,8 @@ public class FriendService {
 
         // 친구 유저 정보가 존재하는지 확인
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
-        if (friendUser == null) {
+        FriendResponse f = friendRepository.findFriendById(friendUser.getUserId()).orElse(null);
+        if (friendUser == null || (f != null && f.getStatus() == FriendEntity.statusType.BAN)) {
             return createErrorResponse("존재하지 않는 아이디입니다. 아이디를 다시 확인해주세요.");
         }
 
@@ -247,6 +247,8 @@ public class FriendService {
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
             String nowTime = globalService.nowTime();
+            String Title = "시작라인$어서오세요 $ $ $ $\n";
+            stream.write(Title.getBytes(StandardCharsets.UTF_8));
             stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
             stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
             stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
@@ -268,11 +270,11 @@ public class FriendService {
         if (friendResponse == null) {
             return createErrorResponse("올바르지 않은 요청입니다.");
         }
-
+        UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         //거절이라면
         if (isAccept.equals("REJECT")) {
             //요청한 유저 친구목록에서 삭제
-            friendRepository.deleteByOwnUserId(friendUserId);
+            friendRepository.deleteByOwnUserId(friendUserId, myId);
             //이벤트 상태 거절로 변경
             eventService.updateEventState(friendUserId, EventEntity.statusType.REJECT, EventEntity.eventType.RequestFriend);
             webSocketService.userAlarm(friendUserId, "친구거절");
@@ -284,5 +286,19 @@ public class FriendService {
         }
     }
 
+    public void deleteFriend(FriendRequest request) {
+        UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        friendRepository.deleteByOwnUserId(UUID.fromString(request.getFriendUserId()), myId);
 
+        if (request.isBan()) {//차단이면 친구 삭제는 하지 않고 상태만 차단으로 변경 -> 재 친구 요청 불가
+            friendRepository.updateStatus(myId, FriendEntity.statusType.BAN);
+        } else {//차단 아니고 삭제면 그냥 삭제
+            friendRepository.deleteByOwnUserId(myId, UUID.fromString(request.getFriendUserId()));
+        }
+    }
+
+    public List<FriendResponse> banList() {
+        UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        return friendRepository.findBanListById(myUserID).orElseThrow(() -> new RuntimeException("차단 목록이 비었습니다"));
+    }
 }
