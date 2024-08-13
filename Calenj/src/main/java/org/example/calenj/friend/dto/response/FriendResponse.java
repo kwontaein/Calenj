@@ -24,10 +24,11 @@ public class FriendResponse {
     private FriendEntity.statusType status;
     private UUID ChattingRoomId;
 
-    public FriendResponse(UUID friendUserId, String nickName, UUID ChattingRoomId) {
+    public FriendResponse(UUID friendUserId, String nickName, UUID ChattingRoomId, FriendEntity.statusType status) {
         this.friendUserId = friendUserId;
         this.nickName = nickName;
         this.ChattingRoomId = ChattingRoomId;
+        this.status = status;
     }
 
     public FriendResponse(UUID friendUserId, String nickName, UUID ChattingRoomId, String createDate) {

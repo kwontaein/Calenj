@@ -10,7 +10,9 @@ import org.example.calenj.friend.dto.response.FriendResponse;
 import org.example.calenj.friend.repository.FriendRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.dto.request.UserChatRequest;
 import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.user.service.UserService;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ import java.util.UUID;
 public class FriendService {
     private final GlobalService globalService;
     private final EventService eventService;
+    private final UserService userService;
+
+
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
     private final WebSocketService webSocketService;
@@ -186,6 +191,10 @@ public class FriendService {
         if (!eventService.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
             return createSuccessResponse("친구 정보 조회에 성공했습니다.", friendUserId);
         }
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUserId).orElse(null);
+        if (friendResponse != null && friendResponse.getStatus() == FriendEntity.statusType.BAN) {
+            return createErrorResponse("차단을 해제하고 요청해주세요");
+        }
         return createErrorResponse("이미 요청한 유저입니다");
     }
 
@@ -252,13 +261,15 @@ public class FriendService {
         friendRepository.save(friendEntity);
         eventService.updateEventState(friendUserId, EventEntity.statusType.ACCEPT, EventEntity.eventType.RequestFriend);
 
-        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getFriendId(), true)) {
-            String nowTime = globalService.nowTime();
+        try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + friendEntity.getChattingRoomId(), true)) {
             String Title = "시작라인$어서오세요 $ $ $ $\n";
             stream.write(Title.getBytes(StandardCharsets.UTF_8));
-            stream.write(friendUser.getNickname().getBytes(StandardCharsets.UTF_8));
-            stream.write("프랜드, 친구일자 :".getBytes(StandardCharsets.UTF_8));
-            stream.write(nowTime.getBytes(StandardCharsets.UTF_8));
+
+            UserChatRequest request = new UserChatRequest(UUID.randomUUID(), UUID.fromString(globalService.extractFromSecurityContext().getUsername()), friendUserId, friendEntity.getChattingRoomId(), false);
+            userService.updateChatIsOpen(request);
+
+            request = new UserChatRequest(UUID.randomUUID(), friendUserId, UUID.fromString(globalService.extractFromSecurityContext().getUsername()), friendEntity.getChattingRoomId(), false);
+            userService.updateChatIsOpen(request);
         } catch (Throwable e) {
             e.printStackTrace();
         }

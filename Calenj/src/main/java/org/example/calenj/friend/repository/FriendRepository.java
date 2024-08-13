@@ -18,7 +18,7 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
             "(f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
     Optional<List<FriendResponse>> findFriendListById(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
     Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
 
     @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:myUserId and f.friendUserId =:userId and f.status =ACCEPT")
@@ -41,5 +41,5 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
-    Optional<List<FriendResponse>> findBanListById(@Param("userId")UUID myUserID);
+    Optional<List<FriendResponse>> findBanListById(@Param("userId") UUID myUserID);
 }

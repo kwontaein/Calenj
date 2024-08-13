@@ -2,6 +2,7 @@ package org.example.calenj.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -12,11 +13,17 @@ import java.util.UUID;
 @Getter
 @ToString
 public class UserChatEntity {
-
     @Id
-    @ManyToOne
-    @JoinColumn(name = "chat_friend_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
-    private UserEntity friendId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(nullable = false, unique = true, name = "chat_list_id", columnDefinition = "BINARY(16)")
+    private UUID chatListId;
+
+    @Column(name = "chat_own_user_id", columnDefinition = "BINARY(16)")
+    private UUID ownUserId;
+
+    @Column(name = "chat_friend_id", columnDefinition = "BINARY(16)")
+    private UUID friendId;
 
     @Column(name = "chat_id", columnDefinition = "BINARY(16)")
     private UUID chatId;
