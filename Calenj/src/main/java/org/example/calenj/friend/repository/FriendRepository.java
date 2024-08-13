@@ -41,5 +41,5 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
-    Optional<List<FriendResponse>> findBanListById(UUID myUserID);
+    Optional<List<FriendResponse>> findBanListById(@Param("userId")UUID myUserID);
 }

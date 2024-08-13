@@ -19,6 +19,7 @@ import {
 } from "../../../../shared/ui/SharedStyled";
 import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
 import {InfoBox} from "../../../../shared/ui/InfoBox";
+import {useFetchUserBanList} from "../../../../entities/reactQuery/model/queryModel";
 
 export const OnlineFriendView: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''

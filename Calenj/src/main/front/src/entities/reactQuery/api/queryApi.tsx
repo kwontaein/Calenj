@@ -177,6 +177,24 @@ export const getFriendRequest = async (): Promise<FriendEvent[] | null> => {
         return null;
     }
 }
+export const getUserBanList = async (): Promise<FriendList[] | null> => {
+    try {
+        const response = await axios.get('/api/getBanList');
+        const data = response.data as FriendList[];
+        return data.sort((a, b) => {
+            return (Number(b.friendAddDate) - Number(a.friendAddDate));
+        });
+
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    }
+}
 
 
 export const getDateEventTag = async (): Promise<EventTagDTO[] | null> => {
