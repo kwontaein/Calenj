@@ -7,10 +7,6 @@ export const FriendList: React.FC = () => {
     const [friendToggle, setFriendToggle] = useState<boolean>(true);
     const [inputValue, setInputValue] = useState<string>('');
 
-    const userId = localStorage.getItem('userId') || ''
-    //그룹 목록 불러오기
-    const friendListState = useFetchFriendList(userId);
-
 
     return (
         <div>

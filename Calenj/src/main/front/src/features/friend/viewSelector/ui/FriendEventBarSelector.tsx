@@ -46,8 +46,8 @@ export const FriendEventBarSelector: React.FC = () => {
                     대기
                 </FriendSelectButton>
                 {window.innerWidth >800 &&
-                    <FriendSelectButton $isAble={viewState==='block'} onClick={()=> dispatch(updateViewState({viewState:'block'}))}>
-                    차단목록
+                    <FriendSelectButton $isAble={viewState==='banUser'} onClick={()=> dispatch(updateViewState({viewState:'banUser'}))}>
+                        차단목록
                     </FriendSelectButton>
                 }
             </FriendSelectButton_Container>

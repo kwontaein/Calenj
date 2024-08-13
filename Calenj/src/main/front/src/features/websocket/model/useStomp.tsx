@@ -35,12 +35,14 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
         if (!userId) return
         const {param, state, target, onlineUserList, message} = stomp.receiveMessage
 
-        
         //온라인 리스트 처리
-        if (message !== null) {
+        if (!message) {
+
             if (target === "friendMsg") { //내 id는 필수로 들어가기 때문
                 if (state === 'ONLINE') {
+
                     const friendIdList = onlineUserList.filter((friendId) => friendId != userId) // 내 id 제거
+                    
                     if (friendIdList.length > 0) {
                         friendIdList.map((friendId) => {
                             dispatch(updateFriendOnline({personalKey: userId, userParam: friendId}))

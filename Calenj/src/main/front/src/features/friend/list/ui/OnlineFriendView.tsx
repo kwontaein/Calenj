@@ -20,6 +20,7 @@ import {
 import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
 import {InfoBox} from "../../../../shared/ui/InfoBox";
 import {useFetchUserBanList} from "../../../../entities/reactQuery/model/queryModel";
+import {useDeleteFriend} from "../model/useDeleteFriend";
 
 export const OnlineFriendView: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
@@ -28,6 +29,8 @@ export const OnlineFriendView: React.FC = () => {
     const [hoverText, setHoverText] = useState<string|null>(null)
     const [dotsInfo, setDotsInfo] = useState<string|null>(null)
     const dotsRef = useClickOutSideCheck(dotsInfo!==null,()=>setDotsInfo(null))
+
+    const deleteFriend =useDeleteFriend(userId)
 
     return (
         <FriendList_Container>
@@ -52,8 +55,7 @@ export const OnlineFriendView: React.FC = () => {
                                     <RowFlexBox>
                                         <FriendListIcon_Container
                                             onMouseEnter={() => setHoverText('message')}
-                                            onMouseLeave={() => setHoverText(null)}
-                                            onClick={() => setDotsInfo(friend.friendUserId)}>
+                                            onMouseLeave={() => setHoverText(null)}>
                                             {hoverText === 'message' &&
                                                 <InfoBox text={'메시지 보내기'} marginLeft={0} marginTop={-75}
                                                          tailCenter={true}/>}
@@ -70,13 +72,15 @@ export const OnlineFriendView: React.FC = () => {
                                             {(dotsInfo && dotsInfo === friend.friendUserId) &&
                                                 <Option_Container style={{marginTop: '140px', marginRight: '-50px'}}
                                                                   ref={dotsRef}>
-                                                    <Option_Item>
+                                                    <Option_Item
+                                                        onClick={() => deleteFriend(friend.friendUserId, friend.nickName, true)}>
                                                         <OptionIcon_Wrapper>
                                                             <i className="bi bi-ban"></i>
                                                         </OptionIcon_Wrapper>
                                                         차단하기
                                                     </Option_Item>
-                                                    <Option_Item>
+                                                    <Option_Item
+                                                        onClick={() => deleteFriend(friend.friendUserId, friend.nickName, false)}>
                                                         <OptionIcon_Wrapper>
                                                             <i className="bi bi-person-x-fill"></i>
                                                         </OptionIcon_Wrapper>
