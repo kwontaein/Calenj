@@ -31,9 +31,17 @@ import {useMessageScroll} from "../model/useMessageScroll";
 export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
     const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
-    const {messageList, chatUUID, position, topRef, bottomRef, hasNextPage, hasPreviousPage, compareDate} = useMessageData()
-    const {scrollRef, messageRefs} = useMessageScroll(messageList,chatUUID, position)
-
+    const {
+        messageList,
+        chatUUID,
+        position,
+        topRef,
+        bottomRef,
+        hasNextPage,
+        hasPreviousPage,
+        compareDate
+    } = useMessageData()
+    const {scrollRef, messageRefs} = useMessageScroll(messageList, chatUUID, position)
 
 
     const MessageBox = useMemo(() => {
@@ -75,6 +83,26 @@ export const MessageScrollBox: React.FC = () => {
                                                 </RowFlexBox>
                                                 <MessageContentContainer>
                                                     <>
+                                                        {message.messageType === 'title' && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
+                                                        {message.messageType === 'vote' && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
+                                                        {message.messageType === 'file' && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
+                                                        {message.messageType === 'schedule' && (
+                                                            <div>
+                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                            </div>
+                                                        )}
                                                         {message.messageType === 'image' && (
                                                             <MessageGridView>
                                                                 {message.message.trim().slice(1, -1).split(',').map((image, index) => (
@@ -102,7 +130,7 @@ export const MessageScrollBox: React.FC = () => {
                         </div>)
                     ))}
 
-                {hasNextPage &&<div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>}
+                {hasNextPage && <div className="scrollBottom" style={{marginTop: '10px'}} ref={bottomRef}></div>}
 
 
             </ScrollableDiv>
