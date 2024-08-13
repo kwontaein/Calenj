@@ -13,7 +13,7 @@ export const FriendEventBarSelect_Container = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    min-width: 307px;
+    min-width: 304px;
 `
 export const FriendSelectTitle_Container = styled.div`
     height: 100%;
@@ -22,23 +22,23 @@ export const FriendSelectTitle_Container = styled.div`
     padding: 0 19px 0 5px;
     align-items: center;
     flex-direction: row;
+    box-sizing: border-box;
+    
 `
 export const FriendSelectButton_Container = styled.div`
     height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     padding: 0 5px;
 `
 export const FriendSelectButton = styled.div<{ $isAble: boolean }>`
     height: 100%;
-    font-size: 13px;
+    font-size: 14px;
     display: flex;
     align-items: center;
-    padding: 0 14px;
+    padding-inline :14px;
     border-radius: 5px;
     margin-inline: 2px;
-
     ${props => props.$isAble && `background-color : ${ThemeColor3};`}
     &:hover {
         background-color: ${ThemeColor3}77;

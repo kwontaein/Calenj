@@ -13,16 +13,16 @@ export const FriendListUL = styled.ul`
     padding: 0;
 `
 
-export const FriendListView = styled.li`
+export const FriendListView = styled.li<{$isClick?:boolean}>`
     padding: 10px;
     height: 45px;
     align-items: center;
     display: flex;
     justify-content: space-between;
     border-radius: 5px;
-
+    background-color: ${props=> props.$isClick ? `${ThemeColor3}77`: "transparent"};
     &:hover {
-        background-color: ${ThemeColor2};
+        background-color: ${ThemeColor3}77;
     }
 `
 export const Friend_ProfilePlace = styled.div`
@@ -66,8 +66,24 @@ export const Friend_ResponseBtn = styled.div`
 `
 
 export const Friend_Hr = styled.hr`
-    background-color: ${TextColor}77;
+    background-color: ${TextColor}20;
     border: 0;
     height: 1px;
     margin: 0;
+`
+
+
+export const FriendListIcon_Container = styled.button`
+    width: 35px;
+    height: 35px;
+    background-color: ${ThemeColor3};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    &:active{
+        background-color: ${ThemeColor2};
+    }
 `

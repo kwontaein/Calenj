@@ -39,8 +39,7 @@ export const AddFriendInput_Container = styled.div`
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 10px 0 10px;
-
+    padding-inline: 10px;
     &.shake {
         animation: ${shake} 0.5s linear;
     }

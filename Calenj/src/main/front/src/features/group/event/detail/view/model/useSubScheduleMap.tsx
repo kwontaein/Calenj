@@ -51,6 +51,7 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
             mapTypeControl: true,
         });
     }
+
     //마커 추가하는 메소드
     const addMaker = (x: string, y: string) => {
         const marker = new naver.maps.Marker({

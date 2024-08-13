@@ -215,7 +215,7 @@ export const InfoTail = styled.div`
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
-    background-color: ${ThemeColor2};
+    background-color: ${BackGroundColor};
     margin-top: -6px;
     position: relative;
     z-index: 0;
@@ -225,7 +225,7 @@ export const InfoContent = styled.div`
     width: auto;
     padding: 5px;
     font-size: 12px;
-    background-color: ${ThemeColor2};
+    background-color: ${BackGroundColor};
     position: relative;
     z-index: 1;
     border-radius: 2px;
@@ -425,18 +425,6 @@ export const Option_Container = styled.div`
     z-index: 2;
 `
 
-
-export const OptionIcon_Wrapper = styled.div`
-    width: 20px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    margin-inline: 5px;
-    color: inherit;
-`
-
 export const Option_Item = styled.div<{$isClick?:boolean}>`
     width: calc(100% - 18px);
     height: 15px;
@@ -455,6 +443,19 @@ export const Option_Item = styled.div<{$isClick?:boolean}>`
         
     }
 `
+
+export const OptionIcon_Wrapper = styled.div`
+    width: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-inline: 5px;
+    color: inherit;
+`
+
+
 
 /**radio*/
 export const Radio_Label = styled.label`
