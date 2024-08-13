@@ -17,7 +17,7 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE Events e SET e.eventStatus =:isAccept WHERE e.ownUserId.userId =:requestUserId and e.eventName=:eventType", nativeQuery = true)
+    @Query("UPDATE Events e SET e.eventStatus =:isAccept WHERE e.ownUserId.userId =:requestUserId and e.eventName=:eventType")
     void updateEvent(@Param("requestUserId") UUID requestUserId, @Param("isAccept") EventEntity.statusType isAccept, @Param("eventType") EventEntity.eventType type);
 
     //모든 이벤트 리스트
@@ -33,7 +33,7 @@ public interface EventRepository extends JpaRepository<EventEntity, EventId> {
     @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.eventUserId =:userId and e.eventName=RequestFriend and e.eventStatus=WAITING")
     Optional<List<EventResponse>> ResponseEventListById(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend")
+    @Query("SELECT new org.example.calenj.event.dto.response.EventResponse(e.eventId,e.ownUserId.nickname,e.ownUserId.userId,e.eventUserId,e.eventPurpose,e.eventName,e.eventStatus,e.createDate,e.eventContent) FROM Events e WHERE e.ownUserId.userId =:ownUserId and e.eventUserId =:friendId and e.eventName=RequestFriend and e.eventStatus =ACCEPT")
     Optional<List<EventResponse>> isDuplicatedEvent(@Param("ownUserId") UUID ownUserId, @Param("friendId") UUID friendId);
 
     default boolean checkIfDuplicatedEvent(UUID ownUserId, UUID friendId) {

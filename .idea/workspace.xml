@@ -5,16 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.08 subSchedule 개인일정 추가">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/api/friendDeleteOrBanApi.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/model/useDeleteFriend.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/UserBanList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/api/cancelUserBanApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SearchInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SearchInputStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/FriendList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/FriendList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/OnlineFriendView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/repository/FriendRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/friend/repository/FriendRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/UserBanList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/UserBanList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/CurrentFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/view/ui/CurrentFriendView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/viewSelector/ui/FriendEventBarSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/viewSelector/ui/FriendEventBarSelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

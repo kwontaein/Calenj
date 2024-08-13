@@ -24,8 +24,6 @@ export const UserBanList :React.FC =()=>{
     const userId = localStorage.getItem('userId')||''
     const {data, isLoading} = useFetchUserBanList(userId)
     const [hoverText, setHoverText] = useState<string|null>(null)
-    const [dotsInfo, setDotsInfo] = useState<string|null>(null)
-    const dotsRef = useClickOutSideCheck(dotsInfo!==null,()=>setDotsInfo(null))
 
 
     return(
@@ -44,34 +42,11 @@ export const UserBanList :React.FC =()=>{
                                 </Friend_ProfilePlace>
                                 <RowFlexBox>
                                     <FriendListIcon_Container
-                                        onMouseEnter={()=>setHoverText('message')}
-                                        onMouseLeave={()=>setHoverText(null)}
-                                        onClick={()=>setDotsInfo(user.friendUserId)}>
-                                        {hoverText==='message' && <InfoBox text={'메시지 보내기'} marginLeft={0} marginTop={-75} tailCenter={true}/>}
-                                        <i className="bi bi-chat-dots-fill"></i>
-                                    </FriendListIcon_Container>
-                                    <FriendListIcon_Container
-                                        onMouseEnter={()=>setHoverText('dots')}
-                                        onMouseLeave={()=>setHoverText(null)}
-                                        onClick={()=>setDotsInfo(user.friendUserId)}>
-                                        {hoverText==='dots' && <InfoBox text={'기타 옵션'} marginLeft={0} marginTop={-75} tailCenter={true}/>}
-                                        <i className="bi bi-three-dots-vertical"></i>
-                                        {(dotsInfo && dotsInfo === user.friendUserId) &&
-                                            <Option_Container style={{marginTop:'140px', marginRight:'-50px'}} ref={dotsRef}>
-                                                <Option_Item>
-                                                    <OptionIcon_Wrapper>
-                                                        <i className="bi bi-ban"></i>
-                                                    </OptionIcon_Wrapper>
-                                                    차단하기
-                                                </Option_Item>
-                                                <Option_Item>
-                                                    <OptionIcon_Wrapper>
-                                                        <i className="bi bi-person-x-fill"></i>
-                                                    </OptionIcon_Wrapper>
-                                                    삭제하기
-                                                </Option_Item>
-                                            </Option_Container>
-                                        }
+                                        onMouseEnter={() => setHoverText('dots')}
+                                        onMouseLeave={() => setHoverText(null)}>
+                                        {hoverText === 'dots' &&
+                                            <InfoBox text={'차단 해제하기'} marginLeft={0} marginTop={-75} tailCenter={true}/>}
+                                        <i className="bi bi-eraser-fill"></i>
                                     </FriendListIcon_Container>
                                 </RowFlexBox>
                             </FriendListView>

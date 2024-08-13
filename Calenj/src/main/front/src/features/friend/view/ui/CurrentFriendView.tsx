@@ -5,6 +5,7 @@ import {AllFriendView} from "../../list/ui/AllFriendView";
 import {OnlineFriendView} from "../../list/ui/OnlineFriendView";
 import {RequestFriendList} from "../../requestFriend";
 import {ResponseFriendList} from "../../responseFriend";
+import {UserBanList} from "../../list/ui/UserBanList";
 
 
 export const CurrentFriendView: React.FC =() =>{
@@ -16,6 +17,7 @@ export const CurrentFriendView: React.FC =() =>{
             {viewState ==='online' && <OnlineFriendView/>}
             {viewState ==='response' &&  <ResponseFriendList/>}
             {viewState ==='request' && <RequestFriendList/>}
+            {viewState ==='banUser' && <UserBanList/>}
         </FullScreen_div>
     )
 }

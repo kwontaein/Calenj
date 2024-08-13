@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/ui/FriendListStyled";
 import {FriendEventDetail} from "../../detail";
 import {FriendEvent, FriendList, useFetchFriendList} from "../../../../entities/reactQuery";
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {
     Option_Container,
     Option_Item,
@@ -22,6 +22,7 @@ import {friendDeleteOrBanApi} from "../api/friendDeleteOrBanApi";
 import {useConfirm} from "../../../../shared/model";
 import {useFetchUserBanList} from "../../../../entities/reactQuery/model/queryModel";
 import {useDeleteFriend} from "../model/useDeleteFriend";
+import {SearchInput} from "../../../../shared/ui/SearchInput";
 
 export const AllFriendView: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
@@ -29,14 +30,16 @@ export const AllFriendView: React.FC = () => {
     const [hoverText, setHoverText] = useState<string|null>(null)
     const [dotsInfo, setDotsInfo] = useState<string|null>(null)
     const dotsRef = useClickOutSideCheck(dotsInfo!==null,()=>setDotsInfo(null))
-
+    const [searchText,setSearchText] = useState<string>('')
     const deleteFriend =useDeleteFriend(userId)
+
 
     return (
         <FriendList_Container>
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <FriendListUL>
+                    <SearchInput searchText={searchText} placeholder={'검색하기'} setSearchText={setSearchText}/>
                     {friendListState.data.map((friend: FriendList) => (
                         <div key={friend.chattingRoomId}>
                             <FriendListView $isClick={dotsInfo!==null && dotsInfo===friend.friendUserId}>
@@ -49,8 +52,7 @@ export const AllFriendView: React.FC = () => {
                                 <RowFlexBox>
                                     <FriendListIcon_Container
                                         onMouseEnter={()=>setHoverText('message')}
-                                        onMouseLeave={()=>setHoverText(null)}
-                                        onClick={()=>setDotsInfo(friend.friendUserId)}>
+                                        onMouseLeave={()=>setHoverText(null)}>
                                         {hoverText==='message' && <InfoBox text={'메시지 보내기'} marginLeft={0} marginTop={-75} tailCenter={true}/>}
                                         <i className="bi bi-chat-dots-fill"></i>
                                     </FriendListIcon_Container>

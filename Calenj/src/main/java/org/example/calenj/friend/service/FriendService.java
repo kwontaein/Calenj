@@ -79,8 +79,15 @@ public class FriendService {
         }
 
         // 친구 유저 정보가 존재하는지 확인
+        FriendResponse f = new FriendResponse();
+
+        System.out.println(friendUserName);
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
-        FriendResponse f = friendRepository.findFriendById(friendUser.getUserId()).orElse(null);
+
+        if (friendUser != null) {
+            f = friendRepository.findFriendById(friendUser.getUserId()).orElse(null);
+        }
+
         if (friendUser == null || (f != null && f.getStatus() == FriendEntity.statusType.BAN)) {
             return createErrorResponse("존재하지 않는 아이디입니다. 아이디를 다시 확인해주세요.");
         }
@@ -289,7 +296,7 @@ public class FriendService {
     public void deleteFriend(FriendRequest request) {
         UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         friendRepository.deleteByOwnUserId(UUID.fromString(request.getFriendUserId()), myId);
-
+        System.out.println(request.isBan());
         if (request.isBan()) {//차단이면 친구 삭제는 하지 않고 상태만 차단으로 변경 -> 재 친구 요청 불가
             friendRepository.updateStatus(myId, FriendEntity.statusType.BAN);
         } else {//차단 아니고 삭제면 그냥 삭제
@@ -299,6 +306,7 @@ public class FriendService {
 
     public List<FriendResponse> banList() {
         UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
-        return friendRepository.findBanListById(myUserID).orElseThrow(() -> new RuntimeException("차단 목록이 비었습니다"));
+        List<FriendResponse> responses = friendRepository.findBanListById(myUserID).orElseThrow(() -> new RuntimeException("차단 목록이 비었습니다"));
+        return responses;
     }
 }
