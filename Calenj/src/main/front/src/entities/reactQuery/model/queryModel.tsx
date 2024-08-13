@@ -57,7 +57,7 @@ export const useFetchCookie= () =>
     useQuery<boolean, Error>({
         queryKey: [QUERY_COOKIE_KEY],
         queryFn: checkCookie, //HTTP 요청함수 (Promise 를 반환하는 함수)
-        refetchInterval:false,
+        // refetchInterval: false,
     });
 
 export const useFetchGroupList = (isOnline:string) =>
@@ -109,7 +109,7 @@ export const useFetchRequestFriendList = (userId:string) =>
     useQuery<FriendEvent[] | null, Error>({
         queryKey: [QUERY_REQUEST_FRIEND_LIST,userId],
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
-        refetchInterval: false,
+        // refetchInterval: false,
     })
 
 export const useFetchDateEventTag = (userId:string) =>
@@ -172,7 +172,7 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         getPreviousPageParam:(firstPage:Message[]) => {
             return firstPage[0].chatUUID ==="시작라인" ? undefined :{position:'older' ,chatUUID:firstPage[0].chatUUID}
         },
-        initialPageParam:{position:"",chatUUID:""},
+        initialPageParam : {position:"",chatUUID:""},
         staleTime: Infinity,
         refetchInterval:false,
         retry:3,

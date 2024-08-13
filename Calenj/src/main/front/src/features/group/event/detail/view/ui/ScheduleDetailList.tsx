@@ -234,7 +234,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                             참가인원 :
                                         </ScheduleDetail_ContentTitle_Container>
                                         <SubScheduleJoinUser_Wrapper>
-                                            {dragIndex.current !== idx &&
+                                            {dragIndex.current !==idx &&
                                                 !schedule.joinUser.length ?
                                                     <SubScheduleJoinUser_Empty>
                                                         참여중인 인원이 없습니다.
@@ -339,7 +339,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                         :
                                         subScheduleEdit[dragIndex.current].joinUser.map((userId, idx) => (
                                             idx < 4 &&
-                                            <ProfileContainer style={{width:'20px', height:'20px'}} $userId={userId}/>
+                                            <ProfileContainer style={{width:'20px', height:'20px', minWidth:'unset'}} $userId={userId} key={userId}/>
                                         ))
                                     }
                                 </SubScheduleJoinUser_Wrapper>

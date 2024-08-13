@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {PointColor, SubScreenColor, TextColor} from "../../../../shared/ui/SharedStyled";
+import {BackGroundColor, PointColor, SubScreenColor, TextColor} from "../../../../shared/ui/SharedStyled";
 
 
 export const SelectorText_Continer = styled.div`
@@ -21,7 +21,7 @@ export const SelectorIcon_Container = styled.div`
 
 export const SelectItem_Container = styled.div`
     width: 196px;
-    background-color: ${TextColor}77;
+    background-color: ${BackGroundColor};
     position: fixed;
     top: 71px;
     left: 82px; //SideNavigation width 72px + subNavigation padding: 10px
