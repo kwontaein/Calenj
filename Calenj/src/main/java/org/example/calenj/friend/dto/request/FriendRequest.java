@@ -15,5 +15,5 @@ public class FriendRequest {
     private String friendUserId;
     private String eventContent;
     private UUID friendId;
-    private boolean isBan;
+    private boolean ban;
 }
