@@ -18,7 +18,13 @@ import {
     getVoteDetail,
     getFriendResponse,
     getFriendRequest,
-    getDateEventTag, getUserDateEvent, getUserInfo, getMessageData, getGroupScheduleList, getSubScheduleList
+    getDateEventTag,
+    getUserDateEvent,
+    getUserInfo,
+    getMessageData,
+    getGroupScheduleList,
+    getSubScheduleList,
+    getUserBanList
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -52,6 +58,7 @@ export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
 export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
 export const QUERY_GROUP_SCHEDULE_LIST = "QUERY_GROUP_SCHEDULE_LIST"
 export const QUERY_GROUP_SUB_SCHEDULE_LIST = "QUERY_GROUP_SUB_SCHEDULE_LIST"
+export const QUERY_USER_BAN_LIST = "QUERY_USER_BAN_LIST"
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -111,6 +118,13 @@ export const useFetchRequestFriendList = (userId:string) =>
         queryFn: getFriendRequest, //HTTP 요청함수 (Promise를 반환하는 함수)
         // refetchInterval: false,
     })
+export const useFetchUserBanList = (userId:string) =>
+    useQuery<FriendList[] | null, Error>({
+        queryKey: [QUERY_USER_BAN_LIST,userId],
+        queryFn: getUserBanList, //HTTP 요청함수 (Promise를 반환하는 함수)
+        // refetchInterval: false,
+    })
+
 
 export const useFetchDateEventTag = (userId:string) =>
     useQuery<EventTagDTO[]|null, Error>({
@@ -176,8 +190,6 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
         staleTime: Infinity,
         refetchInterval:false,
         retry:3,
-
-
     })
 };
 

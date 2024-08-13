@@ -26,8 +26,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
 
     @Modifying
     @Transactional
-    @Query("delete from Friends f where f.ownUserId.userId =:userId")
-    void deleteByOwnUserId(@Param("userId") UUID userId);
+    @Query("delete from Friends f where f.ownUserId.userId =:userId and f.friendUserId =:myId")
+    void deleteByOwnUserId(@Param("userId") UUID userId, @Param("myId") UUID myUserId);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
@@ -39,4 +39,7 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
+
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
+    Optional<List<FriendResponse>> findBanListById(@Param("userId")UUID myUserID);
 }

@@ -80,6 +80,14 @@ export interface FriendList {
     ChattingRoomId: number;
 }
 
+export interface BanUserList{
+    friendUserId: string;
+    nickName: string;
+    chattingRoomId: number;
+    friendAddDate: string;
+    ChattingRoomId: number;
+}
+
 export interface FriendEvent {
     createDate: string
     eventId: number
