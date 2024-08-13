@@ -40,6 +40,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
     Optional<List<FriendResponse>> findBanListById(@Param("userId") UUID myUserID);
 }
