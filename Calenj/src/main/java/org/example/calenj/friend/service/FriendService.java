@@ -295,6 +295,7 @@ public class FriendService {
 
     public void deleteFriend(FriendRequest request) {
         UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        //상대한테서 내 정보 삭제
         friendRepository.deleteByOwnUserId(UUID.fromString(request.getFriendUserId()), myId);
         System.out.println(request.isBan());
         if (request.isBan()) {//차단이면 친구 삭제는 하지 않고 상태만 차단으로 변경 -> 재 친구 요청 불가
@@ -308,5 +309,10 @@ public class FriendService {
         UUID myUserID = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         List<FriendResponse> responses = friendRepository.findBanListById(myUserID).orElseThrow(() -> new RuntimeException("차단 목록이 비었습니다"));
         return responses;
+    }
+
+    public void cancelBan(FriendRequest request) {//밴 취소시 친삭
+        UUID myId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        friendRepository.deleteByOwnUserId(myId, UUID.fromString(request.getFriendUserId()));
     }
 }
