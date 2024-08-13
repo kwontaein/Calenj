@@ -9,6 +9,7 @@ import {updateViewState} from "../../../../entities/redux/model/slice/FriendView
 import {
      useFetchResponseFriendList
 } from "../../../../entities/reactQuery";
+import {useComponentSize} from "../../../../shared/model";
 
 export const FriendEventBarSelector: React.FC = () => {
     const viewState = useSelector((state:RootState) => state.friendViewState.viewState);
@@ -19,12 +20,13 @@ export const FriendEventBarSelector: React.FC = () => {
 
 
 
-
     return (
         <FriendEventBarSelect_Container>
-            <FriendSelectTitle_Container>친구</FriendSelectTitle_Container>
+            <FriendSelectTitle_Container>
+                친구
+            </FriendSelectTitle_Container>
             <hr/>
-            <FriendSelectButton_Container>
+            <FriendSelectButton_Container >
                 <FriendSelectButton $isAble={viewState==='online'} onClick={()=> dispatch(updateViewState({viewState:'online'}))}>
                     온라인
                 </FriendSelectButton>
@@ -43,6 +45,11 @@ export const FriendEventBarSelector: React.FC = () => {
                 <FriendSelectButton $isAble={viewState==='request'} onClick={()=> dispatch(updateViewState({viewState:'request'}))}>
                     대기
                 </FriendSelectButton>
+                {window.innerWidth >800 &&
+                    <FriendSelectButton $isAble={viewState==='block'} onClick={()=> dispatch(updateViewState({viewState:'block'}))}>
+                    차단목록
+                    </FriendSelectButton>
+                }
             </FriendSelectButton_Container>
         </FriendEventBarSelect_Container>
     )

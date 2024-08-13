@@ -22,4 +22,5 @@ export const ContentsScreen_div = styled.div`
     height: calc(100% - ${SubNavigateTopBar_height + SubNavigate_paddingBlock*2}px);
     display: flex;
     flex-direction: row;
+    background-color: ${ThemeColor2};
 `

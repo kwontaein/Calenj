@@ -35,6 +35,7 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
         if (!userId) return
         const {param, state, target, onlineUserList, message} = stomp.receiveMessage
 
+        
         //온라인 리스트 처리
         if (message !== null) {
             if (target === "friendMsg") { //내 id는 필수로 들어가기 때문

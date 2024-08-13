@@ -17,7 +17,6 @@ import {ReturnSubSchedule} from "./types";
 
 export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupScheduleEdit: groupEventSate, setEditMode: React.DispatchWithoutAction):ReturnSubSchedule => {
     const dragIndex = useRef<number | null>(null); // 드래그할 아이템의 인덱스
-    const dragOverIndex = useRef<number | null>(null); // 드랍할 위치의 아이템의 인덱스
     const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
     const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
     const [ItemWidth, setItemWidth] = useState<number | null>(null);
@@ -36,14 +35,12 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
     useEffect(() => {
         if (groupSubScheduleList.data) {
-            console.log(groupSubScheduleList.data)
             dispatchSubSchedule({type: 'SET_SUB_SCHEDULE_LIST', payload: groupSubScheduleList.data})
         }
     }, [groupSubScheduleList.data])
 
     // 드래그 시작될 때 실행
     const dragStart = (e: DragEvent<HTMLDivElement>, position: number) => {
-
         dragIndex.current = position;
         deleteRef.current = position;
         e.dataTransfer.effectAllowed = "move";
@@ -56,24 +53,21 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
     // 드래그 중인 대상이 위로 포개졌을 때
     const dragEnter = (e: DragEvent<HTMLDivElement>, position: number) => {
-        dragOverIndex.current = position;
         const newList = [...subScheduleEdit];
         const dragIndexValue = newList[dragIndex.current!];
-
         // 드래그한 요소를 제거
         newList.splice(dragIndex.current!, 1);
         // 드롭 위치에 요소를 추가하고 나머지를 뒤로 밀기
-        newList.splice(dragOverIndex.current, 0, dragIndexValue);
+        newList.splice(position, 0, dragIndexValue);
         dispatchSubSchedule({type: "SET_SUB_SCHEDULE_LIST", payload: newList});
-        dragIndex.current = dragOverIndex.current;
-        deleteRef.current = dragOverIndex.current;
+        dragIndex.current = position;
+        deleteRef.current = position;
     };
 
     // 드랍 (커서 뗐을 때)
     const drop = () => {
         dispatchSubSchedule({type: "SET_INDEX"})
         dragIndex.current = null;
-        dragOverIndex.current = null;
         setMousePosition(null)
         setInitialDragPosition(null)
     };

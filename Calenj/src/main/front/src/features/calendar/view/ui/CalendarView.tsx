@@ -93,7 +93,6 @@ export const CalendarView: React.FC = () => {
                         )}
                         eventAllow={(dropInfo, draggedEvent) => {
                             // 이벤트 ID 또는 다른 조건으로 특정 이벤트를 고정
-                            console.log(draggedEvent)
                             return dynamicEventTag[draggedEvent?._def.extendedProps.tagKeys[0]].name !== '그룹 일정'; // id가 '2'인 이벤트는 수정 불가
                         }}
                     />
