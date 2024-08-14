@@ -39,7 +39,7 @@ export const OnlineFriendView: React.FC = () => {
             {friendListState.isLoading && <div>Loading...</div>}
             {(friendListState.data && userId) && (
                 <div>
-                    {friendListState.data.length===0 &&
+                    {friendListState.data.filter(({friendUserId})=> userList.includes(friendUserId)).length>0 &&
                         <span>
                             <SearchInput searchText={searchText} placeholder={'검색하기'} setSearchText={setSearchText}/>
                             <FriendListCount_Container>온라인 - {friendListState.data.filter(({friendUserId})=> userList.includes(friendUserId)).length}명</FriendListCount_Container>

@@ -1,5 +1,5 @@
 import axios from "axios";
 
-export const cancelUserBanApi =()=>{
-    return axios.post('api/cancle')
+export const cancelUserBanApi =(friendUserId:string):Promise<void>=>{
+    return axios.post('api/cancelBan',{friendUserId})
 }

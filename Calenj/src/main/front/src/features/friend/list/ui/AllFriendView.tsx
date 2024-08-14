@@ -39,7 +39,7 @@ export const AllFriendView: React.FC = () => {
             {friendListState.isLoading && <div>Loading...</div>}
             {friendListState.data && (
                 <div>
-                    {friendListState.data.length===0 &&
+                    {friendListState.data.length>0 &&
                         <span>
                             <SearchInput searchText={searchText} placeholder={'검색하기'} setSearchText={setSearchText}/>
                             <FriendListCount_Container>모든친구 - {friendListState.data.length}명</FriendListCount_Container>
