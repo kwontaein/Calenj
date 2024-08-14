@@ -19,6 +19,7 @@ import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.dto.request.UserChatRequest;
 import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserChatResponse;
 import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
@@ -265,9 +266,9 @@ public class UserService {
         userChatRepository.save(request.toEntity());
     }
 
-    public void getChatList() {
+    public List<UserChatResponse> getChatList() {
         String myUserId = globalService.extractFromSecurityContext().getUsername();
-        userChatRepository.findChatList(UUID.fromString(myUserId));
+        return userChatRepository.findChatList(UUID.fromString(myUserId)).orElse(null);
     }
 
     public void deleteChat(UUID myId, String friendUserId) {
