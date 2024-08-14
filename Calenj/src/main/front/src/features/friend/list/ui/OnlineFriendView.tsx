@@ -3,7 +3,7 @@ import {
     Friend_Hr,
     Friend_ImagePlace, Friend_NamePlace,
     Friend_ProfilePlace, Friend_TextPlace,
-    FriendList_Container, FriendListIcon_Container,
+    FriendList_Container, FriendListCount_Container, FriendListIcon_Container,
     FriendListUL,
     FriendListView
 } from "../../../../shared/ui/FriendListStyled";
@@ -21,6 +21,7 @@ import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideChec
 import {InfoBox} from "../../../../shared/ui/InfoBox";
 import {useFetchUserBanList} from "../../../../entities/reactQuery/model/queryModel";
 import {useDeleteFriend} from "../model/useDeleteFriend";
+import {SearchInput} from "../../../../shared/ui/SearchInput";
 
 export const OnlineFriendView: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
@@ -29,6 +30,7 @@ export const OnlineFriendView: React.FC = () => {
     const [hoverText, setHoverText] = useState<string|null>(null)
     const [dotsInfo, setDotsInfo] = useState<string|null>(null)
     const dotsRef = useClickOutSideCheck(dotsInfo!==null,()=>setDotsInfo(null))
+    const [searchText,setSearchText] = useState<string>('')
 
     const deleteFriend =useDeleteFriend(userId)
 
@@ -36,8 +38,15 @@ export const OnlineFriendView: React.FC = () => {
         <FriendList_Container>
             {friendListState.isLoading && <div>Loading...</div>}
             {(friendListState.data && userId) && (
+                <div>
+                    {friendListState.data.length===0 &&
+                        <span>
+                            <SearchInput searchText={searchText} placeholder={'검색하기'} setSearchText={setSearchText}/>
+                            <FriendListCount_Container>온라인 - {friendListState.data.filter(({friendUserId})=> userList.includes(friendUserId)).length}명</FriendListCount_Container>
+                        </span>
+                    }
                 <FriendListUL>
-                    {friendListState.data.map((friend: FriendList) => (
+                    {friendListState.data.filter(({nickName})=> nickName.includes(searchText)).map((friend: FriendList) => (
                         (userList.includes(friend.friendUserId) &&
                             <div key={friend.chattingRoomId}>
                                 <FriendListView $isClick={dotsInfo !== null && dotsInfo === friend.friendUserId}>
@@ -96,6 +105,7 @@ export const OnlineFriendView: React.FC = () => {
                         )
                     ))}
                 </FriendListUL>
+                </div>
             )}
         </FriendList_Container>
     )

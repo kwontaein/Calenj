@@ -9,6 +9,15 @@ export const FriendList_Container = styled.div`
     border-radius: 5px;
     padding: 10px;
 `
+
+export const FriendListCount_Container =styled.div`
+    height: 40px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    border-bottom: 1px solid ${TextColor}20;
+`
 export const FriendListUL = styled.ul`
     padding: 0;
 `

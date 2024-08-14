@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {BackGroundColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import FullCalendar from "@fullcalendar/react";
 
 export const SubNavigation_Container_width: number = 232;
 export const SubNavigateTopBar_height: number = 32;
@@ -79,7 +80,7 @@ export const SubNavigateItem_Content = styled.div`
     font-size: 16px;
     align-content: center;
     margin-left: 10px;
-    color: ${TextColor}77;
+    color: inherit;
 `
 
 export const SubNavigateItem_Icon = styled.div`
@@ -89,7 +90,7 @@ export const SubNavigateItem_Icon = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 15px;
-    color: ${TextColor}77;
+    color: inherit;
 `
 
 export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
@@ -105,13 +106,7 @@ export const SubNavigateItem_Container = styled.div<SubNavigationClickProps>`
     border: 5px;
     background-color: ${props => props.$isClick ? BackGroundColor : ''};
 
-    ${SubNavigateItem_Icon} {
-        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
-    }
-
-    ${SubNavigateItem_Content} {
-        color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
-    }
+    color:${TextColor}CC;
 
     transition: background-color 0.3s ease, color 0.3s ease;
 
@@ -147,4 +142,122 @@ export const ListToggleDiv = styled.div`
     &:hover {
         color: ${TextColor};
     }
+`
+
+export const GroupEventCalendar_Container = styled.div`
+    width: calc(100% - 10px);
+    height: 240px;
+    margin : 5px;
+    padding-inline:10px;
+    position: relative;
+    z-index: 0;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: ${ThemeColor3};
+
+    .fc-popover {
+        background: ${BackGroundColor};
+        z-index: 1;
+        color: ${TextColor}
+    }
+
+    .fc-event, .fc-event .fc-event-title {
+        color: unset; /* 상위 div의 기본 색상 제거 */
+    }
+
+    .fc-daygrid-event {
+        z-index: auto !important;
+    }
+
+    .fc-popover-body {
+        height: 100px;
+        overflow-y: auto;
+    }
+    
+    .fc-header-toolbar { //상단 헤더
+        margin-block: 5px;
+    }
+
+    .fc-daygrid-day-top {
+        flex-direction: unset;
+        font-size: 10px;
+    }
+    .fc-toolbar-title{
+        margin-left: 0.5em;
+        font-size: 15px;
+    }
+    .fc-header-toolbar{
+        margin-bottom : 10px;
+    }
+
+
+    .fc-icon-chevron-left::before{
+        font-size: 15px;
+    }
+    .fc-icon-chevron-right::before{
+        font-size: 15px;
+        margin-top: 50px;
+    }
+    .fc-daygrid-day-events{
+        min-height: 10px;
+    }
+    .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+        min-height: 10px;
+
+    }
+
+    .fc-col-header-cell-cushion{
+        font-size: 12px;
+    }
+    //날짜
+    .fc-daygrid-day-number{
+        padding:0;
+        padding-inline: 4px;
+    }
+    .fc .fc-toolbar.fc-header-toolbar {
+         margin-bottom: 10px;
+    }
+
+    //테두리
+    .fc-theme-standard td, .fc-theme-standard th {
+        border: 1px solid ${TextColor}77;
+    }
+    .fc-theme-standard .fc-scrollgrid {
+        border: 1px solid ${TextColor}77;
+    }
+`
+
+export const GroupFullCalendar = styled(FullCalendar)`
+    display: grid;
+    grid-template-columns: 1fr;
+`;
+
+export const Controller_Container = styled.div`
+    position: absolute;
+    width: auto;
+    height: 25px;
+    padding-inline: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    z-index: 5;
+    left: 200px;
+    margin-top: 5px;
+`
+export const Controller_Button = styled.button`
+    width: 20px;
+    height: 100%;
+    display: flex;
+    border-radius: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: ${ThemeColor2};
+    color: ${TextColor}77;
+    font-weight: 550;
+
+    &:hover {
+        background-color: ${ThemeColor2}77;
+        color: ${TextColor};
+    }
+
 `
