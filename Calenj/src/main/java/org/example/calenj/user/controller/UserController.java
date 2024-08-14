@@ -9,6 +9,7 @@ import org.example.calenj.global.auth.PhoneVerificationService;
 import org.example.calenj.global.auth.dto.request.ValidateRequest;
 import org.example.calenj.global.auth.dto.response.ValidateResponse;
 import org.example.calenj.global.service.RedisService;
+import org.example.calenj.user.dto.request.UserChatRequest;
 import org.example.calenj.user.dto.request.UserRequest;
 import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
@@ -68,6 +69,16 @@ public class UserController {
 
         userService.logout(response);
         return "logout";
+    }
+
+    @PostMapping("/api/updateChat")
+    public void updateChat(@RequestBody UserChatRequest r) {
+        userService.updateChatIsOpen(r);
+    }
+
+    @GetMapping("/api/getChatList")
+    public void getChatList() {
+        userService.getChatList();
     }
 
     /**

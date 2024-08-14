@@ -57,7 +57,22 @@ public class FriendController {
         friendService.deleteFriend(request);
     }
 
+    /**
+     * 친구 삭제 + 차단
+     *
+     * @param request
+     */
+    @PostMapping("/api/cancelBan")
+    public void cancelBan(@RequestBody FriendRequest request) {
+        friendService.cancelBan(request);
+    }
 
+
+    /**
+     * 차단목록 불러오기
+     *
+     * @return
+     */
     @GetMapping("/api/getBanList")
     public List<FriendResponse> getBanList() {
         return friendService.banList();

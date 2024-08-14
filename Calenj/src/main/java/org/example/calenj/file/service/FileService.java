@@ -127,7 +127,7 @@ public class FileService {
             chatMessageRequest.setSendDate(globalService.nowTime());
             chatMessageRequest.setMessage(imageIds.toString());
             chatMessageRequest.setParam(param);
-            chatMessageRequest.setMessageType("file");
+            chatMessageRequest.setMessageType("image");
             chatMessageRequest.setChatUUID(uuid);
 
             saveChattingToFile(chatMessageRequest);
