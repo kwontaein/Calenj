@@ -263,7 +263,7 @@ export const getSubScheduleList = async (scheduleId: string): Promise<SubSchedul
     try {
         return await axios.post("api/getSubScheduleList", {scheduleId})
             .then((res: AxiosResponse<SubSchedule[]>) => {
-                return res.data.sort((a,b)=>a.index - b.index)
+                return res.data.sort((a, b) => a.index - b.index)
             })
     } catch (error) {
         const axiosError = error as AxiosError;
@@ -277,11 +277,10 @@ export const getSubScheduleList = async (scheduleId: string): Promise<SubSchedul
 }
 
 
-
-export const getUserChatList = async():Promise<UserChatInfo[]>=>{
-    return axios.get('api/getChatList').then((res)=>{
+export const getUserChatList = async (): Promise<UserChatInfo[]> => {
+    return axios.get('api/getChatList').then((res) => {
         return res.data
-    }).catch((err)=>{
+    }).catch((err) => {
         const axiosError = err as AxiosError;
         console.log(axiosError);
         if (axiosError.response?.status) {
@@ -301,7 +300,8 @@ export const getMessageData = async (pageParam = {position: "", chatUUID: ""}, s
         chatId: chatUUID === "" ? null : chatUUID,
         newOrOld: position === "" ? null : position
     }).then((res) => {
-        return res.data.filter((message:Message)=> message.chatUUID)
+        console.log(res)
+        return res.data.filter((message: Message) => message.chatUUID)
     });
 
 }

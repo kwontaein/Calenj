@@ -81,9 +81,8 @@ public class WebSocketService {
         switch (message.getState()) {
             case ALARM: {
                 response.setEndPoint(fileService.countLinesUntilEndPoint(message));
-                if (target.equals("friendMsg") && response.getEndPoint() != 0) {
+                if (target.equals("friendMsg") && response.getEndPoint() != 0)
                     userService.setChatIsOpen(response.getParam());
-                }
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }

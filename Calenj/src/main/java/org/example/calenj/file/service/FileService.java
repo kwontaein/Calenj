@@ -83,7 +83,7 @@ public class FileService {
         final String imageName = uuid + "." + extension;
         try {
             // 이미지를 저장할 파일 객체 생성
-            final File newfile = new File(imageDir + imageName);
+            final File newfile = new File(imageDir + "/" + imageName);
 
             // 이미 파일이 존재하는 경우 해당 파일을 삭제합니다.
 
@@ -231,8 +231,9 @@ public class FileService {
         String date = parts[1].replace("[", "").replace("]", "").trim();
         String userId = parts[2].replace("[", "").replace("]", "").trim();
         String messageType = parts[3].replace("[", "").replace("]", "").trim();
-        String messageContent = parts[4].replace("[", "").replace("]", "").trim();
+        String messageContent = parts[4];
 
+        System.out.println("messageContent : " + messageContent);
         return new MessageResponse(chatId, date, userId, messageType, messageContent);
     }
 
