@@ -1,7 +1,6 @@
 import React, {useState, useRef, DragEvent, useEffect, useCallback, MouseEventHandler} from "react";
 import {Circle, Line, StandHr, Structure_Container, TestContainer, TestDiv, TestProgress} from "./testStyled";
 import {ThemeColor2} from "../../shared/ui/SharedStyled";
-import userNameRegisterSlice from "../../entities/redux/model/slice/UserNameRegisterSlice";
 
 export const Test: React.FC = () => {
     const dragItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스

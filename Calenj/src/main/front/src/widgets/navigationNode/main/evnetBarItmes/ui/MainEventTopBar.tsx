@@ -2,11 +2,12 @@ import {CalendarController, CalendarFromSelector} from "../../../../../features/
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../entities/redux";
-import {FriendEventBarSelector} from "../../../../../features/friend/viewSelector";
 import {RequestFriendInput} from "../../../../../features/friend/checkUserInput";
 import {LeftEventBar_Container, MainEventTopBar_Container, RightEventBar_Container} from "./MainEventTopBarStyled";
 import {Simulate} from "react-dom/test-utils";
 import click = Simulate.click;
+import {FriendEventBarSelector} from "../../../../../features/friend/eventBarItems";
+import {FriendChatEventBar} from "../../../../../features/friend/eventBarItems/ui/FriendChatEventBar";
 
 export const MainEventTopBar: React.FC = () => {
     const {clickState, friendParam} = useSelector((state: RootState) => state.subNavigation.main_subNavState)
@@ -15,7 +16,9 @@ export const MainEventTopBar: React.FC = () => {
         <MainEventTopBar_Container>
             <LeftEventBar_Container>
                 {clickState === 'friend' &&
-                    <FriendEventBarSelector/>
+                    friendParam==='' ?
+                    <FriendEventBarSelector/>:
+                    <FriendChatEventBar/>
                 }
             </LeftEventBar_Container>
             <RightEventBar_Container $coverAble={clickState==='friend'}>
@@ -26,6 +29,7 @@ export const MainEventTopBar: React.FC = () => {
                     </>
                 }
                 {clickState === 'friend' &&
+                    friendParam==='' &&
                     <RequestFriendInput/>
                 }
             </RightEventBar_Container>

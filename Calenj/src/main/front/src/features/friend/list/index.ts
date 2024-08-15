@@ -1,1 +1,1 @@
-export {FriendList} from './ui/FriendList'
+export {FriendChatList} from './ui/FriendChatList'
