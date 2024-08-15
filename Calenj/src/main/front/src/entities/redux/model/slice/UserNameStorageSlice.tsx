@@ -6,13 +6,13 @@ interface MappingNameProps {
     }
 }
 
-export interface RegisterUserNameState {
-    userNameRegister: MappingNameProps,
+export interface UserNameMapState {
+    userNameStorage: MappingNameProps,
 }
 
 // 초기상태
-const initialState: RegisterUserNameState = {
-    userNameRegister: {}
+const initialState: UserNameMapState = {
+    userNameStorage: {}
 }
 
 
@@ -22,9 +22,9 @@ const userData = createSlice({
     name: 'mappingUserName',
     initialState,
     reducers: {
-        registerUserName: (state, action: PayloadAction<{userId: string,userName: string }>) => {
-            state.userNameRegister = {
-                ...state.userNameRegister,
+        saveUserName: (state, action: PayloadAction<{userId: string,userName: string }>) => {
+            state.userNameStorage = {
+                ...state.userNameStorage,
                 [action.payload.userId]: {
                     userName: action.payload.userName,
                 }
@@ -34,5 +34,5 @@ const userData = createSlice({
 })
 
 
-export const {registerUserName} = userData.actions;
+export const {saveUserName} = userData.actions;
 export default userData.reducer;

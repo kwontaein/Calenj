@@ -10,7 +10,7 @@ import {
 } from '../../../entities/redux/model/slice/NavigatgionSlice'
 import {useFetchGroupDetail, useFetchUserInfo} from '../../../entities/reactQuery'
 import {GroupListView} from "../../../features/group/navItems_list";
-import {registerUserName, RootState} from "../../../entities/redux";
+import {saveUserName, RootState} from "../../../entities/redux";
 
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo,updateNavigation})=>{
@@ -30,7 +30,7 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
         //사용자 정보 push
         if(groupDetailState.data){
             groupDetailState.data.members.forEach((groupMember)=>{
-                dispatch(registerUserName({userId:groupMember.userId, userName: groupMember.nickName}))
+                dispatch(saveUserName({userId:groupMember.userId, userName: groupMember.nickName}))
             })
         }
     }, [groupDetailState.data]);

@@ -11,7 +11,7 @@ import subNavigateReducer from '../../entities/redux/model/slice/SubNavigationSl
 import boardOptionReducer from '../../entities/redux/model/slice/BoardOptionSlice';
 import dateEventTagReducer from '../../entities/redux/model/slice/DateEventTagSlice';
 import calendarReducer from "../../entities/redux/model/slice/CalendarControllerSlice";
-import UserDataReducer from "../../entities/redux/model/slice/UserNameRegisterSlice";
+import UserDataReducer from "../../entities/redux/model/slice/UserNameStorageSlice";
 import friendViewReducer from "../../entities/redux/model/slice/FriendViewSlice";
 import onlineUserReducer from "../../entities/redux/model/slice/OnlineUserStorageSlice";
 import MessageInputSizeReducer from "../../entities/redux/model/slice/InputSizeSlice";
@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
   boardOption:boardOptionReducer,
   dateEventTag:dateEventTagReducer,
   calendarController : calendarReducer,
-  userNameRegister : UserDataReducer,
+  userNameStorage : UserDataReducer,
   friendViewState :friendViewReducer,
   onlineStorage : onlineUserReducer,
   messageInputSize : MessageInputSizeReducer,

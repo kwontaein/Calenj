@@ -1,11 +1,12 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {UserChatInfo} from "../../../reactQuery";
 
 interface FriendViewState{
     viewState:string,
 }
 
 const initialState: FriendViewState = {
-    viewState :'online'
+    viewState :'online',
 }
 
 const friendViewState = createSlice({

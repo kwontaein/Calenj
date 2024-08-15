@@ -30,7 +30,7 @@ import {useMessageScroll} from "../model/useMessageScroll";
 
 export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
-    const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister);
+    const {userNameStorage} = useSelector((state: RootState) => state.userNameStorage);
     const {
         messageList,
         chatUUID,
@@ -78,7 +78,7 @@ export const MessageScrollBox: React.FC = () => {
                                             </ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
-                                                    <NickNameContainer>{userNameRegister[message.userId].userName}</NickNameContainer>
+                                                    <NickNameContainer>{userNameStorage[message.userId].userName}</NickNameContainer>
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>

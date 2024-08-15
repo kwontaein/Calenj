@@ -483,3 +483,24 @@ export const InputType_Radio = styled.input.attrs({type: 'radio'})`
         box-shadow: none;
     }
 `
+
+export const OnlineLED_Container = styled.div<{$bgColor:string, $size:number}>`
+    position: absolute;
+    margin-left: 22px;
+    margin-top: 22px;
+    width:${props=>props.$size}px;
+    height:${props=>props.$size}px;
+    background-color: ${props=> props.$bgColor};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+`
+export const OnlineLED_Wrapper = styled.div<{$isOnline:boolean,$bgColor:string}>`
+    width:60%;
+    height:60%;
+    box-sizing: border-box;
+    background-color:${props=>props.$isOnline ? PointColor: props.$bgColor};
+    border: 2px solid ${props=> props.$isOnline ? PointColor:`${TextColor}77`};
+    border-radius: 50%;
+`

@@ -14,20 +14,19 @@ import {
     GroupTitleViewContent,
     GroupListContent_Container,
 } from './GroupListStyle';
-import {endPointMap, RootState} from '../../../../entities/redux'
-import {useSelector} from 'react-redux'
+import {endPointMap, RootState, updateNavigation} from '../../../../entities/redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useFetchGroupList, GroupList_item} from "../../../../entities/reactQuery";
-import {useNavigation} from "../model/useNavigation";
 import {createPortal} from "react-dom";
 
 
 export const GroupListView: React.FC = () => {
-    const navigationDirect = useNavigation();
+
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const [titleView, setTitleView] = useState<string | null>(null);
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
     const {navigateParam} = useSelector((state: RootState) => state.navigateInfo);
-
+    const dispatch = useDispatch()
     //그룹 목록 불러오기
     const groupListState = useFetchGroupList(stomp.isOnline)
     useEffect(() => {
@@ -35,6 +34,7 @@ export const GroupListView: React.FC = () => {
             endPointMap.set(stomp.param, 0);
         }
     }, [stomp])
+    const {main_subNavState} = useSelector((state:RootState)=> state.subNavigation)
 
     return (
         <>
@@ -43,7 +43,7 @@ export const GroupListView: React.FC = () => {
             {groupListState.data && (
                 <GroupList_Container>
                     <GroupListContent_Container>
-                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => navigationDirect("main")}/>
+                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => dispatch(updateNavigation({navigate: 'main', navigateParam:main_subNavState.friendParam}))}/>
                         <GroupList_HR/>
                         {groupListState.data.map((group: GroupList_item) => (
 
@@ -52,7 +52,7 @@ export const GroupListView: React.FC = () => {
                             }}
                                                onMouseLeave={() => setTitleView(null)}
                                                $isClick={navigateParam === group.groupId} key={group.groupId}
-                                               onClick={() => navigationDirect("group", group.groupId)}>
+                                               onClick={() => dispatch(updateNavigation({navigate: 'group', navigateParam:group.groupId}))}>
                                 <NavigateState $isClick={navigateParam === group.groupId}/>
                                 <GroupListTitle>
                                     {group.groupTitle}

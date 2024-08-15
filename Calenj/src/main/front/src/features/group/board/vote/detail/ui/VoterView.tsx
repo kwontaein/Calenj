@@ -10,7 +10,7 @@ interface VoterProps{
 }
 
 export const VoterView:React.FC<VoterProps> = ({voted}) =>{
-    const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
+    const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
     const userId = localStorage.getItem('userId')
 
 
@@ -35,7 +35,7 @@ export const VoterView:React.FC<VoterProps> = ({voted}) =>{
                                 </MyVoteIcon> :
                                 <MyVoteIcon style={{backgroundColor:'transparent', width:'8px'}}/>
                             }
-                            <div style={{marginInline:'3px', fontSize:'14px'}}>{userNameRegister[voterUser].userName}</div>
+                            <div style={{marginInline:'3px', fontSize:'14px'}}>{userNameStorage[voterUser].userName}</div>
                         </RowFlexBox>
                     ))}
                 </div>

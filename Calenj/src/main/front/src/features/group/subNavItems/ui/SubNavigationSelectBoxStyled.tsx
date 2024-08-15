@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {BackGroundColor, PointColor, SubScreenColor, TextColor} from "../../../../shared/ui/SharedStyled";
 
 
-export const SelectorText_Continer = styled.div`
+export const SelectorText_Container = styled.div`
     height: 100%;
     width: 85%;
     align-content: center;
@@ -48,7 +48,7 @@ export const Btn_ItemSelector = styled.div`
             color: ${TextColor};
         }
 
-        ${SelectorText_Continer} {
+        ${SelectorText_Container} {
             color: ${TextColor};
         }
     }

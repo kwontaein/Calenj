@@ -11,7 +11,7 @@ import {
     VoteDetail,
     VoteList,
     EventTagDTO,
-    UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo
+    UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo, Message
 } from "../model/types";
 
 //쿠키체크
@@ -300,7 +300,9 @@ export const getMessageData = async (pageParam = {position: "", chatUUID: ""}, s
         userId: userId,
         chatId: chatUUID === "" ? null : chatUUID,
         newOrOld: position === "" ? null : position
-    }).then((response) => response.data);
+    }).then((res) => {
+        return res.data.filter((message:Message)=> message.chatUUID)
+    });
 
 }
 

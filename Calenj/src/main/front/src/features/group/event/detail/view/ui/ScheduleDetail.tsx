@@ -42,7 +42,7 @@ interface GroupScheduleProps {
 }
 
 export const ScheduleDetail: React.FC<GroupScheduleProps> = ({originGroupSchedule}) => {
-    const {userNameRegister} = useSelector((state: RootState) => state.userNameRegister)
+    const {userNameStorage} = useSelector((state: RootState) => state.userNameStorage)
 
     //옵션창 관련
     const [optionState, setOptionState] = useReducer((prev)=>!prev, false)
@@ -153,7 +153,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({originGroupSchedul
                 <ScheduleMember_Container>
                     <span>참가인원 : </span>
                     <span style={{marginLeft: '5px'}}>
-                        {originGroupSchedule.managers.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameRegister[userKey].userName : '')}
+                        {originGroupSchedule.managers.map((userKey, index) => index < 2 ? (index !== 0 ? ", " : '') + userNameStorage[userKey].userName : '')}
                     </span>
                     {originGroupSchedule.managers.length > 2 &&
                         <div>
@@ -165,7 +165,7 @@ export const ScheduleDetail: React.FC<GroupScheduleProps> = ({originGroupSchedul
                                         <ScheduleMemberItem_Container key={userKey}>
                                             <ScheduleMemberProfile_Container $userId={userKey}/>
                                             <ScheduleMemberName_Container>
-                                                {userNameRegister[userKey].userName}
+                                                {userNameStorage[userKey].userName}
                                             </ScheduleMemberName_Container>
                                         </ScheduleMemberItem_Container>
                                     ))}
