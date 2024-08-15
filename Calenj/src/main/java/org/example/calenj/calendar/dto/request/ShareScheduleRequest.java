@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ShareScheduleRequest {
     private String chatId;
+    private String param;
     private boolean copyAble;
     private ScheduleRequest scheduleRequest;
 }

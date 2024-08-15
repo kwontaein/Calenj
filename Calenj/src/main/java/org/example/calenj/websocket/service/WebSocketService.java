@@ -61,7 +61,7 @@ public class WebSocketService {
         //보내는 날짜 설정
         message.setSendDate(nowTime);
         //response 채우기
-        ChatMessageResponse response = filterNullFields(message);
+        ChatMessageResponse response = globalService.filterNullFields(message);
         //target 정하기
         response.setTarget(target);
         response.setOnlineUserList(getUsers(message.getParam()));
@@ -122,12 +122,12 @@ public class WebSocketService {
         if (request.getState() == ChatMessageRequest.fileType.ONLINE) {
             System.out.println("실행 온라인");
             //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
-            sendOnlineStateFirstTime(userId, filterNullFields(request));
-            sendOnlineState(userId, filterNullFields(request));
+            sendOnlineStateFirstTime(userId, globalService.filterNullFields(request));
+            sendOnlineState(userId, globalService.filterNullFields(request));
         } else if (request.getState() == ChatMessageRequest.fileType.OFFLINE) {
             System.out.println("실행 오프라인");
             //끊을 시 -> 오프라인이라고만 알리기
-            sendOnlineState(userId, filterNullFields(request));
+            sendOnlineState(userId, globalService.filterNullFields(request));
         }
     }
 
@@ -204,28 +204,6 @@ public class WebSocketService {
         chatMessageResponse.setParam(kind);
         chatMessageResponse.setState(ChatMessageRequest.fileType.ALARM);
         template.convertAndSend("/topic/personalTopic/" + userId, chatMessageResponse);
-    }
-
-
-    /**
-     * response 설정
-     *
-     * @param request 전달받은 정보들
-     **/
-
-    // null이 아닌 필드만 포함시키는 메소드
-    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
-        ChatMessageResponse filteredResponse = new ChatMessageResponse();
-        if (request.getParam() != null) {
-            filteredResponse.setParam(request.getParam());
-        }
-        if (request.getUserId() != null) {
-            filteredResponse.setUserId(request.getUserId());
-        }
-        filteredResponse.setState(request.getState());
-        filteredResponse.setEndPoint(request.getEndPoint());
-        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
-        return filteredResponse;
     }
 
     /**

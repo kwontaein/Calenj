@@ -139,7 +139,7 @@ public class FileService {
                     chatMessageRequest.getMessageType(),
                     chatMessageRequest.getMessage());
 
-            ChatMessageResponse chatMessageResponse = filterNullFields(chatMessageRequest);
+            ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
             template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
@@ -412,27 +412,6 @@ public class FileService {
             e.printStackTrace();
         }
         return messageUUid;
-    }
-
-    /**
-     * response 설정
-     *
-     * @param request 전달받은 정보들
-     **/
-
-    // null이 아닌 필드만 포함시키는 메소드
-    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
-        ChatMessageResponse filteredResponse = new ChatMessageResponse();
-        if (request.getParam() != null) {
-            filteredResponse.setParam(request.getParam());
-        }
-        if (request.getUserId() != null) {
-            filteredResponse.setUserId(request.getUserId());
-        }
-        filteredResponse.setState(request.getState());
-        filteredResponse.setEndPoint(request.getEndPoint());
-        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
-        return filteredResponse;
     }
 
     /**

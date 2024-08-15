@@ -17,8 +17,12 @@ import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
+import org.example.calenj.websocket.dto.response.ChatMessageResponse;
+import org.example.calenj.websocket.dto.response.MessageResponse;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,6 +38,8 @@ public class CalendarService {
     private final UserScheduleRepository userScheduleRepository;
     private final TagRepository tagRepository;
     private final RepeatStateRepository repeatStateRepository;
+
+    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     /**
      * 스케쥴 업데이트
@@ -189,6 +195,17 @@ public class CalendarService {
         );
         
         fileService.saveChattingToFile(chatMessageRequest);
+
+        MessageResponse messageResponse = new MessageResponse(
+                chatMessageRequest.getChatUUID().toString(),
+                chatMessageRequest.getSendDate(),
+                chatMessageRequest.getUserId().toString(),
+                chatMessageRequest.getMessageType(),
+                chatMessageRequest.getMessage());
+
+        ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
+        chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+        template.convertAndSend("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }
 

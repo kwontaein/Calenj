@@ -97,6 +97,11 @@ public class CalendarController {
         calendarService.deleteTag(tagRequest.getId());
     }
 
+    /**
+     * 일정 공유
+     *
+     * @param scheduleRequest 공유할 내용
+     */
     @PostMapping("api/shareSchedule")
     public void shareSchedule(@RequestBody ShareScheduleRequest scheduleRequest) {
         calendarService.shareSchedule(scheduleRequest);
