@@ -391,11 +391,6 @@ public class FileService {
     public UUID saveChattingToFile(ChatMessageRequest message) {
         // 파일을 저장한다.
         // 메시지 내용
-        List<String> lines = getFile(message.getParam());
-
-        if (lines == null) {
-            return null;
-        }
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         if (message.getChatUUID() != null && message.getMessageType() == "file") {
             messageUUid = message.getChatUUID();
@@ -405,20 +400,11 @@ public class FileService {
         if (message.getState() == ChatMessageRequest.fileType.SEND) {
             messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
         } else {
-            if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실행됨");
-            } else {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실패됨");
-            }
+            deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint");
+            messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
         }
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
-            if (lines == null) {
-                String Title = "시작라인 $어서오세요! $ $ $ $ \n";
-                stream.write(Title.getBytes(StandardCharsets.UTF_8));
-            }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
             message.setChatUUID(messageUUid);
         } catch (IOException e) {

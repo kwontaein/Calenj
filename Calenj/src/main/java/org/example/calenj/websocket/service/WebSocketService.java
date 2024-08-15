@@ -5,6 +5,7 @@ import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.user.service.UserService;
 import org.example.calenj.websocket.dto.request.ChatMessageRequest;
 import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.example.calenj.websocket.dto.response.MessageResponse;
@@ -25,10 +26,13 @@ import java.util.stream.Collectors;
 public class WebSocketService {
 
     private final UserRepository userRepository;
+
+    private final FileService fileService;
     private final GlobalService globalService;
+    private final UserService userService;
+
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
     private final SimpUserRegistry simpUserRegistry;
-    private final FileService fileService;
 
 
     /**
@@ -77,11 +81,15 @@ public class WebSocketService {
         switch (message.getState()) {
             case ALARM: {
                 response.setEndPoint(fileService.countLinesUntilEndPoint(message));
+                if (target.equals("friendMsg") && response.getEndPoint() != 0) {
+                    userService.setChatIsOpen(response.getParam());
+                }
                 template.convertAndSendToUser(String.valueOf(response.getUserId()), "/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
             case SEND: {
                 fileService.saveChattingToFile(message);
+
                 MessageResponse messageResponse = new MessageResponse(
                         message.getChatUUID().toString(),
                         message.getSendDate(),

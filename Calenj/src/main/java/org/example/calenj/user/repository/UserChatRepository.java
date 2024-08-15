@@ -15,11 +15,16 @@ import java.util.UUID;
 
 @Repository
 public interface UserChatRepository extends JpaRepository<UserChatEntity, UUID> {
-    @Query("select new org.example.calenj.user.dto.response.UserChatResponse(uc.chatListId,uc.ownUserId,uc.friendId,uc.chatId,uc.isOpen) from UserChat uc where uc.ownUserId =:userId")
+    @Query("select new org.example.calenj.user.dto.response.UserChatResponse(uc.chatListId,uc.ownUserId,uc.friendId,uc.chatId,uc.isOpen) from UserChat uc where uc.ownUserId =:userId and uc.isOpen=true")
     Optional<List<UserChatResponse>> findChatList(@Param("userId") UUID userId);
 
     @Modifying
     @Transactional
     @Query("delete from UserChat uc where uc.ownUserId =:myId and uc.friendId =:friendId")
     void deleteList(@Param("myId") UUID myId, @Param("friendId") UUID friendId);
+
+    @Modifying
+    @Transactional
+    @Query("update UserChat uc set uc.isOpen=true where uc.chatId =:chatId and uc.ownUserId =:myId and uc.isOpen = false")
+    void setIsOpenTrue(@Param("chatId") UUID chatId, @Param("myId") UUID myId);
 }

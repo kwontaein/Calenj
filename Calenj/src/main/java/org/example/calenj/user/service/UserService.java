@@ -275,4 +275,9 @@ public class UserService {
         userChatRepository.deleteList(myId, UUID.fromString(friendUserId));
         userChatRepository.deleteList(UUID.fromString(friendUserId), myId);
     }
+
+    public void setChatIsOpen(String param) {
+        String myUserId = globalService.extractFromSecurityContext().getUsername();
+        userChatRepository.setIsOpenTrue(UUID.fromString(param), UUID.fromString(myUserId));
+    }
 }
