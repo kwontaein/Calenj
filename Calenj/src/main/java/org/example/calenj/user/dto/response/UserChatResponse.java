@@ -14,5 +14,5 @@ public class UserChatResponse {
     private UUID userId;
     private UUID friendId;
     private UUID chatId;
-    private boolean isOpen;
+    private boolean open;
 }

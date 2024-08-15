@@ -1,88 +1,81 @@
-import {useFetchUserChatList} from "../../../../entities/reactQuery";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../entities/redux";
-import styled from "styled-components";
-import {BackGroundColor, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useRef, useState} from 'react';
+import {useFetchFriendList, useFetchUserChatList} from "../../../../entities/reactQuery";
+import {
+    FriendChatList_Container, FriendChatList_Item_Wrapper, FriendDeleteIcon_Wrapper,
+    FriendTop_Container, FriendUserName_Wrapper,
+    TopContent_Container,
+    TopIcon_Container
+} from "./FriendChatListStyled";
+import {SubNavigationButton} from "../../../group/subNavItems";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState, updateMainSubNavigation, updateNavigation} from "../../../../entities/redux";
 import {useFriendChat} from "../model/useFriendChat";
+import {
+    OnlineLED_Container,
+    OnlineLED_Wrapper,
+    ProfileContainer,
+    ThemeColor2, ThemeColor3
+} from "../../../../shared/ui/SharedStyled";
 
-const FriendChatList_Container = styled.ul`
-    appearance: none;
-    margin: 5px;
-    padding: 0;
-    width: calc(100% - 10px);
-    height: calc(100% - 20px);
-    overflow-y: auto;
-`
-const FriendChatList_Item_Wrapper = styled.li`
-    height: 35px;
-    padding: 10px;
-    display: flex;
-    flex-direction: row;
-    padding-inline: 15px;
-    border-radius: 5px;
-    &:hover{
-        background-color: ${BackGroundColor};
-    }
-`
-const FriendUserName_Wrapper = styled.div`
-    width: calc(100% - 45px);
-    padding-left: 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-`
-const FriendDeleteIcon_Wrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: ${TextColor}77;
-    transition: color 0.3s ease;
-    &:hover{
-        color: ${TextColor};
-    }
-`
 
-export const FriendChatList :React.FC = ()=> {
+export const FriendChatList: React.FC = () => {
+    const [friendToggle, setFriendToggle] = useState<boolean>(true);
     const userId = localStorage.getItem('userId') || ''
     const userChatList = useFetchUserChatList(userId)
-    const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
+    const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
     const [hover,setHover] = useState<string|null>(null)
     const startChat =useFriendChat(userId)
-
-    useEffect(() => {
-        console.log(userChatList.data)
-    }, [userChatList]);
+    const {navigateParam} = useSelector((state: RootState) => state.navigateInfo);
+    const deleteRef = useRef<(HTMLDivElement | null)[]>([]);
+    const dispatch = useDispatch()
+    const {userList} = useSelector((state: RootState) => state.onlineStorage.friend)[userId || ''];
 
     return (
-        <>
-        {userChatList.isLoading && <div>Loading..</div>}
-        {userChatList.data &&
-            <FriendChatList_Container>
-                {userChatList.data.map((user)=>(
-                    user.open &&
-                    <FriendChatList_Item_Wrapper key={user.chatListId}
-                                                 onMouseEnter={()=>setHover(user.friendId)}
-                                                 onMouseLeave={()=>setHover(null)}>
-                        <ProfileContainer $userId={user.friendId} style={{width:'35px', height:'35px', boxSizing:'border-box'}}/>
-                        <FriendUserName_Wrapper>
-                            {userNameRegister[user.friendId].userName}
-                        </FriendUserName_Wrapper>
-                        {hover && hover===user.friendId &&
-                            <FriendDeleteIcon_Wrapper onClick={()=>startChat(user.friendId, false)}>
-                                <i className="bi bi-x-lg"></i>
-                            </FriendDeleteIcon_Wrapper>
-                        }
-                    </FriendChatList_Item_Wrapper>
-                ))}
-            </FriendChatList_Container>
-        }
-        </>
+        <div>
+            <SubNavigationButton subItem={'친구'} subItemsHandler={(target:string)=> {
+                dispatch(updateMainSubNavigation({friendParam:''}))
+                dispatch(updateNavigation({navigate:'main', navigateParam:''}))
+            }}/>
+            <FriendTop_Container onClick={() => setFriendToggle(prev => !prev)}>
+                <TopContent_Container>
+                    다이렉트 메시지
+                </TopContent_Container>
+                <TopIcon_Container>
+                    {friendToggle ?
+                        <i className="fi fi-sr-angle-small-up"></i> :
+                        <i className="fi fi-sr-angle-small-down"></i>
+                    }
+                </TopIcon_Container>
+            </FriendTop_Container>
+            {friendToggle &&
+                userChatList.data &&
+                <FriendChatList_Container>
+                    {userChatList.data.map((user,idx)=>(
+                        user.open &&
+                        <FriendChatList_Item_Wrapper key={user.chatListId} $isClick={navigateParam===user.chatId}
+                                                     onClick={(e)=>{
+                                                         !deleteRef.current[idx]?.contains(e.target as Node) && startChat(user.friendId, true)
+                                                     }}
+                                                     onMouseEnter={()=>setHover(user.friendId)}
+                                                     onMouseLeave={()=>setHover(null)}>
+
+                            <ProfileContainer $userId={user.friendId} style={{width:'35px', height:'35px', boxSizing:'border-box'}}/>
+                            <OnlineLED_Container $bgColor={ThemeColor3} $size={15}>
+                                <OnlineLED_Wrapper $bgColor={ThemeColor3} $isOnline={userList.includes(user.friendId)} />
+                            </OnlineLED_Container>
+
+                            <FriendUserName_Wrapper>
+                                {userNameStorage[user.friendId].userName}
+                            </FriendUserName_Wrapper>
+                            {hover && hover===user.friendId &&
+                                <FriendDeleteIcon_Wrapper onClick={()=>startChat(user.friendId, false)} ref={(el)=> deleteRef.current[idx] =el}>
+                                    <i className="bi bi-x-lg"></i>
+                                </FriendDeleteIcon_Wrapper>
+                            }
+                        </FriendChatList_Item_Wrapper>
+                    ))}
+                </FriendChatList_Container>
+            }
+        </div>
     )
 }
-

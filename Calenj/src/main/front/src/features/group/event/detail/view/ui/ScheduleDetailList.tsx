@@ -65,7 +65,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
     const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
 
-    const {userNameRegister} = useSelector((state:RootState)=> state.userNameRegister)
+    const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
 
     //현재시간 갱신
     useEffect(() => {

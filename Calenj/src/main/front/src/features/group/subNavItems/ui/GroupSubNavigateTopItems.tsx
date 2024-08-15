@@ -9,10 +9,10 @@ import {useEffect, useReducer, useRef, useState} from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
 
-interface subNaviationTopProps{
+interface subNavigationTopProps{
     groupTitle:string,
 }
-export const GroupSubNavigateTopItems:React.FC<subNaviationTopProps> = ({groupTitle})=>{
+export const GroupSubNavigateTopItems:React.FC<subNavigationTopProps> = ({groupTitle})=>{
     const [showEventSelector, setShowEventSelector] = useReducer((prev)=>!prev,false);
     const selectBox = useClickOutSideCheck(showEventSelector, setShowEventSelector)
 
