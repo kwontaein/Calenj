@@ -1,24 +1,20 @@
 import styled from "styled-components";
 
 export const GridContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    width: 400px;
-    justify-content: flex-start;
-    
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(126px, auto));
+    gap: 10px;
+    max-width: 400px;
 `;
 
 export const Grid_Element = styled.div`
-    flex: 1 1 calc(33.333% - 10px);
-    margin: 5px;
-    max-width: calc(33.333% - 10px);
-
-    &:nth-child(3n) {
-        margin-right: 0;
-    }
+    display: flex;
+    align-items: center;
 `;
 
 export const Grid_Image = styled.img`
+    max-width: 127px;
     width: 100%;
     height: auto;
+    border-radius: 5px;
 `;
