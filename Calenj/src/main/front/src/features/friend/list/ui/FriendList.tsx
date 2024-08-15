@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useFetchFriendList} from "../../../../entities/reactQuery";
 import {FriendTop_Container, TopContent_Container, TopIcon_Container} from "./FriendListStyled";
+import {FriendChatList} from "./FriendChatList";
 
 
 export const FriendList: React.FC = () => {
@@ -12,8 +13,7 @@ export const FriendList: React.FC = () => {
         <div>
             <FriendTop_Container onClick={() => setFriendToggle(prev => !prev)}>
                 <TopContent_Container>
-
-                    친구
+                    다이렉트 메시지
                 </TopContent_Container>
                 <TopIcon_Container>
                     {friendToggle ?
@@ -22,11 +22,7 @@ export const FriendList: React.FC = () => {
                     }
                 </TopIcon_Container>
             </FriendTop_Container>
-            {friendToggle &&
-                <>
-
-                </>
-            }
+            {friendToggle && <FriendChatList/>}
         </div>
     )
 }

@@ -56,7 +56,7 @@ export const UserBanList :React.FC =()=>{
                         <div key={user.chattingRoomId}>
                             <FriendListView>
                                 <Friend_ProfilePlace>
-                                    <ProfileContainer $userId={user.friendUserId} style={{width:'30px', height:'30px', minWidth : "unset", marginRight:'10px'}}/>
+                                    <ProfileContainer $userId={user.friendUserId} style={{width:'30px', height:'30px', marginRight:'10px'}}/>
                                     <Friend_TextPlace>
                                         <Friend_NamePlace><b>{user.nickName}</b></Friend_NamePlace>
                                     </Friend_TextPlace>

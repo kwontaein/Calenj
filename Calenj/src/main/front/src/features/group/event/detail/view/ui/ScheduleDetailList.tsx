@@ -339,7 +339,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
                                         :
                                         subScheduleEdit[dragIndex.current].joinUser.map((userId, idx) => (
                                             idx < 4 &&
-                                            <ProfileContainer style={{width:'20px', height:'20px', minWidth:'unset'}} $userId={userId} key={userId}/>
+                                            <ProfileContainer style={{width:'20px', height:'20px'}} $userId={userId} key={userId}/>
                                         ))
                                     }
                                 </SubScheduleJoinUser_Wrapper>

@@ -63,8 +63,10 @@ const subNavigation = createSlice({
         updateGroupShowMemberList: (state)=>{
             state.group_subNavState.showMemberList = !state.group_subNavState.showMemberList
         },
-        updateMainSubNavigation: (state, action :PayloadAction<{ clickState: string; friendParam?: string; }>)=>{
-            state.main_subNavState.clickState = action.payload.clickState;
+        updateMainSubNavigation: (state, action :PayloadAction<{ clickState?: string; friendParam?: string; }>)=>{
+            if(action.payload.clickState!==undefined){
+                state.main_subNavState.clickState = action.payload.clickState;
+            }
             if(action.payload.friendParam!==undefined){
                 state.main_subNavState.friendParam = action.payload.friendParam;
             }

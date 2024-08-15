@@ -7,7 +7,7 @@ export const FriendTop_Container = styled.div`
     display: flex;
     flex-direction: row;
     background-color: rgb(0,0,0,0.3);
-    margin-bottom: 5px;
+    margin-bottom: 1px;
         &:hover {
         background-color: rgb(0,0,0,0.3);
     }

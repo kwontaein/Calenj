@@ -15,11 +15,13 @@ import listPlugin from "@fullcalendar/list";
 import FullCalendar, {DateSelectArg, EventChangeArg} from "@fullcalendar/react";
 import {CalendarEventView} from "../../../calendar/view/ui/CalendarEventView";
 import React, {useRef} from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../entities/redux";
 
 export const GroupSubNavigateItems:React.FC<SubNavigationProps> = ({groupId}) =>{
     const [toggleState,toggleHandler,subItemsHandler] = useSubNavState(groupId)
     const calendarRef = useRef<FullCalendar | null>(null)
-
+    const {group_subNavState} = useSelector((state:RootState)=>state.subNavigation)
     const calendarHandler = (compound:string)=>{
         if(!calendarRef.current) return
         if(compound==='next'){
@@ -33,18 +35,20 @@ export const GroupSubNavigateItems:React.FC<SubNavigationProps> = ({groupId}) =>
     return(
         <SubNavigateContents_Container>
             <SubNavigationButton subItem={'그룹일정'} subItemsHandler={subItemsHandler} />
-            <Hr_SubNavigation/>
-            <Controller_Container>
-                <Controller_Button style={{borderRadius:'5px 0 0 5px'}} onClick={()=>calendarHandler("prev")}>
-                    <i className="fi fi-br-angle-left"></i>
-                </Controller_Button>
-                <Controller_Button style={{fontSize:'10px', width:'30px'}} onClick={()=>calendarHandler("today")}>
-                    오늘
-                </Controller_Button>
-                <Controller_Button style={{borderRadius:'0 5px 5px 0'}} onClick={()=>calendarHandler("next")}>
-                    <i className="fi fi-br-angle-right"></i>
-                </Controller_Button>
-            </Controller_Container>
+            {group_subNavState.clickState==='그룹일정' &&
+            <>
+                <Hr_SubNavigation/>
+                <Controller_Container>
+                    <Controller_Button style={{borderRadius:'5px 0 0 5px'}} onClick={()=>calendarHandler("prev")}>
+                        <i className="fi fi-br-angle-left"></i>
+                    </Controller_Button>
+                    <Controller_Button style={{fontSize:'10px', width:'30px'}} onClick={()=>calendarHandler("today")}>
+                        오늘
+                    </Controller_Button>
+                    <Controller_Button style={{borderRadius:'0 5px 5px 0'}} onClick={()=>calendarHandler("next")}>
+                        <i className="fi fi-br-angle-right"></i>
+                    </Controller_Button>
+                </Controller_Container>
                 <GroupEventCalendar_Container>
                     <GroupFullCalendar
                         ref={calendarRef}
@@ -66,6 +70,10 @@ export const GroupSubNavigateItems:React.FC<SubNavigationProps> = ({groupId}) =>
                         }}
                     />
                 </GroupEventCalendar_Container>
+            </>
+            }
+            <Hr_SubNavigation/>
+
 
             <ListToggleDiv onClick={toggleHandler}>
                     {toggleState ?

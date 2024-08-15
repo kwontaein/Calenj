@@ -11,6 +11,7 @@ export const MainSubNavItems: React.FC = () => {
         <>
             <SubNavProfile/>
             {clickState === 'calendar' && <DateEventTag/>}
+
             {clickState === 'friend' && <FriendList/>}
 
         </>

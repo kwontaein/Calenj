@@ -73,7 +73,7 @@ export const MessageScrollBox: React.FC = () => {
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer
+                                            <ProfileContainer style={{minWidth:'40px'}}
                                                 $userId={message.userId}>
                                             </ProfileContainer>
                                             <MessageContainer>

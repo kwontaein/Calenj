@@ -24,7 +24,7 @@ import {
     getMessageData,
     getGroupScheduleList,
     getSubScheduleList,
-    getUserBanList
+    getUserBanList, getUserChatList
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -37,7 +37,7 @@ import {
     FetchData,
     ReceivedData,
     VoteDetail,
-    EventTagDTO, UserDateEvent, UserInfo, GroupSchedule, SubSchedule
+    EventTagDTO, UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo
 } from "./types";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
@@ -59,6 +59,7 @@ export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
 export const QUERY_GROUP_SCHEDULE_LIST = "QUERY_GROUP_SCHEDULE_LIST"
 export const QUERY_GROUP_SUB_SCHEDULE_LIST = "QUERY_GROUP_SUB_SCHEDULE_LIST"
 export const QUERY_USER_BAN_LIST = "QUERY_USER_BAN_LIST"
+export const QUERY_USER_CHAT_LIST = "QUERY_USER_CHAT_LIST"
 
 export const useFetchCookie= () =>
     useQuery<boolean, Error>({
@@ -156,6 +157,14 @@ export const useFetchGroupSubScheduleList = (scheduleId:string)=>
         queryKey:[QUERY_GROUP_SUB_SCHEDULE_LIST, scheduleId],
         queryFn :()=>getSubScheduleList(scheduleId),
     })
+
+export const useFetchUserChatList = (userId:string)=>
+    useQuery<UserChatInfo[],Error>({
+        queryKey:[QUERY_USER_CHAT_LIST, userId],
+        queryFn : ()=> getUserChatList(),
+    })
+
+
 /**수정관련 */
 
 
@@ -193,28 +202,6 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
     })
 };
 
-// export const useChatFileInfinite = (param:string, newMsgLength:number, fetchData :FetchData) =>
-//     useInfiniteQuery({
-//     queryKey: [QUERY_CHATTING_KEY, param],
-//     queryFn: fetchData,
-//     getNextPageParam: (lastPage:Message[], allPages:Message[][]) => {
-//         //마지막 채팅문자열을 가져와 시작라인인지 체크
-//         if(lastPage[lastPage.length-1]){
-//             const containValue = lastPage[lastPage.length-1].chatUUID ==="시작라인";
-//             if(containValue){
-//                 return undefined;
-//             }
-//         }
-//         //받아온 갯수 리턴
-//         return allPages.reduce((prev, current) => prev.concat(current)).length + newMsgLength;
-//     }, //data의 값을 받아 처리할 수 있음
-//     initialPageParam:0,
-//     // enabled: param === stomp.param,
-//     staleTime: Infinity,
-//     refetchInterval:false,
-//     retry:3,
-// });
-//
 
 
 export const useReceiveChatInfinite = (param:string, receiveNewChat:ReceivedData) =>
