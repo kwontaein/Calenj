@@ -11,7 +11,7 @@ import {
     VoteDetail,
     VoteList,
     EventTagDTO,
-    UserDateEvent, UserInfo, GroupSchedule, SubSchedule
+    UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo
 } from "../model/types";
 
 //쿠키체크
@@ -274,6 +274,22 @@ export const getSubScheduleList = async (scheduleId: string): Promise<SubSchedul
         }
         return null;
     }
+}
+
+
+
+export const getUserChatList = async():Promise<UserChatInfo[]>=>{
+    return axios.get('api/getChatList').then((res)=>{
+        return res.data
+    }).catch((err)=>{
+        const axiosError = err as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.status) {
+            console.log(axiosError.response.status);
+            jwtFilter((axiosError.response.status).toString());
+        }
+        return null;
+    })
 }
 
 export const getMessageData = async (pageParam = {position: "", chatUUID: ""}, stompParam: string, userId: string) => {

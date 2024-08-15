@@ -150,7 +150,7 @@ export const DateEventDetail : React.FC<EventDetailProps> =({eventDetail, close}
                                 {(friendList!==null && friendList.length>0) ?
                                     <JoinFriendList_Container>
                                         {friendList.map((friendId:string)=>(
-                                            <ProfileContainer $userId={friendId} key={friendId} style={{width:'18px',height:'18px', minWidth:'unset'}}/>
+                                            <ProfileContainer $userId={friendId} key={friendId} style={{width:'18px',height:'18px'}}/>
                                         ))}
                                     </JoinFriendList_Container>
                                     :

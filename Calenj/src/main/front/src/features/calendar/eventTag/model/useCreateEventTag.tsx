@@ -41,9 +41,6 @@ export const useCreateEventTag = ():ReturnNewEventTag =>{
         }
     }, [createTag]);
 
-    useEffect(() => {
-        console.log(createTag)
-    }, [createTag]);
 
     const createNewTag = () => {
         if (newTagName === "") return

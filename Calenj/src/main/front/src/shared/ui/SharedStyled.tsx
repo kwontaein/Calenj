@@ -142,7 +142,6 @@ export const GlobalStyle = createGlobalStyle`
 export const ProfileContainer = styled.div<{ $userId: string }>`
     width: 40px;
     height: 40px;
-    min-width: 40px;
     padding: 3px;
     border-radius: 50px;
     background-color: #007bff;

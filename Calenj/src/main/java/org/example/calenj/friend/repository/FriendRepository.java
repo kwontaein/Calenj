@@ -18,8 +18,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
             "(f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
     Optional<List<FriendResponse>> findFriendListById(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =WAITING")
-    Optional<FriendResponse> findFriendById(@Param("userId") UUID userId);
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.friendUserId =:friendId")
+    Optional<FriendResponse> findFriendById(@Param("userId") UUID userId, @Param("friendId") UUID friendId);
 
     @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:myUserId and f.friendUserId =:userId and f.status =ACCEPT")
     Optional<String> findFriendByIdIsAccept(@Param("userId") UUID userId, @Param("myUserId") UUID myUserId);
@@ -31,7 +31,7 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query(value = "UPDATE Friends SET status =:statusType WHERE own_user_id = :requestUserId", nativeQuery = true)
+    @Query("UPDATE Friends f SET f.status =:statusType WHERE f.ownUserId.userId = :requestUserId")
     void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("statusType") FriendEntity.statusType statusType);
 
     @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId")
@@ -40,6 +40,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
-    Optional<List<FriendResponse>> findBanListById(@Param("userId")UUID myUserID);
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
+    Optional<List<FriendResponse>> findBanListById(@Param("userId") UUID myUserID);
 }

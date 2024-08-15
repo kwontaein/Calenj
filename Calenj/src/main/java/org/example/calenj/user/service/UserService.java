@@ -17,10 +17,13 @@ import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.user.domain.UserEntity;
+import org.example.calenj.user.dto.request.UserChatRequest;
 import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserChatResponse;
 import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
+import org.example.calenj.user.repository.UserChatRepository;
 import org.example.calenj.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,7 @@ public class UserService {
     private final FriendRepository friendRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final UserChatRepository userChatRepository;
 
     private final GlobalService globalService;
     private final EventService eventService;
@@ -256,5 +260,19 @@ public class UserService {
         UserDetails userDetails = globalService.extractFromSecurityContext();
         String myUserId = userDetails.getUsername();
         userRepository.updateUserNickName(userRequest.getNickname(), myUserId);
+    }
+
+    public void updateChatIsOpen(UserChatRequest request) {
+        userChatRepository.save(request.toEntity());
+    }
+
+    public List<UserChatResponse> getChatList() {
+        String myUserId = globalService.extractFromSecurityContext().getUsername();
+        return userChatRepository.findChatList(UUID.fromString(myUserId)).orElse(null);
+    }
+
+    public void deleteChat(UUID myId, String friendUserId) {
+        userChatRepository.deleteList(myId, UUID.fromString(friendUserId));
+        userChatRepository.deleteList(UUID.fromString(friendUserId), myId);
     }
 }

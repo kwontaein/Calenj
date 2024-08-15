@@ -179,6 +179,13 @@ export interface SubSchedule {
     joinUser: string[],
 }
 
+export interface UserChatInfo{
+    chatListId : string,
+    userId : string,
+    friendId : string,
+    chatId : string,
+    open : boolean,
+}
 
 // export type FetchData = ({pageParam}: FetchDataParams) => Promise<Message[] | any[]>;
 export type FetchData = QueryFunction<Message[], string[], { position: string; chatUUID: string; }>

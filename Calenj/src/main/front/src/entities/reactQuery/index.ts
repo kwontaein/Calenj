@@ -15,7 +15,9 @@ export {
     useFetchUserDateEvent,
     useFetchGroupScheduleList,
     useReceiveChatInfinite,
-    useFetchGroupSubScheduleList
+    useFetchGroupSubScheduleList,
+    useFetchUserBanList,
+    useFetchUserChatList,
 } from './model/queryModel'
 export {
     type GroupDetail,
@@ -34,6 +36,7 @@ export {
     type UserInfo,
     type GroupSchedule,
     type SubSchedule,
+    type UserChatInfo
 } from './model/types'
 
 export {
@@ -52,5 +55,7 @@ export {
     QUERY_USER_INFO_KEY,
     QUERY_GROUP_SCHEDULE_LIST,
     QUERY_USER_DATE_EVENT_KEY,
-    QUERY_GROUP_SUB_SCHEDULE_LIST
+    QUERY_GROUP_SUB_SCHEDULE_LIST,
+    QUERY_USER_CHAT_LIST,
+    QUERY_USER_BAN_LIST
 } from './model/queryModel'

@@ -9,7 +9,9 @@ import org.example.calenj.global.auth.PhoneVerificationService;
 import org.example.calenj.global.auth.dto.request.ValidateRequest;
 import org.example.calenj.global.auth.dto.response.ValidateResponse;
 import org.example.calenj.global.service.RedisService;
+import org.example.calenj.user.dto.request.UserChatRequest;
 import org.example.calenj.user.dto.request.UserRequest;
+import org.example.calenj.user.dto.response.UserChatResponse;
 import org.example.calenj.user.dto.response.UserProfileResponse;
 import org.example.calenj.user.dto.response.UserResponse;
 import org.example.calenj.user.dto.response.UserSubscribeResponse;
@@ -17,6 +19,7 @@ import org.example.calenj.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -68,6 +71,16 @@ public class UserController {
 
         userService.logout(response);
         return "logout";
+    }
+
+    @PostMapping("/api/updateChat")
+    public void updateChat(@RequestBody UserChatRequest r) {
+        userService.updateChatIsOpen(r);
+    }
+
+    @GetMapping("/api/getChatList")
+    public List<UserChatResponse> getChatList() {
+        return userService.getChatList();
     }
 
     /**
