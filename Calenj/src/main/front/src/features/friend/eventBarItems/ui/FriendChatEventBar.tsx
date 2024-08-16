@@ -9,7 +9,6 @@ import {
 } from "../../../../shared/ui/SharedStyled";
 
 export const FriendChatEventBar:React.FC = () =>{
-    const {navigateParam} = useSelector((state:RootState)=> state.navigateInfo)
     const {friendParam} = useSelector((state:RootState)=> state.subNavigation.main_subNavState)
     const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
     const userId = localStorage.getItem('userId') ||''
