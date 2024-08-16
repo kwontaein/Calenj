@@ -27,6 +27,9 @@ import {dateOperation} from "../lib/dateOperation";
 import axios from "axios";
 import {useIntersect} from "../../../../shared/model";
 import {useMessageScroll} from "../model/useMessageScroll";
+import {parseDataString} from "../lib/parseDataString";
+import {ImageGrid} from "./ImageGrid";
+
 
 export const MessageScrollBox: React.FC = () => {
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
@@ -42,10 +45,8 @@ export const MessageScrollBox: React.FC = () => {
         compareDate
     } = useMessageData()
     const {scrollRef, messageRefs} = useMessageScroll(messageList, chatUUID, position)
-
-
+    
     const MessageBox = useMemo(() => {
-
         return (
             <ScrollableDiv ref={scrollRef}>
                 {hasPreviousPage && <div className="scrollTop" ref={topRef}></div>}
@@ -73,8 +74,8 @@ export const MessageScrollBox: React.FC = () => {
                                         </MessageContainer2>
                                     ) : (
                                         <RowFlexBox style={{width: 'auto'}}>
-                                            <ProfileContainer style={{minWidth:'40px'}}
-                                                $userId={message.userId}>
+                                            <ProfileContainer style={{minWidth: '40px'}}
+                                                              $userId={message.userId}>
                                             </ProfileContainer>
                                             <MessageContainer>
                                                 <RowFlexBox>
@@ -93,27 +94,13 @@ export const MessageScrollBox: React.FC = () => {
                                                                 {message.message.replace(/\\lineChange/g, '\n').trim()}
                                                             </div>
                                                         )}
-                                                        {message.messageType === 'file' && (
-                                                            <div>
-                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                            </div>
-                                                        )}
                                                         {message.messageType === 'schedule' && (
                                                             <div>
                                                                 {message.message.replace(/\\lineChange/g, '\n').trim()}
                                                             </div>
                                                         )}
                                                         {message.messageType === 'image' && (
-                                                            <MessageGridView>
-                                                                {message.message.trim().slice(1, -1).split(',').map((image, index) => (
-                                                                    <ImageWrapper key={index}>
-                                                                        <ImageContent
-                                                                            $image={image.split('/')[0].trim()}>
-                                                                            {image.split('/')[0].trim()}
-                                                                        </ImageContent>
-                                                                    </ImageWrapper>
-                                                                ))}
-                                                            </MessageGridView>
+                                                            <ImageGrid images={parseDataString(message.message)}/>
                                                         )}
                                                         {(message.messageType === 'null' || message.messageType === null) && (
                                                             <div>

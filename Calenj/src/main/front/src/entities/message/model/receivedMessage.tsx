@@ -17,6 +17,7 @@ export const receivedMessage = () => {
             };
             return startMsg;
         } else {
+            console.log(message)
             return message[0];
         }
     }
