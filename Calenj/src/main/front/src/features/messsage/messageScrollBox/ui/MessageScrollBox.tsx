@@ -29,6 +29,7 @@ import {useIntersect} from "../../../../shared/model";
 import {useMessageScroll} from "../model/useMessageScroll";
 import {parseDataString} from "../lib/parseDataString";
 import {ImageGrid} from "./ImageGrid";
+import {MessageContentView} from "./MessageContentView";
 
 
 export const MessageScrollBox: React.FC = () => {
@@ -45,7 +46,7 @@ export const MessageScrollBox: React.FC = () => {
         compareDate
     } = useMessageData()
     const {scrollRef, messageRefs} = useMessageScroll(messageList, chatUUID, position)
-    
+
     const MessageBox = useMemo(() => {
         return (
             <ScrollableDiv ref={scrollRef}>
@@ -69,7 +70,7 @@ export const MessageScrollBox: React.FC = () => {
                                         <MessageContainer2>
                                             <DateContainer2>{shortAHMFormat(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer2>
                                             <MessageContentContainer2>
-                                                {(message.messageType === 'null' || message.messageType === null) && message.message.replace(/\\lineChange/g, '\n').trim()}
+                                                <MessageContentView message={message.message} messageType={message.messageType}/>
                                             </MessageContentContainer2>
                                         </MessageContainer2>
                                     ) : (
@@ -83,31 +84,7 @@ export const MessageScrollBox: React.FC = () => {
                                                     <DateContainer>{AHMFormatV2(changeDateForm(message.sendDate.slice(0, 16)))}</DateContainer>
                                                 </RowFlexBox>
                                                 <MessageContentContainer>
-                                                    <>
-                                                        {message.messageType === 'title' && (
-                                                            <div>
-                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                            </div>
-                                                        )}
-                                                        {message.messageType === 'vote' && (
-                                                            <div>
-                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                            </div>
-                                                        )}
-                                                        {message.messageType === 'schedule' && (
-                                                            <div>
-                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                            </div>
-                                                        )}
-                                                        {message.messageType === 'image' && (
-                                                            <ImageGrid images={parseDataString(message.message)}/>
-                                                        )}
-                                                        {(message.messageType === 'null' || message.messageType === null) && (
-                                                            <div>
-                                                                {message.message.replace(/\\lineChange/g, '\n').trim()}
-                                                            </div>
-                                                        )}
-                                                    </>
+                                                    <MessageContentView message={message.message} messageType={message.messageType}/>
                                                 </MessageContentContainer>
                                             </MessageContainer>
                                         </RowFlexBox>

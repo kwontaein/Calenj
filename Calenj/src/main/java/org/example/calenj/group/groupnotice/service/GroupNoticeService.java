@@ -81,7 +81,7 @@ public class GroupNoticeService {
             try {
                 String json = objectMapper.writeValueAsString(Viewerlist);
 
-                System.out.println("ViewerDuplicateList as JSON :" + json);
+                //System.out.println("ViewerDuplicateList as JSON :" + json);
 
                 groupNoticeRepository.updateNoticeWatcher(json, noticeId);
             } catch (JsonProcessingException e) {

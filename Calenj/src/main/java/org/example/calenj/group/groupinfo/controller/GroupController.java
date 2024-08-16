@@ -52,7 +52,7 @@ public class GroupController {
     public String inviteCode(@RequestBody InviteCodeRequest inviteCodeRequest) { //그룹 초대
         //링크 테이블에 저장
         String inviteCode = "http://localhost:3000/inviteGroup/" + groupService.inviteCode(inviteCodeRequest);
-        System.out.println(inviteCode);
+        //System.out.println(inviteCode);
         return inviteCode;
     }
 

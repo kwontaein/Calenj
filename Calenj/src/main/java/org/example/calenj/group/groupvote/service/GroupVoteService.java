@@ -116,7 +116,7 @@ public class GroupVoteService {
         Set<String> uniqueVoters = new LinkedHashSet<>();//몇명이 투표했는지 확인하기 위한 Set
 
         voteChoiceResponse.sort(Comparator.comparingInt(VoteChoiceResponse::getVoteIndex));
-        System.out.println(voteChoiceResponse);
+        //System.out.println(voteChoiceResponse);
 
         int i = 0; //voter의 index값을 위한 선언
         for (VoteChoiceResponse voters : voteChoiceResponse) {

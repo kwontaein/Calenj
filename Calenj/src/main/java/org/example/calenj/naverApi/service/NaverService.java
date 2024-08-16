@@ -38,7 +38,7 @@ public class NaverService {
             try {
                 t.sslContext(SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
             } catch (SSLException e) {
-                System.out.println(e);
+                //System.out.println(e);
             }
         });
 
@@ -58,7 +58,7 @@ public class NaverService {
                 .bodyToMono(NaverMapResponse.class) // 응답 값을 하나만,
                 .block();                  // 동기로 받으려 한다.
 
-        System.out.println("responses : " + responses);
+        //System.out.println("responses : " + responses);
         return responses;
     }
 
@@ -80,7 +80,7 @@ public class NaverService {
                 .bodyToMono(NaverSearchResponse.class)
                 .block();
 
-        System.out.println("Response: " + response);
+        //System.out.println("Response: " + response);
         return response;
     }
 
