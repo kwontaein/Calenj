@@ -35,7 +35,7 @@ export const ShareDateView : React.FC<DateEventProps> = ({onClose, scheduleId}) 
 
     const [copyAble,setCopyAble] = useReducer((prev)=>!prev, false)
     const [isHover,setIsHover] = useReducer((prev)=>!prev, false)
-    const {shareTarget, setTargetHandler} =useShareSchedule(scheduleId)
+    const {shareTarget, setTargetHandler, shareSchedule} =useShareSchedule(scheduleId,copyAble)
 
     return(
         <ShareDateView_Container>
@@ -97,7 +97,7 @@ export const ShareDateView : React.FC<DateEventProps> = ({onClose, scheduleId}) 
                     </EventButtonIcon_Wrapper>
                     {isHover && <InfoBox text={`일정을 공유받은 대상이 해당 일정을 복사할 수 있는여부 (현재상태: ${copyAble ? "복사 가능":"복사 불가능"})`} marginLeft={-10} marginTop={-60}/>}
                     <div style={{fontSize: '10px', marginLeft:'-5px'}}>
-                        일정 카피 가능여부
+                        일정 복사 가능여부
                     </div>
                     <Toggle_Container onClick={setCopyAble} $toggleState={copyAble} style={{width:'40px',marginLeft:'10px'}}>
                         <Toggle_Item $isClick={copyAble} $toggleState={copyAble}/>
@@ -107,7 +107,8 @@ export const ShareDateView : React.FC<DateEventProps> = ({onClose, scheduleId}) 
                 <Modal_Condition_Button onClick={onClose} style={{marginRight:'5px'}}>
                         취소
                     </Modal_Condition_Button>
-                    <Modal_Condition_Button style={{fontSize:'12px'}} $isAble={shareTarget.length>0}>
+                    <Modal_Condition_Button onClick={shareSchedule}
+                                            style={{fontSize:'12px'}} $isAble={shareTarget.length>0}>
                         공유하기
                     </Modal_Condition_Button>
                 </RowFlexBox>

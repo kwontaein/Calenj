@@ -8,6 +8,7 @@ import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
 import org.example.calenj.calendar.dto.request.ShareScheduleRequest;
+import org.example.calenj.calendar.dto.request.SharedPositionRequest;
 import org.example.calenj.calendar.dto.request.TagRequest;
 import org.example.calenj.calendar.dto.response.ExtendedPropsResponse;
 import org.example.calenj.calendar.dto.response.RepeatStateResponse;
@@ -180,19 +181,24 @@ public class CalendarService {
 
     public void shareSchedule(ShareScheduleRequest scheduleRequest) {
         UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+
         ObjectMapper mapper = new ObjectMapper();
+
         String jsonString;
+        ScheduleResponse scheduleResponse = userScheduleRepository.findByScheduleId(scheduleRequest.getScheduleId()).orElse(null);
+
         try {
-            jsonString = mapper.writeValueAsString(scheduleRequest.getScheduleRequest());
+            jsonString = mapper.writeValueAsString(scheduleResponse);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        for(String chatId : scheduleRequest.getChatId()){
+
+        for (SharedPositionRequest positionRequest : scheduleRequest.getSharedPositionRequests()) {
             ChatMessageRequest chatMessageRequest = new
                     ChatMessageRequest(
                     userId,
                     ChatMessageRequest.fileType.SEND,
-                    chatId,
+                    positionRequest.getChatId(),
                     jsonString,
                     0,
                     globalService.nowTime(),
@@ -214,7 +220,7 @@ public class CalendarService {
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setReceivedUUID(UUID.randomUUID());
 
-            template.convertAndSend("/topic/" + scheduleRequest.getTarget() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
+            template.convertAndSend("/topic/" + positionRequest.getTarget() + "/" + positionRequest.getChatId(), chatMessageResponse);
         }
 
     }
