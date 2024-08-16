@@ -1,4 +1,5 @@
 export const parseDataString = (str: string) => {
+
     const regex = /\[\[(.*?)\],\[(.*?)\]\]/g;
     let match;
     const result: GridData[] = [];

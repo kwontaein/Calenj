@@ -27,8 +27,8 @@ import {dateOperation} from "../lib/dateOperation";
 import axios from "axios";
 import {useIntersect} from "../../../../shared/model";
 import {useMessageScroll} from "../model/useMessageScroll";
-import {ImageGrid} from "./ImageGrid";
 import {parseDataString} from "../lib/parseDataString";
+import {ImageGrid} from "./ImageGrid";
 
 
 export const MessageScrollBox: React.FC = () => {
@@ -47,7 +47,6 @@ export const MessageScrollBox: React.FC = () => {
     const {scrollRef, messageRefs} = useMessageScroll(messageList, chatUUID, position)
     
     const MessageBox = useMemo(() => {
-
         return (
             <ScrollableDiv ref={scrollRef}>
                 {hasPreviousPage && <div className="scrollTop" ref={topRef}></div>}
