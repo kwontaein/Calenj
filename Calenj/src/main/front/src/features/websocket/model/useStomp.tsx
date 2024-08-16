@@ -79,7 +79,7 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
             sagaRefresh()//saga middleware 관리 => 토큰이 유효한지 체크하고 saga refresh
         }
         if (!cookie) {
-            // localStorage.removeItem('userId')
+            localStorage.removeItem('userId')
             localStorage.removeItem('nowPosition');
             dispatch(updateOnline({isOnline: "OFFLINE"}));
             dispatch(updateLoading({loading: true}));

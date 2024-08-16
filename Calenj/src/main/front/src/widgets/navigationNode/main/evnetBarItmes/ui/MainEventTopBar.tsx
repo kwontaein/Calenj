@@ -16,9 +16,9 @@ export const MainEventTopBar: React.FC = () => {
         <MainEventTopBar_Container>
             <LeftEventBar_Container>
                 {clickState === 'friend' &&
-                    friendParam==='' ?
+                    (friendParam==='' ?
                     <FriendEventBarSelector/>:
-                    <FriendChatEventBar/>
+                    <FriendChatEventBar/>)
                 }
             </LeftEventBar_Container>
             <RightEventBar_Container $coverAble={clickState==='friend'}>
