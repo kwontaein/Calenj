@@ -46,7 +46,7 @@ export const MessageScrollBox: React.FC = () => {
         compareDate
     } = useMessageData()
     const {scrollRef, messageRefs} = useMessageScroll(messageList, chatUUID, position)
-    
+
     const MessageBox = useMemo(() => {
         return (
             <ScrollableDiv ref={scrollRef}>
