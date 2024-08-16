@@ -180,11 +180,10 @@ public class CalendarService {
 
     public void shareSchedule(ShareScheduleRequest scheduleRequest) {
         UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
-        ObjectMapper objectMapper = new ObjectMapper();
-
+        ObjectMapper mapper = new ObjectMapper();
         String jsonString;
         try {
-            jsonString = objectMapper.writeValueAsString(scheduleRequest.getScheduleRequest());
+            jsonString = mapper.writeValueAsString(scheduleRequest.getScheduleRequest());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -215,7 +214,7 @@ public class CalendarService {
         chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
         chatMessageResponse.setReceivedUUID(UUID.randomUUID());
 
-        template.convertAndSend("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
+        template.convertAndSend("/topic/" + scheduleRequest.getTarget() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }
 

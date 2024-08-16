@@ -143,8 +143,7 @@ public class FileService {
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
             chatMessageResponse.setReceivedUUID(UUID.randomUUID());
-
-            template.convertAndSend("/topic/" + chatMessageResponse.getParam() + "/" + param, chatMessageResponse);
+            template.convertAndSend("/topic/" + chatMessageResponse.getTarget() + "/" + param, chatMessageResponse);
             return true;
         } catch (Exception e) {
             return false;
