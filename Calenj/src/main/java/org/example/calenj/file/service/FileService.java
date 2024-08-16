@@ -83,7 +83,7 @@ public class FileService {
         final String imageName = uuid + "." + extension;
         try {
             // 이미지를 저장할 파일 객체 생성
-            final File newfile = new File(imageDir + imageName);
+            final File newfile = new File(imageDir + "/" + imageName);
 
             // 이미 파일이 존재하는 경우 해당 파일을 삭제합니다.
 
@@ -139,7 +139,7 @@ public class FileService {
                     chatMessageRequest.getMessageType(),
                     chatMessageRequest.getMessage());
 
-            ChatMessageResponse chatMessageResponse = filterNullFields(chatMessageRequest);
+            ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
             template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
@@ -231,8 +231,7 @@ public class FileService {
         String date = parts[1].replace("[", "").replace("]", "").trim();
         String userId = parts[2].replace("[", "").replace("]", "").trim();
         String messageType = parts[3].replace("[", "").replace("]", "").trim();
-        String messageContent = parts[4].replace("[", "").replace("]", "").trim();
-
+        String messageContent = parts[4];
         return new MessageResponse(chatId, date, userId, messageType, messageContent);
     }
 
@@ -391,11 +390,6 @@ public class FileService {
     public UUID saveChattingToFile(ChatMessageRequest message) {
         // 파일을 저장한다.
         // 메시지 내용
-        List<String> lines = getFile(message.getParam());
-
-        if (lines == null) {
-            return null;
-        }
         UUID messageUUid = message.getState() == ChatMessageRequest.fileType.SEND ? UUID.randomUUID() : UUID.fromString(message.getParam());
         if (message.getChatUUID() != null && message.getMessageType() == "file") {
             messageUUid = message.getChatUUID();
@@ -405,47 +399,17 @@ public class FileService {
         if (message.getState() == ChatMessageRequest.fileType.SEND) {
             messageContent = "[" + messageUUid + "] $" + "[" + message.getSendDate() + "]" + " $ " + message.getUserId() + " $ " + message.getMessageType() + " $ " + message.getMessage().replace("\n", "\\lineChange") + "\n";
         } else {
-            if (deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint")) {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실행됨");
-            } else {
-                messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
-                System.out.println("실패됨");
-            }
+            deleteAllMatchingLines(message.getParam(), message.getUserId() + "EndPoint");
+            messageContent = message.getUserId() + "EndPoint" + " [" + messageUUid + "]" + "\n";
         }
 
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + message.getParam(), true)) {
-            if (lines == null) {
-                String Title = "시작라인 $어서오세요! $ $ $ $ \n";
-                stream.write(Title.getBytes(StandardCharsets.UTF_8));
-            }
             stream.write(messageContent.getBytes(StandardCharsets.UTF_8));
             message.setChatUUID(messageUUid);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return messageUUid;
-    }
-
-    /**
-     * response 설정
-     *
-     * @param request 전달받은 정보들
-     **/
-
-    // null이 아닌 필드만 포함시키는 메소드
-    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
-        ChatMessageResponse filteredResponse = new ChatMessageResponse();
-        if (request.getParam() != null) {
-            filteredResponse.setParam(request.getParam());
-        }
-        if (request.getUserId() != null) {
-            filteredResponse.setUserId(request.getUserId());
-        }
-        filteredResponse.setState(request.getState());
-        filteredResponse.setEndPoint(request.getEndPoint());
-        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
-        return filteredResponse;
     }
 
     /**

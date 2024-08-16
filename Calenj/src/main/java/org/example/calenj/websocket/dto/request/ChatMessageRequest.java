@@ -1,15 +1,15 @@
 package org.example.calenj.websocket.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.example.calenj.user.domain.UserEntity;
 
 import java.util.UUID;
 import java.util.stream.Stream;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatMessageRequest {
     private UUID userId;
     private fileType state;

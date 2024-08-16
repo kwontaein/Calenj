@@ -6,6 +6,8 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.websocket.dto.request.ChatMessageRequest;
+import org.example.calenj.websocket.dto.response.ChatMessageResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -149,4 +151,27 @@ public class GlobalService {
         UserEntity userEntity = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
         return userEntity;
     }
+
+
+    /**
+     * response 설정
+     *
+     * @param request 전달받은 정보들
+     **/
+
+    // null이 아닌 필드만 포함시키는 메소드
+    public ChatMessageResponse filterNullFields(ChatMessageRequest request) {
+        ChatMessageResponse filteredResponse = new ChatMessageResponse();
+        if (request.getParam() != null) {
+            filteredResponse.setParam(request.getParam());
+        }
+        if (request.getUserId() != null) {
+            filteredResponse.setUserId(request.getUserId());
+        }
+        filteredResponse.setState(request.getState());
+        filteredResponse.setEndPoint(request.getEndPoint());
+        // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
+        return filteredResponse;
+    }
+
 }

@@ -2,6 +2,7 @@ package org.example.calenj.calendar.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
+import org.example.calenj.calendar.dto.request.ShareScheduleRequest;
 import org.example.calenj.calendar.dto.request.TagRequest;
 import org.example.calenj.calendar.dto.response.ScheduleResponse;
 import org.example.calenj.calendar.dto.response.TagResponse;
@@ -96,4 +97,13 @@ public class CalendarController {
         calendarService.deleteTag(tagRequest.getId());
     }
 
+    /**
+     * 일정 공유
+     *
+     * @param scheduleRequest 공유할 내용
+     */
+    @PostMapping("api/shareSchedule")
+    public void shareSchedule(@RequestBody ShareScheduleRequest scheduleRequest) {
+        calendarService.shareSchedule(scheduleRequest);
+    }
 }

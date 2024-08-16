@@ -5,6 +5,7 @@ import org.example.calenj.calendar.domain.Ids.TagId;
 import org.example.calenj.calendar.domain.TagEntity;
 import org.example.calenj.calendar.domain.UserScheduleEntity;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
+import org.example.calenj.calendar.dto.request.ShareScheduleRequest;
 import org.example.calenj.calendar.dto.request.TagRequest;
 import org.example.calenj.calendar.dto.response.ExtendedPropsResponse;
 import org.example.calenj.calendar.dto.response.RepeatStateResponse;
@@ -13,9 +14,15 @@ import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.repository.RepeatStateRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
+import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.websocket.dto.request.ChatMessageRequest;
+import org.example.calenj.websocket.dto.response.ChatMessageResponse;
+import org.example.calenj.websocket.dto.response.MessageResponse;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,10 +33,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CalendarService {
     private final GlobalService globalService;
+    private final FileService fileService;
 
     private final UserScheduleRepository userScheduleRepository;
     private final TagRepository tagRepository;
     private final RepeatStateRepository repeatStateRepository;
+
+    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     /**
      * 스케쥴 업데이트
@@ -133,7 +143,6 @@ public class CalendarService {
                 extendedProps.setRepeatState(repeatState); // RepeatStateResponse 설정
             }
         });
-        System.out.println("scheduleResponses : \n" + scheduleResponses);
         return scheduleResponses;
     }
 
@@ -165,6 +174,38 @@ public class CalendarService {
      */
     public void deleteTag(UUID id) {
         tagRepository.deleteById(new TagId(id, globalService.getUserEntity(null)));
+    }
+
+    public void shareSchedule(ShareScheduleRequest scheduleRequest) {
+        UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+
+        ChatMessageRequest chatMessageRequest = new
+                ChatMessageRequest(
+                userId,
+                ChatMessageRequest.fileType.SEND,
+                scheduleRequest.getChatId(),
+                scheduleRequest.getScheduleRequest().toString(),
+                0,
+                globalService.nowTime(),
+                UUID.randomUUID(),
+                0,
+                0,
+                "schedule"
+        );
+
+        fileService.saveChattingToFile(chatMessageRequest);
+
+        MessageResponse messageResponse = new MessageResponse(
+                chatMessageRequest.getChatUUID().toString(),
+                chatMessageRequest.getSendDate(),
+                chatMessageRequest.getUserId().toString(),
+                chatMessageRequest.getMessageType(),
+                chatMessageRequest.getMessage());
+
+        ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
+        chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+        System.out.println("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId());
+        template.convertAndSend("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }
 
