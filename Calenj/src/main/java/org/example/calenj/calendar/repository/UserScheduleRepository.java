@@ -35,4 +35,10 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
     @Transactional //update 는 해당 어노테이션이 필요함
     @Query("delete from User_Schedule Us where Us.scheduleId =:scheduleID and Us.userId.userId =:userId")
     void deleteByScheduleId(@Param("scheduleID") UUID scheduleID, @Param("userId") UUID userId);
+
+    @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
+            "(Us.scheduleId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay" +
+            ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
+            " FROM User_Schedule Us WHERE Us.scheduleId =:scheduleId")
+    Optional<ScheduleResponse> findByScheduleId(@Param("scheduleId") UUID scheduleId);
 }
