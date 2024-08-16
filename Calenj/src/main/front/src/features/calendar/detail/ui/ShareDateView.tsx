@@ -35,7 +35,7 @@ export const ShareDateView : React.FC<DateEventProps> = ({onClose, scheduleId}) 
 
     const [copyAble,setCopyAble] = useReducer((prev)=>!prev, false)
     const [isHover,setIsHover] = useReducer((prev)=>!prev, false)
-    const {shareTarget, setTargetHandler} =useShareSchedule(scheduleId)
+    const {shareTarget, setTargetHandler, shareSchedule} =useShareSchedule(scheduleId,copyAble)
 
     return(
         <ShareDateView_Container>
@@ -107,7 +107,8 @@ export const ShareDateView : React.FC<DateEventProps> = ({onClose, scheduleId}) 
                 <Modal_Condition_Button onClick={onClose} style={{marginRight:'5px'}}>
                         취소
                     </Modal_Condition_Button>
-                    <Modal_Condition_Button style={{fontSize:'12px'}} $isAble={shareTarget.length>0}>
+                    <Modal_Condition_Button onClick={shareSchedule}
+                                            style={{fontSize:'12px'}} $isAble={shareTarget.length>0}>
                         공유하기
                     </Modal_Condition_Button>
                 </RowFlexBox>
