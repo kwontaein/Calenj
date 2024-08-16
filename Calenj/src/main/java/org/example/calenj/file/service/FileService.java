@@ -232,8 +232,6 @@ public class FileService {
         String userId = parts[2].replace("[", "").replace("]", "").trim();
         String messageType = parts[3].replace("[", "").replace("]", "").trim();
         String messageContent = parts[4];
-
-        System.out.println("messageContent : " + messageContent);
         return new MessageResponse(chatId, date, userId, messageType, messageContent);
     }
 

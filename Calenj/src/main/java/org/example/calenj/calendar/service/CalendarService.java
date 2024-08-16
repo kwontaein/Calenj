@@ -143,7 +143,6 @@ public class CalendarService {
                 extendedProps.setRepeatState(repeatState); // RepeatStateResponse 설정
             }
         });
-        System.out.println("scheduleResponses : \n" + scheduleResponses);
         return scheduleResponses;
     }
 
@@ -193,7 +192,7 @@ public class CalendarService {
                 0,
                 "schedule"
         );
-        
+
         fileService.saveChattingToFile(chatMessageRequest);
 
         MessageResponse messageResponse = new MessageResponse(
@@ -205,6 +204,7 @@ public class CalendarService {
 
         ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
         chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+        System.out.println("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId());
         template.convertAndSend("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }

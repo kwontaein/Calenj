@@ -300,7 +300,6 @@ export const getMessageData = async (pageParam = {position: "", chatUUID: ""}, s
         chatId: chatUUID === "" ? null : chatUUID,
         newOrOld: position === "" ? null : position
     }).then((res) => {
-        console.log(res)
         return res.data.filter((message: Message) => message.chatUUID)
     });
 
