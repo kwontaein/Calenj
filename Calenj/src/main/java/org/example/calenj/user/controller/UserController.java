@@ -96,7 +96,7 @@ public class UserController {
      */
     @GetMapping("/api/getUserInfo")
     public UserResponse getUserInfo() { //유저 프로필 업데이트
-        System.out.println("selectUserInfo: " + userService.selectUserInfo());
+        //System.out.println("selectUserInfo: " + userService.selectUserInfo());
         return userService.selectUserInfo();
     }
 
@@ -105,7 +105,7 @@ public class UserController {
      */
     @PutMapping("/api/updateUser")
     public ResponseEntity<String> updateUserNickName(@RequestBody UserRequest userRequest) {
-        System.out.println(userRequest);
+        //System.out.println(userRequest);
         userService.updateUserNickName(userRequest);
         return ResponseEntity.ok("사용자 정보가 업데이트되었습니다.");
     }

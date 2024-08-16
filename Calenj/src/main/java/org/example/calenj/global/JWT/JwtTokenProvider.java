@@ -61,7 +61,7 @@ public class JwtTokenProvider {
     // 없다면 두개 다 생성 메소드 실행
     public JwtToken generateToken(Authentication authentication) {
 
-        System.out.println("토큰 생성 실행");
+        //System.out.println("토큰 생성 실행");
 
         String accessToken = generateAccessTokenBy(authentication.getName(), authentication.getAuthorities());
         String refreshToken = generateRefreshToken();
@@ -100,7 +100,7 @@ public class JwtTokenProvider {
         //토큰에서 id 찾기
         boolean token = redisService.isUserTokenValid(authentication.getName(), refreshToken);
         if (!token) {
-            System.out.println("유효하지 않은 리프레시 토큰입니다");
+            //System.out.println("유효하지 않은 리프레시 토큰입니다");
             return null;
         }
 

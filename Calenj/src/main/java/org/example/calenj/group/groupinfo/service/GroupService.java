@@ -208,7 +208,7 @@ public class GroupService {
                 .map(SimpUser::getName)
                 .collect(Collectors.toSet());
 
-        System.out.println("filteredUserNames : " + filteredUserNames);
+        //System.out.println("filteredUserNames : " + filteredUserNames);
         return filteredUserNames.size();
     }
 

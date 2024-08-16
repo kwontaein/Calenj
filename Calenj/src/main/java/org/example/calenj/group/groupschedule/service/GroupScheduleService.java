@@ -108,7 +108,7 @@ public class GroupScheduleService {
                 String locate1 = subSchedule.getPositionX() + "," + subSchedule.getPositionY();
                 String locate2 = subSchedule2.getPositionX() + "," + subSchedule2.getPositionY();
 
-                System.out.println(locate1 + " / " + locate2);
+                //System.out.println(locate1 + " / " + locate2);
                 NaverMapResponse response = naverService.direction(locate1, locate2);
                 int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration() / 60000;
                 subSchedule.setDuration(duration + "분");
@@ -216,7 +216,7 @@ public class GroupScheduleService {
 
         for (GroupSubScheduleResponse response : responses) {
             // 새로운 Timestamp 객체 생성
-            Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 1000*60L));
+            Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 1000 * 60L));
             //해당 아이디가 아닐 경우 skip
             if (!subScheduleId.equals(response.getSubScheduleId())) {
                 plusTime += response.getSubScheduleDuration();
@@ -263,9 +263,9 @@ public class GroupScheduleService {
         ExtendedPropsRequest extendedPropsRequest = new ExtendedPropsRequest(
                 tagKey, "promise", response.getSubScheduleContent(), new ArrayList<>(), new ArrayList<>(), repeatStateRequest);
 
-        System.out.println("newTime : " + response.getSubScheduleDuration());
-        Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 1000*60L));
-        System.out.println("newEnd : " + newEnd);
+        //System.out.println("newTime : " + response.getSubScheduleDuration());
+        Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 1000 * 60L));
+        //System.out.println("newEnd : " + newEnd);
         return new ScheduleRequest(
                 response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
     }
