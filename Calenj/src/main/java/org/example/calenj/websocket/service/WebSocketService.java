@@ -120,12 +120,12 @@ public class WebSocketService {
         }
 
         if (request.getState() == ChatMessageRequest.fileType.ONLINE) {
-            System.out.println("실행 온라인");
+            //System.out.println("실행 온라인");
             //내가 접속 시 -> 온라인 목록 불러옴 + 다른사람들한테 나 온라인이라고 알리기
             sendOnlineStateFirstTime(userId, globalService.filterNullFields(request));
             sendOnlineState(userId, globalService.filterNullFields(request));
         } else if (request.getState() == ChatMessageRequest.fileType.OFFLINE) {
-            System.out.println("실행 오프라인");
+            //System.out.println("실행 오프라인");
             //끊을 시 -> 오프라인이라고만 알리기
             sendOnlineState(userId, globalService.filterNullFields(request));
         }

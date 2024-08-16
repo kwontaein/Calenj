@@ -98,7 +98,7 @@ public class GlobalService {
         LocalDateTime storedDateTime = LocalDateTime.parse(endDate, formatter);
         // 비교
         int comparison = now.compareTo(storedDateTime);
-        System.out.println("comparison: " + comparison);
+        //System.out.println("comparison: " + comparison);
         // 결과 출력
         if (comparison <= 0) {
             return ("useAble");
@@ -119,7 +119,7 @@ public class GlobalService {
         try {
             String json = objectMapper.writeValueAsString(transData);
 
-            System.out.println("ViewerDuplicateList as JSON :" + json);
+            //System.out.println("ViewerDuplicateList as JSON :" + json);
             return json;
         } catch (JsonProcessingException e) {
             return e.getMessage();

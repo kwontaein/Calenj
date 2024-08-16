@@ -1,5 +1,7 @@
 package org.example.calenj.calendar.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.domain.Ids.TagId;
 import org.example.calenj.calendar.domain.TagEntity;
@@ -49,7 +51,7 @@ public class CalendarService {
     public void updateSchedule(ScheduleRequest scheduleRequest) {
         // 반복일정일 경우 -> 수정된 날짜만 미포함 + 해당 날짜에 새로운 스케쥴 생성
         // 그냥 일정일 경우 -> 날짜만 변경
-        System.out.println("scheduleRequest : " + scheduleRequest);
+        //System.out.println("scheduleRequest : " + scheduleRequest);
         if (scheduleRequest.getExtendedProps().getRepeatState().isRepeat()) {
             updateRepeatSchedule(scheduleRequest);
         } else {
@@ -178,13 +180,21 @@ public class CalendarService {
 
     public void shareSchedule(ShareScheduleRequest scheduleRequest) {
         UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String jsonString;
+        try {
+            jsonString = objectMapper.writeValueAsString(scheduleRequest.getScheduleRequest());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         ChatMessageRequest chatMessageRequest = new
                 ChatMessageRequest(
                 userId,
                 ChatMessageRequest.fileType.SEND,
                 scheduleRequest.getChatId(),
-                scheduleRequest.getScheduleRequest().toString(),
+                jsonString,
                 0,
                 globalService.nowTime(),
                 UUID.randomUUID(),
@@ -194,7 +204,6 @@ public class CalendarService {
         );
 
         fileService.saveChattingToFile(chatMessageRequest);
-
         MessageResponse messageResponse = new MessageResponse(
                 chatMessageRequest.getChatUUID().toString(),
                 chatMessageRequest.getSendDate(),
@@ -204,7 +213,8 @@ public class CalendarService {
 
         ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
         chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
-        System.out.println("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId());
+        chatMessageResponse.setReceivedUUID(UUID.randomUUID());
+
         template.convertAndSend("/topic/" + scheduleRequest.getParam() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }

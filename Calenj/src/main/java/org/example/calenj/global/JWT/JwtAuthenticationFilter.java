@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String DbRefreshToken;
         String RefreshValidate;
         if (token == null) {
-            System.out.println("토큰이 없다고?");
+            //System.out.println("토큰이 없다고?");
             authentication = null;
             DbRefreshToken = null;
             RefreshValidate = null;
@@ -76,7 +76,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 return;
             }
         } else {
-            System.out.println("로그인하십쇼!!!");
+            //System.out.println("로그인하십쇼!!!");
         }
         try {
             chain.doFilter(request, response);
@@ -105,7 +105,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     }
 
     private ServletResponse tokenFalse(HttpServletResponse httpResponse, Authentication authentication) {
-        System.out.println("tokenFalse 실행");
+        //System.out.println("tokenFalse 실행");
         removeCookie(httpResponse);
         redisService.deleteUserToken(authentication.getName());
         // 리스폰스에 정보 담아 반환

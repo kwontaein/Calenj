@@ -120,7 +120,7 @@ public class UserService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountId, password);
 
             try {
-                System.out.println(accountId);
+                //System.out.println(accountId);
                 // 사용자 정보 반환
                 userEntity = userRepository.findByUserEmail(accountId).orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
             } catch (UsernameNotFoundException e) {
@@ -157,7 +157,7 @@ public class UserService {
         if (requestCookie != null) {
             for (Cookie cookie : requestCookie) {
                 if ("accessToken".equals(cookie.getName()) && jwtTokenProvider.validateToken(cookie.getValue()).equals("true")) {
-                    System.out.println("액세스 토큰 : " + cookie.getValue());
+                    //System.out.println("액세스 토큰 : " + cookie.getValue());
 
                     Authentication authentication = jwtTokenProvider.getAuthentication(cookie.getValue());
                     String refreshToken = redisService.getUserTokenById(authentication.getName());
@@ -169,7 +169,7 @@ public class UserService {
             }
 
         }
-        System.out.println("checkCookie : " + checkCookie);
+        //System.out.println("checkCookie : " + checkCookie);
         return checkCookie;
     }
 

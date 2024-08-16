@@ -116,7 +116,7 @@ public class FileService {
             for (MultipartFile file : multipartFiles) {
                 UUID uuid = UUID.randomUUID();
                 fileValid(uuid, file);
-                System.out.println(file.getOriginalFilename());
+                //System.out.println(file.getOriginalFilename());
                 imageIds.add("[[" + uuid + "],[" + file.getOriginalFilename() + "]]");
             }
 
@@ -142,7 +142,9 @@ public class FileService {
             ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
             chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
             chatMessageResponse.setTarget("groupMsg");
-            template.convertAndSend("/topic/groupMsg/" + param, chatMessageResponse);
+            chatMessageResponse.setReceivedUUID(UUID.randomUUID());
+
+            template.convertAndSend("/topic/" + chatMessageResponse.getParam() + "/" + param, chatMessageResponse);
             return true;
         } catch (Exception e) {
             return false;

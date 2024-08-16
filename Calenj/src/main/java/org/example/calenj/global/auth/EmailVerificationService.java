@@ -58,7 +58,7 @@ public class EmailVerificationService {
         String content = "방문해주셔서 감사합니다.<br><br>" +
                 "인증 번호는 " + authNumber + "입니다.<br>" +
                 "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
-        System.out.println("authNumber : " + authNumber);
+        //System.out.println("authNumber : " + authNumber);
         validateResponse.setCount(redisService.saveVerificationCode(email, authNumber));
         //전송 상태 반환
         return mailSend(email, title, content, validateResponse);
@@ -116,11 +116,11 @@ public class EmailVerificationService {
 
 
         if (attemptCount < MAX_RESEND_COUNT) {
-            System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 이하이므로 전송");
+            //System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 이하이므로 전송");
 
             return true;
         } else {
-            System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 초과이므로 전송 불가. " + RESEND_COOL_DOWN_MINUTES + "분 카운트 후 재시도 가능");
+            //System.out.println("Attempt Count: " + attemptCount + "\n카운트가 " + MAX_RESEND_COUNT + "회 초과이므로 전송 불가. " + RESEND_COOL_DOWN_MINUTES + "분 카운트 후 재시도 가능");
             return false;
         }
     }
