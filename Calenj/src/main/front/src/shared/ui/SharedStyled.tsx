@@ -144,7 +144,7 @@ export const ProfileContainer = styled.div<{ $userId: string }>`
     height: 40px;
     padding: 3px;
     border-radius: 50px;
-    background-color: #007bff;
+    background-color: ${PointColor};
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
@@ -201,6 +201,7 @@ export const MiniText = styled.div`
 export const RowFlexBox = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
 `
 
 export const Info_Container = styled.div`
@@ -396,6 +397,7 @@ export const Toggle_Item = styled.div<ToggleProps>`
     height: 18px;
     border-radius: 50%;
     background-color: ${props => props.$isClick ? PointColor : ThemeColor3};
+    transition: background-color 0.3s ease;
     ${props => props.$toggleState !== undefined && css
             `animation: ${moveToggle(props.$toggleState)} 0.2s ease-out forwards;`
     }

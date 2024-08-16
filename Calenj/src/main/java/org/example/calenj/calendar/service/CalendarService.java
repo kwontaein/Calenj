@@ -187,34 +187,36 @@ public class CalendarService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        for(String chatId : scheduleRequest.getChatId()){
+            ChatMessageRequest chatMessageRequest = new
+                    ChatMessageRequest(
+                    userId,
+                    ChatMessageRequest.fileType.SEND,
+                    chatId,
+                    jsonString,
+                    0,
+                    globalService.nowTime(),
+                    UUID.randomUUID(),
+                    0,
+                    0,
+                    "schedule"
+            );
 
-        ChatMessageRequest chatMessageRequest = new
-                ChatMessageRequest(
-                userId,
-                ChatMessageRequest.fileType.SEND,
-                scheduleRequest.getChatId(),
-                jsonString,
-                0,
-                globalService.nowTime(),
-                UUID.randomUUID(),
-                0,
-                0,
-                "schedule"
-        );
+            fileService.saveChattingToFile(chatMessageRequest);
+            MessageResponse messageResponse = new MessageResponse(
+                    chatMessageRequest.getChatUUID().toString(),
+                    chatMessageRequest.getSendDate(),
+                    chatMessageRequest.getUserId().toString(),
+                    chatMessageRequest.getMessageType(),
+                    chatMessageRequest.getMessage());
 
-        fileService.saveChattingToFile(chatMessageRequest);
-        MessageResponse messageResponse = new MessageResponse(
-                chatMessageRequest.getChatUUID().toString(),
-                chatMessageRequest.getSendDate(),
-                chatMessageRequest.getUserId().toString(),
-                chatMessageRequest.getMessageType(),
-                chatMessageRequest.getMessage());
+            ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
+            chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+            chatMessageResponse.setReceivedUUID(UUID.randomUUID());
 
-        ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
-        chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
-        chatMessageResponse.setReceivedUUID(UUID.randomUUID());
+            template.convertAndSend("/topic/" + scheduleRequest.getTarget() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
+        }
 
-        template.convertAndSend("/topic/" + scheduleRequest.getTarget() + "/" + scheduleRequest.getChatId(), chatMessageResponse);
     }
 }
 

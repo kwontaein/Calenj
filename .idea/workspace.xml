@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.15 친구 개인채팅 생성">
-      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageContentView.tsx" afterDir="false" />
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.16 메시지 이미지 전송">
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/api/postShareScheduleApi.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/model/useShareSchedule.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/ShareDateViewStyled.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ImageGridStyled.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/types.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetailStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetailStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/ShareDateView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/ShareDateView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/dto/request/ShareScheduleRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/dto/request/ShareScheduleRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,22 +240,6 @@
       <workItem from="1723513392938" duration="8651000" />
       <workItem from="1723617336423" duration="340000" />
       <workItem from="1723692056762" duration="26222000" />
-    </task>
-    <task id="LOCAL-00018" summary="06.17 custom EventView">
-      <option name="closed" value="true" />
-      <created>1718623549771</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1718623549772</updated>
-    </task>
-    <task id="LOCAL-00019" summary="06.17 todoList 수정 전 commit">
-      <option name="closed" value="true" />
-      <created>1718630598395</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1718630598395</updated>
     </task>
     <task id="LOCAL-00020" summary="06.18 nickName 매칭">
       <option name="closed" value="true" />
@@ -626,7 +617,23 @@
       <option name="project" value="LOCAL" />
       <updated>1723778477553</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="08.15 친구 개인채팅 생성">
+      <option name="closed" value="true" />
+      <created>1723780804739</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1723780804739</updated>
+    </task>
+    <task id="LOCAL-00068" summary="08.16 메시지 이미지 전송">
+      <option name="closed" value="true" />
+      <created>1723780835968</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1723780835968</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -659,7 +666,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="07.10 file이름 변경 #2" />
     <MESSAGE value="07.11 프로필 세팅" />
     <MESSAGE value="07.11 채팅 이미지" />
     <MESSAGE value="07.12 채팅 리팩토링" />
@@ -684,7 +690,8 @@
     <MESSAGE value="08.13 친구삭제 및 차단#2" />
     <MESSAGE value="08.15 친구리스트 띄우기" />
     <MESSAGE value="08.15 친구 개인채팅 생성" />
-    <option name="LAST_COMMIT_MESSAGE" value="08.15 친구 개인채팅 생성" />
+    <MESSAGE value="08.16 메시지 이미지 전송" />
+    <option name="LAST_COMMIT_MESSAGE" value="08.16 메시지 이미지 전송" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
