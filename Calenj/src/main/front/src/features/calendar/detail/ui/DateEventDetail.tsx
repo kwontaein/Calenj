@@ -1,5 +1,11 @@
 import {DateSelectArg, EventApi, EventClickArg} from "@fullcalendar/react";
-import {Modal_Background, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
+import {
+    FullScreen_div,
+    Modal_Background,
+    ProfileContainer,
+    RowFlexBox,
+    TextColor
+} from "../../../../shared/ui/SharedStyled";
 import React, {useEffect, useId, useReducer, useRef, useState} from "react";
 import {
     AdditionalInfo_Container,
@@ -25,6 +31,8 @@ import {AddDateEvent} from "../../createEvent";
 import axios from "axios";
 import {useLoginFilter} from "../../../authentication/login";
 import {jwtFilter} from "../../../../entities/authentication/jwt";
+import {ShareDateView} from "./ShareDateView";
+import {useComponentSize} from "../../../../shared/model";
 
 interface EventDetailProps {
     eventDetail: EventApi,
@@ -39,10 +47,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const id = useId()
     const [modify, setModify] = useState<boolean>(false);
-
-    useEffect(() => {
-        console.log(friendList)
-    }, []);
+    const [isShared,setIsShare] = useReducer((prev)=>!prev,false)
     return (
         <>
             {modify ? <AddDateEvent onClose={() => setModify(false)}
@@ -83,7 +88,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
                                 }}>
                                     <i className="fi fi-sr-pencil"></i>
                                 </EventButtonIcon_Wrapper>
-                                <EventButtonIcon_Wrapper>
+                                <EventButtonIcon_Wrapper onClick={setIsShare}>
                                     <i className="bi bi-share-fill"></i>
                                 </EventButtonIcon_Wrapper>
                                 <EventButtonIcon_Wrapper style={{backgroundColor: `rgb(0, 0, 0, 0.3)`}} onClick={close}>
@@ -198,12 +203,11 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
                                 </AdditionalInfo_Container>
                             }
                         </EventDetailContent_Wrapper>
-
-                        <DateEventBottom_Container>
-
-                        </DateEventBottom_Container>
+                        {isShared ?
+                            <ShareDateView onClose={setIsShare} scheduleId={eventDetail.id}/>:
+                            <DateEventBottom_Container/>
+                        }
                     </DateEventDetail_Container>
-
                 </Modal_Background>
             }
         </>

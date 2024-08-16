@@ -75,9 +75,8 @@ export interface VoteDetail {
 export interface FriendList {
     friendUserId: string;
     nickName: string;
-    chattingRoomId: number;
     friendAddDate: string;
-    ChattingRoomId: number;
+    chattingRoomId: string;
 }
 
 export interface BanUserList{
@@ -85,7 +84,6 @@ export interface BanUserList{
     nickName: string;
     chattingRoomId: number;
     friendAddDate: string;
-    ChattingRoomId: number;
 }
 
 export interface FriendEvent {
