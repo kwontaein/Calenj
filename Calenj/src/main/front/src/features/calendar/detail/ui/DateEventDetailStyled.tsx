@@ -6,6 +6,7 @@ const bottomSize = 40;
 
 export const DateEventDetail_Container = styled.div`
     width: 520px;
+    min-width: 200px;
     background-color: ${ThemeColor3};
     border-radius: 8px;
     overflow: hidden;
@@ -101,6 +102,8 @@ export const EventTimeContent_Wrapper = styled.div`
     width: calc(100% - 30px);
     height: 100%;
     font-size: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 `
 
 

@@ -201,7 +201,6 @@ export const MiniText = styled.div`
 export const RowFlexBox = styled.div`
     display: flex;
     flex-direction: row;
-    align-items: center;
 `
 
 export const Info_Container = styled.div`

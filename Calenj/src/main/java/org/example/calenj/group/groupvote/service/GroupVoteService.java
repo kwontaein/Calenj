@@ -61,7 +61,7 @@ public class GroupVoteService {
                     .build());
             i++;
         }
-        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", jsonString);
+//        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", jsonString);
     }
 
     /**
