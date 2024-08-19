@@ -30,11 +30,11 @@ public class RepeatStateResponse {
 
     private int repeatCount;
 
-    private boolean[] repeatWeek;
+    private List<String> repeatWeek;
 
     private List<String> noRepeatDates;
 
-    public RepeatStateResponse(UUID scheduleId, Timestamp startTime, Timestamp endTime, int repeatNum, boolean repeat, String repeatOption, String repeatMode, String repeatDeadline, Date repeatEnd, int repeatCount, String repeatWeek, String noRepeatDates) {
+    public RepeatStateResponse(UUID scheduleId, Timestamp startTime, Timestamp endTime, int repeatNum, boolean repeat, String repeatOption, String repeatMode, String repeatDeadline, Date repeatEnd, int repeatCount, List<String> repeatWeek, List<String> noRepeatDates) {
         this.scheduleId = scheduleId;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -45,21 +45,8 @@ public class RepeatStateResponse {
         this.repeatDeadline = repeatDeadline;
         this.repeatEnd = repeatEnd;
         this.repeatCount = repeatCount;
-        this.repeatWeek = convertStringToBooleanArray(repeatWeek);
-        this.noRepeatDates = convertStringToArray(noRepeatDates);
-    }
-
-    public static boolean[] convertStringToBooleanArray(String input) {
-        input = input.trim(); // 공백 제거
-        input = input.substring(1, input.length() - 1); // 대괄호 제거
-        String[] stringArray = input.split(",\\s*"); // 콤마와 공백을 기준으로 분할
-        boolean[] booleanArray = new boolean[stringArray.length]; // boolean 배열 초기화
-
-        for (int i = 0; i < stringArray.length; i++) {
-            booleanArray[i] = Boolean.parseBoolean(stringArray[i].trim()); // 문자열을 boolean 값으로 변환
-        }
-
-        return booleanArray; // boolean 배열 반환
+        this.repeatWeek = repeatWeek;
+        this.noRepeatDates = noRepeatDates;
     }
 
     public static List<String> convertStringToArray(String input) {

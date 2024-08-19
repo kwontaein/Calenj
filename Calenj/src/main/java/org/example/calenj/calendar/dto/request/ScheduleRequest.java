@@ -37,11 +37,11 @@ public class ScheduleRequest {
                 .scheduleStartDateTime(start)
                 .scheduleEndDateTime(end)
                 .userScheduleAllDay(allDay)
-                .tagIds(extendedProps.getTagKeys().toString())
+                .tagIds(extendedProps.getTagKeys())
                 .userScheduleFormState(extendedProps.getFormState())
                 .userScheduleContent(extendedProps.getContent())
-                .userScheduleTodoList(extendedProps.getTodoList().toString())
-                .userScheduleFriendList(extendedProps.getFriendList().toString())
+                .userScheduleTodoList(extendedProps.getTodoList())
+                .userScheduleFriendList(extendedProps.getFriendList())
                 .build();
     }
 

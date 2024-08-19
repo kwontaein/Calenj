@@ -21,7 +21,6 @@ public class VoteChoiceEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(nullable = false, unique = true, name = "choice_id", columnDefinition = "BINARY(16)")
-    //주키
     private UUID choiceId;
 
     @ManyToOne

@@ -47,7 +47,7 @@ public class GroupSubScheduleRequest {
                 .subScheduleDuration(subScheduleDuration)
                 .subScheduleContent(subScheduleContent)
                 .index(index)
-                .joinUser(joinUser.toString())
+                .joinUser(joinUser)
                 .subScheduleLocate(location)
                 .positionX(positionX)
                 .positionY(positionY)

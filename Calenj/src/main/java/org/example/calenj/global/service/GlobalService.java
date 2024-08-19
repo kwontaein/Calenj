@@ -113,7 +113,7 @@ public class GlobalService {
      * @param transData 바꿀 목록
      * @return json
      */
-    public String saveArrayList(List<String> transData) {
+    public String listToJson(List<String> transData) {
         // JSON 문자열로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -125,18 +125,6 @@ public class GlobalService {
             return e.getMessage();
         }
     }
-
-    /**
-     * 내 유저 상세 정보 조회
-     *
-     * @return 내 정보
-     */
-    /*public UserEntity myUserEntity() {
-        UUID myUserID = UUID.fromString(extractFromSecurityContext().getUsername());
-        UserEntity userEntity = userRepository.findByUserId(myUserID).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다"));
-        return userEntity;
-    }
-*/
 
     /**
      * 유저 정보 조회
@@ -173,5 +161,4 @@ public class GlobalService {
         // 필요한 필드들을 추가로 확인하여 null이 아닌 것만 설정
         return filteredResponse;
     }
-
 }

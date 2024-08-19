@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.calenj.global.helper.StringListConverter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "group_sub_schedule")
@@ -50,7 +52,8 @@ public class GroupSubScheduleEntity {
 
     //서브 일정 참여 인원
     @Column(name = "sub_schedule_join_user")
-    private String joinUser;
+    @Convert(converter = StringListConverter.class)
+    private List<String> joinUser;
 
     //지도 좌표
     @Column(name = "sub_schedule_locate")

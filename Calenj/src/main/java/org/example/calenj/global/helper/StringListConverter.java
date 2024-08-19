@@ -34,12 +34,18 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     //String을 List타입으로 변환
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
+        // dbData가 null인 경우 빈 리스트를 반환하거나 null을 반환하도록 처리합니다.
+        if (dbData == null || dbData.trim().isEmpty()) {
+            return Collections.emptyList(); // 또는 return null;
+        }
+
         TypeReference<List<String>> typeReference = new TypeReference<>() {
         };
         try {
             return mapper.readValue(dbData, typeReference);
         } catch (IOException e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Error converting string to List<String>", e);
         }
     }
+
 }

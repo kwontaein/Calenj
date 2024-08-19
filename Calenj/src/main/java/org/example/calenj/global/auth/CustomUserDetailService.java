@@ -30,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
         return UserEntity.builder()
                 .userId(userEntity.getUserId())
                 .userEmail(userEntity.getUserEmail())
-                .userPassword(userEntity.getPassword()) //여기서 암호화를 한번 더 하는 바람에 오류가 생김.
+                .userPassword(userEntity.getPassword())
                 .nickname(userEntity.getNickname())
                 .userRole(userEntity.getUserRole())
                 .build();

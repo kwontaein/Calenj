@@ -1,13 +1,20 @@
 import {ImageGrid} from "./ImageGrid";
 import {parseDataString} from "../lib/parseDataString";
-import React from "react";
+import React, {useEffect} from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
-interface MessageProps{
-    messageType:string,
-    message:string,
+import {DateEventDetail} from "../../../calendar/detail";
+import {ScheduleMessage} from "./ScheduleMessage";
+
+interface MessageProps {
+    messageType: string,
+    message: string,
 }
-export const MessageContentView :React.FC<MessageProps> =({message,messageType})=>{
-    return(
+
+export const MessageContentView: React.FC<MessageProps> = ({message, messageType}) => {
+    const onClose = () => {
+
+    }
+    return (
         <FullScreen_div>
             {messageType === 'title' &&
                 <div>
@@ -21,7 +28,7 @@ export const MessageContentView :React.FC<MessageProps> =({message,messageType})
             }
             {messageType === 'schedule' &&
                 <div>
-                    {message.replace(/\\lineChange/g, '\n').trim()}
+                    <ScheduleMessage events={JSON.parse(message)}/>
                 </div>
             }
             {messageType === 'image' &&

@@ -3,6 +3,7 @@ package org.example.calenj.calendar.dto.response;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,7 +22,7 @@ public class ScheduleResponse {
     private ExtendedPropsResponse extendedProps;
 
     //java.util.UUID, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, java.lang.Boolean, java.lang.String, java.lang.String, java.lang.String
-    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, String tag, String formState, String content, String todoList, String friendList) {
+    public ScheduleResponse(UUID scheduleId, String title, Timestamp start, Timestamp end, boolean allDay, List<String> tag, String formState, String content, List<String> todoList, List<String> friendList) {
         this.id = scheduleId;
         this.title = title;
         this.start = start;

@@ -270,7 +270,36 @@ public class WebSocketService {
                 .collect(Collectors.toSet());
     }
 
+    public void groupEventChat(String groupId, String userId, String messageType, String message) {
+        ChatMessageRequest chatMessageRequest = new
+                ChatMessageRequest(
+                UUID.fromString(userId),
+                ChatMessageRequest.fileType.SEND,
+                groupId,
+                message,
+                0,
+                globalService.nowTime(),
+                UUID.randomUUID(),
+                0,
+                0,
+                messageType
+        );
+        MessageResponse messageResponse = new MessageResponse(
+                chatMessageRequest.getChatUUID().toString(),
+                chatMessageRequest.getSendDate(),
+                chatMessageRequest.getUserId().toString(),
+                chatMessageRequest.getMessageType(),
+                chatMessageRequest.getMessage());
 
+        fileService.saveChattingToFile(chatMessageRequest);
+
+        ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
+        chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+        chatMessageResponse.setReceivedUUID(UUID.randomUUID());
+
+        template.convertAndSend("/topic/" + chatMessageResponse.getTarget() + "/" + chatMessageResponse.getParam(), chatMessageResponse);
+
+    }
 }
 
 

@@ -19,9 +19,7 @@ import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.websocket.dto.request.ChatMessageRequest;
-import org.example.calenj.websocket.dto.response.ChatMessageResponse;
-import org.example.calenj.websocket.dto.response.MessageResponse;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +35,7 @@ import java.util.stream.Collectors;
 public class CalendarService {
     private final GlobalService globalService;
     private final FileService fileService;
+    private final WebSocketService webSocketService;
 
     private final UserScheduleRepository userScheduleRepository;
     private final TagRepository tagRepository;
@@ -182,47 +181,26 @@ public class CalendarService {
     public void shareSchedule(ShareScheduleRequest scheduleRequest) {
         UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
 
-        ObjectMapper mapper = new ObjectMapper();
 
-        String jsonString;
         ScheduleResponse scheduleResponse = userScheduleRepository.findByScheduleId(scheduleRequest.getScheduleId()).orElse(null);
+        RepeatStateResponse repeatStateresponse = repeatStateRepository.findOneByIds(scheduleResponse.getId()).orElse(null);
 
+        if (repeatStateresponse.getNoRepeatDates() == null) {
+            repeatStateresponse.setNoRepeatDates(Collections.singletonList(""));
+        }
+
+        scheduleResponse.getExtendedProps().setRepeatState(repeatStateresponse);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString;
         try {
             jsonString = mapper.writeValueAsString(scheduleResponse);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
         for (SharedPositionRequest positionRequest : scheduleRequest.getSharedPositionRequests()) {
-            ChatMessageRequest chatMessageRequest = new
-                    ChatMessageRequest(
-                    userId,
-                    ChatMessageRequest.fileType.SEND,
-                    positionRequest.getChatId(),
-                    jsonString,
-                    0,
-                    globalService.nowTime(),
-                    UUID.randomUUID(),
-                    0,
-                    0,
-                    "schedule"
-            );
-
-            fileService.saveChattingToFile(chatMessageRequest);
-            MessageResponse messageResponse = new MessageResponse(
-                    chatMessageRequest.getChatUUID().toString(),
-                    chatMessageRequest.getSendDate(),
-                    chatMessageRequest.getUserId().toString(),
-                    chatMessageRequest.getMessageType(),
-                    chatMessageRequest.getMessage());
-
-            ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
-            chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
-            chatMessageResponse.setReceivedUUID(UUID.randomUUID());
-
-            template.convertAndSend("/topic/" + positionRequest.getTarget() + "/" + positionRequest.getChatId(), chatMessageResponse);
+            webSocketService.groupEventChat(positionRequest.getChatId(), userId.toString(), "schedule", jsonString);
         }
-
     }
 }
 

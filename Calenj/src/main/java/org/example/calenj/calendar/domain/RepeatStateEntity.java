@@ -3,9 +3,12 @@ package org.example.calenj.calendar.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.RepeatStateId;
+import org.example.calenj.global.helper.StringListConverter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "Schedule_Repeat_State")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자를 생성하며, 영속성을 지키기 위해 Protected 설정
@@ -49,8 +52,10 @@ public class RepeatStateEntity {
     private int repeatCount;
 
     @Column(name = "repeat_week")
-    private String repeatWeek;
+    @Convert(converter = StringListConverter.class)
+    private List<String> repeatWeek = new ArrayList<>();
 
     @Column(name = "no_repeat_dates")
-    private String noRepeatDates;
+    @Convert(converter = StringListConverter.class)
+    private List<String> noRepeatDates = new ArrayList<>();
 }
