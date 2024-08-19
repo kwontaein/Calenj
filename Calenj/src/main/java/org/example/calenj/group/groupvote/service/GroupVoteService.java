@@ -1,5 +1,7 @@
 package org.example.calenj.group.groupvote.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
@@ -41,6 +43,14 @@ public class GroupVoteService {
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         GroupVoteEntity groupVoteEntity = groupVoteRepository.save(request.toEntity(userDetails.getUsername(), groupEntity));
 
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString;
+        try {
+            jsonString = mapper.writeValueAsString(groupVoteEntity);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         int i = 0;
         for (String items : request.getPostedVoteChoiceDTO()) {
             voteChoiceRepository.save(VoteChoiceEntity
@@ -51,7 +61,7 @@ public class GroupVoteService {
                     .build());
             i++;
         }
-        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", "새로운 투표가 생성되었습니다. \n" + groupVoteEntity.getVoteId());
+        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", jsonString);
     }
 
     /**
