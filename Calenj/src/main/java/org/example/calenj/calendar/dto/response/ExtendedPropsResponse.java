@@ -14,13 +14,13 @@ public class ExtendedPropsResponse {
     //내용
     private List<String> todoList;
 
-    private List<String> friendList;
+    private List<UUID> friendList;
     //태그 정보
     private List<String> tagKeys;
 
     private RepeatStateResponse repeatState;
 
-    public ExtendedPropsResponse(List<String> tag, UUID scheduleId, String formState, String content, List<String> todoList, List<String> friendList) {
+    public ExtendedPropsResponse(List<String> tag, UUID scheduleId, String formState, String content, List<String> todoList, List<UUID> friendList) {
         this.tagKeys = tag;
         this.scheduleId = scheduleId;
         this.content = content;
