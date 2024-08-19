@@ -1,7 +1,5 @@
 package org.example.calenj.group.groupvote.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
@@ -14,7 +12,6 @@ import org.example.calenj.group.groupvote.dto.response.VoteChoiceResponse;
 import org.example.calenj.group.groupvote.repository.Group_VoteRepository;
 import org.example.calenj.group.groupvote.repository.VoteChoiceRepository;
 import org.example.calenj.websocket.service.WebSocketService;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,6 @@ public class GroupVoteService {
     private final VoteChoiceRepository voteChoiceRepository;
     private final WebSocketService webSocketService;
 
-    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     /**
      * 투표 생성하기
@@ -43,14 +39,6 @@ public class GroupVoteService {
         GroupEntity groupEntity = groupRepository.findByGroupId(request.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
         GroupVoteEntity groupVoteEntity = groupVoteRepository.save(request.toEntity(userDetails.getUsername(), groupEntity));
 
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString;
-        try {
-            jsonString = mapper.writeValueAsString(groupVoteEntity);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
         int i = 0;
         for (String items : request.getPostedVoteChoiceDTO()) {
             voteChoiceRepository.save(VoteChoiceEntity
@@ -61,7 +49,7 @@ public class GroupVoteService {
                     .build());
             i++;
         }
-//        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", jsonString);
+        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", groupVoteEntity.getVoteId() + ", " + groupVoteEntity.getVoteTitle());
     }
 
     /**

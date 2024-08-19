@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class ExtendedPropsRequest {
     //todoList 내용
     private List<String> todoList;
 
-    private List<String> friendList;
+    private List<UUID> friendList;
 
     private RepeatStateRequest repeatState;
 

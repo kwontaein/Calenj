@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
 import org.example.calenj.global.helper.StringListConverter;
+import org.example.calenj.global.helper.UUIDListConverter;
 import org.example.calenj.user.domain.UserEntity;
 
 import java.sql.Timestamp;
@@ -63,6 +64,6 @@ public class UserScheduleEntity {
 
     //friendList
     @Column(name = "user_schedule_friend_list")
-    @Convert(converter = StringListConverter.class)
-    private List<String> userScheduleFriendList = new ArrayList<>();
+    @Convert(converter = UUIDListConverter.class)
+    private List<UUID> userScheduleFriendList = new ArrayList<>();
 }
