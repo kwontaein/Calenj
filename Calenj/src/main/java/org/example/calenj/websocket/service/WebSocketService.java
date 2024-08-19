@@ -296,8 +296,7 @@ public class WebSocketService {
         ChatMessageResponse chatMessageResponse = globalService.filterNullFields(chatMessageRequest);
         chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
         chatMessageResponse.setReceivedUUID(UUID.randomUUID());
-
-        template.convertAndSend("/topic/" + chatMessageResponse.getTarget() + "/" + chatMessageResponse.getParam(), chatMessageResponse);
+        template.convertAndSend("/topic/groupMsg/" + chatMessageResponse.getParam(), chatMessageResponse);
 
     }
 }
