@@ -31,11 +31,13 @@ export const VoteDetail:React.FC = () => {
                     <VoteContent_Container>
                         <VoteConditionItem_Container>
                             <VoteCondition_Item>{timeOperation(data.voteEndDate)}</VoteCondition_Item>
-                            <RowFlexBox style={{height:'20px'}}>
-                                {data.anonymous &&<VoteCondition_Item style={{marginRight:'5px'}}>익명투표</VoteCondition_Item>}
-                                {(data.isMultiple && data.anonymous) && <VoteCondition_Item> • </VoteCondition_Item>}
-                                {data.isMultiple && <VoteCondition_Item>복수선택</VoteCondition_Item>}
-                            </RowFlexBox>
+                            {(data.isMultiple || data.anonymous) &&
+                                <RowFlexBox style={{height:'20px'}}>
+                                    {data.anonymous &&<VoteCondition_Item style={{marginRight:'5px'}}>익명투표</VoteCondition_Item>}
+                                    {(data.isMultiple && data.anonymous) && <VoteCondition_Item> • </VoteCondition_Item>}
+                                    {data.isMultiple && <VoteCondition_Item>복수선택</VoteCondition_Item>}
+                                </RowFlexBox>
+                            }
                         </VoteConditionItem_Container>
                         {(viewVoter && voteItems) ?
                             <VoterView voted={voteItems}/>

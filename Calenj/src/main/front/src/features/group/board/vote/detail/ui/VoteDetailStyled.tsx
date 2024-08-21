@@ -102,7 +102,8 @@ export const MyVoteIcon = styled.div`
 
 export const VoteConditionItem_Container = styled.div`
     width: 100%;
-    height: 50px;
+    height: auto;
+    margin-bottom: 10px;
 `
 
 export const VoteCondition_Item = styled.div`
