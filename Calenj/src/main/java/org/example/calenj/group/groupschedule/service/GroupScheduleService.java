@@ -108,13 +108,13 @@ public class GroupScheduleService {
                 String locate1 = subSchedule.getPositionX() + "," + subSchedule.getPositionY();
                 String locate2 = subSchedule2.getPositionX() + "," + subSchedule2.getPositionY();
 
-                //System.out.println(locate1 + " / " + locate2);
                 NaverMapResponse response = naverService.direction(locate1, locate2);
                 int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration() / 60000;
                 subSchedule.setDuration(duration + "분");
             }
 
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
+
         }
 
         // originId에는 포함되어 있지만 subIds에는 포함되어 있지 않은 ID를 삭제
@@ -225,6 +225,7 @@ public class GroupScheduleService {
             plusTime += response.getSubScheduleDuration();
         }
     }
+
 
     /**
      * 태그 정보 추출하기

@@ -203,6 +203,7 @@ public class WebSocketService {
         chatMessageResponse.setUserId(userId);
         chatMessageResponse.setParam(kind);
         chatMessageResponse.setState(ChatMessageRequest.fileType.ALARM);
+
         template.convertAndSend("/topic/personalTopic/" + userId, chatMessageResponse);
     }
 

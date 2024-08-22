@@ -17,7 +17,6 @@ import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.repository.RepeatStateRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
-import org.example.calenj.file.service.FileService;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CalendarService {
     private final GlobalService globalService;
-    private final FileService fileService;
     private final WebSocketService webSocketService;
 
     private final UserScheduleRepository userScheduleRepository;
@@ -201,6 +199,11 @@ public class CalendarService {
         for (SharedPositionRequest positionRequest : scheduleRequest.getSharedPositionRequests()) {
             webSocketService.groupEventChat(positionRequest.getChatId(), userId.toString(), "schedule", jsonString);
         }
+    }
+
+
+    public void updateSharedGroupSchedule(UUID subScheduleId) {
+
     }
 }
 
