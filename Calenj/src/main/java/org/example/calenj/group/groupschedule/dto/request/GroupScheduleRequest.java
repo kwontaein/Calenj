@@ -41,10 +41,10 @@ public class GroupScheduleRequest {
                 .scheduleTitle(scheduleTitle)
                 .scheduleCreate(time)
                 .scheduleStart(startDate)
-                .managers(managers.toString())
+                .managers(managers)
                 .privacy(privacy)
                 .maxPeople(maxPeople)
-                .member(member.toString())
+                .member(member)
                 .build();
     }
 }

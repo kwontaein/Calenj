@@ -26,7 +26,7 @@ export const Vote: React.FC = () => {
 
     return (
         <GroupVoteList_Container>
-            {boardOption.voteParam!=='' &&  <VoteDetail/>}
+            {boardOption.voteParam!=='' &&  <VoteDetail voteParam={boardOption.voteParam} isMessage={false}/>}
             {boardOption.clickState ==="add" && <CreateVote/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&

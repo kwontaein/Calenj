@@ -3,6 +3,7 @@ import SockJS from "sockjs-client";
 import {call, delay, fork, put, race, take} from 'redux-saga/effects';
 import {buffers, eventChannel} from 'redux-saga';
 import {
+    ADD_SUBSCRIBE,
     Destination,
     receivedStompMsg, REQUEST_FILE,
     SEND_STOMP_MSG,
@@ -18,7 +19,6 @@ interface StompData {
     param: string | number,
     state: stateType,
     message?: string,
-    nowLine?: number;
 }
 
 
@@ -85,7 +85,36 @@ function* sendPublish(destination: Destination, stompClient: CompatClient) {
     })
     onlineStateSetting(stompClient, "ONLINE");
     yield put(updateLoading({loading: true}));
+}
 
+function* addSubScribe(stompClient: CompatClient){
+    while(true){
+        const {payload} = yield take(ADD_SUBSCRIBE)//액션을 기다린 후 dispatch 가 완료되면 실행
+        const {subScribeParam} = yield payload;
+        eventChannel(emit => {
+            //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
+            const subscribeMessage = () => {
+                console.log(`${subScribeParam}으로 구독을 실행합니다.`)
+                stompClient.subscribe(`/topic/friendMsg/${subScribeParam}`, (iMessage: IMessage) => {
+                    emit(JSON.parse(iMessage.body));
+                })
+                stompClient.subscribe(`/user/topic/friendMsg/${subScribeParam}`, (iMessage: IMessage) => {
+                    emit(JSON.parse(iMessage.body));
+                })
+            };
+            subscribeMessage();
+
+            return function unsubscribe() {
+                onlineStateSetting(stompClient, "OFFLINE");
+                //stompClient.disconnect();//연결 끊기(완전히
+                stompClient.deactivate().then(r => {
+                    console.log("임시 비활성화2")
+                }); //연결 끊기(임시 비활성화
+            };
+            //크기를 지정하고 버퍼에 새로운 항목이 추가될 때마다 버퍼의 크기를 동적으로 확장
+            //인자로는 확장의 최장크기(크기제한)
+        }, buffers.expanding<number>(1000) || buffers.none())
+    }
 }
 
 function* closeWebSocketSaga(channel: any) {
@@ -109,7 +138,9 @@ function* startStomp(destination: Destination): any {
     //saga 의 call 을 쓰면 Promise 또는 Generator 함수만 받으며 Promise 시 res 반환 전까지 saga 실행중지
     const stompClient = yield call(createStompConnection) //Stomp 를 connect 하는 함수, 성공 시 다음 명령 실행
     const channel = yield call(createEventChannel, stompClient, destination); //외부 이벤트 소스를 saga 의 이벤트를 발생하게 채널연결
+
     //함수 실행 후 백그라운드에도 유지
+    yield fork(addSubScribe, stompClient)
     yield fork(sendStomp, stompClient)
     yield fork(endPointStomp, stompClient)
     yield fork(sendPublish, destination, stompClient)

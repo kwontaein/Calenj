@@ -52,7 +52,7 @@ public class RepeatStateRequest {
                 .repeatDeadline(repeatDeadline)
                 .repeatEnd(repeatEnd)
                 .repeatCount(repeatCount)
-                .repeatWeek(repeatWeek.toString())
+                .repeatWeek(repeatWeek)
                 .build();
     }
 }

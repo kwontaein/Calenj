@@ -191,12 +191,10 @@ public class GroupScheduleService {
         }
         eventService.updateEventState(friendUserId, isAccept ? EventEntity.statusType.ACCEPT : EventEntity.statusType.REJECT, EventEntity.eventType.JoinSchedule);
 
-        String member = groupScheduleEntity.getMember();
-        List<String> memberList = GroupScheduleResponse.convertStringToArray(member);
+        List<String> memberList = groupScheduleEntity.getMember();
         memberList.add(friendUserId.toString());
-        member = memberList.toString();
 
-        groupScheduleRepository.updateMember(scheduleId, member);
+        groupScheduleRepository.updateMember(scheduleId, memberList.toString());
         template.convertAndSend("/topic/personalTopic/" + friendUserId, "일정에 참여되었습니다.");
     }
 
@@ -211,7 +209,7 @@ public class GroupScheduleService {
         // 서브목록 가져오기
         List<GroupSubScheduleResponse> responses = getSubScheduleList(groupScheduleEntity.getScheduleId());
         // 태그
-        List<String> tagKey = extractTagKey();
+        List<UUID> tagKey = extractTagKey();
         int plusTime = 0;
 
         for (GroupSubScheduleResponse response : responses) {
@@ -233,10 +231,10 @@ public class GroupScheduleService {
      *
      * @return
      */
-    private List<String> extractTagKey() {
+    private List<UUID> extractTagKey() {
         return calendarService.getTagEntityList().stream()
                 .filter(tag -> "그룹 일정".equals(tag.getName()))
-                .map(tag -> tag.getId().toString())
+                .map(tag -> tag.getId())
                 .findFirst()
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
@@ -250,7 +248,7 @@ public class GroupScheduleService {
      * @param tagKey
      * @return
      */
-    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<String> tagKey) {
+    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<UUID> tagKey) {
 
         List<String> repeatWeek = new ArrayList<String>(7);
         for (int i = 0; i < repeatWeek.size(); i++) {
@@ -276,21 +274,20 @@ public class GroupScheduleService {
 
         String response;
 
-        String members = groupSubScheduleEntity.getJoinUser();
-        List<String> newList = GroupSubScheduleResponse.convertStringToArray(members);
+        List<String> members = groupSubScheduleEntity.getJoinUser();
 
-        if (newList.contains(myUserName)) {
-            newList.remove(myUserName);
+        if (members.contains(myUserName)) {
+            members.remove(myUserName);
             response = "해당 일정에 참여를 취소했습니다.";
             calendarService.deleteSchedule(subScheduleId);
         } else {
-            newList.add(myUserName);
+            members.add(myUserName);
             response = "해당 일정에 참여하였습니다.";
             addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
         }
 
         //서브 일정에 유저 추가
-        groupSubScheduleRepository.updateJoinUser(subScheduleId, newList.toString());
+        groupSubScheduleRepository.updateJoinUser(subScheduleId, members);
 
         return response;
     }

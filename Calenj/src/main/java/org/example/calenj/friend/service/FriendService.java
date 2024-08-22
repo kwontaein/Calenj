@@ -48,17 +48,6 @@ public class FriendService {
     }
 
     /**
-     * ID로 유저정보 가져오기
-     *
-     * @param userID 가져올 유저 id
-     * @return 유저정보
-     */
-    public UserEntity getUserEntityById(UUID userID) {
-        UserEntity userEntity = userRepository.findByUserId(userID).orElseThrow(() -> new RuntimeException());
-        return userEntity;
-    }
-
-    /**
      * 친구목록 가져오기
      *
      * @return 친구 목록
@@ -79,13 +68,12 @@ public class FriendService {
         UserEntity ownUser = globalService.getUserEntity(null);
 
         // 나에게 초대는 불가
-        if (isAddingSelf(friendUserName, ownUser)) {
+        if (friendUserName.equals(ownUser.getUserUsedName())) {
             return createErrorResponse("나에게 친구 추가는 불가능합니다.");
         }
 
         // 친구 유저 정보가 존재하는지 확인
         FriendResponse f = new FriendResponse();
-
         UserEntity friendUser = getUserEntityByUserName(friendUserName);
 
         if (friendUser != null) {
@@ -97,7 +85,7 @@ public class FriendService {
         }
 
         // 이미 친구인 경우
-        if (isAlreadyFriend(friendUser, ownUser)) {
+        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId(), ownUser.getUserId()).orElse("Null").equals("ACCEPT")) {
             return createErrorResponse("이미 친구입니다.");
         }
 
@@ -106,34 +94,6 @@ public class FriendService {
     }
 
     /**
-     * 나에게 요청 검사
-     *
-     * @param friendUserName 친구 요청받은 유저 사용자명
-     * @param ownUser        친구 요청한 유저 정보
-     * @return 검사 값 boolean
-     */
-    private boolean isAddingSelf(String friendUserName, UserEntity ownUser) {
-        if (friendUserName.equals(ownUser.getUserUsedName())) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 이미 친구인지 검사
-     *
-     * @param friendUser 친구 요청받은 유저 정보
-     * @param ownUser    친구 요청한 유저 정보
-     * @return 검사 값 boolean
-     */
-    private boolean isAlreadyFriend(UserEntity friendUser, UserEntity ownUser) {
-        if (friendRepository.findFriendByIdIsAccept(friendUser.getUserId(), ownUser.getUserId()).orElse("Null").equals("ACCEPT")) {
-            return true;
-        }
-        return false;
-    }
-
-    /*
      * 검사요소 통과 못할시 에러로 반환
      *
      * @param message 에러 메세지
@@ -163,20 +123,10 @@ public class FriendService {
      */
     private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser) {
         if (friendRepository.findFriendById(friendUser.getUserId(), ownUser.getUserId()).orElse(null) != null) {
-            return repositorySetting(friendUser.getUserId());
+            return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?", friendUser.getUserId());
         } else {
-            return onlyOne(ownUser, friendUser.getUserId());
+            return finalProcess(ownUser, friendUser.getUserId());
         }
-    }
-
-    /**
-     * 요청한 대상으로부터의 요청이 이미 있을 경우
-     *
-     * @param friendUserId 친구 요청 받은 유저 아이디
-     * @return 상대가 요청한 정보가 있고, 내가 요청했다면 -> 친구수락으로 보내기
-     */
-    public AddFriendResponse repositorySetting(UUID friendUserId) {
-        return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?", friendUserId);
     }
 
     /**
@@ -186,7 +136,7 @@ public class FriendService {
      * @param friendUserId 친구 요청 받은 유저 아이디
      * @return 성공 / 실패시 응답 작성
      */
-    public AddFriendResponse onlyOne(UserEntity ownUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
+    public AddFriendResponse finalProcess(UserEntity ownUser, UUID friendUserId) {//동일한 요청 정보가 있다면? -> 저장x
         if (!eventService.checkIfDuplicatedEvent(ownUser.getUserId(), friendUserId)) {
             return createSuccessResponse("친구 정보 조회에 성공했습니다.", friendUserId);
         }
@@ -244,7 +194,7 @@ public class FriendService {
      */
     public void acceptFriend(UUID friendUserId) {
         UUID myUserName = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
-        UserEntity friendUser = getUserEntityById(friendUserId);
+        UserEntity friendUser = globalService.getUserEntity(friendUserId);
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserId, myUserName).orElse(null);
         friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
 

@@ -27,6 +27,11 @@ public interface RepeatStateRepository extends JpaRepository<RepeatStateEntity, 
     @Query("UPDATE Schedule_Repeat_State Rs set Rs.noRepeatDates =:exDates where Rs.scheduleId.scheduleId =:id ")
     void addExDate(@Param("exDates") String exDates, @Param("id") UUID id);
 
+    @Query("SELECT new org.example.calenj.calendar.dto.response.RepeatStateResponse" +
+            "(Rs.scheduleId.scheduleId,Rs.startTime,Rs.endTime,Rs.repeatNum,Rs.repeat,Rs.repeatOption,Rs.repeatMode,Rs.repeatDeadline,Rs.repeatEnd,Rs.repeatCount,Rs.repeatWeek,Rs.noRepeatDates)" +
+            " FROM Schedule_Repeat_State Rs WHERE Rs.scheduleId.scheduleId =:Id")
+    Optional<RepeatStateResponse> findOneByIds(@Param("Id") UUID Id);
+
     @Query("SELECT Rs.noRepeatDates from Schedule_Repeat_State Rs where Rs.scheduleId.scheduleId =:id")
     Optional<String> findByScheduleId(@Param("id") UUID id);
 

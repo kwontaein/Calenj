@@ -3,9 +3,13 @@ package org.example.calenj.calendar.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.UserScheduleEntityId;
+import org.example.calenj.global.helper.StringListConverter;
+import org.example.calenj.global.helper.UUIDListConverter;
 import org.example.calenj.user.domain.UserEntity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "User_Schedule")
@@ -26,7 +30,8 @@ public class UserScheduleEntity {
     private UserEntity userId;
 
     @Column(name = "tag_ids")
-    private String tagIds;
+    @Convert(converter = UUIDListConverter.class)
+    private List<UUID> tagIds = new ArrayList<>();
 
     //제목
     @Column(name = "user_schedule_title")
@@ -54,9 +59,11 @@ public class UserScheduleEntity {
 
     //todoList
     @Column(name = "user_schedule_todo_list")
-    private String userScheduleTodoList;
+    @Convert(converter = StringListConverter.class)
+    private List<String> userScheduleTodoList = new ArrayList<>();
 
     //friendList
     @Column(name = "user_schedule_friend_list")
-    private String userScheduleFriendList;
+    @Convert(converter = UUIDListConverter.class)
+    private List<UUID> userScheduleFriendList = new ArrayList<>();
 }

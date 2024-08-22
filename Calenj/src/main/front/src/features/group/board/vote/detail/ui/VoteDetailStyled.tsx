@@ -59,7 +59,6 @@ export const TransVoteContainer = styled.div<VoteAble>`
 
 
 export const VoteDetail_Container = styled.div`
-    width: 500px;
     height: auto;
     border-radius: 10px;
 `
@@ -102,7 +101,8 @@ export const MyVoteIcon = styled.div`
 
 export const VoteConditionItem_Container = styled.div`
     width: 100%;
-    height: 50px;
+    height: auto;
+    margin-bottom: 10px;
 `
 
 export const VoteCondition_Item = styled.div`

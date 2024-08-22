@@ -1,22 +1,18 @@
 package org.example.calenj.group.groupnotice.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.group.groupinfo.repository.GroupRepository;
+import org.example.calenj.group.groupnotice.domain.GroupNoticeEntity;
 import org.example.calenj.group.groupnotice.dto.request.GroupNoticeRequest;
 import org.example.calenj.group.groupnotice.dto.response.GroupNoticeResponse;
 import org.example.calenj.group.groupnotice.repository.Group_NoticeRepository;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +20,7 @@ public class GroupNoticeService {
     private final GlobalService globalService;
     private final GroupRepository groupRepository;
     private final Group_NoticeRepository groupNoticeRepository;
+    private final WebSocketService webSocketService;
 
     /**
      * 그룹 공지 생성
@@ -32,11 +29,11 @@ public class GroupNoticeService {
      */
     public void makeNotice(GroupNoticeRequest groupNoticeRequest) {
 
-
         String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
         GroupEntity groupEntity = groupRepository.findByGroupId(groupNoticeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
-        groupNoticeRepository.save(groupNoticeRequest.toEntity(userId, groupEntity));
+        GroupNoticeEntity groupNoticeEntity = groupNoticeRepository.save(groupNoticeRequest.toEntity(userId, groupEntity));
+        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userId, "notice", "새로운 공지가 생성되었습니다. \n" + groupNoticeEntity.getNoticeId());
     }
 
     /**
@@ -66,28 +63,18 @@ public class GroupNoticeService {
      * @param noticeId 공지 아이디
      */
     public void noticeViewCount(UUID noticeId) {
-
         String userId = globalService.extractFromSecurityContext().getUsername(); // SecurityContext에서 유저 정보 추출하는 메소드
-        Optional<GroupNoticeResponse> groupNoticeDTO = groupNoticeRepository.findByNoticeId(noticeId);
+        GroupNoticeResponse groupNoticeResponse = groupNoticeRepository.findByNoticeId(noticeId).orElse(null);
 
-        if (groupNoticeDTO.isPresent() && groupNoticeDTO.get().getNoticeWatcher() != null) {
-            List<String> Viewerlist = new ArrayList<>(groupNoticeDTO.get().getNoticeWatcher());
-
-            Viewerlist.add(userId);
-            Viewerlist = Viewerlist.stream().distinct().collect(Collectors.toList());
-
-            // JSON 문자열로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                String json = objectMapper.writeValueAsString(Viewerlist);
-
-                //System.out.println("ViewerDuplicateList as JSON :" + json);
-
-                groupNoticeRepository.updateNoticeWatcher(json, noticeId);
-            } catch (JsonProcessingException e) {
-                e.getMessage();
-            }
+        if (groupNoticeResponse == null) {
+            // 공지사항이 없을 경우 처리
+            return;
         }
+        Set<String> viewerSet = new HashSet<>(groupNoticeResponse.getNoticeWatcher());
+        viewerSet.add(userId);
+        String json = globalService.listToJson(new ArrayList<>(viewerSet));
+
+        groupNoticeRepository.updateNoticeWatcher(json, noticeId);
     }
 
 }

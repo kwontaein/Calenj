@@ -1,16 +1,17 @@
 package org.example.calenj.group.groupvote.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupinfo.domain.GroupEntity;
+import org.example.calenj.group.groupinfo.repository.GroupRepository;
+import org.example.calenj.group.groupvote.domain.GroupVoteEntity;
+import org.example.calenj.group.groupvote.domain.VoteChoiceEntity;
 import org.example.calenj.group.groupvote.dto.request.GroupVoteRequest;
 import org.example.calenj.group.groupvote.dto.response.GroupVoteResponse;
 import org.example.calenj.group.groupvote.dto.response.VoteChoiceResponse;
-import org.example.calenj.group.groupinfo.repository.GroupRepository;
 import org.example.calenj.group.groupvote.repository.Group_VoteRepository;
 import org.example.calenj.group.groupvote.repository.VoteChoiceRepository;
-import org.example.calenj.global.service.GlobalService;
-import org.example.calenj.group.groupinfo.domain.GroupEntity;
-import org.example.calenj.group.groupvote.domain.GroupVoteEntity;
-import org.example.calenj.group.groupvote.domain.VoteChoiceEntity;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class GroupVoteService {
     private final GroupRepository groupRepository;
     private final Group_VoteRepository groupVoteRepository;
     private final VoteChoiceRepository voteChoiceRepository;
+    private final WebSocketService webSocketService;
+
 
     /**
      * 투표 생성하기
@@ -46,6 +49,7 @@ public class GroupVoteService {
                     .build());
             i++;
         }
+        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userDetails.getUsername(), "vote", groupVoteEntity.getVoteId() + ", " + groupVoteEntity.getVoteTitle());
     }
 
     /**
@@ -89,19 +93,19 @@ public class GroupVoteService {
      */
     public void voteViewCount(UUID voteId) {
         UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
-        Optional<GroupVoteResponse> groupVoteDTO = groupVoteRepository.findByVoteId(voteId);
+        GroupVoteResponse groupVoteDTO = groupVoteRepository.findByVoteId(voteId).orElse(null);
+
+        if (groupVoteDTO == null) {
+            return;
+        }
 
         //조회한 사람 갱신
-        if (groupVoteDTO.isPresent() && groupVoteDTO.get().getVoteWatcher() != null) {
-            List<String> Viewerlist = new ArrayList<>(groupVoteDTO.get().getVoteWatcher());
+        Set<String> ViewerList = new HashSet<>(groupVoteDTO.getVoteWatcher());
+        ViewerList.add(userDetails.getUsername());
 
-            Viewerlist.add(userDetails.getUsername());
-            Set<String> ViewerDuplicates = new LinkedHashSet<>(Viewerlist); //중복제거
+        String json = globalService.listToJson(new ArrayList<>(ViewerList));
+        groupVoteRepository.updateVoteWatcher(json, voteId);
 
-            List<String> ViewerDuplicateList = new ArrayList<>(ViewerDuplicates); //다시 list형식으로 변환
-            String json = globalService.saveArrayList(ViewerDuplicateList);
-            groupVoteRepository.updateVoteWatcher(json, voteId);
-        }
     }
 
     /**
@@ -129,7 +133,7 @@ public class GroupVoteService {
 
             List<String> ViewerDuplicateList = new ArrayList<>(voters.getVoter()); //다시 list형식으로 변환
 
-            String json = globalService.saveArrayList(ViewerDuplicateList);
+            String json = globalService.listToJson(ViewerDuplicateList);
             voteChoiceRepository.updateVoterList(voters.getChoiceId(), json);
             i++;
         }
@@ -143,7 +147,7 @@ public class GroupVoteService {
 
         List<String> VoterCount = new ArrayList<>(uniqueVoters);
 
-        String json = globalService.saveArrayList(VoterCount);
+        String json = globalService.listToJson(VoterCount);
         groupVoteRepository.updateVoteCount(voteId, json);
     }
 

@@ -9,9 +9,10 @@ import jakarta.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /* StringListConverter.java */
-public class StringListConverter implements AttributeConverter<List<String>, String> {
+public class UUIDListConverter implements AttributeConverter<List<UUID>, String> {
 
     // JSON 데이터를 Java 객체로 변환하거나 Java 객체를 JSON 데이터로 변환하기 위해 사용
     private static final ObjectMapper mapper = new ObjectMapper()
@@ -23,7 +24,7 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
 
     //List를 String타입으로 변환
     @Override
-    public String convertToDatabaseColumn(List<String> attribute) {
+    public String convertToDatabaseColumn(List<UUID> attribute) {
         try {
             return mapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -32,13 +33,13 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     }
 
     @Override
-    public List<String> convertToEntityAttribute(String dbData) {
+    public List<UUID> convertToEntityAttribute(String dbData) {
         // dbData가 null이거나 비어있는 경우 빈 리스트를 반환합니다.
         if (dbData == null || dbData.trim().isEmpty()) {
             return Collections.emptyList(); // 또는 return null;
         }
 
-        TypeReference<List<String>> typeReference = new TypeReference<>() {
+        TypeReference<List<UUID>> typeReference = new TypeReference<>() {
         };
         try {
             return mapper.readValue(dbData, typeReference);

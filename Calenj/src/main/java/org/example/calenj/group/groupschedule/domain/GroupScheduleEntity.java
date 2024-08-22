@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.calenj.global.helper.StringListConverter;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.user.domain.UserEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "group_schedule")
@@ -32,7 +35,8 @@ public class GroupScheduleEntity {
     private UserEntity manager;
 
     @Column(name = "schedule_manager")
-    private String managers;
+    @Convert(converter = StringListConverter.class)
+    private List<String> managers = new ArrayList<>();
 
     //일정을 만든 그룹
     @ManyToOne
@@ -59,8 +63,9 @@ public class GroupScheduleEntity {
     @Column(name = "group_schedule_max_people")
     private int maxPeople;
 
-    //일정 참여 인원 수
+    //일정 참여 인원
     @Column(name = "group_schedule_attend_users")
-    private String member;
+    @Convert(converter = StringListConverter.class)
+    private List<String> member = new ArrayList<>();
 
 }
