@@ -1,4 +1,4 @@
-import {RootState} from "../../../entities/redux";
+import {addSubScribe, RootState} from "../../../entities/redux";
 import {subscribeCheckApi} from "../api/subscirbeCheckApi";
 import {
     synchronizationStomp,
@@ -29,6 +29,7 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
     const [userId, setUserId] = useState<string>();
     const receivedNewMessage = receivedMessage();
     const {fetchNextPage} = useReceiveChatInfinite(stomp.receiveMessage.param, receivedNewMessage)
+    const [chatRoomId, setChatRoomId] = useState<string|null>();
 
     useEffect(() => {
         if (!userId) return
@@ -58,12 +59,14 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
         if (param === '친구요청') {
             queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
         } else if (param === '친구수락') {
+            let chatRoomId = message[0].message
+            console.log(chatRoomId)
+            setChatRoomId(chatRoomId)
             queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
             queryClient.refetchQueries({queryKey: [QUERY_FRIEND_LIST_KEY]})
         } else if (param === '친구거절') {
             queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
         }
-
     }, [stomp]);
 
     useEffect(() => {
@@ -71,6 +74,12 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
             fetchNextPage()
         }
     }, [stomp.receiveMessage.receivedUUID]);
+
+    //친구요청 처리 이후 추가구독
+    useEffect(()=>{
+        if(!chatRoomId) return
+        dispatch(addSubScribe({subScribeParam:chatRoomId}))
+    },[chatRoomId])
 
 
     return (cookie: boolean) => {

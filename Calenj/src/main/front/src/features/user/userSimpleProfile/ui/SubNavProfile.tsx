@@ -20,17 +20,20 @@ import {
 } from "../../../../entities/reactQuery";
 import {useQueryClient} from "@tanstack/react-query";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {saveUserName} from "../../../../entities/redux";
 
 export const SubNavProfile: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
     const [userInfo, setUserInfo] = useState<UserInfo>()
     const friendListState = useFetchFriendList(userId);
     const queryClient = useQueryClient();
-
+    const dispatch = useDispatch()
     const userData: UserInfo | undefined = queryClient.getQueryData([QUERY_USER_INFO_KEY, userId]);
     //그룹 디테일 불러오기
     useEffect(() => {
         if (userData) {
+            dispatch(saveUserName({userId:userData.userId, userName:userData.nickname}))
             setUserInfo(userData);
         }
     }, [userData]);

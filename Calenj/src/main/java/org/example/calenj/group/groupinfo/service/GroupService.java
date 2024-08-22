@@ -15,6 +15,7 @@ import org.example.calenj.group.groupinfo.repository.Group_UserRepository;
 import org.example.calenj.group.groupinfo.repository.InviteCodeRepository;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.user.repository.UserRepository;
+import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,8 +34,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GroupService {
 
-    private final UserRepository userRepository;
     private final GlobalService globalService;
+    private final WebSocketService webSocketService;
+
+    private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
     private final InviteCodeRepository inviteCodeRepository;
@@ -125,13 +128,15 @@ public class GroupService {
      */
     public void joinGroup(UUID groupId) {
         GroupEntity groupEntity = groupRepository.findByGroupId(groupId).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
+        UserEntity myUserEntity = globalService.getUserEntity(null);
         // 생성한 유저 역할 -> 멤버로 지정해서 그룹 유저 테이블 저장
         GroupUserEntity groupUserEntity = GroupUserEntity.builder()
                 .role(GroupUserEntity.GroupRoleType.Member)
                 .group(groupEntity)
-                .user(globalService.getUserEntity(null))
+                .user(myUserEntity)
                 .build();
         group_userRepository.save(groupUserEntity);
+        webSocketService.groupEventChat(groupId.toString(), myUserEntity.getUserId().toString(), "join", "-> " + myUserEntity.getNickname() + " 님 어서오세요!");
     }
 
     /**
@@ -182,8 +187,11 @@ public class GroupService {
         String enableUse = globalService.compareDate(inviteCodeResponse.getEndDateTime());
 
         if (inviteCodeResponse.getGroupTitle() != null && enableUse.equals("useAble")) {
+
             inviteCodeResponse.setAbleCode("유효한 코드입니다");
         } else if (enableUse.equals("cannotUse")) {
+            //만료된 코드라면 삭제
+            inviteCodeRepository.deleteById(inviteCode);
             inviteCodeResponse.setAbleCode("만료된 코드입니다");
         } else {
             inviteCodeResponse.setAbleCode("잘못된 코드입니다");

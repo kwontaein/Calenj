@@ -16,12 +16,10 @@ export const useFriendChat = (userId:string)=>{
         if(!chatInfo) return
 
         if(isOpen){
-            dispatch(updateMainSubNavigation({friendParam:chatInfo.friendId}))
-            dispatch(updateNavigation({navigate:'main', navigateParam:chatInfo.chatId}))
+            dispatch(updateMainSubNavigation({friendParam:chatInfo.chatId}))
         }else{
             if(navigateParam === chatInfo.chatId){
                 dispatch(updateMainSubNavigation({friendParam:''}))
-                dispatch(updateNavigation({navigate:'main', navigateParam:''}))
             }
         }
 

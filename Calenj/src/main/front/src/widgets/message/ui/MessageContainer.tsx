@@ -14,6 +14,7 @@ export const MessageContainer: React.FC = () => {
     const messageBoxRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        console.log(navigateParam)
         dispatch(updateAppPosition({target: navigate, param: navigateParam}));
     }, [navigateParam]);
 
