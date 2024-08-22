@@ -184,7 +184,7 @@ public class FriendService {
         //이벤트테이블추가
         eventService.createEvent(eventContent, ownUser, friendUser, "Friend Request");
         friendRepository.save(friendEntity);
-        webSocketService.userAlarm(friendUser.getUserId(), "친구요청");
+        webSocketService.userAlarm(friendUser.getUserId(), "친구요청", friendEntity.getChattingRoomId().toString());
     }
 
     /**
@@ -245,11 +245,12 @@ public class FriendService {
             friendRepository.deleteByOwnUserId(friendUserId, myId);
             //이벤트 상태 거절로 변경
             eventService.updateEventState(friendUserId, EventEntity.statusType.REJECT, EventEntity.eventType.RequestFriend);
-            webSocketService.userAlarm(friendUserId, "친구거절");
+            webSocketService.userAlarm(friendUserId, "친구거절", friendResponse.getChattingRoomId().toString());
             return createErrorResponse("친구 요청을 거절했습니다.");
         } else {
             acceptFriend(friendUserId);
-            webSocketService.userAlarm(friendUserId, "친구수락");
+
+            webSocketService.userAlarm(friendUserId, "친구수락", friendResponse.getChattingRoomId().toString());
             return createSuccessResponse("친구 요청을 수락했습니다.", friendUserId);
         }
     }

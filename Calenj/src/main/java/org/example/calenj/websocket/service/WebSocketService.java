@@ -198,11 +198,17 @@ public class WebSocketService {
      * @param userId 알람 보낼 유저 아이디
      * @param kind   알람 종류
      */
-    public void userAlarm(UUID userId, String kind) {
+    public void userAlarm(UUID userId, String kind, String ChatId) {
+        MessageResponse messageResponse = new MessageResponse(UUID.randomUUID().toString(), globalService.nowTime(), userId.toString(), "Alarm", ChatId);
+
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setUserId(userId);
         chatMessageResponse.setParam(kind);
         chatMessageResponse.setState(ChatMessageRequest.fileType.ALARM);
+
+        if (kind.equals("친구수락")) {
+            chatMessageResponse.setMessage(Collections.singletonList(messageResponse));
+        }
 
         template.convertAndSend("/topic/personalTopic/" + userId, chatMessageResponse);
     }
