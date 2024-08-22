@@ -96,6 +96,7 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
             responseEventApi(userKey, 'ACCEPT').then((response) => {
                 if (response.success) {
                     dispatch(saveUserName({userId:userKey, userName: userInfo.userName}))
+                    queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
                     onClose()
                 }
                 window.alert(response.message)

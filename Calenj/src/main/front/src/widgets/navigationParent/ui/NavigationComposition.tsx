@@ -18,11 +18,8 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
     const userId = localStorage.getItem('userId')||'';
     const userInfo = useFetchUserInfo(userId); //사용자정보 저장
 
-    useEffect(() => {
-    }, [userInfo.isLoading]);
     //reactQuery로 그룹 디테일정보 fetching
     const groupDetailState = useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
-
 
     const dispatch = useDispatch();
 

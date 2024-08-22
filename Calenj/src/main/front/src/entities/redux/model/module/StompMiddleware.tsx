@@ -94,7 +94,6 @@ function* addSubScribe(stompClient: CompatClient){
         eventChannel(emit => {
             //subscriber 함수는 새로운 구독이 시작될 때 호출되고, 구독이 종료될 때 호출되는 unsubscribe 함수를 반환
             const subscribeMessage = () => {
-                console.log(`${subScribeParam}으로 구독을 실행합니다.`)
                 stompClient.subscribe(`/topic/friendMsg/${subScribeParam}`, (iMessage: IMessage) => {
                     emit(JSON.parse(iMessage.body));
                 })
