@@ -209,7 +209,7 @@ public class GroupScheduleService {
         // 서브목록 가져오기
         List<GroupSubScheduleResponse> responses = getSubScheduleList(groupScheduleEntity.getScheduleId());
         // 태그
-        List<String> tagKey = extractTagKey();
+        List<UUID> tagKey = extractTagKey();
         int plusTime = 0;
 
         for (GroupSubScheduleResponse response : responses) {
@@ -231,10 +231,10 @@ public class GroupScheduleService {
      *
      * @return
      */
-    private List<String> extractTagKey() {
+    private List<UUID> extractTagKey() {
         return calendarService.getTagEntityList().stream()
                 .filter(tag -> "그룹 일정".equals(tag.getName()))
-                .map(tag -> tag.getId().toString())
+                .map(tag -> tag.getId())
                 .findFirst()
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
@@ -248,7 +248,7 @@ public class GroupScheduleService {
      * @param tagKey
      * @return
      */
-    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<String> tagKey) {
+    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<UUID> tagKey) {
 
         List<String> repeatWeek = new ArrayList<String>(7);
         for (int i = 0; i < repeatWeek.size(); i++) {
@@ -287,7 +287,7 @@ public class GroupScheduleService {
         }
 
         //서브 일정에 유저 추가
-        groupSubScheduleRepository.updateJoinUser(subScheduleId, members.toString());
+        groupSubScheduleRepository.updateJoinUser(subScheduleId, members);
 
         return response;
     }
