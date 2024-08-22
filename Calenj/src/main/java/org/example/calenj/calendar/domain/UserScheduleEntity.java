@@ -30,8 +30,8 @@ public class UserScheduleEntity {
     private UserEntity userId;
 
     @Column(name = "tag_ids")
-    @Convert(converter = StringListConverter.class)
-    private List<String> tagIds = new ArrayList<>();
+    @Convert(converter = UUIDListConverter.class)
+    private List<UUID> tagIds = new ArrayList<>();
 
     //제목
     @Column(name = "user_schedule_title")

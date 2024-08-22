@@ -43,5 +43,5 @@ public interface Group_Sub_Schedule_Repository extends JpaRepository<GroupSubSch
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update group_sub_schedule gss set gss.joinUser =:joinUser where gss.subScheduleId =:subScheduleId")
-    void updateJoinUser(@Param("subScheduleId") UUID subScheduleId, @Param("joinUser") String joinUser);
+    void updateJoinUser(@Param("subScheduleId") UUID subScheduleId, @Param("joinUser") List<String> joinUser);
 }

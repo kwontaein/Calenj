@@ -287,7 +287,7 @@ public class GroupScheduleService {
         }
 
         //서브 일정에 유저 추가
-        groupSubScheduleRepository.updateJoinUser(subScheduleId, members.toString());
+        groupSubScheduleRepository.updateJoinUser(subScheduleId, members);
 
         return response;
     }
