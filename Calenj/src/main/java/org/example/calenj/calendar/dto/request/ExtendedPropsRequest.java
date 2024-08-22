@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ExtendedPropsRequest {
 
-    private List<String> tagKeys;
+    private List<UUID> tagKeys;
 
     private String formState;
     //내용
