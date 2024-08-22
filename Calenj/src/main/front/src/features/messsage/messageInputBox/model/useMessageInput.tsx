@@ -10,7 +10,7 @@ import {imageUploadApi} from "../../../../shared/api/imageUploadApi";
 
 
 export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageInput => {
-    const param = useSelector((state: RootState) => state.navigateInfo.navigateParam)
+    const {navigateParam, navigate} = useSelector((state: RootState) => state.navigateInfo)
     const {inputSize, inputMaxSize} = useSelector((state: RootState) => state.messageInputSize);
 
     const [content, setContent] = useState<string>('');
@@ -19,10 +19,10 @@ export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageIn
 
     useEffect(() => {
         if (chatRef.current) {
-            chatRef.current.value = ChatContentMap.get(param) || ''
+            chatRef.current.value = ChatContentMap.get(navigateParam) || ''
             reSizingInputHeight()
         }
-    }, [param])
+    }, [navigateParam])
 
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -74,7 +74,8 @@ export const useMessageInput = (multiImageHandler: ReturnFileHandler): MessageIn
 
         if (newContent === '') return;
         //메세지 전송
-        dispatch(sendStompMsg({target: 'groupMsg', param: param, message: newContent, messageType: "message"}))
+        let target = navigate ==='main' ? 'friendMsg' :'groupMsg'
+        dispatch(sendStompMsg({target: target, param: navigateParam, message: newContent, messageType: "message"}))
         setContent('');
         if (chatRef.current) {
             chatRef.current.value = ''

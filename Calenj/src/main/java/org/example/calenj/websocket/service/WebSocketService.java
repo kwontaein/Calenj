@@ -281,7 +281,6 @@ public class WebSocketService {
                 globalService.nowTime(),
                 UUID.randomUUID(),
                 0,
-                0,
                 messageType
         );
         MessageResponse messageResponse = new MessageResponse(

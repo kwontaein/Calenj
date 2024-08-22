@@ -14,7 +14,6 @@ export const DateEventDetail_Container = styled.div`
     0 9px 46px 8px rgba(0, 0, 0, .12),
     0 11px 15px -7px rgba(0, 0, 0, .2);
     transition: opacity 0.2s ease-in-out;
-    
 `
 
 

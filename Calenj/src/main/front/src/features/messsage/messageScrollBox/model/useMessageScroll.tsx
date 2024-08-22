@@ -29,6 +29,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const isRender = useRef<boolean>();
     const [isReceive, setIsReceive] = useState<boolean>(false);
     const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
+    const {navigate} = useSelector((state: RootState) => state.navigateInfo)
 
 
     useEffect(() => {
@@ -61,7 +62,11 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (clickState === '' && scrollHeight < scrollTop + screenHeightSize) {
             scrollRef.current.scrollTop -= Math.round(screenHeightSize)
         } else {
-            scrollRef.current.scrollTop += Math.round(screenHeightSize);
+            if(clickState === '') {
+                scrollRef.current.scrollTop -= Math.round(screenHeightSize);
+            }else{
+                scrollRef.current.scrollTop += Math.round(screenHeightSize);
+            }
         }
     }, [clickState]);
 
@@ -86,8 +91,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     //컴포넌트 랜더링과 상관없이 인스턴스를 유지하게 memo
     const debouncing_EndPoint = useMemo(() => {
         return debounce(() => {
+            let target = navigate ==='main' ? 'friendMsg' :'groupMsg'
             endPointMap.set(stompParam, 0)
-            dispatch(requestFile({target: 'groupMsg', param: stompParam, requestFile: "ENDPOINT", nowLine: 0}));
+            dispatch(requestFile({target: target, param: stompParam, requestFile: "ENDPOINT"}));
         }, 2000);
     }, [stompParam]);
 

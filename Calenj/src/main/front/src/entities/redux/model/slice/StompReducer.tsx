@@ -12,6 +12,7 @@ export const UPDATE_ONLINE = 'UPDATE_ONLINE'
 export const UPDATE_LOADING = "UPDATE_LOADING"
 export const UPDATE_APP_POSITION = "UPDATE_APP_POSITION"
 export const UPDATE_STOMP_STATE = "UPDATE_STOMP_STATE"
+export const ADD_SUBSCRIBE = "ADD_SUBSCRIBE"
 
 //todo 추가 하나
 type stateType = "ALARM" | "SEND" | "READ" | "RELOAD" | "ONLINE" | "OFFLINE" | "";
@@ -36,11 +37,11 @@ export interface StompState {
     message: string, //송신한 메시지
     receiveMessage: ReceivedStomp, //받은 메세지 정보
     requestFile: requestType,
-    nowLine: number,
     isOnline: string, //온라인여부
     loading: boolean, //로딩여부 (stomp 셋팅 후 true)
-    isConnect: boolean,
+    isConnect: boolean, //웹소켓 연결여부=>로그아웃 시 false
     messageType: string,
+    subScribeParam: string, //추가로 구독할 param
 }
 
 
@@ -56,7 +57,6 @@ export interface DispatchStompProps {
         target: string,
         param: string,
         requestFile: requestType,
-        nowLine: number,
     }) => void;
     sendStompMsg: (payload: {
         target: string, param: string, message: string,
@@ -85,7 +85,6 @@ export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps 
         target: string,
         param: string,
         requestFile: requestType,
-        nowLine: number,
     }) => dispatch(requestFile(payload)),
     sendStompMsg: (payload: {
         target: string, param: string, message: string,
@@ -129,7 +128,7 @@ export const updateAppPosition = (payload: { target: string, param: string }) =>
     payload: payload,
 })
 
-export const requestFile = (payload: { target: string, param: string, requestFile: requestType, nowLine: number }) => ({
+export const requestFile = (payload: { target: string, param: string, requestFile: requestType }) => ({
     type: REQUEST_FILE,
     payload: payload,
 });
@@ -169,6 +168,10 @@ export const updateLoading = (payload: { loading: boolean }) => ({
     type: UPDATE_LOADING,
     payload: payload,
 });
+export const addSubScribe = (payload:{subScribeParam:string})=>({
+    type: ADD_SUBSCRIBE,
+    payload: payload,
+})
 
 
 export interface Destination {
@@ -194,11 +197,11 @@ const initialState: StompState = {
         receivedUUID:''
     }, // 초기 message 상태
     requestFile: '',
-    nowLine: -1,
     isOnline: "OFFLINE",
     loading: false,
     isConnect: false,
-    messageType: ""
+    messageType: "",
+    subScribeParam:''
 };
 
 //주소를 저장, app/topic을 구분해서 구독 및 메시지 전달을 가능하게 유동적으로 설정
@@ -226,7 +229,6 @@ const StompReducer = handleActions(
             target: action.payload.target,
             param: action.payload.param,
             requestFile: action.payload.requestFile,
-            nowLine: action.payload.nowLine,
         }),
 
         [SEND_STOMP_MSG]: (state, action) => ({
@@ -253,6 +255,10 @@ const StompReducer = handleActions(
             ...state,
             loading: action.payload.loading,
         }),
+        [ADD_SUBSCRIBE]: (state, action) => ({
+            ...state,
+            subScribeParam:action.payload.subScribeParam
+        })
     },
     initialState
 );

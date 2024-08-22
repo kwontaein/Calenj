@@ -30,6 +30,8 @@ export const ScrollableDiv = styled.div`
 
 /** 메시지 관련 styled */
 export const MessageBoxContainer = styled.div<CheckBeforeSender>`
+    min-width: 340px;
+    box-sizing: border-box;
     padding-top: ${props => (props.$sameUser ? '0px' : '12px')};
     padding-inline: 12px;
     padding-bottom: 0;

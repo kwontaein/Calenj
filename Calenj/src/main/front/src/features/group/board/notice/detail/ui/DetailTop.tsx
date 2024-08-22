@@ -12,10 +12,11 @@ interface Details{
     title: string;
     created:string;
     watcher:string[],
+    isMessage?:boolean,
 }
 
 
-export const DetailTop:React.FC<Details>=({state, title,created,watcher})=>{
+export const DetailTop:React.FC<Details>=({state, title,created,watcher,isMessage})=>{
     const dispatch = useDispatch()
     return(
         <BoardDetailTop_Container>
@@ -25,7 +26,8 @@ export const DetailTop:React.FC<Details>=({state, title,created,watcher})=>{
                         {title}
                     </GroupNoticeListTitle>}
                     {(state==="vote") && title}
-                    {state==="vote" &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
+
+                    { (!isMessage && state==="vote") &&<i className="fi fi-br-cross-small" style={{marginTop: "3px", fontSize:'15px'}}
                                          onClick={()=>{dispatch(updateBoardParam({voteParam:''}))}}></i>}
                 </BoardDetailTop_title>
                 <MiniText>

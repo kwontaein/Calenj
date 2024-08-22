@@ -59,7 +59,6 @@ export const TransVoteContainer = styled.div<VoteAble>`
 
 
 export const VoteDetail_Container = styled.div`
-    width: 500px;
     height: auto;
     border-radius: 10px;
 `
