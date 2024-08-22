@@ -37,6 +37,8 @@ import {
 import {AHMFormat, changeDateForm} from "../../../../shared/lib";
 import {responseEventApi} from "../api/responseEventApi";
 import {getFriendUserProfileApi} from "../api/getFriendUserProfileApi";
+import {useDispatch} from "react-redux";
+import {addSubScribe, saveUserName} from "../../../../entities/redux";
 
 interface RequestFriendProps {
     onClose: () => void,
@@ -51,7 +53,7 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
     const [sendMsg, setSendMsg] = useState<string>('');
     const queryClient = useQueryClient();
-
+    const dispatch= useDispatch();
     const getUserInfo = async () => {
         const userData = await getFriendUserProfileApi(userKey);
         setUserInfo(userData)
@@ -81,7 +83,6 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
     const responseEventAccept = () => {
         if (waitingView) {
             //요청 대기중인 경우 > 요청을 취소(롤백)
-
             return
         }
         if (myRequest && userInfo) {
@@ -94,8 +95,7 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
             //내가 요청에 응답하는 경우
             responseEventApi(userKey, 'ACCEPT').then((response) => {
                 if (response.success) {
-                    queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
-                    queryClient.refetchQueries({queryKey: [QUERY_FRIEND_LIST_KEY]}) //친구 리스트 갱신
+                    dispatch(saveUserName({userId:userKey, userName: userInfo.userName}))
                     onClose()
                 }
                 window.alert(response.message)

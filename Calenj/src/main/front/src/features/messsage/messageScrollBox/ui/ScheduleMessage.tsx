@@ -1,4 +1,4 @@
-import React, {useId, useReducer, useRef, useState} from "react";
+import React, {useEffect, useId, useReducer, useRef, useState} from "react";
 import {UserDateEvent} from "../../../../entities/reactQuery";
 import {Modal_Background, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
 import {
@@ -31,23 +31,27 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
     const week = ["일", "월", "화", "수", "목", "금", "토"];
     const id = useId()
     const [isShared, setIsShare] = useReducer((prev) => !prev, false)
+
+    useEffect(() => {
+        console.log(window.innerWidth)
+    }, [window.innerWidth]);
     return (
         <div>
-            <DateEventDetail_Container>
+            <DateEventDetail_Container style={{marginTop:'10px', width:`auto`}}>
                 <EventOption_Container/>
                 <TitleContent_Container>
-                    <TitleContent_Wrapper>
+                    <TitleContent_Wrapper style={{fontSize:'20px'}}>
                         {events.title}
                     </TitleContent_Wrapper>
                 </TitleContent_Container>
 
 
                 <EventDetailContent_Wrapper $isRepeat={formState === 'schedule'}>
-                    <DateTime_Container>
-                        <EventDetailIcon_Wrapper>
+                    <DateTime_Container style={{height:'25px'}}>
+                        <EventDetailIcon_Wrapper style={{fontSize:'15px', marginTop:'0'}}>
                             <i className="fi fi-rr-clock-three"></i>
                         </EventDetailIcon_Wrapper>
-                        <EventTimeContent_Wrapper>
+                        <EventTimeContent_Wrapper style={{fontSize: '15px'}}>
                             {shortAHMFormat2(events.start as Date)}
                             {(shortAHMFormat2(events.start as Date) === shortAHMFormat2(events.end as Date) || formState === 'todo') ? '' : " ~ " + shortAHMFormat2(events.end as Date)}
                         </EventTimeContent_Wrapper>
@@ -96,50 +100,7 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
 
                         </EventDetailContent_Container>
                     </DateEventContent_Container>
-                    {formState !== "todo" && !(formState === 'schedule' && !repeatState.repeat) &&
-                        <AdditionalInfo_Container>
-                            {formState === "promise" &&
-                                <div style={{
-                                    width: 'calc(100% - 10px)',
-                                    marginRight: '10px',
-                                    marginTop: '10px'
-                                }}>
-                                    <div style={{fontSize: '10px'}}>참여인원</div>
-                                    {(friendList !== null && friendList.length > 0) ?
-                                        <JoinFriendList_Container>
-                                            {friendList.map((friendId: string) => (
-                                                <ProfileContainer $userId={friendId} key={friendId}
-                                                                  style={{width: '18px', height: '18px'}}/>
-                                            ))}
-                                        </JoinFriendList_Container>
-                                        :
-                                        <div style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            alignItems: "center",
-                                            justifyContent: 'center',
-                                            fontSize: '13px',
-                                            color: `${TextColor}77`
-                                        }}>지정한 인원이 없습니다.</div>
-                                    }
-                                </div>
-                            }
-                            {(formState === "schedule" && repeatState.repeat) &&
 
-                                <div style={{fontSize: '13px'}}>
-                                    반복 시작일 : {shortAHMFormat2(repeatState.startTime)}
-                                    {repeatState.repeatDeadline !== "count" ?
-                                        <div style={{fontSize: 'inherit'}}>
-                                            반복 마감일 : {shortAHMFormat2(repeatState.endTime)}
-                                        </div> :
-                                        <div style={{fontSize: 'inherit'}}>
-                                            반복 횟수 : {repeatState.repeatCount}회 반복
-                                        </div>
-                                    }
-                                </div>
-                            }
-                        </AdditionalInfo_Container>
-                    }
                 </EventDetailContent_Wrapper>
                 {isShared ?
                     <ShareDateView onClose={setIsShare} scheduleId={events.id}/> :

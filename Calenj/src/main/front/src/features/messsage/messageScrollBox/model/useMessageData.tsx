@@ -63,7 +63,6 @@ export const useMessageData = (): useMessageData => {
 
     const newMessageList = useMemo(() => {
         if (receivedMessages.data) {
-            console.log(receivedMessages.data)
             return receivedMessages.data.pages.filter((message) => message.chatUUID !== "시작라인")
         }
         return []

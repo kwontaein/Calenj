@@ -17,8 +17,7 @@ interface ReturnDetail{
     data :  VoteDetail | null | undefined
 }
 
-export const useVoteDetailData = () =>{
-    const {voteParam} = useSelector((state:RootState) => state.boardOption)
+export const useVoteDetailData = (voteParam:string) =>{
     const [voteItems, setVoteItems] = useState<VoteChoiceResponse[]|null>(null); //정렬된 각각의 항목 (N)
     const [myVote,setMyVote] = useState<boolean[]>(); //내가 투표한 항목순번에 true
     const [isAttend,setAttend] =useState<boolean>(false); //내가 투표한 전적이 있는지

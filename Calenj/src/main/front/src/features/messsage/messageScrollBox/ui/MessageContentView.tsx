@@ -4,6 +4,7 @@ import React, {useEffect} from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 import {DateEventDetail} from "../../../calendar/detail";
 import {ScheduleMessage} from "./ScheduleMessage";
+import {VoteMessage} from "./VoteMessage";
 
 interface MessageProps {
     messageType: string,
@@ -11,9 +12,7 @@ interface MessageProps {
 }
 
 export const MessageContentView: React.FC<MessageProps> = ({message, messageType}) => {
-    const onClose = () => {
 
-    }
     return (
         <FullScreen_div>
             {messageType === 'title' &&
@@ -22,9 +21,7 @@ export const MessageContentView: React.FC<MessageProps> = ({message, messageType
                 </div>
             }
             {messageType === 'vote' &&
-                <div>
-                    {message.replace(/\\lineChange/g, '\n').trim()}
-                </div>
+                <VoteMessage voteData={message}/>
             }
             {messageType === 'schedule' &&
                 <div>

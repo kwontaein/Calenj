@@ -67,7 +67,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                 dynamicEventTag[tagId].isClick
             )
         )
-
+        console.log(events)
         setCurrentEvents(events);
 
         // console.log(events)

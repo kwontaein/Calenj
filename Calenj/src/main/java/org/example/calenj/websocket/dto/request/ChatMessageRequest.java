@@ -18,7 +18,6 @@ public class ChatMessageRequest {
     private int endPoint;
     private String sendDate;
     private UUID chatUUID;
-    private int nowLine;
     private int fileSize;
     private String messageType;
 

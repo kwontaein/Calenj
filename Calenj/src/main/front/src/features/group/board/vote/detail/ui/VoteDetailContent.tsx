@@ -15,8 +15,7 @@ import {
 import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import {VoteDetailProps} from "../model/types";
 
-export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend, myVote, voteEnd, pickVote,isCreator})=>{
-    const {voteParam} = useSelector((state:RootState) => state.boardOption)
+export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend, myVote, voteEnd, pickVote,isCreator, voteParam})=>{
     const {data} = useFetchVoteDetail(voteParam);
     const {voteComplete, updateVote, earlyVoteEnd, checkVoteBefore} = useVoteContent(voteParam,isAttend, myVote)
 

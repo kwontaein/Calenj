@@ -13,14 +13,13 @@ import {useEffect, useState} from "react";
 import {
     QUERY_FRIEND_LIST_KEY,
     QUERY_REQUEST_FRIEND_LIST,
-    QUERY_RESPONSE_FRIEND_LIST,
+    QUERY_RESPONSE_FRIEND_LIST, useReceiveChatInfinite,
 } from "../../../entities/reactQuery";
 import {
     createFriendOnline, updateFriendOffline,
     updateFriendOnline, updateGroupOnlineUserList,
 } from "../../../entities/redux/model/slice/OnlineUserStorageSlice";
 import {useQueryClient} from "@tanstack/react-query";
-import {useReceiveChatInfinite} from "../../../entities/reactQuery/model/queryModel";
 import {receivedMessage} from "../../../entities/message";
 
 export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => {
