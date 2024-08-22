@@ -251,6 +251,7 @@ public class FriendService {
             acceptFriend(friendUserId);
 
             webSocketService.userAlarm(friendUserId, "친구수락", friendResponse.getChattingRoomId().toString());
+            webSocketService.userAlarm(myId, "친구수락", friendResponse.getChattingRoomId().toString());
             return createSuccessResponse("친구 요청을 수락했습니다.", friendUserId);
         }
     }
