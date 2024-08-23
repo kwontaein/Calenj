@@ -1,7 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useReducer, useRef, useState} from "react";
 import styled from "styled-components";
-import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
+import {FullScreen_div, Modal_Background} from "../../../../shared/ui/SharedStyled";
 import {useComponentSize} from "../../../../shared/model";
+import {ImagePreView} from "../../messageImageBox/ui/ImagePreView";
+import {ImagePreView_Container} from "../../messageImageBox/ui/ImagePreViewStyled";
+import {ImagePreview} from "../../../../shared/ui/MultiImageUploadStyled";
 
 const GridContainer = styled.div.attrs<{$widthSize:number, $imageLength:number}>(props=>({
     style:{
@@ -28,9 +31,23 @@ const Grid_Image = styled.img.attrs<{$widthSize:number, $imageLength:number}>(pr
 `
 export const ImageGrid: React.FC<{ images: GridData[] }> = ({images}) => {
     const [contentRef, contentSize] = useComponentSize()
+    const modalBackground = useRef<HTMLDivElement>(null);
+    const [imagePreview, setImagePreview] = useState<GridData|null>(null);
 
     return (
         <FullScreen_div ref={contentRef}>
+            {imagePreview &&
+                <Modal_Background ref={modalBackground} onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                    if (e.target === modalBackground.current) {
+                        setImagePreview(null)
+                    }
+                }}>
+                    <ImagePreView_Container>
+                        <ImagePreview src={`/image/savedImage/${imagePreview.id}.${imagePreview.extension}`} alt={`Preview`} style={{maxWidth:'800px', maxHeight:'800px'}}/>
+                    </ImagePreView_Container>
+                </Modal_Background>
+            }
+
             <GridContainer $widthSize={contentSize.width} $imageLength={images.length}>
                 {images.map((image) => (
                     <Grid_Element key={image.id}>
@@ -38,7 +55,7 @@ export const ImageGrid: React.FC<{ images: GridData[] }> = ({images}) => {
                             src={`/image/savedImage/${image.id}.${image.extension}`}  // 이미지 경로를 환경에 맞게 수정
                             alt={image.filename}
                             draggable="false"
-                            //온클릭 추가 -> 클릭시 크게 보기
+                            onClick={()=>setImagePreview(image)}
                         />
                     </Grid_Element>
                 ))}

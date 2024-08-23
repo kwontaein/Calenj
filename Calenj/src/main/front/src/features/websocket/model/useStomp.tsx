@@ -21,6 +21,7 @@ import {
 } from "../../../entities/redux/model/slice/OnlineUserStorageSlice";
 import {useQueryClient} from "@tanstack/react-query";
 import {receivedMessage} from "../../../entities/message";
+import {useFriendChat} from "../../friend/list";
 
 export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => {
     const dispatch = useDispatch()
@@ -30,6 +31,8 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
     const receivedNewMessage = receivedMessage();
     const {fetchNextPage} = useReceiveChatInfinite(stomp.receiveMessage.param, receivedNewMessage)
     const [chatRoomId, setChatRoomId] = useState<string|null>();
+    const startChat = useFriendChat(userId||'')
+
 
     useEffect(() => {
         if (!userId) return
@@ -71,6 +74,11 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
 
     useEffect(() => {
         if (stomp.receiveMessage.state === "SEND") {
+            const {param, target} = stomp.receiveMessage
+            console.log(target, param)
+            if(target ==="friendMsg"){
+                startChat(param, true)
+            }
             fetchNextPage()
         }
     }, [stomp.receiveMessage.receivedUUID]);

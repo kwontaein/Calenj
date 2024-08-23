@@ -10,6 +10,7 @@ import {
     FriendListUL,
     FriendListView
 } from "../../../../shared/ui/FriendListStyled";
+import {CalenJLogo} from "../../../../shared/ui/logo/CalenJLogo";
 
 
 
@@ -49,6 +50,9 @@ export const ResponseFriendList: React.FC = () => {
                             <Friend_Hr/>
                         </div>
                     ))}
+                    {responseFriendState.data.length===0 &&
+                        <CalenJLogo text={"현재는 아무런 요청도 없네요.. 캘포도 친구를 기다리고 있어요"}/>
+                    }
                 </FriendListUL>
             )}
         </FriendList_Container>

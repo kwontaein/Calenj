@@ -10,6 +10,7 @@ import {
     FriendListUL,
     FriendListView
 } from "../../../../shared/ui/FriendListStyled";
+import {CalenJLogo} from "../../../../shared/ui/logo/CalenJLogo";
 
 export const RequestFriendList : React.FC = () =>{
     const [modal, setModal] = useState<boolean>(false)
@@ -50,6 +51,9 @@ export const RequestFriendList : React.FC = () =>{
                             <Friend_Hr/>
                         </div>
                     ))}
+                    {requestFriendState.data.length ===0 &&
+                        <CalenJLogo text={"대기중인 친구가 없다는 건 아마도 다행이겠죠..?"}/>
+                    }
                 </FriendListUL>
             )}
         </FriendList_Container>

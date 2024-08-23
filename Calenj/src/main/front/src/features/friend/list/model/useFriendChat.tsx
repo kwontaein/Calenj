@@ -4,7 +4,7 @@ import {useFetchUserChatList} from "../../../../entities/reactQuery";
 import {updateUserChatApi} from "../api/updateUserChatApi";
 import {useEffect} from "react";
 
-export const useFriendChat = (userId:string)=>{
+export const useFriendChat = (userId:string, updateParam?:boolean)=>{
     const dispatch = useDispatch()
     const {data, refetch} = useFetchUserChatList(userId)
     const {navigateParam} = useSelector((state:RootState)=> state.navigateInfo)
@@ -14,12 +14,13 @@ export const useFriendChat = (userId:string)=>{
         if(!data) return
         let chatInfo = data.filter(({friendId})=> friendId===friendUserId).at(-1)
         if(!chatInfo) return
-
-        if(isOpen){
-            dispatch(updateMainSubNavigation({friendParam:chatInfo.chatId}))
-        }else{
-            if(navigateParam === chatInfo.chatId){
-                dispatch(updateMainSubNavigation({friendParam:''}))
+        if(updateParam){
+            if(isOpen){
+                dispatch(updateMainSubNavigation({friendParam:chatInfo.chatId}))
+            }else{
+                if(navigateParam === chatInfo.chatId){
+                    dispatch(updateMainSubNavigation({friendParam:''}))
+                }
             }
         }
 

@@ -30,6 +30,7 @@ export const SubNavProfile: React.FC = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch()
     const userData: UserInfo | undefined = queryClient.getQueryData([QUERY_USER_INFO_KEY, userId]);
+
     //그룹 디테일 불러오기
     useEffect(() => {
         if (userData) {

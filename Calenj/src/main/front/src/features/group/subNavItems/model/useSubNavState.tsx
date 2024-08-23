@@ -3,7 +3,6 @@ import {
     updateGroupSubClickState,
     updateGroupSubParam,
     toggleCurrentMap,
-    updateAppPosition
 } from "../../../../entities/redux";
 import {useDispatch} from "react-redux";
 

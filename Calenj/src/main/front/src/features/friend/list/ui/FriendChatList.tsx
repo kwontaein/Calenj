@@ -24,7 +24,7 @@ export const FriendChatList: React.FC = () => {
     const userChatList = useFetchUserChatList(userId)
     const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
     const [hover,setHover] = useState<string|null>(null)
-    const startChat =useFriendChat(userId)
+    const startChat =useFriendChat(userId, true)
     const {navigateParam} = useSelector((state: RootState) => state.navigateInfo);
     const deleteRef = useRef<(HTMLDivElement | null)[]>([]);
     const dispatch = useDispatch()
@@ -34,7 +34,6 @@ export const FriendChatList: React.FC = () => {
         <div>
             <SubNavigationButton subItem={'친구'} subItemsHandler={(target:string)=> {
                 dispatch(updateMainSubNavigation({friendParam:''}))
-                dispatch(updateNavigation({navigate:'main', navigateParam:''}))
             }}/>
             <FriendTop_Container onClick={() => setFriendToggle(prev => !prev)}>
                 <TopContent_Container>
@@ -65,7 +64,7 @@ export const FriendChatList: React.FC = () => {
                             </OnlineLED_Container>
 
                             <FriendUserName_Wrapper>
-                                {userNameStorage[user.friendId].userName}
+                                {userNameStorage[user.friendId] && userNameStorage[user.friendId].userName}
                             </FriendUserName_Wrapper>
                             {hover && hover===user.friendId &&
                                 <FriendDeleteIcon_Wrapper onClick={()=>startChat(user.friendId, false)} ref={(el)=> deleteRef.current[idx] =el}>
