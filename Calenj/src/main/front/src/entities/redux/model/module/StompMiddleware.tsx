@@ -22,7 +22,8 @@ interface StompData {
 }
 
 
-export const endPointMap = new Map();
+export const groupEndPointMap = new Map();
+export const friendEndPointMap = new Map();
 export const scrollPointMap = new Map();
 export const toggleCurrentMap = new Map();
 export const BoardFilterMap = new Map();
@@ -158,13 +159,23 @@ function* startStomp(destination: Destination): any {
         const receiveData = yield put(receivedStompMsg({receiveMessage}));
 
 
-        const {state, param, userId, message, endPoint} = receiveData.payload.receiveMessage
-        console.log(state)
-        if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
-            endPointMap.set(param, endPointMap.get(param) + 1)
-        } else if (state === "ALARM" && message === null) {
-            endPointMap.set(param, endPointMap.get(param) || endPoint)
+        const {state, param, userId, message, endPoint, target} = receiveData.payload.receiveMessage
+
+        console.log(receiveData.payload.receiveMessage)
+        if(target==="groupMsg"){
+            if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
+                groupEndPointMap.set(param, groupEndPointMap.get(param) + 1)
+            } else if (state === "ALARM" && message === null) {
+                groupEndPointMap.set(param, groupEndPointMap.get(param) || endPoint)
+            }
+        }else if(target==="friendMsg"){
+            if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
+                friendEndPointMap.set(param, friendEndPointMap.get(param) + 1)
+            } else if (state === "ALARM" && message === null) {
+                friendEndPointMap.set(param, friendEndPointMap.get(param) || endPoint)
+            }
         }
+
     }
 
 }

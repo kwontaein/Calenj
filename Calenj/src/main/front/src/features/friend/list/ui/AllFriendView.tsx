@@ -32,7 +32,7 @@ export const AllFriendView: React.FC<FriendListProps> = ({friendList}) => {
     const dotsRef = useClickOutSideCheck(dotsInfo!==null,()=>setDotsInfo(null))
     const [searchText,setSearchText] = useState<string>('')
     const deleteFriend =useDeleteFriend(userId)
-    const startChat = useFriendChat(userId)
+    const startChat = useFriendChat(userId, true)
 
 
     return (

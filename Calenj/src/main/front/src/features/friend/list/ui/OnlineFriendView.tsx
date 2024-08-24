@@ -23,6 +23,7 @@ import {useDeleteFriend} from "../model/useDeleteFriend";
 import {SearchInput} from "../../../../shared/ui/SearchInput";
 import {useFriendChat} from "../model/useFriendChat";
 import {FriendListProps, hoverInfo} from "../model/types";
+import {CalenJLogo} from "../../../../shared/ui/logo/CalenJLogo";
 
 export const OnlineFriendView: React.FC<FriendListProps> = ({friendList}) => {
     const userId = localStorage.getItem('userId') || ''
@@ -33,15 +34,17 @@ export const OnlineFriendView: React.FC<FriendListProps> = ({friendList}) => {
     const [searchText,setSearchText] = useState<string>('')
 
     const deleteFriend =useDeleteFriend(userId)
-    const startChat = useFriendChat(userId)
+    const startChat = useFriendChat(userId, true)
 
     return (
         <FriendList_Container>
-            {friendList.filter(({friendUserId})=> userList.includes(friendUserId)).length>0 &&
+            {friendList.filter(({friendUserId})=> userList.includes(friendUserId)).length>0 ?
                 <span>
                     <SearchInput searchText={searchText} placeholder={'검색하기'} setSearchText={setSearchText}/>
                     <FriendListCount_Container>온라인 - {friendList.filter(({friendUserId})=> userList.includes(friendUserId)).length}명</FriendListCount_Container>
                 </span>
+                :
+                <CalenJLogo text={"오늘은 조용하네요 캘포도 휴식을 취해야겠어요"}/>
             }
             <FriendListUL>
                 {friendList.filter(({nickName})=> nickName.includes(searchText)).map((friend: FriendList) => (

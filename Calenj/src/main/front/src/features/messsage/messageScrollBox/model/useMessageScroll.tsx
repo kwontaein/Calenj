@@ -1,8 +1,9 @@
 import {Message, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {endPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
+import { groupEndPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
+import {friendEndPointMap} from "../../../../entities/redux/model/module/StompMiddleware";
 
 interface ReturnScroll {
     scrollRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -20,7 +21,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         clickState
     } = useSelector((state: RootState) => state.subNavigation.group_subNavState)
     const {inputSize} = useSelector((state: RootState) => state.messageInputSize);
-    const stompParam = useSelector((state: RootState) => state.stomp.param)
+    const {param, target} = useSelector((state: RootState) => state.stomp)
     const beforeInputSize = useRef(inputSize);
     const userId = localStorage.getItem("userId");
     //높이 관련
@@ -29,7 +30,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const isRender = useRef<boolean>();
     const [isReceive, setIsReceive] = useState<boolean>(false);
     const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
-    const {navigate} = useSelector((state: RootState) => state.navigateInfo)
 
 
     useEffect(() => {
@@ -50,9 +50,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         return () => {
             if (beforeScrollTop.current === undefined) return
             //스크롤이 존재했는지 체크
-            scrollPointMap.set(stompParam, beforeScrollTop.current);
+            scrollPointMap.set(param, beforeScrollTop.current);
         }
-    }, [stompParam]);
+    }, [param]);
 
 
     useEffect(() => {
@@ -80,10 +80,10 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
             } else { //위로
                 scrollRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
             }
-            scrollPointMap.set(stompParam, scrollRef.current.scrollTop)
+            scrollPointMap.set(param, scrollRef.current.scrollTop)
 
         }
-    }, [clickState, mode, stompParam, screenHeightSize]);
+    }, [clickState, mode, param, screenHeightSize]);
 
 
     const [showDown, setShowDown] = useState<boolean>(true);
@@ -91,11 +91,11 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     //컴포넌트 랜더링과 상관없이 인스턴스를 유지하게 memo
     const debouncing_EndPoint = useMemo(() => {
         return debounce(() => {
-            let target = navigate ==='main' ? 'friendMsg' :'groupMsg'
-            endPointMap.set(stompParam, 0)
-            dispatch(requestFile({target: target, param: stompParam, requestFile: "ENDPOINT"}));
+            let currentTarget = target ==='main' ? 'friendMsg' :'groupMsg'
+            target ==='main' ? friendEndPointMap.set(param,0) : groupEndPointMap.set(param, 0)
+            dispatch(requestFile({target: currentTarget, param: param, requestFile: "ENDPOINT"}));
         }, 2000);
-    }, [stompParam]);
+    }, [param]);
 
 
     //스크롤 => 맨 밑으로 이동
@@ -115,8 +115,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         beforeScrollTop.current = scrollTop - (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0);
 
-        if (endPointMap.get(stompParam) === 0) return;
-
+        if(stomp.target)
+        if (target ==='group' && groupEndPointMap.get(param) === 0 || target ==='main' && friendEndPointMap.get(param) ===0) return;
         //스크롤에 따른 표시
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
             console.log("맨아래로")
@@ -128,7 +128,7 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         return throttleByAnimationFrame(() => {
             updateScroll()
         });
-    }, [stompParam]);
+    }, [param]);
 
 
     const addScrollEvent = () => {
@@ -137,10 +137,10 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (!scrollRef.current || connectMessages.length === 0) return
         scrollRef.current.addEventListener('scroll', updateScroll_throttling);
         //메시지가 없으면 스크롤 세팅필요 X
-        if (scrollPointMap.get(stompParam) === undefined) {
-            if (endPointMap.get(stompParam) === 0) {
+        if (scrollPointMap.get(param) === undefined) {
+            if ((target ==="group" && groupEndPointMap.get(param) === 0)|| (target==="main" && friendEndPointMap.get(param) === 0)) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-                scrollPointMap.set(stompParam, scrollRef.current.scrollHeight)
+                scrollPointMap.set(param, scrollRef.current.scrollHeight)
             } else {
                 const hasEndPoint = connectMessages.some((message: Message) => message.chatUUID === "엔드포인트");
                 if (hasEndPoint) {
@@ -150,12 +150,12 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
                 }
             }
         } else {
-            scrollRef.current.scrollTop = (scrollPointMap.get(stompParam) + (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+            scrollRef.current.scrollTop = (scrollPointMap.get(param) + (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
         }
 
         const {scrollHeight, clientHeight} = scrollRef.current;
         //메시지가 와있는데 스크롤이 없다면 앤드포인트 갱신
-        if (endPointMap.get(stompParam) !== 0 && scrollHeight === clientHeight) {
+        if ((target ==="group" && groupEndPointMap.get(param) !== 0)|| (target==="main" && friendEndPointMap.get(param) !== 0) && scrollHeight === clientHeight) {
             debouncing_EndPoint();
         }
 
@@ -163,8 +163,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
 
     useEffect(() => {
-        const {param, state} = stomp.receiveMessage
-        if (stompParam !== param || state !== 'SEND' || connectMessages.length === 0 || !scrollRef.current) return
+        const {state} = stomp.receiveMessage
+        const messageParam = stomp.receiveMessage.param
+        if (param !== messageParam || state !== 'SEND' || connectMessages.length === 0 || !scrollRef.current) return
         setIsReceive(true);
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
         const sendUser = stomp.receiveMessage.userId
