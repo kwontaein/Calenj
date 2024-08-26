@@ -18,6 +18,7 @@ import org.example.calenj.calendar.repository.RepeatStateRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupschedule.dto.request.GroupSubScheduleRequest;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -176,6 +177,11 @@ public class CalendarService {
         tagRepository.deleteById(new TagId(id, globalService.getUserEntity(null)));
     }
 
+    /**
+     * 일정 공유
+     *
+     * @param scheduleRequest
+     */
     public void shareSchedule(ShareScheduleRequest scheduleRequest) {
         UUID userId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
 
@@ -202,8 +208,16 @@ public class CalendarService {
     }
 
 
-    public void updateSharedGroupSchedule(UUID subScheduleId) {
+    public void updateSharedGroupSchedule(UUID subScheduleId, GroupSubScheduleRequest subSchedule) {
+        // 1. 그룹 스케줄 목록을 조회
+        List<UserScheduleEntity> groupSchedules = userScheduleRepository.getGroupSchedules(subScheduleId).orElse(null);
 
+        // 2. 조회된 스케줄이 있는지 확인 후 업데이트
+        if (groupSchedules != null && !groupSchedules.isEmpty()) {
+          
+
+        }
     }
+
 }
 
