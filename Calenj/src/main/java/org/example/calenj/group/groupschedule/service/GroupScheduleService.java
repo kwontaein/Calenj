@@ -114,7 +114,7 @@ public class GroupScheduleService {
             }
 
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
-
+            calendarService.updateSharedGroupSchedule(subSchedule.getSubScheduleId(), subSchedule);
         }
 
         // originId에는 포함되어 있지만 subIds에는 포함되어 있지 않은 ID를 삭제

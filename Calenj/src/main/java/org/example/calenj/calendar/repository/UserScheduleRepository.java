@@ -41,4 +41,8 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
             ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
             " FROM User_Schedule Us WHERE Us.scheduleId =:scheduleId")
     Optional<ScheduleResponse> findByScheduleId(@Param("scheduleId") UUID scheduleId);
+
+    @Query("select Us from User_Schedule Us where Us.scheduleId=:id")
+    Optional<List<UserScheduleEntity>> getGroupSchedules(@Param("id") UUID id);
+
 }
