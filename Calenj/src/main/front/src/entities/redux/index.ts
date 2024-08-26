@@ -6,5 +6,5 @@ export {updateLoading, updateOnline, synchronizationStomp, updateAppPosition, re
 export {updateToken, updateCodeValid} from './model/slice/EmailValidationSlice';
 export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, groupEndPointMap, toggleCurrentMap, ChatContentMap} from './model/module/StompMiddleware'
 export {type RootState} from './model/types'
-export {saveUserName} from './model/slice/UserNameStorageSlice'
+export {saveUserName, saveFriendIdByChatRoomId} from './model/slice/UserNameStorageSlice'
 export {updateScheduleState} from './model/slice/GroupScheduleSlice'
