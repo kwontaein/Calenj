@@ -97,6 +97,7 @@ public class WebSocketService {
                         message.getMessageType(),
                         message.getMessage());
                 response.setMessage(Collections.singletonList(messageResponse));
+                System.out.println("바뀐 UUID" + response.getReceivedUUID());
                 template.convertAndSend("/topic/" + target + "/" + response.getParam(), response);
                 return;
             }
