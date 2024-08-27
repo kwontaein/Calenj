@@ -3,6 +3,7 @@ package org.example.calenj.calendar.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calenj.calendar.domain.Ids.RepeatStateId;
+import org.example.calenj.global.helper.BooleanListConverter;
 import org.example.calenj.global.helper.StringListConverter;
 
 import java.sql.Date;
@@ -52,8 +53,8 @@ public class RepeatStateEntity {
     private int repeatCount;
 
     @Column(name = "repeat_week")
-    @Convert(converter = StringListConverter.class)
-    private List<String> repeatWeek = new ArrayList<>();
+    @Convert(converter = BooleanListConverter.class)
+    private List<Boolean> repeatWeek = new ArrayList<>();
 
     @Column(name = "no_repeat_dates")
     @Convert(converter = StringListConverter.class)
