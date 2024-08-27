@@ -35,6 +35,7 @@ export const useMessageData = (): useMessageData => {
     const [position, setPosition] = useState<string>('older');
     const queryClient = useQueryClient();
     const [prevMessage, setPrevMessage] = useState<Message[]>([])
+
     const {
         data,
         isFetching,
@@ -48,6 +49,7 @@ export const useMessageData = (): useMessageData => {
     const receivedNewMessage = receivedMessage();
     const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
     const removeDuplicate = (messageList: Message[], newMessageList: Message[]): void => {
         const existingIds = new Set(messageList.map(message => message.chatUUID));
@@ -71,8 +73,10 @@ export const useMessageData = (): useMessageData => {
     const messageList = useMemo(() => {
         if (data) {
             if (!isFetching) {
+                console.log(data)
                 const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message) => (message.chatUUID !== "시작라인" && message.chatUUID !== "마지막라인"))
                 setPrevMessage(messages)
+                console.log(  [...messages, ...newMessageList])
                 return hasNextPage ? messages : [...messages, ...newMessageList]
             } else {
                 return prevMessage

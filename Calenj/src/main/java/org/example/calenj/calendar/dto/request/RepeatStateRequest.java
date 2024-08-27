@@ -35,7 +35,7 @@ public class RepeatStateRequest {
 
     private int repeatCount;
 
-    private List<String> repeatWeek;
+    private List<Boolean> repeatWeek;
 
     private List<String> noRepeatDates;
 

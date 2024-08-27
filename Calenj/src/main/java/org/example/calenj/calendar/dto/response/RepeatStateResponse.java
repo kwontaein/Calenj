@@ -30,11 +30,11 @@ public class RepeatStateResponse {
 
     private int repeatCount;
 
-    private List<String> repeatWeek;
+    private List<Boolean> repeatWeek;
 
     private List<String> noRepeatDates;
 
-    public RepeatStateResponse(UUID scheduleId, Timestamp startTime, Timestamp endTime, int repeatNum, boolean repeat, String repeatOption, String repeatMode, String repeatDeadline, Date repeatEnd, int repeatCount, List<String> repeatWeek, List<String> noRepeatDates) {
+    public RepeatStateResponse(UUID scheduleId, Timestamp startTime, Timestamp endTime, int repeatNum, boolean repeat, String repeatOption, String repeatMode, String repeatDeadline, Date repeatEnd, int repeatCount, List<Boolean> repeatWeek, List<String> noRepeatDates) {
         this.scheduleId = scheduleId;
         this.startTime = startTime;
         this.endTime = endTime;
