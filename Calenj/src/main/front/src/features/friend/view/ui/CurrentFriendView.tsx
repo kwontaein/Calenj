@@ -14,14 +14,7 @@ export const CurrentFriendView: React.FC =() =>{
     const {viewState} = useSelector((state:RootState) => state.friendViewState)
     const userId = localStorage.getItem('userId')||''
     const friendListState = useFetchFriendList(userId);
-    const dispatch = useDispatch()
-    
-    useEffect(() => {
-        if(!friendListState.data) return
-        friendListState.data.forEach((friend)=>{
-            dispatch(saveUserName({userId:friend.friendUserId, userName: friend.nickName}))
-        })
-    }, [friendListState]);
+
 
     return(
         <FullScreen_div>

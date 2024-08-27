@@ -14,10 +14,18 @@ import {
     GroupTitleViewContent,
     GroupListContent_Container,
 } from './GroupListStyle';
-import {endPointMap, RootState, updateNavigation} from '../../../../entities/redux'
+import {
+    groupEndPointMap,
+    RootState, saveFriendIdByChatRoomId,
+    saveUserName,
+    updateMainSubNavigation,
+    updateNavigation
+} from '../../../../entities/redux'
 import {useDispatch, useSelector} from 'react-redux'
-import {useFetchGroupList, GroupList_item} from "../../../../entities/reactQuery";
+import {useFetchGroupList, GroupList_item, useFetchFriendList} from "../../../../entities/reactQuery";
 import {createPortal} from "react-dom";
+import {friendEndPointMap} from "../../../../entities/redux/model/module/StompMiddleware";
+import {ProfileContainer} from "../../../../shared/ui/SharedStyled";
 
 
 export const GroupListView: React.FC = () => {
@@ -25,16 +33,36 @@ export const GroupListView: React.FC = () => {
     const [showMakeGroup, setShowMakeGroup] = useState<boolean>(false);
     const [titleView, setTitleView] = useState<string | null>(null);
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
-    const {navigateParam} = useSelector((state: RootState) => state.navigateInfo);
+    const {navigate,navigateParam} = useSelector((state: RootState) => state.navigateInfo);
+    const [friendAlarm,setFriendAlarm] = useState<string[]>([])
     const dispatch = useDispatch()
     //그룹 목록 불러오기
     const groupListState = useFetchGroupList(stomp.isOnline)
+    const {userNameStorage, friendIdStorage} = useSelector((state: RootState) => state.userNameStorage)
+    const userId = localStorage.getItem('userId') || ''
+    const {data} = useFetchFriendList(userId);
+
     useEffect(() => {
+        if(!data) return
+        data.forEach((friend)=>{
+            dispatch(saveUserName({userId:friend.friendUserId, userName: friend.nickName}))
+            dispatch(saveFriendIdByChatRoomId({chatRoomId:friend.chattingRoomId, friendUserId:friend.friendUserId}))
+        })
+    }, [data]);
+
+    useEffect(() => {
+        const {state,target} = stomp.receiveMessage;
+        if(target ==="friendMsg" && (state ==="SEND" || state ==="ALARM")){
+            setFriendAlarm([...friendEndPointMap.keys()])
+        }
+
         if (stomp.requestFile === "ENDPOINT") {
-            endPointMap.set(stomp.param, 0);
+            navigate ==="group" ? groupEndPointMap.set(stomp.param, 0) : friendEndPointMap.set(stomp.param,0)
         }
     }, [stomp])
+
     const {main_subNavState} = useSelector((state:RootState)=> state.subNavigation)
+
 
     return (
         <>
@@ -43,7 +71,35 @@ export const GroupListView: React.FC = () => {
             {groupListState.data && (
                 <GroupList_Container>
                     <GroupListContent_Container>
-                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => dispatch(updateNavigation({navigate: 'main', navigateParam:main_subNavState.friendParam}))}/>
+                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => {
+                            dispatch(updateNavigation({navigate: 'main', navigateParam:main_subNavState.friendParam}))}}/>
+                        {friendAlarm && friendAlarm.map((chattingRoomId)=>(
+                            (friendEndPointMap.get(chattingRoomId)!==0 && navigateParam!==chattingRoomId) &&
+                            <ProfileContainer key={chattingRoomId}
+                                              $userId={friendIdStorage[chattingRoomId] ? friendIdStorage[chattingRoomId].friendUserId : ''}
+                                              onMouseEnter={() => {setTitleView(chattingRoomId)}}
+                                              onMouseLeave={() => setTitleView(null)}
+                                              onClick={() => {
+                                                  dispatch(updateNavigation({navigate: 'main', navigateParam: chattingRoomId}))
+                                                  dispatch(updateMainSubNavigation({clickState:'friend', friendParam:chattingRoomId}))
+                                              }}
+                                              style={{marginBlock: '8px', width:'50px', height:'50px', boxSizing:'border-box'}}>
+                                <NavigateState $isClick={navigateParam === chattingRoomId}/>
+                                <SignOfMessageNum $existMessage={friendEndPointMap.get(chattingRoomId) !== 0}>
+                                    {friendEndPointMap.get(chattingRoomId)}
+                                </SignOfMessageNum>
+                                {chattingRoomId === titleView &&
+                                    userNameStorage[friendIdStorage[chattingRoomId] ? friendIdStorage[chattingRoomId].friendUserId : ''] &&
+                                    <GroupTitleView_Container>
+                                        <GroupTitleViewTail/>
+                                        <GroupTitleViewContent>
+                                            { userNameStorage[friendIdStorage[chattingRoomId].friendUserId].userName}
+                                        </GroupTitleViewContent>
+                                    </GroupTitleView_Container>
+
+                                }
+                            </ProfileContainer>
+                        ))}
                         <GroupList_HR/>
                         {groupListState.data.map((group: GroupList_item) => (
 
@@ -52,13 +108,15 @@ export const GroupListView: React.FC = () => {
                             }}
                                                onMouseLeave={() => setTitleView(null)}
                                                $isClick={navigateParam === group.groupId} key={group.groupId}
-                                               onClick={() => dispatch(updateNavigation({navigate: 'group', navigateParam:group.groupId}))}>
+                                               onClick={() => {
+                                                   dispatch(updateNavigation({navigate: 'group', navigateParam:group.groupId}))
+                                               }}>
                                 <NavigateState $isClick={navigateParam === group.groupId}/>
                                 <GroupListTitle>
                                     {group.groupTitle}
                                 </GroupListTitle>
-                                <SignOfMessageNum $existMessage={endPointMap.get(group.groupId) || 0 !== 0}>
-                                    {endPointMap.get(group.groupId) !== 0 && endPointMap.get(group.groupId)}
+                                <SignOfMessageNum $existMessage={groupEndPointMap.get(group.groupId) || 0 !== 0}>
+                                    {groupEndPointMap.get(group.groupId) !== 0 && groupEndPointMap.get(group.groupId)}
                                 </SignOfMessageNum>
                                 {group.groupId === titleView &&
                                     <GroupTitleView_Container>

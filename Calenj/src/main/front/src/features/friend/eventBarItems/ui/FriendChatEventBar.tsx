@@ -36,7 +36,7 @@ export const FriendChatEventBar:React.FC = () =>{
                     <OnlineLED_Wrapper $bgColor={ThemeColor2} $isOnline={userList.includes(friendId)} />
                 </OnlineLED_Container>
                 <UserNickName_Container>
-                    {userNameStorage[friendParam]?.userName}
+                    {userNameStorage[friendId]?.userName}
                 </UserNickName_Container>
             </FriendChatEventBar_Container>
         }

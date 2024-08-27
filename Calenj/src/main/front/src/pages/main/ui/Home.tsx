@@ -9,13 +9,18 @@ import {
     mapStateToStompProps
 } from '../../../entities/redux/model/slice/StompReducer';
 import {SignStateWidget} from '../../../widgets/signState';
+import {CalenJLogo} from "../../../shared/ui/logo/CalenJLogo";
 const Home: React.FC<StompData &DispatchStompProps> = ({stomp}) => {
 
     return (
         <FullScreen_div>
             {stomp.isOnline ==="ONLINE"?
                 <NavigationParent/>:
-                <SignStateWidget/>}
+                <>
+                <SignStateWidget/>
+                <CalenJLogo/>
+                </>
+            }
         </FullScreen_div>
     )
 }

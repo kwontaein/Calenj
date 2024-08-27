@@ -23,6 +23,7 @@ import {cancelUserBanApi} from "../api/cancelUserBanApi";
 import {AxiosError} from "axios";
 import {jwtFilter} from "../../../../entities/authentication/jwt";
 import {useConfirm} from "../../../../shared/model";
+import {CalenJLogo} from "../../../../shared/ui/logo/CalenJLogo";
 
 export const UserBanList :React.FC =()=>{
     const userId = localStorage.getItem('userId')||''
@@ -74,6 +75,9 @@ export const UserBanList :React.FC =()=>{
                             <Friend_Hr/>
                         </div>
                     ))}
+                    {data.length ===0 &&
+                        <CalenJLogo text={"캘포는 깨끗한 환경에서만 서식해요. 여기는 캘포가 살기 적합한 환경이네요"}/>
+                    }
                 </FriendListUL>
             )}
         </FriendList_Container>

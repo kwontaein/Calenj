@@ -17,13 +17,6 @@ export const GroupUserList: React.FC = () => {
 
     const stomp = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
 
-
-    useEffect(() => {
-        if (stomp.receiveMessage.state == "ONLINE") {
-            console.log(`온라인 유저 리스트 : ${stomp.receiveMessage.onlineUserList}`)
-        }
-    }, [stomp.receiveMessage])
-
     //그룹 디테일 불러오기
     useEffect(() => {
         setGroupDetail(queryClient.getQueryData([QUERY_GROUP_DETAIL_KEY, stomp.param]));

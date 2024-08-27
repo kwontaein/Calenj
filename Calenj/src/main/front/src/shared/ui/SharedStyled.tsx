@@ -156,6 +156,10 @@ export const ProfileContainer = styled.div<{ $userId: string }>`
     user-select: none;
     background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
     background-size: cover;
+    list-style: none;
+    white-space: nowrap;
+    cursor: pointer;
+
 `
 
 export const CheckBox_Label = styled.label`
