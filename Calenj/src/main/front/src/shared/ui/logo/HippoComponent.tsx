@@ -104,7 +104,7 @@ const Eye = styled.div`
     background-color: #4a4a4a;
     border-radius: 50%;
     position: relative;
-    animation: ${blink} 10s infinite;  // 애니메이션 적용
+    animation: ${blink} 8s infinite;  // 애니메이션 적용
 `;
 
 const RightEye = styled(Eye)`

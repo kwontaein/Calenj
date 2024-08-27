@@ -71,7 +71,7 @@ export const GroupListView: React.FC = () => {
             {groupListState.data && (
                 <GroupList_Container>
                     <GroupListContent_Container>
-                        <Btn_CalenJ_Icon $isClick={navigateParam === ""} onClick={() => {
+                        <Btn_CalenJ_Icon $isClick={navigate === "main"} onClick={() => {
                             dispatch(updateNavigation({navigate: 'main', navigateParam:main_subNavState.friendParam}))}}/>
                         {friendAlarm && friendAlarm.map((chattingRoomId)=>(
                             (friendEndPointMap.get(chattingRoomId)!==0 && navigateParam!==chattingRoomId) &&
