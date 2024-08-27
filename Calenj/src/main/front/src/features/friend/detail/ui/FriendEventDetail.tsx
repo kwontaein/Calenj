@@ -5,7 +5,7 @@ import {requestFriendApi} from "../../requestFriend/api/requestFriendApi";
 import {
     QUERY_FRIEND_LIST_KEY,
     QUERY_REQUEST_FRIEND_LIST,
-    QUERY_RESPONSE_FRIEND_LIST
+    QUERY_RESPONSE_FRIEND_LIST, useFetchResponseFriendList
 } from "../../../../entities/reactQuery";
 import {createPortal} from "react-dom";
 import {Modal_Background, Modal_Condition_Button, Modal_Container} from "../../../../shared/ui/SharedStyled";
@@ -38,7 +38,7 @@ import {AHMFormat, changeDateForm} from "../../../../shared/lib";
 import {responseEventApi} from "../api/responseEventApi";
 import {getFriendUserProfileApi} from "../api/getFriendUserProfileApi";
 import {useDispatch} from "react-redux";
-import {addSubScribe, saveUserName} from "../../../../entities/redux";
+import { saveUserName} from "../../../../entities/redux";
 
 interface RequestFriendProps {
     onClose: () => void,
@@ -54,6 +54,7 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
     const [sendMsg, setSendMsg] = useState<string>('');
     const queryClient = useQueryClient();
     const dispatch= useDispatch();
+    const userId = localStorage.getItem('userId') ||''
     const getUserInfo = async () => {
         const userData = await getFriendUserProfileApi(userKey);
         setUserInfo(userData)
@@ -68,15 +69,10 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
             onClose()
         } else if (userInfo) {
             responseEventApi(userKey, 'REJECT').then((response) => {
-                if (response.success) {
-                    queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
-                    onClose()
-                }
+                queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST,userId]})
+                onClose()
                 window.alert(response.message)
             })
-            //요청받은 이벤트 refetch
-            queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
-            onClose()
         }
     }
 
@@ -88,17 +84,15 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
         if (myRequest && userInfo) {
             //내가 요청을 보내는 경우(메시지를 담아서 전송)
             requestFriendApi(userInfo.userName, sendMsg).then(() => {
-                queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
+                queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST,userId]})
                 onClose()
             })
         } else if (!myRequest && userInfo) {
             //내가 요청에 응답하는 경우
             responseEventApi(userKey, 'ACCEPT').then((response) => {
-                if (response.success) {
-                    dispatch(saveUserName({userId:userKey, userName: userInfo.userName}))
-                    queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
-                    onClose()
-                }
+                dispatch(saveUserName({userId:userKey, userName: userInfo.userName}))
+                queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST, userId]})
+                onClose()
                 window.alert(response.message)
             })
 

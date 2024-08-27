@@ -31,7 +31,7 @@ export interface ReceivedStomp {
 
 //초기상태 정의
 export interface StompState {
-    destination: Destination,
+    destination: string[][],
     target: string,
     param: string,
     message: string, //송신한 메시지
@@ -50,7 +50,7 @@ export interface StompData {
 }
 
 export interface DispatchStompProps {
-    synchronizationStomp: (payload: { destination: Destination }) => void;
+    synchronizationStomp: (payload: { destination: string[][] }) => void;
     updateStompState: (payload: { isConnect: boolean }) => void;
     updateAppPosition: (payload: { target: string, param: string }) => void;
     requestFile: (payload: {
@@ -78,7 +78,7 @@ export interface DispatchStompProps {
 
 /*======================================= 외부 컴포넌트 Connect를 하기 위한 함수 =======================================*/
 export const mapDispatchToStompProps = (dispatch: Dispatch): DispatchStompProps => ({
-    synchronizationStomp: (payload: { destination: Destination }) => dispatch(synchronizationStomp(payload)),
+    synchronizationStomp: (payload: { destination: string[][] }) => dispatch(synchronizationStomp(payload)),
     updateStompState: (payload: { isConnect: boolean }) => dispatch(updateStompState(payload)),
     updateAppPosition: (payload: { target: string, param: string }) => dispatch(updateAppPosition(payload)),
     requestFile: (payload: {
@@ -113,7 +113,7 @@ export const mapStateToStompProps = (state: RootState): StompData => ({
 
 
 // action 함수 정의, 외부 컴포넌트에서 접근하여 payload를 전달하여 store를 수정, (state, action)
-export const synchronizationStomp = (payload: { destination: Destination }) => ({
+export const synchronizationStomp = (payload: { destination: string[][] }) => ({
     type: SYNCHRONIZATION_STOMP,
     payload: payload,
 });
@@ -176,7 +176,6 @@ export const addSubScribe = (payload:{subScribeParam:string})=>({
 
 export interface Destination {
     map: any;
-
     [index: number]: (string | number)[];
 }
 

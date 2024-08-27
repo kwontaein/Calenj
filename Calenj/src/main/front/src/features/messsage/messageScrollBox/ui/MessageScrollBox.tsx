@@ -10,25 +10,20 @@ import {
 } from "../../../../shared/lib";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    requestFile,
     RootState,
 } from "../../../../entities/redux";
 import {
     DateContainer,
-    DateContainer2, HR_ChatEndPoint, HR_NewDate, ImageContent, ImageWrapper,
+    DateContainer2, HR_ChatEndPoint, HR_NewDate,
     MessageBoxContainer, MessageContainer,
     MessageContainer2, MessageContentContainer,
-    MessageContentContainer2, MessageGridView, MessageScroll_Container, NickNameContainer,
+    MessageContentContainer2, MessageScroll_Container, NickNameContainer,
     ScrollableDiv
 } from "./MessageScrollBoxStyled";
 import {ProfileContainer, RowFlexBox} from "../../../../shared/ui/SharedStyled";
 import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
-import axios from "axios";
-import {useIntersect} from "../../../../shared/model";
 import {useMessageScroll} from "../model/useMessageScroll";
-import {parseDataString} from "../lib/parseDataString";
-import {ImageGrid} from "./ImageGrid";
 import {MessageContentView} from "./MessageContentView";
 
 

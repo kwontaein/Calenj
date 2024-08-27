@@ -41,6 +41,8 @@ export const GroupListView: React.FC = () => {
     const {userNameStorage, friendIdStorage} = useSelector((state: RootState) => state.userNameStorage)
     const userId = localStorage.getItem('userId') || ''
     const {data} = useFetchFriendList(userId);
+    const {clickState} = useSelector((state: RootState) => state.subNavigation.main_subNavState)
+
 
     useEffect(() => {
         if(!data) return
@@ -54,10 +56,6 @@ export const GroupListView: React.FC = () => {
         const {state,target} = stomp.receiveMessage;
         if(target ==="friendMsg" && (state ==="SEND" || state ==="ALARM")){
             setFriendAlarm([...friendEndPointMap.keys()])
-        }
-
-        if (stomp.requestFile === "ENDPOINT") {
-            navigate ==="group" ? groupEndPointMap.set(stomp.param, 0) : friendEndPointMap.set(stomp.param,0)
         }
     }, [stomp])
 
@@ -74,7 +72,7 @@ export const GroupListView: React.FC = () => {
                         <Btn_CalenJ_Icon $isClick={navigate === "main"} onClick={() => {
                             dispatch(updateNavigation({navigate: 'main', navigateParam:main_subNavState.friendParam}))}}/>
                         {friendAlarm && friendAlarm.map((chattingRoomId)=>(
-                            (friendEndPointMap.get(chattingRoomId)!==0 && navigateParam!==chattingRoomId) &&
+                            (friendEndPointMap.get(chattingRoomId)!==0 && (navigateParam!==chattingRoomId || clickState==="calendar")) &&
                             <ProfileContainer key={chattingRoomId}
                                               $userId={friendIdStorage[chattingRoomId] ? friendIdStorage[chattingRoomId].friendUserId : ''}
                                               onMouseEnter={() => {setTitleView(chattingRoomId)}}

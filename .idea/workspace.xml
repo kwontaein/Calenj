@@ -4,13 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.26 개인 메시지 제작">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.28 개인 메시지 처리">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/addRruleOptions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/utils/addRruleOptions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/model/useCalendar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/vote/detail/ui/VoteDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/logo/HippoComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/logo/HippoComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileBottom.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileBottom.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -647,7 +656,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="SeungJae" />
                       </list>
                     </value>
                   </entry>
@@ -663,7 +672,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="07.15 채팅 리팩토링" />
     <MESSAGE value="07.21 일정 디테일 제작" />
     <MESSAGE value="07.21 일정 수정제작 완료" />
     <MESSAGE value="07.22 일정 친구등록" />
@@ -688,7 +696,8 @@
     <MESSAGE value="08.19 그룹일정 공유 수정 #1" />
     <MESSAGE value="08.22 친구 메시지 연결 #2" />
     <MESSAGE value="08.26 개인 메시지 제작" />
-    <option name="LAST_COMMIT_MESSAGE" value="08.26 개인 메시지 제작" />
+    <MESSAGE value="08.28 개인 메시지 처리" />
+    <option name="LAST_COMMIT_MESSAGE" value="08.28 개인 메시지 처리" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

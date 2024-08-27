@@ -11,9 +11,10 @@ import {subscribeFilter} from "../utils/subscribeFilter";
 import {SubScribeType} from "./types";
 import {useEffect, useState} from "react";
 import {
-    QUERY_FRIEND_LIST_KEY,
+    Message, QUERY_CHATTING_KEY,
+    QUERY_FRIEND_LIST_KEY, QUERY_NEW_CHAT_KEY,
     QUERY_REQUEST_FRIEND_LIST,
-    QUERY_RESPONSE_FRIEND_LIST, useReceiveChatInfinite,
+    QUERY_RESPONSE_FRIEND_LIST, useChatFileInfinite, useReceiveChatInfinite,
 } from "../../../entities/reactQuery";
 import {
     createFriendOnline, updateFriendOffline,
@@ -60,15 +61,14 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
         }
         //친구요청 처리
         if (param === '친구요청') {
-            queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST]})
+            queryClient.refetchQueries({queryKey: [QUERY_RESPONSE_FRIEND_LIST,userId]})
         } else if (param === '친구수락') {
             let chatRoomId = message[0].message
-            console.log(chatRoomId)
             setChatRoomId(chatRoomId)
-            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
-            queryClient.refetchQueries({queryKey: [QUERY_FRIEND_LIST_KEY]})
+            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST,userId]})
+            queryClient.refetchQueries({queryKey: [QUERY_FRIEND_LIST_KEY,userId]})
         } else if (param === '친구거절') {
-            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST]})
+            queryClient.refetchQueries({queryKey: [QUERY_REQUEST_FRIEND_LIST,userId]})
         }
     }, [stomp]);
 
@@ -79,7 +79,10 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
             if(target ==="friendMsg"){
                 startChat(param, true)
             }
-            fetchNextPage()
+            const chatData = queryClient.getQueryData([QUERY_CHATTING_KEY,param])
+            if(chatData){
+                fetchNextPage()
+            }
         }
     }, [stomp.receiveMessage.receivedUUID]);
 
