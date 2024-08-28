@@ -23,7 +23,6 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
     const {voteItems, myVote, isAttend, voteEnd, loading, pickVoteItem ,data} =useVoteDetailData(voteParam);
     let userId = localStorage.getItem('userId')
     const [viewVoter, setViewVoter] = useState<boolean>(false); //투표인원 보기
-    const { mode, clickState } = useSelector((state:RootState) => state.subNavigation.group_subNavState)
     const [contentRef, contentSize]= useComponentSize()
 
     const dynamicStyle: React.CSSProperties = {

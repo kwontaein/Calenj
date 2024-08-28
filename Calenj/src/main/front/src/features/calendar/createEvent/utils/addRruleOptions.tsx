@@ -32,7 +32,7 @@ export const addRruleOptions = (repeatState: RepeatState, start: Date): Partial<
     if (repeatMode === "cycle") {
         options.freq = freqHash[repeatOption as RepeatOption];
         options.interval = repeatNum;
-    } else if (repeatMode === "week") {
+    } else if (repeatMode === "week" && repeatWeek) {
         options.freq = RRule.WEEKLY;
         const byWeekData: string | number | Weekday | ByWeekday[] | null | undefined = [];
         repeatWeek.forEach((week, index) => {

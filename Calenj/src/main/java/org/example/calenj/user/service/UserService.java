@@ -224,7 +224,7 @@ public class UserService {
 
         UserProfileResponse userProfileResponse = getUserProfile(userId);
 
-        userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId()).orElse(null));
+        userProfileResponse.setChatUUID(friendRepository.findFriendChatRoomId(userEntity.getUserId(), UUID.fromString(myUserId)).orElse(null));
         userProfileResponse.setEventContent(eventService.getEventContent(myUserId, userEntity.getUserId()));
         return userProfileResponse;
     }

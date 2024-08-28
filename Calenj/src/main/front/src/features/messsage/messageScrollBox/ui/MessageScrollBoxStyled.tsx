@@ -25,6 +25,7 @@ export const ScrollableDiv = styled.div`
     max-width: calc(100% - ${ScrollMarginInline}); //padding만큼 뺌
     height: 100%;
     margin-inline: ${ScrollMarginInline / 2}px;
+    overflow-x: hidden;
 `;
 
 

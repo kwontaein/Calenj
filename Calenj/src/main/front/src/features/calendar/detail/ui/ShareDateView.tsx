@@ -90,7 +90,7 @@ export const ShareDateView: React.FC<DateEventProps> = ({onClose, scheduleId}) =
                 </SideScrollBox_Container>
             </ShareContent_Container>
             <ShareButton_Container>
-                <RowFlexBox>
+                <RowFlexBox style={{alignItems:'center'}}>
                     <EventButtonIcon_Wrapper style={{fontSize: '13px', marginLeft: '-5px'}}
                                              onMouseEnter={setIsHover}
                                              onMouseLeave={setIsHover}>

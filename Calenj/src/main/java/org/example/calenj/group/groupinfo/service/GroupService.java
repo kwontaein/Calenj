@@ -227,4 +227,17 @@ public class GroupService {
     private void scheduledInviteCode() {
         // inviteCodeRepository.delete();
     }
+
+    /**
+     * 그룹 나가기
+     *
+     * @param groupId 나갈 그룹 아이디
+     */
+    public void exitGroup(UUID groupId) {
+        //내 이름 해당 그룹에서 삭제.
+        String userId = globalService.extractFromSecurityContext().getUsername();
+        group_userRepository.deleteUserFromGroup(groupId, UUID.fromString(userId));
+        //채팅에 나 나갔다고 알림
+        
+    }
 }

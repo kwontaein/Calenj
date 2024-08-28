@@ -38,7 +38,7 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, repeatState, 
 
 
     const selectWeek = (week:number) =>{
-        repeatDispatch({type:'SET_REPEAT_WEEK', payload:repeatState.repeatWeek.map((item,index)=> index=== week ? !item : item)})
+        repeatDispatch({type:'SET_REPEAT_WEEK', payload : repeatState.repeatWeek!==null ? repeatState.repeatWeek.map((item,index)=> index=== week ? !item : item): []})
     }
 
     const changeStartTime = (startTime: Date) =>{
@@ -165,31 +165,31 @@ export const RepeatEvent: React.FC<EventDateProps> = ({eventState, repeatState, 
                             }
                             {repeatState.repeatMode ==="week" &&
                                 <PatternContent_Container>
-                                    <PatternContent $isClick={repeatState.repeatWeek[0]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[0] : false}
                                                     onClick={()=> selectWeek(0)}>
                                         일
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[1]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ?  repeatState.repeatWeek[1] : false}
                                                     onClick={()=> selectWeek(1)}>
                                         월
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[2]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[2] : false}
                                                     onClick={()=> selectWeek(2)}>
                                         화
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[3]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[3] : false}
                                                     onClick={()=> selectWeek(3)}>
                                         수
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[4]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[4] : false}
                                                     onClick={()=> selectWeek(4)}>
                                         목
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[5]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[5] : false}
                                                     onClick={()=> selectWeek(5)}>
                                         금
                                     </PatternContent>
-                                    <PatternContent $isClick={repeatState.repeatWeek[6]}
+                                    <PatternContent $isClick={repeatState.repeatWeek !==null ? repeatState.repeatWeek[6] : false}
                                                     onClick={()=> selectWeek(6)}>
                                         토
                                     </PatternContent>
