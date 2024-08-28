@@ -26,10 +26,11 @@ export const GroupSubNavigateTopItems:React.FC<subNavigationTopProps> = ({groupT
                     <SubNavigateTopBar_EventSelecter_Container>
                         {showEventSelector ?
                             <SubNavigateTopBar_rightContent_item>
-                                ×
+                                <i className="bi bi-x"></i>
                             </SubNavigateTopBar_rightContent_item> :
-                            <i style={{fontSize:'21px', marginTop:'5px', cursor:'pointer'}} className="fi fi-rr-angle-small-down">
-                            </i>
+                            <SubNavigateTopBar_rightContent_item>
+                                <i className="fi fi-rr-angle-small-down" style={{marginTop:'8px'}}></i>
+                            </SubNavigateTopBar_rightContent_item>
                         }
                     </SubNavigateTopBar_EventSelecter_Container>
                 </FullScreen_div>

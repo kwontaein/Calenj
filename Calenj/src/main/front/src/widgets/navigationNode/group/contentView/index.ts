@@ -1,0 +1,1 @@
+export {GroupContentView} from './ui/GroupContentView'

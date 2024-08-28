@@ -24,34 +24,9 @@ interface CustomSubScreenProps {
     $height?: number,
 }
 
-interface GroupUserListProps {
-    $isClick: boolean,
-}
 
-export const EventTopBarContent = styled.div<GroupUserListProps>`
-    width: 33px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: ${props => props.$isClick ? TextColor : `${TextColor}77`};
 
-    &:hover {
-        color: ${TextColor};
-    }
-`
-export const EventTopBarSubContent = styled.div`
-    width: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: ${TextColor}77;
 
-    &:hover {
-        color: ${TextColor};
-    }
-`
 
 export const TransContentsScreen_div = styled.div<ScreenModeProps>`
     width: ${props => props.$showMemberList ? `calc(100% - ${GroupUserList_Container_width}px)` : `100%`};

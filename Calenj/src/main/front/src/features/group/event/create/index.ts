@@ -1,1 +1,0 @@
-export {CreateGroupEvent} from './ui/CreateGroupEvent'

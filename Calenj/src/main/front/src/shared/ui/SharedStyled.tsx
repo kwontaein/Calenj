@@ -509,3 +509,20 @@ export const OnlineLED_Wrapper = styled.div<{$isOnline:boolean,$bgColor:string}>
     border: 2px solid ${props=> props.$isOnline ? PointColor:`${TextColor}77`};
     border-radius: 50%;
 `
+//알림 신호 개수
+interface receivedMsg {
+    $existMessage: boolean
+}
+export const SignOfMessageNum = styled.div<receivedMsg>`
+    //padding: 1px 6px;
+    background-color: ${props => (props.$existMessage ? "#1AB5E6" : "transparent")};
+    width: ${props => (props.$existMessage ? "15px" : "")};
+    height: ${props => (props.$existMessage ? "15px" : "")};
+    color: white;
+    padding: ${props => (props.$existMessage ? "3px 3px" : "")};
+    border-radius: 50%;
+    font-size: 12px;
+    position: absolute;
+    margin-top: 2.4em;
+    left: 3.5em;
+`

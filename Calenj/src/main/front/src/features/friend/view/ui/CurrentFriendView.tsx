@@ -1,13 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {saveUserName, RootState} from "../../../../entities/redux";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
-import {AllFriendView} from "../../list/ui/AllFriendView";
-import {OnlineFriendView} from "../../list/ui/OnlineFriendView";
-import {RequestFriendList} from "../../requestFriend";
-import {ResponseFriendList} from "../../responseFriend";
-import {UserBanList} from "../../list/ui/UserBanList";
 import {useFetchFriendList} from "../../../../entities/reactQuery";
 import {useEffect} from "react";
+import {AllFriendView, OnlineFriendView, RequestFriendList, ResponseFriendList, UserBanList} from "../../list";
 
 
 export const CurrentFriendView: React.FC =() =>{
