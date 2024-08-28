@@ -22,10 +22,17 @@ import {
     updateNavigation
 } from '../../../../entities/redux'
 import {useDispatch, useSelector} from 'react-redux'
-import {useFetchGroupList, GroupList_item, useFetchFriendList} from "../../../../entities/reactQuery";
+import {
+    useFetchGroupList,
+    GroupList_item,
+    useFetchFriendList,
+    useFetchUserChatList
+} from "../../../../entities/reactQuery";
 import {createPortal} from "react-dom";
 import {friendEndPointMap} from "../../../../entities/redux/model/module/StompMiddleware";
 import {ProfileContainer} from "../../../../shared/ui/SharedStyled";
+import {useFriendChat} from "../../../friend/list";
+import {updateUserChatApi} from "../../../friend/list/api/updateUserChatApi";
 
 
 export const GroupListView: React.FC = () => {
@@ -42,6 +49,7 @@ export const GroupListView: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
     const {data} = useFetchFriendList(userId);
     const {clickState} = useSelector((state: RootState) => state.subNavigation.main_subNavState)
+    const userChatList = useFetchUserChatList(userId)
 
 
     useEffect(() => {
@@ -80,6 +88,14 @@ export const GroupListView: React.FC = () => {
                                               onClick={() => {
                                                   dispatch(updateNavigation({navigate: 'main', navigateParam: chattingRoomId}))
                                                   dispatch(updateMainSubNavigation({clickState:'friend', friendParam:chattingRoomId}))
+                                                  if(userChatList.data){
+                                                      const chatInfo = userChatList.data.filter(({chatId})=> chatId===chattingRoomId).at(-1)
+                                                      if(chatInfo) {
+                                                          if(chatInfo.open) return
+                                                          chatInfo.open = true;
+                                                          updateUserChatApi(chatInfo).then(()=> userChatList.refetch())
+                                                      }
+                                                  }
                                               }}
                                               style={{marginBlock: '8px', width:'50px', height:'50px', boxSizing:'border-box'}}>
                                 <NavigateState $isClick={navigateParam === chattingRoomId}/>

@@ -32,7 +32,6 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
     const receivedNewMessage = receivedMessage();
     const {fetchNextPage} = useReceiveChatInfinite(stomp.receiveMessage.param, receivedNewMessage)
     const [chatRoomId, setChatRoomId] = useState<string|null>();
-    const startChat = useFriendChat(userId||'')
 
 
     useEffect(() => {
@@ -75,10 +74,6 @@ export const useStomp = (sagaRefresh: () => void): (cookie: boolean) => void => 
     useEffect(() => {
         if (stomp.receiveMessage.state === "SEND") {
             const {param, target} = stomp.receiveMessage
-            console.log(target, param)
-            if(target ==="friendMsg"){
-                startChat(param, true)
-            }
             const chatData = queryClient.getQueryData([QUERY_CHATTING_KEY,param])
             if(chatData){
                 fetchNextPage()
