@@ -29,7 +29,7 @@ export const beforeCheckEvent = (repeatState:RepeatState, eventState : DateEvent
             window.alert('반복 주기를 1이상의 값으로 설정해주세요')
             responseResult = false
         }
-        if (repeatMode === "week" && repeatWeek && repeatWeek.indexOf(true) < 0) {
+        if (repeatMode === "week" && repeatWeek.indexOf(true) < 0) {
             window.alert('반복할 요일을 하나이상 선택해주세요.')
             responseResult = false;
         }

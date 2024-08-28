@@ -103,12 +103,12 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
                 tagKeys: tagKeys,
                 formState: formState,
                 content: content,
-                todoList: todo.length===0 ? null : todo,
+                todoList: todo? todo :[],
                 repeatState: {
                     ...repeatState,
-                    repeatWeek : repeatWeek && repeatWeek.length ===0 ? null : repeatWeek
+                    repeatWeek : repeatWeek ? repeatWeek:[],
                 },
-                friendList:friendList.length ===0 ? null : friendList,
+                friendList: friendList ? friendList: [],
             },
         }
         if (repeat) {
