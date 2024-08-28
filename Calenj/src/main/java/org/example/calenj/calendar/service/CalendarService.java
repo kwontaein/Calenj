@@ -188,7 +188,7 @@ public class CalendarService {
         ScheduleResponse scheduleResponse = userScheduleRepository.findByScheduleId(scheduleRequest.getScheduleId()).orElse(null);
         RepeatStateResponse repeatStateresponse = repeatStateRepository.findOneByIds(scheduleResponse.getId()).orElse(null);
 
-        if (repeatStateresponse.getNoRepeatDates().isEmpty()) {
+        if (repeatStateresponse.getNoRepeatDates() != null && repeatStateresponse.getNoRepeatDates().isEmpty()) {
             repeatStateresponse.setNoRepeatDates(null);
         }
 

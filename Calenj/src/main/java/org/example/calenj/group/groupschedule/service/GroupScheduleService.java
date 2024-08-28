@@ -251,7 +251,7 @@ public class GroupScheduleService {
      */
     private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<UUID> tagKey) {
 
-        List<Boolean> repeatWeek = new ArrayList<Boolean>(7);
+        List<Boolean> repeatWeek = new ArrayList<>();
         for (int i = 0; i < repeatWeek.size(); i++) {
             repeatWeek.add(false);
         }
