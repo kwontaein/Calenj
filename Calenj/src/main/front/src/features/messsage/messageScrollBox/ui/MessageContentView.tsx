@@ -13,6 +13,12 @@ interface MessageProps {
 
 export const MessageContentView: React.FC<MessageProps> = ({message, messageType}) => {
 
+    useEffect(() => {
+        if(messageType=== 'schedule'){
+            console.log(message.split(':'))
+        }
+    }, []);
+
     return (
         <FullScreen_div>
             {messageType === 'title' &&
@@ -25,7 +31,7 @@ export const MessageContentView: React.FC<MessageProps> = ({message, messageType
             }
             {messageType === 'schedule' &&
                 <div>
-                    <ScheduleMessage events={JSON.parse(message)}/>
+                    {/*<ScheduleMessage events={JSON.parse(message)}/>*/}
                 </div>
             }
             {messageType === 'image' &&

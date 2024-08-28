@@ -25,6 +25,7 @@ import {Message} from "../../../../entities/reactQuery"
 import {dateOperation} from "../lib/dateOperation";
 import {useMessageScroll} from "../model/useMessageScroll";
 import {MessageContentView} from "./MessageContentView";
+import {InviteHippo} from "../../../../shared/ui/logo/InviteHippo";
 
 
 export const MessageScrollBox: React.FC = () => {
@@ -48,6 +49,11 @@ export const MessageScrollBox: React.FC = () => {
                 {hasPreviousPage && <div className="scrollTop" ref={topRef}></div>}
                 {messageList.length > 0 &&
                     (messageList.map((message: Message, index: number) => (
+                        message.messageType ==="join" ?
+                            <div>
+                                <InviteHippo userName={userNameStorage[message.userId] ? userNameStorage[message.userId].userName : ''}/>
+                            </div>
+                            :
                         <div key={message.chatUUID}>
                             {(index !== 0 && compareDate(messageList[index - 1].sendDate, message.sendDate) && (message.chatUUID !== '엔드포인트')) &&
                                 <HR_NewDate
