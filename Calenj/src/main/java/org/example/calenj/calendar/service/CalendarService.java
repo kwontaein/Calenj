@@ -23,7 +23,6 @@ import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -188,11 +187,6 @@ public class CalendarService {
 
         ScheduleResponse scheduleResponse = userScheduleRepository.findByScheduleId(scheduleRequest.getScheduleId()).orElse(null);
         RepeatStateResponse repeatStateresponse = repeatStateRepository.findOneByIds(scheduleResponse.getId()).orElse(null);
-
-        if (repeatStateresponse.getNoRepeatDates() == null) {
-            repeatStateresponse.setNoRepeatDates(Collections.singletonList(""));
-        }
-
         scheduleResponse.getExtendedProps().setRepeatState(repeatStateresponse);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -214,7 +208,7 @@ public class CalendarService {
 
         // 2. 조회된 스케줄이 있는지 확인 후 업데이트
         if (groupSchedules != null && !groupSchedules.isEmpty()) {
-          
+
 
         }
     }
