@@ -15,10 +15,10 @@ import java.util.UUID;
 
 public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> {
     @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse" +
-            "(f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
+            "(f.friendId,f.friendUserId,f.nickName,f.ChattingRoomId,f.createDate) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =ACCEPT")
     Optional<List<FriendResponse>> findFriendListById(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.friendUserId =:friendId")
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendId,f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.friendUserId =:friendId")
     Optional<FriendResponse> findFriendById(@Param("userId") UUID userId, @Param("friendId") UUID friendId);
 
     @Query("SELECT f.status FROM Friends f WHERE f.ownUserId.userId =:myUserId and f.friendUserId =:userId and f.status =ACCEPT")
@@ -26,13 +26,13 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
 
     @Modifying
     @Transactional
-    @Query("delete from Friends f where f.ownUserId.userId =:userId and f.friendUserId =:myId")
+    @Query("update Friends f set f.status=DELETE where f.ownUserId.userId =:userId and f.friendUserId =:myId")
     void deleteByOwnUserId(@Param("userId") UUID userId, @Param("myId") UUID myUserId);
 
     @Modifying(clearAutomatically = true)
     @Transactional //update 는 해당 어노테이션이 필요함
-    @Query("UPDATE Friends f SET f.status =:statusType WHERE f.ownUserId.userId = :requestUserId")
-    void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("statusType") FriendEntity.statusType statusType);
+    @Query("UPDATE Friends f SET f.status =:statusType WHERE f.ownUserId.userId = :requestUserId and f.friendUserId=:friendUserId")
+    void updateStatus(@Param("requestUserId") UUID requestUserId, @Param("friendUserId") UUID friendUserId, @Param("statusType") FriendEntity.statusType statusType);
 
     @Query("SELECT f.ChattingRoomId FROM Friends f WHERE f.ownUserId.userId =:userId and f.friendId =:myUserId")
     Optional<String> findFriendChatRoomId(@Param("userId") UUID userId, @Param("myUserId") UUID myUserId);
@@ -40,6 +40,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, FriendId> 
     @Query("select f.friendUserId from Friends f join Friends f2 on f.friendUserId=f2.friendUserId where f.ownUserId.userId=:myUserId and f2.ownUserId.userId=:otherUserId")
     Optional<List<String>> DuplicateFriendList(@Param("myUserId") UUID myUserId, @Param("otherUserId") UUID otherUserId);
 
-    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
+    @Query("SELECT new org.example.calenj.friend.dto.response.FriendResponse(f.friendId,f.friendUserId,f.nickName,f.ChattingRoomId,f.status) FROM Friends f WHERE f.ownUserId.userId =:userId and f.status =BAN")
     Optional<List<FriendResponse>> findBanListById(@Param("userId") UUID myUserID);
 }

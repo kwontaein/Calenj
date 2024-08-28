@@ -71,7 +71,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         return "/api/login".equals(requestURI) ||
                 "/api/saveUser".equals(requestURI) ||
                 "/api/sendEmail".equals(requestURI) ||
-                "/api/postCookie".equals(requestURI);
+                "/api/postCookie".equals(requestURI) ||
+                "/api/emailCodeValidation".equals(requestURI);
     }
 
     private void respondWithUnauthorized(HttpServletResponse response) throws IOException {

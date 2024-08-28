@@ -24,7 +24,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final String[] allAllowedUrls = {"/api/postCookie", "/api/login"};    // 모두 허가
+    private final String[] allAllowedUrls = {"/api/postCookie", "/api/login", "/api/sendEmail", "/api/saveUser", "/api/emailCodeValidation"};    // 모두 허가
     private final String[] UserAllowedUrls = {"/**"};    // 유저만 허가
     private final String[] AdminAllowedUrls = {"/**"};    // 매니저만 허가
     private final String[] ManagerAllowedUrls = {"/api/testSuccess"};    // 관리자만 허가
@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(allAllowedUrls).permitAll()    // 허용할 url 목록을 배열로 분리했다
                                 //.requestMatchers(ManagerAllowedUrls).hasRole("MANAGER")   // Manager 역할을 갖고 있는 경우
-                             
+
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

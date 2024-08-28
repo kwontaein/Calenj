@@ -122,7 +122,8 @@ public class FriendService {
      * @return 성공 / 실패시 응답 작성
      */
     private AddFriendResponse processFriendRequest(UserEntity ownUser, UserEntity friendUser) {
-        if (friendRepository.findFriendById(friendUser.getUserId(), ownUser.getUserId()).orElse(null) != null) {
+        FriendResponse friendResponse = friendRepository.findFriendById(friendUser.getUserId(), ownUser.getUserId()).orElse(null);
+        if (friendResponse != null && friendResponse.getStatus() == FriendEntity.statusType.WAITING) {
             return createSuccessResponse("상대가 보낸 요청이 이미 있습니다. 친구 요청을 수락하시겠습니까?", friendUser.getUserId());
         } else {
             return finalProcess(ownUser, friendUser.getUserId());
@@ -173,18 +174,26 @@ public class FriendService {
         UserEntity ownUser = globalService.getUserEntity(null);
         UserEntity friendUser = getUserEntityByUserName(friendUsedName);
 
-        FriendEntity friendEntity = FriendEntity
-                .builder()
-                .ownUserId(ownUser)
-                .friendUserId(friendUser.getUserId())
-                .nickName(friendUser.getNickname())
-                .createDate(String.valueOf(LocalDate.now()))
-                .ChattingRoomId(UUID.randomUUID())
-                .status(FriendEntity.statusType.WAITING).build();
+        FriendResponse friendResponse = friendRepository.findFriendById(ownUser.getUserId(), friendUser.getUserId()).orElse(null);
+        if (friendResponse != null && friendResponse.getStatus() == FriendEntity.statusType.DELETE) {//삭제한 적이 있는 친구라면
+            friendRepository.updateStatus(friendUser.getUserId(), ownUser.getUserId(), FriendEntity.statusType.WAITING);//대기 상태로 전환
+            webSocketService.userAlarm(friendUser.getUserId(), "친구요청", friendResponse.getChattingRoomId().toString());
+        } else {
+            FriendEntity friendEntity = FriendEntity
+                    .builder()
+                    .ownUserId(ownUser)
+                    .friendUserId(friendUser.getUserId())
+                    .nickName(friendUser.getNickname())
+                    .createDate(String.valueOf(LocalDate.now()))
+                    .ChattingRoomId(UUID.randomUUID())
+                    .status(FriendEntity.statusType.WAITING).build();
+            friendRepository.save(friendEntity);
+            webSocketService.userAlarm(friendUser.getUserId(), "친구요청", friendEntity.getChattingRoomId().toString());
+        }
         //이벤트테이블추가
         eventService.createEvent(eventContent, ownUser, friendUser, "Friend Request");
-        friendRepository.save(friendEntity);
-        webSocketService.userAlarm(friendUser.getUserId(), "친구요청", friendEntity.getChattingRoomId().toString());
+
+
     }
 
     /**
@@ -196,7 +205,7 @@ public class FriendService {
         UUID myUserName = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
         UserEntity friendUser = globalService.getUserEntity(friendUserId);
         FriendResponse friendResponse = friendRepository.findFriendById(friendUserId, myUserName).orElse(null);
-        friendRepository.updateStatus(friendUserId, FriendEntity.statusType.ACCEPT);
+        friendRepository.updateStatus(friendUserId, myUserName, FriendEntity.statusType.ACCEPT);
 
         FriendEntity friendEntity = FriendEntity
                 .builder()
@@ -262,7 +271,7 @@ public class FriendService {
         friendRepository.deleteByOwnUserId(UUID.fromString(request.getFriendUserId()), myId);
         userService.deleteChat(myId, request.getFriendUserId());
         if (request.isBan()) {//차단이면 친구 삭제는 하지 않고 상태만 차단으로 변경 -> 재 친구 요청 불가
-            friendRepository.updateStatus(myId, FriendEntity.statusType.BAN);
+            friendRepository.updateStatus(myId, UUID.fromString(request.getFriendUserId()), FriendEntity.statusType.BAN);
         } else {//차단 아니고 삭제면 그냥 삭제
             friendRepository.deleteByOwnUserId(myId, UUID.fromString(request.getFriendUserId()));
         }
