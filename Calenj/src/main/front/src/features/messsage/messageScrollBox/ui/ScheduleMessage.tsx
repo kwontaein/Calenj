@@ -72,19 +72,19 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
                         <EventDetailContent_Container>
                             {(formState === 'schedule' && repeatState.repeat) &&
                                 <RepeatEventContent_Wrapper>
-                                    {repeatState.repeatMode === 'week' && repeatState.repeatWeek!==null && !repeatState.repeatWeek.every((item: boolean) => item) && repeatState.repeatWeek.some((item: boolean) => item) &&
+                                    {repeatState.repeatMode === 'week' && !repeatState.repeatWeek.every((item: boolean) => item) && repeatState.repeatWeek.some((item: boolean) => item) &&
                                         `매주 ${repeatState.repeatWeek.map((item: boolean, index: number) => {
                                             if (item) {
                                                 return week[index];
                                             }
                                         }).join('').split("")} 마다 반복`}
-                                    {(repeatState.repeatMode === 'week' && repeatState.repeatWeek!==null) && repeatState.repeatWeek.every((item: boolean) => item) && '매주 반복'}
+                                    {repeatState.repeatMode === 'week' && repeatState.repeatWeek.every((item: boolean) => item) && '매주 반복'}
                                     {repeatState.repeatMode === 'cycle' && `${repeatState.repeatNum}일 마다 반복`}
                                 </RepeatEventContent_Wrapper>
                             }
                             {formState === "todo" &&
                                 <TodoListContent_Container>
-                                    {todoList!==null && todoList.map((todo: string, index: number) =>
+                                    {todoList.map((todo: string, index: number) =>
                                         <TodoListItem_Wrapper key={id + index}>{todo}</TodoListItem_Wrapper>
                                     )}
                                 </TodoListContent_Container>
