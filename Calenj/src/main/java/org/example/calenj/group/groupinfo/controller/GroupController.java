@@ -20,6 +20,12 @@ public class GroupController {
     private final GroupService groupService;
 
     //그룹 만들기
+    @PostMapping("/api/exitGroup")
+    public void exitGroup(@RequestBody GroupDetailRequest GroupDetailRequest) {
+        groupService.exitGroup(GroupDetailRequest.getGroupId()); // 해당 메소드에서 그룹 생성 및 그룹장 지정
+    }
+
+    //그룹 만들기
     @PostMapping("/api/createGroup")
     public void createGroup(@RequestBody GroupRequest groupRequest) {
         groupService.createGroup(groupRequest.getGroupTitle()); // 해당 메소드에서 그룹 생성 및 그룹장 지정

@@ -10,7 +10,7 @@ export interface RepeatState {
     repeatDeadline :string, //반복 마감
     repeatEnd: Date; //반복 마감기간
     repeatCount:number, //반복횟수
-    repeatWeek :boolean[],
+    repeatWeek :boolean[]|null,
 }
 
 export type RepeatAction =

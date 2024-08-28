@@ -145,7 +145,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
                                     }
                                     {formState === "todo" &&
                                         <TodoListContent_Container>
-                                            {todoList.map((todo: string, index: number) =>
+                                            {todoList!==null && todoList.map((todo: string, index: number) =>
                                                 <TodoListItem_Wrapper key={id + index}>{todo}</TodoListItem_Wrapper>
                                             )}
                                         </TodoListContent_Container>
