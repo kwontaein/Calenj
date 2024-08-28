@@ -187,8 +187,12 @@ public class CalendarService {
 
         ScheduleResponse scheduleResponse = userScheduleRepository.findByScheduleId(scheduleRequest.getScheduleId()).orElse(null);
         RepeatStateResponse repeatStateresponse = repeatStateRepository.findOneByIds(scheduleResponse.getId()).orElse(null);
-        scheduleResponse.getExtendedProps().setRepeatState(repeatStateresponse);
 
+        if (repeatStateresponse.getNoRepeatDates().isEmpty()) {
+            repeatStateresponse.setNoRepeatDates(null);
+        }
+
+        scheduleResponse.getExtendedProps().setRepeatState(repeatStateresponse);
         if (scheduleResponse.getExtendedProps().getTodoList().isEmpty()) {
             scheduleResponse.getExtendedProps().setTodoList(null);
         }
@@ -214,7 +218,6 @@ public class CalendarService {
 
         // 2. 조회된 스케줄이 있는지 확인 후 업데이트
         if (groupSchedules != null && !groupSchedules.isEmpty()) {
-
 
         }
     }
