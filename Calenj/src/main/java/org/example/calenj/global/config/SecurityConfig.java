@@ -5,8 +5,6 @@ import org.example.calenj.global.JWT.JwtAuthenticationEntryPoint;
 import org.example.calenj.global.JWT.JwtAuthenticationFilter;
 import org.example.calenj.global.JWT.JwtTokenProvider;
 import org.example.calenj.global.service.RedisService;
-import org.example.calenj.user.repository.UserRepository;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,15 +24,12 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final String[] allAllowedUrls = {"/**", "/api/login"};    // 모두 허가
+    private final String[] allAllowedUrls = {"/api/postCookie", "/api/login"};    // 모두 허가
     private final String[] UserAllowedUrls = {"/**"};    // 유저만 허가
     private final String[] AdminAllowedUrls = {"/**"};    // 매니저만 허가
     private final String[] ManagerAllowedUrls = {"/api/testSuccess"};    // 관리자만 허가
 
-    private final
-    JwtTokenProvider jwtTokenProvider;
-    private final
-    UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
 
 
@@ -51,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(allAllowedUrls).permitAll()    // 허용할 url 목록을 배열로 분리했다
                                 //.requestMatchers(ManagerAllowedUrls).hasRole("MANAGER")   // Manager 역할을 갖고 있는 경우
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                             
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
