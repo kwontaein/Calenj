@@ -193,7 +193,7 @@ export const useChatFileInfinite = (param:string, userId:string) =>{
             }
         }, //data의 값을 받아 처리할 수 있음
         getPreviousPageParam:(firstPage:Message[]) => {
-            return firstPage[0].chatUUID ==="시작라인" ? undefined :{position:'older' ,chatUUID:firstPage[0].chatUUID}
+            return (firstPage[0].chatUUID ==="시작라인" || firstPage[0].chatUUID ==="엔드포인트") ? undefined :{position:'older' ,chatUUID:firstPage[0].chatUUID}
         },
         initialPageParam : {position:"",chatUUID:""},
         staleTime: Infinity,

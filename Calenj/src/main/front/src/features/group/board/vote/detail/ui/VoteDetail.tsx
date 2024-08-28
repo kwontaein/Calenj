@@ -30,6 +30,7 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
         backgroundColor: isMessage ? 'transparent' : 'rgba(0, 0, 0, 0.3)',
         position : isMessage ? 'relative':'fixed',
         justifyContent:isMessage ? 'left':'center',
+        zIndex: isMessage? '0':'9998',
     };
 
     return(

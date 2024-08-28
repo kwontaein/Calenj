@@ -6,7 +6,7 @@ import {
     SubProfileTopMenu_Container
 } from "./SubNavProfileBottomStyled";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState, updateMainSubNavigation} from "../../../../entities/redux";
+import {RootState, updateMainSubNavigation, updateNavigation} from "../../../../entities/redux";
 import {LogoutButton} from "../../../authentication/logout";
 
 export const SubNavProfileBottom :React.FC = () =>{

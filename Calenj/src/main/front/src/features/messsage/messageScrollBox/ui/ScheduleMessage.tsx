@@ -32,9 +32,6 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
     const id = useId()
     const [isShared, setIsShare] = useReducer((prev) => !prev, false)
 
-    useEffect(() => {
-        console.log(window.innerWidth)
-    }, [window.innerWidth]);
     return (
         <div>
             <DateEventDetail_Container style={{marginTop:'10px', width:`auto`}}>
@@ -82,7 +79,7 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
                                             }
                                         }).join('').split("")} 마다 반복`}
                                     {repeatState.repeatMode === 'week' && repeatState.repeatWeek.every((item: boolean) => item) && '매주 반복'}
-                                    {repeatState.repeatMode === 'cycle' && `${repeatState.repeatMode}${repeatState.repeatNum}마다 반복`}
+                                    {repeatState.repeatMode === 'cycle' && `${repeatState.repeatNum}일 마다 반복`}
                                 </RepeatEventContent_Wrapper>
                             }
                             {formState === "todo" &&

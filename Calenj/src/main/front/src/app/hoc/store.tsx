@@ -56,7 +56,6 @@ export const sagaRefresh = ()=>{
   store.dispatch(updateStompState({isConnect:false}))
 
   setTimeout(()=>{
-    localStorage.removeItem('userId')
     sagaTask.cancel()
     sagaTask;//취소 후 재연결
   },50)

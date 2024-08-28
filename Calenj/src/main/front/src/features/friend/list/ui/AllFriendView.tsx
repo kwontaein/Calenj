@@ -22,6 +22,7 @@ import {SearchInput} from "../../../../shared/ui/SearchInput";
 
 import {useFriendChat} from "../model/useFriendChat";
 import {FriendListProps, hoverInfo} from "../model/types";
+import {CalenJLogo} from "../../../../shared/ui/logo/CalenJLogo";
 
 
 
@@ -44,6 +45,7 @@ export const AllFriendView: React.FC<FriendListProps> = ({friendList}) => {
                 </span>
             }
             <FriendListUL>
+                {friendList.length ===0 &&  <CalenJLogo text={"가끔은 혼자여도 괜찮아요. 캘포가 곁에 있을거에요."}/>}
                 {friendList.filter(({nickName})=> nickName.includes(searchText)).map((friend: FriendList) => (
                     <div key={friend.chattingRoomId}>
                         <FriendListView $isClick={dotsInfo!==null && dotsInfo===friend.friendUserId}>
