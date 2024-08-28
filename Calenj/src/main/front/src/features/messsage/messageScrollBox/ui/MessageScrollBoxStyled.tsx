@@ -57,7 +57,7 @@ export const MessageContentContainer = styled.div`
 /**메세지를 담는 컨테이너 1 */
 export const MessageContainer = styled.div`
     margin-left: 10px;
-
+    width: 100%;
     ${NickNameContainer} {
         padding: 2px;
     }

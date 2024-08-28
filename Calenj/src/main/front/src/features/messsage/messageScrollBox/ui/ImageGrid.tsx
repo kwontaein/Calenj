@@ -8,8 +8,8 @@ import {ImagePreview} from "../../../../shared/ui/MultiImageUploadStyled";
 
 const GridContainer = styled.div.attrs<{$widthSize:number, $imageLength:number}>(props=>({
     style:{
-        gridTemplateColumns : `repeat(auto-fit, minmax(${(props.$widthSize/props.$imageLength) >=400 ? "400px" :(props.$widthSize/props.$imageLength) >=300 ? "300px" : "250px"}, auto))`,
-        maxWidth: props.$widthSize >=1200 ? 1200: props.$widthSize >=900 ? 900: props.$widthSize >=600 ? 600 : 300,
+        gridTemplateColumns : `repeat(auto-fit, minmax(${(props.$widthSize/props.$imageLength) >400 ? "400px" :(props.$widthSize/props.$imageLength) >300 ? "300px" : "250px"}, auto))`,
+        maxWidth: props.$widthSize >1200 ? 1200: props.$widthSize >900 ? 900: props.$widthSize >600 ? 600 : 300,
     }
 }))`
     display: grid;
@@ -22,7 +22,7 @@ const Grid_Element = styled.div`
 `;
 const Grid_Image = styled.img.attrs<{$widthSize:number, $imageLength:number}>(props=>({
     style:{
-        maxWidth : `${(props.$widthSize/props.$imageLength) >=400 ? "400px" : (props.$widthSize/props.$imageLength) >=300 ? "300px" : "250px"}`,
+        maxWidth : `${(props.$widthSize/props.$imageLength) >400 ? "400px" : (props.$widthSize/props.$imageLength) >300 ? "300px" : "250px"}`,
     }
 }))`
     width: 100%;

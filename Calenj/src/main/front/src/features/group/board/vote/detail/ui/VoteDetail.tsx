@@ -35,7 +35,7 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
     return(
         <Modal_Background style={dynamicStyle} ref={contentRef}>
             {(data &&loading)&&
-               <VoteDetail_Container style={{minWidth: !isMessage ?'500px' : contentSize.width>=500 ? `500px` : contentSize.width>=400 ? `400px` : contentSize.width>=300 ? `300px` : '250px'  }}>
+               <VoteDetail_Container style={{minWidth: !isMessage ?'500px' : contentSize.width>500 ? `500px` : contentSize.width>400 ? `400px` : contentSize.width>300 ? `300px` : '250px'  }}>
                 <TransVoteContainer $end={voteEnd||false} style={{marginTop:isMessage ? "5px":'20px'}}>
                     <DetailTop state={"vote"} title={data.voteTitle} created={data.voteCreated} watcher={data.voteWatcher} isMessage={isMessage}/>
                     {data &&

@@ -30,9 +30,7 @@ export const MessageContentView: React.FC<MessageProps> = ({message, messageType
                 <VoteMessage voteData={message}/>
             }
             {messageType === 'schedule' &&
-                <div>
-                    {/*<ScheduleMessage events={JSON.parse(message)}/>*/}
-                </div>
+                <ScheduleMessage events={JSON.parse(message)}/>
             }
             {messageType === 'image' &&
                 <ImageGrid images={parseDataString(message)}/>
