@@ -224,6 +224,7 @@ public class FileService {
      * @return 메세지 dto 배열에 담기
      */
     public static MessageResponse parseLineToChatMessage(String line) {
+        System.out.println(line);
         String[] parts = line.split("\\$");
         if (parts.length != 5) {
             throw new IllegalArgumentException("라인 형식이 잘못되었습니다: " + line);
