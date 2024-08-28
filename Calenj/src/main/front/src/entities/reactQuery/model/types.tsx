@@ -132,9 +132,9 @@ export interface UserDateEvent {
         tagKeys: string[],
         formState: string,
         content: string,
-        todoList: string[]|null,
+        todoList: string[],
         repeatState: RepeatState,
-        friendList: string[]|null,
+        friendList: string[],
     }
 }
 

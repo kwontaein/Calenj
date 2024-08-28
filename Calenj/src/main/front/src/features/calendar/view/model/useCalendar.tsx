@@ -30,7 +30,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
         const events = userEventDateState.data.map((event): DateEvent => {
             const {tagKeys, formState, content, todoList, repeatState, friendList} = event.extendedProps
-            const {repeat, startTime, endTime, repeatWeek} = repeatState;//반복여부
+            const {repeat, startTime, endTime, repeatWeek, noRepeatDates} = repeatState;//반복여부
             const tagKey = tagKeys[0]; //태그 키
             const color = dynamicEventTag[tagKey].color//지정한 태그의 색
             const [R, G, B]: number[] = chroma(color).rgb();
@@ -52,14 +52,14 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     todoList: todoList ? todoList : [],
                     repeatState: {
                         ...repeatState,
-                        repeatWeek: repeatWeek ? repeatWeek:[]
+                        repeatWeek: repeatWeek ? repeatWeek:[false,false,false,false,false]
                     },
                     friendList: friendList? friendList.filter((id)=>id!=="") : [],
                 },
             }
             if (repeat) {
                 newEvent.rrule = addRruleOptions(repeatState, new Date(event.start.toString()))
-                newEvent.exdate = event.extendedProps.repeatState.noRepeatDates;
+                newEvent.exdate = noRepeatDates ? noRepeatDates : [];
             }
             if (formState === "schedule") {
                 newEvent.duration = {milliseconds: new Date(endTime.toString()).getTime() - new Date(startTime.toString()).getTime()};
