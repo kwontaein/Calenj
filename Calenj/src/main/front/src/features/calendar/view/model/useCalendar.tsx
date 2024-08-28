@@ -30,7 +30,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
         const events = userEventDateState.data.map((event): DateEvent => {
             const {tagKeys, formState, content, todoList, repeatState, friendList} = event.extendedProps
-            const {repeat, startTime, endTime} = repeatState;//반복여부
+            const {repeat, startTime, endTime, repeatWeek} = repeatState;//반복여부
             const tagKey = tagKeys[0]; //태그 키
             const color = dynamicEventTag[tagKey].color//지정한 태그의 색
             const [R, G, B]: number[] = chroma(color).rgb();
@@ -49,9 +49,12 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     tagKeys: tagKeys,
                     formState: formState,
                     content: content,
-                    todoList: todoList,
-                    repeatState: repeatState,
-                    friendList: friendList!==null? friendList.filter((id)=>id!=="") : [],
+                    todoList: todoList ? todoList : [],
+                    repeatState: {
+                       ...repeatState,
+                        repeatWeek: repeatWeek ? repeatWeek:[]
+                    },
+                    friendList: friendList? friendList.filter((id)=>id!=="") : [],
                 },
             }
             if (repeat) {

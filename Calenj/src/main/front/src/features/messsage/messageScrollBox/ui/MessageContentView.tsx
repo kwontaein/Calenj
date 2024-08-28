@@ -15,7 +15,7 @@ export const MessageContentView: React.FC<MessageProps> = ({message, messageType
 
     useEffect(() => {
         if(messageType=== 'schedule'){
-            console.log(message.split(':'))
+            console.log(message.split(','))
         }
     }, []);
 
