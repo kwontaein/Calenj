@@ -1,6 +1,3 @@
-import {useEffect} from "react";
-import {VoteMessage_Container} from "./VoteMessageStyled";
-import {useFetchVoteDetail} from "../../../../entities/reactQuery";
 import {VoteDetail} from "../../../group/board/vote/detail";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 
