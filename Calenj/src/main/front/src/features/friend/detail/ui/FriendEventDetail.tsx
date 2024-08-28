@@ -1,7 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {getUserProfileApi, UserInfo} from "../../../user/userInfo";
 import {useQueryClient} from "@tanstack/react-query";
-import {requestFriendApi} from "../../requestFriend/api/requestFriendApi";
 import {
     QUERY_FRIEND_LIST_KEY,
     QUERY_REQUEST_FRIEND_LIST,
@@ -39,6 +38,7 @@ import {responseEventApi} from "../api/responseEventApi";
 import {getFriendUserProfileApi} from "../api/getFriendUserProfileApi";
 import {useDispatch} from "react-redux";
 import { saveUserName} from "../../../../entities/redux";
+import {requestFriendApi} from "../../list/api/requestFriendApi";
 
 interface RequestFriendProps {
     onClose: () => void,

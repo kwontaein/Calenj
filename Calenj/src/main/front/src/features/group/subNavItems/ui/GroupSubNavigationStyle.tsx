@@ -62,7 +62,7 @@ export const SubNavigateTopBar_EventSelecter_Container = styled.div`
 export const SubNavigateTopBar_rightContent_item = styled.div`
     width: 25px;
     height: 25px;
-    font-size: 25px;
+    font-size: 21px;
     display: flex;
     align-items: center;
     justify-content: center;

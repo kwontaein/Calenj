@@ -1,1 +1,0 @@
-export {ResponseFriendList} from './ui/ResponseFriendList'

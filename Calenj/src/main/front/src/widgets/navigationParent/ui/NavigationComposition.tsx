@@ -6,11 +6,11 @@ import {
     NavigateState,
     DispatchNavigationProps,
     mapStateToNavigationProps,
-    mapDispatchToNavigationProps, NavigationProps,
+    mapDispatchToNavigationProps,
 } from '../../../entities/redux/model/slice/NavigatgionSlice'
 import {useFetchGroupDetail, useFetchUserInfo} from '../../../entities/reactQuery'
-import {GroupListView} from "../../../features/group/navItems_list";
-import {saveUserName, RootState} from "../../../entities/redux";
+import {saveUserName} from "../../../entities/redux";
+import {SideAlarmView} from "./SideAlarmView";
 
 
 const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=({navigateInfo,updateNavigation})=>{
@@ -34,7 +34,7 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
 
     return(
             <FullScreen_div style = {{ display:"flex", flexDirection:"row"}}>
-                <GroupListView/>
+                <SideAlarmView/>
                 <SubNavigation isLoading={groupDetailState.isLoading}/>
                 <ContentsComposition isLoading={groupDetailState.isLoading}/>
             </FullScreen_div>

@@ -8,14 +8,8 @@ import {
 import {Vote} from "../../board/vote/list";
 import {Notice} from "../../board/notice/list";
 import {SubScreenOption} from "./SubScreenOption";
-import {GroupEventList} from "../../event/list/ui/GroupEventList";
-import {useEffect} from "react";
 import {RootState} from "../../../../entities/redux";
-
-
-
-
-
+import {GroupScheduleList} from "../../schedule/list";
 
 export const GroupSubScreen : React.FC = () =>{
     const {clickState, mode} = useSelector((state:RootState) => state.subNavigation.group_subNavState)
@@ -33,7 +27,7 @@ export const GroupSubScreen : React.FC = () =>{
                     {clickState === "공지" &&
                         <Notice/>}
                     {clickState ==="그룹일정" &&
-                        <GroupEventList/>
+                        <GroupScheduleList/>
                     }
                 </GroupSubScreenContent_Container>
             </GroupSubScreen_Container>
