@@ -9,16 +9,11 @@ import {
 } from "../../../../shared/ui/FriendListStyled";
 import {FriendList} from "../../../../entities/reactQuery";
 import {
-    Option_Container,
-    Option_Item,
-    OptionIcon_Wrapper,
     ProfileContainer,
     RowFlexBox
 } from "../../../../shared/ui/SharedStyled";
 import {InfoBox} from "../../../../shared/ui/InfoBox";
 import {useState} from "react";
-import {useClickOutSideCheck} from "../../../../shared/model/useClickOutSideCheck";
-import {friendDeleteOrBanApi} from "../api/friendDeleteOrBanApi";
 import {cancelUserBanApi} from "../api/cancelUserBanApi";
 import {AxiosError} from "axios";
 import {jwtFilter} from "../../../../entities/authentication/jwt";

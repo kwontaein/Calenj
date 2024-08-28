@@ -11,7 +11,7 @@ import {
     RepeatNum_Input,
     RepeatState_Container,
     RepeatText_Container, SelectContainer,
-} from "./RePeatEventStyled";
+} from "./RepeatEventStyled";
 import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {ko} from "date-fns/locale/ko";
 import {InfoBox} from "../../../../shared/ui/InfoBox";

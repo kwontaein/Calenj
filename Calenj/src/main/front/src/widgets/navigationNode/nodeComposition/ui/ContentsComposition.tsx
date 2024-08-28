@@ -8,10 +8,11 @@ import {GroupDetail} from '../../../../entities/reactQuery'
 import {EventTopBar_Container, ContentsScreen_div} from "./ContentsCompositionStyled"
 import {useComponentSize} from '../../../../shared/model'
 import {RootState} from "../../../../entities/redux";
-import {GroupContentItem, GroupContentTopItem} from "../../../../features/group/contentItems";
 import {MainEventTopBar} from "../../main/evnetBarItmes";
 import {MainContentView} from "../../main/contentView";
 import {updateInputMaxSize} from "../../../../entities/redux/model/slice/InputSizeSlice";
+import {GroupContentView} from "../../group/contentView";
+import {GroupEventTopBar} from "../../group/eventBarItems";
 
 interface QueryProps {
     isLoading: boolean
@@ -41,14 +42,14 @@ export const ContentsComposition: React.FC<QueryProps> = ({isLoading}) => {
         <FullScreen_div ref={contentRef}>
             <EventTopBar_Container>
                 {(navigate === "group" && groupDetail && !isLoading) &&
-                    <GroupContentTopItem/>}
+                    <GroupEventTopBar/>}
                 {navigate === "main" && <MainEventTopBar/>}
             </EventTopBar_Container>
 
 
             <ContentsScreen_div>
                 {(navigate === "group" && groupDetail && !isLoading) &&
-                    <GroupContentItem param={navigateParam} contentSize={contentSize}/>}
+                    <GroupContentView param={navigateParam} contentSize={contentSize}/>}
                 {navigate === "main" && <MainContentView/>}
             </ContentsScreen_div>
         </FullScreen_div>

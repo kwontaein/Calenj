@@ -1,1 +1,0 @@
-export {GroupListView} from './ui/GroupListView'

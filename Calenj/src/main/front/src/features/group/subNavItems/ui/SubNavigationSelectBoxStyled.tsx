@@ -23,10 +23,11 @@ export const SelectItem_Container = styled.div`
     width: 196px;
     background-color: ${BackGroundColor};
     position: fixed;
-    top: 71px;
-    left: 82px; //SideNavigation width 72px + subNavigation padding: 10px
+    top: 60px;
+    left: 81px; //SideNavigation width 72px + subNavigation padding: 10px
     padding: 8px;
     border-radius: 2px;
+    border: 1px solid ${TextColor}20;
 `
 export const Btn_ItemSelector = styled.div`
     background-color: transparent;

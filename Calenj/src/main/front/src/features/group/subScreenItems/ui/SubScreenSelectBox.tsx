@@ -12,8 +12,7 @@ import {RootState} from "../../../../entities/redux";
 import {GroupSubScreenProps} from "../model/types";
 import {updateClickState} from "../../../../entities/redux";
 import {useEffect} from "react";
-import {GroupEventOption} from "../../event/option";
-
+import {GroupScheduleOption} from "../../schedule/option";
 
 export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({isSearching})=>{
     const {searchRef, filter, setSearchWord} = useSelectBoxState(isSearching)
@@ -58,7 +57,7 @@ export const SubScreenSelectBox:React.FC<GroupSubScreenProps> =({isSearching})=>
                     }
             </SubScreenSelector_Container>
             }
-            {clickState==='그룹일정'&& <GroupEventOption/>}
+            {clickState==='그룹일정'&& <GroupScheduleOption/>}
         </>
     )
 }
