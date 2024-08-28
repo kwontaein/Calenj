@@ -58,12 +58,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             if (DbRefreshToken == null) {
                 httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
                 httpResponse.setContentType("application/json");
-            } else if (DbRefreshToken != null && RefreshValidate.equals("true")) { //리프레시 토큰이 있고, 유효한지 검사
+            } else if (RefreshValidate.equals("true")) { //리프레시 토큰이 있고, 유효한지 검사
                 //토큰 발행
                 JwtToken newToken = jwtTokenProvider.refreshAccessToken(authentication, DbRefreshToken);
                 authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else if (!RefreshValidate.equals("true")) {
+            } else {
                 response = tokenFalse(httpResponse, authentication);
                 writer.print("Invalid JWT Token");
             }

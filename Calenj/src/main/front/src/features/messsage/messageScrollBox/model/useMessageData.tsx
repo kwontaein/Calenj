@@ -73,7 +73,6 @@ export const useMessageData = (): useMessageData => {
     const messageList = useMemo(() => {
         if (data) {
             if (!isFetching) {
-                console.log(data)
                 const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message) => (message.chatUUID !== "시작라인" && message.chatUUID !== "마지막라인"))
                 setPrevMessage(messages)
                 console.log(  [...messages, ...newMessageList])

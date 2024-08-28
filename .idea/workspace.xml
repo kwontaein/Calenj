@@ -6,20 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.28 개인 메시지 처리">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/app/hoc/store.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/module/StompMiddleware.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/redux/model/slice/StompReducer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/list/ui/AllFriendView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/navItems_list/ui/GroupListView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageData.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileBottom.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileBottom.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/websocket/model/useStomp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/message/ui/MessageContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/widgets/navigationNode/nodeComposition/ui/ContentsComposition.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/global/JWT/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/global/JWT/JwtAuthenticationFilter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,6 +236,7 @@
       <workItem from="1723692056762" duration="26222000" />
       <workItem from="1724382555630" duration="29720000" />
       <workItem from="1724736929015" duration="2230000" />
+      <workItem from="1724810051221" duration="3659000" />
     </task>
     <task id="LOCAL-00024" summary="06.25 친구요청 (완료)">
       <option name="closed" value="true" />
