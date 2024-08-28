@@ -238,5 +238,6 @@ public class GroupService {
         String userId = globalService.extractFromSecurityContext().getUsername();
         group_userRepository.deleteUserFromGroup(groupId, UUID.fromString(userId));
         //채팅에 나 나갔다고 알림
+        
     }
 }
