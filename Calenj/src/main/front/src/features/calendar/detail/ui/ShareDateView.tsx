@@ -54,7 +54,7 @@ export const ShareDateView: React.FC<DateEventProps> = ({onClose, scheduleId}) =
                 </ShareContent_Wrapper>
                 <SideScrollBox_Container>
                     {friendListState.data && friendListState.data.map((friend) => (
-                        <MapProfile_Container onClick={() => setTargetHandler("friendMsg", friend.chattingRoomId)}>
+                        <MapProfile_Container onClick={() => setTargetHandler("friendMsg", friend.chattingRoomId)} key={friend.friendUserId}>
                             {shareTarget.some(({chatId}) => chatId === friend.chattingRoomId) &&
                                 <SharePickIcon_Container>
                                     <i className="bi bi-check-circle"></i>
@@ -75,7 +75,7 @@ export const ShareDateView: React.FC<DateEventProps> = ({onClose, scheduleId}) =
                 </ShareContent_Wrapper>
                 <SideScrollBox_Container>
                     {groupListState.data && groupListState.data.map((group) => (
-                        <MapProfile_Container onClick={() => setTargetHandler("groupMsg", group.groupId)}>
+                        <MapProfile_Container onClick={() => setTargetHandler("groupMsg", group.groupId)} key={group.groupId}>
                             {shareTarget.some(({chatId}) => chatId === group.groupId) &&
                                 <SharePickIcon_Container style={{marginTop: '20px'}}>
                                     <i className="bi bi-check-circle"></i>

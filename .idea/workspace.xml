@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.28 일정 빈리스트 처리 #2">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="08.28 일정 빈리스트 처리 #4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useAddDateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/createEvent/model/useAddDateEvent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageContentView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageContentView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/ShareDateView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/ShareDateView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/calendar/service/CalendarService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -662,7 +662,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="07.22 일정 친구등록" />
     <MESSAGE value="07.22 일정 친구등록 #3" />
     <MESSAGE value="07.22 일정 친구등록 #4" />
     <MESSAGE value="07.25 일정 생성 ui제작" />
@@ -687,7 +686,8 @@
     <MESSAGE value="08.28 개인 메시지 처리" />
     <MESSAGE value="08.28 파일구조 리팩토링" />
     <MESSAGE value="08.28 일정 빈리스트 처리 #2" />
-    <option name="LAST_COMMIT_MESSAGE" value="08.28 일정 빈리스트 처리 #2" />
+    <MESSAGE value="08.28 일정 빈리스트 처리 #4" />
+    <option name="LAST_COMMIT_MESSAGE" value="08.28 일정 빈리스트 처리 #4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
