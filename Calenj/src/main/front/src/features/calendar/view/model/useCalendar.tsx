@@ -51,7 +51,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                     content: content,
                     todoList: todoList ? todoList : [],
                     repeatState: {
-                       ...repeatState,
+                        ...repeatState,
                         repeatWeek: repeatWeek ? repeatWeek:[]
                     },
                     friendList: friendList? friendList.filter((id)=>id!=="") : [],
