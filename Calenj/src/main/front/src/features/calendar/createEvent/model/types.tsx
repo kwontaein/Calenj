@@ -53,9 +53,9 @@ export interface DateEvent {
         tagKeys: string[],
         formState: string,
         content: string,
-        todoList: string[],
+        todoList: string[]|null,
         repeatState: RepeatState,
-        friendList:string[]
+        friendList:string[]|null
     }
     exdate?: string[]
 }

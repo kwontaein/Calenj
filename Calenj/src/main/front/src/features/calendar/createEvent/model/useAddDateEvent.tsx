@@ -78,11 +78,12 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
 
     const postEvent = () => {
 
-        const {repeat, startTime, endTime, repeatEnd, repeatDeadline} = repeatState
+        const {repeat, startTime, endTime, repeatEnd, repeatDeadline, repeatWeek} = repeatState
 
         if (!beforeCheckEvent(repeatState, eventState, todoState.todoList)) {
             return
         }
+
         const [R, G, B]: number[] = chroma(backgroundColor).rgb();
         const Brightness = (0.299 * R) + (0.587 * G) + (0.114 * B);
 
@@ -102,9 +103,12 @@ export const useAddDateEvent = (onClose: () => void, event: EventApi | DateSelec
                 tagKeys: tagKeys,
                 formState: formState,
                 content: content,
-                todoList: todo,
-                repeatState: repeatState,
-                friendList:friendList,
+                todoList: todo.length===0 ? null : todo,
+                repeatState: {
+                    ...repeatState,
+                    repeatWeek : repeatWeek && repeatWeek.length ===0 ? null : repeatWeek
+                },
+                friendList:friendList.length ===0 ? null : friendList,
             },
         }
         if (repeat) {
