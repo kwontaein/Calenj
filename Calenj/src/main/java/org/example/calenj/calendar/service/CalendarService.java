@@ -189,6 +189,12 @@ public class CalendarService {
         RepeatStateResponse repeatStateresponse = repeatStateRepository.findOneByIds(scheduleResponse.getId()).orElse(null);
         scheduleResponse.getExtendedProps().setRepeatState(repeatStateresponse);
 
+        if (scheduleResponse.getExtendedProps().getTodoList().isEmpty()) {
+            scheduleResponse.getExtendedProps().setTodoList(null);
+        }
+        if (scheduleResponse.getExtendedProps().getFriendList().isEmpty()) {
+            scheduleResponse.getExtendedProps().setFriendList(null);
+        }
         ObjectMapper mapper = new ObjectMapper();
         String jsonString;
         try {
