@@ -65,7 +65,7 @@ public class EventService {
                 .builder()
                 .eventContent(eventContent)
                 .eventUserNickName(friendUser.getNickname())
-                .ownUserId(ownUser)
+                .ownUserId(globalService.getUserEntity(null))
                 .eventUserId(friendUser.getUserId())
                 .eventPurpose(witchRequest)
                 .eventName(type)

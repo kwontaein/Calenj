@@ -1,7 +1,7 @@
 package org.example.calenj.group.groupinfo.repository;
 
-import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
+import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,5 +24,4 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     // 첫 번째 쿼리: GroupEntity 조회
     @Query("SELECT new org.example.calenj.group.groupinfo.dto.response.GroupResponse(g.groupId, g.groupTitle, g.groupCreated ,g.groupCreator) FROM Group_table g WHERE g.groupId = :groupId")
     Optional<GroupResponse> findGroupById(@Param("groupId") UUID groupId);
-
 }

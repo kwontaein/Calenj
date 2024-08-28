@@ -4,9 +4,11 @@ import org.example.calenj.group.groupinfo.domain.Ids.GroupUserId;
 import org.example.calenj.group.groupinfo.dto.response.GroupUserResponse;
 import org.example.calenj.group.groupinfo.domain.GroupUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,4 +26,9 @@ public interface Group_UserRepository extends JpaRepository<GroupUserEntity, Gro
             "INNER JOIN Group_User gu2 ON gu1.group.groupId = gu2.group.groupId\n" +
             "WHERE gu1.user.userId = :myUserId AND gu2.user.userId = :FriendUserId ")
     List<String> findGroupIds(@Param("FriendUserId") UUID FriendUserId, @Param("myUserId") UUID myUserId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE from Group_User gu where gu.user.userId =:userId and gu.group.groupId =:groupId")
+    void deleteUserFromGroup(@Param("groupId") UUID groupId, @Param("userId") UUID userId);
 }

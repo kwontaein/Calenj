@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
@@ -25,67 +24,79 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     //doFilter 메소드가 가장 먼저 실행되는 이유 : 클라이언트의 HTTP 요청이 서블릿 컨테이너에 도달하기 전에 필터가 요청을 가로채어 원하는 작업을 수행하기 때문
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        //request로 받은 token을 구분해주는 메소드
-        String[] tokens = resolveCookieFilter((HttpServletRequest) request);
-        // 1. Request Header 에서 JWT 토큰 추출
-        String token = tokens[0];
-        Authentication authentication;
-        String DbRefreshToken;
-        String RefreshValidate;
-        if (token == null) {
-            //System.out.println("토큰이 없다고?");
-            authentication = null;
-            DbRefreshToken = null;
-            RefreshValidate = null;
-        } else {
-            authentication = jwtTokenProvider.getAuthentication(token);
-            DbRefreshToken = redisService.getUserTokenById(authentication.getName());
-            RefreshValidate = jwtTokenProvider.validateToken(DbRefreshToken);
-        }
-        // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String requestURI = httpRequest.getRequestURI();
 
-
-        // 2. validateToken 으로 토큰 유효성 검사
-        if (token != null && jwtTokenProvider.validateToken(token).equals("true")) {
-
-            response = tokenTrue(token, httpResponse, authentication);
-        } else if (jwtTokenProvider.validateToken(token).equals("Expired JWT Token")) { //토큰이 만료되었다면
-            //GetWriter()가 이미 선언되었다는 오류가 생김 -> doFilter 동작방식에 이유가 있었음
-            //RESPONSE 를 상위에 선언할 경우, 서블릿에서 서비스로 넘기지 않고 바로 반환함(고로 여기 작성)
-            PrintWriter writer = httpResponse.getWriter();
-
-            if (DbRefreshToken == null) {
-                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
-                httpResponse.setContentType("application/json");
-            } else if (RefreshValidate.equals("true")) { //리프레시 토큰이 있고, 유효한지 검사
-                //토큰 발행
-                JwtToken newToken = jwtTokenProvider.refreshAccessToken(authentication, DbRefreshToken);
-                authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                response = tokenFalse(httpResponse, authentication);
-                writer.print("Invalid JWT Token");
-            }
-
-            writer.flush();
-            writer.close();
-            // 이미 응답이 작성되었는지 확인
-            if (httpResponse.isCommitted()) {
-                // 이미 응답이 작성되었다면 필터 체인을 진행하지 않고 바로 반환
-                return;
-            }
-        } else {
-            //System.out.println("로그인하십쇼!!!");
-        }
-        try {
+        // 특정 API는 필터링 없이 바로 통과
+        if (isExcludedURI(requestURI)) {
             chain.doFilter(request, response);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return;
         }
 
+        // Request로부터 JWT 토큰을 추출
+        String token = resolveCookieFilter(httpRequest)[0];
+        if (token == null) {
+            // 토큰이 없으면 401 Unauthorized 응답
+            respondWithUnauthorized(httpResponse);
+            return;
+        }
 
+        // JWT 토큰에서 Authentication 객체를 생성하고, 저장된 리프레시 토큰을 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        String dbRefreshToken = redisService.getUserTokenById(authentication.getName());
+        String refreshValidate = jwtTokenProvider.validateToken(dbRefreshToken);
+
+        // JWT 토큰의 유효성을 검사
+        String tokenValidationResult = jwtTokenProvider.validateToken(token);
+        if ("true".equals(tokenValidationResult)) {
+            // 유효한 토큰일 경우, 추가 처리를 하고 응답 객체를 업데이트
+            response = tokenTrue(token, httpResponse, authentication);
+        } else if ("Expired JWT Token".equals(tokenValidationResult)) {
+            // 토큰이 만료되었을 경우 처리
+            handleExpiredToken(httpResponse, authentication, dbRefreshToken, refreshValidate);
+        } else {
+            // 토큰이 유효하지 않으면 401 Unauthorized 응답
+            respondWithUnauthorized(httpResponse);
+        }
+
+        // 응답이 아직 커밋되지 않았다면, 필터 체인을 계속 진행
+        if (!httpResponse.isCommitted()) {
+            chain.doFilter(request, response);
+        }
+    }
+
+    private boolean isExcludedURI(String requestURI) {
+        // 인증 없이 접근 가능한 특정 URI를 확인
+        return "/api/login".equals(requestURI) ||
+                "/api/saveUser".equals(requestURI) ||
+                "/api/sendEmail".equals(requestURI) ||
+                "/api/postCookie".equals(requestURI) ||
+                "/api/emailCodeValidation".equals(requestURI);
+    }
+
+    private void respondWithUnauthorized(HttpServletResponse response) throws IOException {
+        // 401 Unauthorized 응답을 작성
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Unauthorized");
+    }
+
+    private void handleExpiredToken(HttpServletResponse response, Authentication authentication, String dbRefreshToken, String refreshValidate) throws IOException {
+        // 만료된 JWT 토큰을 처리
+        if (dbRefreshToken == null) {
+            // 리프레시 토큰이 없을 경우 403 Forbidden 응답
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("No Refresh Token");
+        } else if ("true".equals(refreshValidate)) {
+            // 리프레시 토큰이 유효하면 새로운 액세스 토큰을 발급
+            JwtToken newToken = jwtTokenProvider.refreshAccessToken(authentication, dbRefreshToken);
+            Authentication newAuth = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        } else {
+            // 리프레시 토큰이 유효하지 않으면 401 Unauthorized 응답
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT Token");
+        }
     }
 
 

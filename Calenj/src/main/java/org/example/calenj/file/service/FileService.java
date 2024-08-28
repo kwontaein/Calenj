@@ -191,7 +191,7 @@ public class FileService {
 
         int startIndex = previousLines.size();
 
-        if (startIndex != 0) {
+        if (startIndex != 1) {
             previousLines.add("엔드포인트$" + "[" + globalService.nowTime() + "] $ readPoint" + " $ readPoint" +
                     " $ " + "-----------------새로운 메세지-----------------");
         }

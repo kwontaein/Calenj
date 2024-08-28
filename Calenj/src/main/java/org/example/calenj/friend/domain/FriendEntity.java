@@ -57,6 +57,7 @@ public class FriendEntity {
     public enum statusType { //enum을 활용한 권한종류 설정
         ACCEPT("친구"), //친구 요청 받음
         BAN("차단"), //내가 차단
+        DELETE("삭제"),
         WAITING("대기"); //난 보냈고, 상대는 대기중
 
         private final String status;
