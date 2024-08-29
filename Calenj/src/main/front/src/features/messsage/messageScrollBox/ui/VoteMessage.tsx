@@ -1,4 +1,4 @@
-import {VoteDetail} from "../../../group/board/vote/detail";
+import { VoteDetailMemoization} from "../../../group/board/vote/detail";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 
 interface MessageProps{
@@ -9,7 +9,7 @@ export const VoteMessage : React.FC<MessageProps> = ({voteData}) =>{
 
     return (
         <FullScreen_div>
-            <VoteDetail voteParam={voteId} isMessage={true}/>
+            <VoteDetailMemoization voteParam={voteId} isMessage={true}/>
         </FullScreen_div>
     )
 }

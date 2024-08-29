@@ -33,7 +33,7 @@ public class GroupNoticeService {
         GroupEntity groupEntity = groupRepository.findByGroupId(groupNoticeRequest.getGroupId()).orElseThrow(() -> new UsernameNotFoundException("해당하는 그룹을 찾을수 없습니다"));
 
         GroupNoticeEntity groupNoticeEntity = groupNoticeRepository.save(groupNoticeRequest.toEntity(userId, groupEntity));
-        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userId, "notice", "새로운 공지가 생성되었습니다. \n" + groupNoticeEntity.getNoticeId());
+        webSocketService.groupEventChat(groupEntity.getGroupId().toString(), userId, "notice", groupNoticeEntity.getNoticeId().toString());
     }
 
     /**

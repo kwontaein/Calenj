@@ -9,5 +9,7 @@ export interface VoteDetailProps{
     pickVote: (e:React.ChangeEvent<HTMLInputElement>,isMultiple:boolean)=>void, //현재 클릭한 목록 수정
     voteEnd:boolean,
     isCreator:boolean,
+    contentWidth:number,
+    isMessage?:boolean,
 }
 

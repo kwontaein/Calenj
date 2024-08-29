@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from 'react';
-import {useLoginHandler, requestLoginApi} from '../../../../features/authentication/login';
 import {
     Back_Div, Button_Div, Ear, Ear_Bottom, Ear_Bottom_Container, Ear_Container, Eye, Eye_Container,
     ID_Container,
@@ -10,7 +9,7 @@ import {
     Password_Input, SignUp_Btn, Tail_Div
 } from "./styledPages";
 import {Link} from "react-router-dom";
-import {SignState_Button} from "../../../../shared/ui/SharedStyled";
+import {requestLoginApi, useLoginHandler} from "../../../features/authentication/login";
 
 export const LoginFormPages: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);

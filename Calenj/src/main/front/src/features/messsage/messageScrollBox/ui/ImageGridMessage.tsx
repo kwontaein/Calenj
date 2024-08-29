@@ -29,7 +29,7 @@ const Grid_Image = styled.img.attrs<{$widthSize:number, $imageLength:number}>(pr
     height: auto;
     border-radius: 5px;
 `
-export const ImageGrid: React.FC<{ images: GridData[] }> = ({images}) => {
+export const ImageGridMessage: React.FC<{ images: GridData[] }> = ({images}) => {
     const [contentRef, contentSize] = useComponentSize()
     const modalBackground = useRef<HTMLDivElement>(null);
     const [imagePreview, setImagePreview] = useState<GridData|null>(null);
