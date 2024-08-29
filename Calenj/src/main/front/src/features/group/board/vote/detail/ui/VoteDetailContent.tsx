@@ -15,7 +15,7 @@ import {
 import {MiniText, RowFlexBox} from "../../../../../../shared/ui/SharedStyled";
 import {VoteDetailProps} from "../model/types";
 
-export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend, myVote, voteEnd, pickVote,isCreator, voteParam})=>{
+export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend, myVote, voteEnd, pickVote,isCreator, voteParam, isMessage, contentWidth})=>{
     const {data} = useFetchVoteDetail(voteParam);
     const {voteComplete, updateVote, earlyVoteEnd, checkVoteBefore} = useVoteContent(voteParam,isAttend, myVote)
 
@@ -51,7 +51,10 @@ export const VoteDetailContent:React.FC<VoteDetailProps> =({voteItems, isAttend,
 
             {!voteEnd &&
                 <RowFlexBox>
-                    <TrasformButton $isCreator={isCreator&&(data.countVoter.length>0)} $ableClick={checkVoteBefore()} onClick={updateVote}>
+                    <TrasformButton $isCreator={isCreator&&(data.countVoter.length>0)}
+                                    style={{fontSize: !isMessage ? '15px' : contentWidth>300 ? '15px' : '14px'}}
+                                    $ableClick={checkVoteBefore()}
+                                    onClick={updateVote}>
                         {isAttend&&voteComplete ? '다시 투표하기':'투표 하기'}
                     </TrasformButton>
                     {isCreator && data.countVoter.length>0 &&

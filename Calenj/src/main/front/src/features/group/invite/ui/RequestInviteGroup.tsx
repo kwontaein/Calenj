@@ -4,16 +4,16 @@ import {
     SelectorIcon_Container,
     SelectorText_Container
 } from "./RequestInvieteGroupStyled";
-import {useState} from "react";
+import {useReducer, useState} from "react";
 import {useInviteCode} from "../model/useInviteCode";
 
 
 export const RequestInviteGroup: React.FC = () => {
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useReducer((prev)=>!prev, false)
     const [inviteLink, invite] = useInviteCode(setModalOpen);
 
     return (
-        <div style={{marginBottom: "5px"}}>
+        <div style={{marginBottom: "5px" }}>
             <Btn_ItemSelector onClick={invite}>
                 <SelectorText_Container>
                     초대하기
@@ -22,7 +22,7 @@ export const RequestInviteGroup: React.FC = () => {
                     <i className="fi fi-sr-user-add"></i>
                 </SelectorIcon_Container>
             </Btn_ItemSelector>
-            {modalOpen && <InviteModal onClose={() => setModalOpen(false)} inviteLink={inviteLink}/>}
+            {modalOpen && <InviteModal onClose={setModalOpen} inviteLink={inviteLink}/>}
         </div>
     )
 }

@@ -28,6 +28,7 @@ export const SelectItem_Container = styled.div`
     padding: 8px;
     border-radius: 2px;
     border: 1px solid ${TextColor}20;
+    z-index: 10;
 `
 export const Btn_ItemSelector = styled.div`
     background-color: transparent;

@@ -31,6 +31,7 @@ export const BoardSearchMap = new Map();
 export const BoardParamMap = new Map();
 export const ChatContentMap = new Map();
 export const EventStateMap = new Map();
+export const EndPointParamMap = new Map();
 
 export const subscribeDirection = ['personalTopic', 'groupMsg', 'friendMsg']
 
@@ -151,18 +152,11 @@ function* startStomp(destination: string[][]): any {
         const {state, param, userId, message, endPoint, target} = receiveData.payload.receiveMessage
 
         console.log(state)
-        if(target==="groupMsg"){
-            if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
-                groupEndPointMap.set(param, (groupEndPointMap.get(param)||0) + 1)
-            } else if (state === "ALARM" && message === null) {
-                groupEndPointMap.set(param, groupEndPointMap.get(param) || endPoint)
-            }
-        }else if(target==="friendMsg"){
-            if (state === "SEND" && (localStorage.getItem('userId') !== userId)) {
-                friendEndPointMap.set(param, (friendEndPointMap.get(param)||0) + 1)
-            } else if (state === "ALARM" && message === null) {
+
+        if(state ==="ALARM"){
+            target ==="groupMsg" ?
+                groupEndPointMap.set(param, groupEndPointMap.get(param) || endPoint) :
                 friendEndPointMap.set(param, friendEndPointMap.get(param) || endPoint)
-            }
         }
 
     }

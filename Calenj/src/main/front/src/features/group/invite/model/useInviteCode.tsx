@@ -5,7 +5,7 @@ import {Friends} from "./types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 
-export const useInviteCode = (setModalOpen: React.Dispatch<React.SetStateAction<boolean>>) :[inviteLink:string, invite : ()=>void] =>{
+export const useInviteCode = (setModalOpen:  React.DispatchWithoutAction) :[inviteLink:string, invite : ()=>void] =>{
     const [inviteLink, setInviteLink] = useState<string>("");
     const [friends, setFriends] = useState<Friends[] | null>(null);
     const groupId= useSelector((state:RootState)=> state.subNavigation.group_subNavState.param)
@@ -14,7 +14,7 @@ export const useInviteCode = (setModalOpen: React.Dispatch<React.SetStateAction<
         inviteCodeApi(groupId)
             .then(response => {
                 setInviteLink(response.data)
-                setModalOpen(true)
+                setModalOpen()
                 axios.get('/api/getFriendList')
                     .then(response => {
                         setFriends(response.data);

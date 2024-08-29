@@ -1,1 +1,1 @@
-export {VoteDetail} from './ui/VoteDetail'
+export {VoteDetailMemoization} from './ui/VoteDetail'
