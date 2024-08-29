@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -221,7 +222,7 @@ public class GroupScheduleService {
                 continue;
             }
             // ScheduleRequest 객체 생성 및 저장
-            calendarService.saveSchedule(createScheduleRequest(response, newStart, tagKey));
+            calendarService.saveGroupSchedule(createScheduleRequest(response, newStart, tagKey), groupScheduleEntity.getManager());
             plusTime += response.getSubScheduleDuration();
         }
     }
@@ -256,6 +257,10 @@ public class GroupScheduleService {
             repeatWeek.add(false);
         }
 
+        List<UUID> members = response.getJoinUser().stream()
+                .map(UUID::fromString)  // 각 String을 UUID로 변환
+                .collect(Collectors.toList());  // 변환된 결과를 List로 수집
+
         RepeatStateRequest repeatStateRequest =
                 new RepeatStateRequest(
                         response.getSubScheduleId(),
@@ -277,14 +282,20 @@ public class GroupScheduleService {
                         "promise",
                         response.getSubScheduleContent(),
                         new ArrayList<>(),
-                        new ArrayList<>(),
+                        members,
                         repeatStateRequest);
 
         //System.out.println("newTime : " + response.getSubScheduleDuration());
         Timestamp newEnd = new Timestamp(newStart.getTime() + (response.getSubScheduleDuration() * 1000 * 60L));
         //System.out.println("newEnd : " + newEnd);
         return new ScheduleRequest(
-                response.getSubScheduleId(), response.getSubScheduleTitle(), newStart, null, newEnd, false, extendedPropsRequest);
+                response.getSubScheduleId(),
+                response.getSubScheduleTitle(),
+                newStart,
+                null,
+                newEnd,
+                false,
+                extendedPropsRequest);
     }
 
     public String joinSubSchedule(UUID subScheduleId) {
