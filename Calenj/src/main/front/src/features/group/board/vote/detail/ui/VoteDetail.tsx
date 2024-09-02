@@ -27,9 +27,9 @@ import {useComponentSize} from "../../../../../../shared/model";
 
     const dynamicStyle: React.CSSProperties = {
         backgroundColor: isMessage ? 'transparent' : 'rgba(0, 0, 0, 0.3)',
-        position : isMessage ? 'relative':'fixed',
+        position : isMessage ? 'unset':'fixed',
         justifyContent:isMessage ? 'left':'center',
-        zIndex: isMessage? '0':'9998',
+        zIndex: isMessage? 'unset':'9998',
     };
 
     return(

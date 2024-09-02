@@ -113,7 +113,7 @@ export const MessageScrollBox: React.FC = () => {
                     </div>
                     )
                 )}
-                {hasNextPage && <div className="scrollBottom" style={{marginTop: '5px'}} ref={bottomRef}></div>}
+                {hasNextPage && <div className="scrollBottom" style={{marginTop: '-10px'}} ref={bottomRef}></div>}
             </ScrollableDiv>
         );
     }, [messageList,readEndPoint]);
