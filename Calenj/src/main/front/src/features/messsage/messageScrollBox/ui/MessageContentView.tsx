@@ -1,4 +1,4 @@
-import {ImageGrid} from "./ImageGrid";
+import {ImageGridMessage} from "./ImageGridMessage";
 import {parseDataString} from "../lib/parseDataString";
 import React, {useEffect} from "react";
 import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
@@ -13,12 +13,6 @@ interface MessageProps {
 
 export const MessageContentView: React.FC<MessageProps> = ({message, messageType}) => {
 
-    useEffect(() => {
-        if(messageType=== 'schedule'){
-            console.log(message)
-        }
-    }, []);
-
     return (
         <FullScreen_div>
             {messageType === 'title' &&
@@ -30,12 +24,10 @@ export const MessageContentView: React.FC<MessageProps> = ({message, messageType
                 <VoteMessage voteData={message}/>
             }
             {messageType === 'schedule' &&
-                <div>
-                    {/*<ScheduleMessage events={JSON.parse(message)}/>*/}
-                </div>
+                <ScheduleMessage events={JSON.parse(message)}/>
             }
             {messageType === 'image' &&
-                <ImageGrid images={parseDataString(message)}/>
+                <ImageGridMessage images={parseDataString(message)}/>
             }
             {(messageType === 'null' || messageType === null) &&
                 <div>

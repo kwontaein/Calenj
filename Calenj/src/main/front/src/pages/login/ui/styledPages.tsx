@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {PointColor, TextColor, ThemeColor2, ThemeColor3} from "../../../../shared/ui/SharedStyled";
+import {PointColor, TextColor, ThemeColor2} from "../../../shared/ui/SharedStyled";
 
 export const Login_Container = styled.div`
     display: flex;

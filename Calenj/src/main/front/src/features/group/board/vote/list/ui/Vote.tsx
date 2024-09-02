@@ -8,7 +8,7 @@ import {
     GroupVoteListDivision,
 } from "./VoteStyled";
 import {useSelector} from 'react-redux'
-import {VoteDetail} from "../../detail";
+import { VoteDetailMemoization} from "../../detail";
 import {RootState} from "../../../../../../entities/redux";
 import VoteListItems from "./VoteListItems";
 import {useVoteList} from "../model/useVoteList";
@@ -26,7 +26,7 @@ export const Vote: React.FC = () => {
 
     return (
         <GroupVoteList_Container>
-            {boardOption.voteParam!=='' &&  <VoteDetail voteParam={boardOption.voteParam} isMessage={false}/>}
+            {boardOption.voteParam!=='' &&  <VoteDetailMemoization voteParam={boardOption.voteParam} isMessage={false}/>}
             {boardOption.clickState ==="add" && <CreateVote/>}
             {voteListState.isLoading && <div>Loading...</div>}
             {voteListState.data &&

@@ -192,7 +192,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
                                             반복 시작일 : {shortAHMFormat2(repeatState.startTime)}
                                             {repeatState.repeatDeadline !== "count" ?
                                                 <div style={{fontSize: 'inherit'}}>
-                                                    반복 마감일 : {shortAHMFormat2(repeatState.endTime)}
+                                                    반복 마감일 : {shortAHMFormat2(repeatState.repeatEnd)}
                                                 </div> :
                                                 <div style={{fontSize: 'inherit'}}>
                                                     반복 횟수 : {repeatState.repeatCount}회 반복

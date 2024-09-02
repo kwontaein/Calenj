@@ -47,7 +47,7 @@ export const useMessageData = (): useMessageData => {
     } = useChatFileInfinite(stompParam, userId || '')
     //새로운 메시지
     const receivedNewMessage = receivedMessage();
-    const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage)
+    const receivedMessages = useReceiveChatInfinite(stompParam, receivedNewMessage) //새로운 메시지
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 
@@ -75,7 +75,6 @@ export const useMessageData = (): useMessageData => {
             if (!isFetching) {
                 const messages = data.pages.reduce((prev, current) => prev.concat(current)).filter((message) => (message.chatUUID !== "시작라인" && message.chatUUID !== "마지막라인"))
                 setPrevMessage(messages)
-                console.log(  [...messages, ...newMessageList])
                 return hasNextPage ? messages : [...messages, ...newMessageList]
             } else {
                 return prevMessage
@@ -154,6 +153,8 @@ export const useMessageData = (): useMessageData => {
 
         return () => clearTimeout(timer);
     }, []);
+
+
 
     //--------------------------------------------------------------------------------------------------------------- 의존성을 활용한 페이지 랜더링 및 업데이트 관리
     const compareDate = (date1: string, date2: string): boolean => {

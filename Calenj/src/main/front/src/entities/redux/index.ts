@@ -4,7 +4,7 @@ export {updateBoardFilter, updateBoardParam, updateClickState, updateBoardSearch
 export {updateGroupSubParam, updateGroupSubScreenWidthSize, updateGroupSubScreenHeightSize, updateGroupSubScreenMode, updateGroupSubClickState,updateMainSubNavigation} from './model/slice/SubNavigationSlice';
 export {updateLoading, updateOnline, synchronizationStomp, updateAppPosition, receivedStompMsg, sendStompMsg, requestFile, addSubScribe} from './model/slice/StompReducer';
 export {updateToken, updateCodeValid} from './model/slice/EmailValidationSlice';
-export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, groupEndPointMap, toggleCurrentMap, ChatContentMap} from './model/module/StompMiddleware'
+export {BoardFilterMap, BoardParamMap, BoardSearchMap, scrollPointMap, groupEndPointMap, toggleCurrentMap, ChatContentMap, EndPointParamMap} from './model/module/StompMiddleware'
 export {type RootState} from './model/types'
 export {saveUserName, saveFriendIdByChatRoomId} from './model/slice/UserNameStorageSlice'
 export {updateScheduleState} from './model/slice/GroupScheduleSlice'

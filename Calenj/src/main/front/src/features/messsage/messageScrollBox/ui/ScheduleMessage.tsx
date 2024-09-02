@@ -1,6 +1,6 @@
 import React, {useEffect, useId, useReducer, useRef, useState} from "react";
 import {UserDateEvent} from "../../../../entities/reactQuery";
-import {Modal_Background, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
+import {FullScreen_div, Modal_Background, ProfileContainer, TextColor} from "../../../../shared/ui/SharedStyled";
 import {
     AdditionalInfo_Container, DateEventBottom_Container,
     DateEventContent_Container,
@@ -25,26 +25,28 @@ import {
 } from "../../../calendar/detail/ui/DateEventDetailStyled";
 import {AHMFormat, shortAHMFormat2} from "../../../../shared/lib/dateFormat";
 import {ShareDateView} from "../../../calendar/detail/ui/ShareDateView";
+import {useComponentSize} from "../../../../shared/model";
 
 export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) => {
     const {repeatState, formState, content, todoList, tagKeys, friendList} = events.extendedProps
     const week = ["일", "월", "화", "수", "목", "금", "토"];
     const id = useId()
     const [isShared, setIsShare] = useReducer((prev) => !prev, false)
+    const [contentRef, contentSize]= useComponentSize()
 
     return (
-        <div>
-            <DateEventDetail_Container style={{marginTop:'10px', width:`auto`}}>
+        <FullScreen_div ref={contentRef}>
+            <DateEventDetail_Container style={{position:'unset', marginTop:'10px',boxShadow:'none' , width:contentSize.width>500 ? `500px` : contentSize.width>400 ? `400px` : contentSize.width>300 ? `300px` : '250px'}}>
                 <EventOption_Container/>
                 <TitleContent_Container>
-                    <TitleContent_Wrapper style={{fontSize:'20px'}}>
+                    <TitleContent_Wrapper style={{fontSize:'20px', paddingLeft: contentSize.width>300 ? `50px` : '35px'}}>
                         {events.title}
                     </TitleContent_Wrapper>
                 </TitleContent_Container>
 
 
                 <EventDetailContent_Wrapper $isRepeat={formState === 'schedule'}>
-                    <DateTime_Container style={{height:'25px'}}>
+                    <DateTime_Container style={{height:'25px', paddingLeft: contentSize.width>300 ? `20px` : '5px'}}>
                         <EventDetailIcon_Wrapper style={{fontSize:'15px', marginTop:'0'}}>
                             <i className="fi fi-rr-clock-three"></i>
                         </EventDetailIcon_Wrapper>
@@ -54,13 +56,13 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
                         </EventTimeContent_Wrapper>
                     </DateTime_Container>
 
-                    <EventTime_Container>
+                    <EventTime_Container style={{paddingLeft : contentSize.width>300 ? `50px` : '35px'}}>
                         {formState === 'todo' ?
                             "체크리스트" : `${AHMFormat(events.start as Date).slice(-8)} ~ ${AHMFormat(events.end as Date).slice(-8)}`
                         }
                     </EventTime_Container>
 
-                    <DateEventContent_Container>
+                    <DateEventContent_Container style={{paddingLeft : contentSize.width>300 ? `20px` : '5px'}}>
                         <EventDetailIcon_Wrapper style={{fontSize: '20px'}}>
                             {formState === 'todo' && <i className="bi bi-list-check"></i>}
                             {formState === 'promise' && <i className="bi bi-list-ul"></i>}
@@ -104,6 +106,6 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
                     <DateEventBottom_Container/>
                 }
             </DateEventDetail_Container>
-        </div>
+        </FullScreen_div>
     );
 }

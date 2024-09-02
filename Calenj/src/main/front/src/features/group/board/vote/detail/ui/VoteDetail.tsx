@@ -19,7 +19,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../entities/redux";
 import {useComponentSize} from "../../../../../../shared/model";
 
-export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteParam,isMessage}) => {
+ const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteParam,isMessage}) => {
     const {voteItems, myVote, isAttend, voteEnd, loading, pickVoteItem ,data} =useVoteDetailData(voteParam);
     let userId = localStorage.getItem('userId')
     const [viewVoter, setViewVoter] = useState<boolean>(false); //투표인원 보기
@@ -27,15 +27,15 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
 
     const dynamicStyle: React.CSSProperties = {
         backgroundColor: isMessage ? 'transparent' : 'rgba(0, 0, 0, 0.3)',
-        position : isMessage ? 'relative':'fixed',
+        position : isMessage ? 'unset':'fixed',
         justifyContent:isMessage ? 'left':'center',
-        zIndex: isMessage? '0':'9998',
+        zIndex: isMessage? 'unset':'9998',
     };
 
     return(
         <Modal_Background style={dynamicStyle} ref={contentRef}>
             {(data &&loading)&&
-               <VoteDetail_Container style={{minWidth: !isMessage ?'500px' : contentSize.width>=500 ? `500px` : contentSize.width>=400 ? `400px` : contentSize.width>=300 ? `300px` : '250px'  }}>
+               <VoteDetail_Container style={{minWidth: !isMessage ?'500px' : contentSize.width>500 ? `500px` : contentSize.width>400 ? `400px` : contentSize.width>300 ? `300px` : '250px'}}>
                 <TransVoteContainer $end={voteEnd||false} style={{marginTop:isMessage ? "5px":'20px'}}>
                     <DetailTop state={"vote"} title={data.voteTitle} created={data.voteCreated} watcher={data.voteWatcher} isMessage={isMessage}/>
                     {data &&
@@ -61,6 +61,8 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
                                 pickVote={pickVoteItem}
                                 myVote={myVote as boolean[]}
                                 isCreator={data.voteCreator === userId}
+                                isMessage={isMessage}
+                                contentWidth={contentSize.width}
                             />
                         }
                         {(data.countVoter.length>0||voteEnd) &&
@@ -76,4 +78,4 @@ export const VoteDetail:React.FC<{voteParam:string,isMessage:boolean}> = ({voteP
 }
 
 
-
+export const VoteDetailMemoization = React.memo(VoteDetail)

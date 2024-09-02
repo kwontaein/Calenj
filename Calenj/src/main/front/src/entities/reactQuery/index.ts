@@ -18,6 +18,7 @@ export {
     useFetchGroupSubScheduleList,
     useFetchUserBanList,
     useFetchUserChatList,
+    useFetchNoticeDetail,
 } from './model/queryModel'
 export {
     type GroupDetail,

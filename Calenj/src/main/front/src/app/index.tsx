@@ -8,13 +8,15 @@ import {FullScreen_div} from "../shared/ui/SharedStyled";
 import {useFetchCookie} from "../entities/reactQuery";
 import ImageUploadView from "../shared/ui/ImageUploadView";
 import ImagesUploadComponent from "../shared/ui/MultiImageUploadView";
-import {LoginFormPages} from "../pages/login/ui";
 import {useStomp} from "../features/websocket";
 import {RootState} from "../entities/redux";
 import {sagaRefresh} from "./hoc/store";
-import {UserProfileSetting} from "../features/user/userProtile/ui/UserProfileSetting";
 import {Test} from "../Test/test/test";
 import Direction5 from "../Test/direction5";
+import {LoginFormPages} from "../pages/login";
+import {UserProfileSetting} from "../features/user/userProfile";
+
+
 
 declare global {
     interface Window {

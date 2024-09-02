@@ -1,18 +1,18 @@
 import {Message, QUERY_NEW_CHAT_KEY, useChatFileInfinite} from "../../../../entities/reactQuery";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { groupEndPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
+import {EndPointParamMap, groupEndPointMap, requestFile, RootState, scrollPointMap} from "../../../../entities/redux";
 import {debounce, throttleByAnimationFrame} from "../../../../shared/lib";
 import {friendEndPointMap} from "../../../../entities/redux/model/module/StompMiddleware";
+import {v4 as uuidv4} from "uuid";
 
 interface ReturnScroll {
     scrollRef: React.MutableRefObject<HTMLDivElement | null>,
     messageRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null; }>,
-
+    readEndPoint: string,
 }
 
 export const useMessageScroll = (connectMessages: Message[], chatUUID: string, position: string): ReturnScroll => {
-
     const dispatch = useDispatch();
     const stomp = useSelector((state: RootState) => state.stomp)
     const {
@@ -30,6 +30,30 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     const isRender = useRef<boolean>();
     const [isReceive, setIsReceive] = useState<boolean>(false);
     const beforeScrollTop = useRef<number>(); //이전 스크롤의 위치를 기억
+    const [readEndPoint, setReadEndPoint] = useState<string>('')
+    const [initScrollTop, setInitScrollTop] = useState<number>(0)
+
+    useEffect(() => {
+        // 포커스 이벤트 핸들러
+        const handleFocus = () => {
+            if((target ==="group" && groupEndPointMap.get(param) !== 0) || (target==="main" && friendEndPointMap.get(param) !== 0)) return
+            if(scrollRef.current){
+                const {scrollHeight, clientHeight, scrollTop} = scrollRef.current;
+                if (scrollHeight === clientHeight) {
+                    debouncing_EndPoint();
+                }else if(scrollTop + clientHeight === scrollHeight){
+                    debouncing_EndPoint();
+                }
+            }
+        };
+        // 포커스 이벤트 등록
+        window.addEventListener('focus', handleFocus);
+
+        // 클린업 함수: 컴포넌트가 언마운트되거나 리렌더링 될 때 리스너 제거
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [connectMessages]); // 메시지가 온
 
 
     useEffect(() => {
@@ -42,12 +66,12 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         scrollRef.current.scrollTop -= (beforeInputSize.current - inputSize)
         beforeInputSize.current = inputSize;
         beforeScrollTop.current = scrollRef.current?.scrollTop;
-
     }, [inputSize]);
 
 
     useEffect(() => {
         return () => {
+            console.log(beforeScrollTop.current)
             if (beforeScrollTop.current === undefined) return
             //스크롤이 존재했는지 체크
             scrollPointMap.set(param, beforeScrollTop.current);
@@ -76,9 +100,9 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if (messageDiv && scrollRef.current) {
             const subScreenHeight = (clickState !== '' && mode === 'column') ? screenHeightSize : 0
             if (alignToBottom) { //아래로
-                scrollRef.current.scrollTop = messageDiv.offsetTop - scrollRef.current.clientHeight + messageDiv.clientHeight - subScreenHeight - 20;
+                scrollRef.current.scrollTop = messageDiv.offsetTop - scrollRef.current.clientHeight + messageDiv.clientHeight - subScreenHeight - 40;
             } else { //위로
-                scrollRef.current.scrollTop = messageDiv.offsetTop - 100 - subScreenHeight;
+                scrollRef.current.scrollTop = messageDiv.offsetTop - 90 - subScreenHeight;
             }
             scrollPointMap.set(param, scrollRef.current.scrollTop)
 
@@ -86,13 +110,14 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     }, [clickState, mode, param, screenHeightSize]);
 
 
-    const [showDown, setShowDown] = useState<boolean>(true);
-
     //컴포넌트 랜더링과 상관없이 인스턴스를 유지하게 memo
     const debouncing_EndPoint = useMemo(() => {
         return debounce(() => {
             let currentTarget = target ==='main' ? 'friendMsg' :'groupMsg'
             target ==='main' ? friendEndPointMap.set(param,0) : groupEndPointMap.set(param, 0)
+            const UUid = uuidv4();
+            setReadEndPoint(UUid)
+            EndPointParamMap.set(param, "NONE")
             dispatch(requestFile({target: currentTarget, param: param, requestFile: "ENDPOINT"}));
         }, 2000);
     }, [param]);
@@ -100,26 +125,25 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
 
     //스크롤 => 맨 밑으로 이동
     const scrollToBottom = () => {
-        debouncing_EndPoint()
+        if(document.hasFocus()){
+            debouncing_EndPoint()
+        }
         setTimeout(() => {
             if (scrollRef.current) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight
                 beforeScrollTop.current = scrollRef.current.scrollTop
             }
-        }, 50)
+        }, 5)
     };
 
 
     const updateScroll = () => {
         if (!scrollRef.current) return
         const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
-        beforeScrollTop.current = scrollTop - (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0);
-
-        if(stomp.target)
-        if (target ==='group' && groupEndPointMap.get(param) === 0 || target ==='main' && friendEndPointMap.get(param) ===0) return;
+        beforeScrollTop.current = scrollTop - ((clickState !== "" && mode === "column") ? Math.round(screenHeightSize) : 0);
+        if ((target ==='group' && groupEndPointMap.get(param) === 0 )|| (target ==='main' && friendEndPointMap.get(param) ===0)) return;
         //스크롤에 따른 표시
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
-            console.log("맨아래로")
             scrollToBottom();
         }
     }
@@ -130,6 +154,13 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         });
     }, [param]);
 
+    useEffect(()=>{
+        if(!scrollRef.current || initScrollTop===0) return
+        if(scrollRef.current.scrollTop!==0 && position==='older'){
+            scrollRef.current.scrollTop = initScrollTop
+            setInitScrollTop(0)
+        }
+    },[scrollRef.current?.scrollTop,initScrollTop])
 
     const addScrollEvent = () => {
         //isLoading이 falset가 돼야 스크롤 scrollRef가 잡혀서 셋팅됨
@@ -150,7 +181,8 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
                 }
             }
         } else {
-            scrollRef.current.scrollTop = (scrollPointMap.get(param) + (clickState !== "" && mode === "column" ? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+            scrollRef.current.scrollTop = (scrollPointMap.get(param) + ((clickState !== "" && mode === "column" )? Math.round(screenHeightSize) : 0)); //반올림돼서 올라가는 것으로 추측 +1 로 오차 줄이기
+            setInitScrollTop(scrollRef.current?.scrollTop)
         }
 
         const {scrollHeight, clientHeight} = scrollRef.current;
@@ -158,7 +190,6 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         if ((target ==="group" && groupEndPointMap.get(param) !== 0)|| (target==="main" && friendEndPointMap.get(param) !== 0) && scrollHeight === clientHeight) {
             debouncing_EndPoint();
         }
-
     }
 
 
@@ -175,20 +206,10 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
         }
         if (scrollHeight > clientHeight && scrollTop + clientHeight === scrollHeight) {
             scrollToBottom();
-        } else {
-            setShowDown(true);
         }
     }, [stomp.receiveMessage.receivedUUID])
 
 
-    //데이터 => 아래로 버튼 클릭시 상호작용
-    // const goBottom = async () => {
-    //     if (lastPage) { //마지막 페이지이고, 80개가 넘지 않으면 다시 불러올 필요 없음.
-    //         scrollToBottom();
-    //     } else {
-    //         // getInitialMessages();
-    //     }
-    // }
 
     //메세지 추가 로딩
     useEffect(() => {
@@ -219,10 +240,12 @@ export const useMessageScroll = (connectMessages: Message[], chatUUID: string, p
     }, [connectMessages]);
 
 
+
+
     useEffect(() => {
         if (chatUUID === '') return
         scrollToMessage(chatUUID, position === "newer");
     }, [connectMessages, chatUUID])
 
-    return {scrollRef, messageRefs};
+    return {scrollRef, messageRefs,readEndPoint};
 }
