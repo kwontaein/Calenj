@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.calenj.calendar.dto.request.ExtendedPropsRequest;
 import org.example.calenj.calendar.dto.request.RepeatStateRequest;
 import org.example.calenj.calendar.dto.request.ScheduleRequest;
+import org.example.calenj.calendar.dto.response.TagResponse;
 import org.example.calenj.calendar.service.CalendarService;
 import org.example.calenj.event.domain.EventEntity;
 import org.example.calenj.event.service.EventService;
@@ -207,10 +208,13 @@ public class GroupScheduleService {
     public void addCalendar(GroupScheduleEntity groupScheduleEntity, UUID subScheduleId) {
         // 시간정보 얻기
         Timestamp start = groupScheduleEntity.getScheduleStart();
+        UUID groupId = groupScheduleEntity.getSchedule_Group().getGroupId();
         // 서브목록 가져오기
         List<GroupSubScheduleResponse> responses = getSubScheduleList(groupScheduleEntity.getScheduleId());
-        // 태그
-        List<UUID> tagKey = extractTagKey();
+
+        //해당 그룹의 태그
+        TagResponse tagKey = extractTagKey(groupScheduleEntity.getSchedule_Group().getGroupId());
+
         int plusTime = 0;
 
         for (GroupSubScheduleResponse response : responses) {
@@ -222,7 +226,7 @@ public class GroupScheduleService {
                 continue;
             }
             // ScheduleRequest 객체 생성 및 저장
-            calendarService.saveGroupSchedule(createScheduleRequest(response, newStart, tagKey), groupScheduleEntity.getManager());
+            calendarService.saveGroupSchedule(createScheduleRequest(response, newStart, tagKey, groupId), groupScheduleEntity.getManager());
             plusTime += response.getSubScheduleDuration();
         }
     }
@@ -233,13 +237,8 @@ public class GroupScheduleService {
      *
      * @return
      */
-    private List<UUID> extractTagKey() {
-        return calendarService.getTagEntityList().stream()
-                .filter(tag -> "그룹 일정".equals(tag.getName()))
-                .map(tag -> tag.getId())
-                .findFirst()
-                .map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+    private TagResponse extractTagKey(UUID groupId) {
+        return calendarService.getGroupTag(groupId);
     }
 
     /**
@@ -250,7 +249,7 @@ public class GroupScheduleService {
      * @param tagKey
      * @return
      */
-    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, List<UUID> tagKey) {
+    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, TagResponse tagKey, UUID groupId) {
 
         List<Boolean> repeatWeek = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
@@ -278,7 +277,7 @@ public class GroupScheduleService {
 
         ExtendedPropsRequest extendedPropsRequest =
                 new ExtendedPropsRequest(
-                        tagKey,
+                        Collections.singletonList(tagKey.getId()),
                         "promise",
                         response.getSubScheduleContent(),
                         new ArrayList<>(),
@@ -295,6 +294,8 @@ public class GroupScheduleService {
                 null,
                 newEnd,
                 false,
+                true,
+                groupId,
                 extendedPropsRequest);
     }
 

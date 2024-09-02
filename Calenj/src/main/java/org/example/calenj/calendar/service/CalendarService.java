@@ -17,10 +17,11 @@ import org.example.calenj.calendar.repository.RepeatStateRepository;
 import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
+import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
+import org.example.calenj.group.groupinfo.service.GroupService;
 import org.example.calenj.group.groupschedule.dto.request.GroupSubScheduleRequest;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.websocket.service.WebSocketService;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,12 +33,11 @@ import java.util.stream.Collectors;
 public class CalendarService {
     private final GlobalService globalService;
     private final WebSocketService webSocketService;
+    private final GroupService groupService;
 
     private final UserScheduleRepository userScheduleRepository;
     private final TagRepository tagRepository;
     private final RepeatStateRepository repeatStateRepository;
-
-    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     /**
      * 스케쥴 업데이트
@@ -175,7 +175,15 @@ public class CalendarService {
      * 내가 포함된 일정 조회
      */
     public List<ScheduleResponse> groupSchedulesInMe() {
-        
+        //그룹 일정중에 내가 포함된 그룹(서브) 일정을 조회해야 함
+        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
+        UserEntity user = globalService.getUserEntity(null);
+        //그룹 일정 전부 조회
+        for (GroupResponse g : groupService.groupList()) {
+            //내가 포함된 일정 뽑기
+            List<ScheduleResponse> scheduleResponse = userScheduleRepository.findGroupSchedule(g.getGroupId(), user.getUserId()).orElse(null);
+            scheduleResponses.addAll(scheduleResponse);
+        }
         return new ArrayList<>();
     }
 
@@ -185,8 +193,24 @@ public class CalendarService {
      * @return 스케쥴 태그 목록
      */
     public List<TagResponse> getTagEntityList() {
-        return tagRepository.findByUserId(globalService.getUserEntity(null).getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
+        List<TagResponse> tagResponses = tagRepository.findByUserId(globalService.getUserEntity(null).getUserId()).orElseThrow(() -> new RuntimeException("오류 발생!"));
+        List<GroupResponse> groupResponses = groupService.groupList();
+        for (GroupResponse g : groupResponses) { //내가 속한 그룹의 태그 포함
+            tagResponses.add(getGroupTag(g.getGroupId()));
+        }
+        return tagResponses;
     }
+
+
+    /**
+     * 그룹 스케쥴 태그 목록 조회
+     *
+     * @return 그룹 스케쥴 태그 목록
+     */
+    public TagResponse getGroupTag(UUID groupId) {
+        return tagRepository.findTagByGroupId(groupId).orElseThrow(() -> new RuntimeException("오류 발생!"));
+    }
+
 
     /**
      * 태그 저장

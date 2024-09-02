@@ -16,4 +16,7 @@ import java.util.UUID;
 public interface TagRepository extends JpaRepository<TagEntity, TagId> {
     @Query("SELECT new org.example.calenj.calendar.dto.response.TagResponse(ST.tagId,ST.tag,ST.tagColor,ST.defaultTag) FROM Schedule_Tag ST WHERE ST.userId.userId =:userId order by ST.addTime asc ")
     Optional<List<TagResponse>> findByUserId(@Param("userId") UUID userId);
+
+    @Query("SELECT new org.example.calenj.calendar.dto.response.TagResponse(ST.tagId,ST.tag,ST.tagColor,ST.defaultTag) FROM Schedule_Tag ST WHERE ST.groupId =:groupId")
+    Optional<TagResponse> findTagByGroupId(@Param("groupId") UUID groupId);
 }

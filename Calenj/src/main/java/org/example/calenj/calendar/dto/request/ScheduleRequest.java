@@ -26,6 +26,10 @@ public class ScheduleRequest {
 
     private boolean allDay;
 
+    private boolean isGroupSchedule;
+
+    private UUID groupId;
+
     private ExtendedPropsRequest extendedProps;
 
     public UserScheduleEntity toEntity(UserEntity user) {
@@ -37,6 +41,8 @@ public class ScheduleRequest {
                 .scheduleStartDateTime(start)
                 .scheduleEndDateTime(end)
                 .userScheduleAllDay(allDay)
+                .isGroupSchedule(isGroupSchedule)
+                .groupId(groupId)
                 .tagIds(extendedProps.getTagKeys())
                 .userScheduleFormState(extendedProps.getFormState())
                 .userScheduleContent(extendedProps.getContent())

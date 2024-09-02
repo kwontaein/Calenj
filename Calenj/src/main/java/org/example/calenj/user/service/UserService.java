@@ -72,16 +72,20 @@ public class UserService {
         TagEntity tagEntity = TagEntity
                 .builder()
                 .userId(user)
+                .groupId(null)
                 .tag("그룹 일정")
                 .tagColor("#0070E8")
+                .groupTag(false)
                 .defaultTag(true)
                 .build();
 
         TagEntity tagEntity2 = TagEntity
                 .builder()
                 .userId(user)
+                .groupId(null)
                 .tag("약속 일정")
                 .tagColor("#FFD369")
+                .groupTag(false)
                 .defaultTag(true)
                 .build();
 
