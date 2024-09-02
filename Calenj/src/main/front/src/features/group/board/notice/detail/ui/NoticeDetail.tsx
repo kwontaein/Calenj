@@ -3,8 +3,7 @@ import React, {useLayoutEffect, useState} from 'react';
 import {DetailTop} from './DetailTop'
 import {NoticeDetailContainer, NoticeDetailContent_Container} from "./NoticeDetailStyled";
 import {FullScreen_div} from "../../../../../../shared/ui/SharedStyled";
-import {NoticeDetail} from '../../../../../../entities/reactQuery'
-import {getNoticeDetailApi} from "../api/getNoticeDetailApi";
+import {useFetchNoticeDetail} from "../../../../../../entities/reactQuery";
 
 
 
@@ -13,22 +12,22 @@ interface NoticeListProps{
 }
 
 export const NoticeDetailView:React.FC<NoticeListProps>=({noticeId})=>{
-    const [detail, setDetail] = useState<NoticeDetail | null>(null);
+    const {isLoading, data, refetch} =useFetchNoticeDetail(noticeId)
 
     useLayoutEffect(() => {
-        getNoticeDetailApi(noticeId).then((res)=>{
-            setDetail(res)
-        });
-    }, []);
+        if(!isLoading){
+            refetch()
+        }
+    }, [isLoading]);
 
 
     return(
         <NoticeDetailContainer>
-            {detail &&
+            {data &&
                 <FullScreen_div>
-                     <DetailTop state={"notice"} title={detail.noticeTitle} created={detail.noticeCreated} watcher={detail.noticeWatcher}/>
+                     <DetailTop state={"notice"} title={data.noticeTitle} created={data.noticeCreated} watcher={data.noticeWatcher}/>
                      <NoticeDetailContent_Container>
-                         {detail.noticeContent}
+                         {data.noticeContent}
                      </NoticeDetailContent_Container>
                 </FullScreen_div>
             }

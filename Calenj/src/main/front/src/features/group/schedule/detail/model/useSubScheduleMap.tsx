@@ -26,13 +26,14 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
 
         if (mapModal && initMap) {
             window.addEventListener("resize", handleResize);
+        }else{
+            window.removeEventListener("resize", handleResize);
         }
-        handleResize();
-
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [mapModal, mapElement.current?.clientWidth]);
+    }, [mapModal, mapElement.current?.clientWidth,subScheduleEdit]);
+
 
     //내 위치 정보 받아오는 메소드
     const myLocation = () => {
@@ -86,7 +87,7 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
                 subScheduleEdit[clickState].positionY = locateY;
             }
             console.log(locateX, locateY)
-            if(typeof locateY ==="string" && typeof locateX ==="string"){
+            if(locateX && locateX){
                 drawMap(locateX, locateY);
                 addMaker(locateX, locateY);
             }

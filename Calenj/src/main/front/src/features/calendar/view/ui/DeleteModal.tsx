@@ -46,7 +46,7 @@ export const DeleteModal: React.FC<EventDetailProps> = ({deleteEvent, close}) =>
                         </EventDetailIcon_Wrapper>
                         {shortAHMFormat2(deleteEvent.event.start as Date)} ~ {shortAHMFormat2(deleteEvent.event.end as Date)}
                     </EventTimeContent_Wrapper>
-                    <Delete_Warn>혼또니 해당 일정을 삭제하시겠습니까?</Delete_Warn>
+                    <Delete_Warn>정말로 해당 일정을 삭제하시겠습니까?</Delete_Warn>
                 </Delete_Contents>
                 <Delete_ButtonContainer>
                     <DeleteButton onClick={sendDelete}>예</DeleteButton>

@@ -24,7 +24,7 @@ import {
     getMessageData,
     getGroupScheduleList,
     getSubScheduleList,
-    getUserBanList, getUserChatList
+    getUserBanList, getUserChatList, getNoticeDetail
 } from '../api/queryApi'
 import {
     GroupList_item,
@@ -37,7 +37,7 @@ import {
     FetchData,
     ReceivedData,
     VoteDetail,
-    EventTagDTO, UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo
+    EventTagDTO, UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo, NoticeDetail
 } from "./types";
 import {StompState} from "../../redux/model/slice/StompReducer";
 
@@ -53,6 +53,8 @@ export const QUERY_GROUP_LIST_KEY: string = 'QUERY_GROUP_LIST_KEY'
 export const QUERY_VOTE_LIST_KEY: string = 'QUERY_VOTE_LIST_KEY'
 export const QUERY_VOTE_DETAIL_KEY : string = 'QUERY_VOTE_DETAIL_KEY'
 export const QUERY_NOTICE_LIST_KEY: string ='QUERY_NOTICE_LIST_KEY'
+export const QUERY_NOTICE_DETAIL_KEY: string ='QUERY_NOTICE_DETAIL_KEY'
+
 export const QUERY_DATE_EVENT_TAG_KEY: string ='QUERY_DATE_EVENT_TAG_KEY'
 export const QUERY_USER_DATE_EVENT_KEY: string ='QUERY_USER_DATE_EVENT_KEY'
 export const QUERY_USER_INFO_KEY: string ='QUERY_USER_INFO_KEY'
@@ -87,6 +89,13 @@ export const useFetchNoticeList = (groupId:string) =>
         queryKey: [QUERY_NOTICE_LIST_KEY, groupId],
         queryFn: () => getNoticeList(groupId), //HTTP 요청함수 (Promise를 반환하는 함수)
     });
+
+export const useFetchNoticeDetail = (noticeId:string) =>
+    useQuery<NoticeDetail|null, Error>({
+        queryKey: [QUERY_NOTICE_DETAIL_KEY, noticeId],
+        queryFn: () => getNoticeDetail(noticeId), //HTTP 요청함수 (Promise를 반환하는 함수)
+    });
+
 
 export const useFetchVoteList = (groupId:string) =>
     useQuery<VoteList[] | null, Error>({

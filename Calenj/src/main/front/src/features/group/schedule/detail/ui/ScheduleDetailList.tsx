@@ -50,7 +50,6 @@ interface Locate {
 }
 
 export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSchedule, editMode, startDate,mapHandler}) => {
-
     const { mapModal} = useSelector((state: RootState) => state.groupSchedule)
     const {subScheduleEdit, dispatchSubSchedule, joinSubSchedule,  scheduleTime, dragEnter, dragMousePosition, drop, dragStart, mousePosition, ItemWidth, dragIndex} = useGroupSubSchedule
     const textAreaRef = useRef<(HTMLTextAreaElement | null)[]>([]);
@@ -60,9 +59,6 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
     const [mapIndex, setMapIndex] = useState<number | null>(null); //위치 설정을 위한 index전달
     const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
-
-    const {userNameStorage} = useSelector((state:RootState)=> state.userNameStorage)
-
     //현재시간 갱신
     useEffect(() => {
         setInterval(() => {

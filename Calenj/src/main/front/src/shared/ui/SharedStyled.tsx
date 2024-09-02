@@ -268,15 +268,18 @@ export const Button = styled.button`
     margin: 10px;
     border: none;
     border-radius: 5px;
-    background-color: skyblue;
+    background-color: ${PointColor};
     color: white;
     cursor: pointer;
     width: 470px;
+    
+    &:hover{background-color : ${PointColor}77;
+    }
 `;
 
 //에러메시지
 export const ErrorMessage = styled.div`
-    color: red;
+    color: ${PointColor2};
     font-size: 14px;
     margin-top: 5px;
     margin-left: 10px;

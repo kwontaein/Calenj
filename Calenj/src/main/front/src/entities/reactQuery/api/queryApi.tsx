@@ -11,7 +11,7 @@ import {
     VoteDetail,
     VoteList,
     EventTagDTO,
-    UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo, Message
+    UserDateEvent, UserInfo, GroupSchedule, SubSchedule, UserChatInfo, Message, NoticeDetail
 } from "../model/types";
 
 //쿠키체크
@@ -80,6 +80,25 @@ export const getNoticeList = async (groupId: string): Promise<NoticeList[] | nul
         }
         return null;
     }
+}
+
+export const getNoticeDetail = async (noticeId:string) :Promise<NoticeDetail|null> =>{
+    try{
+        const response = await axios.post('/api/noticeDetail', null, {params: {noticeId: noticeId},
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        })
+        return response.data
+    }catch (error){
+        const axiosError = error as AxiosError;
+        console.log(axiosError);
+        if (axiosError.response?.data) {
+            jwtFilter((axiosError.response.data) as string);
+        }
+        return null;
+    }
+
 }
 
 

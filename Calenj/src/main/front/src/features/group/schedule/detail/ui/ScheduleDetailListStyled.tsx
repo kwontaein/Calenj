@@ -23,11 +23,10 @@ export const ScheduleDetailList_Progress = styled.div`
     align-items: 'stretch';
 `
 export const ScheduleDetailList_Structure_Container = styled.div`
-    width: 30px;
+    width: 20px;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
-    flex:1;
 `
 
 export const ScheduleDetailList_TopLine_Container = styled.div<{ $isNow: boolean, $isClick:boolean}>`
@@ -53,7 +52,7 @@ export const ScheduleDetailList_Circle = styled.div<{ $isNow: boolean, $isClick:
     border: 2px solid ${TextColor};
     background-color: ${props => props.$isClick? PointColor: (props.$isNow ? PointColor : TextColor)};
     border-radius: 50%;
-    margin-right: 11px;
+    margin-right: 5px;
     position: relative;
 `
 export const MapInterval_Container = styled.div`
