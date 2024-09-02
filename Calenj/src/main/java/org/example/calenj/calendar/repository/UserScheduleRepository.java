@@ -23,11 +23,6 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
             " FROM User_Schedule Us WHERE Us.userId.userId = :userId")
     Optional<List<ScheduleResponse>> findListByUserId(@Param("userId") UUID userId);
 
-    @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
-            "(Us.scheduleId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay" +
-            ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
-            "FROM User_Schedule Us ")
-    Optional<List<ScheduleResponse>> findGroupListByUserId(@Param("userId") UUID userId, @Param("tagId") UUID tagId);
 
     @Query("select Us from User_Schedule Us where Us.scheduleId=:id")
     Optional<UserScheduleEntity> getSchedule(@Param("id") UUID id);

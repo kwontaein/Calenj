@@ -175,21 +175,8 @@ public class CalendarService {
      * 내가 포함된 일정 조회
      */
     public List<ScheduleResponse> groupSchedulesInMe() {
-        //태그 정보 받아서
-        List<TagResponse> tagResponses = getTagEntityList();
-
-        //그룹 일정 태그 아이디 뽑기
-        Optional<UUID> groupScheduleTagId = tagResponses.stream()
-                .filter(tag -> "그룹 일정".equals(tag.getName()))  // 이름이 "그룹 일정"인 태그를 필터링
-                .map(TagResponse::getId)  // ID를 추출
-                .findFirst();  // 첫 번째 일치 항목의 ID를 찾음
-
-        //그리고 내가 포함된 그룹 스케쥴 조회
-        List<ScheduleResponse> groupScheduleResponses = userScheduleRepository
-                .findGroupListByUserId(globalService.getUserEntity(null).getUserId(), groupScheduleTagId.orElse(null))
-                .orElse(Collections.emptyList());  // null 대신 빈 리스트 반환
-
-        return groupScheduleResponses;
+        
+        return new ArrayList<>();
     }
 
     /**
