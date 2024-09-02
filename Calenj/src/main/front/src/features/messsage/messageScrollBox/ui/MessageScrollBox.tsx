@@ -48,7 +48,6 @@ export const MessageScrollBox: React.FC = () => {
     const {navigateParam, navigate} = useSelector((state:RootState)=> state.navigateInfo)
 
     const MessageBox = useMemo(() => {
-        console.log(hasNextPage)
         const endPointUUID = EndPointParamMap.get(navigateParam);
         return (
             <ScrollableDiv ref={scrollRef}>

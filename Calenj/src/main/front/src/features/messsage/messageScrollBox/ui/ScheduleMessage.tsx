@@ -35,8 +35,8 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
     const [contentRef, contentSize]= useComponentSize()
 
     return (
-        <div ref={contentRef}>
-            <DateEventDetail_Container style={{marginTop:'10px',boxShadow:'none' , width:contentSize.width>500 ? `500px` : contentSize.width>400 ? `400px` : contentSize.width>300 ? `300px` : '250px'}}>
+        <FullScreen_div ref={contentRef}>
+            <DateEventDetail_Container style={{position:'unset', marginTop:'10px',boxShadow:'none' , width:contentSize.width>500 ? `500px` : contentSize.width>400 ? `400px` : contentSize.width>300 ? `300px` : '250px'}}>
                 <EventOption_Container/>
                 <TitleContent_Container>
                     <TitleContent_Wrapper style={{fontSize:'20px', paddingLeft: contentSize.width>300 ? `50px` : '35px'}}>
@@ -106,6 +106,6 @@ export const ScheduleMessage: React.FC<{ events: UserDateEvent }> = ({events}) =
                     <DateEventBottom_Container/>
                 }
             </DateEventDetail_Container>
-        </div>
+        </FullScreen_div>
     );
 }

@@ -1,5 +1,5 @@
 import {AHMFormat} from "../../../../../shared/lib";
-import {MiniText} from "../../../../../shared/ui/SharedStyled";
+import {FullScreen_div, MiniText} from "../../../../../shared/ui/SharedStyled";
 import {GroupEventListTitle, GroupEventListView_Li, MaxPeopleText_Container} from "./GroupScheduleListStyled";
 import {useCallback, useEffect, useState} from "react";
 import {EventStateMap} from "../../../../../entities/redux/model/module/StompMiddleware";
@@ -47,11 +47,11 @@ export const GroupScheduleList: React.FC = () => {
     }
 
     return (
-        <>
+        <FullScreen_div>
             {scheduleDetail ?
                 <ScheduleDetail originGroupSchedule={scheduleDetail}/>
                 :
-                <>
+                <FullScreen_div>
                     {groupScheduleList.data &&
                         groupScheduleList.data.map((groupEvent: GroupSchedule) => (
                             <GroupEventListView_Li key={groupEvent.scheduleId}
@@ -61,8 +61,8 @@ export const GroupScheduleList: React.FC = () => {
                                 <MiniText>{`일정 생성일 : ${AHMFormat(groupEvent.scheduleCreate)}`}</MiniText>
                             </GroupEventListView_Li>
                         ))}
-                </>
+                </FullScreen_div>
             }
-        </>
+        </FullScreen_div>
     )
 }

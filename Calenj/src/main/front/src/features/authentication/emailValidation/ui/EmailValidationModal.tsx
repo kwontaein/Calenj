@@ -1,4 +1,11 @@
-import {Input, FormLable, ThemeColor2} from '../../../../shared/ui/SharedStyled';
+import {
+    Input,
+    FormLable,
+    ThemeColor2,
+    Modal_Condition_Button,
+    RowFlexBox,
+    ThemeColor3
+} from '../../../../shared/ui/SharedStyled';
 import {ChangeEvent, useEffect, useState} from 'react';
 import './Sign.scss'
 import {ComponentProps} from "../model/types";
@@ -21,10 +28,12 @@ export const EmailValidationModal: React.FC<ComponentProps> = ({email, onClose})
 
     return (
         <div id='emailValidation_Box' style={{backgroundColor: `${ThemeColor2}`}}>
-            <div>
+            <RowFlexBox style={{justifyContent:'space-between'}}>
                 <FormLable style={{marginLeft: '8px'}}>이메일로 전송된 인증코드를 입력해주세요.</FormLable>
-                <button id="btn_cancleValid" onClick={closeModal}>x</button>
-            </div>
+                <Modal_Condition_Button style={{width:'15px', height:'15px', backgroundColor:ThemeColor3}} id="btn_cancleValid" onClick={closeModal}>
+                    x
+                </Modal_Condition_Button>
+            </RowFlexBox>
             <br></br>
             <div style={{fontSize: "15px", marginTop: "3px", marginLeft: "10px"}}>{email}로 인증요청함</div>
 
