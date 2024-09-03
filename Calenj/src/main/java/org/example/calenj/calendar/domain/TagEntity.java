@@ -28,6 +28,9 @@ public class TagEntity {
     @JoinColumn(name = "tag_user_id", referencedColumnName = "user_id", columnDefinition = "BINARY(16)")
     private UserEntity userId;
 
+    @Column(name = "group_id")
+    private UUID groupId;
+
     @Column(name = "add_time")
     private Timestamp addTime;
 
@@ -40,6 +43,11 @@ public class TagEntity {
     @Column(name = "default_tag")
     @Builder.Default
     private boolean defaultTag = false;
+
+    @Column(name = "group_tag")
+    @Builder.Default
+    private boolean groupTag = false;
+
 
     @PrePersist
     protected void onCreate() {

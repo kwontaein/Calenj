@@ -66,4 +66,12 @@ public class UserScheduleEntity {
     @Column(name = "user_schedule_friend_list")
     @Convert(converter = UUIDListConverter.class)
     private List<UUID> userScheduleFriendList = new ArrayList<>();
+
+    //그룹 스케쥴인지 여부
+    @Column(name = "is_group_schedule")
+    private boolean isGroupSchedule;
+
+    //그룹 아이디
+    @Column(name = "group_id")
+    private UUID groupId;
 }
