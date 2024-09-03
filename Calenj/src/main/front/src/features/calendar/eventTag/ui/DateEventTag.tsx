@@ -33,6 +33,7 @@ export const DateEventTag: React.FC = () => {
     const userId = localStorage.getItem('userId')||''
     const dateEventTagState = useFetchDateEventTag(userId);
 
+
     const dispatch = useDispatch()
     const updateEventTag = (id: string) => {
         const {isClick} = dynamicEventTag[id]
@@ -57,7 +58,7 @@ export const DateEventTag: React.FC = () => {
         const eventTags = dateEventTagState.data;
         if(eventTags){
             eventTags.forEach((tag:EventTagDTO)=>{
-                dispatch(createDateEventTag({tagId:tag.id,name:tag.name, color:tag.color, defaultTag:tag.defaultTag}))
+                dispatch(createDateEventTag({tagId:tag.id,name:tag.name, color:tag.color, defaultTag:tag.defaultTag, groupTag:tag.groupTag}))
             })
         }
 
