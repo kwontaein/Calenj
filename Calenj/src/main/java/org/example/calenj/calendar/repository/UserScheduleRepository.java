@@ -23,16 +23,14 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
             " FROM User_Schedule Us WHERE Us.userId.userId = :userId")
     Optional<List<ScheduleResponse>> findListByUserId(@Param("userId") UUID userId);
 
-    //데이터를 json화 시켜서 비교하는 방법 (콘버터를 사용한 경우에 이렇게 조회해야 함)
-    @Query(value = "SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
-            "(Us.scheduleId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay" +
-            ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
-            " FROM User_Schedule Us" +
-            " where Us.isGroupSchedule = true and " +
-            " Us.groupId=:groupId and" +
-            " JSON_CONTAINS(Us.user_schedule_friend_list, JSON_QUOTE(:userId))",
-            nativeQuery = true)
-    Optional<List<ScheduleResponse>> findGroupSchedule(@Param("groupId") UUID groupId, @Param("userId") UUID userId);
+    //리스트를 json으로 변환해서 문자열로 저장했기 때문에, 문자열 비교 연산자인 like 사용
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM User_Schedule Us " +
+                    "WHERE Us.is_group_schedule = true AND Us.group_id = :groupId " +
+                    "AND Us.user_schedule_friend_list like %:userId% ")
+    Optional<List<UserScheduleEntity>> findGroupSchedule(@Param("groupId") UUID groupId, @Param("userId") UUID userId);
+
 
     @Query("select Us from User_Schedule Us where Us.scheduleId=:id")
     Optional<UserScheduleEntity> getSchedule(@Param("id") UUID id);
@@ -54,6 +52,5 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
     Optional<ScheduleResponse> findByScheduleId(@Param("scheduleId") UUID scheduleId);
 
     @Query("select Us from User_Schedule Us where Us.scheduleId=:id")
-    Optional<List<UserScheduleEntity>> getGroupSchedules(@Param("id") UUID id);
-
+    Optional<UserScheduleEntity> getGroupSchedules(@Param("id") UUID id);
 }

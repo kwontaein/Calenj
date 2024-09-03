@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.group.groupschedule.domain.GroupScheduleEntity;
+import org.example.calenj.user.domain.UserEntity;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -23,6 +24,8 @@ public class GroupScheduleRequest {
     public Timestamp scheduleCreate;
     //일정 생성일
     public Timestamp startDate;
+    //일정을 만든 사람
+    public UserEntity manager;
     //관리자들
     private List<String> managers;
     //일정 공개 범위
@@ -42,6 +45,7 @@ public class GroupScheduleRequest {
                 .scheduleCreate(time)
                 .scheduleStart(startDate)
                 .managers(managers)
+                .manager(manager)
                 .privacy(privacy)
                 .maxPeople(maxPeople)
                 .member(member)

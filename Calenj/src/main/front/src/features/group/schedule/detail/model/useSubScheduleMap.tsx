@@ -4,7 +4,6 @@ import {SubSchedule} from "../../../../../entities/reactQuery";
 import {RootState} from "../../../../../entities/redux";
 
 
-
 export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: number | null): React.MutableRefObject<HTMLDivElement | null> => {
     let initMap: naver.maps.Map | undefined = undefined;
     const {mapModal} = useSelector((state: RootState) => state.groupSchedule)
@@ -15,7 +14,10 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
     useEffect(() => {
         if (mapModal && subScheduleEdit.length > 0) {
             const subSchedule = subScheduleEdit[0]
-            geoCode(subSchedule.location)
+            console.log(subSchedule.location)
+            if (subSchedule.location) {
+                geoCode(subSchedule.location)
+            }
         }
         const handleResize = () => {
             if (!mapElement.current || !initMap) return;
@@ -26,13 +28,13 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
 
         if (mapModal && initMap) {
             window.addEventListener("resize", handleResize);
-        }else{
+        } else {
             window.removeEventListener("resize", handleResize);
         }
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [mapModal, mapElement.current?.clientWidth,subScheduleEdit]);
+    }, [mapModal, mapElement.current?.clientWidth, subScheduleEdit]);
 
 
     //내 위치 정보 받아오는 메소드
@@ -46,7 +48,7 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
         }
     };
 
-    const drawMap = (x: string , y: string ) => {
+    const drawMap = (x: string, y: string) => {
         initMap = new naver.maps.Map("map", {
             center: new naver.maps.LatLng(parseFloat(y), parseFloat(x)),
             zoom: 15,
@@ -87,7 +89,7 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
                 subScheduleEdit[clickState].positionY = locateY;
             }
             console.log(locateX, locateY)
-            if(locateX && locateX){
+            if (locateX && locateX) {
                 drawMap(locateX, locateY);
                 addMaker(locateX, locateY);
             }

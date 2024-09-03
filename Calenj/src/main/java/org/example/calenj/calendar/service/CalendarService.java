@@ -19,7 +19,6 @@ import org.example.calenj.calendar.repository.UserScheduleRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.dto.response.GroupResponse;
 import org.example.calenj.group.groupinfo.service.GroupService;
-import org.example.calenj.group.groupschedule.dto.request.GroupSubScheduleRequest;
 import org.example.calenj.user.domain.UserEntity;
 import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.stereotype.Service;
@@ -119,14 +118,13 @@ public class CalendarService {
      */
     public void saveGroupSchedule(ScheduleRequest scheduleRequest, UserEntity user) {
         UserScheduleEntity checkEntity = userScheduleRepository.getSchedule(scheduleRequest.getId()).orElse(null);
+        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(user);
         if (checkEntity != null) {
             //이미 있는 정보일 경우 수정
             //로직 수행
-            UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(user);
             userScheduleRepository.save(userScheduleEntity);
             return;
         }
-        UserScheduleEntity userScheduleEntity = scheduleRequest.toEntity(user);
         repeatStateRepository.save(scheduleRequest.getExtendedProps().getRepeatState().toEntity(userScheduleRepository.save(userScheduleEntity)));
     }
 
@@ -136,39 +134,42 @@ public class CalendarService {
      * @return 스케쥴 목록 반환
      */
     public List<ScheduleResponse> getScheduleList() {
-        // 스케줄 목록 가져오기
-        List<ScheduleResponse> scheduleResponses = userScheduleRepository
+        // 사용자 스케줄 목록 가져오기
+        List<ScheduleResponse> userSchedules = userScheduleRepository
                 .findListByUserId(globalService.getUserEntity(null).getUserId())
                 .orElse(Collections.emptyList());  // null 대신 빈 리스트 반환
 
-        if (scheduleResponses.isEmpty()) {
-            return scheduleResponses;  // 조기 반환
+        // 내가 포함된 그룹 일정 조회 및 합치기
+        userSchedules.addAll(groupSchedulesInMe());
+
+        // 스케줄이 없으면 조기 반환
+        if (userSchedules.isEmpty()) {
+            return userSchedules;
         }
 
-        //내가 포함된 그룹 일정 조회
-        scheduleResponses.addAll(groupSchedulesInMe());
+        // 중복 제거
+        List<ScheduleResponse> distinctSchedules = userSchedules.stream()
+                .distinct()
+                .collect(Collectors.toList());
 
-        // 아이디 추출
-        List<UUID> ids = scheduleResponses.stream()
+        // 스케줄 ID 추출
+        List<UUID> scheduleIds = distinctSchedules.stream()
                 .map(ScheduleResponse::getId)
                 .collect(Collectors.toList());
 
-        // 반복 정보 조회
-        List<RepeatStateResponse> repeatStateResponses = repeatStateRepository.findAllByIds(ids);
-
-        // 반복 정보 매핑
-        Map<UUID, RepeatStateResponse> repeatStateMap = repeatStateResponses.stream()
+        // 반복 정보 조회 및 매핑
+        Map<UUID, RepeatStateResponse> repeatStateMap = repeatStateRepository.findAllByIds(scheduleIds).stream()
                 .collect(Collectors.toMap(RepeatStateResponse::getScheduleId, Function.identity()));
 
         // 각 스케줄에 반복 정보 설정
-        scheduleResponses.forEach(schedule -> {
+        distinctSchedules.forEach(schedule -> {
             RepeatStateResponse repeatState = repeatStateMap.get(schedule.getId());
             if (repeatState != null) {
                 schedule.getExtendedProps().setRepeatState(repeatState);
             }
         });
 
-        return scheduleResponses;
+        return distinctSchedules;
     }
 
     /**
@@ -181,10 +182,24 @@ public class CalendarService {
         //그룹 일정 전부 조회
         for (GroupResponse g : groupService.groupList()) {
             //내가 포함된 일정 뽑기
-            List<ScheduleResponse> scheduleResponse = userScheduleRepository.findGroupSchedule(g.getGroupId(), user.getUserId()).orElse(null);
-            scheduleResponses.addAll(scheduleResponse);
+            List<UserScheduleEntity> scheduleEntities = userScheduleRepository.findGroupSchedule(g.getGroupId(), user.getUserId()).orElse(null);
+            List<ScheduleResponse> scheduleResponseDTOs = scheduleEntities.stream()
+                    .map(entity -> new ScheduleResponse(
+                            entity.getScheduleId(),
+                            entity.getUserScheduleTitle(),
+                            entity.getScheduleStartDateTime(),
+                            entity.getScheduleEndDateTime(),
+                            entity.isUserScheduleAllDay(),
+                            entity.getTagIds(),
+                            entity.getUserScheduleFormState(),
+                            entity.getUserScheduleContent(),
+                            entity.getUserScheduleTodoList(),
+                            entity.getUserScheduleFriendList()
+                    ))
+                    .collect(Collectors.toList());
+            scheduleResponses.addAll(scheduleResponseDTOs);
         }
-        return new ArrayList<>();
+        return scheduleResponses;
     }
 
     /**
@@ -269,13 +284,14 @@ public class CalendarService {
     }
 
 
-    public void updateSharedGroupSchedule(UUID subScheduleId, GroupSubScheduleRequest subSchedule) {
+    public UUID updateSharedGroupSchedule(UUID subScheduleId) {
         // 1. 그룹 스케줄 목록을 조회
-        List<UserScheduleEntity> groupSchedules = userScheduleRepository.getGroupSchedules(subScheduleId).orElse(null);
-
+        UserScheduleEntity groupSchedules = userScheduleRepository.getGroupSchedules(subScheduleId).orElse(null);
         // 2. 조회된 스케줄이 있는지 확인 후 업데이트
-        if (groupSchedules != null && !groupSchedules.isEmpty()) {
-
+        if (groupSchedules != null) {
+            return groupSchedules.getScheduleId();
+        } else {
+            return null;
         }
     }
 
