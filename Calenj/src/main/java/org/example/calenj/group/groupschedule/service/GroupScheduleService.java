@@ -126,7 +126,10 @@ public class GroupScheduleService {
             }
 
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
-            updatedIds.add(calendarService.updateSharedGroupSchedule(subSchedule.getSubScheduleId()));
+            UUID updateId = calendarService.updateSharedGroupSchedule(subSchedule.getSubScheduleId());
+            if (updateId != null) {
+                updatedIds.add(updateId);
+            }
         }
     }
 
