@@ -223,7 +223,7 @@ public class CalendarService {
      * @return 그룹 스케쥴 태그 목록
      */
     public TagResponse getGroupTag(UUID groupId) {
-        return tagRepository.findTagByGroupId(groupId).orElseThrow(() -> new RuntimeException("오류 발생!"));
+        return tagRepository.findTagByGroupId(groupId).orElse(null);
     }
 
 
@@ -235,7 +235,7 @@ public class CalendarService {
      */
     public TagResponse saveTag(TagRequest tagRequest) {
         TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.getUserEntity(null)));
-        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
+        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag(), false);
         return tagResponse;
     }
 

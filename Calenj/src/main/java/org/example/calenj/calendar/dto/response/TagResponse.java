@@ -12,4 +12,5 @@ public class TagResponse {
     private String name;
     private String color;
     private boolean defaultTag;
+    private boolean groupTag;
 }
