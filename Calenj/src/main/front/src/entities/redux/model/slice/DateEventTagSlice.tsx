@@ -9,6 +9,7 @@ interface DynamicEventProps {
         color: string,
         isClick: boolean,
         defaultTag: boolean,
+        groupTag:boolean,
     }
 }
 
@@ -30,7 +31,8 @@ const eventTag = createSlice({
             tagId: string,
             name: string,
             color: string,
-            defaultTag: boolean
+            defaultTag: boolean,
+            groupTag:boolean
         }>) => {
             state.dynamicEventTag = {
                 ...state.dynamicEventTag,
@@ -39,6 +41,7 @@ const eventTag = createSlice({
                     color: action.payload.color,
                     isClick: true,
                     defaultTag: action.payload.defaultTag,
+                    groupTag : action.payload.groupTag,
                 }
             }
         },

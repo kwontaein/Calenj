@@ -223,7 +223,7 @@ public class CalendarService {
      * @return 그룹 스케쥴 태그 목록
      */
     public TagResponse getGroupTag(UUID groupId) {
-        return tagRepository.findTagByGroupId(groupId).orElseThrow(() -> new RuntimeException("오류 발생!"));
+        return tagRepository.findTagByGroupId(groupId).orElse(null);
     }
 
 

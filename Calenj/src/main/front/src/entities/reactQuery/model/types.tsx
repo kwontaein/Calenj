@@ -120,6 +120,7 @@ export interface EventTagDTO {
     name: string,
     color: string,
     defaultTag: boolean, //기본 태그여부
+    groupTag :boolean,
 }
 
 export interface UserDateEvent {
