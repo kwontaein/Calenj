@@ -57,7 +57,7 @@ export const ScheduleDetailList: React.FC<ScheduleDetailProps> = ({useGroupSubSc
     const [clickState, setClickState] = useState<number | null>(null)
     const [nowTime, setNowTime] = useState<Date>(new Date())
     const [mapIndex, setMapIndex] = useState<number | null>(null); //위치 설정을 위한 index전달
-    const mapElement =useSubScheduleMap(subScheduleEdit, clickState)
+    const mapElement = useSubScheduleMap(subScheduleEdit, clickState)
     //지도 그리는 메소드
     //현재시간 갱신
     useEffect(() => {

@@ -15,7 +15,9 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
     useEffect(() => {
         if (mapModal && subScheduleEdit.length > 0) {
             const subSchedule = subScheduleEdit[0]
-            geoCode(subSchedule.location)
+            if(subSchedule.location){
+                geoCode(subSchedule.location)
+            }
         }
         const handleResize = () => {
             if (!mapElement.current || !initMap) return;
