@@ -56,7 +56,8 @@ export const useCreateEventTag = ():ReturnNewEventTag =>{
                     tagId: res.data.id,
                     name: res.data.name,
                     color: res.data.color,
-                    defaultTag: res.data.defaultTag
+                    defaultTag: res.data.defaultTag,
+                    groupTag: res.data.groupTag
                 }))
             });
         setCreateTag()
