@@ -4,28 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="09.02 스크롤 문제해결">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/api/queryApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/entities/reactQuery/model/queryModel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/EmailValidationModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/authentication/emailValidation/ui/EmailValidationModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/DeleteModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/view/ui/DeleteModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/api/getNoticeDetailApi.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/board/notice/detail/ui/NoticeDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubScheduleMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubScheduleMap.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/list/ui/GroupScheduleList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/list/ui/GroupScheduleList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/model/useMessageScroll.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/MessageScrollBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/NoticeMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/NoticeMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/ScheduleMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/messsage/messageScrollBox/ui/VoteMessageStyled.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="09.03 그룹태그 분리" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -264,23 +243,8 @@
       <workItem from="1725026671315" duration="720000" />
       <workItem from="1725243488386" duration="1004000" />
       <workItem from="1725244670403" duration="233000" />
-      <workItem from="1725244921688" duration="16924000" />
-    </task>
-    <task id="LOCAL-00030" summary="06.27 유저 친구수락 제작완료">
-      <option name="closed" value="true" />
-      <created>1719426796893</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1719426796893</updated>
-    </task>
-    <task id="LOCAL-00031" summary="06.28 온라인유저 상태저장">
-      <option name="closed" value="true" />
-      <created>1719573189860</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1719573189860</updated>
+      <workItem from="1725244921688" duration="18140000" />
+      <workItem from="1725307367613" duration="2112000" />
     </task>
     <task id="LOCAL-00032" summary="07.08 채팅 input area로 변경">
       <option name="closed" value="true" />
@@ -658,7 +622,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725244845484</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="09.02 스크롤 문제해결">
+      <option name="closed" value="true" />
+      <created>1725274544623</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1725274544624</updated>
+    </task>
+    <task id="LOCAL-00080" summary="09.03 그룹태그 분리">
+      <option name="closed" value="true" />
+      <created>1725362251564</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1725362251565</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -691,7 +671,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="07.30 스크롤 문제 해결중" />
     <MESSAGE value="07.30 스크롤 문제해결중 #3" />
     <MESSAGE value="07.30 그룹일정 생성api 추가" />
     <MESSAGE value="08.01 그룹일정 수정" />
@@ -716,7 +695,8 @@
     <MESSAGE value="08.28 메시지 엔드포인트 갱신 처리" />
     <MESSAGE value="08.29 메시지 엔드포인트 갱신 처리" />
     <MESSAGE value="09.02 스크롤 문제해결" />
-    <option name="LAST_COMMIT_MESSAGE" value="09.02 스크롤 문제해결" />
+    <MESSAGE value="09.03 그룹태그 분리" />
+    <option name="LAST_COMMIT_MESSAGE" value="09.03 그룹태그 분리" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

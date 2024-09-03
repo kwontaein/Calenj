@@ -1,6 +1,8 @@
 package org.example.calenj.group.groupinfo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.calenj.calendar.domain.TagEntity;
+import org.example.calenj.calendar.repository.TagRepository;
 import org.example.calenj.global.service.GlobalService;
 import org.example.calenj.group.groupinfo.domain.GroupEntity;
 import org.example.calenj.group.groupinfo.domain.GroupUserEntity;
@@ -19,7 +21,6 @@ import org.example.calenj.websocket.service.WebSocketService;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class GroupService {
     private final GlobalService globalService;
     private final WebSocketService webSocketService;
 
+    private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final Group_UserRepository group_userRepository;
@@ -51,19 +53,18 @@ public class GroupService {
     public void createGroup(String groupTitle) {
 
         LocalDate today = LocalDate.now();
-
-        UserDetails userDetails = globalService.extractFromSecurityContext(); // SecurityContext에서 유저 정보 추출하는 메소드
+        UserEntity user = globalService.getUserEntity(null);
 
         // 유저 이름으로 그룹 생성/
         GroupEntity groupEntity = GroupEntity.builder()
                 .groupTitle(groupTitle)
                 .groupCreated(String.valueOf(today))
-                .groupCreator(userDetails.getUsername())
+                .groupCreator(user.getUserId().toString())
                 .build();
 
         groupRepository.save(groupEntity);
 
-        UserEntity userEntity = userRepository.findByUserId(UUID.fromString(userDetails.getUsername()))
+        UserEntity userEntity = userRepository.findByUserId(user.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
 
         // 생성한 유저 역할 -> 관리자 로 지정해서 그룹 유저 테이블 저장
@@ -74,6 +75,19 @@ public class GroupService {
                 .build();
 
         group_userRepository.save(groupUserEntity);
+
+        //해당 그룹만의 태그 정보 생성
+        TagEntity tagEntity = TagEntity
+                .builder()
+                .userId(user)
+                .groupId(groupEntity.getGroupId())
+                .tag(groupEntity.getGroupTitle() + " 의 일정")
+                .tagColor("#0070E8")
+                .groupTag(true)
+                .defaultTag(true)
+                .build();
+
+        tagRepository.save(tagEntity);
 
         // 그룹 파일생성
         try (FileOutputStream stream = new FileOutputStream("C:\\chat\\chat" + groupUserEntity.getGroup().getGroupId(), true)) {
@@ -238,6 +252,6 @@ public class GroupService {
         String userId = globalService.extractFromSecurityContext().getUsername();
         group_userRepository.deleteUserFromGroup(groupId, UUID.fromString(userId));
         //채팅에 나 나갔다고 알림
-        
+
     }
 }
