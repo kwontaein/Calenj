@@ -235,7 +235,7 @@ public class CalendarService {
      */
     public TagResponse saveTag(TagRequest tagRequest) {
         TagEntity tag = tagRepository.save(tagRequest.toEntity(globalService.getUserEntity(null)));
-        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag());
+        TagResponse tagResponse = new TagResponse(tag.getTagId(), tag.getTag(), tag.getTagColor(), tag.isDefaultTag(), false);
         return tagResponse;
     }
 

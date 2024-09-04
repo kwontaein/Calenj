@@ -29,7 +29,7 @@ export const EventTagEdit: React.FC<TagEditProps> = ({id, top}) => {
             });
     }
     return (
-        <EventTagEdit_Container $top={top} $colorChange={colorModal}>
+        <EventTagEdit_Container $top={top-5} $colorChange={colorModal}>
             {!(dynamicEventTag[id].defaultTag) &&
                 <EventTagItem_Container onClick={deleteTag}>
                     삭제하기

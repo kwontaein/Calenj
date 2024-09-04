@@ -73,8 +73,8 @@ public class UserService {
                 .builder()
                 .userId(user)
                 .groupId(null)
-                .tag("그룹 일정")
-                .tagColor("#0070E8")
+                .tag("개인 일정")
+                .tagColor("#b0a0d5")
                 .groupTag(false)
                 .defaultTag(true)
                 .build();
