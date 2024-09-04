@@ -139,6 +139,7 @@ public class CalendarService {
                 .findListByUserId(globalService.getUserEntity(null).getUserId())
                 .orElse(Collections.emptyList());  // null 대신 빈 리스트 반환
 
+        System.out.println("userSchedules : " + userSchedules);
         // 내가 포함된 그룹 일정 조회 및 합치기
         userSchedules.addAll(groupSchedulesInMe());
 
@@ -199,6 +200,7 @@ public class CalendarService {
                     .collect(Collectors.toList());
             scheduleResponses.addAll(scheduleResponseDTOs);
         }
+        System.out.println("scheduleResponses : " + scheduleResponses);
         return scheduleResponses;
     }
 

@@ -111,7 +111,6 @@ public class GroupScheduleService {
      */
     private void updateSubSchedules(GroupScheduleRequest groupScheduleRequest, GroupScheduleEntity groupScheduleEntity,
                                     List<String> subIds, List<UUID> updatedIds) {
-        int lastIndex = groupScheduleRequest.getGroupSubSchedules().size() - 1;
 
         for (int i = 0; i < groupScheduleRequest.getGroupSubSchedules().size(); i++) {
             GroupSubScheduleRequest subSchedule = groupScheduleRequest.getGroupSubSchedules().get(i);
@@ -120,10 +119,10 @@ public class GroupScheduleService {
                 subIds.add(subSchedule.getSubScheduleId().toString());
             }
 
-            if (i < lastIndex) {
+           /* if (i < groupScheduleRequest.getGroupSubSchedules().size() - 1) {
                 int duration = calculateDuration(subSchedule, groupScheduleRequest.getGroupSubSchedules().get(i + 1));
                 subSchedule.setDuration(duration + "분");
-            }
+            }*/
 
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
             UUID updateId = calendarService.updateSharedGroupSchedule(subSchedule.getSubScheduleId());
@@ -170,7 +169,7 @@ public class GroupScheduleService {
      */
     private void updateCalendarWithNewSchedules(GroupScheduleEntity groupScheduleEntity, List<UUID> updatedIds) {
         for (UUID id : updatedIds) {
-            addCalendar(groupScheduleEntity, id);
+            addCalendar(groupScheduleEntity, id, false);
         }
     }
 
@@ -252,7 +251,7 @@ public class GroupScheduleService {
      *
      * @param groupScheduleEntity
      */
-    public void addCalendar(GroupScheduleEntity groupScheduleEntity, UUID subScheduleId) {
+    public void addCalendar(GroupScheduleEntity groupScheduleEntity, UUID subScheduleId, boolean joinCancel) {
         // 시간정보 얻기
         Timestamp start = groupScheduleEntity.getScheduleStart();
         UUID groupId = groupScheduleEntity.getSchedule_Group().getGroupId();
@@ -263,7 +262,6 @@ public class GroupScheduleService {
         TagResponse tagKey = extractTagKey(groupScheduleEntity.getSchedule_Group().getGroupId());
 
         int plusTime = 0;
-        System.out.println("groupScheduleEntity.getManager() :" + groupScheduleEntity.getManager());
         for (GroupSubScheduleResponse response : responses) {
             // 새로운 Timestamp 객체 생성
             Timestamp newStart = new Timestamp(start.getTime() + (plusTime * 1000 * 60L));
@@ -273,7 +271,7 @@ public class GroupScheduleService {
                 continue;
             }
             // ScheduleRequest 객체 생성 및 저장
-            calendarService.saveGroupSchedule(createScheduleRequest(response, newStart, tagKey, groupId), groupScheduleEntity.getManager());
+            calendarService.saveGroupSchedule(createScheduleRequest(response, newStart, tagKey, groupId, joinCancel), groupScheduleEntity.getManager());
             plusTime += response.getSubScheduleDuration();
         }
     }
@@ -296,7 +294,7 @@ public class GroupScheduleService {
      * @param tagKey
      * @return
      */
-    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, TagResponse tagKey, UUID groupId) {
+    private ScheduleRequest createScheduleRequest(GroupSubScheduleResponse response, Timestamp newStart, TagResponse tagKey, UUID groupId, boolean joinCancel) {
 
         List<Boolean> repeatWeek = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
@@ -309,10 +307,13 @@ public class GroupScheduleService {
 
         UUID myUserId = UUID.fromString(globalService.extractFromSecurityContext().getUsername());
 
-        if (members.contains(myUserId)) {
-            members.remove(myUserId);
-        } else {
-            members.add(myUserId);
+        //나가기 시 제외하려고 넣은 코드 but 업데이트만 되면 돌아가는 문제 발생
+        if (joinCancel) {
+            if (members.contains(myUserId)) {
+                members.remove(myUserId);
+            } else {
+                members.add(myUserId);
+            }
         }
 
         RepeatStateRequest repeatStateRequest =
@@ -359,7 +360,6 @@ public class GroupScheduleService {
         String myUserName = globalService.extractFromSecurityContext().getUsername();
 
         String response;
-
         List<String> members = groupSubScheduleEntity.getJoinUser();
 
         if (members.contains(myUserName)) {
@@ -370,7 +370,7 @@ public class GroupScheduleService {
             response = "해당 일정에 참여하였습니다.";
         }
 
-        addCalendar(Objects.requireNonNull(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null)), subScheduleId);
+        addCalendar(Objects.requireNonNull(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null)), subScheduleId, true);
         //서브 일정에 유저 추가
         groupSubScheduleRepository.updateJoinUser(subScheduleId, members);
 
