@@ -154,7 +154,7 @@ export const ProfileContainer = styled.div<{ $userId: string }>`
     color: white;
     font-weight: 550;
     user-select: none;
-    background-image: ${props => props.$userId ? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
+    background: ${props => `url("/image/savedImage/${props.$userId.trim()}.jpeg")`}, url("/image/Logo.png");
     background-size: cover;
     list-style: none;
     white-space: nowrap;

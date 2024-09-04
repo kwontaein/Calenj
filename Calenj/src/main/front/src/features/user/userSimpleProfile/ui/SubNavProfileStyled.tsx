@@ -53,15 +53,7 @@ export const Profile_Container = styled.div`
     display: flex;
     flex-direction: row;
 `
-export const SubNavProfile_div = styled.div<{$userId:string}>`
-    height: 50px;
-    width: 50px;
-    background-color: ${TextColor};
-    border-radius: 50%;
-    display: flex;
-    background-image: ${props => props.$userId? `url("/image/savedImage/${props.$userId.trim()}.jpeg")` : `url("/image/Logo.png")`};
-    background-size: cover;
-`
+
 export const SubNavEmpty_div= styled.div`
     margin-top: 30px;
     margin-left: 29px;
