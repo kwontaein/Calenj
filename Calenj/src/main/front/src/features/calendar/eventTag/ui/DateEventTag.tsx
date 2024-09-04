@@ -9,7 +9,7 @@ import {
     TopContent_Container,
     TopIcon_Container
 } from "./DateEventTagStyled";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useReducer, useRef, useState} from "react";
 import {CustomCheckBox} from "../../../../shared/ui/CustomCheckBox";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
@@ -23,9 +23,11 @@ import {useCreateEventTag} from "../model/useCreateEventTag";
 import {CreateEventTag} from "./CreateEventTag";
 import {EventTagDTO, useFetchDateEventTag} from "../../../../entities/reactQuery";
 import {UseQueryResult} from "@tanstack/react-query";
+import {FullScreen_div} from "../../../../shared/ui/SharedStyled";
 
 export const DateEventTag: React.FC = () => {
-    const [tagToggle, setTagToggle] = useState<boolean>(true);
+    const [tagToggle, setTagToggle] = useReducer((prev)=>!prev , true)
+    const [groupTagToggle, setGroupTagToggle] = useReducer((prev)=>!prev , true)
     const [tagName, setTagName] = useState<string>("")
     const tagItemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
@@ -67,53 +69,98 @@ export const DateEventTag: React.FC = () => {
 
 
     return (
-        <DateEventTag_Container>
-            <TagTop_Container onClick={() => setTagToggle(prev => !prev)}>
-                <TopContent_Container>
-                    내 캘린더
-                </TopContent_Container>
-                <TopIcon_Container>
-                    {tagToggle ?
-                        <i className="fi fi-sr-angle-small-up"></i> :
-                        <i className="fi fi-sr-angle-small-down"></i>
-                    }
-                </TopIcon_Container>
-            </TagTop_Container>
-            {tagToggle && <>
-                <BottomContent_Container>
-                    {Object.keys(dynamicEventTag).map((id: string, index: number) => (
-                        (dynamicEventTag[id].name!=='' &&
-                        <TagItem_Container key={id} $isClick={tagName === id}>
-                            <TagItemContent_Container>
-                                <CustomCheckBox
-                                    isCheck={dynamicEventTag[id].isClick}
-                                    checkKey={id}
-                                    bgColor={dynamicEventTag[id].color}
-                                    updateClickState={updateEventTag}
-                                />
-                                <TagItemText_Container>
-                                    {dynamicEventTag[id].name}
-                                </TagItemText_Container>
+        <FullScreen_div style={{height:"calc(100% - 140px)"}}>
+            <DateEventTag_Container style={{maxHeight:groupTagToggle ? "calc(50% - 15px)": "unset", minHeight: groupTagToggle ? '40px' : "unset"}}>
+                <TagTop_Container onClick={setGroupTagToggle}>
+                    <TopContent_Container>
+                        그룹 태그
+                    </TopContent_Container>
+                    <TopIcon_Container>
+                        {groupTagToggle ?
+                            <i className="fi fi-sr-angle-small-up"></i> :
+                            <i className="fi fi-sr-angle-small-down"></i>
+                        }
+                    </TopIcon_Container>
+                </TagTop_Container>
+                {groupTagToggle && <>
+                    <BottomContent_Container>
+                        {Object.keys(dynamicEventTag).map((id: string, index: number) => (
+                            (dynamicEventTag[id].name!=='' && dynamicEventTag[id].groupTag &&
+                                <TagItem_Container key={id} $isClick={tagName === id}>
+                                    <TagItemContent_Container>
+                                        <CustomCheckBox
+                                            isCheck={dynamicEventTag[id].isClick}
+                                            checkKey={id}
+                                            bgColor={dynamicEventTag[id].color}
+                                            updateClickState={updateEventTag}
+                                        />
+                                        <TagItemText_Container>
+                                            {dynamicEventTag[id].name}
+                                        </TagItemText_Container>
 
-                            </TagItemContent_Container>
-                            <div ref={el => tagItemRefs.current[index] = el}>
-                                <TagItemIcon_Container $isClick={tagName === id}
-                                                       onClick={() => tagName === "" ? setTagName(id) : setTagName('')}>
-                                    <i className="fi fi-rr-menu-dots-vertical"></i>
-                                </TagItemIcon_Container>
-                                {tagName === id && <EventTagEdit id={id} top={tagItemRefs.current[index]?.getBoundingClientRect().top||0}/>}
-                            </div>
+                                    </TagItemContent_Container>
+                                    <div ref={el => tagItemRefs.current[index] = el}>
+                                        <TagItemIcon_Container $isClick={tagName === id}>
+                                           <div style={{width:'12px'}}></div>
+                                        </TagItemIcon_Container>
+                                        {tagName === id && <EventTagEdit id={id} top={tagItemRefs.current[index]?.getBoundingClientRect().top||0}/>}
+                                    </div>
 
-                        </TagItem_Container>
-                        )
-                    ))}
-                    {useCreateTag.createTag &&
-                        <CreateEventTag useCreateTag={useCreateTag}/>
-                    }
-                </BottomContent_Container>
-                <AddEventTagButton useCreateTag={useCreateTag}/>
-            </>
-            }
-        </DateEventTag_Container>
+                                </TagItem_Container>
+                            )
+                        ))}
+                    </BottomContent_Container>
+                </>
+                }
+            </DateEventTag_Container>
+            <DateEventTag_Container  style={{maxHeight:tagToggle ? "calc(50% - 15px)": "unset", minHeight: tagToggle ? '40px' : "unset"}}>
+                <TagTop_Container onClick={setTagToggle}>
+                    <TopContent_Container>
+                        개인 태그
+                    </TopContent_Container>
+                    <TopIcon_Container>
+                        {tagToggle ?
+                            <i className="fi fi-sr-angle-small-up"></i> :
+                            <i className="fi fi-sr-angle-small-down"></i>
+                        }
+                    </TopIcon_Container>
+                </TagTop_Container>
+                {tagToggle && <>
+                    <BottomContent_Container>
+                        {Object.keys(dynamicEventTag).map((id: string, index: number) => (
+                            (dynamicEventTag[id].name!=='' && !dynamicEventTag[id].groupTag &&
+                            <TagItem_Container key={id} $isClick={tagName === id}>
+                                <TagItemContent_Container>
+                                    <CustomCheckBox
+                                        isCheck={dynamicEventTag[id].isClick}
+                                        checkKey={id}
+                                        bgColor={dynamicEventTag[id].color}
+                                        updateClickState={updateEventTag}
+                                    />
+                                    <TagItemText_Container>
+                                        {dynamicEventTag[id].name}
+                                    </TagItemText_Container>
+
+                                </TagItemContent_Container>
+                                <div ref={el => tagItemRefs.current[index] = el}>
+                                    <TagItemIcon_Container $isClick={tagName === id}
+                                                           onClick={() => tagName === "" ? setTagName(id) : setTagName('')}>
+                                        <i className="fi fi-rr-menu-dots-vertical"></i>
+                                    </TagItemIcon_Container>
+                                    {tagName === id && <EventTagEdit id={id} top={tagItemRefs.current[index]?.getBoundingClientRect().top||0}/>}
+                                </div>
+
+                            </TagItem_Container>
+                            )
+                        ))}
+                        {useCreateTag.createTag &&
+                            <CreateEventTag useCreateTag={useCreateTag}/>
+                        }
+                    </BottomContent_Container>
+                    <AddEventTagButton useCreateTag={useCreateTag}/>
+                </>
+                }
+            </DateEventTag_Container>
+        </FullScreen_div>
     )
 }

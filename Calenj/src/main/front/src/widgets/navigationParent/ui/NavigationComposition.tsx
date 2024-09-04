@@ -9,7 +9,7 @@ import {
     mapDispatchToNavigationProps,
 } from '../../../entities/redux/model/slice/NavigatgionSlice'
 import {useFetchGroupDetail, useFetchUserInfo} from '../../../entities/reactQuery'
-import {saveUserName} from "../../../entities/redux";
+import {RootState, saveUserName} from "../../../entities/redux";
 import {SideAlarmView} from "./SideAlarmView";
 
 
@@ -20,9 +20,21 @@ const NavigationComposition :React.FC<NavigateState & DispatchNavigationProps>=(
 
     //reactQuery로 그룹 디테일정보 fetching
     const groupDetailState = useFetchGroupDetail(navigateInfo.navigate,navigateInfo.navigateParam)
+    const {receiveMessage} = useSelector((state: RootState) => state.stomp); // 리덕스 상태 구독
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        let {message, state} = receiveMessage
+
+        if(state !=="SEND") return
+        let {messageType} =message[0]
+        if(messageType ==="join"){
+            groupDetailState.refetch()
+        }
+    }, [receiveMessage.receivedUUID]);
+
+    
     useEffect(() => {
         //사용자 정보 push
         if(groupDetailState.data){

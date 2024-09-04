@@ -59,7 +59,7 @@ export const MessageScrollBox: React.FC = () => {
                     {message.messageType === "join" ?
                         <div>
                             <InviteHippo
-                                userName={userNameStorage[message.userId] ? userNameStorage[message.userId].userName : ''}/>
+                                userId={message.userId}/>
                         </div>
                         :
                         message.messageType === "notice" ?
