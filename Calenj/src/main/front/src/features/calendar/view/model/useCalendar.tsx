@@ -4,7 +4,7 @@ import chroma from "chroma-js";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../entities/redux";
 import {EventTagDTO} from "../../../../entities/reactQuery";
-import {useFetchUserDateEvent} from "../../../../entities/reactQuery/model/queryModel";
+import {useFetchUserDateEvent} from "../../../../entities/reactQuery";
 import {DateEvent, ReturnCalendar} from "../../createEvent/model/types";
 import {addRruleOptions} from "../../createEvent/utils/addRruleOptions";
 import {updateScheduleApi} from "../api/updateScheduleApi";
@@ -70,7 +70,6 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
                 dynamicEventTag[tagId].isClick
             )
         )
-        console.log(events)
         setCurrentEvents(events);
 
         // console.log(events)
@@ -151,7 +150,7 @@ export const useCalendar = (data: EventTagDTO[] | null | undefined): ReturnCalen
 
     //삭제 실행
     const setTrashData = ((clickInfo: EventClickArg) => {
-        if(dynamicEventTag[clickInfo.event._def.extendedProps.tagKeys[0]].name==="그룹 일정") return
+        if(dynamicEventTag[clickInfo.event._def.extendedProps.tagKeys[0]].groupTag) return
         setDeleteEvent(clickInfo);
         //모달 띄우고
         //정말로 삭제하시겠습니까 ? -> 예 선택시

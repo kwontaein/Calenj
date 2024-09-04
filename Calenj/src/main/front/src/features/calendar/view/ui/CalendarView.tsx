@@ -13,11 +13,8 @@ import "@fullcalendar/timegrid/main.css";
 import "@fullcalendar/list/main.css";
 import {useFetchDateEventTag} from "../../../../entities/reactQuery";
 import {CalendarEventView} from "./CalendarEventView";
-import {useComponentSize} from "../../../../shared/model";
-import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
 import {useCalendarController} from "../model/useCalendarController";
 import {AddDateEvent} from "../../createEvent";
-import {AppState, CustomEvent} from "../model/types";
 import {DateEventDetail} from "../../detail";
 import {DeleteModal} from "./DeleteModal";
 import {useSelector} from "react-redux";
@@ -93,7 +90,7 @@ export const CalendarView: React.FC = () => {
                         )}
                         eventAllow={(dropInfo, draggedEvent) => {
                             // 이벤트 ID 또는 다른 조건으로 특정 이벤트를 고정
-                            return dynamicEventTag[draggedEvent?._def.extendedProps.tagKeys[0]].name !== '그룹 일정'; // id가 '2'인 이벤트는 수정 불가
+                            return !dynamicEventTag[draggedEvent?._def.extendedProps.tagKeys[0]].groupTag; // id가 '2'인 이벤트는 수정 불가
                         }}
                     />
                 </GridCalendar_Container>

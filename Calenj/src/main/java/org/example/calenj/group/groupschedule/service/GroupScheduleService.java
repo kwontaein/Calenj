@@ -370,7 +370,7 @@ public class GroupScheduleService {
             response = "해당 일정에 참여하였습니다.";
         }
 
-        addCalendar(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null), subScheduleId);
+        addCalendar(Objects.requireNonNull(groupScheduleRepository.findById(groupSubScheduleEntity.getScheduleId().getScheduleId()).orElse(null)), subScheduleId);
         //서브 일정에 유저 추가
         groupSubScheduleRepository.updateJoinUser(subScheduleId, members);
 

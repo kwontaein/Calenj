@@ -22,10 +22,11 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../entities/redux";
 
 
-export const InviteHippo :React.FC<{userName:string}> = ({userName}) => {
+export const InviteHippo :React.FC<{userId:string}> = ({userId}) => {
     const [groupDetail,setGroupDetail] = useState<GroupDetail>();
     const queryClient = useQueryClient();
     const navigateInfo = useSelector((state:RootState) => state.navigateInfo);
+    const {userNameStorage} = useSelector((state: RootState) => state.userNameStorage);
 
     //그룹 디테일 불러오기
     useEffect( () => {
@@ -35,7 +36,7 @@ export const InviteHippo :React.FC<{userName:string}> = ({userName}) => {
     return (
         <HippoContainer style={{marginTop:'20px', display:'flex', flexDirection:'column', justifyContent:'left', alignItems:'start'}}>
             <Text_Wrapper style={{textAlign:'left', marginLeft:'10px', marginBottom:'50px'}}>
-                {userName}님이 {groupDetail?.groupTitle}방에 합류했습니다.
+                {userNameStorage[userId] ? userNameStorage[userId].userName : ''}님이 {groupDetail?.groupTitle}방에 입장했습니다.
             </Text_Wrapper>
             <Hippo style={{marginBlock:'30px', marginLeft:"10px"}}>
                 <Move_LeftEar/>
@@ -72,9 +73,11 @@ export const InviteHippo :React.FC<{userName:string}> = ({userName}) => {
                 </div>
                 <ShakeTail/>
             </Hippo>
+            {localStorage.getItem('userId')!== userId &&
             <Modal_Condition_Button $isAble={true} style={{width:'200px', marginLeft:'40px'}}>
                 인사하기
             </Modal_Condition_Button>
+            }
         </HippoContainer>
     );
 };

@@ -9,7 +9,7 @@ interface ClickProps{
 
 export const DateEventTag_Container = styled.div`
     width: 100%;
-    height: 200px;
+    height: auto;
 `
 
 export const TagTop_Container = styled.div`
@@ -18,10 +18,10 @@ export const TagTop_Container = styled.div`
     display: flex;
     flex-direction: row;
     background-color: rgb(0,0,0,0.3);
-    margin-bottom: 5px;
         &:hover {
         background-color: rgb(0,0,0,0.3);
     }
+    border-block: 1px solid ${ThemeColor2}20;
 `
 
 export const TopContent_Container = styled.div`
@@ -43,6 +43,7 @@ export const TopIcon_Container = styled.div`
 export const BottomContent_Container = styled.div`
     width: 100%;
     height: calc(100% - 75px);
+    margin-block: 5px;
     overflow-y: auto;
 `
 

@@ -15,7 +15,6 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
     useEffect(() => {
         if (mapModal && subScheduleEdit.length > 0) {
             const subSchedule = subScheduleEdit[0]
-            console.log(subSchedule.location)
             if (subSchedule.location) {
                 geoCode(subSchedule.location)
             }
@@ -89,7 +88,6 @@ export const useSubScheduleMap = (subScheduleEdit: SubSchedule[], clickState: nu
                 subScheduleEdit[clickState].positionX = locateX;
                 subScheduleEdit[clickState].positionY = locateY;
             }
-            console.log(locateX, locateY)
             if(locateX && locateX){
                 drawMap(locateX, locateY);
                 addMaker(locateX, locateY);
