@@ -43,7 +43,7 @@ import {requestFriendApi} from "../../list/api/requestFriendApi";
 interface RequestFriendProps {
     onClose: () => void,
     myRequest: boolean, // 보낸요청 or 받은요청
-    userKey: string,
+    userKey: string, //실제 사용자의 Id
     waitingView: boolean,
 }
 
@@ -99,6 +99,10 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
         }
     }
 
+    useEffect(() => {
+        console.log(userKey)
+    }, []);
+
     return createPortal(
         <Modal_Background>
             <Modal_Container style={{width: '500px', height: 'auto', backgroundColor: 'transparent'}}>
@@ -113,7 +117,7 @@ export const FriendEventDetail: React.FC<RequestFriendProps> = ({onClose, myRequ
                 {userInfo &&
                     <RequestFriendView_Container $myRequest={(myRequest && !waitingView)}>
                         <UserProfile_Container>
-                            <UserProfile/>
+                            <UserProfile $userId={userKey}/>
                             <UserName_Container>
                                 <UserName>{userInfo.nickName}</UserName>
                                 <UserId>{userInfo.userName}</UserId>

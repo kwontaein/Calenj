@@ -20,7 +20,7 @@ public interface UserScheduleRepository extends JpaRepository<UserScheduleEntity
     @Query("SELECT new org.example.calenj.calendar.dto.response.ScheduleResponse" +
             "(Us.scheduleId,Us.userScheduleTitle,Us.scheduleStartDateTime,Us.scheduleEndDateTime,Us.userScheduleAllDay" +
             ",Us.tagIds,Us.userScheduleFormState,Us.userScheduleContent,Us.userScheduleTodoList,Us.userScheduleFriendList)" +
-            " FROM User_Schedule Us WHERE Us.userId.userId = :userId AND Us.isGroupSchedule=false ")
+            " FROM User_Schedule Us WHERE Us.userId.userId = :userId and Us.isGroupSchedule = false")
     Optional<List<ScheduleResponse>> findListByUserId(@Param("userId") UUID userId);
 
     //리스트를 json으로 변환해서 문자열로 저장했기 때문에, 문자열 비교 연산자인 like 사용

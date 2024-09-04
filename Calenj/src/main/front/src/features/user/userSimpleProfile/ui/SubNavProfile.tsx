@@ -7,7 +7,7 @@ import {
     SubNavEmpty_div,
     SubNavProfile_Container,
     SubNavProfile_Content_Container,
-    SubNavProfile_div, UserInfo_ModifyIcon_Container, UserUseName_Content
+    UserInfo_ModifyIcon_Container, UserUseName_Content
 } from "./SubNavProfileStyled";
 import {SubNavProfileBottom} from "./SubNavProfileBottom";
 import {useEffect, useState} from "react";
@@ -22,6 +22,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {saveUserName} from "../../../../entities/redux";
+import {ProfileContainer} from "../../../../shared/ui/SharedStyled";
 
 export const SubNavProfile: React.FC = () => {
     const userId = localStorage.getItem('userId') || ''
@@ -53,7 +54,7 @@ export const SubNavProfile: React.FC = () => {
             </Profile_UserUseName_Container>
             <SubNavProfile_Content_Container>
                 <Profile_Container>
-                    <SubNavProfile_div $userId={userInfo?.userId || ''}/>
+                    <ProfileContainer $userId={userInfo?.userId || ''}/>
                     <SubNavEmpty_div>
                         <ProfileEditButton_div>
                             <i className="fi fi-sr-plus-small" style={{marginTop: '3px'}}></i>
