@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="09.04 v1 마무리 #1">
+    <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="09.04 서브일정 드래그 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubSchedule.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubSchedule.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupschedule/service/GroupScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupschedule/service/GroupScheduleService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -253,14 +249,6 @@
       <workItem from="1725244921688" duration="18140000" />
       <workItem from="1725307367613" duration="2112000" />
       <workItem from="1725419542421" duration="1894000" />
-    </task>
-    <task id="LOCAL-00034" summary="07.10 input 이미지 삽입 #2">
-      <option name="closed" value="true" />
-      <created>1720599946946</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1720599946946</updated>
     </task>
     <task id="LOCAL-00035" summary="07.10 input 이미지 삽입 #3">
       <option name="closed" value="true" />
@@ -646,7 +634,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725427501386</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="09.04 서브일정 드래그 수정">
+      <option name="closed" value="true" />
+      <created>1725436387640</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1725436387640</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -679,7 +675,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="08.01 그룹일정 수정" />
     <MESSAGE value="08.01 그룹일정 수정 #2" />
     <MESSAGE value="08.05 일정 수정 및 삭제 #2" />
     <MESSAGE value="08.05 일정 수정 및 삭제 #3" />
@@ -704,7 +699,8 @@
     <MESSAGE value="09.03 그룹태그 분리" />
     <MESSAGE value="09.04 v1 마무리 #1" />
     <MESSAGE value="09.04 사용자 프로필 세팅" />
-    <option name="LAST_COMMIT_MESSAGE" value="09.04 사용자 프로필 세팅" />
+    <MESSAGE value="09.04 서브일정 드래그 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="09.04 서브일정 드래그 수정" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

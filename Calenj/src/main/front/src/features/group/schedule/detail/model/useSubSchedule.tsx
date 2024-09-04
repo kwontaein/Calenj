@@ -68,6 +68,9 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         dispatchSubSchedule({type: "SET_INDEX"})
         dragOverItem.current = null;
         dragIndex.current = null;
+        setTimeout(()=>{
+            deleteRef.current = null
+        },10)
     };
 
 
@@ -93,12 +96,14 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
     const deleteSubSchedule = useCallback(() => {
         if (deleteRef.current === null) return
+
         const deleteSchedule = () => {
             const newList = [...subScheduleEdit];
             // 드래그한 요소를 제거
-            newList.splice(dragIndex.current!, 1);
+            newList.splice(deleteRef.current!, 1);
             dispatchSubSchedule({type: "SET_SUB_SCHEDULE_LIST", payload: newList});
         }
+
         useConfirm("정말로 해당 일정을 삭제하시겠습니까?", deleteSchedule, () => {
         })
         deleteRef.current = null
