@@ -49,7 +49,7 @@ export const UserProfile_Container = styled.div`
 `
 
 
-export const UserProfile = styled.div`
+export const UserProfile = styled.div<{$userId:string}>`
     width: ${userProfileSize}px;
     height: ${userProfileSize}px;
     border-radius: 50%;
@@ -57,6 +57,20 @@ export const UserProfile = styled.div`
     background-color: ${TextColor};
     margin-left: 10px;
     margin-top: -${userProfileSize - 40}px;
+    padding: 3px;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    color: white;
+    user-select: none;
+    background: ${props => `url("/image/savedImage/${props.$userId.trim()}.jpeg")`}, url("/image/Logo.png");
+    background-size: cover;
+    list-style: none;
+    white-space: nowrap;
+    cursor: pointer;
 `
 
 export const UserName_Container = styled.div`
