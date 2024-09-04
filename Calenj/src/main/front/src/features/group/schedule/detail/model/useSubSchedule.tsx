@@ -16,9 +16,7 @@ import {joinSubScheduleApi} from "../api/joinSubScheduleApi";
 
 export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupScheduleEdit: groupEventSate, setEditMode: React.DispatchWithoutAction):ReturnSubSchedule => {
     const dragIndex = useRef<number | null>(null); // 드래그할 아이템의 인덱스
-    const [initialDragPosition, setInitialDragPosition] = useState<{ x: number, y: number } | null>(null); // 드래그 시작 시 요소의 위치
-    const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
-    const [ItemWidth, setItemWidth] = useState<number | null>(null);
+    const dragOverItem = useRef<number | null>(null); // 드래그할 아이템의 인덱스
     const [scheduleTime, setScheduleTime] = useState<Date[]>([groupScheduleEdit.startDate])
     const deleteRef = useRef<number | null>(null)
 
@@ -32,6 +30,7 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
     const userId = localStorage.getItem('userId')||''
     const userEventDateState = useFetchUserDateEvent(userId)
 
+
     useEffect(() => {
         if (groupSubScheduleList.data) {
             dispatchSubSchedule({type: 'SET_SUB_SCHEDULE_LIST', payload: groupSubScheduleList.data})
@@ -43,15 +42,16 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         dragIndex.current = position;
         deleteRef.current = position;
         e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setDragImage(new Image(), 0, 0); // Hide the default drag image
-        const {top, left} = e.currentTarget.getBoundingClientRect();
-        setInitialDragPosition({x: e.pageX - left, y: e.pageY - top});
-        setItemWidth(e.currentTarget.clientWidth)
+        // 드래그 중인 요소를 클론하여 잔상으로 사용
+
+        // e.dataTransfer.setDragImage(new Image(), 0, 0); // Hide the default drag image
     };
 
 
     // 드래그 중인 대상이 위로 포개졌을 때
     const dragEnter = (e: DragEvent<HTMLDivElement>, position: number) => {
+        e.preventDefault();  // 이벤트 기본 동작을 막아야 제대로 작동할 수 있습니다.
+        if (dragIndex.current === position) return;  // 같은 위치일 경우 무시
         const newList = [...subScheduleEdit];
         const dragIndexValue = newList[dragIndex.current!];
         // 드래그한 요소를 제거
@@ -66,22 +66,11 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
     // 드랍 (커서 뗐을 때)
     const drop = () => {
         dispatchSubSchedule({type: "SET_INDEX"})
+        dragOverItem.current = null;
         dragIndex.current = null;
-        setMousePosition(null)
-        setInitialDragPosition(null)
     };
 
-    const dragMousePosition = (e: DragEvent<HTMLDivElement>) => {
-        if (initialDragPosition === null) return
-        // console.log(e.pageX, e.pageY)
-        if ((e.pageX - initialDragPosition.x) > 0 && (e.pageY - initialDragPosition.y) > 0) {
-            setMousePosition({
-                x: e.pageX - initialDragPosition.x,
-                y: e.pageY - initialDragPosition.y
-            })
-        }
 
-    }
 
     const addSubSchedule = () => {
 
@@ -174,7 +163,6 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
 
     return {
         dragEnter,
-        dragMousePosition,
         drop,
         dragStart,
         subScheduleEdit,
@@ -183,8 +171,6 @@ export const useSubSchedule = (originGroupSchedule: GroupSchedule, groupSchedule
         deleteSubSchedule,
         saveGroupSchedule,
         joinSubSchedule,
-        mousePosition,
-        ItemWidth,
         dragIndex,
         deleteRef,
         scheduleTime
