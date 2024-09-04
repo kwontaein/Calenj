@@ -128,6 +128,7 @@ export const GlobalStyle = createGlobalStyle`
         color: ${TextColor};
         font-family: "Noto Sans KR", sans-serif;
         transition: border ease-in 0.3s;
+
         &:focus {
             outline: none;
             border: 2px solid ${PointColor};
@@ -144,7 +145,7 @@ export const ProfileContainer = styled.div<{ $userId: string }>`
     height: 40px;
     padding: 3px;
     border-radius: 50px;
-    background-color: ${PointColor};
+    box-shadow: 0 0 0 2px ${TextColor}20 inset;
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
@@ -156,6 +157,8 @@ export const ProfileContainer = styled.div<{ $userId: string }>`
     user-select: none;
     background: ${props => `url("/image/savedImage/${props.$userId.trim()}.jpeg")`}, url("/image/Logo.png");
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     list-style: none;
     white-space: nowrap;
     cursor: pointer;
@@ -272,8 +275,9 @@ export const Button = styled.button`
     color: white;
     cursor: pointer;
     width: 470px;
-    
-    &:hover{background-color : ${PointColor}77;
+
+    &:hover {
+        background-color: ${PointColor}77;
     }
 `;
 
@@ -432,7 +436,7 @@ export const Option_Container = styled.div`
     z-index: 2;
 `
 
-export const Option_Item = styled.div<{$isClick?:boolean}>`
+export const Option_Item = styled.div<{ $isClick?: boolean }>`
     width: calc(100% - 18px);
     height: 15px;
     margin: 4px;
@@ -442,12 +446,13 @@ export const Option_Item = styled.div<{$isClick?:boolean}>`
     display: flex;
     align-items: center;
     border-radius: 4px;
-    color: ${props=>props.$isClick ? PointColor2 :TextColor};
+    color: ${props => props.$isClick ? PointColor2 : TextColor};
     transition: background-color 0.5s ease;
+
     &:hover {
         background-color: ${BackGroundColor};
         color: ${PointColor2};
-        
+
     }
 `
 
@@ -461,7 +466,6 @@ export const OptionIcon_Wrapper = styled.div`
     margin-inline: 5px;
     color: inherit;
 `
-
 
 
 /**radio*/
@@ -492,30 +496,32 @@ export const InputType_Radio = styled.input.attrs({type: 'radio'})`
     }
 `
 
-export const OnlineLED_Container = styled.div<{$bgColor:string, $size:number}>`
+export const OnlineLED_Container = styled.div<{ $bgColor: string, $size: number }>`
     position: absolute;
     margin-left: 22px;
     margin-top: 22px;
-    width:${props=>props.$size}px;
-    height:${props=>props.$size}px;
-    background-color: ${props=> props.$bgColor};
+    width: ${props => props.$size}px;
+    height: ${props => props.$size}px;
+    background-color: ${props => props.$bgColor};
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
 `
-export const OnlineLED_Wrapper = styled.div<{$isOnline:boolean,$bgColor:string}>`
-    width:60%;
-    height:60%;
+export const OnlineLED_Wrapper = styled.div<{ $isOnline: boolean, $bgColor: string }>`
+    width: 60%;
+    height: 60%;
     box-sizing: border-box;
-    background-color:${props=>props.$isOnline ? PointColor: props.$bgColor};
-    border: 2px solid ${props=> props.$isOnline ? PointColor:`${TextColor}77`};
+    background-color: ${props => props.$isOnline ? PointColor : props.$bgColor};
+    border: 2px solid ${props => props.$isOnline ? PointColor : `${TextColor}77`};
     border-radius: 50%;
 `
+
 //알림 신호 개수
 interface receivedMsg {
     $existMessage: boolean
 }
+
 export const SignOfMessageNum = styled.div<receivedMsg>`
     //padding: 1px 6px;
     background-color: ${props => (props.$existMessage ? "#1AB5E6" : "transparent")};

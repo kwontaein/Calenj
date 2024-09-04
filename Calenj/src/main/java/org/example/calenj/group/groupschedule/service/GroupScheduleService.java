@@ -120,10 +120,10 @@ public class GroupScheduleService {
                 subIds.add(subSchedule.getSubScheduleId().toString());
             }
 
-            if (i < lastIndex) {
-                int duration = calculateDuration(subSchedule, groupScheduleRequest.getGroupSubSchedules().get(i + 1));
-                subSchedule.setDuration(duration + "분");
-            }
+//            if (i < lastIndex) {
+//                int duration = calculateDuration(subSchedule, groupScheduleRequest.getGroupSubSchedules().get(i + 1));
+//                subSchedule.setDuration(duration + "분");
+//            }
 
             groupSubScheduleRepository.save(subSchedule.toEntity(groupScheduleEntity));
             UUID updateId = calendarService.updateSharedGroupSchedule(subSchedule.getSubScheduleId());

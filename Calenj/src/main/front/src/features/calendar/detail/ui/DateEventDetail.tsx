@@ -47,7 +47,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
     const {dynamicEventTag} = useSelector((state: RootState) => state.dateEventTag)
     const id = useId()
     const [modify, setModify] = useState<boolean>(false);
-    const [isShared,setIsShare] = useReducer((prev)=>!prev,false)
+    const [isShared, setIsShare] = useReducer((prev) => !prev, false)
     return (
         <>
             {modify ? <AddDateEvent onClose={() => setModify(false)}
@@ -204,7 +204,7 @@ export const DateEventDetail: React.FC<EventDetailProps> = ({eventDetail, close}
                             }
                         </EventDetailContent_Wrapper>
                         {isShared ?
-                            <ShareDateView onClose={setIsShare} scheduleId={eventDetail.id}/>:
+                            <ShareDateView onClose={setIsShare} scheduleId={eventDetail.id}/> :
                             <DateEventBottom_Container/>
                         }
                     </DateEventDetail_Container>
