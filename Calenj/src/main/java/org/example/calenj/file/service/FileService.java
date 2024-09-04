@@ -184,7 +184,7 @@ public class FileService {
 
         Collections.reverse(lines); // 파일 내용을 역순으로 정렬
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(chatFileRequest.getUserId() + "EndPoint" + " [" + chatFileRequest.getParam() + "]") && !line.contains("시작라인$어서오세요$$$"))
+                .takeWhile(line -> !line.contains(chatFileRequest.getUserId() + "EndPoint" + " [" + chatFileRequest.getParam() + "]") && !line.contains("시작라인$어서오세요 $ $ $ $"))
                 .filter(createFilterCondition(chatFileRequest.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
@@ -430,7 +430,7 @@ public class FileService {
         // 파일 내용을 역순으로 정렬
 
         List<String> previousLines = lines.stream()
-                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요$$$$"))
+                .takeWhile(line -> !line.contains(message.getUserId() + "EndPoint" + " [" + message.getParam() + "]") && !line.contains("시작라인$어서오세요 $ $ $ $"))
                 .filter(createFilterCondition(message.getParam()))
                 .map(stringTransformer)
                 .collect(Collectors.toList());
