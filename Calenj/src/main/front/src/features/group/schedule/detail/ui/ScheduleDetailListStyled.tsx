@@ -91,7 +91,7 @@ export const ScheduleDetail_Content_Container = styled.div`
 `
 
 export const SubScheduleJoinUser_Wrapper = styled.div`
-    width: calc(100% - 70px);
+    width: calc(100% - 65px);
     font-size: inherit;
     padding-right: 10px;
     text-overflow: ellipsis;
@@ -199,10 +199,10 @@ export const EditSubSchedule_Content =styled.textarea`
     color: inherit;
 `
 
-export const MapPositionText_Container = styled.div<{$isDrag:boolean, $isNull:boolean}>`
+export const MapPositionText_Container = styled.div<{ $isNull:boolean}>`
     max-width: calc(100% - 70px);
     width: auto;
-    color: ${props=> props.$isDrag ? 'inherit' : (props.$isNull ? `${TextColor}77` : TextColor)};
+    color: ${props=> props.$isNull ? `${TextColor}77` : TextColor};
     background-color: inherit;
     font-size: 13px;
     overflow: hidden;
@@ -220,7 +220,7 @@ export const MapIcon_Container = styled.div`
     }
 `
 
-export const MapToggle_Containper = styled.div`
+export const MapToggle_Container = styled.div`
     width: 50px;
     height: 20px;
     display: flex;
@@ -234,23 +234,28 @@ export const MapToggle_Containper = styled.div`
 `
 
 
-export const ScheduleDetailList_Div = styled.div<{ $isDrop: boolean, $isClick?:boolean }>`
+export const ScheduleDetailList_Div = styled.div<{ $isClick?:boolean }>`
     height: auto;
     text-align: center;
     font-size: 40px;
     width: 100%;
     border-radius: 5px;
     box-sizing: border-box;
-    color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
-    border: 1px ${props => props.$isDrop ? `dashed ${TextColor}` : props.$isClick ? `solid ${PointColor}` :`solid ${TextColor}`};
-    background-color: ${props => props.$isDrop ? `${ThemeColor3}` : ThemeColor2};
+    color: ${TextColor};
+    border: 1px ${props => props.$isClick ? `solid ${PointColor}` :`solid ${TextColor}`};
+    background-color: ${ThemeColor2};
     white-space: pre-wrap;
     position: relative;
     padding-block: 10px;
 
     ${SubSchedule_Content_Container} {
-        color: ${props => props.$isDrop ? `${ThemeColor3}` : TextColor};
+        color:  ${TextColor};
     }
+`
+
+export const BlindSchedule_Div = styled.div`
+    background-color: ${ThemeColor2};
+    position: absolute;
 `
 
 export const EditDuration_Input =  styled.input.attrs({ type: 'number' })<{$numLength:number}>`

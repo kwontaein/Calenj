@@ -6,12 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="207cc177-779d-4fce-9b67-8f1abed16ee5" name="Changes" comment="09.04 v1 마무리 #1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/calendar/detail/ui/DateEventDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetaulStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/friend/detail/ui/FriendEventDetaulStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/user/userSimpleProfile/ui/SubNavProfileStyled.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubSchedule.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/model/useSubSchedule.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/front/src/features/group/schedule/detail/ui/ScheduleDetailListStyled.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupschedule/service/GroupScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Calenj/src/main/java/org/example/calenj/group/groupschedule/service/GroupScheduleService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,14 +253,6 @@
       <workItem from="1725244921688" duration="18140000" />
       <workItem from="1725307367613" duration="2112000" />
       <workItem from="1725419542421" duration="1894000" />
-    </task>
-    <task id="LOCAL-00033" summary="07.10 input 이미지 삽입">
-      <option name="closed" value="true" />
-      <created>1720596763309</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1720596763309</updated>
     </task>
     <task id="LOCAL-00034" summary="07.10 input 이미지 삽입 #2">
       <option name="closed" value="true" />
@@ -647,7 +638,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725419833767</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="09.04 사용자 프로필 세팅">
+      <option name="closed" value="true" />
+      <created>1725427501386</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1725427501386</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,7 +679,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Calenj" />
     </ignored-roots>
-    <MESSAGE value="07.30 그룹일정 생성api 추가" />
     <MESSAGE value="08.01 그룹일정 수정" />
     <MESSAGE value="08.01 그룹일정 수정 #2" />
     <MESSAGE value="08.05 일정 수정 및 삭제 #2" />
@@ -705,7 +703,8 @@
     <MESSAGE value="09.02 스크롤 문제해결" />
     <MESSAGE value="09.03 그룹태그 분리" />
     <MESSAGE value="09.04 v1 마무리 #1" />
-    <option name="LAST_COMMIT_MESSAGE" value="09.04 v1 마무리 #1" />
+    <MESSAGE value="09.04 사용자 프로필 세팅" />
+    <option name="LAST_COMMIT_MESSAGE" value="09.04 사용자 프로필 세팅" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -731,12 +730,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx</url>
-          <line>349</line>
+          <line>353</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/Calenj/src/main/front/src/shared/ui/SharedStyled.tsx</url>
-          <line>154</line>
+          <line>155</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
