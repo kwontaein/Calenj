@@ -9,6 +9,8 @@ CalenJ는 개인 뿐 아니라 단체로 일정을 공유 가능한 일정 관�
 제작 기간 :  1월 4일 ~ 9월 3일 (8개월)
 제작 인원 : 2인 (BackEnd 1 , FrontEnd 1)
 
+
+기능 소개
 - 기본적으로 개인의 일정 관리가 가능합니다.
 - 친구와 함께하는 일정의 경우, 함께하는 친구에게 일정이 공유됩니다.
 - 그룹의 경우, 여러 일정을 한번에 저장하고, 일정이 진행되는 장소를 지도로 확인 가능합니다.
@@ -16,43 +18,103 @@ CalenJ는 개인 뿐 아니라 단체로 일정을 공유 가능한 일정 관�
 - 그룹은 기본적으로 채팅 및 공지, 투표의 기능이 제공되며, 이미지 전송 기능 또한 제공됩니다.
 - 투표나 공지는 생성 시 채팅에서 쉽게 확인 가능합니다.
 
+내 역할
+- 전반적인 백엔드(서버)의 모든 부분을 담당.
+- 각 페이지의 css 및 디자인을 제작.
+- 채팅의 스크롤 기능 및 NAVER API 지도를 통한 위치 정보 표시 등을 제작.
+    - direction5 를 통한 걸리는 시간 값 반환
+- JPA를 이용한 데이터 관리 및 저장
+    - converter(Object to Json) 을 사용한 값 저장
+    - nativeQuery 를 사용한 직접적인 sql 문 사용
 
-![캘린더 메인](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/4d7b21f0-9065-4c8b-a87e-97fbb51c0de9/f868425d-294e-4582-9f8c-571254735a9d.png)
+로그인 및 보안관리
+- JWT (JSON WEB TOKEN) 을 이용한 인증 절차 구현
+    - redis를 이용한 refreshToken 값 저장
+- 스프링 시큐리티
+    - `passwordEncoder` 를 사용한 비밀번호 암호화
+    - `filterChain`을 사용한 인증 절차 구현
+- 이메일 인증 서비스 구현 (spring.mail 사용)
 
-캘린더 메인
 
-![일정 생성](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/748da659-43b5-4d95-827a-39bb19261b72/04cc0a2a-6d24-4a9c-95b4-d6633f517d15.png)
+웹소켓 연결 및 채팅 저장
+- WebSocket + SockJs  + stomp 를 이용한 실시간 채팅
+    - topic 분할 통한 친구와 그룹 채팅 및 개인 알림 구분
+    - 받은 메세지의 상태(status)를 통한 처리 (알람 / 채팅 / 읽음 처리)
+- 파일 저장을 통한 채팅 내역 관리
+    - stream 을 통한 파일 읽기 및 내용 형식 처리
+- 사용자 실시간 온라인 상태 반환
+    - WebSocket의 구독한 topic 정보로 온라인 상태 반환
 
-일정 생성
+ 그룹 관리
+ - 그룹 일정
+    - 그룹 생성 및 그룹 세부 정보 반환
+    - 그룹 초대 코드를 통한 타 유저 초대
+- 그룹 공지 및 투표
+    - 그룹 공지와 투표 생성 및 조회, 참여
+- 그룹 일정
+    - 그룹 일정 생성 및 관리
+    - 그룹 일정 참여 관리
+        - 참여한 그룹 일정 개인 일정에 추가
+        - 그룹 일정 업데이트 시 개인 일정 또한 업데이트
+    - 지도를 통한 약속 위치 확인
+ 
 
-![태그 색 변경](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/d8056b77-9774-436f-b473-61f511d6745a/783c0261-484f-49ff-87e6-f31eec912921.png)
+개인 일정 관리
+- 개인 일정 관리
+    - fullCalendar api 를 사용한 일정 관리
+- 일정 공유
+    - 개인 및 그룹에게 내 일정 공유
+- 태그를 통한 일정 분류
+    - 원하는 색상 및 이름으로 태그 저장
+ 
+친구 관리
+- 친구 요청
+    - 개인이 설정 가능한 아이디를 통한 친구 요청
+- 온라인 친구 목록
+    - websocket에서 처리한 온라인 목록을 통한 온라인 친구 목록 설정
+- 친구 차단
+    - 친구 차단 목록을 통한 관리
+    - 차단된 친구에게는 사용자의 아이디가 검색되지 않게 설정
+ 
+트러블 슈팅
+JPA 검색 관련
 
-태그 색 변경
+JWT 관련
 
-![일정 확인 및 공유](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/8150594f-adea-4043-9e2d-1141c65b09f7/b67a72b3-bdda-4614-b76b-f05ab8641129.png)
+1. 토큰의 동작 방식 수정
+2. 토큰 검증 상태 반환
+3. dofilter
+4. redis 사용 이유 (+ 이메일)
 
-일정 확인 및 공유
+온라인 상태 저장 관련
 
-![채팅 및 서브(투표 / 공지 / 그룹 일정) 화면](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/951fac3e-7acb-448e-8e24-66127da15353/0839d1b1-4e51-4ad4-a4a4-04226ac97035.png)
+1. 방식의 수정
+2. 상태 저장 방식
 
-채팅 및 서브(투표 / 공지 / 그룹 일정) 화면
+List<> 혹은 배열 저장 관련
 
-![이미지 전송 기능](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/44c00ffb-3b19-45fc-a7f7-925540c76c8e/200ab855-2f1b-4c67-b573-584759a80f37.png)
+1. @ElementCollection 에서 ListToStringConverter로 변경
 
-이미지 전송 기능
+그룹 일정을 개인 일정에 저장하는 부분.
 
-![그룹 일정 및 서브 화면 위치 변경](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/dad04347-0c72-41a2-8803-15447bfe1d1b/16438bee-f9d8-4278-910c-ce4d7714c226.png)
+1. 그룹 일정과 같은 내용의 일정을 참여한 모든 유저에게 생성
+2. 통일된 하나의 일정으로 수정
 
-그룹 일정 및 서브 화면 위치 변경
+친구 추가 관련.
 
-![그룹 세부 일정 추가 (위치 지정)](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/ca63eea9-569e-4823-bc88-2bde43ef33b3/a3c756ba-a71b-4535-b0bb-26c1d53e5168.png)
+1. 친구 요청 및 관계 처리를 위한 DB 처리
+2. 친구 관계 관리
 
-그룹 세부 일정 추가 (위치 지정)
+파일 구조 관련.
 
-![친구 요청 화면](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/2cbda472-f06b-441e-bcc3-d28fb1717a11/5c892263-3bd3-4ea7-a523-ea5c81cad380.png)
+1. domain 위주로 리팩토링
 
-친구 요청 화면
+웹소켓 채팅 처리
 
-![친구 목록](https://prod-files-secure.s3.us-west-2.amazonaws.com/066f03f1-14cd-4e02-a5dc-16089a05d3c6/8de23397-8702-4e44-ab05-c7c277dd7694/8aca09b2-090a-44e4-8204-bd805bfac8a7.png)
+1. 메세지 형식 처리
+2. 알림 갯수 처리 및 읽음 처리
+3. 메세지 state에 따른 알림 / 채팅 구분 처리
 
-친구 목록
+일정 생성 시 형식 맞추기
+
+1. 각 일정에 대한 형식 맞추기
